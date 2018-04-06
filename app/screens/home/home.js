@@ -170,6 +170,7 @@ export default class Home extends Component {
                         selectedCurrency: -1,
                     })
                 }
+                await AsyncStorage.setItem("balance", this.state.balance+"")
             }
         }
         else {
@@ -225,7 +226,7 @@ export default class Home extends Component {
         }
     }
 
-    tap2 = () => {
+    tap2 = async() => {
         let index = (this.state.selectedCurrency + 1) % this.state.currencies.length
         if (this.state.currencies[index].currency.symbol === this.state.symbol) {
             index = (index + 1) % this.state.currencies.length
@@ -237,6 +238,7 @@ export default class Home extends Component {
             symbol: this.state.currencies[index].currency.symbol,
             balance: this.setBalance(this.state.currencies[index].available_balance, this.state.currencies[index].currency.divisibility),
         });
+        await AsyncStorage.setItem("balance", this.state.balance+"")
     }
 
 
