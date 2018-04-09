@@ -342,7 +342,7 @@ export default class Signup extends Component {
                                 <Text style={styles.agreeText}>
                                     I agree to the
                                 </Text>
-                                <TouchableOpacity onPress={() => Linking.openURL('https://rehive.com/terms-of-use')}>
+                                <TouchableOpacity onPress={() => Linking.openURL('https://rehive.com/legal/')}>
                                     <Text style={styles.termsText}>
                                         terms of use
                                     </Text>
