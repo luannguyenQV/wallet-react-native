@@ -163,7 +163,7 @@ export default class Signup extends Component {
         const scrollResponder = this.refs.myScrollView.getScrollResponder();
         scrollResponder.scrollResponderScrollNativeHandleToKeyboard(
           inputHandle, // The TextInput node handle
-          0, // The scroll view's bottom "contentInset" (default 0)
+          250, // The scroll view's bottom "contentInset" (default 0)
           true // Prevent negative scrolling
         );
       }
@@ -240,15 +240,19 @@ export default class Signup extends Component {
                     title="Create new account"
                 />
                 <View style={styles.mainContainer}>
-                    <KeyboardAvoidingView style={styles.container} behavior={'padding'} keyboardVerticalOffset={85}>
-                        <ScrollView keyboardDismissMode={'interactive'} ref="myScrollView" keyboardShouldPersistTaps='always'>
+                    <KeyboardAvoidingView style={styles.container} behavior={'padding'} keyboardVerticalOffset={85}
+                        onKeyboardChange={()=>console.log("changed")}>
+                        <ScrollView keyboardDismissMode={'interactive'} ref="myScrollView" keyboardShouldPersistTaps='handled'>
                             <TextInput
                                 title="First name"
                                 underlineColorAndroid="white"
                                 placeholder="e.g. John"
                                 autoCapitalize="none"
+                                onFocus={()=>this._scrollToInput(ReactNative.findNodeHandle(this.firstname.refs.first_name))}
                                 onChangeText={(first_name) => this.setState({first_name})}
                                 returnKeyType="next"
+                                ref={ref => this.firstname = ref}
+                                reference="first_name"
                                 onSubmitEditing={() => this.lastname.refs.last_name.focus()}
                             />
                             <TextInput
@@ -256,6 +260,7 @@ export default class Signup extends Component {
                                 underlineColorAndroid="white"
                                 placeholder="e.g. Snow"
                                 autoCapitalize="none"
+                                onFocus={()=>this._scrollToInput(ReactNative.findNodeHandle(this.lastname.refs.last_name))}
                                 onChangeText={(last_name) => this.setState({last_name})}
                                 returnKeyType="next"
                                 ref={ref => this.lastname = ref}
@@ -269,6 +274,7 @@ export default class Signup extends Component {
                                 placeholder="e.g john@gmail.com"
                                 autoCapitalize="none"
                                 keyboardType="email-address"
+                                onFocus={()=>this._scrollToInput(ReactNative.findNodeHandle(this.email.refs.electronic_mail))}
                                 onChangeText={(email) => this.setState({email})}
                                 error={this.state.email_error}
                                 returnKeyType="done"
@@ -282,6 +288,8 @@ export default class Signup extends Component {
                                 keyboardType="numeric"
                                 value={this.state.inputNumber}
                                 underlineColorAndroid="white"
+                                placeholder="e.g +880182968534"
+                                onFocus={()=>this._scrollToInput(ReactNative.findNodeHandle(this.mobile_number.refs.mobile_number))}
                                 onChangeText={(mobile_number) => this.setState({inputNumber:mobile_number})}
                                 changeCountryCode={this.changeCountryCode}
                                 error={this.state.mobile_error}
@@ -294,7 +302,8 @@ export default class Signup extends Component {
                                 required
                                 underlineColorAndroid="white"
                                 placeholder="e.g rehive"
-                                autoCapitalize="none"
+                                autoCapitalize="none"                                
+                                onFocus={()=>this._scrollToInput(ReactNative.findNodeHandle(this.company.refs.company))}
                                 onChangeText={(company) => this.setState({company})}
                                 error={this.state.company_error}
                                 returnKeyType="next"
@@ -308,6 +317,7 @@ export default class Signup extends Component {
                                 placeholder="Password"
                                 underlineColorAndroid="white"
                                 autoCapitalize="none"
+                                onFocus={()=>this._scrollToInput(ReactNative.findNodeHandle(this.pass.refs.password))}
                                 secureTextEntry
                                 onChangeText={(password1) => this.setState({password1})}
                                 error={!this.state.password1_status ? "Password must be at least 8 characters." :  null}
@@ -322,6 +332,7 @@ export default class Signup extends Component {
                                 placeholder="Confirm password"
                                 underlineColorAndroid="white"
                                 autoCapitalize="none"
+                                onFocus={()=>this._scrollToInput(ReactNative.findNodeHandle(this.confirm.refs.confirm_password))}
                                 secureTextEntry
                                 onChangeText={(password2) => this.setState({password2})}
                                 error={this.state.password_error}
