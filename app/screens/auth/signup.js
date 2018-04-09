@@ -47,14 +47,14 @@ export default class Signup extends Component {
             email_error:null,
             company_error:null,
             inputNumber:'',
-            countryCode:null,
+            countryCode:'+1',
             countryName:'',
         }
     }
 
     changeCountryCode = (code,cca2) => {
         this.setState({
-            countryCode:code,
+            countryCode:'+'+code,
             countryName:cca2
         })
     }
@@ -288,6 +288,7 @@ export default class Signup extends Component {
                                 ref={ref => this.mobile_number = ref}
                                 reference="mobile_number"
                                 onSubmitEditing={() => this.company.refs.company.focus()}
+                                code={this.state.countryCode}
                             />
                             <TextInput
                                 title="Company"
