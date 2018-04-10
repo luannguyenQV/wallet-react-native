@@ -241,6 +241,9 @@ export default class Signup extends Component {
                 />
                 <View style={styles.mainContainer}>
                     <KeyboardAvoidingView style={styles.container} behavior={'padding'} keyboardVerticalOffset={85}>
+                        <View style={{flex:1,flexDirection:'row'}}>
+                        <View style={{flex:1}}></View>
+                        <View style={{flex:14}}>
                         <ScrollView keyboardDismissMode={'interactive'} ref="myScrollView" keyboardShouldPersistTaps='always'>
                             <TextInput
                                 title="First name"
@@ -349,6 +352,9 @@ export default class Signup extends Component {
                                 </TouchableOpacity>
                             </View>
                         </ScrollView>
+                        </View>
+                        <View style={{flex:1}}></View>
+                        </View>
                         <TouchableHighlight
                             style={styles.submit}
                             onPress={() => this.signup()}>
@@ -370,7 +376,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
     },
     container: {
-        flex: 1,
+        flex: 14,
         flexDirection: 'column',
         justifyContent: 'center'
     },
