@@ -14,8 +14,8 @@ import ReactNative, {
 import AuthService from './../../services/authService'
 import Icon from 'react-native-vector-icons/Ionicons'
 import Auth from './../../util/auth'
-import TextInput from './../../components/textInput'
-import MobileInput from './../../components/mobileNumberInput'
+import TextInput from './../../components/textInputSignup'
+import MobileInput from './../../components/mobileNumberInputSignup'
 import Colors from './../../config/colors'
 import Header from './../../components/header'
 
