@@ -81,16 +81,21 @@ export default class NewAccounts extends Component {
         if (accountResponse.status === 'success') {
             let accountData = accountResponse.data.results
             let UniqueAccount = accountData
+            let activeIndex = -1;
+            //console.log(UniqueAccount.length)
             for(let i=0;i<UniqueAccount.length;i++){
+                //console.log(UniqueAccount[i].reference+ " " + getAccountList.reference)
                 if(UniqueAccount[i].reference===getAccountList.reference){
                     UniqueAccount[i].activeCurrency=true
+                    console.log(i)
                 }else{
                     UniqueAccount[i].activeCurrency=false
                 }
                 if(UniqueAccount[i].reference===this.state.activeAccount.reference){
-                    UniqueAccount.splice(i, 1)
+                    activeIndex = i
                 }
             }
+            UniqueAccount.splice(activeIndex, 1)
             if (UniqueAccount.length > 0) {
                 this.setState({
                     showIcon: true,
