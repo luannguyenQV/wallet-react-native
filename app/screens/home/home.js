@@ -60,7 +60,9 @@ export default class Home extends Component {
             dataSource: new ListView.DataSource({
                 rowHasChanged: (r1, r2) => JSON.stringify(r1) !== JSON.stringify(r2),
             }),
-            transactionView: false
+            transactionView: false,
+            noAccounts: false,
+            logout: false,
         }
     }
 
@@ -171,6 +173,11 @@ export default class Home extends Component {
                     })
                 }
             }
+            else {
+                this.setState({
+                    noAccounts:true
+                })
+            }
         }
         else {
             this.logout();
@@ -178,6 +185,11 @@ export default class Home extends Component {
     }
 
     logout = () => {
+        if(this.state.logout) return;
+
+        this.setState({
+            logout:true
+        })
         Auth.logout(this.props.navigation);
     }
 
@@ -246,6 +258,7 @@ export default class Home extends Component {
                 <Header
                     navigation={this.props.navigation}
                     drawer
+                    noAccounts={this.state.noAccounts}
                     /*homeRight*/
                 />
                 <View style={styles.balance}>
