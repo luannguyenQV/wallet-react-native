@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import {
     ScrollView,
     View,
@@ -20,7 +20,7 @@ import ResetNavigation from './../../util/resetNavigation'
 import Account from './../../components/newAccountCurrency'
 import Colors from './../../config/colors'
 
-const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => JSON.stringify(r1) !== JSON.stringify(r2)});
+const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => JSON.stringify(r1) !== JSON.stringify(r2) });
 
 export default class NewAccounts extends Component {
     static navigationOptions = {
@@ -47,6 +47,8 @@ export default class NewAccounts extends Component {
             reference: '',
             data: [],
             showIcon: false,
+            noAccounts: false,
+            noCurrencies: false
         }
     }
 
@@ -57,13 +59,22 @@ export default class NewAccounts extends Component {
     getActiveAccount = async () => {
         let responseJson = await UserInfoService.getActiveAccount()
         if (responseJson.status === 'success') {
-            let data = responseJson.data.results[0]
-            data.activeCurrency=true
-            this.setState({
-                activeAccount: data,
-                loading: false,
-            })
-            this.getSelectedCurrencies(data)
+            if (responseJson.data.results[0]) {
+                let data = responseJson.data.results[0]
+                data.activeCurrency = true
+                this.setState({
+                    activeAccount: data,
+                    loading: false,
+                })
+                this.getSelectedCurrencies(data)
+            }
+            else {
+                this.setState({
+                    noAccounts: true,
+                    loading: false,
+                    noCurrencies: true
+                })
+            }
         }
     }
 
@@ -72,22 +83,22 @@ export default class NewAccounts extends Component {
             loading: true,
             isShown: true,
         })
-        if(getAccountList.reference!=this.state.activeAccount.reference){
-            this.state.activeAccount.activeCurrency=false
-        }else{
-            this.state.activeAccount.activeCurrency=true
+        if (getAccountList.reference != this.state.activeAccount.reference) {
+            this.state.activeAccount.activeCurrency = false
+        } else {
+            this.state.activeAccount.activeCurrency = true
         }
         let accountResponse = await AccountService.getAllAccounts()
         if (accountResponse.status === 'success') {
             let accountData = accountResponse.data.results
             let UniqueAccount = accountData
-            for(let i=0;i<UniqueAccount.length;i++){
-                if(UniqueAccount[i].reference===getAccountList.reference){
-                    UniqueAccount[i].activeCurrency=true
-                }else{
-                    UniqueAccount[i].activeCurrency=false
+            for (let i = 0; i < UniqueAccount.length; i++) {
+                if (UniqueAccount[i].reference === getAccountList.reference) {
+                    UniqueAccount[i].activeCurrency = true
+                } else {
+                    UniqueAccount[i].activeCurrency = false
                 }
-                if(UniqueAccount[i].reference===this.state.activeAccount.reference){
+                if (UniqueAccount[i].reference === this.state.activeAccount.reference) {
                     UniqueAccount.splice(i, 1)
                 }
             }
@@ -104,11 +115,12 @@ export default class NewAccounts extends Component {
                     accountDataSource: ds.cloneWithRows(data),
                     reference: getAccountList.reference,
                     loading: false,
+                    noCurrencies: data.length === 0 ? true : false
                 })
             } else {
                 Alert.alert('Error',
                     responseJson.message,
-                    [{text: 'OK'}])
+                    [{ text: 'OK' }])
             }
         }
     }
@@ -118,19 +130,19 @@ export default class NewAccounts extends Component {
             'Are you sure?',
             'Change your active account.',
             [
-                {text: 'Cancel', onPress: () => console.log('Cancel Pressed')},
+                { text: 'Cancel', onPress: () => console.log('Cancel Pressed') },
                 {
                     text: 'OK', onPress: async () => {
-                    let responseJson = await AccountService.setActiveCurrency(reference, code)
-                    if (responseJson.status === 'success') {
-                        this.getActiveAccount()
+                        let responseJson = await AccountService.setActiveCurrency(reference, code)
+                        if (responseJson.status === 'success') {
+                            this.getActiveAccount()
 
-                    } else {
-                        Alert.alert('Error',
-                            responseJson.message,
-                            [{text: 'OK'}])
+                        } else {
+                            Alert.alert('Error',
+                                responseJson.message,
+                                [{ text: 'OK' }])
+                        }
                     }
-                }
                 },
             ]
         )
@@ -153,13 +165,13 @@ export default class NewAccounts extends Component {
                     backgroundColor: Colors.whitesmoke
                 }}>
                     <Text style={styles.addAccountText}
-                          onPress={() => this.props.navigation.navigate('AddAccountB')}>
+                        onPress={() => this.props.navigation.navigate('AddAccountB')}>
                         Add account
                     </Text>
                     {
                         this.state.showIcon &&
                         <TouchableHighlight
-                            style={{paddingHorizontal: 20}}
+                            style={{ paddingHorizontal: 20 }}
                             underlayColor={Colors.darkestgray}
                             onPress={() => this.setState({
                                 isShown: !this.state.isShown
@@ -184,73 +196,86 @@ export default class NewAccounts extends Component {
                  />
                  </View>
                  }*/}
-                <ScrollView
-                    automaticallyAdjustContentInsets={false}
-                    showsHorizontalScrollIndicator={false}
-                    horizontal={true}
-                    style={{backgroundColor: Colors.whitesmoke, height: 40}}>
-                    <View style={styles.currencyListHeader}>
-
-                        <AccountCircle getAccountList={this.state.activeAccount}
-                                       getSelectedCurrencies={this.getSelectedCurrencies}/>
-
-                        <ListView
-                            horizontal={true}
-                            showsHorizontalScrollIndicator={false}
-                            style={{flexDirection: 'row'}}
-                            dataSource={this.state.dataSource}
-                            automaticallyAdjustContentInsets={false}
-                            enableEmptySections
-                            renderRow={(rowData) => <AccountCircle getAccountList={rowData}
-                                                                   getSelectedCurrencies={this.getSelectedCurrencies}/>}
-                        />
+                <View style={{ backgroundColor: Colors.whitesmoke, height: 60 }}>
+                    {this.state.noAccounts ?
+                    <View style={styles.noAccounts}>
+                        <Text style={styles.noAccountsText}>
+                            No accounts added yet
+                        </Text>
                     </View>
+                    : <ScrollView
+                        automaticallyAdjustContentInsets={false}
+                        showsHorizontalScrollIndicator={false}
+                        horizontal={true}>
+                        <View style={styles.currencyListHeader}>
+                            <AccountCircle getAccountList={this.state.activeAccount}
+                                getSelectedCurrencies={this.getSelectedCurrencies} />
 
-                </ScrollView>
-
-                <View style={{flex: 7, flexDirection: 'column', backgroundColor: 'white'}}>
-                    {!this.state.isShown &&
-                    <ScrollView>
-                        <ListView
-                            style={{backgroundColor: 'white', borderTopColor: Colors.lightgray, borderTopWidth: 1}}
-                            dataSource={this.state.dataSource}
-                            renderRow={(rowData) => <NewAccountName getAccountList={rowData}
-                                                                    getSelectedCurrencies={this.getSelectedCurrencies}/>}
-                        />
+                            <ListView
+                                horizontal={true}
+                                showsHorizontalScrollIndicator={false}
+                                style={{ flexDirection: 'row' }}
+                                dataSource={this.state.dataSource}
+                                automaticallyAdjustContentInsets={false}
+                                enableEmptySections
+                                renderRow={(rowData) => <AccountCircle getAccountList={rowData}
+                                    getSelectedCurrencies={this.getSelectedCurrencies} />}
+                            />
+                        </View>
                     </ScrollView>
                     }
-                    {this.state.isShown &&
-                    <ScrollView>
-                        <View style={{
-                            padding: 10,
-                            paddingHorizontal: 20,
-                            justifyContent: 'center',
-                            backgroundColor: Colors.darkergray,
-                        }}>
-                            <Text style={{color: Colors.darkestgray, fontWeight: 'bold', fontSize: 12}}>
-                                Currencies
-                            </Text>
-                        </View>
-                        {
-                            this.state.loading &&
-                            <ActivityIndicator style={{padding: 10}}
-                                               size="large"
-                            />
-                        }
-                        {
-                            !this.state.loading &&
+                </View>
+                <View style={{ flex: 7, flexDirection: 'column', backgroundColor: 'white' }}>
+                    {!this.state.isShown &&
+                        <ScrollView>
                             <ListView
-                                style={{backgroundColor: 'white', borderTopColor: Colors.lightgray, borderTopWidth: 1}}
-                                dataSource={this.state.accountDataSource}
-                                enableEmptySections
-                                renderRow={(rowData) => <Account
-                                    reference={this.state.reference}
-                                    setActiveCurrency={this.setActiveCurrency}
-                                    currencies={rowData}/>}
-
+                                style={{ backgroundColor: 'white', borderTopColor: Colors.lightgray, borderTopWidth: 1 }}
+                                dataSource={this.state.dataSource}
+                                renderRow={(rowData) => <NewAccountName getAccountList={rowData}
+                                    getSelectedCurrencies={this.getSelectedCurrencies} />}
                             />
-                        }
-                    </ScrollView>
+                        </ScrollView>
+                    }
+                    {this.state.isShown &&
+                        <ScrollView>
+                            <View style={{
+                                padding: 10,
+                                paddingHorizontal: 20,
+                                justifyContent: 'center',
+                                backgroundColor: Colors.darkergray,
+                            }}>
+                                <Text style={{ color: Colors.darkestgray, fontWeight: 'bold', fontSize: 12 }}>
+                                    Currencies
+                            </Text>
+                            </View>
+                            {
+                                this.state.loading &&
+                                <ActivityIndicator style={{ padding: 10 }}
+                                    size="large"
+                                />
+                            }
+                            {
+                                !this.state.loading && this.state.noCurrencies &&
+                                <View style={styles.noCurrencies}>
+                                    <Text style={styles.noCurrenciesText}>
+                                        No currencies added yet
+                                    </Text>
+                                </View>
+                            }
+                            {
+                                !this.state.loading && !this.state.noCurrencies &&
+                                <ListView
+                                    style={{ backgroundColor: 'white', borderTopColor: Colors.lightgray, borderTopWidth: 1 }}
+                                    dataSource={this.state.accountDataSource}
+                                    enableEmptySections
+                                    renderRow={(rowData) => <Account
+                                        reference={this.state.reference}
+                                        setActiveCurrency={this.setActiveCurrency}
+                                        currencies={rowData} />}
+
+                                />
+                            }
+                        </ScrollView>
                     }
                 </View>
             </View>
@@ -281,4 +306,22 @@ const styles = StyleSheet.create({
         fontSize: 17,
         marginLeft: 20
     },
+    noAccounts: {
+      flex:1,
+      alignItems: 'center',
+      justifyContent: 'center'  
+    },
+    noAccountsText: {
+        color: Colors.red,
+        fontSize: 16
+    },
+    noCurrenciesText: {
+        color: Colors.darkblue,
+        fontSize: 16
+    },
+    noCurrencies: {
+        height: 60,
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
 })
