@@ -18,6 +18,7 @@ import TextInput from './../../components/textInput'
 import MobileInput from './../../components/mobileNumberInput'
 import Colors from './../../config/colors'
 import Header from './../../components/header'
+import PasswordInput from './../../components/passwordInput'
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
@@ -303,13 +304,12 @@ export default class Signup extends Component {
                                 reference="company"
                                 onSubmitEditing={() => this.pass.refs.password.focus()}
                             />
-                            <TextInput
+                            <PasswordInput
                                 title="Password"
                                 required
                                 placeholder="Password"
                                 underlineColorAndroid="white"
                                 autoCapitalize="none"
-                                secureTextEntry
                                 onChangeText={(password1) => this.setState({password1})}
                                 error={!this.state.password1_status ? "Password must be at least 8 characters." :  null}
                                 returnKeyType="next"
@@ -317,13 +317,12 @@ export default class Signup extends Component {
                                 reference="password"
                                 onSubmitEditing={() => this.confirm.refs.confirm_password.focus()}
                             />
-                            <TextInput
+                            <PasswordInput
                                 title="Confirm password"
                                 required
                                 placeholder="Confirm password"
                                 underlineColorAndroid="white"
                                 autoCapitalize="none"
-                                secureTextEntry
                                 onChangeText={(password2) => this.setState({password2})}
                                 error={this.state.password_error}
                                 returnKeyType="done"
