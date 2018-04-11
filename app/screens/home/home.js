@@ -60,7 +60,9 @@ export default class Home extends Component {
             dataSource: new ListView.DataSource({
                 rowHasChanged: (r1, r2) => JSON.stringify(r1) !== JSON.stringify(r2),
             }),
-            transactionView: false
+            transactionView: false,
+            noAccounts: false,
+            logout: false,
         }
     }
 
@@ -170,6 +172,12 @@ export default class Home extends Component {
                         selectedCurrency: -1,
                     })
                 }
+                await AsyncStorage.setItem("balance", this.state.balance+"")
+            }
+            else {
+                this.setState({
+                    noAccounts:true
+                })
             }
         }
         else {
@@ -178,6 +186,11 @@ export default class Home extends Component {
     }
 
     logout = () => {
+        if(this.state.logout) return;
+
+        this.setState({
+            logout:true
+        })
         Auth.logout(this.props.navigation);
     }
 
@@ -225,7 +238,7 @@ export default class Home extends Component {
         }
     }
 
-    tap2 = () => {
+    tap2 = async() => {
         let index = (this.state.selectedCurrency + 1) % this.state.currencies.length
         if (this.state.currencies[index].currency.symbol === this.state.symbol) {
             index = (index + 1) % this.state.currencies.length
@@ -237,6 +250,7 @@ export default class Home extends Component {
             symbol: this.state.currencies[index].currency.symbol,
             balance: this.setBalance(this.state.currencies[index].available_balance, this.state.currencies[index].currency.divisibility),
         });
+        await AsyncStorage.setItem("balance", this.state.balance+"")
     }
 
 
@@ -246,6 +260,7 @@ export default class Home extends Component {
                 <Header
                     navigation={this.props.navigation}
                     drawer
+                    noAccounts={this.state.noAccounts}
                     /*homeRight*/
                 />
                 <View style={styles.balance}>

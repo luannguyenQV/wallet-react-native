@@ -168,7 +168,7 @@ export default class Transactions extends Component {
                             <View style={{
                                 marginTop: 10, flexDirection: 'column', backgroundColor: 'white', padding: 20
                             }}>
-                                <Text style={{paddingTop: 15, fontSize: 18, fontWeight: 'normal', color: Colors.black}}>
+                                <Text style={{ fontSize: 18, fontWeight: 'normal', color: Colors.black}}>
                                     {this.state.verified ? "No transactions yet." : "Please verify your email address to redeem any unclaimed transactions. Pull to refresh your balance."}
                                 </Text>
                             </View>
