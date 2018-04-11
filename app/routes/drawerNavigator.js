@@ -21,9 +21,6 @@ const RouteConfigs = {
     Home: {
         screen: Home,
     },
-    SendTo: {
-        screen: SendTo,
-    },
     Accounts: {
         screen: NewAccounts,
     },
@@ -39,10 +36,12 @@ const RouteConfigs = {
     Withdraw: {
         screen: Withdraw,
     },
+    SendTo: {
+        screen: SendTo,
+    },
     Receive: {
         screen: Receive,
     },
-    
     GetVerified:{
         screen: GetVerified,
     },
