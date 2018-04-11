@@ -1,8 +1,8 @@
 {
   "name": "wallet",
   "version": "0.0.0",
-  "description": "Hello Expo!",
-  "author": "tsmrafee",
+  "description": "Base wallet demonstrating the Rehive Platform features.",
+  "author": "mdeacon",
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
