@@ -9,12 +9,13 @@ export default class Account extends Component {
         super(props)
         this.state = {
             cca2: 'US',
+            borderColor: Colors.lightgray
         }
     }
 
     render() {
         return (
-            <View style={styles.inputContainer}>
+            <View style={[styles.inputContainer, {borderBottomColor: this.state.borderColor} ]}>
                 <View style={{ flexDirection: 'row' }}>
                     <Text style={[styles.text, { color: this.state.textColor }]}>
                         {this.props.title}
@@ -34,7 +35,7 @@ export default class Account extends Component {
                     }
                 </View>
                 <View style={{ flex: 1, flexDirection: 'row' }}>
-                    <View style={{ flex: 1 }} />
+                    {/* <View style={{ flex: 1 }} /> */}
                     <View style={styles.countryPicker}>
                         <CountryPicker
                             onChange={(value) => {
@@ -69,9 +70,9 @@ const styles = StyleSheet.create({
     input: {
         flex: 3,
         height: 50,
-        width: "100%",
         paddingLeft: 0,
-        fontSize: 16,
+        paddingBottom: 10,
+        paddingTop:10,
         color: Colors.black,
         fontWeight: 'normal',
         borderColor: 'white',
@@ -94,14 +95,13 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 16,
-        color: Colors.black,
     },
     inputContainer: {
         flexDirection: 'column',
-        marginHorizontal: 20,
-        paddingTop: 10,
+        marginLeft: 20,
+        marginRight: 20,
+        paddingTop:10,
         borderBottomWidth: 1,
-        borderBottomColor: Colors.lightgray,
     },
     countryPicker: {
         flex:14,

@@ -47,7 +47,7 @@ export default class Account extends Component {
                     </View>
                 }
                 <View style={{ flex: 1, flexDirection: 'row' }}>
-                    <View style={{ flex: 1 }} />
+                    {/* <View style={{ flex: 1 }} /> */}
                     <TextInput
                         onFocus={() => this.setState({
                             textColor: Colors.lightblue,
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
         height: 50,
         paddingLeft: 0,
         paddingBottom: 10,
-        paddingTop: 15,
+        paddingTop: 10,
         color: Colors.black,
         fontWeight: 'normal',
         borderColor: 'white',
