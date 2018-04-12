@@ -40,27 +40,29 @@ export default class Home extends Component {
     label: 'Home',
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      balance: 0,
-      showTransaction: true,
-      symbol: '',
-      dataToShow: {
-        currency: {},
-      },
-      reference: '',
-      selectedCurrency: -1,
-      company: {
-        name: '',
-      },
-      code: '',
-      dataSource: new ListView.DataSource({
-        rowHasChanged: (r1, r2) => JSON.stringify(r1) !== JSON.stringify(r2),
-      }),
-      transactionView: false,
-    };
-  }
+    constructor(props) {
+        super(props)
+        this.state = {
+            balance: 0,
+            showTransaction: true,
+            symbol: '',
+            dataToShow: {
+                currency: {},
+            },
+            reference: '',
+            selectedCurrency: -1,
+            company: {
+                name: '',
+            },
+            code: '',
+            dataSource: new ListView.DataSource({
+                rowHasChanged: (r1, r2) => JSON.stringify(r1) !== JSON.stringify(r2),
+            }),
+            transactionView: false,
+            noAccounts: false,
+            logout: false,
+        }
+    }
 
   async componentWillMount() {
     try {
@@ -145,10 +147,56 @@ export default class Home extends Component {
             debitSwitch: false,
           });
         }
-        if (settings.allow_credit_transactions === false) {
-          this.setState({
-            creditSwitch: false,
-          });
+    }
+
+    getBalanceInfo = async () => {
+        let responseJson = await UserInfoService.getActiveAccount()
+        if (responseJson.status === "success") {
+            if (responseJson.data.results[0]) {
+                const account = responseJson.data.results[0].currencies[0];
+                AsyncStorage.setItem("account_reference", JSON.stringify(responseJson.data.results[0].reference));
+                let settings = account.settings
+                if (settings.allow_transactions === false) {
+                    this.setState({
+                        creditSwitch: false,
+                        debitSwitch: false
+                    })
+                }
+                if (settings.allow_debit_transactions === false) {
+                    this.setState({
+                        debitSwitch: false
+                    })
+                }
+                if (settings.allow_credit_transactions === false) {
+                    this.setState({
+                        creditSwitch: false
+                    })
+                }
+                AsyncStorage.setItem('currency', JSON.stringify(account.currency))
+                this.setState({
+                    account: responseJson.data.results[0].name,
+                    default: account,
+                    code: account.currency.code,
+                    symbol: account.currency.symbol,
+                    reference: responseJson.data.results[0].reference,
+                    balance: this.setBalance(account.available_balance, account.currency.divisibility),
+                })
+                let responseJson2 = await AccountService.getAllAccountCurrencies(this.state.reference)
+                if (responseJson2.status === "success") {
+                    const currencies = responseJson2.data.results
+                    this.setState({
+                        currencies,
+                        dataSource: this.state.dataSource.cloneWithRows(currencies),
+                        selectedCurrency: -1,
+                    })
+                }
+                await AsyncStorage.setItem("balance", this.state.balance+"")
+            }
+            else {
+                this.setState({
+                    noAccounts:true
+                })
+            }
         }
         AsyncStorage.setItem('currency', JSON.stringify(account.currency));
         this.setState({
@@ -179,9 +227,19 @@ export default class Home extends Component {
     }
   };
 
-  logout = () => {
-    Auth.logout(this.props.navigation);
-  };
+    logout = () => {
+        if(this.state.logout) return;
+
+        this.setState({
+            logout:true
+        })
+        Auth.logout(this.props.navigation);
+    }
+
+    showDialog = (item) => {
+        this.setState({dataToShow: item});
+        this.popupDialog.show();
+    }
 
   showDialog = item => {
     this.setState({ dataToShow: item });
@@ -212,17 +270,19 @@ export default class Home extends Component {
     ]);
   };
 
-  changeAccount = async () => {
-    let responseJson = await AccountService.setActiveCurrency(
-      this.state.reference,
-      this.state.currencies[this.state.selectedCurrency].currency.code,
-    );
-    if (responseJson.status === 'success') {
-      Alert.alert(
-        'Success',
-        'Your active currency has been changed successfully.',
-        [{ text: 'OK' }],
-      );
+    tap2 = async() => {
+        let index = (this.state.selectedCurrency + 1) % this.state.currencies.length
+        if (this.state.currencies[index].currency.symbol === this.state.symbol) {
+            index = (index + 1) % this.state.currencies.length
+        }
+        this.setState({
+            transactionView: true,
+            selectedCurrency: index,
+            code: this.state.currencies[index].currency.code,
+            symbol: this.state.currencies[index].currency.symbol,
+            balance: this.setBalance(this.state.currencies[index].available_balance, this.state.currencies[index].currency.divisibility),
+        });
+        await AsyncStorage.setItem("balance", this.state.balance+"")
     }
   };
 
@@ -244,23 +304,19 @@ export default class Home extends Component {
     });
   };
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <Header
-          navigation={this.props.navigation}
-          drawer
-          /*homeRight*/
-        />
-        <View style={styles.balance}>
-          {/*<TouchableHighlight style={{ flex: 1 }}><View></View></TouchableHighlight>*/}
-          <View
-            style={{
-              flex: 4,
-              justifyContent: 'flex-start',
-              alignItems: 'center',
-            }}>
-            {/*<Text style={{ fontSize: 18, color: 'white' }}>
+    render() {
+        return (
+            <View style={styles.container}>
+                <Header
+                    navigation={this.props.navigation}
+                    drawer
+                    noAccounts={this.state.noAccounts}
+                    /*homeRight*/
+                />
+                <View style={styles.balance}>
+                    {/*<TouchableHighlight style={{ flex: 1 }}><View></View></TouchableHighlight>*/}
+                    <View style={{flex: 4, justifyContent: 'flex-start', alignItems: 'center',}}>
+                        {/*<Text style={{ fontSize: 18, color: 'white' }}>
                          {this.state.account}
                          </Text>*/}
             <View style={{ flexDirection: 'row' }}>
