@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, Image, Clipboard, TouchableHighlight, Alert, AsyncStorage } from 'react-native'
-import Icon from 'react-native-vector-icons/Ionicons'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Colors from './../../config/colors'
 import Header from './../../components/header'
 
@@ -57,7 +57,7 @@ export default class Receive extends Component {
                 )
               }}>
               <Icon
-                name="ios-copy-outline"
+                name="content-copy"
                 size={30}
                 color={Colors.black}
               />
