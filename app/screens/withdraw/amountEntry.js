@@ -18,7 +18,14 @@ export default class AmountEntry extends Component {
         this.state = {
             amount: 0,
             reference: params.reference,
+            currency: ''
         }
+    }
+
+    async componentWillMount() {
+        let data = await AsyncStorage.getItem('currency')
+        let currency = JSON.parse(data)
+        this.setState({currency: currency.code})
     }
 
     withdraw = async () => {
@@ -65,7 +72,8 @@ export default class AmountEntry extends Component {
           amount = amount.times(10)
         }
 
-        let responseJson = await TransectionService.withdraw(amount, this.state.reference)
+        let responseJson = await TransectionService.withdraw(amount, this.state.reference, this.state.currency)
+        console.log(responseJson)
         if (responseJson.status === "success") {
             Alert.alert('Success',
                 "Transaction successful",
