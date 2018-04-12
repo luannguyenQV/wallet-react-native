@@ -17,6 +17,7 @@ export default class BitcoinAddresses extends Component {
             dataSource: new ListView.DataSource({
                 rowHasChanged: (r1, r2) => JSON.stringify(r1) !== JSON.stringify(r2),
             }),
+            empty: false,
         }
     }
 
@@ -36,6 +37,16 @@ export default class BitcoinAddresses extends Component {
         if (responseJson.status === "success") {
             const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => JSON.stringify(r1) !== JSON.stringify(r2)})
             const data = responseJson.data
+            if(data.length===0){
+                this.setState({
+                    empty:true,
+                })
+            }
+            else {
+                this.setState({
+                    empty: false,
+                })
+            }
             let ids = data.map((obj, index) => index)
             this.setState({
                 refreshing: false,
@@ -57,14 +68,27 @@ export default class BitcoinAddresses extends Component {
                     back
                     title="Bitcoin addresses"
                 />
-                <ListView
-                    refreshControl={<RefreshControl refreshing={this.state.refreshing}
-                                                    onRefresh={this.getData.bind(this)}/>}
-                    dataSource={this.state.dataSource}
-                    enableEmptySections
-                    renderRow={(rowData) => <Account onPress={this.goToEdit} reference={rowData}
-                                                     name={rowData.address}/>}
-                />
+                { this.state.empty &&
+                    <View style={{flex: 1, backgroundColor: 'white', paddingHorizontal: 10}}>
+                        <View style={{
+                            marginTop: 10, flexDirection: 'column', backgroundColor: Colors.lightgray, padding: 20, alignItems:'center'
+                        }}>
+                            <Text style={{ fontSize: 18, fontWeight: 'normal', color: Colors.black }}>
+                                No bitcoin addresses added yet
+                            </Text>
+                        </View>
+                    </View>
+                }
+                { !this.state.empty &&
+                    <ListView
+                        refreshControl={<RefreshControl refreshing={this.state.refreshing}
+                                                        onRefresh={this.getData.bind(this)}/>}
+                        dataSource={this.state.dataSource}
+                        enableEmptySections
+                        renderRow={(rowData) => <Account onPress={this.goToEdit} reference={rowData}
+                                                        name={rowData.address}/>}
+                    />
+                }
                 <TouchableHighlight
                     style={styles.submit}
                     onPress={() => this.props.navigation.navigate("AddBitcoinAddress", {
