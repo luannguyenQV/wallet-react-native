@@ -30,7 +30,7 @@ const TransactionDetails = props => {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ flex: 4, padding: 20 }}>
+      <View style={{ flex: 4, padding: 10 }}>
         <View style={{ flex: 1 }}>
           <PopUpInfoLarge label={'Type:'} value={label} />
           <PopUpInfoLarge
