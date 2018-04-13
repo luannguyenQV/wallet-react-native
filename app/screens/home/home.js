@@ -10,6 +10,7 @@ import {
   ListView,
   Image,
   TouchableWithoutFeedback,
+  TouchableOpacity,
 } from 'react-native';
 import Swiper from 'react-native-swiper';
 import PopupDialog, { DialogTitle } from 'react-native-popup-dialog';
@@ -424,10 +425,21 @@ export default class Home extends Component {
           </TouchableHighlight>
         </View>
         <PopupDialog
-          dialogTitle={<DialogTitle title="Transaction Details" />}
           ref={popupDialog => {
             this.popupDialog = popupDialog;
           }}
+          dialogTitle={
+            <View>
+              <DialogTitle title="Transaction Details" />
+
+              {/* <TouchableOpacity
+                onPress={() => {
+                  this.popupDialog.dismiss();
+                }}>
+                <Text>X</Text>
+              </TouchableOpacity> */}
+            </View>
+          }
           width={0.9}
           height={320}>
           <TransactionDetails transactionDetails={this.state.dataToShow} />
