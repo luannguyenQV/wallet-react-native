@@ -9,6 +9,7 @@ export default class AccountCircle extends Component {
             balance: 0,
             color:Colors.darkergray
         }
+        //console.log(this.props.activeCurrency)
     }
 
     render() {

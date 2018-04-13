@@ -13,6 +13,7 @@ import AuthService from './../../services/authService'
 import Auth from './../../util/auth'
 import ResetNavigation from './../../util/resetNavigation'
 import TextInput from './../../components/textInput'
+import PasswordInput from './../../components/passwordInput'
 import Colors from './../../config/colors'
 import Header from './../../components/header'
 
@@ -104,12 +105,11 @@ export default class Login extends Component {
                                 value={this.state.company}
                                 onChangeText={(company) => this.setState({company})}
                             />
-                            <TextInput
+                            <PasswordInput
                                 title="Password"
                                 autoCapitalize="none"
                                 placeholder="Password"
                                 underlineColorAndroid="white"
-                                secureTextEntry
                                 value={this.state.password}
                                 onChangeText={(password) => this.setState({password})}
                             />
