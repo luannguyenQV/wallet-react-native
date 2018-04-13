@@ -154,6 +154,7 @@ export default class Signup extends Component {
         this.confirm.refs.confirm_password.focus();
         this._scrollToInput(
           ReactNative.findNodeHandle(this.confirm.refs.confirm_password),
+
         );
         this.setState({
           password_error: 'Passwords do not match.',
@@ -166,12 +167,12 @@ export default class Signup extends Component {
     }
   };
 
-  _scrollToInput(inputHandle) {
-    const scrollResponder = this.refs.myScrollView.getScrollResponder();
-    scrollResponder.scrollResponderScrollNativeHandleToKeyboard(
-      inputHandle, // The TextInput node handle
-      0, // The scroll view's bottom "contentInset" (default 0)
-      true, // Prevent negative scrolling
+  _scrollToInput (inputHandle) {
+      const scrollResponder = this.refs.myScrollView.getScrollResponder();
+      scrollResponder.scrollResponderScrollNativeHandleToKeyboard(
+        inputHandle, // The TextInput node handle
+        250, // The scroll view's bottom "contentInset" (default 0)
+        true // Prevent negative scrolling
     );
   }
 
@@ -262,142 +263,137 @@ export default class Signup extends Component {
           title="Create new account"
         />
         <View style={styles.mainContainer}>
-          <KeyboardAvoidingView
-            style={styles.container}
-            behavior={'padding'}
-            keyboardVerticalOffset={85}>
-            <ScrollView
-              keyboardDismissMode={'interactive'}
-              ref="myScrollView"
-              keyboardShouldPersistTaps="always">
-              <TextInput
-                title="First name"
-                underlineColorAndroid="white"
-                placeholder="e.g. John"
-                autoCapitalize="none"
-                onChangeText={first_name => this.setState({ first_name })}
-                returnKeyType="next"
-                onSubmitEditing={() => this.lastname.refs.last_name.focus()}
-              />
-              <TextInput
-                title="Last name"
-                underlineColorAndroid="white"
-                placeholder="e.g. Snow"
-                autoCapitalize="none"
-                onChangeText={last_name => this.setState({ last_name })}
-                returnKeyType="next"
-                ref={ref => (this.lastname = ref)}
-                reference="last_name"
-                onSubmitEditing={() => this.email.refs.electronic_mail.focus()}
-              />
-              <TextInput
-                title="Email"
-                required
-                underlineColorAndroid="white"
-                placeholder="e.g john@gmail.com"
-                autoCapitalize="none"
-                keyboardType="email-address"
-                onChangeText={email => this.setState({ email })}
-                error={this.state.email_error}
-                returnKeyType="done"
-                ref={ref => (this.email = ref)}
-                reference="electronic_mail"
-                onSubmitEditing={() =>
-                  this.mobile_number.refs.mobile_number.focus()
-                }
-              />
-              <MobileInput
-                title="Mobile"
-                autoCapitalize="none"
-                keyboardType="numeric"
-                value={this.state.inputNumber}
-                underlineColorAndroid="white"
-                onChangeText={mobile_number =>
-                  this.setState({ inputNumber: mobile_number })
-                }
-                changeCountryCode={this.changeCountryCode}
-                error={this.state.mobile_error}
-                ref={ref => (this.mobile_number = ref)}
-                reference="mobile_number"
-                onSubmitEditing={() => this.company.refs.company.focus()}
-                code={this.state.countryCode}
-              />
-              <TextInput
-                title="Company"
-                required
-                underlineColorAndroid="white"
-                placeholder="e.g rehive"
-                autoCapitalize="none"
-                onChangeText={company => this.setState({ company })}
-                error={this.state.company_error}
-                returnKeyType="next"
-                ref={ref => (this.company = ref)}
-                reference="company"
-                onSubmitEditing={() => this.pass.refs.password.focus()}
-              />
-              <PasswordInput
-                title="Password"
-                required
-                placeholder="Password"
-                underlineColorAndroid="white"
-                autoCapitalize="none"
-                onChangeText={password1 => this.setState({ password1 })}
-                error={
-                  !this.state.password1_status
-                    ? 'Password must be at least 8 characters.'
-                    : null
-                }
-                returnKeyType="next"
-                ref={ref => (this.pass = ref)}
-                reference="password"
-                onSubmitEditing={() =>
-                  this.confirm.refs.confirm_password.focus()
-                }
-              />
-              <PasswordInput
-                title="Confirm password"
-                required
-                placeholder="Confirm password"
-                underlineColorAndroid="white"
-                autoCapitalize="none"
-                onChangeText={password2 => this.setState({ password2 })}
-                error={this.state.password_error}
-                returnKeyType="done"
-                ref={ref => (this.confirm = ref)}
-                reference="confirm_password"
-              />
-              <View style={styles.termsAndCondition}>
-                <Icon
-                  onPress={() =>
-                    this.setState({
-                      terms_and_conditions: !this.state.terms_and_conditions,
-                    })
-                  }
-                  name="md-checkbox"
-                  size={30}
-                  color={
-                    this.state.terms_and_conditions
-                      ? Colors.green
-                      : Colors.lightgray
-                  }
-                />
-                <Text style={styles.agreeText}>I agree to the</Text>
-                <TouchableOpacity
-                  onPress={() => Linking.openURL('https://rehive.com/legal/')}>
-                  <Text style={styles.termsText}>terms of use</Text>
-                </TouchableOpacity>
-              </View>
-            </ScrollView>
-            <TouchableHighlight
-              style={styles.submit}
-              onPress={() => this.signup()}>
-              <Text style={{ color: 'white', fontSize: 20 }}>Register</Text>
-            </TouchableHighlight>
+          <KeyboardAvoidingView style={styles.container} behavior={'padding'} keyboardVerticalOffset={85}
+              onKeyboardChange={()=>console.log("changed")}>
+              <ScrollView keyboardDismissMode={'interactive'} ref="myScrollView" keyboardShouldPersistTaps='handled'>
+                  <TextInput
+                      title="First name"
+                      underlineColorAndroid="white"
+                      placeholder="e.g. John"
+                      autoCapitalize="none"
+                      onFocus={()=>this._scrollToInput(ReactNative.findNodeHandle(this.firstname.refs.first_name))}
+                      onChangeText={(first_name) => this.setState({first_name})}
+                      returnKeyType="next"
+                      ref={ref => this.firstname = ref}
+                      reference="first_name"
+                      onSubmitEditing={() => this.lastname.refs.last_name.focus()}
+                  />
+                  <TextInput
+                      title="Last name"
+                      underlineColorAndroid="white"
+                      placeholder="e.g. Snow"
+                      autoCapitalize="none"
+                      onFocus={()=>this._scrollToInput(ReactNative.findNodeHandle(this.lastname.refs.last_name))}
+                      onChangeText={(last_name) => this.setState({last_name})}
+                      returnKeyType="next"
+                      ref={ref => this.lastname = ref}
+                      reference="last_name"
+                      onSubmitEditing={() => this.email.refs.electronic_mail.focus()}
+                  />
+                  <TextInput
+                      title="Email"
+                      required
+                      underlineColorAndroid="white"
+                      placeholder="e.g john@gmail.com"
+                      autoCapitalize="none"
+                      keyboardType="email-address"
+                      onFocus={()=>this._scrollToInput(ReactNative.findNodeHandle(this.email.refs.electronic_mail))}
+                      onChangeText={(email) => this.setState({email})}
+                      error={this.state.email_error}
+                      returnKeyType="done"
+                      ref={ref => this.email = ref}
+                      reference="electronic_mail"
+                      onSubmitEditing={() => this.mobile_number.refs.mobile_number.focus()}
+                  />
+                  <MobileInput
+                      title="Mobile"
+                      autoCapitalize="none"
+                      keyboardType="numeric"
+                      value={this.state.inputNumber}
+                      underlineColorAndroid="white"
+                      placeholder="e.g +880182968534"
+                      onFocus={()=>this._scrollToInput(ReactNative.findNodeHandle(this.mobile_number.refs.mobile_number))}
+                      onChangeText={(mobile_number) => this.setState({inputNumber:mobile_number})}
+                      changeCountryCode={this.changeCountryCode}
+                      error={this.state.mobile_error}
+                      ref={ref => this.mobile_number = ref}
+                      reference="mobile_number"
+                      onSubmitEditing={() => this.company.refs.company.focus()}
+                  />
+                  <TextInput
+                      title="Company"
+                      required
+                      underlineColorAndroid="white"
+                      placeholder="e.g rehive"
+                      autoCapitalize="none"                                
+                      onFocus={()=>this._scrollToInput(ReactNative.findNodeHandle(this.company.refs.company))}
+                      onChangeText={(company) => this.setState({company})}
+                      error={this.state.company_error}
+                      returnKeyType="next"
+                      ref={ref => this.company = ref}
+                      reference="company"
+                      onSubmitEditing={() => this.pass.refs.password.focus()}
+                  />
+                  <TextInput
+                      title="Password"
+                      required
+                      placeholder="Password"
+                      underlineColorAndroid="white"
+                      autoCapitalize="none"
+                      onFocus={()=>this._scrollToInput(ReactNative.findNodeHandle(this.pass.refs.password))}
+                      secureTextEntry
+                      onChangeText={(password1) => this.setState({password1})}
+                      error={!this.state.password1_status ? "Password must be at least 8 characters." :  null}
+                      returnKeyType="next"
+                      ref={ref => this.pass = ref}
+                      reference="password"
+                      onSubmitEditing={() => this.confirm.refs.confirm_password.focus()}
+                  />
+                  <TextInput
+                      title="Confirm password"
+                      required
+                      placeholder="Confirm password"
+                      underlineColorAndroid="white"
+                      autoCapitalize="none"
+                      onFocus={()=>this._scrollToInput(ReactNative.findNodeHandle(this.confirm.refs.confirm_password))}
+                      secureTextEntry
+                      onChangeText={(password2) => this.setState({password2})}
+                      error={this.state.password_error}
+                      returnKeyType="done"
+                      ref={ref => this.confirm = ref}
+                      reference="confirm_password"
+                  />
+                  <View style={styles.termsAndCondition}>
+                      <Icon
+                          onPress={() => this.setState({
+                              terms_and_conditions: !this.state.terms_and_conditions
+                          })}
+                          name="md-checkbox"
+                          size={30}
+                          color={this.state.terms_and_conditions ? Colors.green : Colors.lightgray}
+                      />
+                      <Text style={styles.agreeText}>
+                          I agree to the
+                      </Text>
+                      <TouchableOpacity onPress={() => Linking.openURL('https://rehive.com/terms-of-use')}>
+                          <Text style={styles.termsText}>
+                              terms of use
+                          </Text>
+                      </TouchableOpacity>
+                  </View>
+              </ScrollView>
+              <TouchableHighlight
+                  style={styles.submit}
+                  onPress={() => this.signup()}>
+                  <Text style={{color: 'white', fontSize: 20}}>
+                      Register
+                  </Text>
+              </TouchableHighlight>
           </KeyboardAvoidingView>
-        </View>
       </View>
-    );
-  }
+  </View>
+);
+}
 }
 
 const styles = StyleSheet.create({
