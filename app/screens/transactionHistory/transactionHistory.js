@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import moment from 'moment';
 import Swiper from 'react-native-swiper';
-import PopupDialog from 'react-native-popup-dialog';
+import PopupDialog, { DialogTitle } from 'react-native-popup-dialog';
 import UserInfoService from './../../services/userInfoService';
 import AccountService from './../../services/accountService';
 import Transactions from './../home/transactions';
@@ -366,10 +366,10 @@ export default class Home extends Component {
           </TouchableHighlight>
         </View>
         <PopupDialog
-          dialogTitle={<DialogTitle title="Transaction Details" />}
           ref={popupDialog => {
             this.popupDialog = popupDialog;
           }}
+          dialogTitle={<DialogTitle title="Transaction Details" />}
           width={0.9}
           height={320}>
           <TransactionDetails transactionDetails={this.state.dataToShow} />
