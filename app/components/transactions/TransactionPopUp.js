@@ -1,14 +1,16 @@
 import React from 'react';
 import { Text, View } from 'react-native';
-import Colors from './../../config/colors';
+// import Colors from './../../config/colors';
 import moment from 'moment';
 
-import PopUpInfoLine from './../general/PopUp/PopUpInfoLine';
-import PopUpInfoLarge from './../general/PopUp/PopUpInfoLarge';
-import PopUpInfoSmall from './../general/PopUp/PopUpInfoSmall';
-import PopUpFooter from './../general/PopUp/PopUpFooter';
+import {
+  PopUp,
+  PopUpInfoLine,
+  PopUpInfo,
+  PopUpFooter,
+} from './../common/PopUp';
 
-const TransactionDetails = props => {
+const TransactionPopUp = ({ popupDialog, transactionDetails }) => {
   const {
     label,
     amount,
@@ -18,7 +20,7 @@ const TransactionDetails = props => {
     balance,
     created,
     status,
-  } = props.transactionDetails;
+  } = transactionDetails;
 
   getAmount = (amount = 0, divisibility) => {
     for (let i = 0; i < divisibility; i++) {
@@ -29,11 +31,16 @@ const TransactionDetails = props => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <PopUp
+      popupDialog={popupDialog}
+      width={0.9}
+      height={320}
+      title={'Transaction Details'}>
       <View style={{ flex: 4, padding: 10 }}>
         <View style={{ flex: 1 }}>
-          <PopUpInfoLarge label={'Type:'} value={label} />
-          <PopUpInfoLarge
+          <PopUpInfo textSize={19} label={'Type:'} value={label} />
+          <PopUpInfo
+            textSize={19}
             label={'Total amount:'}
             sign={total_amount < 0 ? '-' : ''}
             value={
@@ -42,36 +49,36 @@ const TransactionDetails = props => {
             }
           />
           <PopUpInfoLine />
-          <PopUpInfoSmall
+          <PopUpInfo
+            textSize={17}
             label={'Amount:'}
             sign={amount < 0 ? '-' : ''}
+            currency={currency}
             value={
               currency.symbol +
               Math.abs(this.getAmount(amount, currency.divisibility))
             }
           />
-          <PopUpInfoSmall
+          <PopUpInfo
+            textSize={17}
             label={'Fees:'}
             sign={fee < 0 ? '-' : ''}
-            value={
-              currency.symbol +
-              Math.abs(this.getAmount(fee, currency.divisibility))
-            }
+            currency={currency}
+            value={fee}
           />
           <PopUpInfoLine />
-          <PopUpInfoLarge
+          <PopUpInfo
+            textSize={19}
             label={'Balance:'}
             sign={balance < 0 ? '-' : ''}
-            value={
-              currency.symbol +
-              Math.abs(this.getAmount(balance, currency.divisibility))
-            }
+            currency={currency}
+            value={balance}
           />
         </View>
       </View>
       <PopUpFooter left={moment(created).format('lll')} right={status} />
-    </View>
+    </PopUp>
   );
 };
 
-export default TransactionDetails;
+export default TransactionPopUp;
