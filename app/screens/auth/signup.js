@@ -20,6 +20,8 @@ import Colors from './../../config/colors';
 import Header from './../../components/header';
 import PasswordInput from './../../components/passwordInput';
 
+import RegisterForm from './../../components/wallet2/RegisterForm';
+
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
 export default class Signup extends Component {
@@ -256,12 +258,9 @@ export default class Signup extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <Header
-          navigation={this.props.navigation}
-          back
-          title="Create new account"
-        />
-        <View style={styles.mainContainer}>
+        <Header navigation={this.props.navigation} back title="Register" />
+        <RegisterForm navigation={this.props.navigation} />
+        {/* <View style={styles.mainContainer}>
           <KeyboardAvoidingView
             style={styles.container}
             behavior={'padding'}
@@ -394,7 +393,7 @@ export default class Signup extends Component {
               <Text style={{ color: 'white', fontSize: 20 }}>Register</Text>
             </TouchableHighlight>
           </KeyboardAvoidingView>
-        </View>
+        </View> */}
       </View>
     );
   }

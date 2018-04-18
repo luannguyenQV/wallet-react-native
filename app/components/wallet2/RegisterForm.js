@@ -13,19 +13,36 @@ import { Input, Spinner, Button } from './../common2';
 import Colors from './../../config/colors';
 import AuthService from './../../services/authService';
 import Auth from './../../util/auth';
+import MobileInput from './../../components/mobileNumberInput';
 
-class LogInForm extends Component {
+class RegisterForm extends Component {
   state = {
+    first_name: '',
+    last_name: '',
     email: '',
+    email_status: true,
+    mobile_number: '+1',
+    mobile_number_status: true,
     company: '',
     password: '',
+    password_status: true,
+    password2: '',
+    password2_status: true,
+    password_matching: true,
+    terms_and_conditions: false,
+    password_error: null,
+    mobile_error: null,
+    email_error: null,
+    company_error: null,
+    inputNumber: '',
+    countryCode: '+1',
+    countryName: '',
     loading: false,
   };
 
-  componentDidMount() {
-    this.checkLoggedIn();
-    this.getStoredValues();
-  }
+  // componentDidMount() {
+  //   this.checkLoggedIn();
+  // }
 
   clearInputs() {
     this.setState({
@@ -34,20 +51,6 @@ class LogInForm extends Component {
       password: '',
     });
   }
-
-  getStoredValues = async () => {
-    let storedEmail = '';
-    let storedCompany = '';
-    try {
-      storedEmail = await AsyncStorage.getItem('email');
-      storedCompany = await AsyncStorage.getItem('company');
-    } catch (error) {}
-
-    this.setState({
-      email: storedEmail,
-      company: storedCompany,
-    });
-  };
 
   checkLoggedIn = async () => {
     try {
@@ -115,11 +118,33 @@ class LogInForm extends Component {
   // }
 
   render() {
-    const { email, company, password, focusEmail, focusCompany } = this.state;
+    const {
+      first_name,
+      last_name,
+      email,
+      email_status,
+      mobile_number,
+      mobile_number_status,
+      company,
+      password,
+      password_status,
+      password2,
+      password2_status,
+      password_matching,
+      terms_and_conditions,
+      password_error,
+      mobile_error,
+      email_error,
+      company_error,
+      inputNumber,
+      countryCode,
+      countryName,
+    } = this.state;
     const {
       containerStyle,
       containerStyleInputs,
       touchableStyleForgotPassword,
+      touchableStyleClear,
     } = styles;
 
     return (
@@ -132,58 +157,69 @@ class LogInForm extends Component {
             keyboardDismissMode={'interactive'}
             keyboardShouldPersistTaps="always">
             <Input
-              placeholder="e.g. user@gmail.com"
-              label="Email"
+              label="First name"
+              placeholder="e.g. John"
+              onChangeText={first_name => this.setState({ first_name })}
               value={email}
-              required
-              keyboardType="email-address"
-              onChangeText={email => this.setState({ email })}
-              returnKeyType="next"
-              onSubmitEditing={() => {
-                this.company.focus();
-              }}
             />
             <Input
-              placeholder="e.g. Rehive"
-              label="Company"
-              required
+              label="Last name"
+              placeholder="e.g. Snow"
+              onChangeText={last_name => this.setState({ last_name })}
               value={company}
+            />
+            <Input
+              title="Email"
+              required
+              placeholder="e.g john@gmail.com"
+              keyboardType="email-address"
+              onChangeText={email => this.setState({ email })}
+              error={this.state.email_error}
+              ref={ref => (this.email = ref)}
+              value={company}
+            />
+            <MobileInput
+              title="Mobile"
+              required
+              autoCapitalize="none"
+              keyboardType="numeric"
+              value={this.state.inputNumber}
+              underlineColorAndroid="white"
+              onChangeText={mobile_number =>
+                this.setState({ inputNumber: mobile_number })
+              }
+              changeCountryCode={this.changeCountryCode}
+              error={this.state.mobile_error}
+              ref={ref => (this.mobile_number = ref)}
+              reference="mobile_number"
+              onSubmitEditing={() => this.company.refs.company.focus()}
+              code={this.state.countryCode}
+            />
+            <Input
+              title="Company"
+              required
+              placeholder="e.g rehive"
               onChangeText={company => this.setState({ company })}
-              reference={input => {
-                this.company = input;
-              }}
-              onSubmitEditing={() => {
-                this.password.focus();
-              }}
-              returnKeyType="next"
+              error={this.state.company_error}
+              value={company}
             />
             <Input
               placeholder="Password"
               label="Password"
-              required
               value={password}
               password={true}
               onChangeText={password => this.setState({ password })}
-              returnKeyType="done"
-              reference={input => {
-                this.password = input;
-              }}
-              onSubmitEditing={this.onButtonPress.bind(this)}
+            />
+            <Input
+              placeholder="Confirm password"
+              label="Confirm password"
+              value={password2}
+              password={true}
+              onChangeText={password2 => this.setState({ password2 })}
             />
           </ScrollView>
         </KeyboardAvoidingView>
-        <Button
-          label="Log In"
-          reference={input => {
-            this.login = input;
-          }}
-          onPress={this.onButtonPress.bind(this)}
-        />
-        <TouchableHighlight
-          style={touchableStyleForgotPassword}
-          onPress={() => this.props.navigation.navigate('ForgetPassword')}>
-          <Text style={{ color: Colors.lightblue }}>Forgot Password?</Text>
-        </TouchableHighlight>
+        <Button label="Register" onPress={this.onButtonPress.bind(this)} />
       </View>
     );
   }
@@ -194,7 +230,7 @@ const styles = {
     flex: 1,
     backgroundColor: 'white',
     paddingVertical: 10,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
   },
   containerStyleInputs: {
     paddingRight: 25,
@@ -211,4 +247,4 @@ const styles = {
   },
 };
 
-export default LogInForm;
+export default RegisterForm;

@@ -71,6 +71,9 @@ class Input extends Component {
       requiredError,
       requiredErrorText,
       reference,
+      keyboardType,
+      returnKeyType,
+      onSubmitEditing,
     } = this.props;
 
     const {
@@ -96,17 +99,20 @@ class Input extends Component {
         </View>
         <View style={viewStyleInput}>
           <TextInput
+            style={textStyleInput}
             onFocus={() => this.updateColorOnFocus()}
             onBlur={() => this.updateColorOnBlur()}
+            underlineColorAndroid="white"
+            autoCapitalize="none"
             placeholder={placeholder}
             value={value}
             onChangeText={onChangeText}
             ref={reference}
-            underlineColorAndroid="white"
-            style={textStyleInput}
-            secureTextEntry={secureTextEntry}
-            autoCapitalize="none"
             selectTextOnFocus
+            secureTextEntry={secureTextEntry}
+            keyboardType={keyboardType}
+            returnKeyType={returnKeyType}
+            onSubmitEditing={onSubmitEditing}
           />
           {this.renderPassword()}
         </View>
