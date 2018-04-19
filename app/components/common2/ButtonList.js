@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ScrollView, KeyboardAvoidingView } from 'react-native';
+import { View } from 'react-native';
 
 class InputForm extends Component {
   render() {
@@ -7,14 +7,7 @@ class InputForm extends Component {
 
     const { containerStyle } = styles;
 
-    return (
-      <ScrollView
-        keyboardDismissMode={'interactive'}
-        keyboardShouldPersistTaps="always"
-        ref={reference}>
-        {children}
-      </ScrollView>
-    );
+    return <View style={{ containerStyle }}>{children}</View>;
   }
 }
 

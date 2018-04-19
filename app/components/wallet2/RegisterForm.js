@@ -228,133 +228,130 @@ class RegisterForm extends Component {
     } = styles;
 
     return (
-      <View style={containerStyle}>
-        <KeyboardAvoidingView
-          style={containerStyleInputs}
-          behavior={'padding'}
-          // keyboardVerticalOffset={85}
-        >
-          <ScrollView
-            keyboardDismissMode={'interactive'}
-            ref={scrollView => {
-              this.myScrollView = scrollView;
+      <KeyboardAvoidingView
+        style={containerStyle}
+        behavior={'padding'}
+        keyboardVerticalOffset={85}>
+        <ScrollView
+          keyboardDismissMode={'interactive'}
+          reference={scrollView => {
+            this.myScrollView = scrollView;
+          }}
+          keyboardShouldPersistTaps="always">
+          <Input
+            label="First name"
+            placeholder="e.g. John"
+            onChangeText={firstName => this.setState({ firstName })}
+            value={firstName}
+            autoCapitalize={'words'}
+            autoFocus
+            returnKeyType="next"
+            reference={input => {
+              this.firstName = input;
             }}
-            keyboardShouldPersistTaps="always">
-            <Input
-              label="First name"
-              placeholder="e.g. John"
-              onChangeText={firstName => this.setState({ firstName })}
-              value={firstName}
-              autoCapitalize={'words'}
-              autoFocus
-              returnKeyType="next"
-              reference={input => {
-                this.firstName = input;
-              }}
-              onSubmitEditing={() => {
-                this.lastName.focus();
-              }}
-            />
-            <Input
-              label="Last name"
-              placeholder="e.g. Snow"
-              onChangeText={lastName => this.setState({ lastName })}
-              value={lastName}
-              autoCapitalize={'words'}
-              returnKeyType="next"
-              reference={input => {
-                this.lastName = input;
-              }}
-              onSubmitEditing={() => {
-                this.email.focus();
-              }}
-            />
-            <Input
-              placeholder="e.g. user@gmail.com"
-              label="Email"
-              value={email}
-              required
-              requiredError={emailError}
-              keyboardType="email-address"
-              onChangeText={email => this.setState({ email })}
-              returnKeyType="next"
-              reference={input => {
-                this.email = input;
-              }}
-              onSubmitEditing={() => {
-                this.lineNumber.focus();
-              }}
-            />
-            <Input
-              type="mobile"
-              placeholder="12345678"
-              label="Mobile"
-              value={lineNumber}
-              requiredError={mobileNumberError}
-              keyboardType="numeric"
-              onChangeText={lineNumber => this.setState({ lineNumber })}
-              returnKeyType="next"
-              changeCountryCode={this.changeCountryCode}
-              countryCode={countryCode}
-              countryName={countryName}
-              reference={input => {
-                this.lineNumber = input;
-              }}
-              onSubmitEditing={() => {
-                this.company.focus();
-              }}
-            />
-            <Input
-              placeholder="e.g. Rehive"
-              label="Company"
-              required
-              requiredError={companyError}
-              value={company}
-              onChangeText={company => this.setState({ company })}
-              reference={input => {
-                this.company = input;
-              }}
-              onSubmitEditing={() => {
-                this.password.focus();
-              }}
-              returnKeyType="next"
-            />
-            <Input
-              type="password"
-              placeholder="Password"
-              label="Password"
-              required
-              requiredError={passwordError}
-              value={password}
-              password={true}
-              onChangeText={password => this.setState({ password })}
-              returnKeyType="next"
-              reference={input => {
-                this.password = input;
-              }}
-              onSubmitEditing={() => {
-                this.password2.focus();
-              }}
-            />
-            <Input
-              type="password"
-              placeholder="Password"
-              label="Confirm password"
-              required
-              requiredError={password2Error}
-              value={password2}
-              password={true}
-              onChangeText={password2 => this.setState({ password2 })}
-              returnKeyType="done"
-              reference={input => {
-                this.password2 = input;
-              }}
-              onSubmitEditing={this.onButtonPress.bind(this)}
-            />
-          </ScrollView>
-          <Button label="REGISTER" onPress={this.onButtonPress.bind(this)} />
-        </KeyboardAvoidingView>
-      </View>
+            onSubmitEditing={() => {
+              this.lastName.focus();
+            }}
+          />
+          <Input
+            label="Last name"
+            placeholder="e.g. Snow"
+            onChangeText={lastName => this.setState({ lastName })}
+            value={lastName}
+            autoCapitalize={'words'}
+            returnKeyType="next"
+            reference={input => {
+              this.lastName = input;
+            }}
+            onSubmitEditing={() => {
+              this.email.focus();
+            }}
+          />
+          <Input
+            placeholder="e.g. user@gmail.com"
+            label="Email"
+            value={email}
+            required
+            requiredError={emailError}
+            keyboardType="email-address"
+            onChangeText={email => this.setState({ email })}
+            returnKeyType="next"
+            reference={input => {
+              this.email = input;
+            }}
+            onSubmitEditing={() => {
+              this.lineNumber.focus();
+            }}
+          />
+          <Input
+            type="mobile"
+            placeholder="12345678"
+            label="Mobile"
+            value={lineNumber}
+            requiredError={mobileNumberError}
+            keyboardType="numeric"
+            onChangeText={lineNumber => this.setState({ lineNumber })}
+            returnKeyType="next"
+            changeCountryCode={this.changeCountryCode}
+            countryCode={countryCode}
+            countryName={countryName}
+            reference={input => {
+              this.lineNumber = input;
+            }}
+            onSubmitEditing={() => {
+              this.company.focus();
+            }}
+          />
+          <Input
+            placeholder="e.g. Rehive"
+            label="Company"
+            required
+            requiredError={companyError}
+            value={company}
+            onChangeText={company => this.setState({ company })}
+            reference={input => {
+              this.company = input;
+            }}
+            onSubmitEditing={() => {
+              this.password.focus();
+            }}
+            returnKeyType="next"
+          />
+          <Input
+            type="password"
+            placeholder="Password"
+            label="Password"
+            required
+            requiredError={passwordError}
+            value={password}
+            password={true}
+            onChangeText={password => this.setState({ password })}
+            returnKeyType="next"
+            reference={input => {
+              this.password = input;
+            }}
+            onSubmitEditing={() => {
+              this.password2.focus();
+            }}
+          />
+          <Input
+            type="password"
+            placeholder="Password"
+            label="Confirm password"
+            required
+            requiredError={password2Error}
+            value={password2}
+            password={true}
+            onChangeText={password2 => this.setState({ password2 })}
+            returnKeyType="done"
+            reference={input => {
+              this.password2 = input;
+            }}
+            onSubmitEditing={this.onButtonPress.bind(this)}
+          />
+        </ScrollView>
+        <Button label="REGISTER" onPress={this.onButtonPress.bind(this)} />
+      </KeyboardAvoidingView>
     );
   }
 }
@@ -365,9 +362,6 @@ const styles = {
     backgroundColor: 'white',
     paddingVertical: 10,
     justifyContent: 'flex-start',
-  },
-  containerStyleInputs: {
-    flex: 1,
     paddingRight: 25,
     paddingBottom: 15,
   },

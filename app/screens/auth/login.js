@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
+
 import Header from './../../components/header';
 import LogInForm from './../../components/wallet2/LogInForm';
 

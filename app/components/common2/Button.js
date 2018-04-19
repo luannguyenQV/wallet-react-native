@@ -8,20 +8,6 @@ const Button = ({ onPress, label, reference, color }) => {
   // const  = this.props;
   const { buttonStyle, textStyle, containerStyle } = styles;
 
-  // buttonStyle() {
-  //   return (buttonStyle)
-  //   //   {[]}//, { backgroundColor: Colors.primary}]};
-  //   // )
-
-  // }
-  // if(color='secondary') { backgroundColor: Colors.primary};
-  // else if (color='tertiary') {backgroundColor: Colors.primary};
-  // else{backgroundColor: Colors.primary}; ]}
-
-  // style={[{
-  //   backgroundColor: 'white',
-  // }, style]}>
-
   return (
     <View style={containerStyle}>
       <TouchableOpacity onPress={onPress} style={buttonStyle} ref={reference}>
@@ -35,9 +21,6 @@ const styles = {
   containerStyle: {
     flex: 1,
     flexDirection: 'row',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
     alignItems: 'center',
     shadowRadius: 5,
     paddingHorizontal: 50,
@@ -55,6 +38,9 @@ const styles = {
     // justifyContent: 'center',
     marginBottom: 10,
     // paddingHorizontal: 100,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
   },
   textStyle: {
     alignSelf: 'center',

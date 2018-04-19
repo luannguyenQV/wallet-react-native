@@ -124,17 +124,20 @@ class LogInForm extends Component {
     if (responseJson.status === 'success') {
       const loginInfo = responseJson.data;
       await AsyncStorage.setItem('token', loginInfo.token);
+      console.log('1');
       let twoFactorResponse = await AuthService.twoFactorAuth();
+      console.log('2');
       if (twoFactorResponse.status === 'success') {
+        console.log('3');
         const authInfo = twoFactorResponse.data;
+        await AsyncStorage.setItem('email', email);
+        await AsyncStorage.setItem('company', company);
         if (authInfo.sms === true || authInfo.token === true) {
           this.props.navigation.navigate('AuthVerifySms', {
             loginInfo: loginInfo,
             isTwoFactor: true,
           });
         } else {
-          await AsyncStorage.setItem('email', email);
-          await AsyncStorage.setItem('company', company);
           Auth.login(this.props.navigation, loginInfo);
         }
       } else {
@@ -174,8 +177,14 @@ class LogInForm extends Component {
     } = styles;
 
     return (
-      <View style={containerStyle}>
-        <InputForm>
+      <KeyboardAvoidingView
+        style={containerStyle}
+        behavior={'padding'}
+        keyboardVerticalOffset={85}>
+        <InputForm
+          reference={scrollView => {
+            this.myScrollView = scrollView;
+          }}>
           <Input
             placeholder="e.g. user@gmail.com"
             label="Email"
@@ -221,19 +230,17 @@ class LogInForm extends Component {
             onSubmitEditing={this.onButtonPress.bind(this)}
           />
         </InputForm>
+        <Button label="LOG IN" onPress={this.onButtonPress.bind(this)} />
         <Button
-          label="LOG IN"
-          reference={input => {
-            this.login = input;
-          }}
-          onPress={this.onButtonPress.bind(this)}
+          label="Forgot Password?"
+          onPress={() => this.props.navigation.navigate('ForgetPassword')}
         />
-        <TouchableHighlight
+        {/* <TouchableHighlight
           style={touchableStyleForgotPassword}
           onPress={() => this.props.navigation.navigate('ForgetPassword')}>
           <Text style={{ color: Colors.lightblue }}>Forgot Password?</Text>
-        </TouchableHighlight>
-      </View>
+        </TouchableHighlight> */}
+      </KeyboardAvoidingView>
     );
   }
 }
@@ -243,7 +250,7 @@ const styles = {
     flex: 1,
     backgroundColor: 'white',
     paddingVertical: 10,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
   },
   containerStyleInputs: {
     paddingRight: 25,
