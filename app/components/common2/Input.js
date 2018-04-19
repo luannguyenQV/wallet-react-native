@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TextInput } from 'react-native';
 import Colors from './../../config/colors';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import CountryPicker from 'react-native-country-picker-modal';
 
 class Input extends Component {
   state = {
@@ -9,6 +10,8 @@ class Input extends Component {
     borderColor: Colors.lightgray,
     iconNameVisibility: 'visibility-off',
     secureTextEntry: this.props.password,
+    cca2: 'US',
+    countryCode: '+1',
   };
 
   updateColorOnBlur() {
@@ -39,25 +42,135 @@ class Input extends Component {
     }
   };
 
-  renderPassword() {
-    const { iconStyleVisibility } = styles;
+  renderInput() {
+    const {
+      label,
+      placeholder,
+      value,
+      onChangeText,
+      required,
+      requiredError,
+      reference,
+      keyboardType,
+      returnKeyType,
+      onSubmitEditing,
+      autoCapitalize,
+      autoFocus,
+      type,
+      countryCode,
+      changeCountryCode,
+    } = this.props;
 
-    const { password } = this.props;
+    const {
+      viewStyleContainer,
+      viewStyleLabel,
+      viewStyleInput,
+      textStyleLabel,
+      textStyleRequired,
+      textStyleInput,
+      iconStyleVisibility,
+      countryPicker,
+      code,
+    } = styles;
 
-    const { iconNameVisibility, borderColor } = this.state;
+    const {
+      borderColor,
+      textColor,
+      secureTextEntry,
+      iconNameVisibility,
+      cca2,
+    } = this.state;
 
-    if (password) {
-      return (
-        <View style={{ width: 30 }}>
-          <Icon
-            style={iconStyleVisibility}
-            name={iconNameVisibility}
-            size={25}
-            color={borderColor}
-            onPress={this.togglePasswordVisibility}
-          />
-        </View>
-      );
+    switch (type) {
+      case 'password':
+        return (
+          <View style={viewStyleInput}>
+            <TextInput
+              style={textStyleInput}
+              onFocus={() => this.updateColorOnFocus()}
+              onBlur={() => this.updateColorOnBlur()}
+              underlineColorAndroid="white"
+              autoCapitalize={autoCapitalize ? autoCapitalize : 'none'}
+              placeholder={placeholder}
+              value={value}
+              onChangeText={onChangeText}
+              ref={reference}
+              selectTextOnFocus
+              secureTextEntry={secureTextEntry}
+              keyboardType={keyboardType}
+              returnKeyType={returnKeyType}
+              onSubmitEditing={onSubmitEditing}
+              autoFocus={autoFocus}
+            />
+            <View style={{ width: 30 }}>
+              <Icon
+                style={iconStyleVisibility}
+                name={iconNameVisibility}
+                size={25}
+                color={borderColor}
+                onPress={this.togglePasswordVisibility}
+              />
+            </View>
+          </View>
+        );
+
+      case 'mobile':
+        return (
+          <View style={countryPicker}>
+            <CountryPicker
+              onChange={value => {
+                this.setState({ cca2: value.cca2 });
+                changeCountryCode(value.callingCode);
+              }}
+              closeable
+              filterable
+              cca2={cca2}
+              translation="eng"
+              styles={{ width: 60, justifyContent: 'center' }}
+            />
+            <TextInput value={countryCode} editable={false} style={code} />
+            <TextInput
+              style={textStyleInput}
+              onFocus={() => this.updateColorOnFocus()}
+              onBlur={() => this.updateColorOnBlur()}
+              underlineColorAndroid="white"
+              autoCapitalize={autoCapitalize ? autoCapitalize : 'none'}
+              placeholder={placeholder}
+              value={value}
+              onChangeText={onChangeText}
+              ref={reference}
+              selectTextOnFocus
+              secureTextEntry={secureTextEntry}
+              keyboardType={keyboardType}
+              returnKeyType={returnKeyType}
+              onSubmitEditing={onSubmitEditing}
+              autoFocus={autoFocus}
+            />
+          </View>
+        );
+
+      default:
+        return (
+          <View style={viewStyleInput}>
+            <TextInput
+              style={textStyleInput}
+              onFocus={() => this.updateColorOnFocus()}
+              onBlur={() => this.updateColorOnBlur()}
+              underlineColorAndroid="white"
+              autoCapitalize={autoCapitalize ? autoCapitalize : 'none'}
+              placeholder={placeholder}
+              value={value}
+              onChangeText={onChangeText}
+              ref={reference}
+              selectTextOnFocus
+              secureTextEntry={secureTextEntry}
+              keyboardType={keyboardType}
+              returnKeyType={returnKeyType}
+              onSubmitEditing={onSubmitEditing}
+              autoFocus={autoFocus}
+            />
+          </View>
+        );
     }
   }
 
@@ -69,11 +182,12 @@ class Input extends Component {
       onChangeText,
       required,
       requiredError,
-      requiredErrorText,
       reference,
       keyboardType,
       returnKeyType,
       onSubmitEditing,
+      autoCapitalize,
+      autoFocus,
     } = this.props;
 
     const {
@@ -93,29 +207,11 @@ class Input extends Component {
           <Text style={[textStyleLabel, { color: textColor }]}>{label}</Text>
           {required ? <Text style={textStyleRequired}>*</Text> : null}
 
-          {requiredError && (
-            <Text style={textStyleRequired}>{requiredErrorText}</Text>
-          )}
+          {requiredError ? (
+            <Text style={textStyleRequired}>{requiredError}</Text>
+          ) : null}
         </View>
-        <View style={viewStyleInput}>
-          <TextInput
-            style={textStyleInput}
-            onFocus={() => this.updateColorOnFocus()}
-            onBlur={() => this.updateColorOnBlur()}
-            underlineColorAndroid="white"
-            autoCapitalize="none"
-            placeholder={placeholder}
-            value={value}
-            onChangeText={onChangeText}
-            ref={reference}
-            selectTextOnFocus
-            secureTextEntry={secureTextEntry}
-            keyboardType={keyboardType}
-            returnKeyType={returnKeyType}
-            onSubmitEditing={onSubmitEditing}
-          />
-          {this.renderPassword()}
-        </View>
+        {this.renderInput()}
       </View>
     );
   }
@@ -139,10 +235,8 @@ const styles = {
     fontSize: 16,
   },
   textStyleRequired: {
-    paddingTop: 5,
-    paddingBottom: 10,
     color: Colors.red,
-    paddingLeft: 5,
+    paddingRight: 5,
   },
   textStyleInput: {
     height: 40,
@@ -161,6 +255,23 @@ const styles = {
     top: 15,
     right: 0,
     position: 'absolute',
+  },
+  countryPicker: {
+    flexDirection: 'row',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  code: {
+    width: 60,
+    height: 50,
+    fontSize: 16,
+    color: Colors.black,
+    textAlign: 'right',
+    fontWeight: 'normal',
+    borderColor: 'white',
+    borderWidth: 1,
+    alignItems: 'center',
   },
 };
 

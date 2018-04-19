@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import Colors from './../../config/colors';
 import Exp from './../../../exp.json';
+import { Button } from './../../components/common2';
 
 export default class InitialScreen extends Component {
   render() {
@@ -25,6 +26,23 @@ export default class InitialScreen extends Component {
           />
         </View>
         <View style={styles.buttonsContainer}>
+          {/* <Button
+            label="LOG IN"
+            color="primary"
+            reference={input => {
+              this.login = input;
+            }}
+            onPress={() => this.props.navigation.navigate('Login')}
+          />
+          <Button
+            label="REGISTER"
+            color="secondary"
+            reference={input => {
+              this.login = input;
+            }}
+            onPress={() => this.props.navigation.navigate('Signup')}
+          /> */}
+
           <TouchableHighlight
             style={styles.button}
             onPress={() => this.props.navigation.navigate('Login')}>

@@ -7,6 +7,7 @@ import {
   TouchableHighlight,
   Alert,
   AsyncStorage,
+  findNodeHandle,
 } from 'react-native';
 
 import { Input, Spinner, Button } from './../common2';
@@ -14,100 +15,182 @@ import Colors from './../../config/colors';
 import AuthService from './../../services/authService';
 import Auth from './../../util/auth';
 import MobileInput from './../../components/mobileNumberInput';
+import { IsEmail } from './../../util/validation';
+
+const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
 class RegisterForm extends Component {
   state = {
-    first_name: '',
-    last_name: '',
+    firstName: '',
+    lastName: '',
     email: '',
-    email_status: true,
-    mobile_number: '+1',
-    mobile_number_status: true,
-    company: '',
-    password: '',
-    password_status: true,
-    password2: '',
-    password2_status: true,
-    password_matching: true,
-    terms_and_conditions: false,
-    password_error: null,
-    mobile_error: null,
-    email_error: null,
-    company_error: null,
-    inputNumber: '',
+    emailError: '',
+    mobileNumber: null,
+    countryName: 'US',
     countryCode: '+1',
-    countryName: '',
+    lineNumber: null,
+    company: '',
+    companyError: null,
+    password: '',
+    passwordError: true,
+    password2: '',
+    password2Error: true,
+    terms: false,
+    termsError: false,
     loading: false,
   };
 
-  // componentDidMount() {
-  //   this.checkLoggedIn();
-  // }
+  onButtonPress() {
+    if (this.validation()) {
+      let data = {
+        first_name: this.state.firstName,
+        last_name: this.state.lastName,
+        email: this.state.email,
+        company: this.state.company,
+        password1: this.state.password,
+        password2: this.state.password2,
+        mobileNumber: this.state.mobileNumber,
+        terms_and_conditions: this.state.terms,
+      };
 
-  clearInputs() {
-    this.setState({
-      email: '',
-      company: '',
-      password: '',
-    });
+      this.performRegister(data);
+    }
   }
 
-  checkLoggedIn = async () => {
-    try {
-      const token = await AsyncStorage.getItem('token');
-      if (token != null) {
-        ResetNavigation.dispatchToSingleRoute(this.props.navigation, 'Home');
+  validation() {
+    const {
+      email,
+      company,
+      countryName,
+      countryCode,
+      lineNumber,
+      password,
+      password2,
+    } = this.state;
+
+    let emailStatus = false;
+    let emailError = null;
+    let companyStatus = false;
+    let companyError = null;
+    let passwordStatus = false;
+    let passwordError = null;
+    let password2Status = false;
+    let password2Error = null;
+    let mobileNumberStatus = true;
+    let mobileNumberError = null;
+
+    if (email != null && IsEmail(email)) {
+      emailStatus = true;
+    } else {
+      emailError = 'Please enter a valid email address';
+      this.email.focus();
+      this._scrollToInput(findNodeHandle(this.email));
+    }
+
+    if (company != null && company.length > 0) {
+      companyStatus = true;
+    } else {
+      companyError = 'Please enter a company ID';
+    }
+
+    if (password != null && password.length >= 8) {
+      passwordStatus = true;
+    } else {
+      passwordError = 'Password must be at least 8 characters';
+    }
+
+    if (password2 == null && password2.length == 0) {
+      password2Error = 'Please confirm your password';
+    } else if (password2.length < 8) {
+      password2Error = 'Password must be at least 8 characters';
+    } else if (password != password2) {
+      password2Error = 'Passwords do not match';
+    } else {
+      password2Status = true;
+    }
+
+    if (lineNumber) {
+      let mobileNumber = countryCode + lineNumber;
+      const number = phoneUtil.parseAndKeepRawInput(mobileNumber, countryName);
+      passwordStatus = true;
+      if (!phoneUtil.isValidNumber(number)) {
+        mobileNumberStatus = false;
+        mobileNumberError = 'Please enter a valid mobile number or leave blank';
       }
-      return token;
-    } catch (error) {}
+    }
+
+    this.setState({
+      emailError,
+      companyError,
+      passwordError,
+      password2Error,
+      mobileNumberError,
+    });
+
+    if (
+      emailStatus &&
+      companyStatus &&
+      passwordStatus &&
+      password2Status &&
+      mobileNumberStatus
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  changeCountryCode = (code, cca2) => {
+    this.setState({
+      countryCode: '+' + code,
+      countryName: cca2,
+    });
   };
 
-  onButtonPress = async () => {
-    const { email, company, password } = this.state;
-
-    var body = {
-      user: email,
-      company: company,
-      password: password,
-    };
-    let responseJson = await AuthService.login(body);
+  performRegister = async data => {
+    let responseJson = await AuthService.signup(data);
     console.log(responseJson);
     if (responseJson.status === 'success') {
       const loginInfo = responseJson.data;
-      await AsyncStorage.setItem('token', loginInfo.token);
-      let twoFactorResponse = await AuthService.twoFactorAuth();
-      if (twoFactorResponse.status === 'success') {
-        const authInfo = twoFactorResponse.data;
-        if (authInfo.sms === true || authInfo.token === true) {
-          this.props.navigation.navigate('AuthVerifySms', {
-            loginInfo: loginInfo,
-            isTwoFactor: true,
-          });
-        } else {
-          await AsyncStorage.setItem('email', email);
-          await AsyncStorage.setItem('company', company);
-          Auth.login(this.props.navigation, loginInfo);
-        }
+      if (data.mobile_number) {
+        this.props.navigation.navigate('AuthVerifyMobile', {
+          loginInfo,
+          signupInfo: this.state,
+        });
       } else {
-        Alert.alert('Error', twoFactorResponse.message, [{ text: 'OK' }]);
+        Auth.login(this.props.navigation, loginInfo);
       }
     } else {
-      Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
+      console.log(responseJson.data);
+      this.handleFailedResponse(responseJson.data);
     }
   };
 
-  // onLoginFail() {
-  //   this.setState({ error: 'Authentication Failed', loading: false });
-  // }
+  handleFailedResponse(data) {
+    if (data.email) {
+      this.setState({
+        emailError: data.email,
+      });
+    }
+    if (data.mobile_number) {
+      this.setState({
+        mobileError: data.mobile_number,
+      });
+    }
+    if (data.company) {
+      this.setState({
+        companyError: data.company,
+      });
+    }
+  }
 
-  // onLoginSuccess() {
-  //   this.setState({
-  //     email: '',
-  //     password: '',
-  //     error: '',
-  //     loading: false,
-  //   });
-  // }
+  _scrollToInput(inputHandle) {
+    const scrollResponder = this.myScrollView.getScrollResponder();
+    scrollResponder.scrollResponderScrollNativeHandleToKeyboard(
+      inputHandle, // The TextInput node handle
+      0, // The scroll view's bottom "contentInset" (default 0)
+      true, // Prevent negative scrolling
+    );
+  }
 
   // renderButton() {
   //   if (this.state.loading) {
@@ -119,27 +202,24 @@ class RegisterForm extends Component {
 
   render() {
     const {
-      first_name,
-      last_name,
+      firstName,
+      lastName,
       email,
-      email_status,
-      mobile_number,
-      mobile_number_status,
-      company,
-      password,
-      password_status,
-      password2,
-      password2_status,
-      password_matching,
-      terms_and_conditions,
-      password_error,
-      mobile_error,
-      email_error,
-      company_error,
-      inputNumber,
-      countryCode,
+      emailError,
+      lineNumber,
       countryName,
+      countryCode,
+      mobileNumberError,
+      company,
+      companyError,
+      password,
+      passwordError,
+      password2,
+      password2Error,
+      // password_matching,
+      termsAndConditions,
     } = this.state;
+
     const {
       containerStyle,
       containerStyleInputs,
@@ -152,74 +232,128 @@ class RegisterForm extends Component {
         <KeyboardAvoidingView
           style={containerStyleInputs}
           behavior={'padding'}
-          keyboardVerticalOffset={85}>
+          // keyboardVerticalOffset={85}
+        >
           <ScrollView
             keyboardDismissMode={'interactive'}
+            ref={scrollView => {
+              this.myScrollView = scrollView;
+            }}
             keyboardShouldPersistTaps="always">
             <Input
               label="First name"
               placeholder="e.g. John"
-              onChangeText={first_name => this.setState({ first_name })}
-              value={email}
+              onChangeText={firstName => this.setState({ firstName })}
+              value={firstName}
+              autoCapitalize={'words'}
+              autoFocus
+              returnKeyType="next"
+              reference={input => {
+                this.firstName = input;
+              }}
+              onSubmitEditing={() => {
+                this.lastName.focus();
+              }}
             />
             <Input
               label="Last name"
               placeholder="e.g. Snow"
-              onChangeText={last_name => this.setState({ last_name })}
-              value={company}
+              onChangeText={lastName => this.setState({ lastName })}
+              value={lastName}
+              autoCapitalize={'words'}
+              returnKeyType="next"
+              reference={input => {
+                this.lastName = input;
+              }}
+              onSubmitEditing={() => {
+                this.email.focus();
+              }}
             />
             <Input
-              title="Email"
+              placeholder="e.g. user@gmail.com"
+              label="Email"
+              value={email}
               required
-              placeholder="e.g john@gmail.com"
+              requiredError={emailError}
               keyboardType="email-address"
               onChangeText={email => this.setState({ email })}
-              error={this.state.email_error}
-              ref={ref => (this.email = ref)}
-              value={company}
+              returnKeyType="next"
+              reference={input => {
+                this.email = input;
+              }}
+              onSubmitEditing={() => {
+                this.lineNumber.focus();
+              }}
             />
-            <MobileInput
-              title="Mobile"
-              required
-              autoCapitalize="none"
+            <Input
+              type="mobile"
+              placeholder="12345678"
+              label="Mobile"
+              value={lineNumber}
+              requiredError={mobileNumberError}
               keyboardType="numeric"
-              value={this.state.inputNumber}
-              underlineColorAndroid="white"
-              onChangeText={mobile_number =>
-                this.setState({ inputNumber: mobile_number })
-              }
+              onChangeText={lineNumber => this.setState({ lineNumber })}
+              returnKeyType="next"
               changeCountryCode={this.changeCountryCode}
-              error={this.state.mobile_error}
-              ref={ref => (this.mobile_number = ref)}
-              reference="mobile_number"
-              onSubmitEditing={() => this.company.refs.company.focus()}
-              code={this.state.countryCode}
+              countryCode={countryCode}
+              countryName={countryName}
+              reference={input => {
+                this.lineNumber = input;
+              }}
+              onSubmitEditing={() => {
+                this.company.focus();
+              }}
             />
             <Input
-              title="Company"
+              placeholder="e.g. Rehive"
+              label="Company"
               required
-              placeholder="e.g rehive"
-              onChangeText={company => this.setState({ company })}
-              error={this.state.company_error}
+              requiredError={companyError}
               value={company}
+              onChangeText={company => this.setState({ company })}
+              reference={input => {
+                this.company = input;
+              }}
+              onSubmitEditing={() => {
+                this.password.focus();
+              }}
+              returnKeyType="next"
             />
             <Input
+              type="password"
               placeholder="Password"
               label="Password"
+              required
+              requiredError={passwordError}
               value={password}
               password={true}
               onChangeText={password => this.setState({ password })}
+              returnKeyType="next"
+              reference={input => {
+                this.password = input;
+              }}
+              onSubmitEditing={() => {
+                this.password2.focus();
+              }}
             />
             <Input
-              placeholder="Confirm password"
+              type="password"
+              placeholder="Password"
               label="Confirm password"
+              required
+              requiredError={password2Error}
               value={password2}
               password={true}
               onChangeText={password2 => this.setState({ password2 })}
+              returnKeyType="done"
+              reference={input => {
+                this.password2 = input;
+              }}
+              onSubmitEditing={this.onButtonPress.bind(this)}
             />
           </ScrollView>
+          <Button label="REGISTER" onPress={this.onButtonPress.bind(this)} />
         </KeyboardAvoidingView>
-        <Button label="Register" onPress={this.onButtonPress.bind(this)} />
       </View>
     );
   }
@@ -233,6 +367,7 @@ const styles = {
     justifyContent: 'flex-start',
   },
   containerStyleInputs: {
+    flex: 1,
     paddingRight: 25,
     paddingBottom: 15,
   },

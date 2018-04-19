@@ -1,16 +1,5 @@
 import React, { Component } from 'react';
-import ReactNative, {
-  View,
-  Alert,
-  StyleSheet,
-  WebView,
-  Linking,
-  ScrollView,
-  TouchableHighlight,
-  Text,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-} from 'react-native';
+import ReactNative, { View, StyleSheet } from 'react-native';
 import AuthService from './../../services/authService';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Auth from './../../util/auth';
@@ -223,14 +212,14 @@ export default class Signup extends Component {
           Auth.login(this.props.navigation, loginInfo);
         }
       } else {
-        //console.log(responseJson.message)
+        console.log(responseJson.data);
         if (responseJson.data.company) {
           this.company.refs.company.focus();
           this._scrollToInput(
             ReactNative.findNodeHandle(this.company.refs.company),
           );
           this.setState({
-            company_error: responseJson.data.company,
+            companyError: responseJson.data.company,
           });
         }
         if (responseJson.data.email) {
@@ -239,7 +228,7 @@ export default class Signup extends Component {
             ReactNative.findNodeHandle(this.email.refs.electronic_mail),
           );
           this.setState({
-            email_error: responseJson.data.email,
+            emailError: responseJson.data.email,
           });
         }
         if (responseJson.data.mobile_number) {
@@ -248,7 +237,7 @@ export default class Signup extends Component {
             ReactNative.findNodeHandle(this.mobile_number.refs.mobile_number),
           );
           this.setState({
-            mobile_error: responseJson.data.mobile_number,
+            mobileError: responseJson.data.mobile_number,
           });
         }
       }
