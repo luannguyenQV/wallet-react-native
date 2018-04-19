@@ -22,8 +22,7 @@
     "moment": "^2.20.0",
     "prop-types": "^15.6.0",
     "react": "16.0.0",
-    "react-native":
-      "https://github.com/expo/react-native/archive/sdk-24.0.0.tar.gz",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-24.0.0.tar.gz",
     "react-native-country-picker-modal": "^0.5.1",
     "react-native-device-info": "^0.10.2",
     "react-native-elements": "^0.18.5",

@@ -81,7 +81,7 @@ export default class Address extends Component {
 
                         <TextInput
                             title="Address Line 1"
-                            placeholder="e.g. Plot-02, Road-08"
+                            placeholder="e.g. 1 Bree Street"
                             autoCapitalize="none"
                             underlineColorAndroid="white"
                             value={this.state.line_1}
@@ -90,7 +90,7 @@ export default class Address extends Component {
 
                         <TextInput
                             title="Address Line 2"
-                            placeholder="e.g. Mohakhali C/A, Dhaka"
+                            placeholder="e.g. Building 76"
                             autoCapitalize="none"
                             underlineColorAndroid="white"
                             value={this.state.line_2}
@@ -100,7 +100,7 @@ export default class Address extends Component {
 
                         <TextInput
                             title="City"
-                            placeholder="e.g. Capetown"
+                            placeholder="e.g. Cape Town"
                             autoCapitalize="none"
                             underlineColorAndroid="white"
                             value={this.state.city}
