@@ -20,18 +20,25 @@ class RegisterForm extends Component {
     firstName: '',
     lastName: '',
     email: '',
+    emailStatus: false,
     emailError: '',
     mobileNumber: null,
+    mobileNumberStatus: true,
+    mobileNumberError: null,
     countryName: 'US',
     countryCode: '+1',
     lineNumber: null,
     company: '',
+    companyStatus: false,
     companyError: null,
     password: '',
+    passwordStatus: false,
     passwordError: true,
     password2: '',
+    password2Status: false,
     password2Error: true,
     terms: false,
+    termsStatus: false,
     termsError: '',
     loading: false,
     nodeToScrollTo: null,
@@ -112,23 +119,22 @@ class RegisterForm extends Component {
   }
 
   validationMobileNumber() {
-    const { email } = this.state;
+    const { lineNumber, countryCode } = this.state;
 
-    let emailStatus = false;
-    let emailError = null;
-    // if (lineNumber) {
-    //   let mobileNumber = countryCode + lineNumber;
-    //   // const number = phoneUtil.parseAndKeepRawInput(mobileNumber, countryName);
-    //   // passwordStatus = true;
-    //   // if (!phoneUtil.isValidNumber(number)) {
-    //   //   mobileNumberStatus = false;
-    //   //   mobileNumberError = 'Please enter a valid mobile number or leave blank';
-    //   //   if (!nodeToScrollTo) {
-    //   //     nodeToScrollTo = this.lineNumber;
-    //   //   }
-    //   // }
-    // }
-    // this.setState({ emailError, emailStatus });
+    let mobileNumberStatus = true;
+    let mobileNumberError = null;
+    if (lineNumber) {
+      mobileNumberStatus = false;
+      let mobileNumber = countryCode + lineNumber;
+      const number = phoneUtil.parseAndKeepRawInput(mobileNumber);
+      if (phoneUtil.isValidNumber(number)) {
+        mobileNumberStatus = true;
+      } else {
+        mobileNumberError =
+          '  Please enter a valid mobile number or leave blank';
+      }
+    }
+    this.setState({ mobileNumberError, mobileNumberStatus });
   }
 
   validationCompany() {
