@@ -54,7 +54,7 @@ export default class InitialScreen extends Component {
             <Text style={styles.buttonText}>Register</Text>
           </TouchableHighlight> */}
         </View>
-        <View style={{ alignItems: 'center' }}>
+        <View style={{ alignItems: 'center', paddingVertical: 5 }}>
           <Text>Version: {Exp.version}</Text>
         </View>
 

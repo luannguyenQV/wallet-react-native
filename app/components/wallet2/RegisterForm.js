@@ -1,11 +1,5 @@
 import React, { Component } from 'react';
-import {
-  View,
-  KeyboardAvoidingView,
-  Text,
-  findNodeHandle,
-  TouchableOpacity,
-} from 'react-native';
+import { KeyboardAvoidingView, findNodeHandle } from 'react-native';
 
 import { Input, Spinner, Button, InputForm, Checkbox } from './../common2';
 import Colors from './../../config/colors';
@@ -20,25 +14,19 @@ class RegisterForm extends Component {
     firstName: '',
     lastName: '',
     email: '',
-    emailStatus: false,
     emailError: '',
     mobileNumber: null,
-    mobileNumberStatus: true,
     mobileNumberError: null,
     countryName: 'US',
     countryCode: '+1',
     lineNumber: null,
     company: '',
-    companyStatus: false,
     companyError: null,
     password: '',
-    passwordStatus: false,
     passwordError: true,
     password2: '',
-    password2Status: false,
     password2Error: true,
     terms: false,
-    termsStatus: false,
     termsError: '',
     loading: false,
     nodeToScrollTo: null,
@@ -53,7 +41,7 @@ class RegisterForm extends Component {
         company: this.state.company,
         password1: this.state.password,
         password2: this.state.password2,
-        mobileNumber: this.state.mobileNumber,
+        mobile_number: this.state.countryCode + this.state.lineNumber,
         terms_and_conditions: this.state.terms,
       };
       this.performRegister(data);
@@ -61,19 +49,11 @@ class RegisterForm extends Component {
   }
 
   validation() {
-    this.validationEmail();
-    this.validationMobileNumber();
-    this.validationCompany();
-    this.validationPassword();
-    this.validationPassword2();
-
-    const {
-      emailStatus,
-      mobileNumberStatus,
-      companyStatus,
-      passwordStatus,
-      password2Status,
-    } = this.state;
+    let emailStatus = this.validationEmail();
+    let mobileNumberStatus = this.validationMobileNumber();
+    let companyStatus = this.validationCompany();
+    let passwordStatus = this.validationPassword();
+    let password2Status = this.validationPassword2();
 
     let nodeToScrollTo = null;
 
@@ -114,8 +94,8 @@ class RegisterForm extends Component {
     } else {
       emailError = 'Please enter a valid email address';
     }
-
-    this.setState({ emailError, emailStatus });
+    this.setState({ emailError });
+    return emailStatus;
   }
 
   validationMobileNumber() {
@@ -123,9 +103,10 @@ class RegisterForm extends Component {
 
     let mobileNumberStatus = true;
     let mobileNumberError = null;
+    let mobileNumber = null;
     if (lineNumber) {
       mobileNumberStatus = false;
-      let mobileNumber = countryCode + lineNumber;
+      mobileNumber = '+' + countryCode + lineNumber;
       const number = phoneUtil.parseAndKeepRawInput(mobileNumber);
       if (phoneUtil.isValidNumber(number)) {
         mobileNumberStatus = true;
@@ -134,7 +115,8 @@ class RegisterForm extends Component {
           '  Please enter a valid mobile number or leave blank';
       }
     }
-    this.setState({ mobileNumberError, mobileNumberStatus });
+    this.setState({ mobileNumber, mobileNumberError });
+    return mobileNumberStatus;
   }
 
   validationCompany() {
@@ -146,7 +128,8 @@ class RegisterForm extends Component {
     } else {
       companyError = 'Please enter a company ID';
     }
-    this.setState({ companyError, companyStatus });
+    this.setState({ companyError });
+    return companyStatus;
   }
 
   validationPassword() {
@@ -158,7 +141,8 @@ class RegisterForm extends Component {
     } else {
       passwordError = 'Must be at least 8 characters';
     }
-    this.setState({ passwordError, passwordStatus });
+    this.setState({ passwordError });
+    return passwordStatus;
   }
 
   validationPassword2() {
@@ -174,7 +158,8 @@ class RegisterForm extends Component {
     } else {
       password2Status = true;
     }
-    this.setState({ password2Error, password2Status });
+    this.setState({ password2Error });
+    return password2Status;
   }
 
   changeCountryCode = (code, cca2) => {
@@ -185,6 +170,7 @@ class RegisterForm extends Component {
   };
 
   performRegister = async data => {
+    console.log(data);
     let responseJson = await AuthService.signup(data);
     if (responseJson.status === 'success') {
       const loginInfo = responseJson.data;
@@ -230,7 +216,7 @@ class RegisterForm extends Component {
       let scrollResponder = this.myScrollView.getScrollResponder();
       scrollResponder.scrollResponderScrollNativeHandleToKeyboard(
         findNodeHandle(inputHandle),
-        120,
+        200,
         true,
       );
     }, 100);
@@ -269,7 +255,7 @@ class RegisterForm extends Component {
           }}>
           <Input
             label="First name"
-            placeholder="e.g. John"
+            placeholder="e.g. Jon"
             onChangeText={firstName => this.setState({ firstName })}
             value={firstName}
             autoCapitalize={'words'}

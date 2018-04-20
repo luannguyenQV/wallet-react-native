@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
 import {
-  View,
-  ScrollView,
   KeyboardAvoidingView,
-  Text,
-  TouchableHighlight,
   Alert,
   AsyncStorage,
+  findNodeHandle,
 } from 'react-native';
 
-import { Input, Spinner, Button, InputForm, ButtonList } from './../common2';
+import { Input, Button, InputForm } from './../common2';
 import Colors from './../../config/colors';
 import AuthService from './../../services/authService';
 import Auth from './../../util/auth';
@@ -18,10 +15,13 @@ import { IsEmail } from './../../util/validation';
 class LoginForm extends Component {
   state = {
     email: '',
+    emailStatus: false,
     emailError: '',
     company: '',
+    companyStatus: false,
     companyError: '',
     password: '',
+    passwordStatus: false,
     passwordError: '',
     loading: false,
     toFocus: null,
@@ -71,64 +71,81 @@ class LoginForm extends Component {
         company: this.state.company,
         password: this.state.password,
       };
-      console.log(data);
       this.performLogin(data);
     }
   }
 
   validation() {
-    const { email, company, password } = this.state;
+    let emailStatus = this.validationEmail();
+    let companyStatus = this.validationCompany();
+    let passwordStatus = this.validationPassword();
 
+    let nodeToScrollTo = null;
+
+    if (!emailStatus) {
+      nodeToScrollTo = this.email;
+    } else if (!companyStatus) {
+      nodeToScrollTo = this.company;
+    } else if (!passwordStatus) {
+      nodeToScrollTo = this.password;
+    }
+
+    if (emailStatus && companyStatus && passwordStatus) {
+      return true;
+    }
+
+    this._scrollToInput(nodeToScrollTo);
+    return false;
+  }
+
+  validationEmail() {
+    const { email } = this.state;
     let emailStatus = false;
     let emailError = null;
-    let companyStatus = false;
-    let companyError = null;
-    let passwordStatus = false;
-    let passwordError = null;
-
     if (email != null && IsEmail(email)) {
       emailStatus = true;
     } else {
       emailError = 'Please enter a valid email address';
     }
+    this.setState({ emailError });
+    return emailStatus;
+  }
 
+  validationCompany() {
+    const { company } = this.state;
+    let companyStatus = false;
+    let companyError = null;
     if (company != null && company.length > 0) {
       companyStatus = true;
     } else {
       companyError = 'Please enter a company ID';
     }
+    this.setState({ companyError });
+    return companyStatus;
+  }
 
+  validationPassword() {
+    const { password } = this.state;
+    let passwordStatus = false;
+    let passwordError = null;
     if (password != null && password.length >= 8) {
       passwordStatus = true;
     } else {
-      passwordError = 'Password must be at least 8 characters';
+      passwordError = 'Must be at least 8 characters';
     }
-
-    this.setState({
-      emailError,
-      companyError,
-      passwordError,
-    });
-
-    if (emailStatus && companyStatus && passwordStatus) {
-      return true;
-    }
-    return false;
+    this.setState({ passwordError });
+    return passwordStatus;
   }
 
   performLogin = async data => {
-    console.log(data);
     let responseJson = await AuthService.login(data);
     console.log(responseJson);
 
     if (responseJson.status === 'success') {
       const loginInfo = responseJson.data;
       await AsyncStorage.setItem('token', loginInfo.token);
-      console.log('1');
       let twoFactorResponse = await AuthService.twoFactorAuth();
-      console.log('2');
       if (twoFactorResponse.status === 'success') {
-        console.log('3');
         const authInfo = twoFactorResponse.data;
         await AsyncStorage.setItem('email', data.user);
         await AsyncStorage.setItem('company', data.company);
@@ -138,7 +155,6 @@ class LoginForm extends Component {
             isTwoFactor: true,
           });
         } else {
-          console.log('4');
           Auth.login(this.props.navigation, loginInfo);
         }
       } else {
@@ -153,13 +169,18 @@ class LoginForm extends Component {
     }
   };
 
-  // renderButton() {
-  //   if (this.state.loading) {
-  //     return <Spinner size="small" />;
-  //   }
-
-  //   return <Button onPress={this.onButtonPress.bind(this)}>Log In</Button>;
-  // }
+  _scrollToInput(inputHandle) {
+    console.log('1');
+    inputHandle.focus();
+    setTimeout(() => {
+      let scrollResponder = this.myScrollView.getScrollResponder();
+      scrollResponder.scrollResponderScrollNativeHandleToKeyboard(
+        findNodeHandle(inputHandle),
+        200,
+        true,
+      );
+    }, 100);
+  }
 
   render() {
     const {
@@ -171,17 +192,13 @@ class LoginForm extends Component {
       passwordError,
     } = this.state;
 
-    const {
-      containerStyle,
-      containerStyleInputs,
-      touchableStyleForgotPassword,
-    } = styles;
+    const { containerStyle } = styles;
 
     return (
       <KeyboardAvoidingView
         style={containerStyle}
         behavior={'padding'}
-        keyboardVerticalOffset={85}>
+        keyboardVerticalOffset={5}>
         <InputForm
           reference={scrollView => {
             this.myScrollView = scrollView;
@@ -196,7 +213,12 @@ class LoginForm extends Component {
             onChangeText={email => this.setState({ email })}
             returnKeyType="next"
             autoFocus
+            scrollView={this.myScrollView}
+            reference={input => {
+              this.email = input;
+            }}
             onSubmitEditing={() => {
+              this.validationEmail();
               this.company.focus();
             }}
           />
@@ -207,6 +229,7 @@ class LoginForm extends Component {
             requiredError={companyError}
             value={company}
             onChangeText={company => this.setState({ company })}
+            scrollView={this.myScrollView}
             reference={input => {
               this.company = input;
             }}
@@ -225,22 +248,23 @@ class LoginForm extends Component {
             password={true}
             onChangeText={password => this.setState({ password })}
             returnKeyType="done"
+            scrollView={this.myScrollView}
             reference={input => {
               this.password = input;
             }}
             onSubmitEditing={this.onButtonPress.bind(this)}
           />
+          <Button
+            label="LOG IN"
+            type="primary"
+            onPress={this.onButtonPress.bind(this)}
+          />
+          <Button
+            label="Forgot password?"
+            type="text"
+            onPress={() => this.props.navigation.navigate('ForgetPassword')}
+          />
         </InputForm>
-        <Button
-          label="LOG IN"
-          type="primary"
-          onPress={this.onButtonPress.bind(this)}
-        />
-        <Button
-          label="Forgot password?"
-          type="text"
-          onPress={() => this.props.navigation.navigate('ForgetPassword')}
-        />
         {/* <ButtonList>
           
         </ButtonList> */}
@@ -251,8 +275,12 @@ class LoginForm extends Component {
 
 const styles = {
   containerStyle: {
-    paddingVertical: 10,
-    // justifyContent: 'flex-start',
+    flex: 1,
+    // backgroundColor: 'white',
+    backgroundColor: '#00000000',
+    // paddingVertical: 10,
+    justifyContent: 'flex-start',
+    // paddingRight: 25,
   },
   containerStyleInputs: {
     paddingRight: 25,
