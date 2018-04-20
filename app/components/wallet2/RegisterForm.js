@@ -32,7 +32,7 @@ class RegisterForm extends Component {
     password2: '',
     password2Error: true,
     terms: false,
-    termsError: false,
+    termsError: '',
     loading: false,
   };
 
@@ -48,7 +48,7 @@ class RegisterForm extends Component {
         mobileNumber: this.state.mobileNumber,
         terms_and_conditions: this.state.terms,
       };
-      // this.performRegister(data);
+      this.performRegister(data);
     }
   }
 
@@ -97,7 +97,7 @@ class RegisterForm extends Component {
     if (password != null && password.length >= 8) {
       passwordStatus = true;
     } else {
-      passwordError = 'Password must be at least 8 characters';
+      passwordError = 'Must be at least 8 characters';
       if (!nodeToScrollTo) {
         nodeToScrollTo = this.password;
       }
@@ -106,7 +106,7 @@ class RegisterForm extends Component {
     if (password2 == null && password2.length == 0) {
       password2Error = 'Please confirm your password';
     } else if (password2.length < 8) {
-      password2Error = 'Password must be at least 8 characters';
+      password2Error = 'Must be at least 8 characters';
     } else if (password != password2) {
       password2Error = 'Passwords do not match';
     } else {
@@ -118,15 +118,15 @@ class RegisterForm extends Component {
 
     if (lineNumber) {
       let mobileNumber = countryCode + lineNumber;
-      const number = phoneUtil.parseAndKeepRawInput(mobileNumber, countryName);
-      passwordStatus = true;
-      if (!phoneUtil.isValidNumber(number)) {
-        mobileNumberStatus = false;
-        mobileNumberError = 'Please enter a valid mobile number or leave blank';
-        if (!nodeToScrollTo) {
-          nodeToScrollTo = this.lineNumber;
-        }
-      }
+      // const number = phoneUtil.parseAndKeepRawInput(mobileNumber, countryName);
+      // passwordStatus = true;
+      // if (!phoneUtil.isValidNumber(number)) {
+      //   mobileNumberStatus = false;
+      //   mobileNumberError = 'Please enter a valid mobile number or leave blank';
+      //   if (!nodeToScrollTo) {
+      //     nodeToScrollTo = this.lineNumber;
+      //   }
+      // }
     }
 
     this.setState({
@@ -161,7 +161,6 @@ class RegisterForm extends Component {
 
   performRegister = async data => {
     let responseJson = await AuthService.signup(data);
-    console.log(responseJson);
     if (responseJson.status === 'success') {
       const loginInfo = responseJson.data;
       if (data.mobile_number) {
@@ -173,7 +172,6 @@ class RegisterForm extends Component {
         Auth.login(this.props.navigation, loginInfo);
       }
     } else {
-      console.log(responseJson.data);
       this.handleFailedResponse(responseJson.data);
     }
   };
@@ -192,6 +190,11 @@ class RegisterForm extends Component {
     if (data.company) {
       this.setState({
         companyError: data.company,
+      });
+    }
+    if (data.terms_and_conditions) {
+      this.setState({
+        termsError: '* Please accept the terms of use',
       });
     }
   }
@@ -224,8 +227,8 @@ class RegisterForm extends Component {
       passwordError,
       password2,
       password2Error,
-      // password_matching,
       terms,
+      termsError,
     } = this.state;
 
     const {
@@ -362,6 +365,7 @@ class RegisterForm extends Component {
               })
             }
             value={terms}
+            requiredError={termsError}
             label={'I agree to the'}
             link={'https://rehive.com/legal/'}
             linkLabel={'terms of use'}
