@@ -24,17 +24,16 @@ export default class InitialScreen extends Component {
             style={styles.image}
           />
         </View>
-        <Text style={{ marginLeft: 150 }}>ver. {Exp.version}</Text>
         <View style={styles.buttonsContainer}>
           <TouchableHighlight
             style={styles.button}
-            onPress={() => this.props.navigation.navigate('Login')}>
-            <Text style={styles.buttonText}>Sign in</Text>
+            onPress={() => this.props.navigation.navigate('Log in')}>
+            <Text style={styles.buttonText}>Log in</Text>
           </TouchableHighlight>
           <TouchableHighlight
             style={[styles.button, { marginLeft: 25 }]}
-            onPress={() => this.props.navigation.navigate('Signup')}>
-            <Text style={styles.buttonText}>Sign up</Text>
+            onPress={() => this.props.navigation.navigate('Register')}>
+            <Text style={styles.buttonText}>Register</Text>
           </TouchableHighlight>
         </View>
         <View style={styles.textContainer}>
