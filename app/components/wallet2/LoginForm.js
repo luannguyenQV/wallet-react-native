@@ -231,18 +231,19 @@ class LoginForm extends Component {
             onSubmitEditing={this.onButtonPress.bind(this)}
           />
         </InputForm>
-        <ButtonList>
-          <Button
-            label="LOG IN"
-            type="primary"
-            onPress={this.onButtonPress.bind(this)}
-          />
-          <Button
-            label="Forgot password?"
-            type="text"
-            onPress={() => this.props.navigation.navigate('ForgetPassword')}
-          />
-        </ButtonList>
+        <Button
+          label="LOG IN"
+          type="primary"
+          onPress={this.onButtonPress.bind(this)}
+        />
+        <Button
+          label="Forgot password?"
+          type="text"
+          onPress={() => this.props.navigation.navigate('ForgetPassword')}
+        />
+        {/* <ButtonList>
+          
+        </ButtonList> */}
       </KeyboardAvoidingView>
     );
   }

@@ -197,15 +197,6 @@ class RegisterForm extends Component {
     }
   }
 
-  toggleTerms() {
-    const { terms } = this.state;
-    if (terms) {
-      this.setState({ terms: false });
-    } else {
-      this.setState({ terms: true });
-    }
-  }
-
   _scrollToInput(inputHandle) {
     console.log(inputHandle);
     inputHandle.focus();
@@ -373,7 +364,11 @@ class RegisterForm extends Component {
             onSubmitEditing={this.onButtonPress.bind(this)}
           />
           <Checkbox
-            onPress={this.toggleTerms()}
+            onPress={() =>
+              this.setState({
+                terms: !terms,
+              })
+            }
             value={terms}
             label={'I agree to the'}
             link={'https://rehive.com/legal/'}
