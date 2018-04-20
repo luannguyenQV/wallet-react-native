@@ -95,6 +95,7 @@ class Input extends Component {
               returnKeyType={returnKeyType}
               onSubmitEditing={onSubmitEditing}
               autoFocus={autoFocus}
+              blurOnSubmit={false}
             />
             <View style={{ width: 30 }}>
               <Icon
@@ -139,6 +140,7 @@ class Input extends Component {
               returnKeyType={returnKeyType}
               onSubmitEditing={onSubmitEditing}
               autoFocus={autoFocus}
+              blurOnSubmit={false}
             />
           </View>
         );
@@ -162,6 +164,7 @@ class Input extends Component {
               returnKeyType={returnKeyType}
               onSubmitEditing={onSubmitEditing}
               autoFocus={autoFocus}
+              blurOnSubmit={false}
             />
           </View>
         );
@@ -203,6 +206,7 @@ const styles = {
     marginRight: 20,
     paddingTop: 15,
     borderBottomWidth: 1,
+    flexWrap: 'wrap',
   },
   viewStyleLabel: {
     flexDirection: 'row',

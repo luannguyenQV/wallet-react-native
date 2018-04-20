@@ -48,7 +48,6 @@ class RegisterForm extends Component {
         mobileNumber: this.state.mobileNumber,
         terms_and_conditions: this.state.terms,
       };
-
       // this.performRegister(data);
     }
   }
@@ -161,22 +160,22 @@ class RegisterForm extends Component {
   };
 
   performRegister = async data => {
-    // let responseJson = await AuthService.signup(data);
-    // console.log(responseJson);
-    // if (responseJson.status === 'success') {
-    //   const loginInfo = responseJson.data;
-    //   if (data.mobile_number) {
-    //     this.props.navigation.navigate('AuthVerifyMobile', {
-    //       loginInfo,
-    //       signupInfo: this.state,
-    //     });
-    //   } else {
-    //     Auth.login(this.props.navigation, loginInfo);
-    //   }
-    // } else {
-    //   console.log(responseJson.data);
-    //   this.handleFailedResponse(responseJson.data);
-    // }
+    let responseJson = await AuthService.signup(data);
+    console.log(responseJson);
+    if (responseJson.status === 'success') {
+      const loginInfo = responseJson.data;
+      if (data.mobile_number) {
+        this.props.navigation.navigate('AuthVerifyMobile', {
+          loginInfo,
+          signupInfo: this.state,
+        });
+      } else {
+        Auth.login(this.props.navigation, loginInfo);
+      }
+    } else {
+      console.log(responseJson.data);
+      this.handleFailedResponse(responseJson.data);
+    }
   };
 
   handleFailedResponse(data) {
@@ -198,23 +197,16 @@ class RegisterForm extends Component {
   }
 
   _scrollToInput(inputHandle) {
-    console.log(inputHandle);
     inputHandle.focus();
-    const scrollResponder = this.myScrollView.getScrollResponder();
-    scrollResponder.scrollResponderScrollNativeHandleToKeyboard(
-      findNodeHandle(inputHandle), // The TextInput node handle
-      50, // The scroll view's bottom "contentInset" (default 0)
-      true, // Prevent negative scrolling
-    );
+    setTimeout(() => {
+      let scrollResponder = this.myScrollView.getScrollResponder();
+      scrollResponder.scrollResponderScrollNativeHandleToKeyboard(
+        findNodeHandle(inputHandle),
+        120,
+        true,
+      );
+    }, 100);
   }
-
-  // renderButton() {
-  //   if (this.state.loading) {
-  //     return <Spinner size="small" />;
-  //   }
-
-  //   return <Button onPress={this.onButtonPress.bind(this)}>Log In</Button>;
-  // }
 
   render() {
     const {
@@ -264,7 +256,7 @@ class RegisterForm extends Component {
               this.firstName = input;
             }}
             onSubmitEditing={() => {
-              this.lastName.focus();
+              this._scrollToInput(this.lastName);
             }}
           />
           <Input
@@ -278,7 +270,7 @@ class RegisterForm extends Component {
               this.lastName = input;
             }}
             onSubmitEditing={() => {
-              this.email.focus();
+              this._scrollToInput(this.email);
             }}
           />
           <Input
@@ -294,7 +286,7 @@ class RegisterForm extends Component {
               this.email = input;
             }}
             onSubmitEditing={() => {
-              this.lineNumber.focus();
+              this._scrollToInput(this.lineNumber);
             }}
           />
           <Input
@@ -313,7 +305,7 @@ class RegisterForm extends Component {
               this.lineNumber = input;
             }}
             onSubmitEditing={() => {
-              this.company.focus();
+              this._scrollToInput(this.company);
             }}
           />
           <Input
@@ -327,7 +319,7 @@ class RegisterForm extends Component {
               this.company = input;
             }}
             onSubmitEditing={() => {
-              this.password.focus();
+              this._scrollToInput(this.password);
             }}
             returnKeyType="next"
           />
@@ -345,7 +337,7 @@ class RegisterForm extends Component {
               this.password = input;
             }}
             onSubmitEditing={() => {
-              this.password2.focus();
+              this._scrollToInput(this.password2);
             }}
           />
           <Input
@@ -374,8 +366,8 @@ class RegisterForm extends Component {
             link={'https://rehive.com/legal/'}
             linkLabel={'terms of use'}
           />
+          <Button label="REGISTER" onPress={this.onButtonPress.bind(this)} />
         </InputForm>
-        <Button label="REGISTER" onPress={this.onButtonPress.bind(this)} />
       </KeyboardAvoidingView>
     );
   }
@@ -388,7 +380,7 @@ const styles = {
     backgroundColor: '#00000000',
     // paddingVertical: 10,
     justifyContent: 'flex-start',
-    paddingRight: 25,
+    // paddingRight: 25,
   },
 };
 
