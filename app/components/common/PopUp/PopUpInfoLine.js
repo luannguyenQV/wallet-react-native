@@ -18,4 +18,4 @@ const styles = {
   },
 };
 
-export default PopUpInfoLine;
+export { PopUpInfoLine };
