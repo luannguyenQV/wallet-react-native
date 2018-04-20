@@ -48,8 +48,6 @@ class Input extends Component {
       placeholder,
       value,
       onChangeText,
-      required,
-      requiredError,
       reference,
       keyboardType,
       returnKeyType,
@@ -62,11 +60,7 @@ class Input extends Component {
     } = this.props;
 
     const {
-      viewStyleContainer,
-      viewStyleLabel,
       viewStyleInput,
-      textStyleLabel,
-      textStyleRequired,
       textStyleInput,
       iconStyleVisibility,
       countryPicker,
@@ -175,28 +169,13 @@ class Input extends Component {
   }
 
   render() {
-    const {
-      label,
-      placeholder,
-      value,
-      onChangeText,
-      required,
-      requiredError,
-      reference,
-      keyboardType,
-      returnKeyType,
-      onSubmitEditing,
-      autoCapitalize,
-      autoFocus,
-    } = this.props;
+    const { label, required, requiredError } = this.props;
 
     const {
       viewStyleContainer,
       viewStyleLabel,
-      viewStyleInput,
       textStyleLabel,
       textStyleRequired,
-      textStyleInput,
     } = styles;
 
     const { borderColor, textColor, secureTextEntry } = this.state;
@@ -237,6 +216,7 @@ const styles = {
   textStyleRequired: {
     color: Colors.red,
     paddingRight: 5,
+    flexWrap: 'wrap',
   },
   textStyleInput: {
     height: 40,
@@ -249,7 +229,7 @@ const styles = {
     borderWidth: 1,
     flex: 1,
     // alignItems: 'center',
-    fontSize: 20,
+    fontSize: 18,
   },
   iconStyleVisibility: {
     top: 15,
@@ -265,7 +245,7 @@ const styles = {
   code: {
     width: 60,
     height: 50,
-    fontSize: 16,
+    fontSize: 18,
     color: Colors.black,
     textAlign: 'right',
     fontWeight: 'normal',

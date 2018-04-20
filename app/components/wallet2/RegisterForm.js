@@ -1,20 +1,16 @@
 import React, { Component } from 'react';
 import {
   View,
-  ScrollView,
   KeyboardAvoidingView,
   Text,
-  TouchableHighlight,
-  Alert,
-  AsyncStorage,
   findNodeHandle,
+  TouchableOpacity,
 } from 'react-native';
 
-import { Input, Spinner, Button } from './../common2';
+import { Input, Spinner, Button, InputForm, Checkbox } from './../common2';
 import Colors from './../../config/colors';
 import AuthService from './../../services/authService';
 import Auth from './../../util/auth';
-import MobileInput from './../../components/mobileNumberInput';
 import { IsEmail } from './../../util/validation';
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
@@ -53,7 +49,7 @@ class RegisterForm extends Component {
         terms_and_conditions: this.state.terms,
       };
 
-      this.performRegister(data);
+      // this.performRegister(data);
     }
   }
 
@@ -79,24 +75,33 @@ class RegisterForm extends Component {
     let mobileNumberStatus = true;
     let mobileNumberError = null;
 
+    let nodeToScrollTo = null;
+
     if (email != null && IsEmail(email)) {
       emailStatus = true;
     } else {
       emailError = 'Please enter a valid email address';
-      this.email.focus();
-      this._scrollToInput(findNodeHandle(this.email));
+      if (!nodeToScrollTo) {
+        nodeToScrollTo = this.email;
+      }
     }
 
     if (company != null && company.length > 0) {
       companyStatus = true;
     } else {
       companyError = 'Please enter a company ID';
+      if (!nodeToScrollTo) {
+        nodeToScrollTo = this.company;
+      }
     }
 
     if (password != null && password.length >= 8) {
       passwordStatus = true;
     } else {
       passwordError = 'Password must be at least 8 characters';
+      if (!nodeToScrollTo) {
+        nodeToScrollTo = this.password;
+      }
     }
 
     if (password2 == null && password2.length == 0) {
@@ -108,6 +113,9 @@ class RegisterForm extends Component {
     } else {
       password2Status = true;
     }
+    if (!nodeToScrollTo && !password2Status) {
+      nodeToScrollTo = this.password2;
+    }
 
     if (lineNumber) {
       let mobileNumber = countryCode + lineNumber;
@@ -116,6 +124,9 @@ class RegisterForm extends Component {
       if (!phoneUtil.isValidNumber(number)) {
         mobileNumberStatus = false;
         mobileNumberError = 'Please enter a valid mobile number or leave blank';
+        if (!nodeToScrollTo) {
+          nodeToScrollTo = this.lineNumber;
+        }
       }
     }
 
@@ -136,6 +147,9 @@ class RegisterForm extends Component {
     ) {
       return true;
     }
+
+    this._scrollToInput(nodeToScrollTo);
+
     return false;
   }
 
@@ -147,22 +161,22 @@ class RegisterForm extends Component {
   };
 
   performRegister = async data => {
-    let responseJson = await AuthService.signup(data);
-    console.log(responseJson);
-    if (responseJson.status === 'success') {
-      const loginInfo = responseJson.data;
-      if (data.mobile_number) {
-        this.props.navigation.navigate('AuthVerifyMobile', {
-          loginInfo,
-          signupInfo: this.state,
-        });
-      } else {
-        Auth.login(this.props.navigation, loginInfo);
-      }
-    } else {
-      console.log(responseJson.data);
-      this.handleFailedResponse(responseJson.data);
-    }
+    // let responseJson = await AuthService.signup(data);
+    // console.log(responseJson);
+    // if (responseJson.status === 'success') {
+    //   const loginInfo = responseJson.data;
+    //   if (data.mobile_number) {
+    //     this.props.navigation.navigate('AuthVerifyMobile', {
+    //       loginInfo,
+    //       signupInfo: this.state,
+    //     });
+    //   } else {
+    //     Auth.login(this.props.navigation, loginInfo);
+    //   }
+    // } else {
+    //   console.log(responseJson.data);
+    //   this.handleFailedResponse(responseJson.data);
+    // }
   };
 
   handleFailedResponse(data) {
@@ -183,11 +197,22 @@ class RegisterForm extends Component {
     }
   }
 
+  toggleTerms() {
+    const { terms } = this.state;
+    if (terms) {
+      this.setState({ terms: false });
+    } else {
+      this.setState({ terms: true });
+    }
+  }
+
   _scrollToInput(inputHandle) {
+    console.log(inputHandle);
+    inputHandle.focus();
     const scrollResponder = this.myScrollView.getScrollResponder();
     scrollResponder.scrollResponderScrollNativeHandleToKeyboard(
-      inputHandle, // The TextInput node handle
-      0, // The scroll view's bottom "contentInset" (default 0)
+      findNodeHandle(inputHandle), // The TextInput node handle
+      50, // The scroll view's bottom "contentInset" (default 0)
       true, // Prevent negative scrolling
     );
   }
@@ -217,7 +242,7 @@ class RegisterForm extends Component {
       password2,
       password2Error,
       // password_matching,
-      termsAndConditions,
+      terms,
     } = this.state;
 
     const {
@@ -231,13 +256,11 @@ class RegisterForm extends Component {
       <KeyboardAvoidingView
         style={containerStyle}
         behavior={'padding'}
-        keyboardVerticalOffset={85}>
-        <ScrollView
-          keyboardDismissMode={'interactive'}
+        keyboardVerticalOffset={5}>
+        <InputForm
           reference={scrollView => {
             this.myScrollView = scrollView;
-          }}
-          keyboardShouldPersistTaps="always">
+          }}>
           <Input
             label="First name"
             placeholder="e.g. John"
@@ -349,7 +372,14 @@ class RegisterForm extends Component {
             }}
             onSubmitEditing={this.onButtonPress.bind(this)}
           />
-        </ScrollView>
+          <Checkbox
+            onPress={this.toggleTerms()}
+            value={terms}
+            label={'I agree to the'}
+            link={'https://rehive.com/legal/'}
+            linkLabel={'terms of use'}
+          />
+        </InputForm>
         <Button label="REGISTER" onPress={this.onButtonPress.bind(this)} />
       </KeyboardAvoidingView>
     );
@@ -359,20 +389,11 @@ class RegisterForm extends Component {
 const styles = {
   containerStyle: {
     flex: 1,
-    backgroundColor: 'white',
-    paddingVertical: 10,
+    // backgroundColor: 'white',
+    backgroundColor: '#00000000',
+    // paddingVertical: 10,
     justifyContent: 'flex-start',
     paddingRight: 25,
-    paddingBottom: 15,
-  },
-  touchableStyleForgotPassword: {
-    padding: 10,
-    height: 50,
-    backgroundColor: 'white',
-    width: '100%',
-    borderColor: Colors.lightblue,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 };
 

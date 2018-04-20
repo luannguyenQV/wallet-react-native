@@ -9,6 +9,7 @@ class InputForm extends Component {
 
     return (
       <ScrollView
+        style={containerStyle}
         keyboardDismissMode={'interactive'}
         keyboardShouldPersistTaps="always"
         ref={reference}>
@@ -20,12 +21,7 @@ class InputForm extends Component {
 
 const styles = {
   containerStyle: {
-    flex: 1,
-    backgroundColor: 'white',
-    paddingVertical: 10,
-    justifyContent: 'center',
-    paddingRight: 25,
-    paddingBottom: 15,
+    paddingBottom: 25,
   },
 };
 

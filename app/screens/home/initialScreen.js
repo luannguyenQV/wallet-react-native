@@ -26,9 +26,9 @@ export default class InitialScreen extends Component {
           />
         </View>
         <View style={styles.buttonsContainer}>
-          {/* <Button
+          <Button
             label="LOG IN"
-            color="primary"
+            type="primary"
             reference={input => {
               this.login = input;
             }}
@@ -36,14 +36,14 @@ export default class InitialScreen extends Component {
           />
           <Button
             label="REGISTER"
-            color="secondary"
+            type="secondary"
             reference={input => {
               this.login = input;
             }}
             onPress={() => this.props.navigation.navigate('Signup')}
-          /> */}
+          />
 
-          <TouchableHighlight
+          {/* <TouchableHighlight
             style={styles.button}
             onPress={() => this.props.navigation.navigate('Login')}>
             <Text style={styles.buttonText}>Log In</Text>
@@ -52,7 +52,7 @@ export default class InitialScreen extends Component {
             style={[styles.button, { marginLeft: 25 }]}
             onPress={() => this.props.navigation.navigate('Signup')}>
             <Text style={styles.buttonText}>Register</Text>
-          </TouchableHighlight>
+          </TouchableHighlight> */}
         </View>
         <View style={{ alignItems: 'center' }}>
           <Text>Version: {Exp.version}</Text>
@@ -60,7 +60,7 @@ export default class InitialScreen extends Component {
 
         <View style={styles.textContainer}>
           <Text style={styles.text}>
-            By tapping Sign in or Sign up, I agree to Terms of Service and
+            By tapping Log in or Register, I agree to Terms of Service and
             Privacy Policy
           </Text>
         </View>
@@ -84,10 +84,10 @@ const styles = StyleSheet.create({
     height: 150,
   },
   buttonsContainer: {
-    flexDirection: 'row',
-    paddingHorizontal: 25,
+    // flexDirection: 'row',
+    // paddingHorizontal: 25,
     justifyContent: 'center',
-    paddingVertical: 25,
+    // paddingVertical: 25,
   },
   button: {
     backgroundColor: Colors.lightblue,

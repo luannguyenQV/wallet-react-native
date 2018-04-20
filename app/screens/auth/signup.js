@@ -11,7 +11,7 @@ export default class Signup extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: 'white' }}>
         <Header navigation={this.props.navigation} back title="Register" />
         <RegisterForm navigation={this.props.navigation} />
       </View>

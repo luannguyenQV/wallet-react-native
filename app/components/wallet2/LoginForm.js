@@ -9,13 +9,13 @@ import {
   AsyncStorage,
 } from 'react-native';
 
-import { Input, Spinner, Button, InputForm } from './../common2';
+import { Input, Spinner, Button, InputForm, ButtonList } from './../common2';
 import Colors from './../../config/colors';
 import AuthService from './../../services/authService';
 import Auth from './../../util/auth';
 import { IsEmail } from './../../util/validation';
 
-class LogInForm extends Component {
+class LoginForm extends Component {
   state = {
     email: '',
     emailError: '',
@@ -130,14 +130,15 @@ class LogInForm extends Component {
       if (twoFactorResponse.status === 'success') {
         console.log('3');
         const authInfo = twoFactorResponse.data;
-        await AsyncStorage.setItem('email', email);
-        await AsyncStorage.setItem('company', company);
+        await AsyncStorage.setItem('email', data.user);
+        await AsyncStorage.setItem('company', data.company);
         if (authInfo.sms === true || authInfo.token === true) {
           this.props.navigation.navigate('AuthVerifySms', {
             loginInfo: loginInfo,
             isTwoFactor: true,
           });
         } else {
+          console.log('4');
           Auth.login(this.props.navigation, loginInfo);
         }
       } else {
@@ -230,16 +231,18 @@ class LogInForm extends Component {
             onSubmitEditing={this.onButtonPress.bind(this)}
           />
         </InputForm>
-        <Button label="LOG IN" onPress={this.onButtonPress.bind(this)} />
-        <Button
-          label="Forgot Password?"
-          onPress={() => this.props.navigation.navigate('ForgetPassword')}
-        />
-        {/* <TouchableHighlight
-          style={touchableStyleForgotPassword}
-          onPress={() => this.props.navigation.navigate('ForgetPassword')}>
-          <Text style={{ color: Colors.lightblue }}>Forgot Password?</Text>
-        </TouchableHighlight> */}
+        <ButtonList>
+          <Button
+            label="LOG IN"
+            type="primary"
+            onPress={this.onButtonPress.bind(this)}
+          />
+          <Button
+            label="Forgot password?"
+            type="text"
+            onPress={() => this.props.navigation.navigate('ForgetPassword')}
+          />
+        </ButtonList>
       </KeyboardAvoidingView>
     );
   }
@@ -247,24 +250,13 @@ class LogInForm extends Component {
 
 const styles = {
   containerStyle: {
-    flex: 1,
-    backgroundColor: 'white',
     paddingVertical: 10,
-    justifyContent: 'flex-start',
+    // justifyContent: 'flex-start',
   },
   containerStyleInputs: {
     paddingRight: 25,
     paddingBottom: 15,
   },
-  touchableStyleForgotPassword: {
-    padding: 10,
-    height: 50,
-    backgroundColor: 'white',
-    width: '100%',
-    borderColor: Colors.lightblue,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
 };
 
-export default LogInForm;
+export default LoginForm;
