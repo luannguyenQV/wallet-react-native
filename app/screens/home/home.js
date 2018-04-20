@@ -13,7 +13,6 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Swiper from 'react-native-swiper';
-import PopupDialog, { DialogTitle } from 'react-native-popup-dialog';
 import UserInfoService from './../../services/userInfoService';
 import AccountService from './../../services/accountService';
 import Transactions from './transactions';
