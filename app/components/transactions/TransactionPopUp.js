@@ -43,10 +43,8 @@ const TransactionPopUp = ({ popupDialog, transactionDetails }) => {
             textSize={19}
             label={'Total amount:'}
             sign={total_amount < 0 ? '-' : ''}
-            value={
-              currency.symbol +
-              Math.abs(this.getAmount(total_amount, currency.divisibility))
-            }
+            currency={currency}
+            value={total_amount}
           />
           <PopUpInfoLine />
           <PopUpInfo
@@ -54,10 +52,7 @@ const TransactionPopUp = ({ popupDialog, transactionDetails }) => {
             label={'Amount:'}
             sign={amount < 0 ? '-' : ''}
             currency={currency}
-            value={
-              currency.symbol +
-              Math.abs(this.getAmount(amount, currency.divisibility))
-            }
+            value={amount}
           />
           <PopUpInfo
             textSize={17}

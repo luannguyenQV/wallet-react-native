@@ -24,19 +24,10 @@ const PopUpInfo = ({ label, value, textSize, currency }) => {
 
   getAmount = (amount = 0, divisibility) => {
     for (let i = 0; i < divisibility; i++) {
-      amount = amount / 10;
+      amount = Math.abs(amount) / 10;
     }
 
-    return amount.toFixed(8).replace(/\.?0+$/, '');
-  };
-
-  renderValue = () => {
-    if (currency) {
-      return (
-        currency.symbol + Math.abs(this.getAmount(value, currency.divisibility))
-      );
-    }
-    // return value;
+    return amount.toFixed(divisibility);
   };
 
   return (
@@ -44,7 +35,11 @@ const PopUpInfo = ({ label, value, textSize, currency }) => {
       <Text style={getTextStyleLabel()}>{label}</Text>
       <View style={viewStyleValue}>
         <Text style={textStyleSign}>{value < 0 ? '-' : ''}</Text>
-        <Text style={getTextStyleValue()}>{value}</Text>
+        <Text style={getTextStyleValue()}>
+          {currency
+            ? currency.symbol + this.getAmount(value, currency.divisibility)
+            : value}
+        </Text>
       </View>
     </View>
   );
