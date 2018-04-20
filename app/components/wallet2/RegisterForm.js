@@ -34,6 +34,7 @@ class RegisterForm extends Component {
     terms: false,
     termsError: '',
     loading: false,
+    nodeToScrollTo: null,
   };
 
   onButtonPress() {
@@ -53,89 +54,33 @@ class RegisterForm extends Component {
   }
 
   validation() {
-    const {
-      email,
-      company,
-      countryName,
-      countryCode,
-      lineNumber,
-      password,
-      password2,
-    } = this.state;
+    this.validationEmail();
+    this.validationMobileNumber();
+    this.validationCompany();
+    this.validationPassword();
+    this.validationPassword2();
 
-    let emailStatus = false;
-    let emailError = null;
-    let companyStatus = false;
-    let companyError = null;
-    let passwordStatus = false;
-    let passwordError = null;
-    let password2Status = false;
-    let password2Error = null;
-    let mobileNumberStatus = true;
-    let mobileNumberError = null;
+    const {
+      emailStatus,
+      mobileNumberStatus,
+      companyStatus,
+      passwordStatus,
+      password2Status,
+    } = this.state;
 
     let nodeToScrollTo = null;
 
-    if (email != null && IsEmail(email)) {
-      emailStatus = true;
-    } else {
-      emailError = 'Please enter a valid email address';
-      if (!nodeToScrollTo) {
-        nodeToScrollTo = this.email;
-      }
-    }
-
-    if (company != null && company.length > 0) {
-      companyStatus = true;
-    } else {
-      companyError = 'Please enter a company ID';
-      if (!nodeToScrollTo) {
-        nodeToScrollTo = this.company;
-      }
-    }
-
-    if (password != null && password.length >= 8) {
-      passwordStatus = true;
-    } else {
-      passwordError = 'Must be at least 8 characters';
-      if (!nodeToScrollTo) {
-        nodeToScrollTo = this.password;
-      }
-    }
-
-    if (password2 == null && password2.length == 0) {
-      password2Error = 'Please confirm your password';
-    } else if (password2.length < 8) {
-      password2Error = 'Must be at least 8 characters';
-    } else if (password != password2) {
-      password2Error = 'Passwords do not match';
-    } else {
-      password2Status = true;
-    }
-    if (!nodeToScrollTo && !password2Status) {
+    if (!emailStatus) {
+      nodeToScrollTo = this.email;
+    } else if (!mobileNumberStatus) {
+      nodeToScrollTo = this.lineNumber;
+    } else if (!companyStatus) {
+      nodeToScrollTo = this.company;
+    } else if (!passwordStatus) {
+      nodeToScrollTo = this.password;
+    } else if (!password2Status) {
       nodeToScrollTo = this.password2;
     }
-
-    if (lineNumber) {
-      let mobileNumber = countryCode + lineNumber;
-      // const number = phoneUtil.parseAndKeepRawInput(mobileNumber, countryName);
-      // passwordStatus = true;
-      // if (!phoneUtil.isValidNumber(number)) {
-      //   mobileNumberStatus = false;
-      //   mobileNumberError = 'Please enter a valid mobile number or leave blank';
-      //   if (!nodeToScrollTo) {
-      //     nodeToScrollTo = this.lineNumber;
-      //   }
-      // }
-    }
-
-    this.setState({
-      emailError,
-      companyError,
-      passwordError,
-      password2Error,
-      mobileNumberError,
-    });
 
     if (
       emailStatus &&
@@ -148,8 +93,82 @@ class RegisterForm extends Component {
     }
 
     this._scrollToInput(nodeToScrollTo);
-
     return false;
+  }
+
+  validationEmail() {
+    const { email } = this.state;
+
+    let emailStatus = false;
+    let emailError = null;
+
+    if (email != null && IsEmail(email)) {
+      emailStatus = true;
+    } else {
+      emailError = 'Please enter a valid email address';
+    }
+
+    this.setState({ emailError, emailStatus });
+  }
+
+  validationMobileNumber() {
+    const { email } = this.state;
+
+    let emailStatus = false;
+    let emailError = null;
+    // if (lineNumber) {
+    //   let mobileNumber = countryCode + lineNumber;
+    //   // const number = phoneUtil.parseAndKeepRawInput(mobileNumber, countryName);
+    //   // passwordStatus = true;
+    //   // if (!phoneUtil.isValidNumber(number)) {
+    //   //   mobileNumberStatus = false;
+    //   //   mobileNumberError = 'Please enter a valid mobile number or leave blank';
+    //   //   if (!nodeToScrollTo) {
+    //   //     nodeToScrollTo = this.lineNumber;
+    //   //   }
+    //   // }
+    // }
+    // this.setState({ emailError, emailStatus });
+  }
+
+  validationCompany() {
+    const { company } = this.state;
+    let companyStatus = false;
+    let companyError = null;
+    if (company != null && company.length > 0) {
+      companyStatus = true;
+    } else {
+      companyError = 'Please enter a company ID';
+    }
+    this.setState({ companyError, companyStatus });
+  }
+
+  validationPassword() {
+    const { password } = this.state;
+    let passwordStatus = false;
+    let passwordError = null;
+    if (password != null && password.length >= 8) {
+      passwordStatus = true;
+    } else {
+      passwordError = 'Must be at least 8 characters';
+    }
+    this.setState({ passwordError, passwordStatus });
+  }
+
+  validationPassword2() {
+    const { password, password2 } = this.state;
+    let password2Status = false;
+    let password2Error = null;
+    if (password2 == null && password2.length == 0) {
+      password2Error = 'Please confirm your password';
+    } else if (password2.length < 8) {
+      password2Error = 'Must be at least 8 characters';
+    } else if (password != password2) {
+      password2Error = 'Passwords do not match';
+    } else {
+      password2Status = true;
+    }
+    this.setState({ password2Error, password2Status });
   }
 
   changeCountryCode = (code, cca2) => {
@@ -289,6 +308,7 @@ class RegisterForm extends Component {
               this.email = input;
             }}
             onSubmitEditing={() => {
+              this.validationEmail();
               this._scrollToInput(this.lineNumber);
             }}
           />
