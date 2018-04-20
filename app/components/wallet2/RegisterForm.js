@@ -250,12 +250,7 @@ class RegisterForm extends Component {
       termsError,
     } = this.state;
 
-    const {
-      containerStyle,
-      containerStyleInputs,
-      touchableStyleForgotPassword,
-      touchableStyleClear,
-    } = styles;
+    const { containerStyle } = styles;
 
     return (
       <KeyboardAvoidingView
@@ -328,6 +323,7 @@ class RegisterForm extends Component {
               this.lineNumber = input;
             }}
             onSubmitEditing={() => {
+              this.validationMobileNumber();
               this._scrollToInput(this.company);
             }}
           />
@@ -342,6 +338,7 @@ class RegisterForm extends Component {
               this.company = input;
             }}
             onSubmitEditing={() => {
+              this.validationCompany();
               this._scrollToInput(this.password);
             }}
             returnKeyType="next"
@@ -360,6 +357,7 @@ class RegisterForm extends Component {
               this.password = input;
             }}
             onSubmitEditing={() => {
+              this.validationPassword();
               this._scrollToInput(this.password2);
             }}
           />
