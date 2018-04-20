@@ -1,38 +1,47 @@
-import React, { Component } from 'react'
-import { View, Text, StyleSheet, Image, Clipboard, TouchableHighlight, Alert, AsyncStorage } from 'react-native'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import Colors from './../../config/colors'
-import Header from './../../components/header'
+import React, { Component } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Clipboard,
+  TouchableHighlight,
+  Alert,
+  AsyncStorage
+} from "react-native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import Colors from "./../../config/colors";
+import Header from "./../../components/header";
 
 export default class Receive extends Component {
   static navigationOptions = {
-    title: 'Receive',
-  }
+    title: "Receive"
+  };
 
   constructor() {
-    super()
+    super();
 
     this.state = {
-      imageURI: 'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=undefined&choe=UTF-8',
-      email: '',
-    }
+      imageURI:
+        "https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=undefined&choe=UTF-8",
+      email: ""
+    };
   }
 
   async componentWillMount() {
-    const value = await AsyncStorage.getItem('user');
-    const user = JSON.parse(value)
-    const imageURI = 'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=' + user.email + '&choe=UTF-8'
-    this.setState({ imageURI, email: user.email })
+    const value = await AsyncStorage.getItem("user");
+    const user = JSON.parse(value);
+    const imageURI =
+      "https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=" +
+      user.email +
+      "&choe=UTF-8";
+    this.setState({ imageURI, email: user.email });
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <Header
-          navigation={this.props.navigation}
-          drawer
-          title="Receive"
-        />
+        <Header navigation={this.props.navigation} drawer title="Receive" />
         <Text style={styles.text}>
           The QR code is your public address for accepting payments.
         </Text>
@@ -42,63 +51,62 @@ export default class Receive extends Component {
         />
         <View style={styles.boxed}>
           <View style={styles.memoIcon}>
-            <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
-              <Text style={styles.memoText}>
-                {this.state.email}
-              </Text>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <Text style={styles.memoText}>{this.state.email}</Text>
             </View>
             <TouchableHighlight
-              underlayColor={'white'}
+              underlayColor={"white"}
               onPress={() => {
-                Clipboard.setString(this.state.email)
-                Alert.alert(
-                  null,
-                  'Copied',
-                )
-              }}>
-              <Icon
-                name="content-copy"
-                size={30}
-                color={Colors.black}
-              />
+                Clipboard.setString(this.state.email);
+                Alert.alert(null, "Copied");
+              }}
+            >
+              <Icon name="content-copy" size={30} color={Colors.black} />
             </TouchableHighlight>
           </View>
         </View>
       </View>
-    )
+    );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
-    backgroundColor: 'white',
-    alignItems: 'center',
+    flexDirection: "column",
+    backgroundColor: "white",
+    alignItems: "center"
   },
   text: {
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
     color: Colors.black,
-    padding: 20,
+    padding: 20
   },
   boxed: {
-    flexDirection: 'column',
+    flexDirection: "column",
     padding: 5,
-    backgroundColor: Colors.lightgray,
+    paddingHorizontal: 15,
+    backgroundColor: Colors.lightgray
   },
   memoText: {
     flex: 1,
     padding: 2,
     fontSize: 14,
     fontWeight: "bold",
-    color: Colors.black,
+    color: Colors.black
   },
   memoIcon: {
     padding: 5,
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-})
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center"
+  }
+});
