@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import Colors from './../../config/colors';
 import Exp from './../../../exp.json';
+import { Button } from './../../components/common2';
 
 export default class InitialScreen extends Component {
   render() {
@@ -25,20 +26,41 @@ export default class InitialScreen extends Component {
           />
         </View>
         <View style={styles.buttonsContainer}>
-          <TouchableHighlight
+          <Button
+            label="LOG IN"
+            type="primary"
+            reference={input => {
+              this.login = input;
+            }}
+            onPress={() => this.props.navigation.navigate('Login')}
+          />
+          <Button
+            label="REGISTER"
+            type="secondary"
+            reference={input => {
+              this.login = input;
+            }}
+            onPress={() => this.props.navigation.navigate('Signup')}
+          />
+
+          {/* <TouchableHighlight
             style={styles.button}
             onPress={() => this.props.navigation.navigate('Login')}>
-            <Text style={styles.buttonText}>Log in</Text>
+            <Text style={styles.buttonText}>Log In</Text>
           </TouchableHighlight>
           <TouchableHighlight
             style={[styles.button, { marginLeft: 25 }]}
             onPress={() => this.props.navigation.navigate('Signup')}>
             <Text style={styles.buttonText}>Register</Text>
-          </TouchableHighlight>
+          </TouchableHighlight> */}
         </View>
+        <View style={{ alignItems: 'center', paddingVertical: 5 }}>
+          <Text>Version: {Exp.version}</Text>
+        </View>
+
         <View style={styles.textContainer}>
           <Text style={styles.text}>
-            By tapping Sign in or Sign up, I agree to Terms of Service and
+            By tapping Log in or Register, I agree to Terms of Service and
             Privacy Policy
           </Text>
         </View>
@@ -62,10 +84,10 @@ const styles = StyleSheet.create({
     height: 150,
   },
   buttonsContainer: {
-    flexDirection: 'row',
-    paddingHorizontal: 25,
+    // flexDirection: 'row',
+    // paddingHorizontal: 25,
     justifyContent: 'center',
-    paddingVertical: 25,
+    // paddingVertical: 25,
   },
   button: {
     backgroundColor: Colors.lightblue,
