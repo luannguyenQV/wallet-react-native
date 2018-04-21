@@ -25,10 +25,11 @@ var transactionService = {
         return BaseService.post('transactions/transfer/', data)
     },
 
-    withdraw: (amount, reference) => {
+    withdraw: (amount, reference, currency) => {
         var data = {
             amount,
             reference,
+            currency,
         }
         return BaseService.post('transactions/debit/', data)
     },
