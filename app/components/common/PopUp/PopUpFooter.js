@@ -44,4 +44,4 @@ const styles = {
   },
 };
 
-export default PopUpFooter;
+export { PopUpFooter };

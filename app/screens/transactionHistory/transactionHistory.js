@@ -22,7 +22,7 @@ import NetInfo from './../../util/checkNetConnection';
 import Colors from './../../config/colors';
 import Header from './../../components/header';
 // import Icon from 'react-native-vector-icons/MaterialIcons';
-import TransactionDetails from './../../components/wallet/TransactionDetails';
+import TransactionPopUp from './../../components/transactions/TransactionPopUp';
 
 let inputLength = 0;
 
@@ -365,15 +365,12 @@ export default class Home extends Component {
             <Text style={{ color: 'white', fontSize: 20 }}>Send</Text>
           </TouchableHighlight>
         </View>
-        <PopupDialog
-          ref={popupDialog => {
+        <TransactionPopUp
+          popupDialog={popupDialog => {
             this.popupDialog = popupDialog;
           }}
-          dialogTitle={<DialogTitle title="Transaction Details" />}
-          width={0.9}
-          height={320}>
-          <TransactionDetails transactionDetails={this.state.dataToShow} />
-        </PopupDialog>
+          transactionDetails={this.state.dataToShow}
+        />
       </View>
     );
   }
