@@ -203,7 +203,7 @@ class RegisterForm extends Component {
     }
     if (data.mobile_number) {
       this.setState({
-        mobileNumberError: data.mobile_number,
+        mobileNumberError: ' ' + data.mobile_number,
       });
     }
     if (data.company) {
