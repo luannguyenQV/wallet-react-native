@@ -22,6 +22,7 @@ class InputForm extends Component {
 const styles = {
   containerStyle: {
     paddingBottom: 25,
+    paddingRight: 10,
   },
 };
 

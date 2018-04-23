@@ -6,7 +6,7 @@ import {
   findNodeHandle,
 } from 'react-native';
 
-import { Input, Button, InputForm } from './../common2';
+import { Input, Button, InputForm } from './../common';
 import Colors from './../../config/colors';
 import AuthService from './../../services/authService';
 import Auth from './../../util/auth';

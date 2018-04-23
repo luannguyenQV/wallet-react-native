@@ -22,7 +22,7 @@ import NetInfo from './../../util/checkNetConnection';
 import Colors from './../../config/colors';
 import Header from './../../components/header';
 // import Icon from 'react-native-vector-icons/MaterialIcons';
-import TransactionPopUp from './../../components/transactions/TransactionPopUp';
+import TransactionPopUp from './../../components/wallet/TransactionPopUp';
 
 let inputLength = 0;
 

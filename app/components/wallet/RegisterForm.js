@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { KeyboardAvoidingView, findNodeHandle } from 'react-native';
 
-import { Input, Spinner, Button, InputForm, Checkbox } from './../common2';
+import { Input, Spinner, Button, InputForm, Checkbox } from './../common';
 import Colors from './../../config/colors';
 import AuthService from './../../services/authService';
 import Auth from './../../util/auth';
@@ -139,7 +139,8 @@ class RegisterForm extends Component {
     if (password != null && password.length >= 8) {
       passwordStatus = true;
     } else {
-      passwordError = 'Must be at least 8 characters';
+      passwordError =
+        'Must be at least 8 characters aand test the length liek this ';
     }
     this.setState({ passwordError });
     return passwordStatus;

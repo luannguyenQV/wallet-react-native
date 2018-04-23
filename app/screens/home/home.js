@@ -23,7 +23,7 @@ import Header from './../../components/header';
 import HomeCard from './../../components/homeCard';
 // import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import TransactionPopUp from './../../components/transactions/TransactionPopUp';
+import TransactionPopUp from './../../components/wallet/TransactionPopUp';
 
 let inputLength = 0;
 

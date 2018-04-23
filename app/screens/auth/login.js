@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View } from 'react-native';
 
 import Header from './../../components/header';
-import LoginForm from './../../components/wallet2/LoginForm';
+import LoginForm from './../../components/wallet/LoginForm';
 
 export default class Login extends Component {
   static navigationOptions = {

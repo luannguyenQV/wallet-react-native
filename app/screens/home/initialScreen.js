@@ -1,18 +1,8 @@
 import React, { Component } from 'react';
-import {
-  View,
-  Alert,
-  AsyncStorage,
-  ScrollView,
-  KeyboardAvoidingView,
-  StyleSheet,
-  TouchableHighlight,
-  Text,
-  Image,
-} from 'react-native';
+import { View, StyleSheet, Text, Image } from 'react-native';
 import Colors from './../../config/colors';
 import Exp from './../../../exp.json';
-import { Button } from './../../components/common2';
+import { Button } from './../../components/common';
 
 export default class InitialScreen extends Component {
   render() {
