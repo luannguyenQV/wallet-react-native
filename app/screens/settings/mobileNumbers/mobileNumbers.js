@@ -23,6 +23,7 @@ export default class Settings extends Component {
             dataSource: new ListView.DataSource({
                 rowHasChanged: (r1, r2) => JSON.stringify(r1) !== JSON.stringify(r2),
             }),
+            empty: false
         }
     }
 
@@ -31,12 +32,26 @@ export default class Settings extends Component {
     }
 
     getData = async () => {
+        this.setState({
+            refreshing: true,
+        })
         let responseJson = await SettingsService.getAllMobiles()
         if (responseJson.status === "success") {
             const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => JSON.stringify(r1) !== JSON.stringify(r2)});
             const data = responseJson.data
+            if(data.length===0){
+                this.setState({
+                    empty:true,
+                })
+            }
+            else {
+                this.setState({
+                    empty: false,
+                })
+            }
             let ids = data.map((obj, index) => index);
             this.setState({
+                refreshing: false,
                 dataSource: ds.cloneWithRows(data, ids),
             })
         }
@@ -127,15 +142,29 @@ export default class Settings extends Component {
                     textContent={this.state.loadingMessage}
                     textStyle={{color: '#FFF'}}
                 />
-                <ListView
-                    refreshControl={<RefreshControl refreshing={this.state.refreshing}
-                                                    onRefresh={this.getData.bind(this)}/>}
-                    dataSource={this.state.dataSource}
-                    enableEmptySections
-                    renderRow={(rowData) => <MobileNumber mobile={rowData} makePrimary={this.makePrimary}
-                                                          verify={this.verify} delete={this.delete}
-                                                          reload={this.reload}/>}
-                />
+                { this.state.empty &&
+                    <View style={{flex: 1, backgroundColor: 'white', paddingHorizontal: 10}}>
+                        <View style={{
+                            marginTop: 10, flexDirection: 'column', backgroundColor: Colors.lightgray, padding: 20, alignItems:'center'
+                        }}>
+                            <Text style={{ fontSize: 18, fontWeight: 'normal', color: Colors.black }}>
+                                No mobile number added yet
+                            </Text>
+                        </View>
+                    </View>
+                }
+                { !this.state.empty &&
+                    <ListView
+                        refreshControl={<RefreshControl refreshing={this.state.refreshing}
+                                                        onRefresh={this.getData.bind(this)}/>}
+                        dataSource={this.state.dataSource}
+                        enableEmptySections
+                        renderRow={(rowData) => <MobileNumber mobile={rowData} makePrimary={this.makePrimary}
+                                                            verify={this.verify} delete={this.delete}
+                                                            reload={this.reload}/>}
+                    />
+                }
+                
                 <TouchableHighlight
                     style={styles.submit}
                     onPress={() => this.props.navigation.navigate("AddMobileNumber", {routeName: this.state.routeName})}>

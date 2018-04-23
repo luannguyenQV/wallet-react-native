@@ -37,7 +37,8 @@ var settingsService = {
     return BaseService.patch('user/mobiles/' + id + '/', data)
   },
 
-  verifyMobile: (data) => {
+  verifyMobile: (otp) => {
+    var data = {otp}
     return BaseService.post('auth/mobile/verify/', data)
   },
 

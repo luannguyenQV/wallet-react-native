@@ -34,28 +34,32 @@ export default class Account extends Component {
                         </Text>
                     }
                 </View>
-                <View style={styles.countryPicker}>
-                    <CountryPicker
-                        onChange={(value) => {
-                            this.setState({ cca2: value.cca2 })
-                            this.props.changeCountryCode(value.callingCode)
-                        }}
-                        closeable
-                        filterable
-                        cca2={this.state.cca2}
-                        translation="eng"
-                        styles={{ width: 60, justifyContent: 'center' }}
-                    />
-                    <TextInput
-                        value={this.props.code}
-                        editable={false}
-                        style={styles.code}
-                    />
-                    <TextInput
-                        {...this.props}
-                        ref={this.props.reference}
-                        style={styles.input}
-                    />
+                <View style={{ flex: 1, flexDirection: 'row' }}>
+                    {/* <View style={{ flex: 1 }} /> */}
+                    <View style={styles.countryPicker}>
+                        <CountryPicker
+                            onChange={(value) => {
+                                this.setState({ cca2: value.cca2 })
+                                this.props.changeCountryCode(value.callingCode)
+                            }}
+                            closeable
+                            filterable
+                            cca2={this.state.cca2}
+                            translation="eng"
+                            styles={{ width: 60, justifyContent: 'center' }}
+                        />
+                        <TextInput
+                            value={this.props.code}
+                            editable={false}
+                            style={styles.code}
+                        />
+                        <TextInput
+                            {...this.props}
+                            ref={this.props.reference}
+                            style={styles.input}
+                        />
+                    </View>
+                    <View style={{ flex: 1 }} />
                 </View>
             </View>
         )
@@ -91,16 +95,16 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 16,
-        color: Colors.black,
     },
     inputContainer: {
         flexDirection: 'column',
-        marginHorizontal: 20,
-        paddingTop: 10,
+        marginLeft: 20,
+        marginRight: 20,
+        paddingTop:10,
         borderBottomWidth: 1,
-        borderBottomColor: Colors.lightgray,
     },
     countryPicker: {
+        flex:14,
         flexDirection: 'row',
         width: '100%',
         alignItems: 'center',

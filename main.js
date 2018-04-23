@@ -1,4 +1,4 @@
-import Expo from 'expo'
-import App from './app/index'
+import Expo from 'expo';
+import App from './app/index';
 
-Expo.registerRootComponent(App)
+Expo.registerRootComponent(App);
