@@ -34,9 +34,10 @@ class RegisterForm extends Component {
 
   onButtonPress() {
     if (this.validation()) {
+      let lineNumber = this.state.lineNumber;
       let mobileNumber = '';
-      if (this.state.lineNumber.length > 0) {
-        mobileNumber = this.state.countryCode + this.state.lineNumber;
+      if (lineNumber != null && lineNumber.length > 0) {
+        mobileNumber = this.state.countryCode + lineNumber;
       }
       let data = {
         first_name: this.state.firstName,
@@ -108,7 +109,7 @@ class RegisterForm extends Component {
     let mobileNumberStatus = true;
     let mobileNumberError = null;
     let mobileNumber = null;
-    if (lineNumber.length > 0) {
+    if (lineNumber != null && lineNumber.length > 0) {
       mobileNumberStatus = false;
       mobileNumber = countryCode + lineNumber;
       const number = phoneUtil.parseAndKeepRawInput(mobileNumber);
