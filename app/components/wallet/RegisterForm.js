@@ -34,6 +34,10 @@ class RegisterForm extends Component {
 
   onButtonPress() {
     if (this.validation()) {
+      let mobileNumber = '';
+      if (this.state.lineNumber.length > 0) {
+        mobileNumber = this.state.countryCode + this.state.lineNumber;
+      }
       let data = {
         first_name: this.state.firstName,
         last_name: this.state.lastName,
@@ -41,7 +45,7 @@ class RegisterForm extends Component {
         company: this.state.company,
         password1: this.state.password,
         password2: this.state.password2,
-        mobile_number: this.state.countryCode + this.state.lineNumber,
+        mobile_number: mobileNumber,
         terms_and_conditions: this.state.terms,
       };
       this.performRegister(data);
@@ -104,9 +108,9 @@ class RegisterForm extends Component {
     let mobileNumberStatus = true;
     let mobileNumberError = null;
     let mobileNumber = null;
-    if (lineNumber) {
+    if (lineNumber.length > 0) {
       mobileNumberStatus = false;
-      mobileNumber = '+' + countryCode + lineNumber;
+      mobileNumber = countryCode + lineNumber;
       const number = phoneUtil.parseAndKeepRawInput(mobileNumber);
       if (phoneUtil.isValidNumber(number)) {
         mobileNumberStatus = true;
@@ -115,6 +119,7 @@ class RegisterForm extends Component {
           '  Please enter a valid mobile number or leave blank';
       }
     }
+    console.log(mobileNumber);
     this.setState({ mobileNumber, mobileNumberError });
     return mobileNumberStatus;
   }
@@ -173,6 +178,7 @@ class RegisterForm extends Component {
   performRegister = async data => {
     console.log(data);
     let responseJson = await AuthService.signup(data);
+    console.log(responseJson);
     if (responseJson.status === 'success') {
       const loginInfo = responseJson.data;
       if (data.mobile_number) {
@@ -196,7 +202,7 @@ class RegisterForm extends Component {
     }
     if (data.mobile_number) {
       this.setState({
-        mobileError: data.mobile_number,
+        mobileNumberError: data.mobile_number,
       });
     }
     if (data.company) {

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   View,
   Text,
@@ -7,15 +7,15 @@ import {
   Clipboard,
   TouchableHighlight,
   Alert,
-  AsyncStorage
-} from "react-native";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import Colors from "./../../config/colors";
-import Header from "./../../components/header";
+  AsyncStorage,
+} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Colors from './../../config/colors';
+import Header from './../../components/header';
 
 export default class Receive extends Component {
   static navigationOptions = {
-    title: "Receive"
+    title: 'Receive',
   };
 
   constructor() {
@@ -23,18 +23,18 @@ export default class Receive extends Component {
 
     this.state = {
       imageURI:
-        "https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=undefined&choe=UTF-8",
-      email: ""
+        'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=undefined&choe=UTF-8',
+      email: '',
     };
   }
 
   async componentWillMount() {
-    const value = await AsyncStorage.getItem("user");
+    const value = await AsyncStorage.getItem('user');
     const user = JSON.parse(value);
     const imageURI =
-      "https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=" +
-      user.email +
-      "&choe=UTF-8";
+      'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=' +
+      encodeURIComponent(user.email) +
+      '&choe=UTF-8';
     this.setState({ imageURI, email: user.email });
   }
 
@@ -54,19 +54,17 @@ export default class Receive extends Component {
             <View
               style={{
                 flex: 1,
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
               <Text style={styles.memoText}>{this.state.email}</Text>
             </View>
             <TouchableHighlight
-              underlayColor={"white"}
+              underlayColor={'white'}
               onPress={() => {
                 Clipboard.setString(this.state.email);
-                Alert.alert(null, "Copied");
-              }}
-            >
+                Alert.alert(null, 'Copied');
+              }}>
               <Icon name="content-copy" size={30} color={Colors.black} />
             </TouchableHighlight>
           </View>
@@ -79,34 +77,34 @@ export default class Receive extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "column",
-    backgroundColor: "white",
-    alignItems: "center"
+    flexDirection: 'column',
+    backgroundColor: 'white',
+    alignItems: 'center',
   },
   text: {
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
     color: Colors.black,
-    padding: 20
+    padding: 20,
   },
   boxed: {
-    flexDirection: "column",
+    flexDirection: 'column',
     padding: 5,
     paddingHorizontal: 15,
-    backgroundColor: Colors.lightgray
+    backgroundColor: Colors.lightgray,
   },
   memoText: {
     flex: 1,
     padding: 2,
     fontSize: 14,
-    fontWeight: "bold",
-    color: Colors.black
+    fontWeight: 'bold',
+    color: Colors.black,
   },
   memoIcon: {
     padding: 5,
-    flexDirection: "row",
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center"
-  }
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
