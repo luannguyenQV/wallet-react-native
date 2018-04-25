@@ -145,8 +145,7 @@ class RegisterForm extends Component {
     if (password != null && password.length >= 8) {
       passwordStatus = true;
     } else {
-      passwordError =
-        'Must be at least 8 characters aand test the length liek this ';
+      passwordError = 'Must be at least 8 characters';
     }
     this.setState({ passwordError });
     return passwordStatus;
@@ -177,9 +176,7 @@ class RegisterForm extends Component {
   };
 
   performRegister = async data => {
-    console.log(data);
     let responseJson = await AuthService.signup(data);
-    console.log(responseJson);
     if (responseJson.status === 'success') {
       const loginInfo = responseJson.data;
       if (data.mobile_number) {

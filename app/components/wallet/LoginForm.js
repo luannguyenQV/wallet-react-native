@@ -139,7 +139,6 @@ class LoginForm extends Component {
 
   performLogin = async data => {
     let responseJson = await AuthService.login(data);
-    console.log(responseJson);
 
     if (responseJson.status === 'success') {
       const loginInfo = responseJson.data;
