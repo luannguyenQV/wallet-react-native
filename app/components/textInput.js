@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TextInput } from 'react-native';
 import Colors from './../config/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-export default class TextInput extends Component {
+export default class TextInput_ extends Component {
   constructor() {
     super();
     this.state = {
