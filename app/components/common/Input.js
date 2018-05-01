@@ -184,16 +184,15 @@ class Input extends Component {
     const { borderColor, textColor, secureTextEntry } = this.state;
 
     return (
-      <View style={[viewStyleContainer, { borderBottomColor: borderColor }]}>
-        <View style={viewStyleLabel}>
-          <Text style={[textStyleLabel, { color: textColor }]}>{label}</Text>
-          {required ? <Text style={textStyleRequired}>*</Text> : null}
-
-          {requiredError ? (
-            <Text style={textStyleRequired}>{requiredError}</Text>
-          ) : null}
-        </View>
+      <View style={viewStyleContainer}>
+        <Text style={[textStyleLabel, { color: textColor }]}>
+          {label}
+          {required ? ' *' : ''}
+        </Text>
         {this.renderInput()}
+        {requiredError ? (
+          <Text style={textStyleRequired}>{requiredError}</Text>
+        ) : null}
       </View>
     );
   }
@@ -202,38 +201,41 @@ class Input extends Component {
 const styles = {
   viewStyleContainer: {
     flexDirection: 'column',
-    marginLeft: 20,
-    marginRight: 20,
-    paddingTop: 15,
-    borderBottomWidth: 1,
-    flexWrap: 'wrap',
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 16,
+    paddingBottom: 8,
+    height: 64,
+    // borderBottomWidth: 1,
+    // flexWrap: 'wrap',
   },
   viewStyleLabel: {
     flexDirection: 'row',
   },
   viewStyleInput: {
     flexDirection: 'row',
+    height: 24,
+    borderBottomWidth: 1,
   },
   textStyleLabel: {
-    fontSize: 16,
+    fontSize: 12,
+    paddingBottom: 8,
   },
   textStyleRequired: {
+    minHeight: 12,
+    fontSize: 12,
     color: Colors.red,
-    paddingRight: 5,
-    flexWrap: 'wrap',
   },
   textStyleInput: {
-    height: 40,
     paddingLeft: 0,
-    paddingBottom: 5,
-    paddingTop: 5,
     color: Colors.black,
     fontWeight: 'normal',
     borderColor: 'white',
-    borderWidth: 1,
+    // borderWidth: 1,
+    paddingBottom: 8,
     flex: 1,
     // alignItems: 'center',
-    fontSize: 18,
+    fontSize: 16,
   },
   iconStyleVisibility: {
     top: 15,
