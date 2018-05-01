@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TextInput } from 'react-native';
 import Colors from './../config/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-export default class Account extends Component {
+export default class TextInput extends Component {
   constructor() {
     super();
     this.state = {
@@ -80,31 +80,31 @@ export default class Account extends Component {
 }
 
 const styles = StyleSheet.create({
-    input: {
-        height: 50,
-        paddingLeft: 0,
-        paddingBottom: 10,
-        paddingTop:10,
-        color: Colors.black,
-        fontWeight: 'normal',
-        borderColor: 'white',
-        borderWidth: 1,
-        alignItems: 'center',
-    },
-    text: {
-        fontSize: 16,
-    },
-    inputContainer: {
-        flexDirection: 'column',
-        marginLeft: 20,
-        marginRight: 20,
-        paddingTop:10,
-        borderBottomWidth: 1,
-    },
-    errorText: {
-        paddingTop:5,
-        paddingBottom: 10,
-        color:Colors.red,
-        paddingLeft:5,
-    },
-})
+  input: {
+    height: 50,
+    paddingLeft: 0,
+    paddingBottom: 10,
+    paddingTop: 10,
+    color: Colors.black,
+    fontWeight: 'normal',
+    borderColor: 'white',
+    borderWidth: 1,
+    alignItems: 'center',
+  },
+  text: {
+    fontSize: 16,
+  },
+  inputContainer: {
+    flexDirection: 'column',
+    marginLeft: 20,
+    marginRight: 20,
+    paddingTop: 10,
+    borderBottomWidth: 1,
+  },
+  errorText: {
+    paddingTop: 5,
+    paddingBottom: 10,
+    color: Colors.red,
+    paddingLeft: 5,
+  },
+});
