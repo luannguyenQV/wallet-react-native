@@ -30,7 +30,7 @@ class InitialScreen extends Component {
             reference={input => {
               this.login = input;
             }}
-            onPress={() => this.props.navigation.navigate('Signup')}
+            onPress={() => this.props.navigation.navigate('Register')}
           />
 
           {/* <TouchableHighlight
