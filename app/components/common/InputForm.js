@@ -29,7 +29,7 @@ const styles = {
     flex: 1,
     // backgroundColor: 'white',
     backgroundColor: '#00000000',
-    paddingVertical: 10,
+    // paddingVertical: 10,
     justifyContent: 'flex-start',
     // paddingRight: 25,
   },

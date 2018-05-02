@@ -1,21 +1,12 @@
 import React, { Component } from 'react';
-import {
-  View,
-  Alert,
-  Text,
-  StyleSheet,
-  KeyboardAvoidingView,
-  ScrollView,
-  TouchableHighlight,
-} from 'react-native';
+import { View, Alert } from 'react-native';
 import AuthService from './../../../services/authService';
-import TextInput from './../../../components/textInput';
-import Colors from './../../../config/colors';
+import { Input, InputForm, Button } from './../../../components/common';
 import Header from './../../../components/header';
 
 class ChangePasswordScreen extends Component {
   static navigationOptions = {
-    title: 'Change password',
+    label: 'Change password',
   };
 
   constructor() {
@@ -50,80 +41,41 @@ class ChangePasswordScreen extends Component {
           back
           title="Change password"
         />
-        <KeyboardAvoidingView style={styles.container} behavior={'padding'}>
-          <ScrollView keyboardDismissMode={'interactive'}>
-            <TextInput
-              title="Old password"
-              placeholder="e.g. 12345678"
-              autoCapitalize="none"
-              secureTextEntry
-              value={this.state.old_password}
-              underlineColorAndroid="white"
-              onChangeText={old_password => this.setState({ old_password })}
-            />
-            <TextInput
-              title="New password"
-              autoCapitalize="none"
-              placeholder="e.g. 123dr321"
-              secureTextEntry
-              value={this.state.line_2}
-              onChangeText={new_password1 => this.setState({ new_password1 })}
-              underlineColorAndroid="white"
-            />
+        <InputForm>
+          <Input
+            type="password"
+            label="Old password"
+            placeholder="e.g. 12345678"
+            autoCapitalize="none"
+            value={this.state.old_password}
+            underlineColorAndroid="white"
+            onChangeText={old_password => this.setState({ old_password })}
+          />
+          <Input
+            type="password"
+            label="New password"
+            autoCapitalize="none"
+            placeholder="e.g. 123dr321"
+            value={this.state.line_2}
+            onChangeText={new_password1 => this.setState({ new_password1 })}
+            underlineColorAndroid="white"
+          />
 
-            <TextInput
-              title="Confirm new password"
-              autoCapitalize="none"
-              placeholder="e.g. 123dr321"
-              secureTextEntry
-              value={this.state.new_password2}
-              underlineColorAndroid="white"
-              onChangeText={new_password2 => this.setState({ new_password2 })}
-            />
-          </ScrollView>
-          <TouchableHighlight style={styles.submit} onPress={() => this.save()}>
-            <Text style={{ color: 'white', fontSize: 20 }}>Confirm</Text>
-          </TouchableHighlight>
-        </KeyboardAvoidingView>
+          <Input
+            type="password"
+            label="Confirm new password"
+            autoCapitalize="none"
+            placeholder="e.g. 123dr321"
+            value={this.state.new_password2}
+            underlineColorAndroid="white"
+            onChangeText={new_password2 => this.setState({ new_password2 })}
+          />
+
+          <Button label="CONFIRM" onPress={() => this.save()} />
+        </InputForm>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: 'white',
-    paddingTop: 10,
-  },
-  input: {
-    height: 60,
-    width: '100%',
-    padding: 10,
-    fontSize: 16,
-    borderColor: 'white',
-    borderWidth: 1,
-  },
-  submit: {
-    marginTop: 10,
-    marginBottom: 10,
-    marginHorizontal: 20,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: Colors.lightblue,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    fontSize: 20,
-    paddingLeft: 10,
-  },
-  inputContainer: {
-    flexDirection: 'column',
-    width: '100%',
-    paddingTop: 10,
-  },
-});
 
 export default ChangePasswordScreen;

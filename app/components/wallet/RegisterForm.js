@@ -21,11 +21,11 @@ class RegisterForm extends Component {
     countryCode: '+1',
     lineNumber: null,
     company: '',
-    companyError: null,
+    companyError: '',
     password: '',
-    passwordError: true,
+    passwordError: '',
     password2: '',
-    password2Error: true,
+    password2Error: '',
     terms: false,
     termsError: '',
     loading: false,
@@ -344,7 +344,6 @@ class RegisterForm extends Component {
           required
           requiredError={passwordError}
           value={password}
-          password={true}
           onChangeText={password => this.setState({ password })}
           returnKeyType="next"
           reference={input => {
@@ -362,7 +361,6 @@ class RegisterForm extends Component {
           required
           requiredError={password2Error}
           value={password2}
-          password={true}
           onChangeText={password2 => this.setState({ password2 })}
           returnKeyType="done"
           reference={input => {

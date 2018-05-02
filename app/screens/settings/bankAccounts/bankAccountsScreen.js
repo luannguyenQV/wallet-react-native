@@ -7,6 +7,7 @@ import {
   TouchableHighlight,
   Text,
 } from 'react-native';
+
 import Account from './../../../components/bankAccount';
 import SettingsService from './../../../services/settingsService';
 import Colors from './../../../config/colors';
@@ -68,7 +69,18 @@ class BankAccountsScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Header navigation={this.props.navigation} back title="Bank accounts" />
+        <Header
+          navigation={this.props.navigation}
+          back
+          title="Bank accounts"
+          headerRightTitle="Add"
+          headerRightOnPress={() =>
+            this.props.navigation.navigate('AddBankAccount', {
+              parentRoute: 'Settings',
+              nextRoute: 'SettingsBankAccounts',
+            })
+          }
+        />
         {this.state.empty && (
           <View
             style={{
@@ -113,17 +125,6 @@ class BankAccountsScreen extends Component {
             )}
           />
         )}
-
-        <TouchableHighlight
-          style={styles.submit}
-          onPress={() =>
-            this.props.navigation.navigate('AddBankAccount', {
-              parentRoute: 'Settings',
-              nextRoute: 'SettingsBankAccounts',
-            })
-          }>
-          <Text style={{ color: 'white', fontSize: 20 }}>Add bank account</Text>
-        </TouchableHighlight>
       </View>
     );
   }

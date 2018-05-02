@@ -73,6 +73,13 @@ class BitcoinAddressesScreen extends Component {
           navigation={this.props.navigation}
           back
           title="Bitcoin addresses"
+          headerRightTitle="Add"
+          headerRightOnPress={() =>
+            this.props.navigation.navigate('AddBitcoinAddress', {
+              parentRoute: 'Settings',
+              nextRoute: 'SettingsBitcoinAddresses',
+            })
+          }
         />
         {this.state.empty && (
           <View
@@ -119,18 +126,6 @@ class BitcoinAddressesScreen extends Component {
             )}
           />
         )}
-        <TouchableHighlight
-          style={styles.submit}
-          onPress={() =>
-            this.props.navigation.navigate('AddBitcoinAddress', {
-              parentRoute: 'Settings',
-              nextRoute: 'SettingsBitcoinAddresses',
-            })
-          }>
-          <Text style={{ color: 'white', fontSize: 20 }}>
-            Add bitcoin address
-          </Text>
-        </TouchableHighlight>
       </View>
     );
   }

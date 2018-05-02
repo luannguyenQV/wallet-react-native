@@ -9,15 +9,15 @@ class Input extends Component {
     textColor: Colors.black,
     borderColor: Colors.lightgray,
     iconNameVisibility: 'visibility-off',
-    secureTextEntry: this.props.password,
+    secureTextEntry: this.props.type == 'password' ? true : false,
     cca2: 'US',
     countryCode: '+1',
   };
 
   _OnBlur() {
     this.setState({
-      textColor: Colors.primary,
-      borderColor: Colors.primary,
+      textColor: Colors.black,
+      borderColor: Colors.lightgray,
     });
   }
 
@@ -101,7 +101,7 @@ class Input extends Component {
           style={textStyleInput}
           onFocus={() => this._OnFocus()}
           onBlur={() => this._OnBlur()}
-          underlineColorAndroid="white"
+          underlineColorAndroid="transparent"
           autoCapitalize={autoCapitalize ? autoCapitalize : 'none'}
           placeholder={placeholder}
           value={value}
@@ -152,11 +152,12 @@ class Input extends Component {
           </Text>
         </View>
         {this.renderInput()}
-        <View style={viewStyleHelper}>
-          {requiredError ? (
+
+        {requiredError ? (
+          <View style={viewStyleHelper}>
             <Text style={textStyleRequired}>{requiredError}</Text>
-          ) : null}
-        </View>
+          </View>
+        ) : null}
       </View>
     );
   }
@@ -166,7 +167,9 @@ const styles = {
   viewStyleContainer: {
     paddingLeft: 20,
     paddingRight: 20,
-    height: 84,
+    minHeight: 64,
+    paddingTop: 8,
+    // height: 84,
   },
   viewStyleLabel: {
     height: 20,

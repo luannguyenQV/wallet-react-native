@@ -1,20 +1,9 @@
 import React, { Component } from 'react';
-import {
-  View,
-  ScrollView,
-  KeyboardAvoidingView,
-  AsyncStorage,
-  StyleSheet,
-  TouchableHighlight,
-  Text,
-  Alert,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import { View, AsyncStorage, StyleSheet, Text, Alert } from 'react-native';
 import TransactionService from './../../../services/transactionService';
 import Spinner from 'react-native-loading-spinner-overlay';
 import ResetNavigation from './../../../util/resetNavigation';
-import TextInput from './../../../components/textInput';
-import TextInputMultiLine from './../../../components/textInputMultiline';
+import { Input, InputForm, Button } from './../../../components/common';
 import Colors from './../../../config/colors';
 import Header from './../../../components/header';
 import Big from 'big.js';
@@ -139,41 +128,38 @@ class SendAmountEntryScreen extends Component {
           textContent={this.state.loadingMessage}
           textStyle={{ color: '#FFF' }}
         />
-        <KeyboardAvoidingView style={styles.container} behavior={'padding'}>
-          <ScrollView keyboardDismissMode={'interactive'}>
-            <TextInput
-              title="Amount"
-              placeholder="Enter amount here"
-              autoCapitalize="none"
-              keyboardType="numeric"
-              underlineColorAndroid="white"
-              onChangeText={this.amountChanged}
-            />
-            <TextInput
-              title="Note"
-              placeholder="Enter note here"
-              autoCapitalize="none"
-              placeholderTextColor="lightgray"
-              multiline={true}
-              underlineColorAndroid="white"
-              onChangeText={note => this.setState({ note })}
-            />
-          </ScrollView>
+        <InputForm>
+          <Input
+            label="Amount"
+            placeholder="Enter amount here"
+            autoCapitalize="none"
+            keyboardType="numeric"
+            onChangeText={this.amountChanged}
+          />
+          <Input
+            label="Note"
+            placeholder="Enter note here"
+            autoCapitalize="none"
+            onChangeText={note => this.setState({ note })}
+          />
           {this.state.disabled ? (
-            <TouchableWithoutFeedback>
-              <View
-                style={[styles.submit, { backgroundColor: Colors.lightgray }]}>
-                <Text style={{ color: 'white', fontSize: 20 }}>
-                  Amount exceeds balance
-                </Text>
-              </View>
-            </TouchableWithoutFeedback>
+            <View
+              style={[styles.submit, { backgroundColor: Colors.lightgray }]}>
+              <Text style={{ color: 'white', fontSize: 20 }}>
+                Amount exceeds balance
+              </Text>
+            </View>
           ) : (
-            <TouchableHighlight style={styles.submit} onPress={this.send}>
-              <Text style={{ color: 'white', fontSize: 20 }}>Send</Text>
-            </TouchableHighlight>
+            <Button
+              label="SEND"
+              type="primary"
+              reference={input => {
+                this.login = input;
+              }}
+              onPress={this.send}
+            />
           )}
-        </KeyboardAvoidingView>
+        </InputForm>
       </View>
     );
   }
