@@ -12,7 +12,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import Contact from './../../../components/contact';
-import TextInput from './../../../components/textInput';
+import { Input } from './../../../components/common';
 import ContactService from './../../../services/contactService';
 import UserInfoService from './../../../services/userInfoService';
 import Auth from './../../../util/auth';
@@ -153,11 +153,10 @@ class SendScreen extends Component {
             behavior={'padding'}
             keyboardVerticalOffset={75}>
             <View style={{ flex: 1 }}>
-              <TextInput
-                title="Recipient"
+              <Input
+                label="Recipient"
                 placeholder="Enter email, stellar address or mobile"
                 autoCapitalize="none"
-                underlineColorAndroid="white"
                 value={this.state.searchText}
                 onChange={this.searchTextChanged.bind(this)}
               />
