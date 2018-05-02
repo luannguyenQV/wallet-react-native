@@ -1,17 +1,16 @@
-import React, { Component } from 'react'
-import { View, Text, StyleSheet, Image } from 'react-native'
-import Date from './../util/date.js'
-import Colors from './../config/colors'
+import React, { Component } from 'react';
+import { View, Text, StyleSheet, Image } from 'react-native';
+import Date from './../util/date.js';
+import Colors from './../config/colors';
 
-export default class Withdraw extends Component {
-
+export default class Transaction extends Component {
   getAmount = (amount, divisibility) => {
     for (let i = 0; i < divisibility; i++) {
-      amount = amount / 10
+      amount = amount / 10;
     }
 
-    return amount.toFixed(8).replace(/\.?0+$/, "")
-  }
+    return amount.toFixed(8).replace(/\.?0+$/, '');
+  };
 
   render() {
     return (
@@ -20,11 +19,16 @@ export default class Withdraw extends Component {
           <View style={styles.icon}>
             <Image
               source={require('./../../assets/icons/profile.png')}
-              style={{height:40, width:40}}
+              style={{ height: 40, width: 40 }}
             />
           </View>
           <View style={styles.type}>
-            <Text style={{ fontSize: 18, fontWeight: 'normal', color: Colors.black }}>
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: 'normal',
+                color: Colors.black,
+              }}>
               {this.props.data.label}
             </Text>
             <Text style={{ fontSize: 13, color: '#4D4D4D' }}>
@@ -33,15 +37,22 @@ export default class Withdraw extends Component {
           </View>
         </View>
         <View style={styles.right}>
-          <Text style={{ fontSize: 20, fontWeight: 'normal', color: Colors.black }}>
-            {this.props.data.currency.symbol + " " + this.getAmount(this.props.data.amount, this.props.data.currency.divisibility)}
+          <Text
+            style={{ fontSize: 20, fontWeight: 'normal', color: Colors.black }}>
+            {this.props.data.currency.symbol +
+              ' ' +
+              this.getAmount(
+                this.props.data.amount,
+                this.props.data.currency.divisibility,
+              )}
           </Text>
           <Text style={{ fontSize: 14, color: Colors.black }}>
-            {Date.getDateFromMiliseconds(this.props.data.updated)} | {this.props.data.status}
+            {Date.getDateFromMiliseconds(this.props.data.updated)} |{' '}
+            {this.props.data.status}
           </Text>
         </View>
       </View>
-    )
+    );
   }
 }
 
@@ -73,4 +84,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-end',
   },
-})
+});

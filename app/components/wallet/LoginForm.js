@@ -261,7 +261,7 @@ class LoginForm extends Component {
           <Button
             label="Forgot password?"
             type="text"
-            onPress={() => this.props.navigation.navigate('ForgetPassword')}
+            onPress={() => this.props.navigation.navigate('ForgotPassword')}
           />
         </InputForm>
         {/* <ButtonList>
