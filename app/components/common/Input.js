@@ -167,8 +167,8 @@ const styles = {
   viewStyleContainer: {
     paddingLeft: 20,
     paddingRight: 20,
-    minHeight: 64,
-    paddingTop: 8,
+    minHeight: 56,
+    paddingTop: 0,
   },
   viewStyleLabel: {
     height: 20,
