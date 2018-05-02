@@ -42,7 +42,7 @@ class AddEmailAddressScreen extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.container}>
         <Header
           navigation={this.props.navigation}
           back
@@ -62,5 +62,12 @@ class AddEmailAddressScreen extends Component {
     );
   }
 }
+
+const styles = {
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+};
 
 export default AddEmailAddressScreen;

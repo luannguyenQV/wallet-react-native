@@ -42,7 +42,7 @@ class VerifyMobileScreen extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.container}>
         <Header
           navigation={this.props.navigation}
           back

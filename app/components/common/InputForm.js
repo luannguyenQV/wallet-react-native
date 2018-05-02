@@ -27,7 +27,7 @@ class InputForm extends Component {
 const styles = {
   containerStyle: {
     flex: 1,
-    // backgroundColor: 'white',
+    backgroundColor: 'white',
     backgroundColor: '#00000000',
     // paddingVertical: 10,
     justifyContent: 'flex-start',

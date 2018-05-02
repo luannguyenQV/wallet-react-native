@@ -41,7 +41,7 @@ class AddMobileNumberScreen extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.container}>
         <Header
           navigation={this.props.navigation}
           back
@@ -57,12 +57,20 @@ class AddMobileNumberScreen extends Component {
             value={this.state.number}
             onChangeText={number => this.setState({ number })}
             changeCountryCode={this.changeCountryCode}
-            code={this.state.code}
+            countryCode={this.state.code}
+            // countryName={countryName}
           />
         </InputForm>
       </View>
     );
   }
 }
+
+const styles = {
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+};
 
 export default AddMobileNumberScreen;

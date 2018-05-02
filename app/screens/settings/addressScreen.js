@@ -22,7 +22,7 @@ class AddressScreen extends Component {
       line_2: '',
       city: '',
       state_province: '',
-      country: '',
+      country: 'US',
       postal_code: '',
     };
   }
@@ -40,7 +40,7 @@ class AddressScreen extends Component {
         line_2: address.line_2,
         city: address.city,
         state_province: address.state_province,
-        country: address.country !== '--' ? address.country : 'US',
+        country: user.nationality !== '' ? user.nationality : 'US',
         postal_code: address.postal_code,
       });
     } else {
@@ -67,7 +67,7 @@ class AddressScreen extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.container}>
         <Header
           navigation={this.props.navigation}
           back
@@ -119,10 +119,33 @@ class AddressScreen extends Component {
                 closeable
                 filterable
                 translation="eng"
-                styles={{ flex: 1, justifyContent: 'center' }}
+                styles={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
               />
             </View>
           </View>
+
+          {/* <View style={[styles.pickerContainer, { paddingVertical: 20 }]}>
+            <Text style={[styles.text, { flex: 4 }]}>Country</Text>
+            <View style={{ flex: 5, alignItems: 'flex-end' }}>
+              <CountryPicker
+                onChange={value => {
+                  this.setState({ nationality: value.cca2 });
+                }}
+                closeable
+                filterable
+                translation="eng"
+                styles={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              />
+            </View>
+          </View> */}
 
           <Input
             label="Postal code"
@@ -137,26 +160,13 @@ class AddressScreen extends Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flex: 1,
-    flexDirection: 'column',
     backgroundColor: 'white',
-    paddingTop: 10,
-  },
-  submit: {
-    marginTop: 10,
-    marginBottom: 10,
-    marginHorizontal: 20,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: Colors.lightblue,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   text: {
     fontSize: 16,
-    borderRightColor: Colors.lightgray,
     color: Colors.black,
   },
   pickerContainer: {
@@ -166,8 +176,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: Colors.lightgray,
   },
-});
+};
 
 export default AddressScreen;

@@ -141,7 +141,7 @@ class Input extends Component {
       textStyleRequired,
     } = styles;
 
-    const { borderColor, textColor, secureTextEntry } = this.state;
+    const { textColor } = this.state;
 
     return (
       <View style={viewStyleContainer}>
@@ -169,7 +169,6 @@ const styles = {
     paddingRight: 20,
     minHeight: 64,
     paddingTop: 8,
-    // height: 84,
   },
   viewStyleLabel: {
     height: 20,
@@ -191,7 +190,7 @@ const styles = {
     paddingTop: 8,
   },
   textStyleInput: {
-    color: Colors.black,
+    color: 'black',
     fontWeight: 'normal',
     paddingTop: 8,
     flex: 1,
@@ -201,7 +200,7 @@ const styles = {
   textStyleCode: {
     width: 50,
     fontSize: 16,
-    color: Colors.black,
+    color: 'black',
     textAlign: 'right',
     fontWeight: 'normal',
     borderColor: 'white',
@@ -214,7 +213,7 @@ const styles = {
     paddingTop: 2,
     paddingBottom: 8,
     fontSize: 12,
-    color: Colors.red,
+    color: Colors.error,
   },
   iconStyleVisibility: {
     width: 24,

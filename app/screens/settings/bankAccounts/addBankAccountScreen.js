@@ -94,11 +94,11 @@ class AddBankAccountScreen extends Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flex: 1,
     backgroundColor: 'white',
   },
-});
+};
 
 export default AddBankAccountScreen;
