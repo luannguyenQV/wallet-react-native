@@ -194,80 +194,69 @@ class LoginForm extends Component {
     const { containerStyle } = styles;
 
     return (
-      <KeyboardAvoidingView
-        style={containerStyle}
-        behavior={'padding'}
-        keyboardVerticalOffset={5}>
-        <InputForm
-          reference={scrollView => {
-            this.myScrollView = scrollView;
-          }}>
-          <Input
-            placeholder="e.g. user@gmail.com"
-            label="Email"
-            value={email}
-            required
-            requiredError={emailError}
-            keyboardType="email-address"
-            onChangeText={email => this.setState({ email })}
-            returnKeyType="next"
-            autoFocus
-            scrollView={this.myScrollView}
-            reference={input => {
-              this.email = input;
-            }}
-            onSubmitEditing={() => {
-              this.validationEmail();
-              this.company.focus();
-            }}
-          />
-          <Input
-            placeholder="e.g. Rehive"
-            label="Company"
-            required
-            requiredError={companyError}
-            value={company}
-            onChangeText={company => this.setState({ company })}
-            scrollView={this.myScrollView}
-            reference={input => {
-              this.company = input;
-            }}
-            onSubmitEditing={() => {
-              this.password.focus();
-            }}
-            returnKeyType="next"
-          />
-          <Input
-            type="password"
-            placeholder="Password"
-            label="Password"
-            required
-            requiredError={passwordError}
-            value={password}
-            password={true}
-            onChangeText={password => this.setState({ password })}
-            returnKeyType="done"
-            scrollView={this.myScrollView}
-            reference={input => {
-              this.password = input;
-            }}
-            onSubmitEditing={this.onButtonPress.bind(this)}
-          />
-          <Button
-            label="LOG IN"
-            type="primary"
-            onPress={this.onButtonPress.bind(this)}
-          />
-          <Button
-            label="Forgot password?"
-            type="text"
-            onPress={() => this.props.navigation.navigate('ForgotPassword')}
-          />
-        </InputForm>
-        {/* <ButtonList>
-          
-        </ButtonList> */}
-      </KeyboardAvoidingView>
+      <InputForm
+        reference={scrollView => {
+          this.myScrollView = scrollView;
+        }}>
+        <Input
+          placeholder="e.g. user@gmail.com"
+          label="Email"
+          value={email}
+          required
+          requiredError={emailError}
+          keyboardType="email-address"
+          onChangeText={email => this.setState({ email })}
+          returnKeyType="next"
+          autoFocus
+          reference={input => {
+            this.email = input;
+          }}
+          onSubmitEditing={() => {
+            this.validationEmail();
+            this.company.focus();
+          }}
+        />
+        <Input
+          placeholder="e.g. Rehive"
+          label="Company"
+          required
+          requiredError={companyError}
+          value={company}
+          onChangeText={company => this.setState({ company })}
+          reference={input => {
+            this.company = input;
+          }}
+          onSubmitEditing={() => {
+            this.password.focus();
+          }}
+          returnKeyType="next"
+        />
+        <Input
+          type="password"
+          placeholder="Password"
+          label="Password"
+          required
+          requiredError={passwordError}
+          value={password}
+          password={true}
+          onChangeText={password => this.setState({ password })}
+          returnKeyType="done"
+          reference={input => {
+            this.password = input;
+          }}
+          onSubmitEditing={this.onButtonPress.bind(this)}
+        />
+        <Button
+          label="LOG IN"
+          type="primary"
+          onPress={this.onButtonPress.bind(this)}
+        />
+        <Button
+          label="Forgot password?"
+          type="text"
+          onPress={() => this.props.navigation.navigate('ForgotPassword')}
+        />
+      </InputForm>
     );
   }
 }

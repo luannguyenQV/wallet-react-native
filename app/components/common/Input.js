@@ -14,17 +14,17 @@ class Input extends Component {
     countryCode: '+1',
   };
 
-  updateColorOnBlur() {
+  _OnBlur() {
     this.setState({
-      textColor: Colors.black,
-      borderColor: Colors.lightgray,
+      textColor: Colors.primary,
+      borderColor: Colors.primary,
     });
   }
 
-  updateColorOnFocus() {
+  _OnFocus() {
     this.setState({
-      textColor: Colors.lightblue,
-      borderColor: Colors.lightblue,
+      textColor: Colors.primary,
+      borderColor: Colors.primary,
     });
   }
 
@@ -63,8 +63,8 @@ class Input extends Component {
       viewStyleInput,
       textStyleInput,
       iconStyleVisibility,
-      countryPicker,
-      code,
+      viewStyleCountry,
+      textStyleCode,
     } = styles;
 
     const {
@@ -75,43 +75,10 @@ class Input extends Component {
       cca2,
     } = this.state;
 
-    switch (type) {
-      case 'password':
-        return (
-          <View style={viewStyleInput}>
-            <TextInput
-              style={textStyleInput}
-              onFocus={() => this.updateColorOnFocus()}
-              onBlur={() => this.updateColorOnBlur()}
-              underlineColorAndroid="white"
-              autoCapitalize={autoCapitalize ? autoCapitalize : 'none'}
-              placeholder={placeholder}
-              value={value}
-              onChangeText={onChangeText}
-              ref={reference}
-              selectTextOnFocus
-              secureTextEntry={secureTextEntry}
-              keyboardType={keyboardType}
-              returnKeyType={returnKeyType}
-              onSubmitEditing={onSubmitEditing}
-              autoFocus={autoFocus}
-              blurOnSubmit={false}
-            />
-            <View style={{ width: 30 }}>
-              <Icon
-                style={iconStyleVisibility}
-                name={iconNameVisibility}
-                size={25}
-                color={borderColor}
-                onPress={this.togglePasswordVisibility}
-              />
-            </View>
-          </View>
-        );
-
-      case 'mobile':
-        return (
-          <View style={countryPicker}>
+    return (
+      <View style={[viewStyleInput, { borderColor: borderColor }]}>
+        {type === 'mobile' ? (
+          <View style={viewStyleCountry}>
             <CountryPicker
               onChange={value => {
                 this.setState({ cca2: value.cca2 });
@@ -121,54 +88,46 @@ class Input extends Component {
               filterable
               cca2={cca2}
               translation="eng"
-              styles={{ width: 60, justifyContent: 'center' }}
+              styles={{ width: 24 }}
             />
-            <TextInput value={countryCode} editable={false} style={code} />
             <TextInput
-              style={textStyleInput}
-              onFocus={() => this.updateColorOnFocus()}
-              onBlur={() => this.updateColorOnBlur()}
-              underlineColorAndroid="white"
-              autoCapitalize={autoCapitalize ? autoCapitalize : 'none'}
-              placeholder={placeholder}
-              value={value}
-              onChangeText={onChangeText}
-              ref={reference}
-              selectTextOnFocus
-              secureTextEntry={secureTextEntry}
-              keyboardType={keyboardType}
-              returnKeyType={returnKeyType}
-              onSubmitEditing={onSubmitEditing}
-              autoFocus={autoFocus}
-              blurOnSubmit={false}
+              value={countryCode}
+              editable={false}
+              style={textStyleCode}
             />
           </View>
-        );
-
-      default:
-        return (
-          <View style={viewStyleInput}>
-            <TextInput
-              style={textStyleInput}
-              onFocus={() => this.updateColorOnFocus()}
-              onBlur={() => this.updateColorOnBlur()}
-              underlineColorAndroid="white"
-              autoCapitalize={autoCapitalize ? autoCapitalize : 'none'}
-              placeholder={placeholder}
-              value={value}
-              onChangeText={onChangeText}
-              ref={reference}
-              selectTextOnFocus
-              secureTextEntry={secureTextEntry}
-              keyboardType={keyboardType}
-              returnKeyType={returnKeyType}
-              onSubmitEditing={onSubmitEditing}
-              autoFocus={autoFocus}
-              blurOnSubmit={false}
+        ) : null}
+        <TextInput
+          style={textStyleInput}
+          onFocus={() => this._OnFocus()}
+          onBlur={() => this._OnBlur()}
+          underlineColorAndroid="white"
+          autoCapitalize={autoCapitalize ? autoCapitalize : 'none'}
+          placeholder={placeholder}
+          value={value}
+          onChangeText={onChangeText}
+          ref={reference}
+          selectTextOnFocus
+          secureTextEntry={secureTextEntry}
+          keyboardType={keyboardType}
+          returnKeyType={returnKeyType}
+          onSubmitEditing={onSubmitEditing}
+          autoFocus={autoFocus}
+          blurOnSubmit={false}
+        />
+        {type === 'password' ? (
+          <View>
+            <Icon
+              style={iconStyleVisibility}
+              name={iconNameVisibility}
+              size={24}
+              color={borderColor}
+              onPress={this.togglePasswordVisibility}
             />
           </View>
-        );
-    }
+        ) : null}
+      </View>
+    );
   }
 
   render() {
@@ -177,6 +136,7 @@ class Input extends Component {
     const {
       viewStyleContainer,
       viewStyleLabel,
+      viewStyleHelper,
       textStyleLabel,
       textStyleRequired,
     } = styles;
@@ -185,14 +145,18 @@ class Input extends Component {
 
     return (
       <View style={viewStyleContainer}>
-        <Text style={[textStyleLabel, { color: textColor }]}>
-          {label}
-          {required ? ' *' : ''}
-        </Text>
+        <View style={viewStyleLabel}>
+          <Text style={[textStyleLabel, { color: textColor }]}>
+            {label}
+            {required ? ' *' : ''}
+          </Text>
+        </View>
         {this.renderInput()}
-        {requiredError ? (
-          <Text style={textStyleRequired}>{requiredError}</Text>
-        ) : null}
+        <View style={viewStyleHelper}>
+          {requiredError ? (
+            <Text style={textStyleRequired}>{requiredError}</Text>
+          ) : null}
+        </View>
       </View>
     );
   }
@@ -200,64 +164,61 @@ class Input extends Component {
 
 const styles = {
   viewStyleContainer: {
-    flexDirection: 'column',
     paddingLeft: 20,
     paddingRight: 20,
-    paddingTop: 16,
-    paddingBottom: 8,
-    height: 64,
-    // borderBottomWidth: 1,
-    // flexWrap: 'wrap',
+    height: 84,
   },
   viewStyleLabel: {
+    height: 20,
+  },
+  viewStyleCountry: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   viewStyleInput: {
     flexDirection: 'row',
-    height: 24,
+    minHeight: 32,
     borderBottomWidth: 1,
+  },
+  viewStyleHelper: {
+    height: 28,
   },
   textStyleLabel: {
     fontSize: 12,
-    paddingBottom: 8,
-  },
-  textStyleRequired: {
-    minHeight: 12,
-    fontSize: 12,
-    color: Colors.red,
+    paddingTop: 8,
   },
   textStyleInput: {
-    paddingLeft: 0,
     color: Colors.black,
     fontWeight: 'normal',
-    borderColor: 'white',
-    // borderWidth: 1,
-    paddingBottom: 8,
+    paddingTop: 8,
     flex: 1,
-    // alignItems: 'center',
     fontSize: 16,
+    paddingBottom: 8,
   },
-  iconStyleVisibility: {
-    top: 15,
-    right: 0,
-    position: 'absolute',
-  },
-  countryPicker: {
-    flexDirection: 'row',
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  code: {
-    width: 60,
-    height: 50,
-    fontSize: 18,
+  textStyleCode: {
+    width: 50,
+    fontSize: 16,
     color: Colors.black,
     textAlign: 'right',
     fontWeight: 'normal',
     borderColor: 'white',
-    borderWidth: 1,
     alignItems: 'center',
+    fontSize: 16,
+    paddingTop: 8,
+    paddingBottom: 8,
+  },
+  textStyleRequired: {
+    paddingTop: 2,
+    paddingBottom: 8,
+    fontSize: 12,
+    color: Colors.red,
+  },
+  iconStyleVisibility: {
+    width: 24,
+    height: 24,
+    right: 0,
+    bottom: 8,
+    position: 'absolute',
   },
 };
 
