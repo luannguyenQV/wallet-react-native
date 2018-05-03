@@ -1,10 +1,28 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, Image } from 'react-native';
+import { connect } from 'react-redux';
+import { initialLoad } from '../../redux/actions';
+
 import Colors from './../../config/colors';
 import Exp from './../../../exp.json';
 import { Button } from './../../components/common';
 
 class InitialScreen extends Component {
+  componentDidMount() {
+    this.props.initialLoad();
+    this.onAuthComplete(this.props);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.onAuthComplete(nextProps);
+  }
+
+  onAuthComplete(props) {
+    if (props.token) {
+      this.props.navigation.navigate('Home');
+    }
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -104,4 +122,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default InitialScreen;
+const mapStateToProps = ({ auth }) => {
+  const { token } = auth;
+
+  return { token };
+};
+
+export default connect(mapStateToProps, { initialLoad })(InitialScreen);

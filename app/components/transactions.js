@@ -68,7 +68,8 @@ export default class Transactions extends Component {
         nextUrl: responseJson.data.next,
       });
     } else {
-      this.props.logout();
+      console.log('logout2');
+      // this.props.logout();
     }
 
     if (this.state.data.length === 0) {
@@ -96,7 +97,8 @@ export default class Transactions extends Component {
           });
         }
       } else {
-        this.props.logout();
+        console.log('logout3');
+        // this.props.logout();
       }
     }
     if (this.state.data.length > 0) {
@@ -240,11 +242,11 @@ export default class Transactions extends Component {
               data={this.state.data}
               renderItem={({ item }) => (
                 <ListItem
-                  avatar={
-                    this.state.profile.profile != null
-                      ? this.state.profile.profile
-                      : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgmT5tM-IGcFDpqZ87p9zKGaWQuzpvAcDKfOTPYfx5A9zOmbTh8RMMFg'
-                  }
+                  // avatar={
+                  //   this.state.profile.profile != null
+                  //     ? this.state.profile.profile
+                  //     : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgmT5tM-IGcFDpqZ87p9zKGaWQuzpvAcDKfOTPYfx5A9zOmbTh8RMMFg'
+                  // }
                   title={item.tx_type === 'credit' ? 'Received' : 'Sent'}
                   subtitle={moment(item.created).fromNow()}
                   rightTitle={`${item.currency.symbol}${this.getAmount(

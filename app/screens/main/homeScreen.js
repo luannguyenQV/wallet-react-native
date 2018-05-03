@@ -12,6 +12,9 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
 } from 'react-native';
+import { connect } from 'react-redux';
+import { logoutUser } from './../../redux/actions';
+
 import Swiper from 'react-native-swiper';
 import UserInfoService from './../../services/userInfoService';
 import AccountService from './../../services/accountService';
@@ -64,20 +67,11 @@ class HomeScreen extends Component {
     };
   }
 
-  async componentWillMount() {
-    try {
-      const token = await AsyncStorage.getItem('token');
-      if (token === null) {
-        this.logout();
-      }
-      return token;
-    } catch (error) {}
-  }
-
   async componentDidMount() {
+    console.log(this.props);
     //NetInfo.check(this.props.navigation)
-    this.getBalanceInfo();
-    this.getUserInfo();
+    // this.getBalanceInfo();
+    // this.getUserInfo();
   }
 
   setBalance = (balance, divisibility) => {
@@ -90,6 +84,7 @@ class HomeScreen extends Component {
   };
 
   getUserInfo = async () => {
+    console.log('test1');
     let responseJson = await UserInfoService.getUserDetails();
     if (responseJson.status === 'success') {
       AsyncStorage.removeItem('user');
@@ -110,10 +105,6 @@ class HomeScreen extends Component {
         this.setState({
           creditSwitch: false,
         });
-      }
-      const token = await AsyncStorage.getItem('token');
-      if (token === null) {
-        await this.logout();
       }
       let responseJson2 = await UserInfoService.getCompany();
       if (responseJson2.status === 'success') {
@@ -187,12 +178,15 @@ class HomeScreen extends Component {
   };
 
   logout = () => {
-    if (this.state.logout) return;
-
-    this.setState({
-      logout: true,
-    });
-    Auth.logout(this.props.navigation);
+    // this.props.navigation.navigate('Logout');
+    console.log('logout1');
+    // this.props.logoutUser();
+    // if (this.state.logout) return;
+    // console.log('logout2');
+    // this.setState({
+    //   logout: true,
+    // });
+    // Auth.logout(this.props.navigation);
   };
 
   showDialog = item => {
@@ -488,4 +482,8 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+const mapStateToProps = ({ auth }) => {
+  return auth;
+};
+
+export default connect(mapStateToProps, { logoutUser })(HomeScreen);
