@@ -68,10 +68,11 @@ class HomeScreen extends Component {
   }
 
   async componentDidMount() {
+    console.log('mounted home');
     console.log(this.props);
     //NetInfo.check(this.props.navigation)
-    // this.getBalanceInfo();
-    // this.getUserInfo();
+    this.getBalanceInfo();
+    this.getUserInfo();
   }
 
   setBalance = (balance, divisibility) => {

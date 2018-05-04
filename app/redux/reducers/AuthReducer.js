@@ -7,6 +7,7 @@ import {
   AUTH_FIELD_FOCUS,
   LOGOUT_USER,
 } from './../actions/types';
+import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 
 const INITIAL_STATE = {
   firstName: '',
@@ -36,6 +37,8 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
   console.log(action);
   switch (action.type) {
+    case PERSIST_REHYDRATE:
+      return action.payload.auth || [];
     case AUTH_FIELD_CHANGED:
       return {
         ...state,
@@ -73,8 +76,8 @@ export default (state = INITIAL_STATE, action) => {
       console.log('logged out');
       return {
         ...state,
-        token: null,
-        user: null,
+        token: '',
+        user: '',
       };
     default:
       return state;

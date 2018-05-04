@@ -8,9 +8,11 @@ import Auth from './../../util/auth';
 import Header from './../../components/header';
 
 class LogoutScreen extends Component {
+  state = { loggingOut: false };
+
   componentDidMount() {
     this.props.logoutUser();
-    this.onLogoutComplete(this.props);
+    // this.onLogoutComplete(this.props);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -18,7 +20,9 @@ class LogoutScreen extends Component {
   }
 
   onLogoutComplete(props) {
-    if (!props.token) {
+    if (!props.token && !this.state.loggingOut) {
+      console.log('logged out2');
+      this.setState({ loggingOut: true });
       this.props.navigation.navigate('InitialScreen');
     }
   }

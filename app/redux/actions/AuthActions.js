@@ -13,22 +13,10 @@ import { IsEmail } from './../../util/validation';
 import AuthService from './../../services/authService';
 import Auth from './../../util/auth';
 
-export const initialLoad = () => async dispatch => {
-  let token = await AsyncStorage.getItem('token');
-
+export const initialLoad = token => async dispatch => {
   if (token) {
     dispatch({ type: LOGIN_USER_SUCCESS, payload: token });
   } else {
-    let email = await AsyncStorage.getItem('email');
-    let company = await AsyncStorage.getItem('company');
-    dispatch({
-      type: AUTH_FIELD_CHANGED,
-      payload: { prop: 'email', value: email },
-    });
-    dispatch({
-      type: AUTH_FIELD_CHANGED,
-      payload: { prop: 'company', value: company },
-    });
     dispatch({ type: LOGIN_USER_FAIL });
   }
 };
@@ -42,12 +30,8 @@ export const authFieldChange = ({ prop, value }) => {
 };
 
 export const logoutUser = () => {
-  return async ({ dispatch }) => {
-    await AsyncStorage.removeItem('user');
-    await AsyncStorage.removeItem('token');
-    dispatch({
-      type: LOGOUT_USER,
-    });
+  return {
+    type: LOGOUT_USER,
   };
 };
 
@@ -92,13 +76,6 @@ performLogin = async (dispatch, data) => {
 
   if (responseJson.status === 'success') {
     const loginInfo = responseJson.data;
-    await AsyncStorage.setItem('token', loginInfo.token);
-    await AsyncStorage.setItem('email', data.user);
-    await AsyncStorage.setItem('company', data.company);
-    console.log('asyncset');
-    console.log(data);
-    console.log(loginInfo.token);
-
     loginUserSuccess(dispatch, loginInfo.token);
     // let twoFactorResponse = await AuthService.twoFactorAuth();
     // if (twoFactorResponse.status === 'success') {

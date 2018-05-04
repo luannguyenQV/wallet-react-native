@@ -9,13 +9,13 @@ import { Button } from './../../components/common';
 
 class InitialScreen extends Component {
   componentDidMount() {
-    this.props.initialLoad();
+    this.props.initialLoad(this.props.token);
     this.onAuthComplete(this.props);
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.onAuthComplete(nextProps);
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   this.onAuthComplete(nextProps);
+  // }
 
   onAuthComplete(props) {
     if (props.token) {

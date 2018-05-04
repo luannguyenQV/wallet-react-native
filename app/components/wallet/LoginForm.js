@@ -16,9 +16,7 @@ import { IsEmail } from './../../util/validation';
 
 class LoginForm extends Component {
   componentWillReceiveProps(nextProps) {
-    // console.log(nextProps);
     this.onAuthComplete(nextProps);
-    // this._scrollToInput(nextProps.focusProp);
   }
 
   onAuthComplete(props) {
@@ -27,10 +25,10 @@ class LoginForm extends Component {
     }
   }
 
-  onButtonPress() {
+  onButtonPress = () => {
     const { email, company, password } = this.props;
     this.props.loginUser({ email, company, password });
-  }
+  };
 
   _scrollToInput(inputHandle) {
     inputHandle.focus();
@@ -120,13 +118,9 @@ class LoginForm extends Component {
             reference={input => {
               this.password = input;
             }}
-            onSubmitEditing={this.onButtonPress.bind(this)}
+            onSubmitEditing={this.onButtonPress}
           />
-          <Button
-            label="LOG IN"
-            type="primary"
-            onPress={this.onButtonPress.bind(this)}
-          />
+          <Button label="LOG IN" type="primary" onPress={this.onButtonPress} />
           <Button
             label="Forgot password?"
             type="text"
