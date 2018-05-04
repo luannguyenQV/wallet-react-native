@@ -2,9 +2,13 @@ import { AsyncStorage } from 'react-native';
 import {
   AUTH_FIELD_CHANGED,
   AUTH_FIELD_ERROR,
+  TERMS_CHANGED,
   LOGIN_USER_SUCCESS,
   LOGIN_USER_FAIL,
   LOGIN_USER,
+  REGISTER_USER_SUCCESS,
+  REGISTER_USER_FAIL,
+  REGISTER_USER,
   AUTH_FIELD_FOCUS,
   LOGOUT_USER,
 } from './types';
@@ -26,6 +30,13 @@ export const authFieldChange = ({ prop, value }) => {
   return {
     type: AUTH_FIELD_CHANGED,
     payload: { prop, value, error },
+  };
+};
+
+export const termsChanged = ({ prop, value }) => {
+  return {
+    type: TERMS_CHANGED,
+    payload: { prop, value: !value },
   };
 };
 
@@ -126,6 +137,11 @@ validation = (prop, value) => {
         error = 'Please enter a company ID';
       }
       break;
+    // case 'mobile':
+    //   if (!value) {
+    //     error = 'Please enter a company ID';
+    //   }
+    //   break;
     default:
       error = '';
   }

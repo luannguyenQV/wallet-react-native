@@ -1,18 +1,9 @@
 import React, { Component } from 'react';
-import {
-  KeyboardAvoidingView,
-  Alert,
-  AsyncStorage,
-  findNodeHandle,
-} from 'react-native';
+import { KeyboardAvoidingView, findNodeHandle } from 'react-native';
 import { connect } from 'react-redux';
 import { authFieldChange, loginUser } from './../../redux/actions';
 
 import { Input, Button, InputForm } from './../common';
-import Colors from './../../config/colors';
-import AuthService from './../../services/authService';
-import Auth from './../../util/auth';
-import { IsEmail } from './../../util/validation';
 
 class LoginForm extends Component {
   componentWillReceiveProps(nextProps) {

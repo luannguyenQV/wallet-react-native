@@ -6,12 +6,13 @@ import {
   AUTH_FIELD_ERROR,
   AUTH_FIELD_FOCUS,
   LOGOUT_USER,
+  TERMS_CHANGED,
 } from './../actions/types';
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 
 const INITIAL_STATE = {
-  firstName: '',
-  lastName: '',
+  first_name: '',
+  last_name: '',
   email: '',
   emailError: '',
   mobileNumber: null,
@@ -25,7 +26,7 @@ const INITIAL_STATE = {
   passwordError: true,
   password2: '',
   password2Error: true,
-  terms: false,
+  terms_and_conditions: false,
   termsError: '',
   loginError: '',
   token: null,
@@ -49,6 +50,11 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         [action.payload.prop + 'Error']: action.payload.error,
+      };
+    case TERMS_CHANGED:
+      return {
+        ...state,
+        [action.payload.prop]: action.payload.value,
       };
     case LOGIN_USER:
       return { ...state, loading: true, error: '' };

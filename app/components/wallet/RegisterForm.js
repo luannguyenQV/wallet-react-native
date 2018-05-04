@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import { KeyboardAvoidingView, findNodeHandle } from 'react-native';
+import { connect } from 'react-redux';
+import { authFieldChange, registerUser } from './../../redux/actions';
 
 import { Input, Spinner, Button, InputForm, Checkbox } from './../common';
-import Colors from './../../config/colors';
-import AuthService from './../../services/authService';
-import Auth from './../../util/auth';
-import { IsEmail } from './../../util/validation';
 
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
@@ -32,141 +30,145 @@ class RegisterForm extends Component {
     nodeToScrollTo: null,
   };
 
+  componentWillReceiveProps(nextProps) {
+    this.onAuthComplete(nextProps);
+  }
+
+  onAuthComplete(props) {
+    if (props.token) {
+      this.props.navigation.navigate('Home');
+    }
+  }
+
   onButtonPress() {
-    if (this.validation()) {
-      let lineNumber = this.state.lineNumber;
-      let mobileNumber = '';
-      if (lineNumber != null && lineNumber.length > 0) {
-        mobileNumber = this.state.countryCode + lineNumber;
-      }
-      let data = {
-        first_name: this.state.firstName,
-        last_name: this.state.lastName,
-        email: this.state.email,
-        company: this.state.company,
-        password1: this.state.password,
-        password2: this.state.password2,
-        mobile_number: mobileNumber,
-        terms_and_conditions: this.state.terms,
-      };
-      this.performRegister(data);
-    }
+    let data = ({
+      first_name,
+      last_name,
+      email,
+      company,
+      password1,
+      password2,
+      mobile_number,
+      terms_and_conditions,
+    } = this.props);
+
+    this.props.registerUser(data);
   }
 
-  validation() {
-    let emailStatus = this.validationEmail();
-    let mobileNumberStatus = this.validationMobileNumber();
-    let companyStatus = this.validationCompany();
-    let passwordStatus = this.validationPassword();
-    let password2Status = this.validationPassword2();
+  // validation() {
+  //   let emailStatus = this.validationEmail();
+  //   let mobileNumberStatus = this.validationMobileNumber();
+  //   let companyStatus = this.validationCompany();
+  //   let passwordStatus = this.validationPassword();
+  //   let password2Status = this.validationPassword2();
 
-    let nodeToScrollTo = null;
+  //   let nodeToScrollTo = null;
 
-    if (!emailStatus) {
-      nodeToScrollTo = this.email;
-    } else if (!mobileNumberStatus) {
-      nodeToScrollTo = this.lineNumber;
-    } else if (!companyStatus) {
-      nodeToScrollTo = this.company;
-    } else if (!passwordStatus) {
-      nodeToScrollTo = this.password;
-    } else if (!password2Status) {
-      nodeToScrollTo = this.password2;
-    }
+  //   if (!emailStatus) {
+  //     nodeToScrollTo = this.email;
+  //   } else if (!mobileNumberStatus) {
+  //     nodeToScrollTo = this.lineNumber;
+  //   } else if (!companyStatus) {
+  //     nodeToScrollTo = this.company;
+  //   } else if (!passwordStatus) {
+  //     nodeToScrollTo = this.password;
+  //   } else if (!password2Status) {
+  //     nodeToScrollTo = this.password2;
+  //   }
 
-    if (
-      emailStatus &&
-      companyStatus &&
-      passwordStatus &&
-      password2Status &&
-      mobileNumberStatus
-    ) {
-      return true;
-    }
+  //   if (
+  //     emailStatus &&
+  //     companyStatus &&
+  //     passwordStatus &&
+  //     password2Status &&
+  //     mobileNumberStatus
+  //   ) {
+  //     return true;
+  //   }
 
-    this._scrollToInput(nodeToScrollTo);
-    return false;
-  }
+  //   this._scrollToInput(nodeToScrollTo);
+  //   return false;
+  // }
 
-  validationEmail() {
-    const { email } = this.state;
+  // validationEmail() {
+  //   const { email } = this.state;
 
-    let emailStatus = false;
-    let emailError = null;
+  //   let emailStatus = false;
+  //   let emailError = null;
 
-    if (email != null && IsEmail(email)) {
-      emailStatus = true;
-    } else {
-      emailError = 'Please enter a valid email address';
-    }
-    this.setState({ emailError });
-    return emailStatus;
-  }
+  //   if (email != null && IsEmail(email)) {
+  //     emailStatus = true;
+  //   } else {
+  //     emailError = 'Please enter a valid email address';
+  //   }
+  //   this.setState({ emailError });
+  //   return emailStatus;
+  // }
 
-  validationMobileNumber() {
-    const { lineNumber, countryCode } = this.state;
+  // validationMobileNumber() {
+  //   const { lineNumber, countryCode } = this.state;
 
-    let mobileNumberStatus = true;
-    let mobileNumberError = null;
-    let mobileNumber = null;
-    if (lineNumber != null && lineNumber.length > 0) {
-      mobileNumberStatus = false;
-      mobileNumber = countryCode + lineNumber;
-      const number = phoneUtil.parseAndKeepRawInput(mobileNumber);
-      if (phoneUtil.isValidNumber(number)) {
-        mobileNumberStatus = true;
-      } else {
-        mobileNumberError =
-          '  Please enter a valid mobile number or leave blank';
-      }
-    }
-    console.log(mobileNumber);
-    this.setState({ mobileNumber, mobileNumberError });
-    return mobileNumberStatus;
-  }
+  //   let mobileNumberStatus = true;
+  //   let mobileNumberError = null;
+  //   let mobileNumber = null;
+  //   if (lineNumber != null && lineNumber.length > 0) {
+  //     mobileNumberStatus = false;
+  //     mobileNumber = countryCode + lineNumber;
+  //     const number = phoneUtil.parseAndKeepRawInput(mobileNumber);
+  //     if (phoneUtil.isValidNumber(number)) {
+  //       mobileNumberStatus = true;
+  //     } else {
+  //       mobileNumberError =
+  //         '  Please enter a valid mobile number or leave blank';
+  //     }
+  //   }
+  //   console.log(mobileNumber);
+  //   this.setState({ mobileNumber, mobileNumberError });
+  //   return mobileNumberStatus;
+  // }
 
-  validationCompany() {
-    const { company } = this.state;
-    let companyStatus = false;
-    let companyError = null;
-    if (company != null && company.length > 0) {
-      companyStatus = true;
-    } else {
-      companyError = 'Please enter a company ID';
-    }
-    this.setState({ companyError });
-    return companyStatus;
-  }
+  // validationCompany() {
+  //   const { company } = this.state;
+  //   let companyStatus = false;
+  //   let companyError = null;
+  //   if (company != null && company.length > 0) {
+  //     companyStatus = true;
+  //   } else {
+  //     companyError = 'Please enter a company ID';
+  //   }
+  //   this.setState({ companyError });
+  //   return companyStatus;
+  // }
 
-  validationPassword() {
-    const { password } = this.state;
-    let passwordStatus = false;
-    let passwordError = null;
-    if (password != null && password.length >= 8) {
-      passwordStatus = true;
-    } else {
-      passwordError = 'Must be at least 8 characters';
-    }
-    this.setState({ passwordError });
-    return passwordStatus;
-  }
+  // validationPassword() {
+  //   const { password } = this.state;
+  //   let passwordStatus = false;
+  //   let passwordError = null;
+  //   if (password != null && password.length >= 8) {
+  //     passwordStatus = true;
+  //   } else {
+  //     passwordError = 'Must be at least 8 characters';
+  //   }
+  //   this.setState({ passwordError });
+  //   return passwordStatus;
+  // }
 
-  validationPassword2() {
-    const { password, password2 } = this.state;
-    let password2Status = false;
-    let password2Error = null;
-    if (password2 == null && password2.length == 0) {
-      password2Error = 'Please confirm your password';
-    } else if (password2.length < 8) {
-      password2Error = 'Must be at least 8 characters';
-    } else if (password != password2) {
-      password2Error = 'Passwords do not match';
-    } else {
-      password2Status = true;
-    }
-    this.setState({ password2Error });
-    return password2Status;
-  }
+  // validationPassword2() {
+  //   const { password, password2 } = this.state;
+  //   let password2Status = false;
+  //   let password2Error = null;
+  //   if (password2 == null && password2.length == 0) {
+  //     password2Error = 'Please confirm your password';
+  //   } else if (password2.length < 8) {
+  //     password2Error = 'Must be at least 8 characters';
+  //   } else if (password != password2) {
+  //     password2Error = 'Passwords do not match';
+  //   } else {
+  //     password2Status = true;
+  //   }
+  //   this.setState({ password2Error });
+  //   return password2Status;
+  // }
 
   changeCountryCode = (code, cca2) => {
     this.setState({
@@ -175,45 +177,45 @@ class RegisterForm extends Component {
     });
   };
 
-  performRegister = async data => {
-    let responseJson = await AuthService.signup(data);
-    if (responseJson.status === 'success') {
-      const loginInfo = responseJson.data;
-      if (data.mobile_number) {
-        this.props.navigation.navigate('AuthVerifyMobile', {
-          loginInfo,
-          signupInfo: this.state,
-        });
-      } else {
-        Auth.login(this.props.navigation, loginInfo);
-      }
-    } else {
-      this.handleFailedResponse(responseJson.data);
-    }
-  };
+  // performRegister = async data => {
+  //   let responseJson = await AuthService.signup(data);
+  //   if (responseJson.status === 'success') {
+  //     const loginInfo = responseJson.data;
+  //     if (data.mobile_number) {
+  //       this.props.navigation.navigate('AuthVerifyMobile', {
+  //         loginInfo,
+  //         signupInfo: this.state,
+  //       });
+  //     } else {
+  //       Auth.login(this.props.navigation, loginInfo);
+  //     }
+  //   } else {
+  //     this.handleFailedResponse(responseJson.data);
+  //   }
+  // };
 
-  handleFailedResponse(data) {
-    if (data.email) {
-      this.setState({
-        emailError: data.email,
-      });
-    }
-    if (data.mobile_number) {
-      this.setState({
-        mobileNumberError: ' ' + data.mobile_number,
-      });
-    }
-    if (data.company) {
-      this.setState({
-        companyError: data.company,
-      });
-    }
-    if (data.terms_and_conditions) {
-      this.setState({
-        termsError: '* Please accept the terms of use',
-      });
-    }
-  }
+  // handleFailedResponse(data) {
+  //   if (data.email) {
+  //     this.setState({
+  //       emailError: data.email,
+  //     });
+  //   }
+  //   if (data.mobile_number) {
+  //     this.setState({
+  //       mobileNumberError: ' ' + data.mobile_number,
+  //     });
+  //   }
+  //   if (data.company) {
+  //     this.setState({
+  //       companyError: data.company,
+  //     });
+  //   }
+  //   if (data.terms_and_conditions) {
+  //     this.setState({
+  //       termsError: '* Please accept the terms of use',
+  //     });
+  //   }
+  // }
 
   _scrollToInput(inputHandle) {
     inputHandle.focus();
@@ -229,8 +231,8 @@ class RegisterForm extends Component {
 
   render() {
     const {
-      firstName,
-      lastName,
+      first_name,
+      last_name,
       email,
       emailError,
       lineNumber,
@@ -243,9 +245,9 @@ class RegisterForm extends Component {
       passwordError,
       password2,
       password2Error,
-      terms,
+      terms_and_conditions,
       termsError,
-    } = this.state;
+    } = this.props;
 
     const { containerStyle } = styles;
 
@@ -261,27 +263,31 @@ class RegisterForm extends Component {
           <Input
             label="First name"
             placeholder="e.g. Jon"
-            onChangeText={firstName => this.setState({ firstName })}
-            value={firstName}
+            onChangeText={value =>
+              this.props.authFieldChange({ prop: 'first_name', value })
+            }
+            value={first_name}
             autoCapitalize={'words'}
             autoFocus
             returnKeyType="next"
             reference={input => {
-              this.firstName = input;
+              this.first_name = input;
             }}
             onSubmitEditing={() => {
-              this._scrollToInput(this.lastName);
+              this._scrollToInput(this.last_name);
             }}
           />
           <Input
             label="Last name"
             placeholder="e.g. Snow"
-            onChangeText={lastName => this.setState({ lastName })}
-            value={lastName}
+            onChangeText={value =>
+              this.props.authFieldChange({ prop: 'last_name', value })
+            }
+            value={last_name}
             autoCapitalize={'words'}
             returnKeyType="next"
             reference={input => {
-              this.lastName = input;
+              this.last_name = input;
             }}
             onSubmitEditing={() => {
               this._scrollToInput(this.email);
@@ -294,24 +300,28 @@ class RegisterForm extends Component {
             required
             requiredError={emailError}
             keyboardType="email-address"
-            onChangeText={email => this.setState({ email })}
+            onChangeText={value =>
+              this.props.authFieldChange({ prop: 'email', value })
+            }
             returnKeyType="next"
             reference={input => {
               this.email = input;
             }}
             onSubmitEditing={() => {
               this.validationEmail();
-              this._scrollToInput(this.lineNumber);
+              this._scrollToInput(this.company);
             }}
           />
-          <Input
+          {/* <Input
             type="mobile"
             placeholder="12345678"
             label="Mobile"
             value={lineNumber}
             requiredError={mobileNumberError}
             keyboardType="numeric"
-            onChangeText={lineNumber => this.setState({ lineNumber })}
+            onChangeText={value =>
+              this.props.authFieldChange({ prop: 'lineNumber', value })
+            }
             returnKeyType="next"
             changeCountryCode={this.changeCountryCode}
             countryCode={countryCode}
@@ -323,14 +333,16 @@ class RegisterForm extends Component {
               this.validationMobileNumber();
               this._scrollToInput(this.company);
             }}
-          />
+          /> */}
           <Input
             placeholder="e.g. Rehive"
             label="Company"
             required
             requiredError={companyError}
             value={company}
-            onChangeText={company => this.setState({ company })}
+            onChangeText={value =>
+              this.props.authFieldChange({ prop: 'company', value })
+            }
             reference={input => {
               this.company = input;
             }}
@@ -348,7 +360,9 @@ class RegisterForm extends Component {
             requiredError={passwordError}
             value={password}
             password={true}
-            onChangeText={password => this.setState({ password })}
+            onChangeText={value =>
+              this.props.authFieldChange({ prop: 'password', value })
+            }
             returnKeyType="next"
             reference={input => {
               this.password = input;
@@ -366,25 +380,28 @@ class RegisterForm extends Component {
             requiredError={password2Error}
             value={password2}
             password={true}
-            onChangeText={password2 => this.setState({ password2 })}
+            onChangeText={value =>
+              this.props.authFieldChange({ prop: 'password2', value })
+            }
             returnKeyType="done"
             reference={input => {
               this.password2 = input;
             }}
             onSubmitEditing={this.onButtonPress.bind(this)}
           />
-          <Checkbox
-            onPress={() =>
-              this.setState({
-                terms: !terms,
+          {/* <Checkbox
+            onPress={value =>
+              this.props.authFieldChange({
+                prop: 'terms_and_conditions',
+                value,
               })
             }
-            value={terms}
+            value={terms_and_conditions}
             requiredError={termsError}
             label={'I agree to the'}
             link={'https://rehive.com/legal/'}
             linkLabel={'terms of use'}
-          />
+          /> */}
           <Button label="REGISTER" onPress={this.onButtonPress.bind(this)} />
         </InputForm>
       </KeyboardAvoidingView>
@@ -395,12 +412,16 @@ class RegisterForm extends Component {
 const styles = {
   containerStyle: {
     flex: 1,
-    // backgroundColor: 'white',
     backgroundColor: '#00000000',
-    // paddingVertical: 10,
     justifyContent: 'flex-start',
-    // paddingRight: 25,
   },
 };
 
-export default RegisterForm;
+const mapStateToProps = ({ auth }) => {
+  return auth;
+};
+
+export default connect(mapStateToProps, {
+  authFieldChange,
+  registerUser,
+})(RegisterForm);
