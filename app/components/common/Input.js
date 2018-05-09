@@ -14,10 +14,18 @@ class Input extends Component {
     countryCode: '+1',
   };
 
+  // componentWillReceiveProps(nextProps) {
+  //   if (nextProps.requiredError != '') {
+  //     this.setState({
+  //       borderColor: Colors.red,
+  //     });
+  //   }
+  // }
+
   _OnBlur() {
     this.setState({
       textColor: Colors.black,
-      borderColor: Colors.lightgray,
+      borderColor: 'lightgray',
     });
   }
 
@@ -57,6 +65,7 @@ class Input extends Component {
       type,
       countryCode,
       changeCountryCode,
+      requiredError,
     } = this.props;
 
     const {
@@ -76,7 +85,17 @@ class Input extends Component {
     } = this.state;
 
     return (
-      <View style={[viewStyleInput, { borderColor: borderColor }]}>
+      <View
+        style={[
+          viewStyleInput,
+          requiredError != '' && requiredError != null
+            ? {
+                borderColor: 'red',
+              }
+            : {
+                borderColor,
+              },
+        ]}>
         {type === 'mobile' ? (
           <View style={viewStyleCountry}>
             <CountryPicker
@@ -93,7 +112,17 @@ class Input extends Component {
             <TextInput
               value={countryCode}
               editable={false}
-              style={textStyleCode}
+              style={[
+                textStyleCode,
+                countryCode.length < 4
+                  ? {
+                      width: 35,
+                    }
+                  : {
+                      width: 50,
+                    },
+              ]}
+              underlineColorAndroid="transparent"
             />
           </View>
         ) : null}
@@ -131,7 +160,7 @@ class Input extends Component {
   }
 
   render() {
-    const { label, required, requiredError } = this.props;
+    const { label, required, requiredError, helperText } = this.props;
 
     const {
       viewStyleContainer,
@@ -139,6 +168,7 @@ class Input extends Component {
       viewStyleHelper,
       textStyleLabel,
       textStyleRequired,
+      textStyleHelper,
     } = styles;
 
     const { textColor } = this.state;
@@ -155,7 +185,11 @@ class Input extends Component {
 
         {requiredError ? (
           <View style={viewStyleHelper}>
-            <Text style={textStyleRequired}>{requiredError}</Text>
+            <Text style={textStyleRequired}>Error: {requiredError}</Text>
+          </View>
+        ) : helperText ? (
+          <View style={viewStyleHelper}>
+            <Text style={textStyleHelper}>{helperText}</Text>
           </View>
         ) : null}
       </View>
@@ -198,22 +232,26 @@ const styles = {
     paddingBottom: 8,
   },
   textStyleCode: {
-    width: 50,
     fontSize: 16,
     color: 'black',
     textAlign: 'right',
     fontWeight: 'normal',
-    borderColor: 'white',
     alignItems: 'center',
     fontSize: 16,
     paddingTop: 8,
     paddingBottom: 8,
   },
   textStyleRequired: {
-    paddingTop: 2,
+    paddingTop: 8,
     paddingBottom: 8,
     fontSize: 12,
     color: Colors.error,
+  },
+  textStyleHelper: {
+    paddingTop: 8,
+    paddingBottom: 8,
+    fontSize: 12,
+    color: 'gray',
   },
   iconStyleVisibility: {
     width: 24,

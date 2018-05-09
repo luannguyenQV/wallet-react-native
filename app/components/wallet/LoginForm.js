@@ -1,10 +1,5 @@
 import React, { Component } from 'react';
-import {
-  KeyboardAvoidingView,
-  Alert,
-  AsyncStorage,
-  findNodeHandle,
-} from 'react-native';
+import { View, Alert, AsyncStorage, findNodeHandle } from 'react-native';
 
 import { Input, Button, InputForm } from './../common';
 import Colors from './../../config/colors';
@@ -237,6 +232,7 @@ class LoginForm extends Component {
           label="Password"
           required
           requiredError={passwordError}
+          helperText="Must be at least 8 characters"
           value={password}
           password={true}
           onChangeText={password => this.setState({ password })}
@@ -246,16 +242,18 @@ class LoginForm extends Component {
           }}
           onSubmitEditing={this.onButtonPress.bind(this)}
         />
-        <Button
-          label="LOG IN"
-          type="primary"
-          onPress={this.onButtonPress.bind(this)}
-        />
-        <Button
-          label="Forgot password?"
-          type="text"
-          onPress={() => this.props.navigation.navigate('ForgotPassword')}
-        />
+        <View style={{ paddingTop: 8 }}>
+          <Button
+            label="LOG IN"
+            type="primary"
+            onPress={this.onButtonPress.bind(this)}
+          />
+          <Button
+            label="Forgot password?"
+            type="text"
+            onPress={() => this.props.navigation.navigate('ForgotPassword')}
+          />
+        </View>
       </InputForm>
     );
   }

@@ -78,7 +78,7 @@ class AddressScreen extends Component {
         <InputForm>
           <Input
             label="Address Line 1"
-            placeholder="e.g. Plot-02, Road-08"
+            placeholder="e.g. 158 Kloof Street"
             autoCapitalize="none"
             value={this.state.line_1}
             onChangeText={line_1 => this.setState({ line_1 })}
@@ -86,7 +86,7 @@ class AddressScreen extends Component {
 
           <Input
             label="Address Line 2"
-            placeholder="e.g. Mohakhali C/A, Dhaka"
+            placeholder="e.g. Gardens"
             autoCapitalize="none"
             value={this.state.line_2}
             onChangeText={line_2 => this.setState({ line_2 })}
@@ -94,7 +94,7 @@ class AddressScreen extends Component {
 
           <Input
             label="City"
-            placeholder="e.g. Capetown"
+            placeholder="e.g. Cape Town"
             autoCapitalize="none"
             value={this.state.city}
             onChangeText={city => this.setState({ city })}
@@ -106,6 +106,14 @@ class AddressScreen extends Component {
             autoCapitalize="none"
             value={this.state.state_province}
             onChangeText={state_province => this.setState({ state_province })}
+          />
+
+          <Input
+            label="Postal code"
+            placeholder="e.g. 9001"
+            autoCapitalize="none"
+            value={this.state.postal_code}
+            onChangeText={postal_code => this.setState({ postal_code })}
           />
 
           <View style={styles.pickerContainer}>
@@ -127,33 +135,6 @@ class AddressScreen extends Component {
               />
             </View>
           </View>
-
-          {/* <View style={[styles.pickerContainer, { paddingVertical: 20 }]}>
-            <Text style={[styles.text, { flex: 4 }]}>Country</Text>
-            <View style={{ flex: 5, alignItems: 'flex-end' }}>
-              <CountryPicker
-                onChange={value => {
-                  this.setState({ nationality: value.cca2 });
-                }}
-                closeable
-                filterable
-                translation="eng"
-                styles={{
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              />
-            </View>
-          </View> */}
-
-          <Input
-            label="Postal code"
-            placeholder="e.g. 1212"
-            autoCapitalize="none"
-            value={this.state.postal_code}
-            onChangeText={postal_code => this.setState({ postal_code })}
-          />
         </InputForm>
       </View>
     );
@@ -176,6 +157,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     borderBottomWidth: 1,
+    borderColor: 'lightgrey',
   },
 };
 

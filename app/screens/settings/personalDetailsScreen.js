@@ -17,11 +17,6 @@ import Colors from './../../config/colors';
 import Header from './../../components/header';
 import { Input, InputForm } from './../../components/common';
 
-const languages = {
-  en: 'English',
-  af: 'Africans',
-};
-
 class PersonalDetailsScreen extends Component {
   static navigationOptions = {
     title: 'Personal details',
@@ -40,7 +35,6 @@ class PersonalDetailsScreen extends Component {
       id_number: '',
       skype_name: '',
       mobile_number: '',
-      language: '',
       modalVisible: false,
       languageModalVisible: false,
       first_name_color: false,
@@ -62,7 +56,6 @@ class PersonalDetailsScreen extends Component {
       last_name: user.last_name,
       id_number: user.id_number,
       nationality: user.nationality !== '' ? user.nationality : 'US',
-      language: user.language,
       profile: user.profile,
     });
   }
@@ -73,10 +66,6 @@ class PersonalDetailsScreen extends Component {
 
   openModal = async () => {
     this.setState({ modalVisible: true });
-  };
-
-  openLanguageModal = async () => {
-    this.setState({ languageModalVisible: true });
   };
 
   launchCamera = async () => {
@@ -203,25 +192,6 @@ class PersonalDetailsScreen extends Component {
               />
             </View>
           </View>
-          <View style={[styles.pickerContainer]}>
-            <Text style={[styles.text, { flex: 4, paddingRight: 0 }]}>
-              Language
-            </Text>
-            <TouchableHighlight
-              style={{ flex: 5, alignItems: 'flex-end' }}
-              onPress={() => {
-                this.openLanguageModal();
-              }}>
-              <Text
-                style={{
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontWeight: 'normal',
-                }}>
-                {languages[this.state.language]} ▼
-              </Text>
-            </TouchableHighlight>
-          </View>
         </InputForm>
 
         <Modal
@@ -257,44 +227,6 @@ class PersonalDetailsScreen extends Component {
                 style={styles.button}
                 onPress={() => {
                   this.setState({ modalVisible: false });
-                }}>
-                <Text style={styles.buttonText}>Cancel</Text>
-              </TouchableHighlight>
-            </View>
-          </View>
-        </Modal>
-
-        <Modal
-          animationInTiming={500}
-          animationOutTiming={500}
-          backdropColor="black"
-          onBackdropPress={() => this.setState({ languageModalVisible: false })}
-          isVisible={this.state.languageModalVisible}>
-          <View style={[styles.modal, { justifyContent: 'flex-end' }]}>
-            <View style={[styles.languageModal]}>
-              <TouchableHighlight
-                style={[
-                  styles.button,
-                  { marginTop: 5, borderRadius: 5, backgroundColor: 'white' },
-                ]}
-                onPress={() => this.languageSelected('en')}>
-                <Text style={styles.buttonText}>English</Text>
-              </TouchableHighlight>
-              <TouchableHighlight
-                style={[
-                  styles.button,
-                  { marginTop: 5, borderRadius: 5, backgroundColor: 'white' },
-                ]}
-                onPress={() => this.languageSelected('af')}>
-                <Text style={styles.buttonText}>Afrikaans</Text>
-              </TouchableHighlight>
-              <TouchableHighlight
-                style={[
-                  styles.button,
-                  { marginTop: 20, borderRadius: 5, backgroundColor: 'white' },
-                ]}
-                onPress={() => {
-                  this.setState({ languageModalVisible: false });
                 }}>
                 <Text style={styles.buttonText}>Cancel</Text>
               </TouchableHighlight>

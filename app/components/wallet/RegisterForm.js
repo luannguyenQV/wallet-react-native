@@ -343,6 +343,7 @@ class RegisterForm extends Component {
           label="Password"
           required
           requiredError={passwordError}
+          helperText="Must be at least 8 characters"
           value={password}
           onChangeText={password => this.setState({ password })}
           returnKeyType="next"
@@ -360,6 +361,7 @@ class RegisterForm extends Component {
           label="Confirm password"
           required
           requiredError={password2Error}
+          helperText="Please enter the same password as above"
           value={password2}
           onChangeText={password2 => this.setState({ password2 })}
           returnKeyType="done"
