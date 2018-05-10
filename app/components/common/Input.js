@@ -8,10 +8,18 @@ class Input extends Component {
   state = {
     textColor: Colors.black,
     borderColor: Colors.lightgray,
-    iconNameVisibility: 'visibility-off',
+    iconNameVisibility: 'visibility',
+    secureTextEntry: this.props.type === 'password' ? true : false,
     cca2: 'US',
     countryCode: '+1',
   };
+
+  // componentDidMount() {
+  //   console.log(this.props);
+  //   if (this.props.type === 'password') {
+  //     this.togglePasswordVisibility();
+  //   }
+  // }
 
   _OnBlur() {
     this.setState({
@@ -130,11 +138,7 @@ class Input extends Component {
           onChangeText={onChangeText}
           ref={reference}
           selectTextOnFocus
-          secureTextEntry={
-            secureTextEntry
-              ? secureTextEntry
-              : this.props.type === 'password' ? true : false
-          }
+          secureTextEntry={secureTextEntry ? secureTextEntry : false}
           keyboardType={keyboardType}
           returnKeyType={returnKeyType}
           onSubmitEditing={onSubmitEditing}

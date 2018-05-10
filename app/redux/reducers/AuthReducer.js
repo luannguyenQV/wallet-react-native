@@ -60,8 +60,6 @@ export default (state = INITIAL_STATE, action) => {
     case UPDATE_AUTH_FORM_FIELD:
       return {
         ...state,
-        // authFormState: action.payload,
-        // registerFormState: '',
         inputError: '',
         loading: true,
       };
@@ -87,7 +85,7 @@ export default (state = INITIAL_STATE, action) => {
         authFormState,
         authFormInputState,
         actionText,
-        inputError: '',
+        // inputError: '',
         input: '',
         password: '',
         loading: false,
@@ -109,10 +107,11 @@ export default (state = INITIAL_STATE, action) => {
     case LOGIN_USER_FAIL:
       return {
         ...state,
-        authFormState: 'validCompany',
         token: null,
         // passwordError: 'Unable to login with provided credentials',
-        inputError: '',
+        inputError:
+          'Unable to login with provided credentials, please try again',
+        input: state.email,
         loading: false,
       };
 
@@ -132,10 +131,10 @@ export default (state = INITIAL_STATE, action) => {
     case REGISTER_USER_FAIL:
       return {
         ...state,
-        authFormState: 'validCompany',
         token: null,
         // passwordError: 'Unable to login with provided credentials',
-        inputError: '',
+        inputError: 'User already registered with this email',
+        input: state.email,
         loading: false,
       };
 

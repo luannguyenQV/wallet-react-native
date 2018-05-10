@@ -252,6 +252,7 @@ performLogin = async (dispatch, data) => {
 };
 
 const loginUserFail = dispatch => {
+  dispatch(updateAuthFormState({ nextFormState: 'login', inputState: '' }));
   dispatch({ type: LOGIN_USER_FAIL });
 };
 
@@ -274,6 +275,7 @@ performRegister = async (dispatch, data) => {
 };
 
 const registerUserFail = dispatch => {
+  dispatch(updateAuthFormState({ nextFormState: 'register', inputState: '' }));
   dispatch({ type: REGISTER_USER_FAIL });
 };
 

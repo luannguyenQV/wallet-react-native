@@ -159,23 +159,21 @@ class InitialScreen extends Component {
 
     let textHeader = '';
     let iconHeaderLeft = '';
-    let onPressHeaderLeft = () => {};
+    let onPressHeaderLeft = () =>
+      this.props.updateAuthFormState({ nextFormState: 'landing' });
     let onPressActionOne = () => {};
 
     console.log(authFormState);
     switch (authFormState) {
       case 'company':
-        // onPressActionOne = () =>
-        //   this.props.saveCompany({ company: this.props.company });
+        if (this.props.company) {
+          iconHeaderLeft = 'md-close';
+        }
         break;
 
       case 'login':
         textHeader = 'Welcome back';
-        iconHeaderLeft = 'md-arrow-back';
-        onPressHeaderLeft = () =>
-          this.props.updateAuthFormState({
-            nextState: 'validCompany',
-          });
+        iconHeaderLeft = 'md-close';
 
         // textActionOne = 'Log in';
         // onPressActionOne = () => this.performLogin();
@@ -183,11 +181,7 @@ class InitialScreen extends Component {
 
       case 'register':
         textHeader = 'Register';
-        iconHeaderLeft = 'md-arrow-back';
-        onPressHeaderLeft = () =>
-          this.props.updateAuthFormState({
-            nextState: 'validCompany',
-          });
+        iconHeaderLeft = 'md-close';
 
         // textActionOne = { actionText };
         // onPressActionOne = () => this.nextRegister();
@@ -214,6 +208,7 @@ class InitialScreen extends Component {
       case 'company':
         return (
           <Input
+            key="company"
             placeholder="e.g. Rehive"
             label="Company"
             value={input}
@@ -232,6 +227,7 @@ class InitialScreen extends Component {
       case 'email':
         return (
           <Input
+            key="email"
             placeholder="e.g. user@gmail.com"
             label="Email"
             value={input}
@@ -251,6 +247,7 @@ class InitialScreen extends Component {
       case 'mobile':
         return (
           <Input
+            key="mobile"
             type="mobile"
             autoFocus
             placeholder="12345678"
@@ -273,6 +270,7 @@ class InitialScreen extends Component {
       case 'password':
         return (
           <Input
+            key="password"
             type="password"
             placeholder="Password"
             label="Password"
