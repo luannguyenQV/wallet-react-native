@@ -21,11 +21,11 @@ class RegisterForm extends Component {
     countryCode: '+1',
     lineNumber: null,
     company: '',
-    companyError: null,
+    companyError: '',
     password: '',
-    passwordError: true,
+    passwordError: '',
     password2: '',
-    password2Error: true,
+    password2Error: '',
     terms: false,
     termsError: '',
     loading: false,
@@ -250,144 +250,140 @@ class RegisterForm extends Component {
     const { containerStyle } = styles;
 
     return (
-      <KeyboardAvoidingView
-        style={containerStyle}
-        behavior={'padding'}
-        keyboardVerticalOffset={5}>
-        <InputForm
-          reference={scrollView => {
-            this.myScrollView = scrollView;
-          }}>
-          <Input
-            label="First name"
-            placeholder="e.g. Jon"
-            onChangeText={firstName => this.setState({ firstName })}
-            value={firstName}
-            autoCapitalize={'words'}
-            autoFocus
-            returnKeyType="next"
-            reference={input => {
-              this.firstName = input;
-            }}
-            onSubmitEditing={() => {
-              this._scrollToInput(this.lastName);
-            }}
-          />
-          <Input
-            label="Last name"
-            placeholder="e.g. Snow"
-            onChangeText={lastName => this.setState({ lastName })}
-            value={lastName}
-            autoCapitalize={'words'}
-            returnKeyType="next"
-            reference={input => {
-              this.lastName = input;
-            }}
-            onSubmitEditing={() => {
-              this._scrollToInput(this.email);
-            }}
-          />
-          <Input
-            placeholder="e.g. user@gmail.com"
-            label="Email"
-            value={email}
-            required
-            requiredError={emailError}
-            keyboardType="email-address"
-            onChangeText={email => this.setState({ email })}
-            returnKeyType="next"
-            reference={input => {
-              this.email = input;
-            }}
-            onSubmitEditing={() => {
-              this.validationEmail();
-              this._scrollToInput(this.lineNumber);
-            }}
-          />
-          <Input
-            type="mobile"
-            placeholder="12345678"
-            label="Mobile"
-            value={lineNumber}
-            requiredError={mobileNumberError}
-            keyboardType="numeric"
-            onChangeText={lineNumber => this.setState({ lineNumber })}
-            returnKeyType="next"
-            changeCountryCode={this.changeCountryCode}
-            countryCode={countryCode}
-            countryName={countryName}
-            reference={input => {
-              this.lineNumber = input;
-            }}
-            onSubmitEditing={() => {
-              this.validationMobileNumber();
-              this._scrollToInput(this.company);
-            }}
-          />
-          <Input
-            placeholder="e.g. Rehive"
-            label="Company"
-            required
-            requiredError={companyError}
-            value={company}
-            onChangeText={company => this.setState({ company })}
-            reference={input => {
-              this.company = input;
-            }}
-            onSubmitEditing={() => {
-              this.validationCompany();
-              this._scrollToInput(this.password);
-            }}
-            returnKeyType="next"
-          />
-          <Input
-            type="password"
-            placeholder="Password"
-            label="Password"
-            required
-            requiredError={passwordError}
-            value={password}
-            password={true}
-            onChangeText={password => this.setState({ password })}
-            returnKeyType="next"
-            reference={input => {
-              this.password = input;
-            }}
-            onSubmitEditing={() => {
-              this.validationPassword();
-              this._scrollToInput(this.password2);
-            }}
-          />
-          <Input
-            type="password"
-            placeholder="Password"
-            label="Confirm password"
-            required
-            requiredError={password2Error}
-            value={password2}
-            password={true}
-            onChangeText={password2 => this.setState({ password2 })}
-            returnKeyType="done"
-            reference={input => {
-              this.password2 = input;
-            }}
-            onSubmitEditing={this.onButtonPress.bind(this)}
-          />
-          <Checkbox
-            onPress={() =>
-              this.setState({
-                terms: !terms,
-              })
-            }
-            value={terms}
-            requiredError={termsError}
-            label={'I agree to the'}
-            link={'https://rehive.com/legal/'}
-            linkLabel={'terms of use'}
-          />
-          <Button label="REGISTER" onPress={this.onButtonPress.bind(this)} />
-        </InputForm>
-      </KeyboardAvoidingView>
+      <InputForm
+        reference={scrollView => {
+          this.myScrollView = scrollView;
+        }}>
+        <Input
+          label="First name"
+          placeholder="e.g. Jon"
+          onChangeText={firstName => this.setState({ firstName })}
+          value={firstName}
+          autoCapitalize={'words'}
+          autoFocus
+          returnKeyType="next"
+          scrollToInput={this._scrollToInput.bind(this)}
+          reference={input => {
+            this.firstName = input;
+          }}
+          onSubmitEditing={() => {
+            this._scrollToInput(this.lastName);
+          }}
+        />
+        <Input
+          label="Last name"
+          placeholder="e.g. Snow"
+          onChangeText={lastName => this.setState({ lastName })}
+          value={lastName}
+          autoCapitalize={'words'}
+          returnKeyType="next"
+          reference={input => {
+            this.lastName = input;
+          }}
+          onSubmitEditing={() => {
+            this._scrollToInput(this.email);
+          }}
+        />
+        <Input
+          placeholder="e.g. user@gmail.com"
+          label="Email"
+          value={email}
+          required
+          requiredError={emailError}
+          keyboardType="email-address"
+          onChangeText={email => this.setState({ email })}
+          returnKeyType="next"
+          reference={input => {
+            this.email = input;
+          }}
+          onSubmitEditing={() => {
+            this.validationEmail();
+            this._scrollToInput(this.lineNumber);
+          }}
+        />
+        <Input
+          type="mobile"
+          placeholder="12345678"
+          label="Mobile"
+          value={lineNumber}
+          requiredError={mobileNumberError}
+          keyboardType="numeric"
+          onChangeText={lineNumber => this.setState({ lineNumber })}
+          returnKeyType="next"
+          changeCountryCode={this.changeCountryCode}
+          countryCode={countryCode}
+          countryName={countryName}
+          reference={input => {
+            this.lineNumber = input;
+          }}
+          onSubmitEditing={() => {
+            this.validationMobileNumber();
+            this._scrollToInput(this.company);
+          }}
+        />
+        <Input
+          placeholder="e.g. Rehive"
+          label="Company"
+          required
+          requiredError={companyError}
+          value={company}
+          onChangeText={company => this.setState({ company })}
+          reference={input => {
+            this.company = input;
+          }}
+          onSubmitEditing={() => {
+            this.validationCompany();
+            this._scrollToInput(this.password);
+          }}
+          returnKeyType="next"
+        />
+        <Input
+          type="password"
+          placeholder="Password"
+          label="Password"
+          required
+          requiredError={passwordError}
+          helperText="Must be at least 8 characters"
+          value={password}
+          onChangeText={password => this.setState({ password })}
+          returnKeyType="next"
+          reference={input => {
+            this.password = input;
+          }}
+          onSubmitEditing={() => {
+            this.validationPassword();
+            this._scrollToInput(this.password2);
+          }}
+        />
+        <Input
+          type="password"
+          placeholder="Password"
+          label="Confirm password"
+          required
+          requiredError={password2Error}
+          helperText="Please enter the same password as above"
+          value={password2}
+          onChangeText={password2 => this.setState({ password2 })}
+          returnKeyType="done"
+          reference={input => {
+            this.password2 = input;
+          }}
+          onSubmitEditing={this.onButtonPress.bind(this)}
+        />
+        <Checkbox
+          onPress={() =>
+            this.setState({
+              terms: !terms,
+            })
+          }
+          value={terms}
+          requiredError={termsError}
+          label={'I agree to the'}
+          link={'https://rehive.com/legal/'}
+          linkLabel={'terms of use'}
+        />
+        <Button label="REGISTER" onPress={this.onButtonPress.bind(this)} />
+      </InputForm>
     );
   }
 }
@@ -397,7 +393,7 @@ const styles = {
     flex: 1,
     // backgroundColor: 'white',
     backgroundColor: '#00000000',
-    // paddingVertical: 10,
+    paddingVertical: 10,
     justifyContent: 'flex-start',
     // paddingRight: 25,
   },

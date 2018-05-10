@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import TransectionService from './../../../services/transactionService';
 import ResetNavigation from './../../../util/resetNavigation';
-import TextInput from './../../../components/textInput';
+import { Input } from './../../../components/common';
 import Colors from './../../../config/colors';
 import Header from './../../../components/header';
 import Big from 'big.js';
@@ -101,8 +101,8 @@ class WithdrawAmountEntryScreen extends Component {
         <Header navigation={this.props.navigation} back title="Withdraw" />
         <KeyboardAvoidingView style={styles.container} behavior={'padding'}>
           <View style={{ flex: 1 }}>
-            <TextInput
-              title="Amount"
+            <Input
+              label="Amount"
               placeholder="Enter amount here"
               autoCapitalize="none"
               keyboardType="numeric"

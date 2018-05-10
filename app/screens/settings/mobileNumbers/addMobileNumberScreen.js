@@ -1,15 +1,7 @@
 import React, { Component } from 'react';
-import {
-  View,
-  KeyboardAvoidingView,
-  StyleSheet,
-  TouchableHighlight,
-  Text,
-  Alert,
-} from 'react-native';
+import { View, Alert } from 'react-native';
 import SettingsService from './../../../services/settingsService';
-import TextInput from './../../../components/mobileNumberInput';
-import Colors from './../../../config/colors';
+import { Input, InputForm } from './../../../components/common';
 import Header from './../../../components/header';
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
@@ -31,6 +23,7 @@ class AddMobileNumberScreen extends Component {
   changeCountryCode = code => {
     this.setState({ code: '+' + code });
   };
+
   add = async () => {
     let responseJson = await SettingsService.addMobile({
       number: this.state.code + this.state.number,
@@ -48,48 +41,36 @@ class AddMobileNumberScreen extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.container}>
         <Header
           navigation={this.props.navigation}
           back
           title="Add mobile number"
+          headerRightTitle="Save"
+          headerRightOnPress={this.add}
         />
-        <KeyboardAvoidingView style={styles.container} behavior={'padding'}>
-          <View style={{ flex: 1 }}>
-            <TextInput
-              title="Enter number"
-              autoCapitalize="none"
-              value={this.state.number}
-              onChangeText={number => this.setState({ number })}
-              changeCountryCode={this.changeCountryCode}
-              code={this.state.code}
-            />
-          </View>
-          <TouchableHighlight style={styles.submit} onPress={this.add}>
-            <Text style={{ color: 'white', fontSize: 20 }}>Save</Text>
-          </TouchableHighlight>
-        </KeyboardAvoidingView>
+        <InputForm>
+          <Input
+            label="Enter number"
+            autoCapitalize="none"
+            type="mobile"
+            value={this.state.number}
+            onChangeText={number => this.setState({ number })}
+            changeCountryCode={this.changeCountryCode}
+            countryCode={this.state.code}
+            // countryName={countryName}
+          />
+        </InputForm>
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flex: 1,
-    flexDirection: 'column',
     backgroundColor: 'white',
-    paddingTop: 10,
   },
-  submit: {
-    marginBottom: 10,
-    marginHorizontal: 20,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: Colors.lightblue,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+};
 
 export default AddMobileNumberScreen;

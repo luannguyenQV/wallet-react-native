@@ -49,11 +49,12 @@ class EditBitcoinAddressScreen extends Component {
           navigation={this.props.navigation}
           back
           title="Edit bitcoin address"
+          headerRightTitle="Save"
+          headerRightOnPress={this.update}
         />
         <EditBitcoinAddressComponent
           updateAddress={this.updateAddress}
           values={this.state}
-          onPress={this.update}
         />
       </View>
     );

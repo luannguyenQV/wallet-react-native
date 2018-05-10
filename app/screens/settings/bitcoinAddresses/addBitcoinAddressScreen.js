@@ -47,11 +47,12 @@ class AddBitcoinAddressScreen extends Component {
           navigation={this.props.navigation}
           back
           title="Add new address"
+          headerRightTitle="Save"
+          headerRightOnPress={this.add}
         />
         <AddBitcoinAddressComponent
           updateAddress={this.updateAddress}
           values={this.state}
-          onPress={this.add}
         />
       </View>
     );

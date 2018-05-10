@@ -9,6 +9,7 @@ import {
   Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import HeaderButtons from 'react-navigation-header-buttons';
 import Colors from './../config/colors';
 import DrawerButton from './drawerButton';
 
@@ -196,6 +197,14 @@ export default class Header extends Component {
                   style={{ paddingRight: 10 }}
                 />
               </TouchableOpacity>
+            ) : null}
+            {this.props.headerRightTitle ? (
+              <HeaderButtons color="white">
+                <HeaderButtons.Item
+                  title={this.props.headerRightTitle}
+                  onPress={this.props.headerRightOnPress}
+                />
+              </HeaderButtons>
             ) : null}
           </View>
         </View>

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Alert, StyleSheet } from 'react-native';
+
 import EditBankAccountComponent from './../../../components/bankAccountComponent';
 import SettingsService from './../../../services/settingsService';
 import ResetNavigation from './../../../util/resetNavigation';
@@ -78,6 +79,8 @@ class EditBankAccountScreen extends Component {
           navigation={this.props.navigation}
           back
           title="Edit bank account"
+          headerRightTitle="Save"
+          headerRightOnPress={this.add}
         />
         <EditBankAccountComponent
           values={this.state}

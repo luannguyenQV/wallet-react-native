@@ -12,7 +12,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import Contact from './../../../components/contact';
-import TextInput from './../../../components/textInput';
+import { Input, Button } from './../../../components/common';
 import ContactService from './../../../services/contactService';
 import UserInfoService from './../../../services/userInfoService';
 import Auth from './../../../util/auth';
@@ -153,13 +153,12 @@ class SendScreen extends Component {
             behavior={'padding'}
             keyboardVerticalOffset={75}>
             <View style={{ flex: 1 }}>
-              <TextInput
-                title="Recipient"
+              <Input
+                label="Recipient"
                 placeholder="Enter email, stellar address or mobile"
                 autoCapitalize="none"
-                underlineColorAndroid="white"
                 value={this.state.searchText}
-                onChange={this.searchTextChanged.bind(this)}
+                onChangeText={this.searchTextChanged}
               />
               <View style={styles.spinner}>
                 <Text>Loading Contacts</Text>
@@ -179,12 +178,11 @@ class SendScreen extends Component {
           <Header navigation={this.props.navigation} title="To" drawer right />
           <KeyboardAvoidingView style={styles.container} behavior={'padding'}>
             <View style={{ flex: 1 }}>
-              <TextInput
-                title="Recipient"
+              <Input
+                label="Recipient"
                 placeholder="Enter email, stellar address or mobile"
-                fontSize={this.state.searchText.length == 0 ? 18 : 22}
+                // fontSize={this.state.searchText.length == 0 ? 18 : 22}
                 autoCapitalize="none"
-                underlineColorAndroid="white"
                 value={this.state.searchText}
                 onChange={this.searchTextChanged.bind(this)}
               />
@@ -204,9 +202,7 @@ class SendScreen extends Component {
                 />
               </View>
             </View>
-            <TouchableHighlight style={styles.submit} onPress={this.send}>
-              <Text style={{ color: 'white', fontSize: 20 }}>Next</Text>
-            </TouchableHighlight>
+            <Button label="Next" onPress={this.send} />
           </KeyboardAvoidingView>
         </View>
       );

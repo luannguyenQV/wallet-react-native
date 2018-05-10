@@ -14,7 +14,7 @@ import Header from '../../../../components/header';
 import Colors from '../../../../config/colors';
 import Auth from './../../../../util/auth';
 import resetNavigation from './../../../../util/resetNavigation';
-import TextInput from './../../../../components/textInput';
+import { Input } from './../../../../components/common';
 
 class AuthVerifySmsScreen extends Component {
   static navigationOptions = {
@@ -57,12 +57,11 @@ class AuthVerifySmsScreen extends Component {
         />
         <KeyboardAvoidingView style={styles.mainContainer} behavior={'padding'}>
           <View style={{ flex: 1 }}>
-            <TextInput
-              title="Enter the OTP"
+            <Input
+              label="Enter the OTP"
               placeholder="OTP"
               autoCapitalize="none"
               keyboardType="numeric"
-              underlineColorAndroid="white"
               onChangeText={token => this.setState({ token })}
             />
           </View>

@@ -36,7 +36,7 @@ class Button extends Component {
 
   render() {
     const { onPress, label, reference } = this.props;
-    const { buttonStyleText, textStyle, containerStyle } = styles;
+    const { containerStyle } = styles;
     return (
       <View style={containerStyle}>
         <TouchableOpacity

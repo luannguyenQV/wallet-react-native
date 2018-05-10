@@ -3,12 +3,8 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
   Image,
-  AsyncStorage,
-  Button,
   TouchableHighlight,
-  KeyboardAvoidingView,
   Alert,
   Clipboard,
 } from 'react-native';
@@ -17,7 +13,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Colors from './../../../../config/colors';
 import AuthService from './../../../../services/authService';
 import resetNavigation from './../../../../util/resetNavigation';
-import TextInput from './../../../../components/textInput';
+import { Input, InputForm, Button } from './../../../../components/common';
 
 class TwoFactorTokenScreen extends Component {
   static navigationOptions = {
@@ -103,74 +99,60 @@ class TwoFactorTokenScreen extends Component {
           back
           title="Token authentication"
         />
-        <KeyboardAvoidingView
-          style={styles.mainContainer}
-          behavior={'padding'}
-          keyboardVerticalOffset={85}>
-          <ScrollView style={{ flex: 1, paddingBottom: 10 }}>
-            <Image
-              style={{ width: 250, height: 250, alignSelf: 'center' }}
-              source={{ uri: this.state.imageURI }}
-            />
-            <View style={styles.infoContainer}>
-              <Text style={styles.infoTitleText}>Issuer</Text>
-              <Text style={styles.infoDetailsText}>{this.state.issuer}</Text>
-              <TouchableHighlight
-                underlayColor={'white'}
-                onPress={() => {
-                  Clipboard.setString(this.state.issuer);
-                  Alert.alert(null, 'Copied');
-                }}>
-                <Icon name="content-copy" size={30} color={Colors.black} />
-              </TouchableHighlight>
-            </View>
-            <View style={[styles.infoContainer, { backgroundColor: 'white' }]}>
-              <Text style={styles.infoTitleText}>Account</Text>
-              <Text style={styles.infoDetailsText}>{this.state.account}</Text>
-              <TouchableHighlight
-                underlayColor={'white'}
-                onPress={() => {
-                  Clipboard.setString(this.state.account);
-                  Alert.alert(null, 'Copied');
-                }}>
-                <Icon name="content-copy" size={30} color={Colors.black} />
-              </TouchableHighlight>
-            </View>
-            <View style={styles.infoContainer}>
-              <Text style={styles.infoTitleText}>Key</Text>
-              <Text style={styles.infoDetailsText}>{this.state.key}</Text>
-              <TouchableHighlight
-                underlayColor={'white'}
-                onPress={() => {
-                  Clipboard.setString(this.state.key);
-                  Alert.alert(null, 'Copied');
-                }}>
-                <Icon name="content-copy" size={30} color={Colors.black} />
-              </TouchableHighlight>
-            </View>
-            <TextInput
-              title="Enter your token"
-              placeholder="e.g. 123456"
-              value={this.state.token}
-              underlineColorAndroid="white"
-              keyboardType="numeric"
-              returnKeyType="next"
-              onChangeText={token => this.setState({ token: token })}
-            />
-          </ScrollView>
-          <TouchableHighlight
-            style={styles.submit}
-            onPress={() => this.saveToken()}>
-            <Text style={{ color: 'white', fontSize: 20 }}>Submit</Text>
-          </TouchableHighlight>
-          {this.state.delete && (
+        <InputForm>
+          <Image
+            style={{ width: 250, height: 250, alignSelf: 'center' }}
+            source={{ uri: this.state.imageURI }}
+          />
+          <View style={styles.infoContainer}>
+            <Text style={styles.infoTitleText}>Issuer</Text>
+            <Text style={styles.infoDetailsText}>{this.state.issuer}</Text>
             <TouchableHighlight
-              style={[styles.submit, { backgroundColor: Colors.red }]}
-              onPress={() => this.deleteTwoFactorAuth()}>
-              <Text style={{ color: 'white', fontSize: 20 }}> Delete</Text>
+              underlayColor={'white'}
+              onPress={() => {
+                Clipboard.setString(this.state.issuer);
+                Alert.alert(null, 'Copied');
+              }}>
+              <Icon name="content-copy" size={30} color={Colors.black} />
             </TouchableHighlight>
+          </View>
+          <View style={[styles.infoContainer, { backgroundColor: 'white' }]}>
+            <Text style={styles.infoTitleText}>Account</Text>
+            <Text style={styles.infoDetailsText}>{this.state.account}</Text>
+            <TouchableHighlight
+              underlayColor={'white'}
+              onPress={() => {
+                Clipboard.setString(this.state.account);
+                Alert.alert(null, 'Copied');
+              }}>
+              <Icon name="content-copy" size={30} color={Colors.black} />
+            </TouchableHighlight>
+          </View>
+          <View style={styles.infoContainer}>
+            <Text style={styles.infoTitleText}>Key</Text>
+            <Text style={styles.infoDetailsText}>{this.state.key}</Text>
+            <TouchableHighlight
+              underlayColor={'white'}
+              onPress={() => {
+                Clipboard.setString(this.state.key);
+                Alert.alert(null, 'Copied');
+              }}>
+              <Icon name="content-copy" size={30} color={Colors.black} />
+            </TouchableHighlight>
+          </View>
+          <Input
+            label="Enter your token"
+            placeholder="e.g. 123456"
+            value={this.state.token}
+            keyboardType="numeric"
+            returnKeyType="done"
+            onChangeText={token => this.setState({ token: token })}
+          />
+          <Button label="SUBMIT" onPress={() => this.saveToken()} />
+          {this.state.delete && (
+            <Button label="DELETE" onPress={() => this.deleteTwoFactorAuth()} />
           )}
-        </KeyboardAvoidingView>
+        </InputForm>
       </View>
     );
   }
@@ -180,6 +162,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
+    backgroundColor: 'white',
   },
   mainContainer: {
     flex: 1,

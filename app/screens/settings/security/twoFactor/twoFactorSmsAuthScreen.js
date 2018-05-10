@@ -11,7 +11,7 @@ import {
 import Header from './../../../../components/header';
 import Colors from './../../../../config/colors';
 import AuthService from './../../../../services/authService';
-import TextInput from './../../../../components/mobileNumberInput';
+import { Input } from './../../../../components/common';
 
 class twoFactorSmsAuthScreen extends Component {
   static navigationOptions = {
@@ -22,7 +22,8 @@ class twoFactorSmsAuthScreen extends Component {
     super(props);
     const params = this.props.navigation.state.params;
     this.state = {
-      mobile_number: '+1',
+      mobile_number: '',
+      code: '+1',
       delete: params.authInfo.sms,
       authInfo: params.authInfo,
     };
@@ -30,7 +31,7 @@ class twoFactorSmsAuthScreen extends Component {
 
   sendSms = async () => {
     let responseJson = await AuthService.smsAuthPost({
-      mobile_number: this.state.mobile_number,
+      mobile_number: this.state.code + this.state.mobile_number,
     });
     if (responseJson.status === 'success') {
       const authInfo = responseJson.data;
@@ -40,8 +41,11 @@ class twoFactorSmsAuthScreen extends Component {
     }
   };
 
-  changeCountryCode = code => {
-    this.setState({ mobile_number: '+' + code });
+  changeCountryCode = (code, cca2) => {
+    this.setState({
+      code: '+' + code,
+      countryName: cca2,
+    });
   };
 
   deleteTwoFactorAuth = async () => {
@@ -82,13 +86,15 @@ class twoFactorSmsAuthScreen extends Component {
         />
         <KeyboardAvoidingView style={styles.mainContainer} behavior={'padding'}>
           <View style={{ flex: 1 }}>
-            <TextInput
-              title="Enter valid mobile number"
-              placeholder="e.g. +8801714632656"
+            <Input
+              type="mobile"
+              label="Enter valid mobile number"
+              placeholder="123456789"
               autoCapitalize="none"
               value={this.state.mobile_number}
               onChangeText={mobile => this.setState({ mobile_number: mobile })}
               changeCountryCode={this.changeCountryCode}
+              countryCode={this.state.code}
             />
           </View>
           <TouchableHighlight

@@ -33,11 +33,6 @@ class SettingsScreen extends Component {
             goTo={this.goTo}
           />
           <Option
-            name="Get verified"
-            gotoAddress="SettingsGetVerified"
-            goTo={this.goTo}
-          />
-          <Option
             name="Address"
             gotoAddress="SettingsAddress"
             goTo={this.goTo}

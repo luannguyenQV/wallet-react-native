@@ -6,8 +6,6 @@ import {
   Text,
   Image,
   StyleSheet,
-  KeyboardAvoidingView,
-  ScrollView,
   AsyncStorage,
   TouchableHighlight,
 } from 'react-native';
@@ -17,12 +15,7 @@ import UserInfoService from './../../services/userInfoService';
 import ResetNavigation from './../../util/resetNavigation';
 import Colors from './../../config/colors';
 import Header from './../../components/header';
-import TextInput from './../../components/textInput';
-
-const languages = {
-  en: 'English',
-  af: 'Africans',
-};
+import { Input, InputForm } from './../../components/common';
 
 class PersonalDetailsScreen extends Component {
   static navigationOptions = {
@@ -42,7 +35,6 @@ class PersonalDetailsScreen extends Component {
       id_number: '',
       skype_name: '',
       mobile_number: '',
-      language: '',
       modalVisible: false,
       languageModalVisible: false,
       first_name_color: false,
@@ -64,7 +56,6 @@ class PersonalDetailsScreen extends Component {
       last_name: user.last_name,
       id_number: user.id_number,
       nationality: user.nationality !== '' ? user.nationality : 'US',
-      language: user.language,
       profile: user.profile,
     });
   }
@@ -75,10 +66,6 @@ class PersonalDetailsScreen extends Component {
 
   openModal = async () => {
     this.setState({ modalVisible: true });
-  };
-
-  openLanguageModal = async () => {
-    this.setState({ languageModalVisible: true });
   };
 
   launchCamera = async () => {
@@ -137,102 +124,76 @@ class PersonalDetailsScreen extends Component {
           navigation={this.props.navigation}
           back
           title="Personal details"
+          headerRightTitle="Save"
+          headerRightOnPress={this.save}
         />
-        <KeyboardAvoidingView style={styles.container} behavior={'padding'}>
-          <ScrollView
-            keyboardDismissMode={'interactive'}
-            keyboardShouldPersistTaps="always">
-            <View style={styles.profile}>
-              <TouchableHighlight
-                style={{ width: 100 }}
-                onPress={() => this.openModal()}>
-                {this.state.profile ? (
-                  <Image
-                    style={styles.photo}
-                    source={{
-                      uri: this.state.profile,
-                      cache: 'only-if-cached',
-                    }}
-                    key={this.state.profile}
-                  />
-                ) : (
-                  <Image
-                    source={require('./../../../assets/icons/profile.png')}
-                    style={styles.photo}
-                  />
-                )}
-              </TouchableHighlight>
-            </View>
-
-            <TextInput
-              title="First name"
-              placeholder=""
-              autoCapitalize="none"
-              underlineColorAndroid="white"
-              value={this.state.first_name}
-              onChangeText={text => this.setState({ first_name: text })}
-            />
-
-            <TextInput
-              title="Last name"
-              placeholder=""
-              autoCapitalize="none"
-              underlineColorAndroid="white"
-              value={this.state.last_name}
-              onChangeText={text => this.setState({ last_name: text })}
-            />
-
-            <TextInput
-              title="ID No"
-              placeholder=""
-              autoCapitalize="none"
-              underlineColorAndroid="white"
-              value={this.state.id_number}
-              onChangeText={text => this.setState({ id_number: text })}
-            />
-            <View style={[styles.pickerContainer, { paddingVertical: 20 }]}>
-              <Text style={[styles.text, { flex: 4 }]}>Country</Text>
-              <View style={{ flex: 5, alignItems: 'flex-end' }}>
-                <CountryPicker
-                  onChange={value => {
-                    this.setState({ nationality: value.cca2 });
+        <InputForm>
+          <View style={styles.profile}>
+            <TouchableHighlight
+              style={{ width: 100 }}
+              onPress={() => this.openModal()}>
+              {this.state.profile ? (
+                <Image
+                  style={styles.photo}
+                  source={{
+                    uri: this.state.profile,
+                    cache: 'only-if-cached',
                   }}
-                  closeable
-                  filterable
-                  cca2={this.state.nationality}
-                  translation="eng"
-                  styles={{
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
+                  key={this.state.profile}
                 />
-              </View>
+              ) : (
+                <Image
+                  source={require('./../../../assets/icons/profile.png')}
+                  style={styles.photo}
+                />
+              )}
+            </TouchableHighlight>
+          </View>
+
+          <Input
+            label="First name"
+            placeholder=""
+            autoCapitalize="none"
+            value={this.state.first_name}
+            onChangeText={text => this.setState({ first_name: text })}
+          />
+
+          <Input
+            label="Last name"
+            placeholder=""
+            autoCapitalize="none"
+            value={this.state.last_name}
+            onChangeText={text => this.setState({ last_name: text })}
+          />
+
+          <Input
+            label="ID No"
+            placeholder=""
+            autoCapitalize="none"
+            value={this.state.id_number}
+            onChangeText={text => this.setState({ id_number: text })}
+          />
+          <View style={[styles.pickerContainer, { paddingVertical: 20 }]}>
+            <Text style={[styles.text, { flex: 4 }]}>Country</Text>
+            <View style={{ flex: 5, alignItems: 'flex-end' }}>
+              <CountryPicker
+                onChange={value => {
+                  this.setState({ nationality: value.cca2 });
+                }}
+                closeable
+                filterable
+                cca2={this.state.nationality}
+                translation="eng"
+                styles={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              />
             </View>
-            <View style={[styles.pickerContainer]}>
-              <Text style={[styles.text, { flex: 4, paddingRight: 0 }]}>
-                Language
-              </Text>
-              <TouchableHighlight
-                style={{ flex: 5, alignItems: 'flex-end' }}
-                onPress={() => {
-                  this.openLanguageModal();
-                }}>
-                <Text
-                  style={{
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: 'normal',
-                  }}>
-                  {languages[this.state.language]} ▼
-                </Text>
-              </TouchableHighlight>
-            </View>
-          </ScrollView>
-          <TouchableHighlight style={styles.submit} onPress={() => this.save()}>
-            <Text style={{ color: 'white', fontSize: 20 }}>Save</Text>
-          </TouchableHighlight>
-        </KeyboardAvoidingView>
+          </View>
+        </InputForm>
+
         <Modal
           animationInTiming={500}
           animationOutTiming={500}
@@ -266,43 +227,6 @@ class PersonalDetailsScreen extends Component {
                 style={styles.button}
                 onPress={() => {
                   this.setState({ modalVisible: false });
-                }}>
-                <Text style={styles.buttonText}>Cancel</Text>
-              </TouchableHighlight>
-            </View>
-          </View>
-        </Modal>
-        <Modal
-          animationInTiming={500}
-          animationOutTiming={500}
-          backdropColor="black"
-          onBackdropPress={() => this.setState({ languageModalVisible: false })}
-          isVisible={this.state.languageModalVisible}>
-          <View style={[styles.modal, { justifyContent: 'flex-end' }]}>
-            <View style={[styles.languageModal]}>
-              <TouchableHighlight
-                style={[
-                  styles.button,
-                  { marginTop: 5, borderRadius: 5, backgroundColor: 'white' },
-                ]}
-                onPress={() => this.languageSelected('en')}>
-                <Text style={styles.buttonText}>English</Text>
-              </TouchableHighlight>
-              <TouchableHighlight
-                style={[
-                  styles.button,
-                  { marginTop: 5, borderRadius: 5, backgroundColor: 'white' },
-                ]}
-                onPress={() => this.languageSelected('af')}>
-                <Text style={styles.buttonText}>Africans</Text>
-              </TouchableHighlight>
-              <TouchableHighlight
-                style={[
-                  styles.button,
-                  { marginTop: 20, borderRadius: 5, backgroundColor: 'white' },
-                ]}
-                onPress={() => {
-                  this.setState({ languageModalVisible: false });
                 }}>
                 <Text style={styles.buttonText}>Cancel</Text>
               </TouchableHighlight>

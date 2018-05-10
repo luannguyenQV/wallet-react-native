@@ -8,7 +8,7 @@ import {
   Text,
 } from 'react-native';
 import AuthService from './../../services/authService';
-import TextInput from './../../components/textInput';
+import { Input, Button } from './../../components/common';
 import Colors from './../../config/colors';
 import Header from './../../components/header';
 
@@ -57,28 +57,22 @@ class ForgotPasswordScreen extends Component {
             style={styles.container}
             behavior={'padding'}
             keyboardVerticalOffset={75}>
-            <TextInput
-              title="Email"
+            <Input
+              label="Email"
               placeholder="e.g john@gmail.com"
               autoCapitalize="none"
               keyboardType="email-address"
               underlineColorAndroid="white"
               onChangeText={email => this.setState({ email })}
             />
-            <TextInput
-              title="Company"
+            <Input
+              label="Company"
               placeholder="e.g rehive"
               autoCapitalize="none"
               underlineColorAndroid="white"
               onChangeText={company => this.setState({ company })}
             />
-            <TouchableHighlight
-              style={styles.submit}
-              onPress={() => this.sendEmail()}>
-              <Text style={{ color: 'white', fontSize: 20 }}>
-                Send reset email
-              </Text>
-            </TouchableHighlight>
+            <Button label="Send reset email" onPress={() => this.sendEmail()} />
           </KeyboardAvoidingView>
         </View>
       </View>

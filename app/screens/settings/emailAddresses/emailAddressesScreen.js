@@ -145,6 +145,12 @@ class EmailAddressesScreen extends Component {
           navigation={this.props.navigation}
           back
           title="Email addresses"
+          headerRightTitle="Add"
+          headerRightOnPress={() =>
+            this.props.navigation.navigate('AddEmailAddress', {
+              routeName: this.state.routeName,
+            })
+          }
         />
         <Spinner
           visible={this.state.loading}
@@ -198,17 +204,6 @@ class EmailAddressesScreen extends Component {
             )}
           />
         )}
-        <TouchableHighlight
-          style={styles.submit}
-          onPress={() =>
-            this.props.navigation.navigate('AddEmailAddress', {
-              routeName: this.state.routeName,
-            })
-          }>
-          <Text style={{ color: 'white', fontSize: 20 }}>
-            Add email address
-          </Text>
-        </TouchableHighlight>
       </View>
     );
   }

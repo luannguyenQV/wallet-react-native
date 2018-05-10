@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Alert, StyleSheet } from 'react-native';
+
 import AddBankAccountComponent from './../../../components/bankAccountComponent';
 import SettingsService from './../../../services/settingsService';
 import ResetNavigation from './../../../util/resetNavigation';
@@ -73,8 +74,9 @@ class AddBankAccountScreen extends Component {
         <Header
           navigation={this.props.navigation}
           back
-          smallTitle
-          title="Add new bank account"
+          title="Add bank account"
+          headerRightTitle="Save"
+          headerRightOnPress={this.add}
         />
         <AddBankAccountComponent
           values={this.state}
@@ -86,18 +88,17 @@ class AddBankAccountScreen extends Component {
           updateSwift={this.updateSwift}
           updateIBAN={this.updateIBAN}
           updateBIC={this.updateBIC}
-          save={this.add}
         />
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flex: 1,
     backgroundColor: 'white',
   },
-});
+};
 
 export default AddBankAccountScreen;
