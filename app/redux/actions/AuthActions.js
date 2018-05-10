@@ -6,29 +6,156 @@ import {
   LOGIN_USER_SUCCESS,
   LOGIN_USER_FAIL,
   LOGIN_USER,
+  UPDATE_COMPANY_SUCCESS,
+  UPDATE_COMPANY_FAIL,
+  UPDATE_COMPANY,
   REGISTER_USER_SUCCESS,
   REGISTER_USER_FAIL,
   REGISTER_USER,
-  AUTH_FIELD_FOCUS,
+  UPDATE_AUTH_FORM_FIELD,
+  UPDATE_AUTH_FORM_STATE,
+  UPDATE_REGISTER_FORM_STATE,
   LOGOUT_USER,
 } from './types';
 
+import store from './../store';
+import clientConfig from './../../config/client';
+
 import { IsEmail } from './../../util/validation';
 import AuthService from './../../services/authService';
-import Auth from './../../util/auth';
 
-export const initialLoad = token => async dispatch => {
-  if (token) {
+export const initialLoad = props => async dispatch => {
+  // console.log(props);
+  if (props.token) {
     dispatch({ type: LOGIN_USER_SUCCESS, payload: token });
   } else {
-    dispatch({ type: LOGIN_USER_FAIL });
+    if (props.company) {
+      dispatch({ type: LOGIN_USER_FAIL });
+    } else {
+      dispatch({ type: UPDATE_AUTH_FORM_STATE, payload: 'invalidCompany' });
+    }
+  }
+};
+
+export const updateAuthFormState = ({ nextState }) => {
+  return {
+    type: UPDATE_AUTH_FORM_STATE,
+    payload: nextState,
+  };
+};
+
+export const updateRegisterFormState = ({ state, value }) => {
+  let actionText = '';
+  let nextState = '';
+  if (state === 'initial') {
+    if (clientConfig.requireEmail) {
+      nextState = 'email';
+    } else if (clientConfig.requireMobile) {
+      nextState = 'mobile';
+    }
+    actionText = 'Next';
+  } else {
+    console.log(state, value);
+    let error = validation(state, value);
+    if (error) {
+      return {
+        type: AUTH_FIELD_ERROR,
+        payload: { prop: state, value, error },
+      };
+    } else {
+      return dispatch => {
+        dispatch({ type: UPDATE_AUTH_FORM_FIELD });
+        let data = { state, value };
+        performUpdateAuthFormField(dispatch, data);
+      };
+      if (state === 'email') {
+        if (clientConfig.requireMobile) {
+          nextState = 'mobile';
+          actionText = 'Next';
+        } else if (clientConfig.requireTerms) {
+          nextState = 'terms';
+          actionText = 'Next';
+        } else {
+          nextState = 'password';
+          actionText = 'Register';
+        }
+      } else if (state === 'mobile') {
+        if (clientConfig.requireTerms) {
+          nextState = 'terms';
+          actionText = 'Next';
+        } else {
+          nextState = 'password';
+          actionText = 'Register';
+        }
+      } else if (state === 'terms') {
+        nextState = 'password';
+        actionText = 'Register';
+      }
+    }
+  }
+
+  return {
+    type: UPDATE_REGISTER_FORM_STATE,
+    payload: { nextState, actionText },
+  };
+};
+
+performUpdateAuthFormField = async (dispatch, data) => {
+  console.log(data.state);
+  let responseJson = await AuthService.signup(data);
+  console.log(responseJson.data);
+  if (responseJson.data.company) {
+    dispatch({
+      type: UPDATE_COMPANY_FAIL,
+      payload: responseJson.data.company[0],
+    });
+  } else {
+    // if (responseJson.data.email)
+    // const data = { requireEmail, requireMobile };
+    dispatch({
+      type: UPDATE_COMPANY_SUCCESS,
+    });
+  }
+};
+
+export const saveCompany = ({ company }) => {
+  return dispatch => {
+    dispatch({ type: UPDATE_COMPANY });
+    let data = { company };
+    performUpdateCompany(dispatch, data);
+  };
+};
+
+performUpdateCompany = async (dispatch, data) => {
+  console.log(data);
+  let responseJson = await AuthService.signup(data);
+  console.log(responseJson.data);
+  if (responseJson.data.company) {
+    dispatch({
+      type: UPDATE_COMPANY_FAIL,
+      payload: responseJson.data.company[0],
+    });
+  } else {
+    // if (responseJson.data.email)
+    // const data = { requireEmail, requireMobile };
+    dispatch({
+      type: UPDATE_COMPANY_SUCCESS,
+    });
   }
 };
 
 export const authFieldChange = ({ prop, value }) => {
-  let error = validation(prop, value);
+  // let error = validation(prop, value);
   return {
     type: AUTH_FIELD_CHANGED,
+    payload: { prop, value },
+  };
+};
+
+export const authFieldSave = ({ prop, value }) => {
+  let error = validation(prop, value);
+  return {
+    type: AUTH_FIELD_SAVE,
     payload: { prop, value, error },
   };
 };
@@ -120,6 +247,7 @@ const loginUserSuccess = (dispatch, token) => {
 };
 
 validation = (prop, value) => {
+  console.log(prop, value);
   let error = '';
   switch (prop) {
     case 'email':

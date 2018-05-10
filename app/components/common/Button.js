@@ -52,17 +52,18 @@ class Button extends Component {
 
 const styles = {
   containerStyle: {
-    height: 50,
+    height: 52,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 50,
-    paddingVertical: 7,
+    paddingHorizontal: 24,
+    paddingVertical: 8,
     backgroundColor: '#00000000',
   },
   buttonStyle: {
     flex: 1,
     height: 38,
     borderRadius: 2,
+    minWidth: 64,
     // backgroundColor: Colors.primary,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },

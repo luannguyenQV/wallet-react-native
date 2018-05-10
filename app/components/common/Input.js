@@ -159,7 +159,7 @@ class Input extends Component {
               onChangeText={onChangeText}
               ref={reference}
               selectTextOnFocus
-              secureTextEntry={secureTextEntry}
+              secureTextEntry={false}
               keyboardType={keyboardType}
               returnKeyType={returnKeyType}
               onSubmitEditing={onSubmitEditing}

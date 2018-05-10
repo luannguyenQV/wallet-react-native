@@ -261,39 +261,6 @@ class RegisterForm extends Component {
             this.myScrollView = scrollView;
           }}>
           <Input
-            label="First name"
-            placeholder="e.g. Jon"
-            onChangeText={value =>
-              this.props.authFieldChange({ prop: 'first_name', value })
-            }
-            value={first_name}
-            autoCapitalize={'words'}
-            autoFocus
-            returnKeyType="next"
-            reference={input => {
-              this.first_name = input;
-            }}
-            onSubmitEditing={() => {
-              this._scrollToInput(this.last_name);
-            }}
-          />
-          <Input
-            label="Last name"
-            placeholder="e.g. Snow"
-            onChangeText={value =>
-              this.props.authFieldChange({ prop: 'last_name', value })
-            }
-            value={last_name}
-            autoCapitalize={'words'}
-            returnKeyType="next"
-            reference={input => {
-              this.last_name = input;
-            }}
-            onSubmitEditing={() => {
-              this._scrollToInput(this.email);
-            }}
-          />
-          <Input
             placeholder="e.g. user@gmail.com"
             label="Email"
             value={email}
@@ -371,23 +338,6 @@ class RegisterForm extends Component {
               this.validationPassword();
               this._scrollToInput(this.password2);
             }}
-          />
-          <Input
-            type="password"
-            placeholder="Password"
-            label="Confirm password"
-            required
-            requiredError={password2Error}
-            value={password2}
-            password={true}
-            onChangeText={value =>
-              this.props.authFieldChange({ prop: 'password2', value })
-            }
-            returnKeyType="done"
-            reference={input => {
-              this.password2 = input;
-            }}
-            onSubmitEditing={this.onButtonPress.bind(this)}
           />
           {/* <Checkbox
             onPress={value =>
