@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { View } from 'react-native';
 
 import Header from './../../components/header';
-import LoginForm from './../../components/wallet/LoginForm';
 
 class LoginScreen extends Component {
   static navigationOptions = {
@@ -13,7 +12,7 @@ class LoginScreen extends Component {
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
         <Header navigation={this.props.navigation} back title="Log in" />
-        <LoginForm navigation={this.props.navigation} />
+        {/* <LoginForm navigation={this.props.navigation} /> */}
       </View>
     );
   }

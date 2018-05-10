@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import Colors from './../../config/colors';
 import NetInfo from './../../util/checkNetConnection';
+import { Button } from './../../components/common';
 
 class NoNetConnectionScreen extends Component {
   static navigationOptions = {
@@ -38,17 +39,16 @@ class NoNetConnectionScreen extends Component {
           <Text style={styles.text}>Lost Connection</Text>
         </View>
         <View style={styles.buttonsContainer}>
-          <TouchableHighlight
-            style={styles.button}
+          <Button
+            label="TRY AGAIN"
             onPress={() => {
               NetInfo.getInfo().then(isConnected => {
                 if (isConnected) {
                   this.props.navigation.goBack();
                 }
               });
-            }}>
-            <Text style={styles.buttonText}>Try Again</Text>
-          </TouchableHighlight>
+            }}
+          />
         </View>
       </View>
     );

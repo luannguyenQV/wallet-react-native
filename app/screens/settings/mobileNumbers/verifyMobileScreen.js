@@ -1,15 +1,8 @@
 import React, { Component } from 'react';
-import {
-  View,
-  KeyboardAvoidingView,
-  StyleSheet,
-  TouchableHighlight,
-  Text,
-  Alert,
-} from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import SettingsService from './../../../services/settingsService';
 import ResetNavigation from './../../../util/resetNavigation';
-import TextInput from './../../../components/textInput';
+import { Input, InputForm, Button } from './../../../components/common';
 import Colors from './../../../config/colors';
 import Header from './../../../components/header';
 
@@ -49,36 +42,40 @@ class VerifyMobileScreen extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.container}>
         <Header
           navigation={this.props.navigation}
           back
           title="Verify mobile number"
         />
-        <KeyboardAvoidingView style={styles.container} behavior={'padding'}>
-          <View style={{ flex: 1 }}>
-            <TextInput
-              title="Enter OTP"
-              placeholder="OTP"
-              autoCapitalize="none"
-              keyboardType="numeric"
-              underlineColorAndroid="white"
-              onChangeText={otp => this.setState({ otp })}
+        <InputForm>
+          <Input
+            label="Enter OTP"
+            placeholder="OTP"
+            autoCapitalize="none"
+            keyboardType="numeric"
+            underlineColorAndroid="white"
+            onChangeText={otp => this.setState({ otp })}
+          />
+          <View style={{ justifyContent: 'center' }}>
+            <Button
+              label="VERIFY"
+              type="primary"
+              reference={input => {
+                this.login = input;
+              }}
+              onPress={this.verify}
+            />
+            <Button
+              label="SKIP"
+              type="secondary"
+              reference={input => {
+                this.login = input;
+              }}
+              onPress={() => this.reload()}
             />
           </View>
-          <View style={styles.buttons}>
-            <TouchableHighlight
-              style={[styles.submit, { backgroundColor: Colors.red }]}
-              onPress={() => this.reload()}>
-              <Text style={{ color: 'white', fontSize: 20 }}>Skip</Text>
-            </TouchableHighlight>
-            <TouchableHighlight
-              style={[styles.submit, { marginLeft: 25 }]}
-              onPress={this.verify}>
-              <Text style={{ color: 'white', fontSize: 20 }}>Verify</Text>
-            </TouchableHighlight>
-          </View>
-        </KeyboardAvoidingView>
+        </InputForm>
       </View>
     );
   }

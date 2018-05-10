@@ -95,6 +95,13 @@ class WithdrawBankAccountsScreen extends Component {
           navigation={this.props.navigation}
           back
           title="Select bank account"
+          headerRightTitle="Add"
+          headerRightOnPress={() =>
+            this.props.navigation.navigate('AddBankAccount', {
+              parentRoute: 'Withdraw',
+              nextRoute: 'BankAccounts',
+            })
+          }
         />
         {this.state.empty && (
           <View
@@ -141,17 +148,6 @@ class WithdrawBankAccountsScreen extends Component {
             )}
           />
         )}
-
-        <TouchableHighlight
-          style={styles.submit}
-          onPress={() =>
-            this.props.navigation.navigate('AddBankAccount', {
-              parentRoute: 'Withdraw',
-              nextRoute: 'BankAccounts',
-            })
-          }>
-          <Text style={{ color: 'white', fontSize: 20 }}>Add bank account</Text>
-        </TouchableHighlight>
       </View>
     );
   }

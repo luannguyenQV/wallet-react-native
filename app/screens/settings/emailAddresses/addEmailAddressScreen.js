@@ -1,16 +1,8 @@
 import React, { Component } from 'react';
-import {
-  View,
-  KeyboardAvoidingView,
-  StyleSheet,
-  TouchableHighlight,
-  Text,
-  Alert,
-} from 'react-native';
+import { View, Alert } from 'react-native';
 import SettingsService from './../../../services/settingsService';
 import ResetNavigation from './../../../util/resetNavigation';
-import TextInput from './../../../components/textInput';
-import Colors from './../../../config/colors';
+import { Input, InputForm } from './../../../components/common';
 import Header from './../../../components/header';
 
 class AddEmailAddressScreen extends Component {
@@ -50,46 +42,32 @@ class AddEmailAddressScreen extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.container}>
         <Header
           navigation={this.props.navigation}
           back
           title="Add email address"
+          headerRightTitle="Save"
+          headerRightOnPress={this.add}
         />
-        <KeyboardAvoidingView style={styles.container} behavior={'padding'}>
-          <View style={{ flex: 1, paddingTop: 10 }}>
-            <TextInput
-              title="Enter email address"
-              placeholder="e.g. john@gmail.com"
-              autoCapitalize="none"
-              underlineColorAndroid="white"
-              onChangeText={email => this.setState({ email })}
-            />
-          </View>
-          <TouchableHighlight style={styles.submit} onPress={this.add}>
-            <Text style={{ color: 'white', fontSize: 20 }}>Save</Text>
-          </TouchableHighlight>
-        </KeyboardAvoidingView>
+        <InputForm>
+          <Input
+            label="Email address"
+            placeholder="e.g. john1@gmail.com"
+            autoCapitalize="none"
+            onChangeText={email => this.setState({ email })}
+          />
+        </InputForm>
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flex: 1,
-    flexDirection: 'column',
     backgroundColor: 'white',
   },
-  submit: {
-    marginBottom: 10,
-    marginHorizontal: 20,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: Colors.lightblue,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+};
 
 export default AddEmailAddressScreen;

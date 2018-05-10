@@ -60,6 +60,9 @@ import SettingsAddress from './../screens/settings/addressScreen';
 import SettingsPersonalDetails from './../screens/settings/personalDetailsScreen';
 
 const Stack = {
+  Home: {
+    screen: Home,
+  },
   InitialScreen: {
     screen: InitialScreen,
   },
@@ -71,9 +74,6 @@ const Stack = {
   },
   ForgotPassword: {
     screen: ForgotPassword,
-  },
-  Home: {
-    screen: Home,
   },
   NoNetConnection: {
     screen: NoNetConnection,

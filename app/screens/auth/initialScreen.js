@@ -20,7 +20,6 @@ import {
   Input,
   Output,
 } from './../../components/common';
-import LoginForm from './../../components/wallet/LoginForm';
 
 class InitialScreen extends Component {
   state = {

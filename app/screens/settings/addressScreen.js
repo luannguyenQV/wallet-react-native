@@ -1,16 +1,8 @@
 import React, { Component } from 'react';
-import {
-  View,
-  Alert,
-  Text,
-  StyleSheet,
-  KeyboardAvoidingView,
-  ScrollView,
-  TouchableHighlight,
-} from 'react-native';
+import { View, Alert, Text, StyleSheet } from 'react-native';
 import CountryPicker from 'react-native-country-picker-modal';
 import UserInfoService from './../../services/userInfoService';
-import TextInput from './../../components/textInput';
+import { Input, InputForm } from './../../components/common';
 import Colors from './../../config/colors';
 import Header from './../../components/header';
 import ResetNavigation from './../../util/resetNavigation';
@@ -30,7 +22,7 @@ class AddressScreen extends Component {
       line_2: '',
       city: '',
       state_province: '',
-      country: '',
+      country: 'US',
       postal_code: '',
     };
   }
@@ -48,7 +40,7 @@ class AddressScreen extends Component {
         line_2: address.line_2,
         city: address.city,
         state_province: address.state_province,
-        country: address.country !== '--' ? address.country : 'US',
+        country: user.nationality !== '' ? user.nationality : 'US',
         postal_code: address.postal_code,
       });
     } else {
@@ -75,102 +67,87 @@ class AddressScreen extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
-        <Header navigation={this.props.navigation} back title="Address" />
-        <KeyboardAvoidingView style={styles.container} behavior={'padding'}>
-          <ScrollView
-            keyboardDismissMode={'interactive'}
-            keyboardShouldPersistTaps="always">
-            <TextInput
-              title="Address Line 1"
-              placeholder="e.g. Plot-02, Road-08"
-              autoCapitalize="none"
-              underlineColorAndroid="white"
-              value={this.state.line_1}
-              onChangeText={line_1 => this.setState({ line_1 })}
-            />
+      <View style={styles.container}>
+        <Header
+          navigation={this.props.navigation}
+          back
+          title="Address"
+          headerRightTitle="Save"
+          headerRightOnPress={this.save}
+        />
+        <InputForm>
+          <Input
+            label="Address Line 1"
+            placeholder="e.g. 158 Kloof Street"
+            autoCapitalize="none"
+            value={this.state.line_1}
+            onChangeText={line_1 => this.setState({ line_1 })}
+          />
 
-            <TextInput
-              title="Address Line 2"
-              placeholder="e.g. Mohakhali C/A, Dhaka"
-              autoCapitalize="none"
-              underlineColorAndroid="white"
-              value={this.state.line_2}
-              onChangeText={line_2 => this.setState({ line_2 })}
-            />
+          <Input
+            label="Address Line 2"
+            placeholder="e.g. Gardens"
+            autoCapitalize="none"
+            value={this.state.line_2}
+            onChangeText={line_2 => this.setState({ line_2 })}
+          />
 
-            <TextInput
-              title="City"
-              placeholder="e.g. Capetown"
-              autoCapitalize="none"
-              underlineColorAndroid="white"
-              value={this.state.city}
-              onChangeText={city => this.setState({ city })}
-            />
+          <Input
+            label="City"
+            placeholder="e.g. Cape Town"
+            autoCapitalize="none"
+            value={this.state.city}
+            onChangeText={city => this.setState({ city })}
+          />
 
-            <TextInput
-              title="State province"
-              placeholder="e.g. Western Cape"
-              autoCapitalize="none"
-              underlineColorAndroid="white"
-              value={this.state.state_province}
-              onChangeText={state_province => this.setState({ state_province })}
-            />
+          <Input
+            label="State province"
+            placeholder="e.g. Western Cape"
+            autoCapitalize="none"
+            value={this.state.state_province}
+            onChangeText={state_province => this.setState({ state_province })}
+          />
 
-            <View style={styles.pickerContainer}>
-              <Text style={[styles.text, { flex: 4 }]}>Country</Text>
-              <View style={{ flex: 5, alignItems: 'flex-end' }}>
-                <CountryPicker
-                  onChange={value => {
-                    this.setState({ country: value.cca2 });
-                  }}
-                  cca2={this.state.country}
-                  closeable
-                  filterable
-                  translation="eng"
-                  styles={{ flex: 1, justifyContent: 'center' }}
-                />
-              </View>
+          <Input
+            label="Postal code"
+            placeholder="e.g. 9001"
+            autoCapitalize="none"
+            value={this.state.postal_code}
+            onChangeText={postal_code => this.setState({ postal_code })}
+          />
+
+          <View style={styles.pickerContainer}>
+            <Text style={[styles.text, { flex: 4 }]}>Country</Text>
+            <View style={{ flex: 5, alignItems: 'flex-end' }}>
+              <CountryPicker
+                onChange={value => {
+                  this.setState({ country: value.cca2 });
+                }}
+                cca2={this.state.country}
+                closeable
+                filterable
+                translation="eng"
+                styles={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              />
             </View>
-
-            <TextInput
-              title="Postal code"
-              placeholder="e.g. 1212"
-              autoCapitalize="none"
-              value={this.state.postal_code}
-              underlineColorAndroid="white"
-              onChangeText={postal_code => this.setState({ postal_code })}
-            />
-          </ScrollView>
-          <TouchableHighlight style={styles.submit} onPress={() => this.save()}>
-            <Text style={{ color: 'white', fontSize: 20 }}>Save</Text>
-          </TouchableHighlight>
-        </KeyboardAvoidingView>
+          </View>
+        </InputForm>
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flex: 1,
-    flexDirection: 'column',
     backgroundColor: 'white',
-    paddingTop: 10,
-  },
-  submit: {
-    marginTop: 10,
-    marginBottom: 10,
-    marginHorizontal: 20,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: Colors.lightblue,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   text: {
     fontSize: 16,
-    borderRightColor: Colors.lightgray,
     color: Colors.black,
   },
   pickerContainer: {
@@ -180,8 +157,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: Colors.lightgray,
+    borderColor: 'lightgrey',
   },
-});
+};
 
 export default AddressScreen;

@@ -4,14 +4,11 @@ import {
   KeyboardAvoidingView,
   StyleSheet,
   AsyncStorage,
-  TouchableHighlight,
-  Text,
   Alert,
 } from 'react-native';
 import SettingsService from './../../services/settingsService';
 import Auth from './../../util/auth';
-import AuthService from './../../services/authService';
-import TextInput from './../../components/textInput';
+import { Input, Button } from './../../components/common';
 import Colors from './../../config/colors';
 import Header from './../../components/header';
 
@@ -61,20 +58,6 @@ class VerifyMobileScreen extends Component {
     }
   };
 
-  /*editMobile = () => {
-     this.setState({})
-     return (
-     <TextInput
-     title="Change mobile no"
-     value={this.state.mobile_number}
-     autoCapitalize="none"
-     keyboardType="numeric"
-     underlineColorAndroid="white"
-     onChangeText={(mobile) => this.setState({mobile_number: mobile})}
-     />
-     )
-     }*/
-
   render() {
     return (
       <View style={{ flex: 1 }}>
@@ -84,32 +67,23 @@ class VerifyMobileScreen extends Component {
         />
         <KeyboardAvoidingView style={styles.container} behavior={'padding'}>
           <View style={{ flex: 1 }}>
-            <TextInput
-              title={this.state.otp_msg}
-              /*editable={this.editMobile}*/
+            <Input
+              label={this.state.otp_msg}
               placeholder="OTP"
               autoCapitalize="none"
               keyboardType="numeric"
-              underlineColorAndroid="white"
               onChangeText={otp => this.setState({ otp })}
             />
           </View>
-
-          <TouchableHighlight style={[styles.resend]} onPress={this.verify}>
-            <Text style={{ color: 'white', fontSize: 20 }}>Verify</Text>
-          </TouchableHighlight>
+          <Button label="VERIFY" onPress={this.verify} />
 
           <View style={styles.buttons}>
-            <TouchableHighlight
-              style={[styles.submit, { backgroundColor: Colors.red }]}
-              onPress={() => this.reload()}>
-              <Text style={{ color: 'white', fontSize: 20 }}>Skip</Text>
-            </TouchableHighlight>
-            <TouchableHighlight
-              style={[styles.submit, { marginLeft: 25 }]}
-              onPress={() => this.resend()}>
-              <Text style={{ color: 'white', fontSize: 20 }}>Resend</Text>
-            </TouchableHighlight>
+            <Button label="SKIP" type="primary" onPress={() => this.reload()} />
+            <Button
+              label="RESEND"
+              type="secondary"
+              onPress={() => this.resend()}
+            />
           </View>
         </KeyboardAvoidingView>
       </View>

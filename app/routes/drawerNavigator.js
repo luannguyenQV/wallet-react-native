@@ -15,7 +15,7 @@ import Accounts from './../screens/main/accounts/accountsScreen';
 import Deposit from './../screens/main/wallets/depositScreen';
 import Withdraw from './../screens/main/wallets/withdrawScreen';
 
-import GetVerified from './../screens/settings/getVerified/getVerified2Screen';
+import GetVerified from './../screens/settings/getVerified/getVerifiedScreen';
 import Settings from './../screens/settings/settingsScreen';
 import About from './../screens/main/aboutScreen';
 import Logout from './../screens/auth/logoutScreen';

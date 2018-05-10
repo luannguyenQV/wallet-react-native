@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { View } from 'react-native';
 
 import Header from './../../components/header';
-import RegisterForm from './../../components/wallet/RegisterForm';
 
 class RegisterScreen extends Component {
   static navigationOptions = {
@@ -13,7 +12,7 @@ class RegisterScreen extends Component {
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
         <Header navigation={this.props.navigation} back title="Register" />
-        <RegisterForm navigation={this.props.navigation} />
+        {/* <RegisterForm navigation={this.props.navigation} /> */}
       </View>
     );
   }

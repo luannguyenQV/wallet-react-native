@@ -92,20 +92,18 @@ class DocumentScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Header navigation={this.props.navigation} back title="Document" />
+        <Header
+          navigation={this.props.navigation}
+          back
+          title="Document"
+          headerRightTitle="Upload"
+          headerRightOnPress={() => this.openModal()}
+        />
         <View style={styles.topContainer}>
           <Text style={{ fontSize: 18, textAlign: 'center' }}>
             Instructions of why and how to upload a picture of{' '}
             {this.state.title}.
           </Text>
-        </View>
-        <View style={styles.bottomContainer}>
-          <View style={{ flex: 1 }} />
-          <TouchableHighlight
-            style={styles.upload}
-            onPress={() => this.openModal()}>
-            <Text style={{ fontSize: 20, color: 'white' }}>Upload</Text>
-          </TouchableHighlight>
         </View>
         <Modal
           animationType={'slide'}

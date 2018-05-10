@@ -142,6 +142,12 @@ class MobileNumbersScreen extends Component {
           navigation={this.props.navigation}
           back
           title="Mobile numbers"
+          headerRightTitle="Add"
+          headerRightOnPress={() =>
+            this.props.navigation.navigate('AddMobileNumber', {
+              routeName: this.state.routeName,
+            })
+          }
         />
         <Spinner
           visible={this.state.loading}
@@ -195,18 +201,6 @@ class MobileNumbersScreen extends Component {
             )}
           />
         )}
-
-        <TouchableHighlight
-          style={styles.submit}
-          onPress={() =>
-            this.props.navigation.navigate('AddMobileNumber', {
-              routeName: this.state.routeName,
-            })
-          }>
-          <Text style={{ color: 'white', fontSize: 20 }}>
-            Add mobile number
-          </Text>
-        </TouchableHighlight>
       </View>
     );
   }
