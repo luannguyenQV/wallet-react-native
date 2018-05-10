@@ -60,11 +60,11 @@ import SettingsAddress from './../screens/settings/addressScreen';
 import SettingsPersonalDetails from './../screens/settings/personalDetailsScreen';
 
 const Stack = {
-  Home: {
-    screen: Home,
-  },
   InitialScreen: {
     screen: InitialScreen,
+  },
+  Home: {
+    screen: Home,
   },
   Login: {
     screen: Login,

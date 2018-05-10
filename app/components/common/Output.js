@@ -45,8 +45,8 @@ const styles = {
     flexDirection: 'row',
   },
   textStyleLabel: {
-    fontSize: 16,
-    color: Colors.black,
+    fontSize: 12,
+    paddingTop: 8,
   },
   textStyleInput: {
     height: 40,

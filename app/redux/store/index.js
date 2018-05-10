@@ -17,9 +17,18 @@ export default function configureStore(initialState = {}) {
   const store = createStore(
     persistedReducer,
     initialState,
-    compose(applyMiddleware(thunk)),
+    compose(
+      applyMiddleware(thunk),
+      global.reduxNativeDevTools
+        ? global.reduxNativeDevTools(/*options*/)
+        : noop => noop,
+    ),
   );
 
   const persistor = persistStore(store);
+  // persistor.purge();
+  // if (global.reduxNativeDevTools) {
+  //   global.reduxNativeDevTools.updateStore(store);
+  // }
   return { persistor, store };
 }

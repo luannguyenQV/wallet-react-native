@@ -5,10 +5,10 @@ import {
   initialLoad,
   authFieldChange,
   updateAuthFormState,
-  saveCompany,
+  // updateAuthInputState,
+  updateAuthInputField,
   loginUser,
   registerUser,
-  updateRegisterFormState,
 } from '../../redux/actions';
 
 import Colors from './../../config/colors';
@@ -22,18 +22,9 @@ import {
 } from './../../components/common';
 
 class InitialScreen extends Component {
-  state = {
-    containerOpen: null,
-    containerShow: 'initial',
-    inputState: 'company',
-  };
-
   componentDidMount() {
     this.props.initialLoad(this.props);
     this.onAuthComplete(this.props);
-    if (this.input) {
-      this.input.focus();
-    }
   }
   componentWillReceiveProps(nextProps) {
     this.onAuthComplete(nextProps);
@@ -41,7 +32,8 @@ class InitialScreen extends Component {
       nextProps.authFormState === 'register' &&
       nextProps.registerFormState === ''
     ) {
-      this.props.updateRegisterFormState({ state: 'initial' });
+      console.log('yo');
+      this.props.updateAuthFormState({ nextFormState: 'landing' });
     }
   }
 
@@ -51,33 +43,13 @@ class InitialScreen extends Component {
     }
   }
 
-  changeContainerState = newState => {
-    if (this.state.containerOpen === null)
-      this.setState({ containerOpen: false });
-  };
-
   performLogin = () => {
     const { email, company, password } = this.props;
     this.props.loginUser({ email, company, password });
   };
 
-  openLogin() {
-    this.props.updateAuthFormState({
-      nextState: 'login',
-    });
-  }
-
-  openRegister() {
-    this.props.updateAuthFormState({
-      nextState: 'register',
-    });
-  }
-
-  nextRegister() {
-    this.props.updateRegisterFormState({
-      state: this.props.registerFormState,
-      value: this.props.input,
-    });
+  updateAuthInputField() {
+    this.props.updateAuthInputField(this.props);
   }
 
   changeCountryCode = (code, cca2) => {
@@ -86,6 +58,13 @@ class InitialScreen extends Component {
       // countryName: cca2,
     });
   };
+
+  openLoginForm() {
+    this.props.updateAuthFormState({
+      nextFormState: 'login',
+    });
+    this.props.authFieldChange({ prop: 'input', value: this.props.email });
+  }
 
   renderMainContainer() {
     const {
@@ -96,19 +75,12 @@ class InitialScreen extends Component {
       imageSmall,
     } = styles;
 
-    const {
-      authFormState,
-      inputError,
-      company,
-      email,
-      password,
-      emailError,
-      passwordError,
-      loading,
-    } = this.props;
+    const { authFormState, authFormInputState } = this.props;
+    console.log('authFormState: ', authFormState);
+    console.log('authFormInputState: ', authFormInputState);
 
     switch (authFormState) {
-      case 'validCompany':
+      case 'landing':
         return (
           <View style={contentContainer}>
             <View style={imageContainer}>
@@ -124,7 +96,7 @@ class InitialScreen extends Component {
                 textActionOne="Change"
                 onPressActionOne={() =>
                   this.props.updateAuthFormState({
-                    nextState: 'invalidCompany',
+                    nextFormState: 'company',
                   })
                 }>
                 <Output label="Company" value={this.props.company} />
@@ -138,7 +110,7 @@ class InitialScreen extends Component {
                 reference={input => {
                   this.login = input;
                 }}
-                onPress={() => this.openLogin()}
+                onPress={() => this.openLoginForm()}
               />
               <Button
                 label="REGISTER"
@@ -148,7 +120,7 @@ class InitialScreen extends Component {
                 }}
                 onPress={() =>
                   this.props.updateAuthFormState({
-                    nextState: 'register',
+                    nextFormState: 'register',
                   })
                 }
               />
@@ -165,7 +137,6 @@ class InitialScreen extends Component {
                 style={imageSmall}
               />
             </View>
-
             <CardContainer>{this.renderOpenCard()}</CardContainer>
           </View>
         );
@@ -173,14 +144,6 @@ class InitialScreen extends Component {
   }
 
   renderOpenCard() {
-    const {
-      contentContainer,
-      imageContainer,
-      buttonsContainer,
-      image,
-      imageSmall,
-    } = styles;
-
     const {
       authFormState,
       input,
@@ -194,125 +157,78 @@ class InitialScreen extends Component {
       actionText,
     } = this.props;
 
+    let textHeader = '';
+    let iconHeaderLeft = '';
+    let onPressHeaderLeft = () => {};
+    let onPressActionOne = () => {};
+
+    console.log(authFormState);
     switch (authFormState) {
-      case 'invalidCompany':
-        return (
-          <Card
-            textActionOne="Save"
-            onPressActionOne={() =>
-              this.props.saveCompany({ company: this.props.company })
-            }
-            loading={loading}>
-            <Input
-              placeholder="e.g. Rehive"
-              label="Company"
-              requiredError={inputError}
-              value={company}
-              autoFocus
-              onChangeText={value =>
-                this.props.authFieldChange({ prop: 'company', value })
-              }
-              returnKeyType="done"
-            />
-          </Card>
-        );
+      case 'company':
+        // onPressActionOne = () =>
+        //   this.props.saveCompany({ company: this.props.company });
+        break;
+
       case 'login':
-        return (
-          <Card
-            textHeader="Welcome back"
-            iconHeaderLeft="md-arrow-back"
-            onPressHeaderLeft={() =>
-              this.props.updateAuthFormState({
-                nextState: 'validCompany',
-              })
-            }
-            textActionOne="Log in"
-            onPressActionOne={() => this.performLogin()}
-            loading={loading}>
-            <Input
-              placeholder="e.g. user@gmail.com"
-              label="Email"
-              value={email}
-              requiredError={emailError}
-              keyboardType="email-address"
-              onChangeText={value =>
-                this.props.authFieldChange({ prop: 'email', value })
-              }
-              returnKeyType="next"
-              autoFocus
-              scrollView={this.myScrollView}
-              reference={input => {
-                this.email = input;
-              }}
-              // onSubmitEditing={() => {
-              //   this.validationEmail();
-              // }}
-            />
-            <Input
-              type="password"
-              placeholder="Password"
-              label="Password"
-              requiredError={passwordError}
-              value={password}
-              password={true}
-              onChangeText={value =>
-                this.props.authFieldChange({ prop: 'password', value })
-              }
-              returnKeyType="done"
-              scrollView={this.myScrollView}
-              reference={input => {
-                this.password = input;
-              }}
-              // onSubmitEditing={this.onButtonPress}
-            />
-          </Card>
-        );
+        textHeader = 'Welcome back';
+        iconHeaderLeft = 'md-arrow-back';
+        onPressHeaderLeft = () =>
+          this.props.updateAuthFormState({
+            nextState: 'validCompany',
+          });
+
+        // textActionOne = 'Log in';
+        // onPressActionOne = () => this.performLogin();
+        break;
+
       case 'register':
-        return (
-          <Card
-            textHeader="Register"
-            iconHeaderLeft="md-arrow-back"
-            onPressHeaderLeft={() =>
-              this.props.updateAuthFormState({
-                nextState: 'validCompany',
-              })
-            }
-            textActionOne={actionText}
-            onPressActionOne={() => this.nextRegister()}
-            loading={loading}>
-            {this.renderRegisterInput()}
-          </Card>
-        );
-      default:
-        return <View />;
+        textHeader = 'Register';
+        iconHeaderLeft = 'md-arrow-back';
+        onPressHeaderLeft = () =>
+          this.props.updateAuthFormState({
+            nextState: 'validCompany',
+          });
+
+        // textActionOne = { actionText };
+        // onPressActionOne = () => this.nextRegister();
+        break;
     }
+    return (
+      <Card
+        textHeader={textHeader}
+        iconHeaderLeft={iconHeaderLeft}
+        onPressHeaderLeft={onPressHeaderLeft}
+        textActionOne={actionText}
+        onPressActionOne={() => this.updateAuthInputField()}
+        loading={loading}>
+        {this.renderInputField()}
+      </Card>
+    );
   }
 
-  renderRegisterInput() {
-    const {
-      contentContainer,
-      imageContainer,
-      buttonsContainer,
-      image,
-      imageSmall,
-    } = styles;
+  renderInputField() {
+    const { authFormInputState, input, inputError, countryCode } = this.props;
 
-    const {
-      registerFormState,
-      input,
-      inputError,
-      company,
-      email,
-      password,
-      emailError,
-      passwordError,
-      loading,
-      lineNumber,
-      countryCode,
-      mobileNumberError,
-    } = this.props;
-
-    switch (registerFormState) {
+    console.log();
+    switch (authFormInputState) {
+      case 'company':
+        return (
+          <Input
+            placeholder="e.g. Rehive"
+            label="Company"
+            value={input}
+            requiredError={inputError}
+            reference={input => {
+              this.input = input;
+            }}
+            onChangeText={value =>
+              this.props.authFieldChange({ prop: 'input', value })
+            }
+            returnKeyType="next"
+            autoFocus
+            onSubmitEditing={() => this.updateAuthInputField()}
+          />
+        );
       case 'email':
         return (
           <Input
@@ -329,8 +245,7 @@ class InitialScreen extends Component {
             }
             returnKeyType="next"
             autoFocus
-            scrollView={this.myScrollView}
-            onSubmitEditing={() => this.nextRegister()}
+            onSubmitEditing={() => this.updateAuthInputField()}
           />
         );
       case 'mobile':
@@ -352,10 +267,10 @@ class InitialScreen extends Component {
             returnKeyType="next"
             changeCountryCode={this.changeCountryCode}
             countryCode={countryCode}
-            onSubmitEditing={() => this.nextRegister()}
+            onSubmitEditing={() => this.updateAuthInputField()}
           />
         );
-      default:
+      case 'password':
         return (
           <Input
             type="password"
@@ -372,9 +287,11 @@ class InitialScreen extends Component {
               this.props.authFieldChange({ prop: 'input', value })
             }
             returnKeyType="done"
-            onSubmitEditing={() => this.nextRegister()}
+            onSubmitEditing={() => this.updateAuthInputField()}
           />
         );
+      default:
+        return <View />;
     }
   }
 
@@ -486,8 +403,8 @@ export default connect(mapStateToProps, {
   authFieldChange,
   initialLoad,
   updateAuthFormState,
-  saveCompany,
+  // updateAuthInputState,
+  updateAuthInputField,
   loginUser,
   registerUser,
-  updateRegisterFormState,
 })(InitialScreen);

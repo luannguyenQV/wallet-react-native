@@ -9,18 +9,9 @@ class Input extends Component {
     textColor: Colors.black,
     borderColor: Colors.lightgray,
     iconNameVisibility: 'visibility-off',
-    secureTextEntry: this.props.type === 'password' ? true : false,
     cca2: 'US',
     countryCode: '+1',
   };
-
-  // componentWillReceiveProps(nextProps) {
-  //   if (nextProps.requiredError != '') {
-  //     this.setState({
-  //       borderColor: Colors.red,
-  //     });
-  //   }
-  // }
 
   _OnBlur() {
     this.setState({
@@ -66,6 +57,7 @@ class Input extends Component {
       countryCode,
       changeCountryCode,
       requiredError,
+      autoCorrect,
     } = this.props;
 
     const {
@@ -132,12 +124,17 @@ class Input extends Component {
           onBlur={() => this._OnBlur()}
           underlineColorAndroid="transparent"
           autoCapitalize={autoCapitalize ? autoCapitalize : 'none'}
+          autoCorrect={autoCorrect ? autoCorrect : false}
           placeholder={placeholder}
           value={value}
           onChangeText={onChangeText}
           ref={reference}
           selectTextOnFocus
-          secureTextEntry={secureTextEntry ? secureTextEntry : false}
+          secureTextEntry={
+            secureTextEntry
+              ? secureTextEntry
+              : this.props.type === 'password' ? true : false
+          }
           keyboardType={keyboardType}
           returnKeyType={returnKeyType}
           onSubmitEditing={onSubmitEditing}

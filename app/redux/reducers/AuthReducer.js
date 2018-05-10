@@ -1,51 +1,42 @@
 import {
   AUTH_FIELD_CHANGED,
+  AUTH_FIELD_ERROR,
+  TERMS_CHANGED,
   LOGIN_USER_SUCCESS,
   LOGIN_USER_FAIL,
   LOGIN_USER,
+  REGISTER_USER,
+  REGISTER_USER_SUCCESS,
+  REGISTER_USER_FAIL,
+  UPDATE_AUTH_FORM_FIELD,
   UPDATE_AUTH_FORM_FIELD_SUCCESS,
   UPDATE_AUTH_FORM_FIELD_FAIL,
-  AUTH_FIELD_ERROR,
-  AUTH_FIELD_FOCUS,
-  LOGOUT_USER,
-  TERMS_CHANGED,
   UPDATE_AUTH_FORM_STATE,
-  UPDATE_REGISTER_FORM_STATE,
-  UPDATE_AUTH_FORM_FIELD,
+  LOGOUT_USER,
 } from './../actions/types';
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 
 const INITIAL_STATE = {
-  first_name: '',
   input: '',
   inputError: '',
+  actionText: '',
+  authFormState: '',
+  authFormInputState: '',
+  first_name: '',
   last_name: '',
   email: '',
-  emailError: '',
   mobileNumber: null,
-  mobileNumberError: null,
   countryName: 'US',
   countryCode: '+1',
   lineNumber: null,
   company: '',
-  companyError: null,
   password: '',
-  passwordError: true,
-  password2: '',
-  password2Error: true,
   terms_and_conditions: false,
-  termsError: '',
-  loginError: '',
   token: null,
-  user: null,
   loading: false,
-  authFormState: 'invalidCompany',
-  registerFormState: 'email',
-  actionText: 'Next',
 };
 
 export default (state = INITIAL_STATE, action) => {
-  console.log(action);
   switch (action.type) {
     case PERSIST_REHYDRATE:
       return action.payload.auth || [];
@@ -65,16 +56,19 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         [action.payload.prop]: action.payload.value,
       };
+
     case UPDATE_AUTH_FORM_FIELD:
       return {
         ...state,
-        loading: true,
+        // authFormState: action.payload,
+        // registerFormState: '',
         inputError: '',
+        loading: true,
       };
     case UPDATE_AUTH_FORM_FIELD_SUCCESS:
       return {
         ...state,
-        // authFormState: 'validCompany',
+        [action.payload.prop]: action.payload.value,
         input: '',
         inputError: '',
         loading: false,
@@ -82,15 +76,33 @@ export default (state = INITIAL_STATE, action) => {
     case UPDATE_AUTH_FORM_FIELD_FAIL:
       return {
         ...state,
-        inputError: action.payload,
+        inputError: action.payload.inputError,
         loading: false,
       };
+
+    case UPDATE_AUTH_FORM_STATE:
+      const { authFormState, authFormInputState, actionText } = action.payload;
+      return {
+        ...state,
+        authFormState,
+        authFormInputState,
+        actionText,
+        inputError: '',
+        input: '',
+        password: '',
+        loading: false,
+      };
+
     case LOGIN_USER:
-      return { ...state, loading: true, error: '' };
+      return {
+        ...state,
+        loading: true,
+        error: '',
+        input: '',
+      };
     case LOGIN_USER_SUCCESS:
       return {
         ...state,
-        password: '',
         token: action.payload,
         loading: false,
       };
@@ -98,36 +110,35 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         authFormState: 'validCompany',
-        password: '',
         token: null,
         // passwordError: 'Unable to login with provided credentials',
         inputError: '',
         loading: false,
       };
-    case UPDATE_AUTH_FORM_STATE:
+
+    case REGISTER_USER:
       return {
         ...state,
-        authFormState: action.payload,
-        registerFormState: '',
-        inputError: '',
-        password: '',
-      };
-    case UPDATE_AUTH_FORM_FIELD:
-      return {
-        ...state,
-        authFormState: action.payload,
-        registerFormState: '',
-        inputError: '',
-        loading: '',
-      };
-    case UPDATE_REGISTER_FORM_STATE:
-      return {
-        ...state,
-        registerFormState: action.payload.nextState,
-        actionText: action.payload.actionText,
-        inputError: '',
+        loading: true,
+        error: '',
         input: '',
       };
+    case REGISTER_USER_SUCCESS:
+      return {
+        ...state,
+        token: action.payload,
+        loading: false,
+      };
+    case REGISTER_USER_FAIL:
+      return {
+        ...state,
+        authFormState: 'validCompany',
+        token: null,
+        // passwordError: 'Unable to login with provided credentials',
+        inputError: '',
+        loading: false,
+      };
+
     case LOGOUT_USER:
       console.log('logged out');
       return {

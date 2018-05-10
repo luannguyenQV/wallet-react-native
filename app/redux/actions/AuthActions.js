@@ -1,4 +1,3 @@
-import { AsyncStorage } from 'react-native';
 import {
   AUTH_FIELD_CHANGED,
   AUTH_FIELD_ERROR,
@@ -6,157 +5,211 @@ import {
   LOGIN_USER_SUCCESS,
   LOGIN_USER_FAIL,
   LOGIN_USER,
-  UPDATE_COMPANY_SUCCESS,
-  UPDATE_COMPANY_FAIL,
-  UPDATE_COMPANY,
+  REGISTER_USER,
   REGISTER_USER_SUCCESS,
   REGISTER_USER_FAIL,
-  REGISTER_USER,
   UPDATE_AUTH_FORM_FIELD,
+  UPDATE_AUTH_FORM_FIELD_SUCCESS,
+  UPDATE_AUTH_FORM_FIELD_FAIL,
   UPDATE_AUTH_FORM_STATE,
-  UPDATE_REGISTER_FORM_STATE,
   LOGOUT_USER,
 } from './types';
 
-import store from './../store';
 import clientConfig from './../../config/client';
 
 import { IsEmail } from './../../util/validation';
 import AuthService from './../../services/authService';
 
 export const initialLoad = props => async dispatch => {
-  // console.log(props);
   if (props.token) {
     dispatch({ type: LOGIN_USER_SUCCESS, payload: token });
   } else {
     if (props.company) {
-      dispatch({ type: LOGIN_USER_FAIL });
+      dispatch(
+        updateAuthFormState({ nextFormState: 'landing', inputState: '' }),
+      );
     } else {
-      dispatch({ type: UPDATE_AUTH_FORM_STATE, payload: 'invalidCompany' });
+      dispatch(
+        updateAuthFormState({ nextFormState: 'company', inputState: '' }),
+      );
     }
   }
 };
 
-export const updateAuthFormState = ({ nextState }) => {
-  return {
-    type: UPDATE_AUTH_FORM_STATE,
-    payload: nextState,
-  };
-};
-
-export const updateRegisterFormState = ({ state, value }) => {
+export const updateAuthFormState = ({
+  authState,
+  inputState,
+  nextFormState,
+}) => {
+  console.log('updateAuthInputState');
+  console.log('inputState: ', inputState);
+  console.log('authState: ', authState);
+  console.log('nextFormState: ', nextFormState);
   let actionText = '';
-  let nextState = '';
-  if (state === 'initial') {
+  let nextInputState = '';
+  if (nextFormState === 'landing') {
+    nextInputState = '';
+  } else if (nextFormState === 'company') {
+    actionText = 'Save';
+    nextInputState = 'company';
+  } else if (nextFormState === 'register') {
     if (clientConfig.requireEmail) {
-      nextState = 'email';
+      nextInputState = 'email';
     } else if (clientConfig.requireMobile) {
-      nextState = 'mobile';
+      nextInputState = 'mobile';
+    } else {
+      nextInputState = 'email';
+    }
+    actionText = 'Next';
+  } else if (nextFormState === 'login') {
+    if (clientConfig.requireEmail) {
+      nextInputState = 'email';
+    } else if (clientConfig.requireMobile) {
+      nextInputState = 'mobile';
+    } else {
+      nextInputState = 'email';
     }
     actionText = 'Next';
   } else {
-    console.log(state, value);
-    let error = validation(state, value);
-    if (error) {
-      return {
-        type: AUTH_FIELD_ERROR,
-        payload: { prop: state, value, error },
-      };
-    } else {
-      return dispatch => {
-        dispatch({ type: UPDATE_AUTH_FORM_FIELD });
-        let data = { state, value };
-        performUpdateAuthFormField(dispatch, data);
-      };
-      if (state === 'email') {
+    if (authState === 'company') {
+      nextInputState = '';
+      nextFormState = 'landing';
+    } else if (authState === 'login') {
+      if (inputState === '') {
+        actionText = 'Next';
+        nextInputState = 'email';
+      } else if (inputState === 'email') {
+        actionText = 'Log in';
+        nextInputState = 'password';
+      } else if (inputState === 'password') {
+        nextInputState = '';
+        nextFormState = 'landing';
+      }
+    } else if (authState === 'register') {
+      if (inputState === 'email') {
         if (clientConfig.requireMobile) {
-          nextState = 'mobile';
+          nextInputState = 'mobile';
           actionText = 'Next';
         } else if (clientConfig.requireTerms) {
-          nextState = 'terms';
+          nextInputState = 'terms';
           actionText = 'Next';
         } else {
-          nextState = 'password';
+          nextInputState = 'password';
           actionText = 'Register';
         }
-      } else if (state === 'mobile') {
+      } else if (inputState === 'mobile') {
         if (clientConfig.requireTerms) {
-          nextState = 'terms';
+          nextInputState = 'terms';
           actionText = 'Next';
         } else {
-          nextState = 'password';
+          nextInputState = 'password';
           actionText = 'Register';
         }
-      } else if (state === 'terms') {
+      } else if (inputState === 'terms') {
         nextState = 'password';
         actionText = 'Register';
       }
     }
+    if (!nextFormState) {
+      nextFormState = authState;
+    }
   }
-
+  console.log('UPDATE_AUTH_FORM_STATE');
+  console.log('actionText: ', actionText);
+  console.log('nextInputState: ', nextInputState);
+  console.log('nextFormState: ', nextFormState);
   return {
-    type: UPDATE_REGISTER_FORM_STATE,
-    payload: { nextState, actionText },
+    type: UPDATE_AUTH_FORM_STATE,
+    payload: {
+      actionText,
+      authFormInputState: nextInputState,
+      authFormState: nextFormState,
+    },
   };
+  // console.log({ nextState, actionText });
+  // dispatch({
+  //   type: UPDATE_AUTH_INPUT_STATE,
+  //   payload: { actionText, nextState },
+  // });
+  // return {
+  //   type: UPDATE_AUTH_INPUT_STATE,
+  //   payload: { nextState, actionText },
+  // };
 };
 
-performUpdateAuthFormField = async (dispatch, data) => {
-  console.log(data.state);
-  let responseJson = await AuthService.signup(data);
-  console.log(responseJson.data);
-  if (responseJson.data.company) {
+export const updateAuthInputField = props => async dispatch => {
+  let authState = props.authFormState;
+  let inputState = props.authFormInputState;
+  let value = props.input;
+  let error = validation(inputState, value);
+  if (error) {
     dispatch({
-      type: UPDATE_COMPANY_FAIL,
-      payload: responseJson.data.company[0],
+      type: AUTH_FIELD_ERROR,
+      payload: { error },
     });
   } else {
-    // if (responseJson.data.email)
-    // const data = { requireEmail, requireMobile };
     dispatch({
-      type: UPDATE_COMPANY_SUCCESS,
+      type: UPDATE_AUTH_FORM_FIELD,
     });
+
+    if (inputState === 'password') {
+      if (authState === 'login') {
+        dispatch({ type: LOGIN_USER });
+        let data = {
+          user: props.email,
+          company: props.company,
+          password: value,
+        };
+        performLogin(dispatch, data);
+      } else if (authState === 'register') {
+        dispatch({ type: REGISTER_USER });
+        let data = {
+          email: props.email,
+          company: props.company,
+          password1: value,
+          password2: value,
+        };
+        performRegister(dispatch, data);
+      }
+    } else {
+      let response = await performCompanyServerValidation(props);
+
+      console.log('response', response);
+      if (!response) {
+        dispatch({
+          type: UPDATE_AUTH_FORM_FIELD_SUCCESS,
+          payload: { prop: inputState, value },
+        });
+        dispatch(updateAuthFormState({ authState, inputState }));
+      } else {
+        dispatch({
+          type: UPDATE_AUTH_FORM_FIELD_FAIL,
+          payload: { inputError: response },
+        });
+      }
+    }
   }
 };
 
-export const saveCompany = ({ company }) => {
-  return dispatch => {
-    dispatch({ type: UPDATE_COMPANY });
-    let data = { company };
-    performUpdateCompany(dispatch, data);
-  };
-};
+performCompanyServerValidation = async props => {
+  let authState = props.authFormState;
+  let inputState = props.authFormInputState;
+  let value = props.input;
 
-performUpdateCompany = async (dispatch, data) => {
-  console.log(data);
-  let responseJson = await AuthService.signup(data);
-  console.log(responseJson.data);
-  if (responseJson.data.company) {
-    dispatch({
-      type: UPDATE_COMPANY_FAIL,
-      payload: responseJson.data.company[0],
-    });
-  } else {
-    // if (responseJson.data.email)
-    // const data = { requireEmail, requireMobile };
-    dispatch({
-      type: UPDATE_COMPANY_SUCCESS,
-    });
+  if (authState === 'company') {
+    let responseJson = await AuthService.signup({ company: value });
+    console.log(responseJson.data);
+    if (responseJson.data.company) {
+      return 'Please enter a valid company ID';
+    }
   }
+  return '';
 };
 
 export const authFieldChange = ({ prop, value }) => {
-  // let error = validation(prop, value);
   return {
     type: AUTH_FIELD_CHANGED,
     payload: { prop, value },
-  };
-};
-
-export const authFieldSave = ({ prop, value }) => {
-  let error = validation(prop, value);
-  return {
-    type: AUTH_FIELD_SAVE,
-    payload: { prop, value, error },
   };
 };
 
@@ -170,42 +223,6 @@ export const termsChanged = ({ prop, value }) => {
 export const logoutUser = () => {
   return {
     type: LOGOUT_USER,
-  };
-};
-
-export const loginUser = ({ email, company, password }) => {
-  return dispatch => {
-    let error = '';
-    let prop = 'email';
-    error = validation(prop, email);
-    if (error) {
-      dispatch({
-        type: AUTH_FIELD_ERROR,
-        payload: { prop, error },
-      });
-    }
-    prop = 'company';
-    error = validation(prop, company);
-    if (error) {
-      dispatch({
-        type: AUTH_FIELD_ERROR,
-        payload: { prop, error },
-      });
-    }
-    prop = 'password';
-    error = validation(prop, password);
-    if (error) {
-      dispatch({
-        type: AUTH_FIELD_ERROR,
-        payload: { prop, error },
-      });
-    }
-
-    if (!error) {
-      dispatch({ type: LOGIN_USER });
-      let data = { user: email, company, password };
-      performLogin(dispatch, data);
-    }
   };
 };
 
@@ -230,7 +247,6 @@ performLogin = async (dispatch, data) => {
     //   Alert.alert('Error', twoFactorResponse.message, [{ text: 'OK' }]);
     // }
   } else {
-    console.log('fail');
     loginUserFail(dispatch);
   }
 };
@@ -242,6 +258,28 @@ const loginUserFail = dispatch => {
 const loginUserSuccess = (dispatch, token) => {
   dispatch({
     type: LOGIN_USER_SUCCESS,
+    payload: token,
+  });
+};
+
+performRegister = async (dispatch, data) => {
+  let responseJson = await AuthService.signup(data);
+
+  if (responseJson.status === 'success') {
+    const loginInfo = responseJson.data;
+    registerUserSuccess(dispatch, loginInfo.token);
+  } else {
+    registerUserFail(dispatch);
+  }
+};
+
+const registerUserFail = dispatch => {
+  dispatch({ type: REGISTER_USER_FAIL });
+};
+
+const registerUserSuccess = (dispatch, token) => {
+  dispatch({
+    type: REGISTER_USER_SUCCESS,
     payload: token,
   });
 };
