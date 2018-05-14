@@ -80,6 +80,7 @@ const styles = {
     shadowColor: 'rgba(0, 0, 0, 0.6)',
     shadowOpacity: 0.2,
     shadowRadius: 2,
+    marginVertical: 5,
     elevation: 2,
     shadowOffset: {
       height: 1,
@@ -101,11 +102,6 @@ const styles = {
     color: 'black',
     opacity: 0.87,
     fontWeight: 'bold',
-  },
-
-  cardContent: {
-    padding: 0,
-    color: 'rgba(0, 0, 0, 0.54)',
   },
   viewStyleFooter: {
     height: 52,

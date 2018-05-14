@@ -9,3 +9,4 @@ export * from './InputForm';
 export * from './ButtonList';
 export * from './Checkbox';
 export * from './CardContainer';
+export * from './PopUpGeneral';

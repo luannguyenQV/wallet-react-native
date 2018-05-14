@@ -17,8 +17,9 @@ import AccountCircle from '../../../components/accountCircle';
 import NewAccountName from './../../../components/newAccountName';
 import Header from './../../../components/header';
 import ResetNavigation from './../../../util/resetNavigation';
-import Account from './../../../components/newAccountCurrency';
+import AccountCurrency from './../../../components/accountCurrency';
 import Colors from './../../../config/colors';
+import { CardContainer } from '../../../components/common';
 
 const ds = new ListView.DataSource({
   rowHasChanged: (r1, r2) => JSON.stringify(r1) !== JSON.stringify(r2),
@@ -161,13 +162,13 @@ class AccountsScreen extends Component {
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
-            backgroundColor: Colors.whitesmoke,
+            // backgroundColor: Colors.whitesmoke,
           }}>
-          <Text
+          {/* <Text
             style={styles.addAccountText}
             onPress={() => this.props.navigation.navigate('AddAccountB')}>
             Add account
-          </Text>
+          </Text> */}
           {this.state.showIcon && (
             <TouchableHighlight
               style={{ paddingHorizontal: 20 }}
@@ -185,18 +186,6 @@ class AccountsScreen extends Component {
             </TouchableHighlight>
           )}
         </View>
-        {/*{
-                 this.state.loading &&
-                 <View style={{
-                 backgroundColor: Colors.whitesmoke,
-                 height: 70,
-                 alignItems: 'center',
-                 justifyContent: 'center'
-                 }}>
-                 <ActivityIndicator size="large"
-                 />
-                 </View>
-                 }*/}
         <View style={{ backgroundColor: Colors.whitesmoke, height: 60 }}>
           {this.state.noAccounts ? (
             <View style={styles.noAccounts}>
@@ -235,7 +224,7 @@ class AccountsScreen extends Component {
           style={{
             flex: 7,
             flexDirection: 'column',
-            backgroundColor: 'white',
+            // backgroundColor: 'white',
           }}>
           {!this.state.isShown && (
             <ScrollView>
@@ -286,22 +275,25 @@ class AccountsScreen extends Component {
                 )}
               {!this.state.loading &&
                 !this.state.noCurrencies && (
-                  <ListView
-                    style={{
-                      backgroundColor: 'white',
-                      borderTopColor: Colors.lightgray,
-                      borderTopWidth: 1,
-                    }}
-                    dataSource={this.state.accountDataSource}
-                    enableEmptySections
-                    renderRow={rowData => (
-                      <Account
-                        reference={this.state.reference}
-                        setActiveCurrency={this.setActiveCurrency}
-                        currencies={rowData}
-                      />
-                    )}
-                  />
+                  <CardContainer>
+                    <ListView
+                      style={{
+                        // backgroundColor: 'white',
+                        borderTopColor: Colors.lightgray,
+                        borderTopWidth: 1,
+                      }}
+                      dataSource={this.state.accountDataSource}
+                      enableEmptySections
+                      renderRow={rowData => (
+                        <AccountCurrency
+                          navigation={this.props.navigation}
+                          reference={this.state.reference}
+                          setActiveCurrency={this.setActiveCurrency}
+                          currency={rowData}
+                        />
+                      )}
+                    />
+                  </CardContainer>
                 )}
             </ScrollView>
           )}
@@ -315,12 +307,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
   },
   currencyListHeader: {
     flexDirection: 'row',
     paddingHorizontal: 20,
-    backgroundColor: Colors.whitesmoke,
+    // backgroundColor: Colors.whitesmoke,
   },
   account: {
     height: 50,

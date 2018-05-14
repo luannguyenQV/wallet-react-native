@@ -14,3 +14,21 @@ export const REGISTER_USER_SUCCESS = 'register_user_success';
 export const REGISTER_USER_FAIL = 'register_user_fail';
 export const AUTH_FIELD_FOCUS = 'auth_field_focus';
 export const LOGOUT_USER = 'logout_user';
+
+// REHIVE
+export const FETCH_USER = 'fetch_user';
+export const FETCH_USER_SUCCESS = 'fetch_user_success';
+export const FETCH_USER_FAIL = 'fetch_user_fail';
+export const FETCH_ACCOUNTS = 'fetch_accounts';
+export const FETCH_ACCOUNTS_SUCCESS = 'fetch_accounts_success';
+export const FETCH_ACCOUNTS_FAIL = 'fetch_accounts_fail';
+export const UPDATE_TEMP_CURRENCY = 'update_temp_currency';
+export const SET_ACTIVE_CURRENCY = 'set_active_currency';
+export const SET_ACTIVE_CURRENCY_SUCCESS = 'set_active_currency_success';
+export const SET_ACTIVE_CURRENCY_FAIL = 'set_active_currency_fail';
+
+export const SET_SEND_CURRENCY = 'set_send_currency';
+export const SET_SEND_AMOUNT = 'set_send_amount';
+export const SET_SEND_RECIPIENT = 'set_send_recipient';
+export const SET_SEND_NOTE = 'set_send_note';
+export const RESET_SEND = 'reset_send';

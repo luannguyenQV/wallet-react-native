@@ -41,10 +41,10 @@ export const updateAuthFormState = ({
   inputState,
   nextFormState,
 }) => {
-  console.log('updateAuthInputState');
-  console.log('inputState: ', inputState);
-  console.log('authState: ', authState);
-  console.log('nextFormState: ', nextFormState);
+  // console.log('updateAuthInputState');
+  // console.log('inputState: ', inputState);
+  // console.log('authState: ', authState);
+  // console.log('nextFormState: ', nextFormState);
   let actionText = '';
   let nextInputState = '';
   if (nextFormState === 'landing') {
@@ -114,10 +114,10 @@ export const updateAuthFormState = ({
       nextFormState = authState;
     }
   }
-  console.log('UPDATE_AUTH_FORM_STATE');
-  console.log('actionText: ', actionText);
-  console.log('nextInputState: ', nextInputState);
-  console.log('nextFormState: ', nextFormState);
+  // console.log('UPDATE_AUTH_FORM_STATE');
+  // console.log('actionText: ', actionText);
+  // console.log('nextInputState: ', nextInputState);
+  // console.log('nextFormState: ', nextFormState);
   return {
     type: UPDATE_AUTH_FORM_STATE,
     payload: {
@@ -174,7 +174,7 @@ export const updateAuthInputField = props => async dispatch => {
     } else {
       let response = await performCompanyServerValidation(props);
 
-      console.log('response', response);
+      // console.log('response', response);
       if (!response) {
         dispatch({
           type: UPDATE_AUTH_FORM_FIELD_SUCCESS,
@@ -198,7 +198,7 @@ performCompanyServerValidation = async props => {
 
   if (authState === 'company') {
     let responseJson = await AuthService.signup({ company: value });
-    console.log(responseJson.data);
+    // console.log(responseJson.data);
     if (responseJson.data.company) {
       return 'Please enter a valid company ID';
     }

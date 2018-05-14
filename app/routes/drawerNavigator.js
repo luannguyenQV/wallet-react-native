@@ -27,15 +27,15 @@ const RouteConfigs = {
   Accounts: {
     screen: Accounts,
   },
-  Transactions: {
-    screen: Transactions,
-  },
-  Deposit: {
-    screen: Deposit,
-  },
-  Withdraw: {
-    screen: Withdraw,
-  },
+  // Transactions: {
+  //   screen: Transactions,
+  // },
+  // Deposit: {
+  //   screen: Deposit,
+  // },
+  // Withdraw: {
+  //   screen: Withdraw,
+  // },
   SendTo: {
     screen: Send,
   },

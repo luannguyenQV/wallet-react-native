@@ -9,7 +9,6 @@ import NoNetConnection from './../screens/auth/noNetConnectionScreen';
 
 import Home from './drawerNavigator';
 
-import AccountCurrencies from './../screens/main/accounts/accountCurrenciesScreen';
 // import AccountsB from './../screens/accounts/accountsB';
 import Accounts from './../screens/main/accounts/accountsScreen';
 import AddAccount from './../screens/main/accounts/addAccountScreen';
@@ -104,9 +103,6 @@ const Stack = {
   },
   AddAccount: {
     screen: AddAccount,
-  },
-  AccountCurrencies: {
-    screen: AccountCurrencies,
   },
   UploadImage: {
     screen: UploadImage,

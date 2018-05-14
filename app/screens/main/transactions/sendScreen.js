@@ -11,8 +11,16 @@ import {
   ListView,
   ActivityIndicator,
 } from 'react-native';
+import { connect } from 'react-redux';
+import { setSendCurrency, setSendAmount } from '../../../redux/actions';
+
 import Contact from './../../../components/contact';
-import { Input, Button } from './../../../components/common';
+import {
+  Input,
+  Button,
+  CardContainer,
+  Card,
+} from './../../../components/common';
 import ContactService from './../../../services/contactService';
 import UserInfoService from './../../../services/userInfoService';
 import Auth from './../../../util/auth';
@@ -24,27 +32,25 @@ class SendScreen extends Component {
     title: 'Send',
   });
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      balance: 0,
-      ready: false,
-      refreshing: false,
-      reference: '',
-      searchText: '',
-      data: [],
-      contacts: new ListView.DataSource({
-        rowHasChanged: (r1, r2) => r1 !== r2,
-      }),
-    };
-  }
+  state = {
+    input: '',
+    balance: 0,
+    ready: false,
+    refreshing: false,
+    reference: '',
+    searchText: '',
+    data: [],
+    contacts: new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2,
+    }),
+  };
 
   async componentWillMount() {
     let balance = await AsyncStorage.getItem('balance');
     this.setState({
       balance: parseFloat(balance),
     });
-    this.showContactsAsync();
+    // this.showContactsAsync();
     let responseJson = await UserInfoService.getUserDetails();
     if (responseJson.status === 'success') {
       AsyncStorage.removeItem('user');
@@ -143,23 +149,94 @@ class SendScreen extends Component {
     this.props.navigation.navigate('QRcodeScanner');
   };
 
-  render() {
-    if (!this.state.ready) {
-      return (
-        <View style={{ flex: 1 }}>
-          <Header navigation={this.props.navigation} title="To" back right />
-          <KeyboardAvoidingView
-            style={styles.container}
-            behavior={'padding'}
-            keyboardVerticalOffset={75}>
-            <View style={{ flex: 1 }}>
+  updateSendAmount() {
+    this.props.setSendAmount(this.state.input);
+  }
+
+  renderAmount() {
+    const {
+      send_amount,
+      send_currency,
+      send_recipient,
+      send_note,
+      send_reference,
+      tempCurrency,
+    } = this.props;
+    // console.log('send', send);
+    if (send_currency === null) {
+      this.props.setSendCurrency(tempCurrency);
+    } else {
+      if (!send_amount) {
+        return (
+          <Card
+            textHeader="Amount"
+            textActionOne="Next"
+            onPressActionOne={() => this.updateSendAmount()}>
+            <View>
               <Input
-                label="Recipient"
-                placeholder="Enter email, stellar address or mobile"
-                autoCapitalize="none"
-                value={this.state.searchText}
-                onChangeText={this.searchTextChanged}
+                key="amount"
+                placeholder="e.g. 10"
+                label={'Enter amount (' + send_currency.currency.symbol + ')'}
+                prefix={send_currency.currency.symbol}
+                value={this.state.input}
+                // requiredError={inputError}
+                reference={input => {
+                  this.input = input;
+                }}
+                keyboardType="numeric"
+                onChangeText={value => this.setState({ input: value })}
+                returnKeyType="next"
+                autoFocus
+                onSubmitEditing={() => this.updateAuthInputField()}
               />
+            </View>
+          </Card>
+        );
+      }
+      return (
+        <Card textHeader="Amount">
+          <View>
+            <Text>
+              Currency: {send_currency.currency.symbol}
+              {send_amount}
+            </Text>
+          </View>
+        </Card>
+      );
+    }
+    return;
+  }
+
+  renderRecipient() {
+    return <Card textHeader="Recipient" />;
+  }
+
+  renderNote() {
+    return <Card textHeader="Note" />;
+  }
+
+  render() {
+    return (
+      <View style={{ flex: 1 }}>
+        <Header navigation={this.props.navigation} title="To" back right />
+        <CardContainer>
+          {this.renderAmount()}
+          {this.renderRecipient()}
+          {this.renderNote()}
+        </CardContainer>
+        {/* <KeyboardAvoidingView
+          style={styles.container}
+          behavior={'padding'}
+          keyboardVerticalOffset={75}>
+          <View style={{ flex: 1 }}>
+            <Input
+              label="Recipient"
+              placeholder="Enter email, stellar address or mobile"
+              autoCapitalize="none"
+              value={this.state.searchText}
+              onChangeText={this.searchTextChanged}
+            />
+            {!this.state.ready ? (
               <View style={styles.spinner}>
                 <Text>Loading Contacts</Text>
                 <ActivityIndicator
@@ -168,24 +245,7 @@ class SendScreen extends Component {
                   size="large"
                 />
               </View>
-            </View>
-          </KeyboardAvoidingView>
-        </View>
-      );
-    } else {
-      return (
-        <View style={{ flex: 1 }}>
-          <Header navigation={this.props.navigation} title="To" drawer right />
-          <KeyboardAvoidingView style={styles.container} behavior={'padding'}>
-            <View style={{ flex: 1 }}>
-              <Input
-                label="Recipient"
-                placeholder="Enter email, stellar address or mobile"
-                // fontSize={this.state.searchText.length == 0 ? 18 : 22}
-                autoCapitalize="none"
-                value={this.state.searchText}
-                onChange={this.searchTextChanged.bind(this)}
-              />
+            ) : (
               <View style={{ flex: 1, marginHorizontal: 20, marginTop: 10 }}>
                 <ListView
                   refreshControl={
@@ -201,12 +261,12 @@ class SendScreen extends Component {
                   )}
                 />
               </View>
-            </View>
-            <Button label="Next" onPress={this.send} />
-          </KeyboardAvoidingView>
-        </View>
-      );
-    }
+            )}
+          </View>
+          <Button label="Next" onPress={this.send} />
+        </KeyboardAvoidingView> */}
+      </View>
+    );
   }
 }
 
@@ -247,4 +307,30 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SendScreen;
+const mapStateToProps = ({ rehive }) => {
+  const {
+    user,
+    accounts,
+    send_amount,
+    send_currency,
+    send_recipient,
+    send_note,
+    send_reference,
+    tempCurrency,
+  } = rehive;
+  return {
+    user,
+    accounts,
+    tempCurrency,
+    send_amount,
+    send_currency,
+    send_recipient,
+    send_note,
+    send_reference,
+  };
+};
+
+export default connect(mapStateToProps, {
+  setSendCurrency,
+  setSendAmount,
+})(SendScreen);

@@ -9,6 +9,8 @@ import {
   updateAuthInputField,
   loginUser,
   registerUser,
+  fetchUser,
+  fetchAccounts,
 } from '../../redux/actions';
 
 import Colors from './../../config/colors';
@@ -32,14 +34,20 @@ class InitialScreen extends Component {
       nextProps.authFormState === 'register' &&
       nextProps.registerFormState === ''
     ) {
-      console.log('yo');
       this.props.updateAuthFormState({ nextFormState: 'landing' });
     }
   }
 
   onAuthComplete(props) {
+    // console.log(props);
     if (props.token) {
-      this.props.navigation.navigate('Home');
+      // debugger;
+      if (this.props.accounts && this.props.user) {
+        this.props.navigation.navigate('Home');
+      } else {
+        this.props.fetchUser();
+        this.props.fetchAccounts();
+      }
     }
   }
 
@@ -75,9 +83,9 @@ class InitialScreen extends Component {
       imageSmall,
     } = styles;
 
-    const { authFormState, authFormInputState } = this.props;
-    console.log('authFormState: ', authFormState);
-    console.log('authFormInputState: ', authFormInputState);
+    const { authFormState } = this.props;
+    // console.log('authFormState: ', authFormState);
+    // console.log('authFormInputState: ', authFormInputState);
 
     switch (authFormState) {
       case 'landing':
@@ -163,7 +171,7 @@ class InitialScreen extends Component {
       this.props.updateAuthFormState({ nextFormState: 'landing' });
     let onPressActionOne = () => {};
 
-    console.log(authFormState);
+    // console.log(authFormState);
     switch (authFormState) {
       case 'company':
         if (this.props.company) {
@@ -172,8 +180,8 @@ class InitialScreen extends Component {
         break;
 
       case 'login':
-        textHeader = 'Welcome back';
-        iconHeaderLeft = 'md-close';
+        // textHeader = 'Welcome back';
+        iconHeaderLeft = 'md-arrow-back';
 
         // textActionOne = 'Log in';
         // onPressActionOne = () => this.performLogin();
@@ -203,7 +211,6 @@ class InitialScreen extends Component {
   renderInputField() {
     const { authFormInputState, input, inputError, countryCode } = this.props;
 
-    console.log();
     switch (authFormInputState) {
       case 'company':
         return (
@@ -393,8 +400,40 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ auth }) => {
-  return auth;
+const mapStateToProps = ({ auth, rehive }) => {
+  const {
+    authFormInputState,
+    input,
+    inputError,
+    countryCode,
+    authFormState,
+    company,
+    email,
+    password,
+    emailError,
+    passwordError,
+    loading,
+    actionText,
+    token,
+  } = auth;
+  const { user, accounts } = rehive;
+  return {
+    authFormInputState,
+    input,
+    inputError,
+    countryCode,
+    authFormState,
+    company,
+    email,
+    password,
+    emailError,
+    passwordError,
+    loading,
+    actionText,
+    token,
+    user,
+    accounts,
+  };
 };
 
 export default connect(mapStateToProps, {
@@ -405,4 +444,6 @@ export default connect(mapStateToProps, {
   updateAuthInputField,
   loginUser,
   registerUser,
+  fetchUser,
+  fetchAccounts,
 })(InitialScreen);

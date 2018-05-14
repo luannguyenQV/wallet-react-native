@@ -1,6 +1,6 @@
 export default {
   company: null,
-  requireEmail: true,
+  requireEmail: false,
   requireMobile: false,
-  requireTerms: false,
+  requireTerms: true,
 };
