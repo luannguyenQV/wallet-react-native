@@ -27,8 +27,15 @@ export const SET_ACTIVE_CURRENCY = 'set_active_currency';
 export const SET_ACTIVE_CURRENCY_SUCCESS = 'set_active_currency_success';
 export const SET_ACTIVE_CURRENCY_FAIL = 'set_active_currency_fail';
 
+export const SEND_FIELD_UPDATE = 'send_field_update';
+export const SEND_FIELD_ERROR = 'send_field_error';
 export const SET_SEND_CURRENCY = 'set_send_currency';
 export const SET_SEND_AMOUNT = 'set_send_amount';
 export const SET_SEND_RECIPIENT = 'set_send_recipient';
 export const SET_SEND_NOTE = 'set_send_note';
+export const SET_SEND_STATE = 'set_send_state';
 export const RESET_SEND = 'reset_send';
+
+export const SEND = 'send';
+export const SEND_SUCCESS = 'send_success';
+export const SEND_FAIL = 'send_fail';

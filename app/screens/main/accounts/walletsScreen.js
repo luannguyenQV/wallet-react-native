@@ -25,9 +25,9 @@ const ds = new ListView.DataSource({
   rowHasChanged: (r1, r2) => JSON.stringify(r1) !== JSON.stringify(r2),
 });
 
-class AccountsScreen extends Component {
+class WalletsScreen extends Component {
   static navigationOptions = {
-    title: 'Accounts',
+    title: 'Wallets',
   };
 
   constructor(props) {
@@ -132,30 +132,30 @@ class AccountsScreen extends Component {
     }
   };
 
-  setActiveCurrency = async (reference, code) => {
-    Alert.alert('Are you sure?', 'Change your active account.', [
-      { text: 'Cancel', onPress: () => console.log('Cancel Pressed') },
-      {
-        text: 'OK',
-        onPress: async () => {
-          let responseJson = await AccountService.setActiveCurrency(
-            reference,
-            code,
-          );
-          if (responseJson.status === 'success') {
-            this.getActiveAccount();
-          } else {
-            Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
-          }
-        },
-      },
-    ]);
-  };
+  // setActiveCurrency = async (reference, code) => {
+  //   Alert.alert('Are you sure?', 'Change your active account.', [
+  //     { text: 'Cancel', onPress: () => console.log('Cancel Pressed') },
+  //     {
+  //       text: 'OK',
+  //       onPress: async () => {
+  //         let responseJson = await AccountService.setActiveCurrency(
+  //           reference,
+  //           code,
+  //         );
+  //         if (responseJson.status === 'success') {
+  //           this.getActiveAccount();
+  //         } else {
+  //           Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
+  //         }
+  //       },
+  //     },
+  //   ]);
+  // };
 
   render() {
     return (
       <View style={styles.container}>
-        <Header navigation={this.props.navigation} drawer title="Accounts" />
+        <Header navigation={this.props.navigation} drawer title="Wallets" />
         <View
           style={{
             paddingVertical: 10,
@@ -288,7 +288,7 @@ class AccountsScreen extends Component {
                         <AccountCurrency
                           navigation={this.props.navigation}
                           reference={this.state.reference}
-                          setActiveCurrency={this.setActiveCurrency}
+                          // setActiveCurrency={this.setActiveCurrency}
                           currency={rowData}
                         />
                       )}
@@ -346,4 +346,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AccountsScreen;
+export default WalletsScreen;

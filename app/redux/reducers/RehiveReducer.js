@@ -9,11 +9,17 @@ import {
   SET_ACTIVE_CURRENCY_SUCCESS,
   SET_ACTIVE_CURRENCY_FAIL,
   SET_ACTIVE_CURRENCY,
+  SEND_FIELD_UPDATE,
+  SEND_FIELD_ERROR,
+  SET_SEND_STATE,
   SET_SEND_CURRENCY,
   SET_SEND_AMOUNT,
   SET_SEND_RECIPIENT,
   SET_SEND_NOTE,
   RESET_SEND,
+  SEND_SUCCESS,
+  SEND_FAIL,
+  SEND,
 } from './../actions/types';
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 
@@ -25,15 +31,16 @@ const INITIAL_STATE = {
   loadingUser: false,
   loadingAccounts: false,
   loadingActiveCurrencyChange: false,
-  send_amount: null,
-  send_currency: null,
-  send_recipient: null,
-  send_note: null,
-  send_reference: null,
+  sendAmount: null,
+  sendCurrency: null,
+  sendRecipient: '',
+  sendNote: '',
+  sendReference: null,
+  sendState: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
-  // console.log(action);
+  console.log(action);
   switch (action.type) {
     case PERSIST_REHYDRATE:
       return action.payload.auth || [];
@@ -94,34 +101,55 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         loadingActiveCurrencyChange: false,
       };
+    case SEND_FIELD_UPDATE:
+      return { ...state, [action.payload.prop]: action.payload.value };
     case SET_SEND_CURRENCY:
       return {
         ...state,
-        send_currency: action.payload,
+        sendCurrency: action.payload.currency,
+        sendReference: action.payload.reference,
+        sendState: 'amount',
+        inputError: '',
       };
-    case SET_SEND_AMOUNT:
+    case SEND_FIELD_ERROR:
       return {
         ...state,
-        send_amount: action.payload,
+        inputError: action.payload,
       };
-    case SET_SEND_RECIPIENT:
+    case SET_SEND_STATE:
       return {
         ...state,
-        send_recipient: action.payload,
-      };
-    case SET_SEND_NOTE:
-      return {
-        ...state,
-        send_note: action.payload,
+        sendState: action.payload,
+        inputError: '',
       };
     case RESET_SEND:
       return {
         ...state,
-        send_amount: null,
-        send_currency: null,
-        send_recipient: null,
-        send_note: null,
-        send_reference: null,
+        sendAmount: null,
+        sendCurrency: null,
+        sendRecipient: null,
+        sendNote: null,
+        sendReference: null,
+        sendState: 'amount',
+        inputError: '',
+      };
+    case SEND:
+      return {
+        ...state,
+        sending: true,
+      };
+    case SEND_SUCCESS:
+      return {
+        ...state,
+        sendState: 'success',
+        sending: false,
+      };
+    case SEND_FAIL:
+      return {
+        ...state,
+        sendState: 'fail',
+        inputError: action.payload,
+        sending: false,
       };
     default:
       return state;

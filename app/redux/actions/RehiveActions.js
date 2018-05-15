@@ -9,15 +9,22 @@ import {
   SET_ACTIVE_CURRENCY_SUCCESS,
   SET_ACTIVE_CURRENCY_FAIL,
   SET_ACTIVE_CURRENCY,
+  SEND_FIELD_UPDATE,
   SET_SEND_CURRENCY,
-  SET_SEND_AMOUNT,
+  SEND_FIELD_ERROR,
   SET_SEND_RECIPIENT,
   SET_SEND_NOTE,
+  SET_SEND_STATE,
   RESET_SEND,
+  SEND_SUCCESS,
+  SEND_FAIL,
+  SEND,
 } from './types';
+import Big from 'big.js';
 
 import UserInfoService from './../../services/userInfoService';
 import AccountService from './../../services/accountService';
+import TransactionService from './../../services/transactionService';
 
 export const fetchUser = () => async dispatch => {
   dispatch({ type: FETCH_USER });
@@ -102,46 +109,96 @@ export const setActiveCurrency = (reference, code) => async dispatch => {
   }
 };
 
-export const setSendCurrency = currency => {
-  if (currency) {
+export const sendFieldUpdate = ({ prop, value }) => {
+  return {
+    type: SEND_FIELD_UPDATE,
+    payload: { prop, value },
+  };
+};
+
+export const setSendCurrency = (currency, reference) => {
+  if (currency && reference) {
     return {
       type: SET_SEND_CURRENCY,
-      payload: currency,
+      payload: { currency, reference },
     };
   } else {
     // Return fail?
   }
 };
 
-export const setSendAmount = amount => {
-  if (amount) {
+export const validateSendAmount = (currency, amount) => {
+  for (let i = 0; i < currency.currency.divisibility; i++) {
+    amount = amount * 10;
+  }
+  if (amount < currency.available_balance && amount) {
+    return setSendState('recipient');
+  } else {
     return {
-      type: SET_SEND_AMOUNT,
-      payload: amount,
+      type: SEND_FIELD_ERROR,
+      payload: 'Invalid send amount',
     };
-  } else {
-    // Return fail?
   }
 };
 
-export const setSendRecipient = recipient => {
+export const validateSendRecipient = recipient => {
   if (recipient) {
+    return setSendState('note');
+  } else {
     return {
-      type: SET_SEND_RECIPIENT,
-      payload: recipient,
+      type: SEND_FIELD_ERROR,
+      payload: 'Recipient cannot be blank',
+    };
+  }
+};
+
+export const validateSendNote = note => {
+  return setSendState('confirm');
+};
+
+export const setSendState = state => {
+  console.log(state);
+  if (state) {
+    return {
+      type: SET_SEND_STATE,
+      payload: state,
     };
   } else {
     // Return fail?
   }
 };
 
-export const setSendNote = note => {
-  if (note) {
-    return {
-      type: SET_SEND_NOTE,
-      payload: note,
-    };
+export const resetSend = () => {
+  return {
+    type: RESET_SEND,
+  };
+};
+
+export const send = data => async dispatch => {
+  console.log(data);
+  let amount = new Big(data.amount);
+  for (let i = 0; i < data.currency.currency.divisibility; i++) {
+    amount = amount.times(10);
+  }
+  dispatch({ type: SEND });
+  let responseJson = await TransactionService.sendMoney(
+    amount,
+    data.recipient,
+    data.note,
+    data.currency.currency.code,
+    data.reference,
+  );
+
+  console.log('responseJson', responseJson);
+
+  if (responseJson.status === 'success') {
+    dispatch({
+      type: SEND_SUCCESS,
+    });
   } else {
-    // Return fail?
+    dispatch({
+      type: SEND_FAIL,
+      payload: responseJson.message,
+    });
   }
 };

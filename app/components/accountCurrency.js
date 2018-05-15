@@ -8,7 +8,7 @@ import {
   Image,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { setSendCurrency } from './../redux/actions';
+import { setSendCurrency, resetSend } from './../redux/actions';
 
 import Colors from './../config/colors';
 import IconF from 'react-native-vector-icons/Ionicons';
@@ -48,12 +48,13 @@ class AccountCurrency extends Component {
   };
 
   send() {
-    this.props.setSendCurrency(this.state.currency);
+    this.props.resetSend();
+    this.props.setSendCurrency(this.state.currency, this.state.reference);
     this.props.navigation.navigate('SendTo');
   }
 
   render() {
-    const { currency } = this.state;
+    const { currency } = this.props;
     console.log('currency: ', this.props.currency);
     return (
       <Card
@@ -162,4 +163,5 @@ const mapStateToProps = ({}) => {
 
 export default connect(mapStateToProps, {
   setSendCurrency,
+  resetSend,
 })(AccountCurrency);

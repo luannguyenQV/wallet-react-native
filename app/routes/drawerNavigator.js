@@ -11,7 +11,7 @@ import Transactions from './../screens/main/transactions/transactionHistoryScree
 import Send from './../screens/main/transactions/sendScreen';
 import Receive from './../screens/main/transactions/receiveScreen';
 
-import Accounts from './../screens/main/accounts/accountsScreen';
+import Wallets from './../screens/main/accounts/walletsScreen';
 import Deposit from './../screens/main/wallets/depositScreen';
 import Withdraw from './../screens/main/wallets/withdrawScreen';
 
@@ -24,8 +24,8 @@ const RouteConfigs = {
   Home: {
     screen: Home,
   },
-  Accounts: {
-    screen: Accounts,
+  Wallets: {
+    screen: Wallets,
   },
   // Transactions: {
   //   screen: Transactions,
