@@ -24,6 +24,7 @@ class WalletsScreen extends Component {
         <FlatList
           data={accounts.results}
           renderItem={({ item }) => this.renderAccount(item)}
+          keyExtractor={item => item.name}
         />
       );
     }
@@ -39,6 +40,7 @@ class WalletsScreen extends Component {
             renderItem={({ item }) =>
               this.renderWallet(item, account.reference)
             }
+            keyExtractor={item => item.currency.code}
           />
         </Card>
       );
@@ -53,7 +55,6 @@ class WalletsScreen extends Component {
   renderWallet(currency, accountReference) {
     return (
       <Wallet
-        key={currency.name}
         accountReference={accountReference}
         navigation={this.props.navigation}
         // reference={this.state.reference}

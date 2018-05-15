@@ -41,7 +41,7 @@ class ReceiveScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Header navigation={this.props.navigation} drawer title="Receive" />
+        <Header navigation={this.props.navigation} back title="Receive" />
         <Text style={styles.text}>
           The QR code is your public address for accepting payments.
         </Text>

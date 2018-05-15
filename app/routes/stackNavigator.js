@@ -14,6 +14,7 @@ import Wallets from './../screens/main/accounts/walletsScreen';
 import AddAccount from './../screens/main/accounts/addAccountScreen';
 
 import Send from './../screens/main/transactions/sendScreen';
+import Receive from './../screens/main/transactions/receiveScreen';
 import QRcodeScanner from './../screens/main/transactions/qrcodeScannerScreen';
 
 import BankAccounts from './../screens/main/wallets/withdrawBankAccountsScreen';
@@ -78,6 +79,12 @@ const Stack = {
   },
   AuthVerifyMobile: {
     screen: AuthVerifyMobile,
+  },
+  Send: {
+    screen: Send,
+  },
+  Receive: {
+    screen: Receive,
   },
   BankAccounts: {
     screen: BankAccounts,

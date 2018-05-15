@@ -53,7 +53,7 @@ class Wallet extends Component {
       this.state.currency,
       this.props.accountReference,
     );
-    this.props.navigation.navigate('SendTo');
+    this.props.navigation.navigate('Send');
   }
 
   render() {
