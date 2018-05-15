@@ -36,12 +36,12 @@ const RouteConfigs = {
   // Withdraw: {
   //   screen: Withdraw,
   // },
-  SendTo: {
-    screen: Send,
-  },
-  Receive: {
-    screen: Receive,
-  },
+  // SendTo: {
+  //   screen: Send,
+  // },
+  // Receive: {
+  //   screen: Receive,
+  // },
   GetVerified: {
     screen: GetVerified,
   },

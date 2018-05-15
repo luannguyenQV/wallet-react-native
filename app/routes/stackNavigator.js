@@ -13,7 +13,6 @@ import Home from './drawerNavigator';
 import Wallets from './../screens/main/accounts/walletsScreen';
 import AddAccount from './../screens/main/accounts/addAccountScreen';
 
-import SendAmountEntry from './../screens/main/transactions/sendAmountEntryScreen';
 import Send from './../screens/main/transactions/sendScreen';
 import QRcodeScanner from './../screens/main/transactions/qrcodeScannerScreen';
 
@@ -89,15 +88,9 @@ const Stack = {
   WithdrawAmountEntry: {
     screen: WithdrawAmountEntry,
   },
-  SendAmountEntry: {
-    screen: SendAmountEntry,
-  },
   QRcodeScanner: {
     screen: QRcodeScanner,
   },
-  // AccountsB: {
-  //   screen: AccountsB,
-  // },
   Wallets: {
     screen: Wallets,
   },

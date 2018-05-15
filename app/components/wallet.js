@@ -15,7 +15,7 @@ import IconF from 'react-native-vector-icons/Ionicons';
 
 import { Card } from './../components/common';
 
-class AccountCurrency extends Component {
+class Wallet extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -49,24 +49,23 @@ class AccountCurrency extends Component {
 
   send() {
     this.props.resetSend();
-    this.props.setSendCurrency(this.state.currency, this.state.reference);
+    this.props.setSendCurrency(
+      this.state.currency,
+      this.props.accountReference,
+    );
     this.props.navigation.navigate('SendTo');
   }
 
   render() {
-    const { currency } = this.props;
-    console.log('currency: ', this.props.currency);
+    const { key, currency } = this.props;
     return (
       <Card
+        key={key}
         textHeader={currency.currency.description}
         textActionOne="Send"
         onPressActionOne={() => this.send()}
         textActionTwo="Receive"
-        // onPressActionTwo={() =>
-        //   this.setState({
-        //     showModal: false,
-        //   })
-        // }
+        onPressActionTwo={() => this.props.navigation.navigate('Receive')}
         loading={this.props.loadingDefaultAccountChange}>
         <View>
           <Text>
@@ -84,51 +83,7 @@ class AccountCurrency extends Component {
             ).toFixed(currency.currency.divisibility)}
           </Text>
         </View>
-        {/* <Output label="Company" value={this.props.company} /> */}
       </Card>
-      // <View
-      //   style={{
-      //     height: 60,
-      //     padding: 10,
-      //     paddingHorizontal: 20,
-      //     borderBottomWidth: 2,
-      //     borderBottomColor: Colors.lightgray,
-      //     justifyContent: 'center',
-      //     alignItems: 'center',
-      //     backgroundColor: 'white',
-      //   }}>
-      //   <View
-      //     style={{
-      //       flexDirection: 'row',
-      //       flex: 1,
-      //       justifyContent: 'center',
-      //       alignItems: 'center',
-      //     }}>
-      //     <View style={{ flex: 1, justifyContent: 'center' }}>
-      //       <Text style={{ color: Colors.darkestgray, fontSize: 14 }}>
-      //         {this.state.currencies.currency.description}
-      //       </Text>
-      //       <Text style={{ color: Colors.black, fontSize: 18 }}>
-      //         {this.state.currencies.currency.symbol}
-      //         {this.state.balance.toFixed(4).replace(/0{0,2}$/, '')}
-      //       </Text>
-      //     </View>
-      //     <TouchableWithoutFeedback
-      //       onPress={() => {
-      //         this.props.setActiveCurrency(
-      //           this.state.reference,
-      //           this.state.currencies.currency.code,
-      //         );
-      //       }}
-      //       style={{ justifyContent: 'center', alignItems: 'center' }}>
-      //       <IconF
-      //         name="md-checkbox"
-      //         size={30}
-      //         color={this.state.active ? Colors.green : Colors.lightgray}
-      //       />
-      //     </TouchableWithoutFeedback>
-      //   </View>
-      // </View>
     );
   }
 }
@@ -164,4 +119,4 @@ const mapStateToProps = ({}) => {
 export default connect(mapStateToProps, {
   setSendCurrency,
   resetSend,
-})(AccountCurrency);
+})(Wallet);

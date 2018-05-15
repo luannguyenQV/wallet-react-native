@@ -80,7 +80,8 @@ const styles = {
     shadowColor: 'rgba(0, 0, 0, 0.6)',
     shadowOpacity: 0.2,
     shadowRadius: 2,
-    marginVertical: 5,
+    margin: 5,
+    padding: 5,
     elevation: 2,
     shadowOffset: {
       height: 1,

@@ -117,6 +117,7 @@ export const sendFieldUpdate = ({ prop, value }) => {
 };
 
 export const setSendCurrency = (currency, reference) => {
+  console.log(currency, reference);
   if (currency && reference) {
     return {
       type: SET_SEND_CURRENCY,
