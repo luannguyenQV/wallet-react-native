@@ -60,6 +60,7 @@ export default (state = INITIAL_STATE, action) => {
     case UPDATE_AUTH_FORM_FIELD:
       return {
         ...state,
+        [action.payload.prop]: state.input,
         inputError: '',
         loading: true,
       };

@@ -190,8 +190,8 @@ class SendScreen extends Component {
     if (sendCurrency === null) {
       this.props.setSendCurrency(tempCurrency, accounts.results[0].reference);
     } else if (
-      sendState !== 'confirm' ||
-      sendState !== 'success' ||
+      sendState !== 'confirm' &&
+      sendState !== 'success' &&
       sendState !== 'fail'
     ) {
       if (sendState === 'amount') {

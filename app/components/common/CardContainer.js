@@ -25,7 +25,8 @@ const styles = {
   containerStyle: {
     flex: 1,
     // alignItems: 'stretch',
-    padding: 5,
+    // padding: 5,
+    // paddingBottom: 10,
     marginTop: 0,
   },
 };

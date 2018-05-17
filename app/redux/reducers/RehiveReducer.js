@@ -26,8 +26,7 @@ import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 const INITIAL_STATE = {
   user: null,
   accounts: null,
-  tempCurrency: null,
-  tempCurrencyIndex: 0,
+  currentIndex: 0,
   loadingUser: false,
   loadingAccounts: false,
   loadingActiveCurrencyChange: false,
@@ -40,7 +39,6 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action) => {
-  console.log(action);
   switch (action.type) {
     case PERSIST_REHYDRATE:
       return action.payload.auth || [];
@@ -69,8 +67,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         accounts: action.payload.accounts,
-        tempCurrency: action.payload.tempCurrency,
-        tempCurrencyIndex: action.payload.activeAccountIndex,
+        currentIndex: action.payload.activeAccountIndex,
         loadingAccounts: false,
       };
     case FETCH_ACCOUNTS_FAIL:
@@ -78,12 +75,10 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         loadingAccounts: false,
       };
-    case UPDATE_TEMP_CURRENCY:
+    case UPDATE_CURRENT_INDEX:
       return {
         ...state,
-        tempCurrency: action.payload.tempCurrency,
-        tempCurrencyIndex: action.payload.activeAccountIndex,
-        loadingAccounts: false,
+        currentIndex: action.payload,
       };
     case SET_ACTIVE_CURRENCY:
       return {

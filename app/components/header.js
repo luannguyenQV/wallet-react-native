@@ -217,8 +217,8 @@ const styles = StyleSheet.create({
   options: {
     width: '100%',
     flexDirection: 'row',
-    backgroundColor: Colors.lightblue,
-    height: 55,
+    backgroundColor: Colors.primary,
+    height: 64,
   },
   left: {
     flex: 1,

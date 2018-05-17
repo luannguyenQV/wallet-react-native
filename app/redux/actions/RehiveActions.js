@@ -5,7 +5,7 @@ import {
   FETCH_ACCOUNTS,
   FETCH_ACCOUNTS_SUCCESS,
   FETCH_ACCOUNTS_FAIL,
-  UPDATE_TEMP_CURRENCY,
+  UPDATE_CURRENT_INDEX,
   SET_ACTIVE_CURRENCY_SUCCESS,
   SET_ACTIVE_CURRENCY_FAIL,
   SET_ACTIVE_CURRENCY,
@@ -40,28 +40,25 @@ export const fetchUser = () => async dispatch => {
 
 export const fetchAccounts = () => async dispatch => {
   dispatch({ type: FETCH_ACCOUNTS });
-  let allAccountsResponseJson = await AccountService.getAllAccounts();
-  let activeAccountResponseJson = await UserInfoService.getActiveAccount();
-  console.log('allAccountsResponseJson', allAccountsResponseJson.data);
+  let responseJson = await AccountService.getAllAccounts();
 
-  if (
-    allAccountsResponseJson.status === 'success' &&
-    activeAccountResponseJson.status === 'success'
-  ) {
-    const accounts = allAccountsResponseJson.data;
-    const currencies = accounts.results[0].currencies;
+  if (responseJson.status === 'success') {
+    const accounts = responseJson.data;
     let activeAccountIndex = 0;
+    let currencies;
+    let tempCurrency;
 
-    for (var i = 0; i < currencies.length; i++) {
-      if (currencies[i].active === true) {
-        activeAccountIndex = i;
-        i = currencies.length;
+    for (var i = 0; i < accounts.count; i++) {
+      currencies = accounts.results[i].currencies;
+      for (var j = 0; j < currencies.length; j++) {
+        if (currencies[j].active === true) {
+          activeAccountIndex = j;
+          tempCurrency = currencies[j];
+          i = accounts.length;
+          j = currencies.length;
+        }
       }
     }
-    // console.log('accounts', accounts);
-    const tempCurrency = currencies[activeAccountIndex];
-
-    console.log('tempCurrency', tempCurrency);
 
     dispatch({
       type: FETCH_ACCOUNTS_SUCCESS,
@@ -72,24 +69,10 @@ export const fetchAccounts = () => async dispatch => {
   }
 };
 
-export const switchTempCurrency = (
-  accounts,
-  tempCurrency,
-  tempCurrencyIndex,
-) => {
-  console.log('accounts', accounts);
-  console.log('tempCurrency', tempCurrency);
-  console.log('tempCurrencyIndex', tempCurrencyIndex);
-  let currencies = accounts.results[0].currencies;
-  console.log('currencies', currencies);
-  let index = (tempCurrencyIndex + 1) % currencies.length;
-  if (currencies[index].currency.symbol === tempCurrency.currency.symbol) {
-    index = (index + 1) % currencies.length;
-  }
-
+export const setCurrentIndex = index => {
   return {
-    type: UPDATE_TEMP_CURRENCY,
-    payload: { index, tempCurrency: currencies[index] },
+    type: UPDATE_CURRENT_INDEX,
+    payload: { index },
   };
 };
 
@@ -98,11 +81,8 @@ export const setActiveCurrency = (reference, code) => async dispatch => {
   let responseJson = await AccountService.setActiveCurrency(reference, code);
 
   if (responseJson.status === 'success') {
-    // const tempCurrency = responseJson.data.results[0].currencies[0];
-    // const accounts = responseJson.data;
     dispatch({
       type: SET_ACTIVE_CURRENCY_SUCCESS,
-      // payload: { accounts, tempCurrency },
     });
   } else {
     dispatch({ type: SET_ACTIVE_CURRENCY_FAIL });

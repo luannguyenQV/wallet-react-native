@@ -39,14 +39,15 @@ class InitialScreen extends Component {
   }
 
   onAuthComplete(props) {
-    // console.log(props);
-    if (props.token) {
-      // debugger;
-      if (this.props.accounts && this.props.user) {
-        this.props.navigation.navigate('Home');
-      } else {
-        this.props.fetchUser();
-        this.props.fetchAccounts();
+    const { token, accounts, user, loadingAccounts, loadingUser } = props;
+    if (token) {
+      if (!loadingAccounts && !loadingUser) {
+        if (accounts && user) {
+          props.navigation.navigate('Home');
+        } else {
+          props.fetchUser();
+          props.fetchAccounts();
+        }
       }
     }
   }
@@ -416,7 +417,7 @@ const mapStateToProps = ({ auth, rehive }) => {
     actionText,
     token,
   } = auth;
-  const { user, accounts } = rehive;
+  const { user, accounts, loadingUser, loadingAccounts } = rehive;
   return {
     authFormInputState,
     input,
@@ -433,6 +434,8 @@ const mapStateToProps = ({ auth, rehive }) => {
     token,
     user,
     accounts,
+    loadingUser,
+    loadingAccounts,
   };
 };
 

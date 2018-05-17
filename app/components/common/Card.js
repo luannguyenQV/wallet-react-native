@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 import Colors from './../../config/colors';
 import { Spinner } from './Spinner';
+import TouchableCircle from './../touchableCircle';
 
 // make component
 const Card = props => {
@@ -16,6 +17,7 @@ const Card = props => {
     buttonStyleAction,
     textStyleAction,
     iconStyleHeaderLeft,
+    iconStyleHeaderRight,
     viewStyleFooter,
   } = styles;
 
@@ -23,6 +25,10 @@ const Card = props => {
     textHeader,
     iconHeaderLeft,
     onPressHeaderLeft,
+    iconHeaderRight,
+    walletCodeHeaderRight,
+    walletCodeActive,
+    onPressHeaderRight,
     textActionOne,
     onPressActionOne,
     textActionTwo,
@@ -32,16 +38,35 @@ const Card = props => {
 
   return (
     <View style={viewStyleCardContainer}>
-      {textHeader || iconHeaderLeft ? (
+      {textHeader || iconHeaderLeft || iconHeaderRight ? (
         <View resizeMode="cover" style={viewStyleCardTitleContainer}>
-          <Icon
-            style={iconStyleHeaderLeft}
-            name={iconHeaderLeft}
-            size={32}
-            // color="black"
-            onPress={onPressHeaderLeft}
-          />
+          {iconHeaderLeft ? (
+            <Icon
+              style={iconStyleHeaderLeft}
+              name={iconHeaderLeft}
+              size={32}
+              // color="black"
+              onPress={onPressHeaderLeft}
+            />
+          ) : null}
           <Text style={textStyleCardTitle}>{textHeader}</Text>
+          {iconHeaderLeft ? (
+            <Icon
+              style={iconStyleHeaderRight}
+              name={iconHeaderRight}
+              size={32}
+              // color="black"
+              onPress={onPressHeaderRight}
+            />
+          ) : null}
+          {walletCodeHeaderRight ? (
+            <TouchableCircle
+              text={walletCodeHeaderRight}
+              active={walletCodeActive}
+              onPress={onPressHeaderRight}
+              radius={27}
+            />
+          ) : null}
         </View>
       ) : null}
       <View>{props.children}</View>
@@ -80,8 +105,10 @@ const styles = {
     shadowColor: 'rgba(0, 0, 0, 0.6)',
     shadowOpacity: 0.2,
     shadowRadius: 2,
-    margin: 5,
-    padding: 5,
+    margin: 8,
+    // marginBottom: 10,
+    // padding: 5,
+    // paddingBottom: 10,
     elevation: 2,
     shadowOffset: {
       height: 1,
@@ -97,8 +124,10 @@ const styles = {
     // position: 'absolute',
     // top: 120,
     // left: 26,
+    flex: 1,
     backgroundColor: 'transparent',
     paddingTop: 16,
+    paddingLeft: 16,
     fontSize: 24,
     color: 'black',
     opacity: 0.87,
@@ -120,6 +149,12 @@ const styles = {
   iconStyleHeaderLeft: {
     padding: 16,
     alignSelf: 'flex-start',
+    color: 'black',
+    opacity: 0.87,
+  },
+  iconStyleHeaderLeft: {
+    padding: 16,
+    alignSelf: 'flex-end',
     color: 'black',
     opacity: 0.87,
   },

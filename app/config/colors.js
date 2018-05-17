@@ -15,7 +15,7 @@ export default {
   drawerColor: '#333B42',
   gold: '#F8CF51',
 
-  primary: '#3C8DBC',
+  primary: '#3D95CE',
   secondary: '#F8CF51',
   tertiary: '#04556B',
   warning: '#FC8755',

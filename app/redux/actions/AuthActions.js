@@ -150,6 +150,7 @@ export const updateAuthInputField = props => async dispatch => {
   } else {
     dispatch({
       type: UPDATE_AUTH_FORM_FIELD,
+      payload: { prop: inputState },
     });
 
     if (inputState === 'password') {

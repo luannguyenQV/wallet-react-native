@@ -1,25 +1,28 @@
 import React, { Component } from 'react';
 import { View, FlatList } from 'react-native';
 import { connect } from 'react-redux';
-// import {} from './../redux/actions';
+import { fetchAccounts } from './../../../redux/actions';
 
-import UserInfoService from './../../../services/userInfoService';
-import AccountService from './../../../services/accountService';
 import Header from './../../../components/header';
 import Wallet from './../../../components/wallet';
-import Colors from './../../../config/colors';
-import { CardContainer, Card } from '../../../components/common';
+import { CardContainer, Card, Spinner } from '../../../components/common';
 
 class WalletsScreen extends Component {
   static navigationOptions = {
     title: 'Wallets',
   };
 
+  componentDidMount() {
+    this.refreshAccounts();
+  }
+
+  refreshAccounts() {
+    // this.props.fetchAccounts();
+  }
+
   renderAccounts() {
     const { accounts } = this.props;
-    if (accounts.results.length === 1) {
-      return this.renderAccount(accounts.results[0]);
-    } else if (accounts.results.length > 1) {
+    if (accounts.results.length > 0) {
       return (
         <FlatList
           data={accounts.results}
@@ -32,49 +35,41 @@ class WalletsScreen extends Component {
   }
 
   renderAccount(account) {
-    if (account.currencies.length > 0) {
-      return (
-        <Card key={account.name} textHeader={account.label}>
-          <FlatList
-            data={account.currencies}
-            renderItem={({ item }) =>
-              this.renderWallet(item, account.reference)
-            }
-            keyExtractor={item => item.currency.code}
-          />
-        </Card>
-      );
-    }
     return (
-      <Card key={account.name} textHeader={account.label}>
-        <Card textHeader="No currencies" />
-      </Card>
+      <FlatList
+        data={account.currencies}
+        renderItem={({ item }) =>
+          this.renderWallet(item, account.reference, account.name)
+        }
+        keyExtractor={item => item.currency.code}
+      />
     );
+    // if (account.currencies.length > 0) {
+    // }
+    // return (
+    //   <Card key={account.name} textHeader={account.label}>
+    //     <Card textHeader="No currencies" />
+    //   </Card>
+    // );
   }
 
-  renderWallet(currency, accountReference) {
+  renderWallet(currency, accountReference, accountLabel) {
     return (
       <Wallet
         accountReference={accountReference}
+        accountLabel={accountLabel}
         navigation={this.props.navigation}
-        // reference={this.state.reference}
-        // setActiveCurrency={this.setActiveCurrency}
         currency={currency}
       />
     );
   }
 
   render() {
-    console.log(this.props.accounts);
     return (
       <View style={styles.container}>
         <Header navigation={this.props.navigation} drawer title="Wallets" />
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'column',
-            // backgroundColor: 'white',
-          }}>
+        <View style={{ flex: 1 }}>
+          {/* {this.props.loadingAccounts ? <Spinner size="small" /> : null} */}
           <CardContainer>{this.renderAccounts()}</CardContainer>
         </View>
       </View>
@@ -86,13 +81,12 @@ const styles = {
   container: {
     flex: 1,
     flexDirection: 'column',
-    // backgroundColor: 'white',
   },
 };
 
 const mapStateToProps = ({ rehive }) => {
-  const { accounts } = rehive;
-  return { accounts };
+  const { accounts, loadingAccounts } = rehive;
+  return { accounts, loadingAccounts };
 };
 
-export default connect(mapStateToProps, {})(WalletsScreen);
+export default connect(mapStateToProps, { fetchAccounts })(WalletsScreen);
