@@ -1,6 +1,11 @@
 // import lib for making component
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import Colors from './../../config/colors';
@@ -34,6 +39,7 @@ const Card = props => {
     textActionTwo,
     onPressActionTwo,
     loading,
+    onCardPress,
   } = props;
 
   return (
@@ -69,7 +75,9 @@ const Card = props => {
           ) : null}
         </View>
       ) : null}
-      <View>{props.children}</View>
+      <TouchableWithoutFeedback onPress={onCardPress}>
+        <View>{props.children}</View>
+      </TouchableWithoutFeedback>
       <View style={viewStyleFooter}>
         {loading ? (
           <Spinner size="small" />

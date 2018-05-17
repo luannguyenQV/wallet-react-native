@@ -57,13 +57,28 @@ export default class Header extends Component {
   };
 
   render() {
+    const {
+      navigation,
+      noAccounts,
+      creditSwitch,
+      debitSwitch,
+      drawer,
+      back,
+      title,
+      right,
+      smallTitle,
+      homeRight,
+      headerRightTitle,
+      headerRightOnPress,
+      headerRightIcon,
+    } = this.props;
     return (
       <View
         style={{
           paddingTop: Expo.Constants.statusBarHeight,
-          backgroundColor: Colors.lightblue,
+          backgroundColor: Colors.primary,
         }}>
-        {this.props.noAccounts === true && (
+        {noAccounts === true && (
           <View
             style={{
               paddingVertical: 4,
@@ -77,8 +92,8 @@ export default class Header extends Component {
             </Text>
           </View>
         )}
-        {this.props.creditSwitch === false &&
-          this.props.debitSwitch === true && (
+        {creditSwitch === false &&
+          debitSwitch === true && (
             <View
               style={{
                 paddingVertical: 4,
@@ -92,8 +107,8 @@ export default class Header extends Component {
               </Text>
             </View>
           )}
-        {this.props.debitSwitch === false &&
-          this.props.creditSwitch === true && (
+        {debitSwitch === false &&
+          creditSwitch === true && (
             <View
               style={{
                 paddingVertical: 4,
@@ -107,8 +122,8 @@ export default class Header extends Component {
               </Text>
             </View>
           )}
-        {this.props.debitSwitch === false &&
-          this.props.creditSwitch === false && (
+        {debitSwitch === false &&
+          creditSwitch === false && (
             <View
               style={{
                 paddingVertical: 4,
@@ -146,32 +161,27 @@ export default class Header extends Component {
         )}
         <View style={styles.options}>
           <View style={styles.left}>
-            {this.props.drawer ? (
-              <DrawerButton navigation={this.props.navigation} />
-            ) : null}
-            {this.props.back ? (
+            {drawer ? <DrawerButton navigation={navigation} /> : null}
+            {back ? (
               <TouchableOpacity
-                onPress={() => this.props.navigation.goBack()}
+                onPress={() => navigation.goBack()}
                 style={{ padding: 20 }}>
                 <Icon name="ios-arrow-back" size={35} color="white" />
               </TouchableOpacity>
             ) : null}
           </View>
           <View style={styles.title}>
-            {this.props.title ? (
+            {title ? (
               <Text
-                style={[
-                  styles.titleText,
-                  { fontSize: this.props.smallTitle ? 16 : 20 },
-                ]}>
-                {this.props.title}
+                style={[styles.titleText, { fontSize: smallTitle ? 16 : 20 }]}>
+                {title}
               </Text>
             ) : null}
           </View>
           <View style={styles.rightIcon}>
-            {this.props.right ? (
+            {right ? (
               <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('QRcodeScanner')}
+                onPress={() => navigation.navigate('QRcodeScanner')}
                 style={{ padding: 10 }}>
                 <Icon
                   name="ios-qr-scanner-outline"
@@ -181,9 +191,9 @@ export default class Header extends Component {
                 />
               </TouchableOpacity>
             ) : null}
-            {this.props.homeRight ? (
+            {homeRight ? (
               <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('AccountsB')}
+                onPress={() => navigation.navigate('AccountsB')}
                 style={{
                   flex: 1,
                   padding: 10,
@@ -198,11 +208,19 @@ export default class Header extends Component {
                 />
               </TouchableOpacity>
             ) : null}
-            {this.props.headerRightTitle ? (
+            {headerRightTitle ? (
               <HeaderButtons color="white">
                 <HeaderButtons.Item
-                  title={this.props.headerRightTitle}
-                  onPress={this.props.headerRightOnPress}
+                  title={headerRightTitle}
+                  onPress={headerRightOnPress}
+                />
+              </HeaderButtons>
+            ) : null}
+            {headerRightIcon ? (
+              <HeaderButtons IconComponent={Icon} iconSize={23} color="white">
+                <HeaderButtons.Item
+                  iconName={headerRightIcon}
+                  onPress={headerRightOnPress}
                 />
               </HeaderButtons>
             ) : null}

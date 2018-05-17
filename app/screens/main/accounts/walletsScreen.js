@@ -6,10 +6,19 @@ import { fetchAccounts } from './../../../redux/actions';
 import Header from './../../../components/header';
 import Wallet from './../../../components/wallet';
 import { CardContainer, Card, Spinner } from '../../../components/common';
+import HeaderAccount from '../../../components/headerAccount';
+import TransactionList from './../../../components/TransactionList';
 
 class WalletsScreen extends Component {
   static navigationOptions = {
     title: 'Wallets',
+  };
+
+  state = {
+    showDetails: false,
+    currency: null,
+    accountReference: '',
+    accountLabel: '',
   };
 
   componentDidMount() {
@@ -19,6 +28,24 @@ class WalletsScreen extends Component {
   refreshAccounts() {
     // this.props.fetchAccounts();
   }
+
+  showDetails(currency, accountReference, accountLabel) {
+    this.setState({
+      showDetails: true,
+      currency: currency,
+      accountReference: accountReference,
+      accountLabel: accountLabel,
+    });
+  }
+
+  hideDetails = () => {
+    this.setState({
+      showDetails: false,
+      currency: null,
+      accountReference: '',
+      accountLabel: '',
+    });
+  };
 
   renderAccounts() {
     const { accounts } = this.props;
@@ -56,6 +83,9 @@ class WalletsScreen extends Component {
   renderWallet(currency, accountReference, accountLabel) {
     return (
       <Wallet
+        onCardPress={() =>
+          this.showDetails(currency, accountReference, accountLabel)
+        }
         accountReference={accountReference}
         accountLabel={accountLabel}
         navigation={this.props.navigation}
@@ -64,16 +94,48 @@ class WalletsScreen extends Component {
     );
   }
 
-  render() {
+  renderDetails() {
+    const { currency, accountReference, accountLabel } = this.state;
+    console.log('currency', currency);
+    console.log('accountLabel', accountLabel);
     return (
-      <View style={styles.container}>
-        <Header navigation={this.props.navigation} drawer title="Wallets" />
-        <View style={{ flex: 1 }}>
-          {/* {this.props.loadingAccounts ? <Spinner size="small" /> : null} */}
-          <CardContainer>{this.renderAccounts()}</CardContainer>
-        </View>
+      <View style={{ flex: 1 }}>
+        <HeaderAccount currency={currency} accountLabel={accountLabel} />
+        <TransactionList
+          // updateBalance={this.getBalanceInfo}
+          currencyCode={currency.currency.code}
+          // showDialog={this.showDialog}
+          // logout={this.logout}
+        />
       </View>
     );
+  }
+
+  render() {
+    if (this.state.showDetails) {
+      return (
+        <View style={styles.container}>
+          <Header
+            navigation={this.props.navigation}
+            drawer
+            title="Wallets"
+            headerRightIcon="md-close"
+            headerRightOnPress={this.hideDetails}
+          />
+          {this.renderDetails()}
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.container}>
+          <Header navigation={this.props.navigation} drawer title="Wallets" />
+          {/* <View style={{ flex: 1 }}> */}
+          <CardContainer>{this.renderAccounts()}</CardContainer>
+          {/* {this.props.loadingAccounts ? <Spinner size="small" /> : null} */}
+          {/* </View> */}
+        </View>
+      );
+    }
   }
 }
 

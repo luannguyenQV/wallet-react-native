@@ -37,7 +37,7 @@ class Wallet extends Component {
   };
 
   render() {
-    const { key, currency, accountLabel } = this.props;
+    const { currency, accountLabel, onCardPress } = this.props;
     const {
       textStyleLabel,
       textStyleBalance,
@@ -61,7 +61,7 @@ class Wallet extends Component {
       ).toFixed(currency.currency.divisibility);
     return (
       <Card
-        // key={key}
+        onCardPress={onCardPress}
         textHeader={header}
         textActionOne="Send"
         onPressActionOne={() => this.send()}

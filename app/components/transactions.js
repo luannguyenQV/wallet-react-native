@@ -113,7 +113,7 @@ export default class Transactions extends Component {
       data: [],
       initialLoading: true,
     });
-    let responseJson = await TransactionService.getAllTransactionsByCurrecny(
+    let responseJson = await TransactionService.getAllTransactionsByCurrency(
       currency,
     );
     this.setData(responseJson);

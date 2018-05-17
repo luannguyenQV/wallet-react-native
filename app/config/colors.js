@@ -12,13 +12,15 @@ export default {
   drawerHeaderText: '#C0C9CF',
   transactionBackground: '#F7F7F7',
   whitesmoke: '#F6F6F6',
-  drawerColor: '#333B42',
   gold: '#F8CF51',
+  drawerColor: '#ffffff',
 
-  primary: '#3D95CE',
-  secondary: '#F8CF51',
+  primary: '#4d4d4d',
+  secondary: '#a6a6a6',
   tertiary: '#04556B',
   warning: '#FC8755',
   error: '#ED675A',
   success: '#03DBBB',
+  positive: '#ED675A',
+  negative: '#03DBBB',
 };

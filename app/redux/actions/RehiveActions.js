@@ -72,7 +72,7 @@ export const fetchAccounts = () => async dispatch => {
 export const setCurrentIndex = index => {
   return {
     type: UPDATE_CURRENT_INDEX,
-    payload: { index },
+    payload: index,
   };
 };
 

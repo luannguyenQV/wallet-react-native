@@ -42,10 +42,10 @@ class HeaderAccount extends Component {
 
 const styles = {
   viewStyleContainer: {
-    // flex: 1,
+    flex: 1,
     backgroundColor: Colors.primary,
     width: SCREEN_WIDTH,
-    // height: 86,
+    // minHeight: 86,
   },
   viewStyleButtons: {
     flexDirection: 'row',

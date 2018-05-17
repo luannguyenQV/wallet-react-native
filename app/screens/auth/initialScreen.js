@@ -363,7 +363,7 @@ const styles = {
   },
   textTerms: {
     fontSize: 12,
-    color: Colors.lightblue,
+    color: Colors.primary,
   },
 
   cardContainer: {

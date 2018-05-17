@@ -1,16 +1,9 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import Colors from './../config/colors';
+import { performDivisibility } from './../util/general';
 
 class HeaderCurrency extends Component {
-  setBalance = (balance, divisibility) => {
-    for (let i = 0; i < divisibility; i++) {
-      balance = balance / 10;
-    }
-    let balanceString = balance.toString();
-    return balance;
-  };
-
   render() {
     const { accountLabel, currency } = this.props;
     const {
@@ -29,7 +22,7 @@ class HeaderCurrency extends Component {
           <Text style={textStyleSymbol}>{currency.currency.symbol}</Text>
           <Text style={textStyleAmount}>
             {' '}
-            {this.setBalance(
+            {performDivisibility(
               currency.available_balance,
               currency.currency.divisibility,
             ).toFixed(currency.currency.divisibility)}
@@ -42,8 +35,8 @@ class HeaderCurrency extends Component {
 
 const styles = {
   viewStyleContainer: {
-    // margin: 8,
-    // marginRight: 8,
+    flex: 1,
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
   },

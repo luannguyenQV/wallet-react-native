@@ -57,7 +57,7 @@ const RouteConfigs = {
 };
 
 export default DrawerNavigator(RouteConfigs, {
-  drawerWidth: 300,
+  drawerWidth: 200,
   drawerOpenRoute: 'DrawerOpen',
   drawerCloseRoute: 'DrawerClose',
   drawerToggleRoute: 'DrawerToggle',
@@ -67,9 +67,9 @@ export default DrawerNavigator(RouteConfigs, {
       <ScrollView>
         <DrawerItems
           {...props}
-          activeTintColor="#6EBDF7"
-          activeBackgroundColor="#485159"
-          inactiveTintColor="white"
+          activeTintColor={Colors.drawerColor}
+          activeBackgroundColor={Colors.primary}
+          inactiveTintColor={Colors.primary}
           inactiveBackgroundColor="transparent"
           labelStyle={{
             margin: 15,

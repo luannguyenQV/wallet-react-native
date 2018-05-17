@@ -11,8 +11,7 @@ import HomeCard from './../../components/homeCard';
 
 import TransactionPopUp from './../../components/wallet/TransactionPopUp';
 import HeaderAccount from '../../components/headerAccount';
-import headerAccount from '../../components/headerAccount';
-import Transactions from './../../components/transactions';
+import TransactionList from './../../components/TransactionList';
 import { CardContainer, Card } from '../../components/common';
 
 const renderPagination = (index, total, context) => {
@@ -36,27 +35,38 @@ class HomeScreen extends Component {
   renderAccounts() {
     const account = this.props.accounts.results[0];
     return (
-      <FlatList
-        onViewableItemsChanged={({ viewableItems }) => {
-          this.setCurrentIndex(viewableItems[0].index);
-        }}
-        viewabilityConfig={{
-          itemVisiblePercentThreshold: 50,
-        }}
-        style={{ height: 0 }}
-        data={account.currencies}
-        horizontal
-        pagingEnabled
-        renderItem={({ item }) => (
-          <HeaderAccount currency={item} accountLabel={account.name} />
-        )}
-        keyExtractor={item => account.name + item.currency.code}
-        showsHorizontalScrollIndicator={false}
-      />
+      <View style={{ flex: 1 }}>
+        <FlatList
+          onViewableItemsChanged={this.handleViewableItemsChanged}
+          viewabilityConfig={this.viewabilityConfig}
+          // style={{ height: 0 }}
+          data={account.currencies}
+          horizontal
+          pagingEnabled
+          renderItem={({ item }) => (
+            <HeaderAccount currency={item} accountLabel={account.name} />
+          )}
+          keyExtractor={item => account.name + item.currency.code}
+          showsHorizontalScrollIndicator={false}
+        />
+      </View>
     );
   }
 
+  handleViewableItemsChanged = info => {
+    // console.log(;
+    if (info.viewableItems.length > 0) {
+      this.props.setCurrentIndex(info.viewableItems[0].index);
+    }
+  };
+
+  viewabilityConfig = {
+    itemVisiblePercentThreshold: 50,
+  };
+
   render() {
+    const { accounts, currentIndex } = this.props;
+    // console.log(accounts);
     return (
       <View style={styles.container}>
         <Header
@@ -66,7 +76,7 @@ class HomeScreen extends Component {
         />
         {this.renderAccounts()}
         {/* <Swiper renderPagination={renderPagination} loop={false}> */}
-        <View style={{ flex: 1 }} />
+        {/* <View style={{ flex: 1 }} /> */}
         {/* <CardContainer>
           <Card
             key={0}
@@ -76,11 +86,13 @@ class HomeScreen extends Component {
             <Text>Put your logo and brand here.</Text>
           </Card>
         </CardContainer> */}
-        <Transactions
-          updateBalance={this.getBalanceInfo}
-          currency={this.state.code}
-          showDialog={this.showDialog}
-          logout={this.logout}
+        <TransactionList
+          // updateBalance={this.getBalanceInfo}
+          currencyCode={
+            accounts.results[0].currencies[currentIndex].currency.code
+          }
+          // showDialog={this.showDialog}
+          // logout={this.logout}
         />
         {/* </Swiper> */}
         {/* <TransactionPopUp
@@ -109,8 +121,8 @@ const styles = {
 
 const mapStateToProps = ({ auth, rehive }) => {
   const { token } = auth;
-  const { user, accounts, tempCurrency, loadingAccounts } = rehive;
-  return { token, user, accounts, tempCurrency, loadingAccounts };
+  const { user, accounts, currentIndex, loadingAccounts } = rehive;
+  return { token, user, accounts, currentIndex, loadingAccounts };
 };
 
 export default connect(mapStateToProps, { logoutUser, setCurrentIndex })(
