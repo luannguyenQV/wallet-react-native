@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Alert } from 'react-native';
 import SettingsService from './../../../services/settingsService';
 import ResetNavigation from './../../../util/resetNavigation';
-import { Input, InputForm } from './../../../components/common';
+import { Input, InputContainer } from './../../../components/common';
 import Header from './../../../components/header';
 
 class AddEmailAddressScreen extends Component {
@@ -50,14 +50,14 @@ class AddEmailAddressScreen extends Component {
           headerRightTitle="Save"
           headerRightOnPress={this.add}
         />
-        <InputForm>
+        <InputContainer>
           <Input
             label="Email address"
             placeholder="e.g. john1@gmail.com"
             autoCapitalize="none"
             onChangeText={email => this.setState({ email })}
           />
-        </InputForm>
+        </InputContainer>
       </View>
     );
   }

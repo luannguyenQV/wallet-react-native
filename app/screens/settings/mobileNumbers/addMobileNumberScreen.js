@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Alert } from 'react-native';
 import SettingsService from './../../../services/settingsService';
-import { Input, InputForm } from './../../../components/common';
+import { Input, InputContainer } from './../../../components/common';
 import Header from './../../../components/header';
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
 
@@ -49,7 +49,7 @@ class AddMobileNumberScreen extends Component {
           headerRightTitle="Save"
           headerRightOnPress={this.add}
         />
-        <InputForm>
+        <InputContainer>
           <Input
             label="Enter number"
             autoCapitalize="none"
@@ -60,7 +60,7 @@ class AddMobileNumberScreen extends Component {
             countryCode={this.state.code}
             // countryName={countryName}
           />
-        </InputForm>
+        </InputContainer>
       </View>
     );
   }

@@ -288,7 +288,6 @@ const registerUserSuccess = (dispatch, token) => {
 };
 
 validation = (prop, value) => {
-  console.log(prop, value);
   let error = '';
   switch (prop) {
     case 'email':

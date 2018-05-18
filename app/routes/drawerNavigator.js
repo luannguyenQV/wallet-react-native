@@ -48,16 +48,16 @@ const RouteConfigs = {
   Settings: {
     screen: Settings,
   },
-  About: {
-    screen: About,
-  },
+  // About: {
+  //   screen: About,
+  // },
   Logout: {
     screen: Logout,
   },
 };
 
 export default DrawerNavigator(RouteConfigs, {
-  drawerWidth: 200,
+  drawerWidth: 300,
   drawerOpenRoute: 'DrawerOpen',
   drawerCloseRoute: 'DrawerClose',
   drawerToggleRoute: 'DrawerToggle',

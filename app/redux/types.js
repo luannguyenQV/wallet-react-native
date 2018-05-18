@@ -16,7 +16,7 @@ export const REGISTER_USER_FAIL = 'register_user_fail';
 export const AUTH_FIELD_FOCUS = 'auth_field_focus';
 export const LOGOUT_USER = 'logout_user';
 
-// WALLET
+// ACCOUNTS
 export const FETCH_ACCOUNTS = 'fetch_accounts';
 export const FETCH_ACCOUNTS_SUCCESS = 'fetch_accounts_success';
 export const FETCH_ACCOUNTS_FAIL = 'fetch_accounts_fail';
@@ -54,3 +54,9 @@ export const FETCH_ADDRESSES_FAIL = 'fetch_addresses_fail';
 export const FETCH_DOCUMENTS = 'fetch_documents';
 export const FETCH_DOCUMENTS_SUCCESS = 'fetch_documents_success';
 export const FETCH_DOCUMENTS_FAIL = 'fetch_documents_fail';
+export const FETCH_BANK_ACCOUNTS = 'fetch_bank_accounts';
+export const FETCH_BANK_ACCOUNTS_SUCCESS = 'fetch_bank_accounts_success';
+export const FETCH_BANK_ACCOUNTS_FAIL = 'fetch_bank_accounts_fail';
+export const FETCH_CRYPTO_ACCOUNTS = 'fetch_crypto_accounts';
+export const FETCH_CRYPTO_ACCOUNTS_SUCCESS = 'fetch_crypto_accounts_success';
+export const FETCH_CRYPTO_ACCOUNTS_FAIL = 'fetch_crypto_accounts_fail';

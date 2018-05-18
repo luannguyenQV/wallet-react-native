@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import { View, Alert, Text, StyleSheet } from 'react-native';
+import { View, Alert, Text, RefreshControl } from 'react-native';
+import { connect } from 'react-redux';
+import { fetchAddresses } from './../../redux/actions';
+
 import CountryPicker from 'react-native-country-picker-modal';
 import UserInfoService from './../../services/userInfoService';
-import { Input, InputForm } from './../../components/common';
+import { Input, InputContainer } from './../../components/common';
 import Colors from './../../config/colors';
 import Header from './../../components/header';
 import ResetNavigation from './../../util/resetNavigation';
@@ -12,45 +15,25 @@ class AddressScreen extends Component {
     title: 'Address',
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      routeName: this.props.navigation.state.params
-        ? this.props.navigation.state.params.name
-        : null,
-      line_1: '',
-      line_2: '',
-      city: '',
-      state_province: '',
-      country: 'US',
-      postal_code: '',
-    };
-  }
+  state = {
+    routeName: this.props.navigation.state.params
+      ? this.props.navigation.state.params.name
+      : null,
+    line_1: this.props.addresses.line_1,
+    line_2: this.props.addresses.line_2,
+    city: this.props.addresses.city,
+    state_province: this.props.addresses.state_province,
+    country:
+      this.props.addresses.country !== '' ? this.props.addresses.country : 'US',
+    postal_code: this.props.addresses.postal_code,
+  };
 
   componentDidMount() {
-    this.getAddress();
+    this.props.fetchAddresses();
   }
-
-  getAddress = async () => {
-    let responseJson = await UserInfoService.getAddress();
-    if (responseJson.status === 'success') {
-      const address = responseJson.data;
-      this.setState({
-        line_1: address.line_1,
-        line_2: address.line_2,
-        city: address.city,
-        state_province: address.state_province,
-        country: user.nationality !== '' ? user.nationality : 'US',
-        postal_code: address.postal_code,
-      });
-    } else {
-      Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
-    }
-  };
 
   save = async () => {
     let responseJson = await UserInfoService.updateAddress(this.state);
-    //console.log(responseJson)
     if (responseJson.status === 'success') {
       this.reload();
     } else {
@@ -66,6 +49,15 @@ class AddressScreen extends Component {
   };
 
   render() {
+    const { fetchAddresses, loadingAddresses } = this.props;
+    const {
+      line_1,
+      line_2,
+      city,
+      state_province,
+      postal_code,
+      country,
+    } = this.state;
     return (
       <View style={styles.container}>
         <Header
@@ -75,12 +67,18 @@ class AddressScreen extends Component {
           headerRightTitle="Save"
           headerRightOnPress={this.save}
         />
-        <InputForm>
+        <InputContainer
+          refreshControl={
+            <RefreshControl
+              refreshing={loadingAddresses}
+              onRefresh={fetchAddresses}
+            />
+          }>
           <Input
             label="Address Line 1"
             placeholder="e.g. 158 Kloof Street"
             autoCapitalize="none"
-            value={this.state.line_1}
+            value={line_1}
             onChangeText={line_1 => this.setState({ line_1 })}
           />
 
@@ -88,7 +86,7 @@ class AddressScreen extends Component {
             label="Address Line 2"
             placeholder="e.g. Gardens"
             autoCapitalize="none"
-            value={this.state.line_2}
+            value={line_2}
             onChangeText={line_2 => this.setState({ line_2 })}
           />
 
@@ -96,7 +94,7 @@ class AddressScreen extends Component {
             label="City"
             placeholder="e.g. Cape Town"
             autoCapitalize="none"
-            value={this.state.city}
+            value={city}
             onChangeText={city => this.setState({ city })}
           />
 
@@ -104,7 +102,7 @@ class AddressScreen extends Component {
             label="State province"
             placeholder="e.g. Western Cape"
             autoCapitalize="none"
-            value={this.state.state_province}
+            value={state_province}
             onChangeText={state_province => this.setState({ state_province })}
           />
 
@@ -112,7 +110,7 @@ class AddressScreen extends Component {
             label="Postal code"
             placeholder="e.g. 9001"
             autoCapitalize="none"
-            value={this.state.postal_code}
+            value={postal_code}
             onChangeText={postal_code => this.setState({ postal_code })}
           />
 
@@ -123,7 +121,7 @@ class AddressScreen extends Component {
                 onChange={value => {
                   this.setState({ country: value.cca2 });
                 }}
-                cca2={this.state.country}
+                cca2={country}
                 closeable
                 filterable
                 translation="eng"
@@ -135,7 +133,7 @@ class AddressScreen extends Component {
               />
             </View>
           </View>
-        </InputForm>
+        </InputContainer>
       </View>
     );
   }
@@ -147,18 +145,23 @@ const styles = {
     backgroundColor: 'white',
   },
   text: {
-    fontSize: 16,
+    fontSize: 14,
     color: Colors.black,
   },
   pickerContainer: {
     flexDirection: 'row',
     marginHorizontal: 20,
     paddingVertical: 20,
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'center',
     borderBottomWidth: 1,
-    borderColor: 'lightgrey',
+    borderColor: 'lightgray',
   },
 };
 
-export default AddressScreen;
+const mapStateToProps = ({ user }) => {
+  const { profile, addresses, loadingAddresses } = user;
+  return { profile, addresses, loadingAddresses };
+};
+
+export default connect(mapStateToProps, { fetchAddresses })(AddressScreen);

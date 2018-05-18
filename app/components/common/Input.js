@@ -7,7 +7,7 @@ import CountryPicker from 'react-native-country-picker-modal';
 class Input extends Component {
   state = {
     textColor: Colors.black,
-    borderColor: Colors.lightgray,
+    borderColor: 'lightgray',
     iconNameVisibility: 'visibility',
     secureTextEntry: this.props.type === 'password' ? true : false,
     cca2: 'US',
@@ -217,7 +217,7 @@ const styles = {
     fontSize: 12,
     paddingTop: 8,
     color: 'black',
-    opacity: 0.6,
+    opacity: 0.86,
   },
   textStyleInput: {
     color: 'black',

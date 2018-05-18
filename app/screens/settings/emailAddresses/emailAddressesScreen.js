@@ -1,77 +1,32 @@
 import React, { Component } from 'react';
-import {
-  View,
-  StyleSheet,
-  ListView,
-  Alert,
-  AsyncStorage,
-  TouchableHighlight,
-  Text,
-  RefreshControl,
-} from 'react-native';
-import { NavigationActions } from 'react-navigation';
+import { View, Alert, FlatList, RefreshControl } from 'react-native';
+import { connect } from 'react-redux';
+import { fetchEmailAddresses } from './../../../redux/actions';
+
 import Spinner from 'react-native-loading-spinner-overlay';
 import EmailAddress from './../../../components/emailAddress';
 import ResetNavigation from './../../../util/resetNavigation';
 import SettingsService from './../../../services/settingsService';
 import Colors from './../../../config/colors';
 import Header from './../../../components/header';
+import { EmptyListMessage } from './../../../components/common';
 
 class EmailAddressesScreen extends Component {
   static navigationOptions = {
     title: 'Email addresses',
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      routeName: this.props.navigation.state.params
-        ? this.props.navigation.state.params.name
-        : null,
-      refreshing: false,
-      loading: false,
-      loadingMessage: '',
-      dataSource: new ListView.DataSource({
-        rowHasChanged: (r1, r2) => JSON.stringify(r1) !== JSON.stringify(r2),
-      }),
-      empty: false,
-    };
-  }
-
-  componentWillMount() {
-    this.getData();
-  }
-
-  getData = async () => {
-    this.setState({
-      refreshing: true,
-    });
-    let responseJson = await SettingsService.getAllEmails();
-
-    if (responseJson.status === 'success') {
-      const ds = new ListView.DataSource({
-        rowHasChanged: (r1, r2) => JSON.stringify(r1) !== JSON.stringify(r2),
-      });
-      const data = responseJson.data;
-      //console.log(data)
-      if (data.length === 0) {
-        this.setState({
-          empty: true,
-        });
-      } else {
-        this.setState({
-          empty: false,
-        });
-      }
-      let ids = data.map((obj, index) => index);
-      this.setState({
-        refreshing: false,
-        dataSource: ds.cloneWithRows(data, ids),
-      });
-    } else {
-      Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
-    }
+  state = {
+    routeName: this.props.navigation.state.params
+      ? this.props.navigation.state.params.name
+      : null,
+    loading: false,
+    loadingMessage: '',
   };
+
+  componentDidMount() {
+    this.props.fetchEmailAddresses();
+  }
 
   reload = () => {
     console.log('emailAddress: ' + this.state.routeName);
@@ -97,27 +52,25 @@ class EmailAddressesScreen extends Component {
     }
   };
 
-  verify = async number => {
+  verify = async email => {
     this.setState({
       loading: true,
       loadingMessage: 'Sending verification code...',
     });
-    const userData = await AsyncStorage.getItem('user');
-
-    const user = JSON.parse(userData);
 
     const body = {
-      email: number,
-      company: user.company,
+      email: email,
+      company: this.props.profile.company,
     };
 
     let responseJson = await SettingsService.resendEmailVerification(body);
 
     if (responseJson.status === 'success') {
+      this.setState({ loading: false });
       Alert.alert(
         'Email Sent',
         'A verification email has been sent, please check your email box.',
-        [{ text: 'OK', onPress: () => this.setState({ loading: false }) }],
+        [{ text: 'OK', onPress: () => {} }],
       );
     } else {
       Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
@@ -132,6 +85,7 @@ class EmailAddressesScreen extends Component {
     let responseJson = await SettingsService.deleteEmail(id);
 
     if (responseJson.status === 'success') {
+      this.setState({ loading: false });
       this.reload();
     } else {
       Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
@@ -139,6 +93,11 @@ class EmailAddressesScreen extends Component {
   };
 
   render() {
+    const {
+      emailAddresses,
+      loadingEmailAddresses,
+      fetchEmailAddresses,
+    } = this.props;
     return (
       <View style={styles.container}>
         <Header
@@ -157,59 +116,35 @@ class EmailAddressesScreen extends Component {
           textContent={this.state.loadingMessage}
           textStyle={{ color: '#FFF' }}
         />
-        {this.state.empty && (
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: 'white',
-              paddingHorizontal: 10,
-            }}>
-            <View
-              style={{
-                marginTop: 10,
-                flexDirection: 'column',
-                backgroundColor: Colors.lightgray,
-                padding: 20,
-                alignItems: 'center',
-              }}>
-              <Text
-                style={{
-                  fontSize: 18,
-                  fontWeight: 'normal',
-                  color: Colors.black,
-                }}>
-                No email address added yet
-              </Text>
-            </View>
-          </View>
-        )}
-        {!this.state.empty && (
-          <ListView
+        {emailAddresses.length > 0 ? (
+          <FlatList
             refreshControl={
               <RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={this.getData.bind(this)}
+                refreshing={loadingEmailAddresses}
+                onRefresh={fetchEmailAddresses}
               />
             }
-            dataSource={this.state.dataSource}
-            enableEmptySections
-            renderRow={rowData => (
+            data={emailAddresses}
+            renderItem={({ item }) => (
               <EmailAddress
-                email={rowData}
+                email={item}
                 makePrimary={this.makePrimary}
                 verify={this.verify}
                 delete={this.delete}
                 reload={this.reload}
               />
             )}
+            keyExtractor={item => item.id}
           />
+        ) : (
+          <EmptyListMessage text="No email addresses added yet" />
         )}
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flex: 1,
     flexDirection: 'column',
@@ -224,6 +159,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-});
+};
 
-export default EmailAddressesScreen;
+const mapStateToProps = ({ user }) => {
+  const { emailAddresses, loadingEmailAddresses, profile } = user;
+  return { emailAddresses, loadingEmailAddresses, profile };
+};
+
+export default connect(mapStateToProps, { fetchEmailAddresses })(
+  EmailAddressesScreen,
+);

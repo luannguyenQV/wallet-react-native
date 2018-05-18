@@ -1,26 +1,13 @@
 import React, { Component } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableHighlight,
-  AsyncStorage,
-  Alert,
-  ScrollView,
-  ActivityIndicator,
-} from 'react-native';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
 // import {  } from './../redux/actions';
 
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Colors from './../../../config/colors';
 import Header from './../../../components/header';
 import GetVerifiedOption from './../../../components/getVerifiedOption';
-import SettingsService from './../../../services/settingsService';
-import UserInfoService from './../../../services/userInfoService';
 import HeaderVerified from './../../../components/HeaderVerified';
 
-import { Spinner, InputForm } from './../../../components/common';
+import { Spinner, InputContainer } from './../../../components/common';
 
 class GetVerifiedScreen extends Component {
   static navigationOptions = {
@@ -253,20 +240,20 @@ class GetVerifiedScreen extends Component {
         />
         <View style={styles.mainContainer}>
           {loadingProfile ? <Spinner /> : null}
-          <InputForm>
+          <InputContainer>
             {this.renderBasicInfo()}
             {this.renderEmailAddresses()}
             {this.renderMobileNumbers()}
             {this.renderAddresses()}
             {this.renderDocuments()}
-          </InputForm>
+          </InputContainer>
         </View>
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flex: 1,
     backgroundColor: 'white',
@@ -274,7 +261,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
   },
-});
+};
 
 const mapStateToProps = ({ user }) => {
   const { profile, addresses, mobileNumbers, emailAddresses, documents } = user;

@@ -81,7 +81,6 @@ export const sendFieldUpdate = ({ prop, value }) => {
 };
 
 export const setSendCurrency = (currency, reference) => {
-  console.log(currency, reference);
   if (currency && reference) {
     return {
       type: SET_SEND_CURRENCY,
@@ -140,7 +139,6 @@ export const resetSend = () => {
 };
 
 export const send = data => async dispatch => {
-  console.log(data);
   let amount = new Big(data.amount);
   for (let i = 0; i < data.currency.currency.divisibility; i++) {
     amount = amount.times(10);
@@ -153,8 +151,6 @@ export const send = data => async dispatch => {
     data.currency.currency.code,
     data.reference,
   );
-
-  console.log('responseJson', responseJson);
 
   if (responseJson.status === 'success') {
     dispatch({

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, FlatList, Text } from 'react-native';
+import { View, FlatList, Text, RefreshControl } from 'react-native';
 
 import TransactionService from './../services/transactionService';
 import TransactionListItem from './TransactionListItem';
@@ -84,11 +84,18 @@ class TransactionList extends Component {
   // };
 
   renderTransactions() {
-    const { transactions } = this.state;
+    const { transactions, loading } = this.state;
     if (transactions.length > 0) {
       return (
         <FlatList
           // style={{ height: 0 }}
+
+          // refreshControl={
+          //   <RefreshControl
+          //     refreshing={loading}
+          //     onRefresh={() => this.getTransactions(this.props.currencyCode)}
+          //   />
+          // }
           data={transactions}
           renderItem={({ item }) => this.renderItem(item)}
           keyExtractor={item => item.id}

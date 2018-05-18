@@ -9,6 +9,9 @@ import {
 import { ImagePicker } from 'expo';
 import Colors from './../../../config/colors';
 import Header from './../../../components/header';
+import DocumentUploadHelperText from './../../../components/DocumentUploadHelperText';
+import { InputContainer, Output } from '../../../components/common';
+import document_categories from './../../../config/document_types.json';
 
 class DocumentScreen extends Component {
   static navigationOptions = {
@@ -24,33 +27,6 @@ class DocumentScreen extends Component {
       modalVisible: false,
       type: 'other',
     };
-  }
-
-  componentWillMount() {
-    if (this.state.title === 'Proof of Identity') {
-      this.setState({
-        type: 'government_id',
-      });
-    }
-    if (this.state.title === 'Advanced Proof of Identity') {
-      this.setState({
-        type: 'id_confirmation',
-      });
-    }
-    if (this.state.title === 'Proof of Address') {
-      this.setState({
-        type: 'utility_bill',
-      });
-    }
-    if (
-      this.state.title === 'Proof of Identity' ||
-      this.state.title === 'Advanced Proof of Identity' ||
-      this.state.title === 'Proof of Address'
-    ) {
-      this.setState({
-        getVerified: true,
-      });
-    }
   }
 
   openModal = async () => {
@@ -89,6 +65,21 @@ class DocumentScreen extends Component {
     }
   };
 
+  renderHelperText() {
+    const { title } = this.state;
+
+    let document_category = document_categories.filter(
+      document_category => document_category.document_category === title,
+    );
+    let options = document_category[0].document_types;
+
+    console.log('document_categories', document_categories);
+    console.log('document_category', document_category);
+    console.log('options', options);
+
+    return <DocumentUploadHelperText title={title} options={options} />;
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -96,15 +87,11 @@ class DocumentScreen extends Component {
           navigation={this.props.navigation}
           back
           title="Document"
-          headerRightTitle="Upload"
+          headerRightTitle="Add"
           headerRightOnPress={() => this.openModal()}
         />
-        <View style={styles.topContainer}>
-          <Text style={{ fontSize: 18, textAlign: 'center' }}>
-            Instructions of why and how to upload a picture of{' '}
-            {this.state.title}.
-          </Text>
-        </View>
+        <View style={styles.topContainer}>{this.renderHelperText()}</View>
+        {/* <Output label={'> ' + 'item.description' + ' <'} /> */}
         <Modal
           animationType={'slide'}
           transparent
@@ -147,19 +134,15 @@ class DocumentScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
+    // flexDirection: 'column',
     backgroundColor: 'white',
   },
   topContainer: {
-    flex: 1,
-    backgroundColor: Colors.lightgray,
+    // flex: 1,
+    // backgroundColor: Colors.lightgray,
     padding: 20,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  bottomContainer: {
-    flex: 3,
-    flexDirection: 'column',
   },
   upload: {
     marginBottom: 10,

@@ -213,6 +213,7 @@ export default class Header extends Component {
                 <HeaderButtons.Item
                   title={headerRightTitle}
                   onPress={headerRightOnPress}
+                  // buttonStyle={{ fontSize: 12 }}
                 />
               </HeaderButtons>
             ) : null}
@@ -245,7 +246,7 @@ const styles = StyleSheet.create({
   },
   title: {
     flex: 3,
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'center',
   },
   rightIcon: {
@@ -256,5 +257,6 @@ const styles = StyleSheet.create({
   titleText: {
     color: 'white',
     fontSize: 20,
+    paddingLeft: 0,
   },
 });

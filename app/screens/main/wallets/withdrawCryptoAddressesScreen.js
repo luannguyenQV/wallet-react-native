@@ -4,18 +4,18 @@ import {
   ListView,
   StyleSheet,
   Alert,
-  RefreshControl,
   TouchableHighlight,
   Text,
+  RefreshControl,
 } from 'react-native';
 import Account from './../../../components/bankAccount';
 import SettingsService from './../../../services/settingsService';
 import Colors from './../../../config/colors';
 import Header from './../../../components/header';
 
-class BitcoinAddressesScreen extends Component {
+class WithdrawCryptoAddressesScreen extends Component {
   static navigationOptions = {
-    title: 'Bitcoin addresses',
+    title: 'Select crypto address',
   };
 
   constructor(props) {
@@ -33,15 +33,15 @@ class BitcoinAddressesScreen extends Component {
     this.getData();
   }
 
-  goToEdit = reference => {
-    this.props.navigation.navigate('EditBitcoinAddress', { reference });
+  getAmount = reference => {
+    this.props.navigation.navigate('WithdrawAmountEntry', { reference });
   };
-
   getData = async () => {
     this.setState({
       refreshing: true,
     });
-    let responseJson = await SettingsService.getAllBitcoinAddresses();
+    let responseJson = await SettingsService.getAllCryptoAddresses();
+
     if (responseJson.status === 'success') {
       const ds = new ListView.DataSource({
         rowHasChanged: (r1, r2) => JSON.stringify(r1) !== JSON.stringify(r2),
@@ -62,6 +62,9 @@ class BitcoinAddressesScreen extends Component {
         dataSource: ds.cloneWithRows(data, ids),
       });
     } else {
+      this.setState({
+        refreshing: false,
+      });
       Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
     }
   };
@@ -72,12 +75,12 @@ class BitcoinAddressesScreen extends Component {
         <Header
           navigation={this.props.navigation}
           back
-          title="Bitcoin addresses"
+          title="Select crypto address"
           headerRightTitle="Add"
           headerRightOnPress={() =>
-            this.props.navigation.navigate('AddBitcoinAddress', {
-              parentRoute: 'Settings',
-              nextRoute: 'SettingsBitcoinAddresses',
+            this.props.navigation.navigate('AddCryptoAddress', {
+              parentRoute: 'Withdraw',
+              nextRoute: 'CryptoAddresses',
             })
           }
         />
@@ -102,7 +105,7 @@ class BitcoinAddressesScreen extends Component {
                   fontWeight: 'normal',
                   color: Colors.black,
                 }}>
-                No bitcoin addresses added yet
+                No crypto addresses added yet
               </Text>
             </View>
           </View>
@@ -116,11 +119,10 @@ class BitcoinAddressesScreen extends Component {
               />
             }
             dataSource={this.state.dataSource}
-            enableEmptySections
             renderRow={rowData => (
               <Account
-                onPress={this.goToEdit}
-                reference={rowData}
+                onPress={this.getAmount}
+                reference={rowData.code}
                 name={rowData.address}
               />
             )}
@@ -139,8 +141,8 @@ const styles = StyleSheet.create({
   },
   submit: {
     marginBottom: 10,
-    marginHorizontal: 20,
     height: 50,
+    marginHorizontal: 20,
     borderRadius: 25,
     backgroundColor: Colors.lightblue,
     alignItems: 'center',
@@ -148,4 +150,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BitcoinAddressesScreen;
+export default WithdrawCryptoAddressesScreen;

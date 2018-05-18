@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { View, Alert, StyleSheet } from 'react-native';
-import AddBitcoinAddressComponent from './../../../components/bitcoinAddressComponent';
+import AddCryptoAddressComponent from './../../../components/cryptoAddressComponent';
 import SettingsService from './../../../services/settingsService';
 import ResetNavigation from './../../../util/resetNavigation';
 import Header from './../../../components/header';
 
-class AddBitcoinAddressScreen extends Component {
+class AddCryptoAddressScreen extends Component {
   static navigationOptions = {
     title: 'Add new address',
   };
@@ -31,7 +31,7 @@ class AddBitcoinAddressScreen extends Component {
   };
 
   add = async () => {
-    let responseJson = await SettingsService.addBitcoinAddresses(this.state);
+    let responseJson = await SettingsService.addCryptoAddresses(this.state);
 
     if (responseJson.status === 'success') {
       this.reload();
@@ -50,7 +50,7 @@ class AddBitcoinAddressScreen extends Component {
           headerRightTitle="Save"
           headerRightOnPress={this.add}
         />
-        <AddBitcoinAddressComponent
+        <AddCryptoAddressComponent
           updateAddress={this.updateAddress}
           values={this.state}
         />
@@ -66,4 +66,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddBitcoinAddressScreen;
+export default AddCryptoAddressScreen;

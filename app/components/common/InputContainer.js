@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { ScrollView, KeyboardAvoidingView } from 'react-native';
 
-class InputForm extends Component {
+class InputContainer extends Component {
   render() {
-    const { reference, children } = this.props;
+    const { reference, children, refreshControl } = this.props;
 
     const { containerStyle, containerStyleScroll } = styles;
 
@@ -16,7 +16,8 @@ class InputForm extends Component {
           style={containerStyleScroll}
           keyboardDismissMode={'interactive'}
           keyboardShouldPersistTaps="always"
-          ref={reference}>
+          ref={reference}
+          refreshControl={refreshControl}>
           {children}
         </ScrollView>
       </KeyboardAvoidingView>
@@ -39,4 +40,4 @@ const styles = {
   },
 };
 
-export { InputForm };
+export { InputContainer };

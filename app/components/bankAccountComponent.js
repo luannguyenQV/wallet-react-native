@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 
-import { Input, InputForm } from './../components/common';
+import { Input, InputContainer } from './../components/common';
 
 export default class BankAccountComponent extends Component {
   render() {
     return (
-      <InputForm>
+      <InputContainer>
         <Input
           label="Account holder"
           placeholder="e.g. John Snow"
@@ -62,7 +62,7 @@ export default class BankAccountComponent extends Component {
           value={this.props.values.bic}
           onChangeText={text => this.props.updateBIC(text)}
         />
-      </InputForm>
+      </InputContainer>
     );
   }
 }

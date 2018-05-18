@@ -18,16 +18,16 @@ import Receive from './../screens/main/transactions/receiveScreen';
 import QRcodeScanner from './../screens/main/transactions/qrcodeScannerScreen';
 
 import BankAccounts from './../screens/main/wallets/withdrawBankAccountsScreen';
-import BitcoinAddresses from './../screens/main/wallets/withdrawBitcoinAddressesScreen';
+import CryptoAddresses from './../screens/main/wallets/withdrawCryptoAddressesScreen';
 import WithdrawAmountEntry from './../screens/main/wallets/withdrawAmountEntryScreen';
 
 import SettingsBankAccounts from './../screens/settings/bankAccounts/bankAccountsScreen';
 import AddBankAccount from './../screens/settings/bankAccounts/addBankAccountScreen';
 import EditBankAccount from './../screens/settings/bankAccounts/editBankAccountScreen';
 
-import SettingsBitcoinAddresses from './../screens/settings/bitcoinAddresses/bitcoinAddressesScreen';
-import AddBitcoinAddress from './../screens/settings/bitcoinAddresses/addBitcoinAddressScreen';
-import EditBitcoinAddress from './../screens/settings/bitcoinAddresses/editBitcoinAddressScreen';
+import SettingsCryptoAddresses from './../screens/settings/cryptoAddresses/cryptoAddressesScreen';
+import AddCryptoAddress from './../screens/settings/cryptoAddresses/addCryptoAddressScreen';
+import EditCryptoAddress from './../screens/settings/cryptoAddresses/editCryptoAddressScreen';
 
 import SettingsEmailAddresses from './../screens/settings/emailAddresses/emailAddressesScreen';
 import AddEmailAddress from './../screens/settings/emailAddresses/addEmailAddressScreen';
@@ -46,7 +46,6 @@ import MobileNotifications from './../screens/settings/notifications/mobileNotif
 
 import UploadImage from './../screens/settings/profileImage/uploadImageScreen';
 
-import SettingsSecurity from './../screens/settings/security/securityScreen';
 import ChangePassword from './../screens/settings/security/changePasswordScreen';
 import TwoFactor from '../screens/settings/security/twoFactor/twoFactorScreen';
 import TwoFactorSmsAuth from '../screens/settings/security/twoFactor/twoFactorSmsAuthScreen';
@@ -89,8 +88,8 @@ const Stack = {
   BankAccounts: {
     screen: BankAccounts,
   },
-  BitcoinAddresses: {
-    screen: BitcoinAddresses,
+  CryptoAddresses: {
+    screen: CryptoAddresses,
   },
   WithdrawAmountEntry: {
     screen: WithdrawAmountEntry,
@@ -140,8 +139,8 @@ const Stack = {
   SettingsBankAccounts: {
     screen: SettingsBankAccounts,
   },
-  SettingsBitcoinAddresses: {
-    screen: SettingsBitcoinAddresses,
+  SettingsCryptoAddresses: {
+    screen: SettingsCryptoAddresses,
   },
   AddBankAccount: {
     screen: AddBankAccount,
@@ -149,17 +148,14 @@ const Stack = {
   EditBankAccount: {
     screen: EditBankAccount,
   },
-  AddBitcoinAddress: {
-    screen: AddBitcoinAddress,
+  AddCryptoAddress: {
+    screen: AddCryptoAddress,
   },
-  EditBitcoinAddress: {
-    screen: EditBitcoinAddress,
+  EditCryptoAddress: {
+    screen: EditCryptoAddress,
   },
   SettingsCards: {
     screen: SettingsCards,
-  },
-  SettingsSecurity: {
-    screen: SettingsSecurity,
   },
   ChangePassword: {
     screen: ChangePassword,

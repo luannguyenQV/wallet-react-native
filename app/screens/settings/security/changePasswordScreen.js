@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Alert } from 'react-native';
 import AuthService from './../../../services/authService';
-import { Input, InputForm, Button } from './../../../components/common';
+import { Input, InputContainer, Button } from './../../../components/common';
 import Header from './../../../components/header';
 
 class ChangePasswordScreen extends Component {
@@ -41,7 +41,7 @@ class ChangePasswordScreen extends Component {
           back
           title="Change password"
         />
-        <InputForm>
+        <InputContainer>
           <Input
             type="password"
             label="Old password"
@@ -72,7 +72,7 @@ class ChangePasswordScreen extends Component {
           />
 
           <Button label="CONFIRM" onPress={() => this.save()} />
-        </InputForm>
+        </InputContainer>
       </View>
     );
   }

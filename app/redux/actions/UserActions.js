@@ -14,6 +14,12 @@ import {
   FETCH_DOCUMENTS_SUCCESS,
   FETCH_DOCUMENTS_FAIL,
   FETCH_DOCUMENTS,
+  FETCH_BANK_ACCOUNTS_SUCCESS,
+  FETCH_BANK_ACCOUNTS_FAIL,
+  FETCH_BANK_ACCOUNTS,
+  FETCH_CRYPTO_ACCOUNTS_SUCCESS,
+  FETCH_CRYPTO_ACCOUNTS_FAIL,
+  FETCH_CRYPTO_ACCOUNTS,
 } from './../types';
 
 import UserInfoService from './../../services/userInfoService';
@@ -93,5 +99,35 @@ export const fetchDocuments = () => async dispatch => {
   } else {
     //TODO: Logout here?
     dispatch({ type: FETCH_DOCUMENTS_FAIL });
+  }
+};
+
+export const fetchBankAccounts = () => async dispatch => {
+  dispatch({ type: FETCH_BANK_ACCOUNTS });
+  let responseJson = await SettingsService.getAllBankAccounts();
+
+  if (responseJson.status === 'success') {
+    dispatch({
+      type: FETCH_BANK_ACCOUNTS_SUCCESS,
+      payload: responseJson.data,
+    });
+  } else {
+    //TODO: Logout here?
+    dispatch({ type: FETCH_BANK_ACCOUNTS_FAIL });
+  }
+};
+
+export const fetchCryptoAccounts = () => async dispatch => {
+  dispatch({ type: FETCH_CRYPTO_ACCOUNTS });
+  let responseJson = await SettingsService.getAllCryptoAddresses();
+
+  if (responseJson.status === 'success') {
+    dispatch({
+      type: FETCH_CRYPTO_ACCOUNTS_SUCCESS,
+      payload: responseJson.data,
+    });
+  } else {
+    //TODO: Logout here?
+    dispatch({ type: FETCH_CRYPTO_ACCOUNTS_FAIL });
   }
 };

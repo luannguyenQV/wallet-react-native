@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { View, Alert, StyleSheet } from 'react-native';
-import EditBitcoinAddressComponent from './../../../components/bitcoinAddressComponent';
+import EditCryptoAddressComponent from './../../../components/cryptoAddressComponent';
 import SettingsService from './../../../services/settingsService';
 import ResetNavigation from './../../../util/resetNavigation';
 import Header from './../../../components/header';
 
-class EditBitcoinAddressScreen extends Component {
+class EditCryptoAddressScreen extends Component {
   static navigationOptions = {
-    title: 'Edit bitcoin address',
+    title: 'Edit Crypto address',
   };
 
   constructor(props) {
@@ -26,12 +26,12 @@ class EditBitcoinAddressScreen extends Component {
     ResetNavigation.dispatchUnderDrawer(
       this.props.navigation,
       'Settings',
-      'SettingsBitcoinAddresses',
+      'SettingsCryptoAddresses',
     );
   };
 
   update = async () => {
-    let responseJson = await SettingsService.editBitcoinAddresses(
+    let responseJson = await SettingsService.editCryptoAddresses(
       this.state.id,
       this.state,
     );
@@ -48,11 +48,11 @@ class EditBitcoinAddressScreen extends Component {
         <Header
           navigation={this.props.navigation}
           back
-          title="Edit bitcoin address"
+          title="Edit Crypto address"
           headerRightTitle="Save"
           headerRightOnPress={this.update}
         />
-        <EditBitcoinAddressComponent
+        <EditCryptoAddressComponent
           updateAddress={this.updateAddress}
           values={this.state}
         />
@@ -68,4 +68,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EditBitcoinAddressScreen;
+export default EditCryptoAddressScreen;

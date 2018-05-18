@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 import SettingsService from './../../../services/settingsService';
 import ResetNavigation from './../../../util/resetNavigation';
-import { Input, InputForm, Button } from './../../../components/common';
+import { Input, InputContainer, Button } from './../../../components/common';
 import Colors from './../../../config/colors';
 import Header from './../../../components/header';
 
@@ -20,7 +20,6 @@ class VerifyMobileScreen extends Component {
   }
 
   reload = () => {
-    console.log('addEmailAddress: ' + this.state.routeName);
     ResetNavigation.dispatchUnderDrawer(
       this.props.navigation,
       this.state.routeName != null ? 'GetVerified' : 'Settings',
@@ -48,7 +47,7 @@ class VerifyMobileScreen extends Component {
           back
           title="Verify mobile number"
         />
-        <InputForm>
+        <InputContainer>
           <Input
             label="Enter OTP"
             placeholder="OTP"
@@ -75,7 +74,7 @@ class VerifyMobileScreen extends Component {
               onPress={() => this.reload()}
             />
           </View>
-        </InputForm>
+        </InputContainer>
       </View>
     );
   }

@@ -14,20 +14,30 @@ import {
   FETCH_DOCUMENTS_SUCCESS,
   FETCH_DOCUMENTS_FAIL,
   FETCH_DOCUMENTS,
+  FETCH_BANK_ACCOUNTS_SUCCESS,
+  FETCH_BANK_ACCOUNTS_FAIL,
+  FETCH_BANK_ACCOUNTS,
+  FETCH_CRYPTO_ACCOUNTS_SUCCESS,
+  FETCH_CRYPTO_ACCOUNTS_FAIL,
+  FETCH_CRYPTO_ACCOUNTS,
 } from './../types';
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 
 const INITIAL_STATE = {
-  profile: null,
+  profile: {},
   loadingProfile: false,
-  emailAddresses: null,
+  emailAddresses: [],
   loadingEmailAddresses: false,
-  mobileNumbers: null,
+  mobileNumbers: [],
   loadingMobileNumbers: false,
-  addresses: null,
+  addresses: {},
   loadingAddresses: false,
-  documents: null,
+  documents: {},
   loadingDocuments: false,
+  bankAccounts: [],
+  loadingBankAccounts: false,
+  cryptoAccounts: null,
+  loadingCryptoAccounts: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -113,6 +123,38 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loadingDocuments: false,
+      };
+    case FETCH_BANK_ACCOUNTS:
+      return {
+        ...state,
+        loadingBankAccounts: true,
+      };
+    case FETCH_BANK_ACCOUNTS_SUCCESS:
+      return {
+        ...state,
+        bankAccounts: action.payload,
+        loadingBankAccounts: false,
+      };
+    case FETCH_BANK_ACCOUNTS_FAIL:
+      return {
+        ...state,
+        loadingBankAccounts: false,
+      };
+    case FETCH_CRYPTO_ACCOUNTS:
+      return {
+        ...state,
+        loadingCryptoAccounts: true,
+      };
+    case FETCH_CRYPTO_ACCOUNTS_SUCCESS:
+      return {
+        ...state,
+        cryptoAccounts: action.payload,
+        loadingCryptoAccounts: false,
+      };
+    case FETCH_CRYPTO_ACCOUNTS_FAIL:
+      return {
+        ...state,
+        loadingCryptoAccounts: false,
       };
     default:
       return state;

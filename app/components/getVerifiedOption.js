@@ -1,12 +1,5 @@
 import React, { Component } from 'react';
-import {
-  View,
-  Text,
-  TouchableHighlight,
-  ScrollView,
-  TouchableWithoutFeedback,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Text, TouchableWithoutFeedback } from 'react-native';
 import Colors from './../config/colors';
 import { Output } from './common';
 
@@ -37,13 +30,11 @@ class GetVerifiedOption extends Component {
   }
 
   render() {
-    const { label, value } = this.props;
+    const { label, value, status, gotoAddress } = this.props;
     return (
       <View style={styles.options}>
         <TouchableWithoutFeedback
-          onPress={() =>
-            this.props.goTo(this.props.gotoAddress, this.props.title)
-          }>
+          onPress={() => this.props.goTo(gotoAddress, label)}>
           <View style={styles.optionsElement}>
             <View style={{ flex: 1 }}>
               <Output label={label} value={value} />
@@ -54,7 +45,7 @@ class GetVerifiedOption extends Component {
                   styles.optionsText,
                   { fontSize: 13, color: this.state.color },
                 ]}>
-                {this.props.status}
+                {status}
               </Text>
             </View>
           </View>

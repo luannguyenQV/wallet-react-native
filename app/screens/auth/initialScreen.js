@@ -15,6 +15,8 @@ import {
   fetchAddresses,
   fetchDocuments,
   fetchAccounts,
+  fetchBankAccounts,
+  fetchCryptoAccounts,
 } from '../../redux/actions';
 
 import Colors from './../../config/colors';
@@ -55,6 +57,8 @@ class InitialScreen extends Component {
           props.fetchAddresses();
           props.fetchDocuments();
           props.fetchAccounts();
+          props.fetchBankAccounts();
+          props.fetchCryptoAccounts();
         }
       }
     }
@@ -458,4 +462,6 @@ export default connect(mapStateToProps, {
   fetchAddresses,
   fetchDocuments,
   fetchAccounts,
+  fetchBankAccounts,
+  fetchCryptoAccounts,
 })(InitialScreen);

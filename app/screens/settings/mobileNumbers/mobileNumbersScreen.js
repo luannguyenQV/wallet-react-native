@@ -5,71 +5,36 @@ import {
   ListView,
   Alert,
   AsyncStorage,
-  TouchableHighlight,
-  Text,
+  FlatList,
   RefreshControl,
 } from 'react-native';
-import { NavigationActions } from 'react-navigation';
+import { connect } from 'react-redux';
+import { fetchMobileNumbers } from './../../../redux/actions';
+
 import Spinner from 'react-native-loading-spinner-overlay';
 import MobileNumber from './../../../components/mobileNumber';
 import ResetNavigation from './../../../util/resetNavigation';
 import SettingsService from './../../../services/settingsService';
 import Colors from './../../../config/colors';
 import Header from './../../../components/header';
+import { EmptyListMessage } from './../../../components/common';
 
 class MobileNumbersScreen extends Component {
   static navigationOptions = {
     title: 'Mobile numbers',
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      routeName: this.props.navigation.state.params
-        ? this.props.navigation.state.params.name
-        : null,
-      refreshing: false,
-      loading: false,
-      loadingMessage: '',
-      dataSource: new ListView.DataSource({
-        rowHasChanged: (r1, r2) => JSON.stringify(r1) !== JSON.stringify(r2),
-      }),
-      empty: false,
-    };
-  }
+  state = {
+    routeName: this.props.navigation.state.params
+      ? this.props.navigation.state.params.name
+      : null,
+    loading: false,
+    loadingMessage: '',
+  };
 
   componentWillMount() {
-    this.getData();
+    this.props.fetchMobileNumbers();
   }
-
-  getData = async () => {
-    this.setState({
-      refreshing: true,
-    });
-    let responseJson = await SettingsService.getAllMobiles();
-    if (responseJson.status === 'success') {
-      const ds = new ListView.DataSource({
-        rowHasChanged: (r1, r2) => JSON.stringify(r1) !== JSON.stringify(r2),
-      });
-      const data = responseJson.data;
-      if (data.length === 0) {
-        this.setState({
-          empty: true,
-        });
-      } else {
-        this.setState({
-          empty: false,
-        });
-      }
-      let ids = data.map((obj, index) => index);
-      this.setState({
-        refreshing: false,
-        dataSource: ds.cloneWithRows(data, ids),
-      });
-    } else {
-      Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
-    }
-  };
 
   reload = () => {
     ResetNavigation.dispatchUnderDrawer(
@@ -88,6 +53,7 @@ class MobileNumbersScreen extends Component {
     let responseJson = await SettingsService.makeMobilePrimary(id, body);
 
     if (responseJson.status === 'success') {
+      this.setState({ loading: false });
       this.reload();
     } else {
       Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
@@ -99,13 +65,10 @@ class MobileNumbersScreen extends Component {
       loading: true,
       loadingMessage: 'Sending verification code...',
     });
-    const userData = await AsyncStorage.getItem('user');
-
-    const user = JSON.parse(userData);
 
     const body = {
       mobile: number,
-      company: user.company,
+      company: this.props.profile.company,
     };
 
     let responseJson = await SettingsService.resendMobileVerification(body);
@@ -129,6 +92,7 @@ class MobileNumbersScreen extends Component {
     let responseJson = await SettingsService.deleteMobile(id);
 
     if (responseJson.status === 'success') {
+      this.setState({ loading: false });
       this.reload();
     } else {
       Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
@@ -136,6 +100,11 @@ class MobileNumbersScreen extends Component {
   };
 
   render() {
+    const {
+      mobileNumbers,
+      loadingMobileNumbers,
+      fetchMobileNumbers,
+    } = this.props;
     return (
       <View style={styles.container}>
         <Header
@@ -154,52 +123,28 @@ class MobileNumbersScreen extends Component {
           textContent={this.state.loadingMessage}
           textStyle={{ color: '#FFF' }}
         />
-        {this.state.empty && (
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: 'white',
-              paddingHorizontal: 10,
-            }}>
-            <View
-              style={{
-                marginTop: 10,
-                flexDirection: 'column',
-                backgroundColor: Colors.lightgray,
-                padding: 20,
-                alignItems: 'center',
-              }}>
-              <Text
-                style={{
-                  fontSize: 18,
-                  fontWeight: 'normal',
-                  color: Colors.black,
-                }}>
-                No mobile number added yet
-              </Text>
-            </View>
-          </View>
-        )}
-        {!this.state.empty && (
-          <ListView
+        {mobileNumbers.length > 0 ? (
+          <FlatList
             refreshControl={
               <RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={this.getData.bind(this)}
+                refreshing={loadingMobileNumbers}
+                onRefresh={fetchMobileNumbers}
               />
             }
-            dataSource={this.state.dataSource}
-            enableEmptySections
-            renderRow={rowData => (
+            data={mobileNumbers}
+            renderItem={({ item }) => (
               <MobileNumber
-                mobile={rowData}
+                mobile={item}
                 makePrimary={this.makePrimary}
                 verify={this.verify}
                 delete={this.delete}
                 reload={this.reload}
               />
             )}
+            keyExtractor={item => item.id}
           />
+        ) : (
+          <EmptyListMessage text="No mobile numbers added yet" />
         )}
       </View>
     );
@@ -223,4 +168,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MobileNumbersScreen;
+const mapStateToProps = ({ user }) => {
+  const { mobileNumbers, loadingMobileNumbers, profile } = user;
+  return { mobileNumbers, loadingMobileNumbers, profile };
+};
+
+export default connect(mapStateToProps, { fetchMobileNumbers })(
+  MobileNumbersScreen,
+);

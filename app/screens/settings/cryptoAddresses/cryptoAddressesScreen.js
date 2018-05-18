@@ -1,64 +1,68 @@
 import React, { Component } from 'react';
 import { View, RefreshControl, FlatList } from 'react-native';
 import { connect } from 'react-redux';
-import { fetchBankAccounts } from './../../../redux/actions';
+import { fetchCryptoAccounts } from './../../../redux/actions';
 
 import Account from './../../../components/bankAccount';
 import Colors from './../../../config/colors';
 import Header from './../../../components/header';
 import { EmptyListMessage } from './../../../components/common';
 
-class BankAccountsScreen extends Component {
+class CryptoAddressesScreen extends Component {
   static navigationOptions = {
-    title: 'Bank accounts',
+    title: 'Crypto addresses',
   };
 
   componentDidMount() {
-    this.props.fetchBankAccounts();
+    this.props.fetchCryptoAccounts();
   }
 
   goToEdit = reference => {
-    this.props.navigation.navigate('EditBankAccount', { reference });
+    this.props.navigation.navigate('EditCryptoAddress', { reference });
   };
 
   render() {
-    const { bankAccounts, loadingBankAccounts, fetchBankAccounts } = this.props;
-    console.log(bankAccounts);
-    console.log(bankAccounts.length);
+    const {
+      cryptoAccounts,
+      loadingCryptoAccounts,
+      fetchCryptoAccounts,
+    } = this.props;
+    console.log(cryptoAccounts);
+    console.log(cryptoAccounts.length);
     return (
       <View style={styles.container}>
         <Header
           navigation={this.props.navigation}
           back
-          title="Bank accounts"
+          title="Crypto addresses"
           headerRightTitle="Add"
           headerRightOnPress={() =>
-            this.props.navigation.navigate('AddBankAccount', {
+            this.props.navigation.navigate('AddCryptoAddress', {
               parentRoute: 'Settings',
-              nextRoute: 'SettingsBankAccounts',
+              nextRoute: 'SettingsCryptoAddresses',
             })
           }
         />
-        {bankAccounts.length > 0 ? (
+        {cryptoAccounts.length > 0 ? (
           <FlatList
             refreshControl={
               <RefreshControl
-                refreshing={loadingBankAccounts}
-                onRefresh={fetchBankAccounts}
+                refreshing={loadingCryptoAccounts}
+                onRefresh={fetchCryptoAccounts}
               />
             }
-            data={bankAccounts}
+            data={cryptoAccounts}
             renderItem={({ item }) => (
               <Account
                 onPress={this.goToEdit}
                 reference={item}
-                name={item.bank_name}
+                name={item.address}
               />
             )}
             keyExtractor={item => item.id}
           />
         ) : (
-          <EmptyListMessage text="No bank accounts added yet" />
+          <EmptyListMessage text="No crypto addresses added yet" />
         )}
       </View>
     );
@@ -74,8 +78,8 @@ const styles = {
   submit: {
     marginBottom: 10,
     marginHorizontal: 20,
-    borderRadius: 25,
     height: 50,
+    borderRadius: 25,
     backgroundColor: Colors.lightblue,
     alignItems: 'center',
     justifyContent: 'center',
@@ -83,10 +87,10 @@ const styles = {
 };
 
 const mapStateToProps = ({ user }) => {
-  const { bankAccounts, loadingBankAccounts } = user;
-  return { bankAccounts, loadingBankAccounts };
+  const { cryptoAccounts, loadingCryptoAccounts } = user;
+  return { cryptoAccounts, loadingCryptoAccounts };
 };
 
-export default connect(mapStateToProps, { fetchBankAccounts })(
-  BankAccountsScreen,
+export default connect(mapStateToProps, { fetchCryptoAccounts })(
+  CryptoAddressesScreen,
 );
