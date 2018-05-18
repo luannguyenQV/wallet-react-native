@@ -7,9 +7,9 @@
   "sdkVersion": "24.0.0",
   "orientation": "portrait",
   "primaryColor": "#cccccc",
-  "icon": "./assets/icons/app.png",
+  "icon": "./assets/icons/Rehive_icon_primary.png",
   "loading": {
-    "icon": "./assets/icons/new_loading.png",
+    "icon": "./assets/icons/Rehive_icon_primary.png",
     "hideExponentText": false
   },
   "packagerOpts": {

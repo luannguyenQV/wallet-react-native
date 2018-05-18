@@ -32,7 +32,7 @@ class NoNetConnectionScreen extends Component {
         <View
           style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <Image
-            source={require('./../../../assets/icons/new_logo.png')}
+            source={require('./../../../assets/icons/Rehive_icon_primary.png')}
             resizeMode="contain"
             style={styles.image}
           />

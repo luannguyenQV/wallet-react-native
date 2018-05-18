@@ -1,7 +1,8 @@
 export * from './Button';
 export * from './Card';
 export * from './CardSection';
-// export * from './Header';
+// export * from './CardInternal';
+export * from './AuthForm';
 export * from './Input';
 export * from './Output';
 export * from './OutputContainer';

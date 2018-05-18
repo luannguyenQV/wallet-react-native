@@ -8,20 +8,18 @@ import {
   REGISTER_USER,
   REGISTER_USER_SUCCESS,
   REGISTER_USER_FAIL,
-  UPDATE_AUTH_FORM_FIELD,
-  UPDATE_AUTH_FORM_FIELD_SUCCESS,
-  UPDATE_AUTH_FORM_FIELD_FAIL,
   UPDATE_AUTH_FORM_STATE,
   LOGOUT_USER,
+  LOADING,
 } from './../types';
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 
 const INITIAL_STATE = {
   input: '',
   inputError: '',
-  actionText: '',
-  authFormState: '',
-  authFormInputState: '',
+  textFooterRight: '',
+  authState: '',
+  inputState: '',
   first_name: '',
   last_name: '',
   email: '',
@@ -37,6 +35,7 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action) => {
+  console.log(action);
   switch (action.type) {
     case PERSIST_REHYDRATE:
       return action.payload.auth || [];
@@ -44,6 +43,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         [action.payload.prop]: action.payload.value,
+        inputError: '',
         [action.payload.prop + 'Error']: action.payload.error,
       };
     case AUTH_FIELD_ERROR:
@@ -57,47 +57,35 @@ export default (state = INITIAL_STATE, action) => {
         [action.payload.prop]: action.payload.value,
       };
 
-    case UPDATE_AUTH_FORM_FIELD:
+    case UPDATE_AUTH_FORM_STATE:
+      const {
+        authState,
+        inputState,
+        textFooterRight,
+        iconHeaderLeft,
+      } = action.payload;
       return {
         ...state,
-        [action.payload.prop]: state.input,
-        inputError: '',
-        loading: true,
-      };
-    case UPDATE_AUTH_FORM_FIELD_SUCCESS:
-      return {
-        ...state,
-        [action.payload.prop]: action.payload.value,
-        input: '',
-        inputError: '',
-        loading: false,
-      };
-    case UPDATE_AUTH_FORM_FIELD_FAIL:
-      return {
-        ...state,
-        inputError: action.payload.inputError,
+        authState,
+        inputState,
+        textFooterRight,
+        iconHeaderLeft,
+        // inputError: '',
+        password: '',
         loading: false,
       };
 
-    case UPDATE_AUTH_FORM_STATE:
-      const { authFormState, authFormInputState, actionText } = action.payload;
+    case LOADING:
       return {
         ...state,
-        authFormState,
-        authFormInputState,
-        actionText,
-        // inputError: '',
-        input: '',
-        password: '',
-        loading: false,
+        loading: true,
       };
 
     case LOGIN_USER:
       return {
         ...state,
         loading: true,
-        error: '',
-        input: '',
+        inputError: '',
       };
     case LOGIN_USER_SUCCESS:
       return {
@@ -112,7 +100,6 @@ export default (state = INITIAL_STATE, action) => {
         // passwordError: 'Unable to login with provided credentials',
         inputError:
           'Unable to login with provided credentials, please try again',
-        input: state.email,
         loading: false,
       };
 
@@ -120,8 +107,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: true,
-        error: '',
-        input: '',
+        inputError: '',
       };
     case REGISTER_USER_SUCCESS:
       return {
@@ -133,14 +119,11 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         token: null,
-        // passwordError: 'Unable to login with provided credentials',
-        inputError: 'User already registered with this email',
-        input: state.email,
+        inputError: action.payload,
         loading: false,
       };
 
     case LOGOUT_USER:
-      console.log('logged out');
       return {
         ...state,
         token: '',

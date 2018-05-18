@@ -18,10 +18,10 @@ export default class BankAccount extends Component {
         onPress={() => this.props.onPress(this.props.reference)}>
         <View style={styles.optionsElement}>
           <View style={styles.optionsText}>
-            <Image
+            {/* <Image
               source={require('./../../assets/icons/placeholder.png')}
               style={{ height: 40, width: 40 }}
-            />
+            /> */}
             {this.props.name ? (
               <Text
                 style={{ fontSize: 18, paddingLeft: 20, color: Colors.black }}>

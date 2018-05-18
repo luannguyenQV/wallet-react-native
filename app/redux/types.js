@@ -15,6 +15,7 @@ export const REGISTER_USER_SUCCESS = 'register_user_success';
 export const REGISTER_USER_FAIL = 'register_user_fail';
 export const AUTH_FIELD_FOCUS = 'auth_field_focus';
 export const LOGOUT_USER = 'logout_user';
+export const LOADING = 'loading';
 
 // ACCOUNTS
 export const FETCH_ACCOUNTS = 'fetch_accounts';

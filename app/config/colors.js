@@ -17,7 +17,14 @@ export default {
 
   primary: '#4d4d4d',
   secondary: '#a6a6a6',
-  tertiary: '#04556B',
+  tertiary: '#c4c4c4',
+  quaternary: '#e1e1e1',
+
+  onPrimary: '#e1e1e1',
+  onSecondary: '#ffffff',
+  onTertiary: '#000000',
+  onQuaternary: '#4d4d4d',
+
   warning: '#FC8755',
   error: '#ED675A',
   success: '#03DBBB',

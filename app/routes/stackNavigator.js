@@ -1,8 +1,6 @@
 import { StackNavigator } from 'react-navigation';
 
-import InitialScreen from './../screens/auth/initialScreen';
-import Login from './../screens/auth/loginScreen';
-import Register from './../screens/auth/registerScreen';
+import AuthScreen from './../screens/auth/authScreen';
 import AuthVerifyMobile from './../screens/auth/verifyMobileScreen';
 import ForgotPassword from './../screens/auth/forgotPasswordScreen';
 import NoNetConnection from './../screens/auth/noNetConnectionScreen';
@@ -58,17 +56,11 @@ import SettingsAddress from './../screens/settings/addressScreen';
 import SettingsPersonalDetails from './../screens/settings/personalDetailsScreen';
 
 const Stack = {
-  InitialScreen: {
-    screen: InitialScreen,
+  AuthScreen: {
+    screen: AuthScreen,
   },
   Home: {
     screen: Home,
-  },
-  Login: {
-    screen: Login,
-  },
-  Register: {
-    screen: Register,
   },
   ForgotPassword: {
     screen: ForgotPassword,

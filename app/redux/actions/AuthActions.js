@@ -2,17 +2,15 @@ import {
   AUTH_FIELD_CHANGED,
   AUTH_FIELD_ERROR,
   TERMS_CHANGED,
+  LOGIN_USER,
   LOGIN_USER_SUCCESS,
   LOGIN_USER_FAIL,
-  LOGIN_USER,
   REGISTER_USER,
   REGISTER_USER_SUCCESS,
   REGISTER_USER_FAIL,
-  UPDATE_AUTH_FORM_FIELD,
-  UPDATE_AUTH_FORM_FIELD_SUCCESS,
-  UPDATE_AUTH_FORM_FIELD_FAIL,
   UPDATE_AUTH_FORM_STATE,
   LOGOUT_USER,
+  LOADING,
 } from './../types';
 
 import clientConfig from './../../config/client';
@@ -25,186 +23,24 @@ export const initialLoad = props => async dispatch => {
     dispatch({ type: LOGIN_USER_SUCCESS, payload: token });
   } else {
     if (props.company) {
-      dispatch(
-        updateAuthFormState({ nextFormState: 'landing', inputState: '' }),
-      );
+      dispatch({
+        type: UPDATE_AUTH_FORM_STATE,
+        payload: {
+          iconHeaderLeft: 'md-arrow-back',
+          authState: 'landing',
+        },
+      });
     } else {
-      dispatch(
-        updateAuthFormState({ nextFormState: 'company', inputState: '' }),
-      );
+      dispatch({
+        type: UPDATE_AUTH_FORM_STATE,
+        payload: {
+          textFooterRight: 'Next',
+          authState: 'company',
+          inputState: 'company',
+        },
+      });
     }
   }
-};
-
-export const updateAuthFormState = ({
-  authState,
-  inputState,
-  nextFormState,
-}) => {
-  // console.log('updateAuthInputState');
-  // console.log('inputState: ', inputState);
-  // console.log('authState: ', authState);
-  // console.log('nextFormState: ', nextFormState);
-  let actionText = '';
-  let nextInputState = '';
-  if (nextFormState === 'landing') {
-    nextInputState = '';
-  } else if (nextFormState === 'company') {
-    actionText = 'Save';
-    nextInputState = 'company';
-  } else if (nextFormState === 'register') {
-    if (clientConfig.requireEmail) {
-      nextInputState = 'email';
-    } else if (clientConfig.requireMobile) {
-      nextInputState = 'mobile';
-    } else {
-      nextInputState = 'email';
-    }
-    actionText = 'Next';
-  } else if (nextFormState === 'login') {
-    if (clientConfig.requireEmail) {
-      nextInputState = 'email';
-    } else if (clientConfig.requireMobile) {
-      nextInputState = 'mobile';
-    } else {
-      nextInputState = 'email';
-    }
-    actionText = 'Next';
-  } else {
-    if (authState === 'company') {
-      nextInputState = '';
-      nextFormState = 'landing';
-    } else if (authState === 'login') {
-      if (inputState === '') {
-        actionText = 'Next';
-        nextInputState = 'email';
-      } else if (inputState === 'email') {
-        actionText = 'Log in';
-        nextInputState = 'password';
-      } else if (inputState === 'password') {
-        nextInputState = '';
-        nextFormState = 'landing';
-      }
-    } else if (authState === 'register') {
-      if (inputState === 'email') {
-        if (clientConfig.requireMobile) {
-          nextInputState = 'mobile';
-          actionText = 'Next';
-        } else if (clientConfig.requireTerms) {
-          nextInputState = 'terms';
-          actionText = 'Next';
-        } else {
-          nextInputState = 'password';
-          actionText = 'Register';
-        }
-      } else if (inputState === 'mobile') {
-        if (clientConfig.requireTerms) {
-          nextInputState = 'terms';
-          actionText = 'Next';
-        } else {
-          nextInputState = 'password';
-          actionText = 'Register';
-        }
-      } else if (inputState === 'terms') {
-        nextState = 'password';
-        actionText = 'Register';
-      }
-    }
-    if (!nextFormState) {
-      nextFormState = authState;
-    }
-  }
-  // console.log('UPDATE_AUTH_FORM_STATE');
-  // console.log('actionText: ', actionText);
-  // console.log('nextInputState: ', nextInputState);
-  // console.log('nextFormState: ', nextFormState);
-  return {
-    type: UPDATE_AUTH_FORM_STATE,
-    payload: {
-      actionText,
-      authFormInputState: nextInputState,
-      authFormState: nextFormState,
-    },
-  };
-  // console.log({ nextState, actionText });
-  // dispatch({
-  //   type: UPDATE_AUTH_INPUT_STATE,
-  //   payload: { actionText, nextState },
-  // });
-  // return {
-  //   type: UPDATE_AUTH_INPUT_STATE,
-  //   payload: { nextState, actionText },
-  // };
-};
-
-export const updateAuthInputField = props => async dispatch => {
-  let authState = props.authFormState;
-  let inputState = props.authFormInputState;
-  let value = props.input;
-  let error = validation(inputState, value);
-  if (error) {
-    dispatch({
-      type: AUTH_FIELD_ERROR,
-      payload: { error },
-    });
-  } else {
-    dispatch({
-      type: UPDATE_AUTH_FORM_FIELD,
-      payload: { prop: inputState },
-    });
-
-    if (inputState === 'password') {
-      if (authState === 'login') {
-        dispatch({ type: LOGIN_USER });
-        let data = {
-          user: props.email,
-          company: props.company,
-          password: value,
-        };
-        performLogin(dispatch, data);
-      } else if (authState === 'register') {
-        dispatch({ type: REGISTER_USER });
-        let data = {
-          email: props.email,
-          company: props.company,
-          password1: value,
-          password2: value,
-        };
-        performRegister(dispatch, data);
-      }
-    } else {
-      let response = await performCompanyServerValidation(props);
-
-      // console.log('response', response);
-      if (!response) {
-        dispatch({
-          type: UPDATE_AUTH_FORM_FIELD_SUCCESS,
-          payload: { prop: inputState, value },
-        });
-        dispatch(updateAuthFormState({ authState, inputState }));
-      } else {
-        dispatch({
-          type: UPDATE_AUTH_FORM_FIELD_FAIL,
-          payload: { inputError: response },
-        });
-      }
-    }
-  }
-};
-
-performCompanyServerValidation = async props => {
-  let authState = props.authFormState;
-  let inputState = props.authFormInputState;
-  let value = props.input;
-
-  if (authState === 'company') {
-    let responseJson = await AuthService.signup({ company: value });
-    // console.log(responseJson.data);
-    if (responseJson.data.company) {
-      return 'Please enter a valid company ID';
-    }
-  }
-  return '';
 };
 
 export const authFieldChange = ({ prop, value }) => {
@@ -212,6 +48,181 @@ export const authFieldChange = ({ prop, value }) => {
     type: AUTH_FIELD_CHANGED,
     payload: { prop, value },
   };
+};
+
+export const nextAuthFormState = (props, nextFormState) => async dispatch => {
+  const { authState, inputState, company, password, email } = props;
+
+  let error = validation(props);
+  let textFooterRight = '';
+  let nextAuthState = '';
+  let nextInputState = '';
+  let iconHeaderLeft = '';
+  let data = {};
+
+  if (error) {
+    dispatch({
+      type: AUTH_FIELD_ERROR,
+      payload: { error },
+    });
+  } else {
+    iconHeaderLeft = 'md-arrow-back';
+    switch (authState) {
+      case 'company':
+        dispatch({
+          type: LOADING,
+        });
+        error = await performCompanyServerValidation(company);
+        if (error) {
+          dispatch({
+            type: AUTH_FIELD_ERROR,
+            payload: { error },
+          });
+          return;
+        } else {
+          nextAuthState = 'landing';
+        }
+        break;
+      case 'landing':
+        nextAuthState = nextFormState;
+        nextInputState = 'email';
+        textFooterRight = 'Next';
+        break;
+      case 'login':
+        switch (inputState) {
+          case 'email':
+            nextInputState = 'password';
+            textFooterRight = 'Log in';
+            break;
+          case 'password':
+            data = { company, user: email, password };
+            await performLogin(dispatch, data);
+            return;
+            break;
+        }
+        break;
+      case 'register':
+        switch (inputState) {
+          case 'email':
+            nextInputState = 'password';
+            textFooterRight = 'Register';
+            break;
+          case 'password':
+            data = {
+              company,
+              email,
+              password1: password,
+              password2: password,
+            };
+            await performRegister(dispatch, data);
+            return;
+            break;
+        }
+        break;
+      default:
+        nextAuthState = 'company';
+        nextInputState = 'company';
+    }
+    if (!nextAuthState) {
+      nextAuthState = authState;
+    }
+    dispatch({
+      type: UPDATE_AUTH_FORM_STATE,
+      payload: {
+        textFooterRight,
+        iconHeaderLeft,
+        inputState: nextInputState,
+        authState: nextAuthState,
+      },
+    });
+  }
+  return;
+};
+
+export const previousAuthFormState = props => {
+  const { authState, inputState } = props;
+
+  let iconHeaderLeft = '';
+  let textFooterRight = '';
+  let nextAuthState = '';
+  let nextInputState = '';
+
+  switch (authState) {
+    case 'landing':
+      nextAuthState = 'company';
+      nextInputState = 'company';
+      textFooterRight = 'Next';
+      break;
+    case 'login':
+    case 'register':
+      iconHeaderLeft = 'md-arrow-back';
+      switch (inputState) {
+        case 'email':
+          nextAuthState = 'landing';
+          break;
+        case 'password':
+          nextInputState = 'email';
+          textFooterRight = 'Next';
+          break;
+      }
+      break;
+    default:
+      nextAuthState = 'company';
+      nextInputState = 'company';
+      textFooterRight = 'Next';
+  }
+  if (!nextAuthState) {
+    nextAuthState = authState;
+  }
+  return {
+    type: UPDATE_AUTH_FORM_STATE,
+    payload: {
+      iconHeaderLeft,
+      textFooterRight,
+      inputState: nextInputState,
+      authState: nextAuthState,
+    },
+  };
+
+  return;
+};
+
+validation = props => {
+  let error = '';
+
+  switch (props.inputState) {
+    case 'email':
+      if (!IsEmail(props.email)) {
+        error = 'Please enter a valid email address';
+      }
+      break;
+    case 'password':
+      if (props.password.length < 8) {
+        error = 'Password must be at least 8 characters in length';
+      }
+      break;
+    case 'company':
+      if (!props.company) {
+        error = 'Please enter a company ID';
+      }
+      break;
+    // case 'mobile':
+    //   if (!value) {
+    //     error = 'Please enter a company ID';
+    //   }
+    //   break;
+    default:
+      error = '';
+  }
+  return error;
+};
+
+performCompanyServerValidation = async company => {
+  let responseJson = await AuthService.signup({ company });
+  if (responseJson.data.company) {
+    return 'Please enter a valid company ID';
+  }
+  return '';
 };
 
 export const termsChanged = ({ prop, value }) => {
@@ -228,6 +239,9 @@ export const logoutUser = () => {
 };
 
 performLogin = async (dispatch, data) => {
+  dispatch({
+    type: LOGIN_USER,
+  });
   let responseJson = await AuthService.login(data);
 
   if (responseJson.status === 'success') {
@@ -253,8 +267,10 @@ performLogin = async (dispatch, data) => {
 };
 
 const loginUserFail = dispatch => {
-  dispatch(updateAuthFormState({ nextFormState: 'login', inputState: '' }));
   dispatch({ type: LOGIN_USER_FAIL });
+  dispatch(
+    previousAuthFormState({ authState: 'login', inputState: 'password' }),
+  );
 };
 
 const loginUserSuccess = (dispatch, token) => {
@@ -265,19 +281,25 @@ const loginUserSuccess = (dispatch, token) => {
 };
 
 performRegister = async (dispatch, data) => {
+  dispatch({
+    type: REGISTER_USER,
+  });
   let responseJson = await AuthService.signup(data);
 
+  console.log('responseJson', responseJson);
   if (responseJson.status === 'success') {
     const loginInfo = responseJson.data;
     registerUserSuccess(dispatch, loginInfo.token);
   } else {
-    registerUserFail(dispatch);
+    registerUserFail(dispatch, responseJson.message);
   }
 };
 
-const registerUserFail = dispatch => {
-  dispatch(updateAuthFormState({ nextFormState: 'register', inputState: '' }));
-  dispatch({ type: REGISTER_USER_FAIL });
+const registerUserFail = (dispatch, error) => {
+  dispatch({ type: REGISTER_USER_FAIL, payload: error });
+  dispatch(
+    previousAuthFormState({ authState: 'register', inputState: 'password' }),
+  );
 };
 
 const registerUserSuccess = (dispatch, token) => {
@@ -285,33 +307,4 @@ const registerUserSuccess = (dispatch, token) => {
     type: REGISTER_USER_SUCCESS,
     payload: token,
   });
-};
-
-validation = (prop, value) => {
-  let error = '';
-  switch (prop) {
-    case 'email':
-      if (!IsEmail(value)) {
-        error = 'Please enter a valid email address';
-      }
-      break;
-    case 'password':
-      if (value.length < 8) {
-        error = 'Password must be at least 8 characters in length';
-      }
-      break;
-    case 'company':
-      if (!value) {
-        error = 'Please enter a company ID';
-      }
-      break;
-    // case 'mobile':
-    //   if (!value) {
-    //     error = 'Please enter a company ID';
-    //   }
-    //   break;
-    default:
-      error = '';
-  }
-  return error;
 };

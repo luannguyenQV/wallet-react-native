@@ -23,10 +23,10 @@ class Button extends Component {
     const { textStyle, textStyleText } = styles;
     const { type } = this.props;
     switch (type) {
-      // case 'primary':
-      //   return [textStyle, { color: 'white' }];
-      // case 'secondary':
-      //   return [textStyle, { color: 'black' }];
+      case 'primary':
+        return [textStyle, { color: Colors.onPrimary }];
+      case 'secondary':
+        return [textStyle, { color: Colors.onSecondary }];
       case 'text':
         return [textStyleText];
       default:
@@ -62,7 +62,7 @@ const styles = {
   buttonStyle: {
     flex: 1,
     height: 38,
-    borderRadius: 2,
+    borderRadius: 3,
     minWidth: 64,
     // backgroundColor: Colors.primary,
     shadowColor: '#000',
@@ -75,7 +75,7 @@ const styles = {
   buttonStyleText: {
     flex: 1,
     height: 28,
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
     // width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
@@ -86,8 +86,8 @@ const styles = {
     fontWeight: 'bold',
   },
   textStyleText: {
-    color: Colors.primary,
-    fontSize: 15,
+    color: Colors.onPrimary,
+    fontSize: 16,
     // fontWeight: 'bold',
   },
 };
