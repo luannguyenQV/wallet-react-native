@@ -32,9 +32,9 @@ class Output extends Component {
 const styles = {
   viewStyleContainer: {
     flexDirection: 'column',
-    marginLeft: 20,
-    marginRight: 20,
-    paddingTop: 15,
+    // marginLeft: 20,
+    // marginRight: 20,
+    // paddingTop: 15,
     borderBottomWidth: 0,
     flexWrap: 'wrap',
   },
@@ -47,13 +47,15 @@ const styles = {
   textStyleLabel: {
     fontSize: 12,
     paddingTop: 8,
+    color: 'black',
+    opacity: 0.6,
   },
   textStyleInput: {
     height: 40,
     paddingLeft: 0,
     paddingBottom: 5,
     paddingTop: 5,
-    color: Colors.black,
+    color: 'black',
     fontWeight: 'normal',
     borderColor: 'white',
     borderWidth: 1,

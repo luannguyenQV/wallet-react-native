@@ -9,7 +9,11 @@ import {
   updateAuthInputField,
   loginUser,
   registerUser,
-  fetchUser,
+  fetchProfile,
+  fetchEmailAddresses,
+  fetchMobileNumbers,
+  fetchAddresses,
+  fetchDocuments,
   fetchAccounts,
 } from '../../redux/actions';
 
@@ -39,13 +43,17 @@ class InitialScreen extends Component {
   }
 
   onAuthComplete(props) {
-    const { token, accounts, user, loadingAccounts, loadingUser } = props;
+    const { token, accounts, profile, loadingAccounts, loadingProfile } = props;
     if (token) {
-      if (!loadingAccounts && !loadingUser) {
-        if (accounts && user) {
+      if (!loadingAccounts && !loadingProfile) {
+        if (accounts && profile) {
           props.navigation.navigate('Home');
         } else {
-          props.fetchUser();
+          props.fetchProfile();
+          props.fetchEmailAddresses();
+          props.fetchMobileNumbers();
+          props.fetchAddresses();
+          props.fetchDocuments();
           props.fetchAccounts();
         }
       }
@@ -85,8 +93,6 @@ class InitialScreen extends Component {
     } = styles;
 
     const { authFormState } = this.props;
-    // console.log('authFormState: ', authFormState);
-    // console.log('authFormInputState: ', authFormInputState);
 
     switch (authFormState) {
       case 'landing':
@@ -172,7 +178,6 @@ class InitialScreen extends Component {
       this.props.updateAuthFormState({ nextFormState: 'landing' });
     let onPressActionOne = () => {};
 
-    // console.log(authFormState);
     switch (authFormState) {
       case 'company':
         if (this.props.company) {
@@ -401,7 +406,7 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ auth, rehive }) => {
+const mapStateToProps = ({ auth, rehive, user }) => {
   const {
     authFormInputState,
     input,
@@ -417,7 +422,8 @@ const mapStateToProps = ({ auth, rehive }) => {
     actionText,
     token,
   } = auth;
-  const { user, accounts, loadingUser, loadingAccounts } = rehive;
+  const { accounts, loadingProfile, loadingAccounts } = rehive;
+  const { profile } = user;
   return {
     authFormInputState,
     input,
@@ -432,10 +438,10 @@ const mapStateToProps = ({ auth, rehive }) => {
     loading,
     actionText,
     token,
-    user,
     accounts,
-    loadingUser,
+    loadingProfile,
     loadingAccounts,
+    profile,
   };
 };
 
@@ -443,10 +449,13 @@ export default connect(mapStateToProps, {
   authFieldChange,
   initialLoad,
   updateAuthFormState,
-  // updateAuthInputState,
   updateAuthInputField,
   loginUser,
   registerUser,
-  fetchUser,
+  fetchProfile,
+  fetchEmailAddresses,
+  fetchMobileNumbers,
+  fetchAddresses,
+  fetchDocuments,
   fetchAccounts,
 })(InitialScreen);

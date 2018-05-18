@@ -9,275 +9,235 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
+import { connect } from 'react-redux';
+// import {  } from './../redux/actions';
+
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Colors from './../../../config/colors';
 import Header from './../../../components/header';
-import Option from './../../../components/getVerifiedOption';
+import GetVerifiedOption from './../../../components/getVerifiedOption';
 import SettingsService from './../../../services/settingsService';
 import UserInfoService from './../../../services/userInfoService';
+import HeaderVerified from './../../../components/HeaderVerified';
 
-class GetVerified2Screen extends Component {
+import { Spinner, InputForm } from './../../../components/common';
+
+class GetVerifiedScreen extends Component {
   static navigationOptions = {
     title: 'Get verified',
   };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      user: '',
-      email: '',
-      email_status: '',
-      mobile_number: '',
-      mobile_number_status: '',
-      basic_info: '',
-      basic_info_status: '',
-      address: '',
-      address_status: '',
-      proof_of_identity: '',
-      proof_of_identity_status: '',
-      advance_proof_of_identity: '',
-      advance_proof_of_identity_status: '',
-      proof_of_address: '',
-      proof_of_address_status: '',
-      loading: true,
-    };
-  }
-
-  async componentWillMount() {
-    this.getData();
-
-    this.emails();
-
-    this.mobiles();
-
-    this.addresses();
-
-    this.documents();
-  }
 
   goTo = (path, name) => {
     this.props.navigation.navigate(path, { name });
   };
 
-  getData = async () => {
-    let user = await AsyncStorage.getItem('user');
-    user = JSON.parse(user);
-    this.setState({
-      user: user,
-      email: user.email,
-      mobile_number: user.mobile_number,
-      basic_info: user.first_name + ' ' + user.last_name,
-      basic_info_status: user.status,
-      address_status: user.kyc.addresses.status
-        ? user.kyc.addresses.status
-        : 'incomplete',
-    });
-  };
+  renderBasicInfo() {
+    const { profile } = this.props;
 
-  emails = async () => {
-    let responseJson = await SettingsService.getAllEmails();
-    if (responseJson.status === 'success') {
-      const data = responseJson.data;
-      for (let i = 0; i < data.length; i++) {
-        if (data[i].verified === true) {
-          this.setState({
-            email_status: 'Verified',
-          });
-        }
-        if (data[i].primary === true) {
-          this.setState({
-            email: data[i].email,
-          });
-        }
+    let value = profile.first_name + ' ' + profile.last_name;
+    let status = profile.status.toUpperCase();
+
+    return (
+      <GetVerifiedOption
+        label="Basic Info"
+        value={value}
+        status={status}
+        gotoAddress="SettingsPersonalDetails"
+        goTo={this.goTo}
+      />
+    );
+  }
+
+  renderEmailAddresses() {
+    const { emailAddresses } = this.props;
+
+    let value = 'Not yet provided';
+    let status = 'INCOMPLETE';
+
+    for (let i = 0; i < emailAddresses.length; i++) {
+      if (emailAddresses[i].verified === true) {
+        status = 'VERIFIED';
+        value = emailAddresses[i].email;
       }
-      if (this.state.email_status !== 'Verified') {
-        this.setState({
-          email_status: 'Pending',
-        });
+      if (emailAddresses[i].primary === true) {
+        value = emailAddresses[i].email;
       }
-    } else {
-      Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
     }
-  };
 
-  mobiles = async () => {
-    let responseJsonMobile = await SettingsService.getAllMobiles();
-    if (responseJsonMobile.status === 'success') {
-      const data = responseJsonMobile.data;
-      if (data.length == 0) {
-        this.setState({
-          mobile_number_status: 'Incomplete',
-          mobile_number: 'Not yet provided',
-        });
-      } else {
-        for (let i = 0; i < data.length; i++) {
-          if (data[i].verified) {
-            this.setState({
-              mobile_number_status: 'Verified',
-            });
-          }
-          if (data[i].primary) {
-            this.setState({
-              mobile_number: data[i].number,
-            });
-          }
-        }
-        if (this.state.mobile_number_status != 'Verified') {
-          this.setState({
-            mobile_number_status: 'Pending',
-            mobile_number: data[0].number,
-          });
-        }
+    return (
+      <GetVerifiedOption
+        label="Email address"
+        value={value}
+        status={status}
+        gotoAddress="SettingsEmailAddresses"
+        goTo={this.goTo}
+      />
+    );
+  }
+
+  renderMobileNumbers() {
+    const { mobileNumbers } = this.props;
+
+    let value = 'Not yet provided';
+    let status = 'INCOMPLETE';
+
+    for (let i = 0; i < mobileNumbers.length; i++) {
+      if (mobileNumbers[i].verified) {
+        status = 'VERIFIED';
+        value = mobileNumbers[i].number;
       }
-    } else {
-      Alert.alert('Error', responseJsonMobile.message, [{ text: 'OK' }]);
+      if (mobileNumbers[i].primary) {
+        value = mobileNumbers[i].number;
+      }
     }
-  };
 
-  addresses = async () => {
-    let responseJsonAddress = await UserInfoService.getAddress();
-    if (responseJsonAddress.status === 'success') {
-      const data = responseJsonAddress.data;
-      let address = '';
-      if (data.line_1) {
-        address = address + data.line_1 + ',';
-      }
-      if (data.line_2) {
-        address = address + data.line_2 + ',';
-      }
-      if (data.city) {
-        address = address + data.city + ',';
-      }
-      if (data.state_province) {
-        address = address + data.state_province + ',';
-      }
-      if (data.country) {
-        address = address + data.country + ',';
-      }
-      if (data.postal_code) {
-        address = address + data.postal_code;
-      }
+    return (
+      <GetVerifiedOption
+        label="Mobile number"
+        value={value}
+        status={status}
+        gotoAddress="SettingsMobileNumbers"
+        goTo={this.goTo}
+      />
+    );
+  }
 
-      this.setState({
-        address: address,
-      });
-    } else {
-      Alert.alert('Error', responseJsonAddress.message, [{ text: 'OK' }]);
+  renderAddresses() {
+    const { addresses } = this.props;
+
+    let value = '';
+    if (addresses.line_1) {
+      value = value + addresses.line_1 + ', ';
     }
-  };
-
-  documents = async () => {
-    let responseJsonDocuments = await UserInfoService.getAllDocuments();
-
-    if (responseJsonDocuments.status === 'success') {
-      const data = responseJsonDocuments.data.results;
-      let idDocuments = data.filter(
-        doc => doc.document_category === 'Proof Of Identity',
-      );
-      let idSelfieDocuments = data.filter(
-        doc => doc.document_category === 'Advanced Proof Of Identity',
-      );
-      let addressDocuments = data.filter(
-        doc => doc.document_category === 'Proof Of Address',
-      );
-
-      let idVerified = idDocuments.filter(doc => doc.status === 'verified');
-      let idPending = idDocuments.filter(doc => doc.status === 'pending');
-      let idDenied = idDocuments.filter(doc => doc.status === 'denied');
-      if (idVerified.length > 0) {
-        this.setState({
-          proof_of_identity_status: 'verified',
-          proof_of_identity: 'Verified',
-        });
-      } else if (idPending.length > 0) {
-        this.setState({
-          proof_of_identity_status: 'pending',
-          proof_of_identity: 'Waiting for approval',
-        });
-      } else if (idDenied.length) {
-        this.setState({
-          proof_of_identity_status: 'denied',
-          proof_of_identity: idDenied[0].note,
-        });
-      } else {
-        this.setState({
-          proof_of_identity_status: 'incomplete',
-          proof_of_identity: 'Not yet provided',
-        });
-      }
-
-      let idSelfieVerified = idSelfieDocuments.filter(
-        doc => doc.status === 'verified',
-      );
-      let idSelfiePending = idSelfieDocuments.filter(
-        doc => doc.status === 'pending',
-      );
-      let idSelfieDenied = idSelfieDocuments.filter(
-        doc => doc.status === 'denied',
-      );
-
-      if (idSelfieVerified.length > 0) {
-        this.setState({
-          advance_proof_of_identity_status: 'verified',
-          advance_proof_of_identity: 'Verified',
-        });
-      } else if (idSelfiePending.length > 0) {
-        this.setState({
-          advance_proof_of_identity_status: 'pending',
-          advance_proof_of_identity: 'Waiting for approval',
-        });
-      } else if (idSelfieDenied.length > 0) {
-        this.setState({
-          advance_proof_of_identity_status: 'denied',
-          advance_proof_of_identity: idSelfieDenied[0].note,
-        });
-      } else {
-        this.setState({
-          advance_proof_of_identity_status: 'incomplete',
-          advance_proof_of_identity: 'Not yet provided',
-        });
-      }
-
-      let addressVerified = addressDocuments.filter(
-        doc => doc.status === 'verified',
-      );
-      let addressPending = addressDocuments.filter(
-        doc => doc.status === 'pending',
-      );
-      let addressDenied = addressDocuments.filter(
-        doc => doc.status === 'denied',
-      );
-
-      if (addressVerified.length > 0) {
-        this.setState({
-          proof_of_address_status: 'verified',
-          proof_of_address: 'Verified',
-        });
-      } else if (addressPending.length > 0) {
-        this.setState({
-          proof_of_address_status: 'pending',
-          proof_of_address: 'Waiting for approval',
-        });
-      } else if (addressDenied.length > 0) {
-        this.setState({
-          proof_of_address_status: 'denied',
-          proof_of_address: idDenied[0].note,
-        });
-      } else {
-        this.setState({
-          proof_of_address_status: 'incomplete',
-          proof_of_address: 'Not yet provided',
-        });
-      }
-      this.setState({
-        loading: false,
-      });
-    } else {
-      Alert.alert('Error', responseJsonDocuments.message, [{ text: 'OK' }]);
+    if (addresses.line_2) {
+      value = value + addresses.line_2 + ', ';
     }
-  };
+    if (addresses.city) {
+      value = value + addresses.city + ', ';
+    }
+    if (addresses.state_province) {
+      value = value + addresses.state_province + ', ';
+    }
+    if (addresses.country) {
+      value = value + addresses.country + ', ';
+    }
+    if (addresses.postal_code) {
+      value = value + addresses.postal_code;
+    }
+    let status = addresses.status.toUpperCase();
+
+    return (
+      <GetVerifiedOption
+        label="Address"
+        value={value}
+        status={status}
+        gotoAddress="SettingsAddress"
+        goTo={this.goTo}
+      />
+    );
+  }
+
+  renderDocuments() {
+    const { documents } = this.props;
+
+    let valueIdentity = 'Not yet provided';
+    let statusIdentity = 'INCOMPLETE';
+    let idDocuments = documents.filter(
+      doc => doc.document_category === 'Proof Of Identity',
+    );
+    let idVerified = idDocuments.filter(doc => doc.status === 'verified');
+    let idPending = idDocuments.filter(doc => doc.status === 'pending');
+    let idDenied = idDocuments.filter(doc => doc.status === 'denied');
+    if (idVerified.length > 0) {
+      statusIdentity = 'verified';
+      valueIdentity = 'Verified';
+    } else if (idPending.length > 0) {
+      statusIdentity = 'pending';
+      valueIdentity = 'Waiting for approval';
+    } else if (idDenied.length) {
+      statusIdentity = 'denied';
+      valueIdentity = idDenied[0].note;
+    }
+
+    let valueAdvancedIdentity = 'Not yet provided';
+    let statusAdvancedIdentity = 'INCOMPLETE';
+    let idSelfieDocuments = documents.filter(
+      doc => doc.document_category === 'Advanced Proof Of Identity',
+    );
+    let idSelfieVerified = idSelfieDocuments.filter(
+      doc => doc.status === 'verified',
+    );
+    let idSelfiePending = idSelfieDocuments.filter(
+      doc => doc.status === 'pending',
+    );
+    let idSelfieDenied = idSelfieDocuments.filter(
+      doc => doc.status === 'denied',
+    );
+    if (idSelfieVerified.length > 0) {
+      statusAdvancedIdentity = 'verified';
+      valueAdvancedIdentity = 'Verified';
+    } else if (idSelfiePending.length > 0) {
+      statusAdvancedIdentity = 'pending';
+      valueAdvancedIdentity = 'Waiting for approval';
+    } else if (idSelfieDenied.length > 0) {
+      statusAdvancedIdentity = 'denied';
+      valueAdvancedIdentity = idSelfieDenied[0].note;
+    }
+
+    let valueAddress = 'Not yet provided';
+    let statusAddress = 'INCOMPLETE';
+    let addressDocuments = documents.filter(
+      doc => doc.document_category === 'Proof Of Address',
+    );
+    let addressVerified = addressDocuments.filter(
+      doc => doc.status === 'verified',
+    );
+    let addressPending = addressDocuments.filter(
+      doc => doc.status === 'pending',
+    );
+    let addressDenied = addressDocuments.filter(doc => doc.status === 'denied');
+    if (addressVerified.length > 0) {
+      statusAddress = 'verified';
+      valueAddress = 'Verified';
+    } else if (addressPending.length > 0) {
+      statusAddress = 'pending';
+      valueAddress = 'Waiting for approval';
+    } else if (addressDenied.length > 0) {
+      statusAddress = 'denied';
+      valueAddress = idDenied[0].note;
+    }
+
+    return (
+      <View>
+        <GetVerifiedOption
+          label="Proof of Identity"
+          value={valueIdentity}
+          status={statusIdentity.toUpperCase()}
+          gotoAddress="Document"
+          goTo={this.goTo}
+        />
+
+        <GetVerifiedOption
+          label="Advanced Proof of Identity"
+          value={valueAdvancedIdentity}
+          status={statusAdvancedIdentity.toUpperCase()}
+          gotoAddress="Document"
+          goTo={this.goTo}
+        />
+
+        <GetVerifiedOption
+          label="Proof of Address"
+          value={valueAddress}
+          status={statusAddress.toUpperCase()}
+          gotoAddress="Document"
+          goTo={this.goTo}
+        />
+      </View>
+    );
+  }
 
   render() {
+    const { profile, loadingProfile } = this.props;
     return (
       <View style={styles.container}>
         <Header
@@ -285,89 +245,21 @@ class GetVerified2Screen extends Component {
           drawer
           title="Get verified"
         />
+        <HeaderVerified
+          photoLink={profile.profile}
+          username={profile.username}
+          firstName={profile.first_name}
+          lastName={profile.last_name}
+        />
         <View style={styles.mainContainer}>
-          <View style={styles.titleContainer}>
-            <Text style={{ fontSize: 16 }}>
-              Your default account is currently on tier 1. You can view your
-              limits and fees by following the links below. Complete the steps
-              below if you want to increase your verification level.
-            </Text>
-            <View style={styles.buttonsContainer}>
-              <Text style={[styles.buttonText, { paddingRight: 8 }]}>
-                Limits
-              </Text>
-              <Text style={[styles.buttonText, { paddingLeft: 8 }]}>Fees</Text>
-            </View>
-          </View>
-          {this.state.loading && (
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <ActivityIndicator size="large" />
-            </View>
-          )}
-          {!this.state.loading && (
-            <ScrollView style={{ flex: 1 }}>
-              <Option
-                title="Email address"
-                subtitle={this.state.email}
-                buttonText={this.state.email_status.toUpperCase()}
-                gotoAddress="SettingsEmailAddresses"
-                goTo={this.goTo}
-              />
-
-              <Option
-                title="Mobile number"
-                subtitle={this.state.mobile_number}
-                buttonText={this.state.mobile_number_status.toUpperCase()}
-                gotoAddress="SettingsMobileNumbers"
-                goTo={this.goTo}
-              />
-
-              <Option
-                title="Basic Info"
-                subtitle={this.state.basic_info}
-                buttonText={this.state.basic_info_status.toUpperCase()}
-                gotoAddress="SettingsPersonalDetails"
-                goTo={this.goTo}
-              />
-
-              <Option
-                title="Address"
-                subtitle={this.state.address}
-                buttonText={this.state.address_status.toUpperCase()}
-                gotoAddress="SettingsAddress"
-                goTo={this.goTo}
-              />
-
-              <Option
-                title="Proof of Identity"
-                subtitle={this.state.proof_of_identity}
-                buttonText={this.state.proof_of_identity_status.toUpperCase()}
-                gotoAddress="Document"
-                goTo={this.goTo}
-              />
-
-              <Option
-                title="Advanced Proof of Identity"
-                subtitle={this.state.advance_proof_of_identity}
-                buttonText={this.state.advance_proof_of_identity_status.toUpperCase()}
-                gotoAddress="Document"
-                goTo={this.goTo}
-              />
-
-              <Option
-                title="Proof of Address"
-                subtitle={this.state.proof_of_address}
-                buttonText={this.state.proof_of_address_status.toUpperCase()}
-                gotoAddress="Document"
-                goTo={this.goTo}
-              />
-            </ScrollView>
-          )}
+          {loadingProfile ? <Spinner /> : null}
+          <InputForm>
+            {this.renderBasicInfo()}
+            {this.renderEmailAddresses()}
+            {this.renderMobileNumbers()}
+            {this.renderAddresses()}
+            {this.renderDocuments()}
+          </InputForm>
         </View>
       </View>
     );
@@ -382,19 +274,17 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
   },
-  titleContainer: {
-    padding: 20,
-    backgroundColor: Colors.lightgray,
-  },
-  buttonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    paddingTop: 10,
-  },
-  buttonText: {
-    color: Colors.lightblue,
-    fontSize: 16,
-  },
 });
 
-export default GetVerified2Screen;
+const mapStateToProps = ({ user }) => {
+  const { profile, addresses, mobileNumbers, emailAddresses, documents } = user;
+  return {
+    profile,
+    addresses,
+    mobileNumbers,
+    emailAddresses,
+    documents,
+  };
+};
+
+export default connect(mapStateToProps, {})(GetVerifiedScreen);

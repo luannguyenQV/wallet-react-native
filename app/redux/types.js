@@ -1,3 +1,4 @@
+// AUTH
 export const AUTH_FIELD_CHANGED = 'auth_field_changed';
 export const AUTH_FIELD_ERROR = 'auth_field_error';
 export const TERMS_CHANGED = 'terms_changed';
@@ -15,10 +16,7 @@ export const REGISTER_USER_FAIL = 'register_user_fail';
 export const AUTH_FIELD_FOCUS = 'auth_field_focus';
 export const LOGOUT_USER = 'logout_user';
 
-// REHIVE
-export const FETCH_USER = 'fetch_user';
-export const FETCH_USER_SUCCESS = 'fetch_user_success';
-export const FETCH_USER_FAIL = 'fetch_user_fail';
+// WALLET
 export const FETCH_ACCOUNTS = 'fetch_accounts';
 export const FETCH_ACCOUNTS_SUCCESS = 'fetch_accounts_success';
 export const FETCH_ACCOUNTS_FAIL = 'fetch_accounts_fail';
@@ -39,3 +37,20 @@ export const RESET_SEND = 'reset_send';
 export const SEND = 'send';
 export const SEND_SUCCESS = 'send_success';
 export const SEND_FAIL = 'send_fail';
+
+// USER
+export const FETCH_PROFILE = 'fetch_profile';
+export const FETCH_PROFILE_SUCCESS = 'fetch_profile_success';
+export const FETCH_PROFILE_FAIL = 'fetch_profile_fail';
+export const FETCH_EMAIL_ADDRESSES = 'fetch_email_addresses';
+export const FETCH_EMAIL_ADDRESSES_SUCCESS = 'fetch_email_addresses_success';
+export const FETCH_EMAIL_ADDRESSES_FAIL = 'fetch_email_addresses_fail';
+export const FETCH_MOBILE_NUMBERS = 'fetch_mobile_numbers';
+export const FETCH_MOBILE_NUMBERS_SUCCESS = 'fetch_mobile_numbers_success';
+export const FETCH_MOBILE_NUMBERS_FAIL = 'fetch_mobile_numbers_fail';
+export const FETCH_ADDRESSES = 'fetch_addresses';
+export const FETCH_ADDRESSES_SUCCESS = 'fetch_addresses_success';
+export const FETCH_ADDRESSES_FAIL = 'fetch_addresses_fail';
+export const FETCH_DOCUMENTS = 'fetch_documents';
+export const FETCH_DOCUMENTS_SUCCESS = 'fetch_documents_success';
+export const FETCH_DOCUMENTS_FAIL = 'fetch_documents_fail';

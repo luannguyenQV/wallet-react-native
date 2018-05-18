@@ -1,7 +1,7 @@
 import {
-  FETCH_USER_SUCCESS,
-  FETCH_USER_FAIL,
-  FETCH_USER,
+  FETCH_PROFILE_SUCCESS,
+  FETCH_PROFILE_FAIL,
+  FETCH_PROFILE,
   FETCH_ACCOUNTS,
   FETCH_ACCOUNTS_SUCCESS,
   FETCH_ACCOUNTS_FAIL,
@@ -20,14 +20,14 @@ import {
   SEND_SUCCESS,
   SEND_FAIL,
   SEND,
-} from './../actions/types';
+} from './../types';
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 
 const INITIAL_STATE = {
   user: null,
   accounts: null,
   currentIndex: 0,
-  loadingUser: false,
+  loadingProfile: false,
   loadingAccounts: false,
   loadingActiveCurrencyChange: false,
   sendAmount: null,
@@ -42,21 +42,21 @@ export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case PERSIST_REHYDRATE:
       return action.payload.auth || [];
-    case FETCH_USER:
+    case FETCH_PROFILE:
       return {
         ...state,
-        loadingUser: true,
+        loadingProfile: true,
       };
-    case FETCH_USER_SUCCESS:
+    case FETCH_PROFILE_SUCCESS:
       return {
         ...state,
         user: action.payload,
-        loadingUser: false,
+        loadingProfile: false,
       };
-    case FETCH_USER_FAIL:
+    case FETCH_PROFILE_FAIL:
       return {
         ...state,
-        loadingUser: false,
+        loadingProfile: false,
       };
     case FETCH_ACCOUNTS:
       return {

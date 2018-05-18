@@ -1,23 +1,10 @@
 import React, { Component } from 'react';
-import {
-  Text,
-  TouchableWithoutFeedback,
-  View,
-  LayoutAnimation,
-  NativeModules,
-} from 'react-native';
-// import { connect } from 'react-redux';
-// import * as actions from '../actions';
+import { Text, View } from 'react-native';
 import { Icon } from 'react-native-elements';
 import moment from 'moment';
 import { performDivisibility } from './../util/general';
 
-// import { CardSection } from './../common';
 import Colors from './../config/colors';
-
-const { UIManager } = NativeModules;
-UIManager.setLayoutAnimationEnabledExperimental &&
-  UIManager.setLayoutAnimationEnabledExperimental(true);
 
 class TransactionListItem extends Component {
   renderItem() {
@@ -30,7 +17,6 @@ class TransactionListItem extends Component {
       textStyleAmount,
       viewStyleAmount,
     } = styles;
-    console.log(item);
 
     let iconName = '';
     let headerText = '';
@@ -48,7 +34,7 @@ class TransactionListItem extends Component {
           headerText =
             headerText + ' to ' + item.destination_transaction.user.email;
         }
-        color = Colors.negative;
+        color = Colors.positive;
         break;
       case 'credit':
         // console.log('Credit');
@@ -59,7 +45,7 @@ class TransactionListItem extends Component {
           headerText =
             headerText + ' from ' + item.source_transaction.user.email;
         }
-        color = Colors.positive;
+        color = Colors.negative;
         break;
       default:
         iconName = 'question';
@@ -108,14 +94,16 @@ const styles = {
     // justifyContent: 'flex-end',
   },
   textStyleHeader: {
-    fontSize: 12,
+    fontSize: 14,
+    flexWrap: 'wrap',
   },
   textStyleDate: {
     fontSize: 10,
     borderBottomColor: 'lightgrey',
   },
   textStyleAmount: {
-    fontSize: 12,
+    // width: 60,
+    fontSize: 14,
   },
 };
 

@@ -14,13 +14,6 @@ class Input extends Component {
     countryCode: '+1',
   };
 
-  // componentDidMount() {
-  //   console.log(this.props);
-  //   if (this.props.type === 'password') {
-  //     this.togglePasswordVisibility();
-  //   }
-  // }
-
   _OnBlur() {
     this.setState({
       textColor: Colors.black,
@@ -223,6 +216,8 @@ const styles = {
   textStyleLabel: {
     fontSize: 12,
     paddingTop: 8,
+    color: 'black',
+    opacity: 0.6,
   },
   textStyleInput: {
     color: 'black',

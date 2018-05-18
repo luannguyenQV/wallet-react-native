@@ -35,7 +35,7 @@ const styles = {
   },
   containerStyleScroll: {
     paddingBottom: 25,
-    paddingRight: 10,
+    // paddingRight: 10,
   },
 };
 

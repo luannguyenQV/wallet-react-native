@@ -13,7 +13,7 @@ import {
   UPDATE_AUTH_FORM_FIELD_FAIL,
   UPDATE_AUTH_FORM_STATE,
   LOGOUT_USER,
-} from './types';
+} from './../types';
 
 import clientConfig from './../../config/client';
 

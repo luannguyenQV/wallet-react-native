@@ -1,7 +1,4 @@
 import {
-  FETCH_USER_SUCCESS,
-  FETCH_USER_FAIL,
-  FETCH_USER,
   FETCH_ACCOUNTS,
   FETCH_ACCOUNTS_SUCCESS,
   FETCH_ACCOUNTS_FAIL,
@@ -19,24 +16,11 @@ import {
   SEND_SUCCESS,
   SEND_FAIL,
   SEND,
-} from './types';
+} from './../types';
 import Big from 'big.js';
 
-import UserInfoService from './../../services/userInfoService';
 import AccountService from './../../services/accountService';
 import TransactionService from './../../services/transactionService';
-
-export const fetchUser = () => async dispatch => {
-  dispatch({ type: FETCH_USER });
-  let responseJson = await UserInfoService.getUserDetails();
-
-  if (responseJson.status === 'success') {
-    dispatch({ type: FETCH_USER_SUCCESS, payload: responseJson.data });
-  } else {
-    //TODO: Logout here?
-    dispatch({ type: FETCH_USER_FAIL });
-  }
-};
 
 export const fetchAccounts = () => async dispatch => {
   dispatch({ type: FETCH_ACCOUNTS });

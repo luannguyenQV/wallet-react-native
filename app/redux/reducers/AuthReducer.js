@@ -13,7 +13,7 @@ import {
   UPDATE_AUTH_FORM_FIELD_FAIL,
   UPDATE_AUTH_FORM_STATE,
   LOGOUT_USER,
-} from './../actions/types';
+} from './../types';
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 
 const INITIAL_STATE = {

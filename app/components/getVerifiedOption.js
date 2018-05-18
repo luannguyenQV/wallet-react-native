@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TouchableHighlight,
   ScrollView,
   TouchableWithoutFeedback,
   TouchableOpacity,
 } from 'react-native';
 import Colors from './../config/colors';
+import { Output } from './common';
 
-export default class GetVerifiedOption extends Component {
+class GetVerifiedOption extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -20,13 +20,13 @@ export default class GetVerifiedOption extends Component {
 
   componentWillMount() {
     let color;
-    if (this.props.buttonText === 'PENDING') {
+    if (this.props.status === 'PENDING') {
       color = Colors.black;
-    } else if (this.props.buttonText === 'VERIFIED') {
+    } else if (this.props.status === 'VERIFIED') {
       color = Colors.green;
     } else if (
-      this.props.buttonText === 'INCOMPLETE' ||
-      this.props.buttonText === 'DENIED'
+      this.props.status === 'INCOMPLETE' ||
+      this.props.status === 'DENIED'
     ) {
       color = Colors.red;
     }
@@ -37,6 +37,7 @@ export default class GetVerifiedOption extends Component {
   }
 
   render() {
+    const { label, value } = this.props;
     return (
       <View style={styles.options}>
         <TouchableWithoutFeedback
@@ -44,31 +45,16 @@ export default class GetVerifiedOption extends Component {
             this.props.goTo(this.props.gotoAddress, this.props.title)
           }>
           <View style={styles.optionsElement}>
-            <ScrollView style={{ flex: 1, marginRight: 8 }}>
-              <TouchableOpacity
-                onPress={() =>
-                  this.props.goTo(this.props.gotoAddress, this.props.title)
-                }>
-                <Text
-                  numberOfLines={1}
-                  style={[
-                    styles.optionsText,
-                    { color: Colors.black, fontSize: 16 },
-                  ]}>
-                  {this.props.title}
-                </Text>
-                <Text numberOfLines={1} style={styles.optionsText}>
-                  {this.props.subtitle}
-                </Text>
-              </TouchableOpacity>
-            </ScrollView>
+            <View style={{ flex: 1 }}>
+              <Output label={label} value={value} />
+            </View>
             <View style={[styles.submit, { borderColor: this.state.color }]}>
               <Text
                 style={[
                   styles.optionsText,
                   { fontSize: 13, color: this.state.color },
                 ]}>
-                {this.props.buttonText}
+                {this.props.status}
               </Text>
             </View>
           </View>
@@ -78,29 +64,32 @@ export default class GetVerifiedOption extends Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = {
   options: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    height: 70,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.lightgray,
+    paddingVertical: 4,
+    paddingHorizontal: 16,
+    // height: 70,
   },
   optionsElement: {
+    // backgroundColor: 'grey',
     flex: 1,
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
   optionsText: {
-    fontSize: 13,
+    fontSize: 8,
     color: Colors.black,
   },
   submit: {
-    paddingHorizontal: 10,
-    height: 24,
+    // padding: 4,
+    // height: 24,
     borderWidth: 1,
-    borderRadius: 20,
+    borderRadius: 5,
+    width: 100,
     justifyContent: 'center',
     alignItems: 'center',
   },
-});
+};
+
+export default GetVerifiedOption;

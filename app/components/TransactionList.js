@@ -12,7 +12,6 @@ class TransactionList extends Component {
   };
 
   async componentDidMount() {
-    console.log;
     await this.getTransactions(this.props.currencyCode);
   }
 
@@ -25,11 +24,9 @@ class TransactionList extends Component {
       transactions: [],
       loading: true,
     });
-    console.log(currencyCode);
     let responseJson = await TransactionService.getAllTransactionsByCurrency(
       currencyCode,
     );
-    console.log('responseJson', responseJson);
     this.setState({
       transactions: responseJson.data.results,
       loading: false,
