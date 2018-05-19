@@ -20,21 +20,22 @@ import {
   FETCH_CRYPTO_ACCOUNTS_SUCCESS,
   FETCH_CRYPTO_ACCOUNTS_FAIL,
   FETCH_CRYPTO_ACCOUNTS,
+  LOGOUT_USER,
 } from './../types';
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 
 const INITIAL_STATE = {
-  profile: {},
+  profile: null,
   loadingProfile: false,
-  emailAddresses: [],
+  emailAddresses: null,
   loadingEmailAddresses: false,
-  mobileNumbers: [],
+  mobileNumbers: null,
   loadingMobileNumbers: false,
-  addresses: {},
+  addresses: null,
   loadingAddresses: false,
-  documents: {},
+  documents: null,
   loadingDocuments: false,
-  bankAccounts: [],
+  bankAccounts: null,
   loadingBankAccounts: false,
   cryptoAccounts: null,
   loadingCryptoAccounts: false,
@@ -156,6 +157,9 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         loadingCryptoAccounts: false,
       };
+
+    case LOGOUT_USER:
+      return INITIAL_STATE;
     default:
       return state;
   }

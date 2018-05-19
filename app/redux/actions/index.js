@@ -1,3 +1,3 @@
 export * from './AuthActions';
-export * from './RehiveActions';
+export * from './AccountsActions';
 export * from './UserActions';

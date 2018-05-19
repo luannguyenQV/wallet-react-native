@@ -1,39 +1,91 @@
 import React, { Component } from 'react';
-import { View, Dimensions } from 'react-native';
+import { View, FlatList, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
-import { switchTempCurrency, setActiveCurrency } from './../redux/actions';
+import {
+  setActiveWalletIndex,
+  setSendWallet,
+  resetSend,
+} from './../redux/actions';
 
 import Colors from './../config/colors';
-import HeaderCurrency from './headerCurrency';
+import HeaderWallet from './headerWallet';
 import HeaderButton from './headerButton';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class HeaderAccount extends Component {
-  changeAccount = () => {
-    this.props.setActiveCurrency(
-      this.props.accounts.results[0].reference,
-      this.props.tempCurrency.currency.code,
+  componentDidMount() {
+    this.flatListRef.scrollToIndex({
+      animated: false,
+      index: this.props.activeWalletIndex || 0,
+    });
+  }
+
+  getItemLayout = (data, index) => ({
+    length: SCREEN_WIDTH,
+    offset: SCREEN_WIDTH * index,
+    index,
+  });
+
+  renderWallets() {
+    return (
+      <View>
+        <FlatList
+          onViewableItemsChanged={this.handleViewableItemsChanged}
+          viewabilityConfig={this.viewabilityConfig}
+          // style={{ height: 0 }}
+          ref={ref => {
+            this.flatListRef = ref;
+          }}
+          // scrollToIndex=(params)
+          data={this.props.wallets}
+          horizontal
+          pagingEnabled
+          getItemLayout={this.getItemLayout}
+          renderItem={({ item }) => <HeaderWallet wallet={item} />}
+          keyExtractor={item => item.account_name + item.currency.currency.code}
+          showsHorizontalScrollIndicator={false}
+        />
+      </View>
     );
+  }
+
+  handleViewableItemsChanged = info => {
+    if (info.viewableItems.length > 0) {
+      this.props.setActiveWalletIndex(info.viewableItems[0].index);
+    }
   };
 
-  switchTempCurrency = () => {
-    this.props.switchTempCurrency(
-      this.props.accounts,
-      this.props.tempCurrency,
-      this.props.tempCurrencyIndex,
-    );
+  viewabilityConfig = {
+    itemVisiblePercentThreshold: 50,
   };
+
+  onPressSend() {
+    this.props.resetSend();
+    this.props.setSendWallet(this.props.wallets[this.props.activeWalletIndex]);
+    this.props.navigation.navigate('Send');
+  }
+
+  onPressReceive() {
+    this.props.navigation.navigate('Receive');
+  }
 
   render() {
-    const { accountLabel, currency } = this.props;
     const { viewStyleContainer, viewStyleButtons } = styles;
     return (
       <View style={viewStyleContainer}>
-        <HeaderCurrency accountLabel={accountLabel} currency={currency} />
+        {this.renderWallets()}
         <View style={viewStyleButtons}>
-          <HeaderButton icon="md-arrow-dropleft-circle" label="Receive" />
-          <HeaderButton icon="md-arrow-dropright-circle" label="Send" />
+          <HeaderButton
+            icon="md-arrow-dropleft-circle"
+            label="Receive"
+            onPress={() => this.onPressReceive()}
+          />
+          <HeaderButton
+            icon="md-arrow-dropright-circle"
+            label="Send"
+            onPress={() => this.onPressSend()}
+          />
         </View>
       </View>
     );
@@ -42,10 +94,11 @@ class HeaderAccount extends Component {
 
 const styles = {
   viewStyleContainer: {
-    flex: 1,
+    // flex: 1,
+    flexDirection: 'column',
     backgroundColor: Colors.primary,
-    width: SCREEN_WIDTH,
     // minHeight: 86,
+    // height: '100%',
   },
   viewStyleButtons: {
     flexDirection: 'row',
@@ -54,18 +107,25 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ rehive }) => {
+const mapStateToProps = ({ accounts }) => {
   const {
     user,
-    accounts,
-    tempCurrency,
+    wallets,
     loadingAccounts,
-    tempCurrencyIndex,
-  } = rehive;
-  return { user, accounts, tempCurrency, loadingAccounts, tempCurrencyIndex };
+    activeWalletIndex,
+    currentIndex,
+  } = accounts;
+  return {
+    user,
+    wallets,
+    loadingAccounts,
+    activeWalletIndex,
+    currentIndex,
+  };
 };
 
 export default connect(mapStateToProps, {
-  switchTempCurrency,
-  setActiveCurrency,
+  setActiveWalletIndex,
+  setSendWallet,
+  resetSend,
 })(HeaderAccount);

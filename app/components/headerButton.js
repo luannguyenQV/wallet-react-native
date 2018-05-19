@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import Colors from './../config/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -13,13 +13,19 @@ class HeaderAccount extends Component {
   };
 
   render() {
-    const { icon, label } = this.props;
+    const { icon, label, onPress } = this.props;
     const { viewStyleContainer, iconStyle, textStyleLabel } = styles;
     return (
-      <View style={viewStyleContainer}>
-        <Icon style={iconStyle} name={icon} size={32} color="white" />
-        <Text style={textStyleLabel}>{label}</Text>
-      </View>
+      <TouchableOpacity
+        onPress={onPress}
+        // style={this.buttonStyle()}
+        // ref={reference}
+      >
+        <View style={viewStyleContainer}>
+          <Icon style={iconStyle} name={icon} size={32} color="white" />
+          <Text style={textStyleLabel}>{label}</Text>
+        </View>
+      </TouchableOpacity>
     );
   }
 }

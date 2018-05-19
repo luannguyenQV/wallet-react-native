@@ -15,6 +15,8 @@ export const REGISTER_USER_SUCCESS = 'register_user_success';
 export const REGISTER_USER_FAIL = 'register_user_fail';
 export const AUTH_FIELD_FOCUS = 'auth_field_focus';
 export const LOGOUT_USER = 'logout_user';
+export const APP_LOAD_START = 'app_load_start';
+export const APP_LOAD_FINISH = 'app_load_finish';
 export const LOADING = 'loading';
 
 // ACCOUNTS
@@ -28,7 +30,7 @@ export const SET_ACTIVE_CURRENCY_FAIL = 'set_active_currency_fail';
 
 export const SEND_FIELD_UPDATE = 'send_field_update';
 export const SEND_FIELD_ERROR = 'send_field_error';
-export const SET_SEND_CURRENCY = 'set_send_currency';
+export const SET_SEND_WALLET = 'set_send_wallet';
 export const SET_SEND_AMOUNT = 'set_send_amount';
 export const SET_SEND_RECIPIENT = 'set_send_recipient';
 export const SET_SEND_NOTE = 'set_send_note';

@@ -11,6 +11,8 @@ import {
   UPDATE_AUTH_FORM_STATE,
   LOGOUT_USER,
   LOADING,
+  APP_LOAD_START,
+  APP_LOAD_FINISH,
 } from './../types';
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 
@@ -30,12 +32,14 @@ const INITIAL_STATE = {
   company: '',
   password: '',
   terms_and_conditions: false,
-  token: null,
+  token: '',
   loading: false,
+  hasFetched: false,
+  appLoading: true,
 };
 
 export default (state = INITIAL_STATE, action) => {
-  console.log(action);
+  // console.log(action);
   switch (action.type) {
     case PERSIST_REHYDRATE:
       return action.payload.auth || [];
@@ -86,10 +90,13 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         loading: true,
         inputError: '',
+        password: '',
       };
     case LOGIN_USER_SUCCESS:
       return {
         ...state,
+        authState: '',
+        inputState: '',
         token: action.payload,
         loading: false,
       };
@@ -122,12 +129,21 @@ export default (state = INITIAL_STATE, action) => {
         inputError: action.payload,
         loading: false,
       };
+    case APP_LOAD_START:
+      return {
+        ...state,
+        appLoading: true,
+      };
+    case APP_LOAD_FINISH:
+      return {
+        ...state,
+        appLoading: false,
+      };
 
     case LOGOUT_USER:
       return {
-        ...state,
-        token: '',
-        user: '',
+        company: state.company,
+        email: state.email,
       };
     default:
       return state;

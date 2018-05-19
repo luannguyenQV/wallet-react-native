@@ -12,7 +12,7 @@ class LogoutScreen extends Component {
 
   componentDidMount() {
     this.props.logoutUser();
-    // this.onLogoutComplete(this.props);
+    this.onLogoutComplete(this.props);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -21,9 +21,8 @@ class LogoutScreen extends Component {
 
   onLogoutComplete(props) {
     if (!props.token && !this.state.loggingOut) {
-      console.log('logged out2');
       this.setState({ loggingOut: true });
-      this.props.navigation.navigate('InitialScreen');
+      this.props.navigation.navigate('AuthScreen');
     }
   }
 

@@ -29,7 +29,6 @@ class EmailAddressesScreen extends Component {
   }
 
   reload = () => {
-    console.log('emailAddress: ' + this.state.routeName);
     ResetNavigation.dispatchUnderDrawer(
       this.props.navigation,
       this.state.routeName != null ? 'GetVerified' : 'Settings',

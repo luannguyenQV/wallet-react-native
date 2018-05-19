@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Dimensions } from 'react-native';
 import Colors from './../config/colors';
 import { performDivisibility } from './../util/general';
 
-class HeaderCurrency extends Component {
+const SCREEN_WIDTH = Dimensions.get('window').width;
+
+class HeaderWallet extends Component {
   render() {
-    const { accountLabel, currency } = this.props;
+    const { currency, account_label } = this.props.wallet;
     const {
       viewStyleContainer,
       viewStyleCurrency,
@@ -17,7 +19,7 @@ class HeaderCurrency extends Component {
     return (
       <View style={viewStyleContainer}>
         <Text style={textStyleCode}>{currency.currency.code}</Text>
-        <Text style={textStyleAccount}>{accountLabel}</Text>
+        <Text style={textStyleAccount}>{account_label.toLowerCase()}</Text>
         <View style={viewStyleCurrency}>
           <Text style={textStyleSymbol}>{currency.currency.symbol}</Text>
           <Text style={textStyleAmount}>
@@ -35,7 +37,8 @@ class HeaderCurrency extends Component {
 
 const styles = {
   viewStyleContainer: {
-    flex: 1,
+    // flex: 1,
+    width: SCREEN_WIDTH,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
@@ -71,4 +74,4 @@ const styles = {
   },
 };
 
-export default HeaderCurrency;
+export default HeaderWallet;

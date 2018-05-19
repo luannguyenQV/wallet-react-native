@@ -11,6 +11,7 @@ import {
   UPDATE_AUTH_FORM_STATE,
   LOGOUT_USER,
   LOADING,
+  APP_LOAD_START,
 } from './../types';
 
 import clientConfig from './../../config/client';
@@ -19,9 +20,14 @@ import { IsEmail } from './../../util/validation';
 import AuthService from './../../services/authService';
 
 export const initialLoad = props => async dispatch => {
+  dispatch({ type: APP_LOAD_START });
   if (props.token) {
     dispatch({ type: LOGIN_USER_SUCCESS, payload: token });
   } else {
+    dispatch({
+      type: AUTH_FIELD_ERROR,
+      payload: '',
+    });
     if (props.company) {
       dispatch({
         type: UPDATE_AUTH_FORM_STATE,
@@ -60,13 +66,14 @@ export const nextAuthFormState = (props, nextFormState) => async dispatch => {
   let iconHeaderLeft = '';
   let data = {};
 
+  let skip = false;
+
   if (error) {
     dispatch({
       type: AUTH_FIELD_ERROR,
       payload: { error },
     });
   } else {
-    iconHeaderLeft = 'md-arrow-back';
     switch (authState) {
       case 'company':
         dispatch({
@@ -78,12 +85,13 @@ export const nextAuthFormState = (props, nextFormState) => async dispatch => {
             type: AUTH_FIELD_ERROR,
             payload: { error },
           });
-          return;
         } else {
           nextAuthState = 'landing';
+          iconHeaderLeft = 'md-arrow-back';
         }
         break;
       case 'landing':
+        iconHeaderLeft = 'md-arrow-back';
         nextAuthState = nextFormState;
         nextInputState = 'email';
         textFooterRight = 'Next';
@@ -97,7 +105,7 @@ export const nextAuthFormState = (props, nextFormState) => async dispatch => {
           case 'password':
             data = { company, user: email, password };
             await performLogin(dispatch, data);
-            return;
+            skip = true;
             break;
         }
         break;
@@ -115,7 +123,7 @@ export const nextAuthFormState = (props, nextFormState) => async dispatch => {
               password2: password,
             };
             await performRegister(dispatch, data);
-            return;
+            skip = true;
             break;
         }
         break;
@@ -126,15 +134,17 @@ export const nextAuthFormState = (props, nextFormState) => async dispatch => {
     if (!nextAuthState) {
       nextAuthState = authState;
     }
-    dispatch({
-      type: UPDATE_AUTH_FORM_STATE,
-      payload: {
-        textFooterRight,
-        iconHeaderLeft,
-        inputState: nextInputState,
-        authState: nextAuthState,
-      },
-    });
+    if (!skip) {
+      dispatch({
+        type: UPDATE_AUTH_FORM_STATE,
+        payload: {
+          textFooterRight,
+          iconHeaderLeft,
+          inputState: nextInputState,
+          authState: nextAuthState,
+        },
+      });
+    }
   }
   return;
 };
@@ -232,12 +242,6 @@ export const termsChanged = ({ prop, value }) => {
   };
 };
 
-export const logoutUser = () => {
-  return {
-    type: LOGOUT_USER,
-  };
-};
-
 performLogin = async (dispatch, data) => {
   dispatch({
     type: LOGIN_USER,
@@ -286,7 +290,6 @@ performRegister = async (dispatch, data) => {
   });
   let responseJson = await AuthService.signup(data);
 
-  console.log('responseJson', responseJson);
   if (responseJson.status === 'success') {
     const loginInfo = responseJson.data;
     registerUserSuccess(dispatch, loginInfo.token);
@@ -307,4 +310,10 @@ const registerUserSuccess = (dispatch, token) => {
     type: REGISTER_USER_SUCCESS,
     payload: token,
   });
+};
+
+export const logoutUser = () => {
+  return {
+    type: LOGOUT_USER,
+  };
 };

@@ -40,7 +40,6 @@ class MobileNotificationsScreen extends Component {
         rowHasChanged: (r1, r2) => JSON.stringify(r1) !== JSON.stringify(r2),
       });
       const data = responseJson.data;
-      //console.log(data)
       let ids = data.map((obj, index) => index);
       this.setState({
         refreshing: false,

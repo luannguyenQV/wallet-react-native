@@ -12,9 +12,9 @@ class AddEmailAddressScreen extends Component {
 
   constructor(props) {
     super(props);
-    console.log(
-      'addEmailAddress Params: ' + this.props.navigation.state.params.routeName,
-    );
+    // console.log(
+    //   'addEmailAddress Params: ' + this.props.navigation.state.params.routeName,
+    // );
     this.state = {
       routeName: this.props.navigation.state.params.routeName,
       email: '',

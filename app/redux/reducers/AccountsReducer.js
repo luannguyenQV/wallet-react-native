@@ -12,7 +12,7 @@ import {
   SEND_FIELD_UPDATE,
   SEND_FIELD_ERROR,
   SET_SEND_STATE,
-  SET_SEND_CURRENCY,
+  SET_SEND_WALLET,
   SET_SEND_AMOUNT,
   SET_SEND_RECIPIENT,
   SET_SEND_NOTE,
@@ -20,18 +20,21 @@ import {
   SEND_SUCCESS,
   SEND_FAIL,
   SEND,
+  LOGOUT_USER,
+  // APP_LOAD_FINISH,
 } from './../types';
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 
 const INITIAL_STATE = {
   user: null,
-  accounts: null,
-  currentIndex: 0,
+  // accounts: null,
+  wallets: null,
+  activeWalletIndex: 0,
   loadingProfile: false,
   loadingAccounts: false,
   loadingActiveCurrencyChange: false,
   sendAmount: null,
-  sendCurrency: null,
+  sendWallet: null,
   sendRecipient: '',
   sendNote: '',
   sendReference: null,
@@ -39,6 +42,7 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action) => {
+  // console.log(action);
   switch (action.type) {
     case PERSIST_REHYDRATE:
       return action.payload.auth || [];
@@ -50,7 +54,7 @@ export default (state = INITIAL_STATE, action) => {
     case FETCH_PROFILE_SUCCESS:
       return {
         ...state,
-        user: action.payload,
+        profile: action.payload,
         loadingProfile: false,
       };
     case FETCH_PROFILE_FAIL:
@@ -66,8 +70,8 @@ export default (state = INITIAL_STATE, action) => {
     case FETCH_ACCOUNTS_SUCCESS:
       return {
         ...state,
-        accounts: action.payload.accounts,
-        currentIndex: action.payload.activeAccountIndex,
+        wallets: action.payload.wallets,
+        activeWalletIndex: action.payload.activeWalletIndex,
         loadingAccounts: false,
       };
     case FETCH_ACCOUNTS_FAIL:
@@ -78,7 +82,7 @@ export default (state = INITIAL_STATE, action) => {
     case UPDATE_CURRENT_INDEX:
       return {
         ...state,
-        currentIndex: action.payload,
+        activeWalletIndex: action.payload,
       };
     case SET_ACTIVE_CURRENCY:
       return {
@@ -98,11 +102,10 @@ export default (state = INITIAL_STATE, action) => {
       };
     case SEND_FIELD_UPDATE:
       return { ...state, [action.payload.prop]: action.payload.value };
-    case SET_SEND_CURRENCY:
+    case SET_SEND_WALLET:
       return {
         ...state,
-        sendCurrency: action.payload.currency,
-        sendReference: action.payload.reference,
+        sendWallet: action.payload,
         sendState: 'amount',
         inputError: '',
       };
@@ -146,6 +149,9 @@ export default (state = INITIAL_STATE, action) => {
         inputError: action.payload,
         sending: false,
       };
+
+    case LOGOUT_USER:
+      return INITIAL_STATE;
     default:
       return state;
   }

@@ -7,7 +7,7 @@ import {
   SET_ACTIVE_CURRENCY_FAIL,
   SET_ACTIVE_CURRENCY,
   SEND_FIELD_UPDATE,
-  SET_SEND_CURRENCY,
+  SET_SEND_WALLET,
   SEND_FIELD_ERROR,
   SET_SEND_RECIPIENT,
   SET_SEND_NOTE,
@@ -16,61 +16,76 @@ import {
   SEND_SUCCESS,
   SEND_FAIL,
   SEND,
+  APP_LOAD_FINISH,
 } from './../types';
+import _ from 'lodash';
 import Big from 'big.js';
 
 import AccountService from './../../services/accountService';
 import TransactionService from './../../services/transactionService';
 
 export const fetchAccounts = () => async dispatch => {
+  dispatch({ type: APP_LOAD_FINISH });
   dispatch({ type: FETCH_ACCOUNTS });
   let responseJson = await AccountService.getAllAccounts();
 
   if (responseJson.status === 'success') {
-    const accounts = responseJson.data;
-    let activeAccountIndex = 0;
+    const accounts = responseJson.data.results;
+    let activeWalletIndex = 0;
     let currencies;
-    let tempCurrency;
+    let account;
 
-    for (var i = 0; i < accounts.count; i++) {
-      currencies = accounts.results[i].currencies;
+    // var wallets = _.flatten(_.flatten(accounts, 'users'));
+
+    // console.log('1', _.flatten(accounts.results));
+
+    // let wallets = _.map(accounts.results, function(account) {
+    //   return _.flatten(account.currencies);
+    // });
+
+    // wallets.log('1', _.flatten(accounts));
+
+    // _.map(currencies, 'user');
+
+    // console.log(accounts);
+    let wallets;
+    let index = 0;
+    for (var i = 0; i < accounts.length; i++) {
+      account = accounts[i];
+      // console.log(account);
+      currencies = account.currencies;
       for (var j = 0; j < currencies.length; j++) {
-        if (currencies[j].active === true) {
-          activeAccountIndex = j;
-          tempCurrency = currencies[j];
-          i = accounts.length;
-          j = currencies.length;
+        if (!wallets) {
+          wallets = [];
         }
+        wallets[index] = {
+          index,
+          account_reference: account.reference,
+          account_name: account.name,
+          account_label: account.label,
+          currency: currencies[j],
+        };
+        if (currencies[j].active === true) {
+          activeWalletIndex = index;
+        }
+        index++;
       }
     }
 
     dispatch({
       type: FETCH_ACCOUNTS_SUCCESS,
-      payload: { accounts, tempCurrency, activeAccountIndex },
+      payload: { wallets, activeWalletIndex },
     });
   } else {
     dispatch({ type: FETCH_ACCOUNTS_FAIL });
   }
 };
 
-export const setCurrentIndex = index => {
+export const setActiveWalletIndex = index => {
   return {
     type: UPDATE_CURRENT_INDEX,
     payload: index,
   };
-};
-
-export const setActiveCurrency = (reference, code) => async dispatch => {
-  dispatch({ type: SET_ACTIVE_CURRENCY });
-  let responseJson = await AccountService.setActiveCurrency(reference, code);
-
-  if (responseJson.status === 'success') {
-    dispatch({
-      type: SET_ACTIVE_CURRENCY_SUCCESS,
-    });
-  } else {
-    dispatch({ type: SET_ACTIVE_CURRENCY_FAIL });
-  }
 };
 
 export const sendFieldUpdate = ({ prop, value }) => {
@@ -80,22 +95,24 @@ export const sendFieldUpdate = ({ prop, value }) => {
   };
 };
 
-export const setSendCurrency = (currency, reference) => {
-  if (currency && reference) {
+export const setSendWallet = wallet => {
+  if (wallet) {
     return {
-      type: SET_SEND_CURRENCY,
-      payload: { currency, reference },
+      type: SET_SEND_WALLET,
+      payload: wallet,
     };
   } else {
     // Return fail?
   }
 };
 
-export const validateSendAmount = (currency, amount) => {
-  for (let i = 0; i < currency.currency.divisibility; i++) {
+export const validateSendAmount = (wallet, amount) => {
+  console.log(wallet, amount);
+  // const currency = wallet.currency.currency;
+  for (let i = 0; i < wallet.currency.currency.divisibility; i++) {
     amount = amount * 10;
   }
-  if (amount < currency.available_balance && amount) {
+  if (amount < wallet.currency.available_balance && amount) {
     return setSendState('recipient');
   } else {
     return {
@@ -121,7 +138,6 @@ export const validateSendNote = note => {
 };
 
 export const setSendState = state => {
-  console.log(state);
   if (state) {
     return {
       type: SET_SEND_STATE,
@@ -130,6 +146,23 @@ export const setSendState = state => {
   } else {
     // Return fail?
   }
+};
+
+// export const fetchAccounts = () => async dispatch => {
+export const setActiveCurrency = wallet => async () => {
+  let responseJson = await AccountService.setActiveCurrency(
+    wallet.account_reference,
+    wallet.currency.currency.code,
+  );
+  // console.log(responseJson);
+  //   if (responseJson.status === 'success') {
+  //     Alert.alert(
+  //       'Success',
+  //       'Your active currency has been changed successfully.',
+  //       [{ text: 'OK' }],
+  //     );
+  //   }
+  // };
 };
 
 export const resetSend = () => {

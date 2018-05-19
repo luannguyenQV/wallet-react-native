@@ -1,19 +1,16 @@
 import React, { Component } from 'react';
 import {
   View,
-  KeyboardAvoidingView,
   StyleSheet,
   AsyncStorage,
   RefreshControl,
-  TouchableHighlight,
   Text,
-  Alert,
   ListView,
   ActivityIndicator,
 } from 'react-native';
 import { connect } from 'react-redux';
 import {
-  setSendCurrency,
+  setSendWallet,
   validateSendAmount,
   validateSendRecipient,
   validateSendNote,
@@ -30,8 +27,6 @@ import {
   Card,
 } from './../../../components/common';
 import ContactService from './../../../services/contactService';
-import UserInfoService from './../../../services/userInfoService';
-import Auth from './../../../util/auth';
 import Colors from './../../../config/colors';
 import Header from './../../../components/header';
 
@@ -55,21 +50,6 @@ class SendScreen extends Component {
     showContacts: false,
     contactButtonText: 'Show contacts',
   };
-
-  async componentWillMount() {
-    let balance = await AsyncStorage.getItem('balance');
-    this.setState({
-      balance: parseFloat(balance),
-    });
-    // this.showContactsAsync();
-    let responseJson = await UserInfoService.getUserDetails();
-    if (responseJson.status === 'success') {
-      AsyncStorage.removeItem('user');
-      AsyncStorage.setItem('user', JSON.stringify(responseJson.data));
-    } else {
-      Auth.logout(this.props.navigation);
-    }
-  }
 
   showContactsAsync = async () => {
     //await AsyncStorage.removeItem('contacts')
@@ -141,35 +121,9 @@ class SendScreen extends Component {
     });
   };
 
-  send = async () => {
-    if (this.state.searchText === '') {
-      Alert.alert('Error', 'Enter a reference..');
-      return;
-    } else {
-      this.setState({ reference: this.state.searchText });
-    }
-
-    this.props.navigation.navigate('SendAmountEntry', {
-      recipient: this.state.searchText,
-      memo: '',
-      balance: this.state.balance,
-    });
-  };
-
   goToBarcodeScanner = () => {
     this.props.navigation.navigate('QRcodeScanner');
   };
-
-  performSend() {
-    const data = {
-      amount: this.props.sendAmount,
-      recipient: this.props.sendRecipient,
-      note: this.props.sendNote,
-      currency: this.props.sendCurrency,
-      reference: this.props.sendReference,
-    };
-    this.props.send(data);
-  }
 
   setSendState(nextState) {
     this.props.setSendState(nextState);
@@ -179,16 +133,17 @@ class SendScreen extends Component {
     const {
       sendState,
       sendAmount,
-      sendCurrency,
-      tempCurrency,
+      sendWallet,
       sendFieldUpdate,
       validateSendAmount,
       inputError,
-      accounts,
+      wallets,
     } = this.props;
 
-    if (sendCurrency === null) {
-      this.props.setSendCurrency(tempCurrency, accounts.results[0].reference);
+    const { textStyleOutput } = styles;
+
+    if (sendWallet === null) {
+      this.props.setSendWallet(wallets[activeWalletIndex]);
     } else if (
       sendState !== 'confirm' &&
       sendState !== 'success' &&
@@ -199,15 +154,13 @@ class SendScreen extends Component {
           <Card
             textHeader="Amount"
             textActionOne="Next"
-            onPressActionOne={() =>
-              validateSendAmount(sendCurrency, sendAmount)
-            }>
+            onPressActionOne={() => validateSendAmount(sendWallet, sendAmount)}>
             <View>
               <Input
                 key="amount"
                 placeholder="e.g. 10"
-                label={sendCurrency.currency.symbol}
-                prefix={sendCurrency.currency.symbol}
+                label={sendWallet.currency.currency.symbol}
+                prefix={sendWallet.currency.currency.symbol}
                 requiredError={inputError}
                 reference={input => {
                   this.input = input;
@@ -220,7 +173,7 @@ class SendScreen extends Component {
                 returnKeyType="next"
                 autoFocus
                 onSubmitEditing={() =>
-                  validateSendAmount(sendCurrency, sendAmount)
+                  validateSendAmount(sendWallet, sendAmount)
                 }
               />
             </View>
@@ -233,8 +186,9 @@ class SendScreen extends Component {
           textActionOne="Change"
           onPressActionOne={() => this.setSendState('amount')}>
           <View>
-            <Text>
-              You are about to send {sendCurrency.currency.symbol} {sendAmount}
+            <Text style={textStyleOutput}>
+              You are about to send {sendWallet.currency.currency.symbol}{' '}
+              {sendAmount}
             </Text>
           </View>
         </Card>
@@ -266,6 +220,8 @@ class SendScreen extends Component {
       inputError,
     } = this.props;
 
+    const { textStyleOutput } = styles;
+
     if (sendState === 'recipient' || sendState === 'note') {
       if (sendState === 'recipient') {
         return (
@@ -273,8 +229,9 @@ class SendScreen extends Component {
             // textHeader="Recipient"
             textActionOne="Next"
             onPressActionOne={() => validateSendRecipient(sendRecipient)}
-            textActionTwo={this.state.contactButtonText}
-            onPressActionTwo={() => this.toggleContacts()}>
+            // textActionTwo={this.state.contactButtonText}
+            // onPressActionTwo={() => this.toggleContacts()}
+          >
             <View>
               <Input
                 key="recipient"
@@ -304,7 +261,7 @@ class SendScreen extends Component {
           textActionOne="Change"
           onPressActionOne={() => this.setSendState('recipient')}>
           <View>
-            <Text>To: {sendRecipient}</Text>
+            <Text style={textStyleOutput}>To: {sendRecipient}</Text>
           </View>
         </Card>
       );
@@ -386,12 +343,14 @@ class SendScreen extends Component {
   renderConfirm() {
     const {
       sendAmount,
-      sendCurrency,
+      sendWallet,
       sendRecipient,
       sendNote,
       sendState,
       sending,
     } = this.props;
+
+    const { textStyleOutput } = styles;
 
     if (sendState === 'confirm') {
       return (
@@ -403,11 +362,12 @@ class SendScreen extends Component {
           onPressActionTwo={() => this.setSendState('note')}
           loading={sending}>
           <View>
-            <Text>
-              You are about to send {sendCurrency.currency.symbol} {sendAmount}
+            <Text style={textStyleOutput}>
+              You are about to send {sendWallet.currency.currency.symbol}{' '}
+              {sendAmount}
             </Text>
-            <Text>to {sendRecipient}</Text>
-            <Text>with note {sendNote}</Text>
+            <Text style={textStyleOutput}>to {sendRecipient}</Text>
+            <Text style={textStyleOutput}>with note {sendNote}</Text>
           </View>
         </Card>
       );
@@ -417,7 +377,7 @@ class SendScreen extends Component {
         <Card textHeader="Success">
           <View>
             <Text>
-              You sent {sendCurrency.currency.symbol} {sendAmount}
+              You sent {sendWallet.currency.currency.symbol} {sendAmount}
             </Text>
             <Text>to {sendRecipient}</Text>
             <Text>with note {sendNote}</Text>
@@ -486,14 +446,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  textStyleOutput: {
+    fontSize: 16,
+    alignSelf: 'center',
+    padding: 8,
+    paddingBottom: 0,
+  },
 });
 
-const mapStateToProps = ({ rehive }) => {
+const mapStateToProps = ({ accounts }) => {
   const {
     user,
-    accounts,
+    wallets,
     sendAmount,
-    sendCurrency,
+    sendWallet,
     sendRecipient,
     sendNote,
     sendReference,
@@ -501,13 +467,13 @@ const mapStateToProps = ({ rehive }) => {
     tempCurrency,
     inputError,
     sending,
-  } = rehive;
+  } = accounts;
   return {
     user,
-    accounts,
+    wallets,
     tempCurrency,
     sendAmount,
-    sendCurrency,
+    sendWallet,
     sendRecipient,
     sendNote,
     sendReference,
@@ -519,7 +485,7 @@ const mapStateToProps = ({ rehive }) => {
 
 export default connect(mapStateToProps, {
   sendFieldUpdate,
-  setSendCurrency,
+  setSendWallet,
   validateSendAmount,
   validateSendRecipient,
   validateSendNote,

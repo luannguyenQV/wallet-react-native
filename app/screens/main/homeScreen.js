@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, ScrollView, FlatList } from 'react-native';
 import { connect } from 'react-redux';
-import { logoutUser, setCurrentIndex } from './../../redux/actions';
+import { logoutUser, setActiveWalletIndex } from './../../redux/actions';
 import _ from 'lodash';
 import Swiper from 'react-native-swiper';
 
@@ -32,40 +32,8 @@ class HomeScreen extends Component {
     this.popupDialog.show();
   };
 
-  renderAccounts() {
-    const account = this.props.accounts.results[0];
-    return (
-      <View style={{ flex: 1 }}>
-        <FlatList
-          onViewableItemsChanged={this.handleViewableItemsChanged}
-          viewabilityConfig={this.viewabilityConfig}
-          // style={{ height: 0 }}
-          data={account.currencies}
-          horizontal
-          pagingEnabled
-          renderItem={({ item }) => (
-            <HeaderAccount currency={item} accountLabel={account.name} />
-          )}
-          keyExtractor={item => account.name + item.currency.code}
-          showsHorizontalScrollIndicator={false}
-        />
-      </View>
-    );
-  }
-
-  handleViewableItemsChanged = info => {
-    // console.log(;
-    if (info.viewableItems.length > 0) {
-      this.props.setCurrentIndex(info.viewableItems[0].index);
-    }
-  };
-
-  viewabilityConfig = {
-    itemVisiblePercentThreshold: 50,
-  };
-
   render() {
-    const { accounts, currentIndex } = this.props;
+    const { wallets, activeWalletIndex } = this.props;
     // console.log(accounts);
     return (
       <View style={styles.container}>
@@ -74,7 +42,9 @@ class HomeScreen extends Component {
           drawer
           // noAccounts={this.state.noAccounts}
         />
-        {this.renderAccounts()}
+        <HeaderAccount navigation={this.props.navigation} />
+        {/* currency={item} accountLabel={account.name} /> */}
+        {/* {this.renderAccounts()} */}
         {/* <Swiper renderPagination={renderPagination} loop={false}> */}
         {/* <View style={{ flex: 1 }} /> */}
         {/* <CardContainer>
@@ -88,9 +58,7 @@ class HomeScreen extends Component {
         </CardContainer> */}
         <TransactionList
           // updateBalance={this.getBalanceInfo}
-          currencyCode={
-            accounts.results[0].currencies[currentIndex].currency.code
-          }
+          currencyCode={wallets[activeWalletIndex].currency.currency.code}
           // showDialog={this.showDialog}
           // logout={this.logout}
         />
@@ -119,12 +87,10 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ auth, rehive }) => {
+const mapStateToProps = ({ auth, accounts }) => {
   const { token } = auth;
-  const { user, accounts, currentIndex, loadingAccounts } = rehive;
-  return { token, user, accounts, currentIndex, loadingAccounts };
+  const { user, wallets, activeWalletIndex, loadingAccounts } = accounts;
+  return { token, user, wallets, activeWalletIndex, loadingAccounts };
 };
 
-export default connect(mapStateToProps, { logoutUser, setCurrentIndex })(
-  HomeScreen,
-);
+export default connect(mapStateToProps, { logoutUser })(HomeScreen);

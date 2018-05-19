@@ -27,8 +27,6 @@ class CryptoAddressesScreen extends Component {
       loadingCryptoAccounts,
       fetchCryptoAccounts,
     } = this.props;
-    console.log(cryptoAccounts);
-    console.log(cryptoAccounts.length);
     return (
       <View style={styles.container}>
         <Header

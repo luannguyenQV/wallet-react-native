@@ -23,8 +23,6 @@ class BankAccountsScreen extends Component {
 
   render() {
     const { bankAccounts, loadingBankAccounts, fetchBankAccounts } = this.props;
-    console.log(bankAccounts);
-    console.log(bankAccounts.length);
     return (
       <View style={styles.container}>
         <Header

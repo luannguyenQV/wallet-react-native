@@ -2,7 +2,7 @@
   "name": "Rehive Wallet",
   "description": "A multi-currency wallet built on the Rehive platform.",
   "version": "0.2.0",
-  "slug": "rehive-wallet",
+  "slug": "rehive-wallet-staging",
   "privacy": "public",
   "sdkVersion": "24.0.0",
   "orientation": "portrait",
@@ -17,9 +17,9 @@
   },
   "ios": {
     "supportsTablet": true,
-    "bundleIdentifier": "com.rehive.wallet"
+    "bundleIdentifier": "com.rehive.wallet_staging"
   },
   "android": {
-    "package": "com.rehive_wallet"
+    "package": "com.rehive_wallet_staging"
   }
 }

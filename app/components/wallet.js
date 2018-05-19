@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import { connect } from 'react-redux';
 import {
-  setSendCurrency,
+  setSendWallet,
   resetSend,
   setActiveCurrency,
 } from './../redux/actions';
@@ -22,22 +22,16 @@ class Wallet extends Component {
 
   send() {
     this.props.resetSend();
-    this.props.setSendCurrency(
-      this.props.currency,
-      this.props.accountReference,
-    );
+    this.props.setSendWallet(this.props.wallet);
     this.props.navigation.navigate('Send');
   }
 
   setActiveCurrency = () => {
-    this.props.setActiveCurrency(
-      this.props.accountReference,
-      this.props.currency.currency.code,
-    );
+    this.props.setActiveCurrency(this.props.wallet);
   };
 
   render() {
-    const { currency, accountLabel, onCardPress } = this.props;
+    const { wallet, onCardPress } = this.props;
     const {
       textStyleLabel,
       textStyleBalance,
@@ -45,20 +39,22 @@ class Wallet extends Component {
       viewStyleContainer,
       textStyleDescription,
     } = styles;
-    const header = currency.currency.code + ' ' + accountLabel;
+    const header =
+      wallet.currency.currency.code + ' ' + wallet.account_label.toLowerCase();
     const balance =
-      currency.currency.symbol +
-      ' ' +
-      this.getBalance(currency.balance, currency.currency.divisibility).toFixed(
-        currency.currency.divisibility,
-      );
-    const available =
-      currency.currency.symbol +
+      wallet.currency.currency.symbol +
       ' ' +
       this.getBalance(
-        currency.available_balance,
-        currency.currency.divisibility,
-      ).toFixed(currency.currency.divisibility);
+        wallet.currency.balance,
+        wallet.currency.currency.divisibility,
+      ).toFixed(wallet.currency.currency.divisibility);
+    const available =
+      wallet.currency.currency.symbol +
+      ' ' +
+      this.getBalance(
+        wallet.currency.available_balance,
+        wallet.currency.currency.divisibility,
+      ).toFixed(wallet.currency.currency.divisibility);
     return (
       <Card
         onCardPress={onCardPress}
@@ -67,14 +63,13 @@ class Wallet extends Component {
         onPressActionOne={() => this.send()}
         textActionTwo="Receive"
         onPressActionTwo={() => this.props.navigation.navigate('Receive')}
-        iconHeaderRight={currency.active ? 'md-star' : 'md-star-outline'}
-        walletCodeHeaderRight={currency.currency.code}
-        walletCodeActive={currency.active}
+        walletCodeHeaderRight={wallet.currency.currency.code}
+        walletCodeActive={wallet.currency.active}
         onPressHeaderRight={() => this.setActiveCurrency()}
         loading={this.props.loadingDefaultAccountChange}>
         <View style={viewStyleContainer}>
           <Text style={textStyleDescription}>
-            {currency.currency.description}
+            {wallet.currency.currency.description}
           </Text>
           <Text style={textStyleLabel}>Balance</Text>
           <Text style={textStyleBalance}>{balance}</Text>
@@ -118,7 +113,7 @@ const mapStateToProps = ({}) => {
 };
 
 export default connect(mapStateToProps, {
-  setSendCurrency,
+  setSendWallet,
   resetSend,
   setActiveCurrency,
 })(Wallet);

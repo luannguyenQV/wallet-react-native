@@ -5,8 +5,8 @@ import { fetchAccounts } from './../../../redux/actions';
 
 import Header from './../../../components/header';
 import Wallet from './../../../components/wallet';
-import { CardContainer, Card, Spinner } from '../../../components/common';
-import HeaderAccount from '../../../components/headerAccount';
+import { CardContainer, EmptyListMessage } from '../../../components/common';
+import HeaderWallet from '../../../components/headerWallet';
 import TransactionList from './../../../components/TransactionList';
 
 class WalletsScreen extends Component {
@@ -16,9 +16,7 @@ class WalletsScreen extends Component {
 
   state = {
     showDetails: false,
-    currency: null,
-    accountReference: '',
-    accountLabel: '',
+    wallet: null,
   };
 
   componentDidMount() {
@@ -29,81 +27,52 @@ class WalletsScreen extends Component {
     // this.props.fetchAccounts();
   }
 
-  showDetails(currency, accountReference, accountLabel) {
+  showDetails(wallet) {
     this.setState({
       showDetails: true,
-      currency: currency,
-      accountReference: accountReference,
-      accountLabel: accountLabel,
+      wallet: wallet,
     });
   }
 
   hideDetails = () => {
     this.setState({
       showDetails: false,
-      currency: null,
-      accountReference: '',
-      accountLabel: '',
+      wallet: null,
     });
   };
 
-  renderAccounts() {
-    const { accounts } = this.props;
-    if (accounts.results.length > 0) {
+  renderWallets() {
+    const { wallets } = this.props;
+    if (wallets.length > 0) {
       return (
         <FlatList
-          data={accounts.results}
-          renderItem={({ item }) => this.renderAccount(item)}
-          keyExtractor={item => item.name}
+          data={wallets}
+          renderItem={({ item }) => this.renderWallet(item)}
+          keyExtractor={item => item.account_name + item.currency.currency.code}
         />
       );
     }
-    return <Card textHeader="No accounts" />;
+    return <EmptyListMessage text="No wallets" />;
   }
 
-  renderAccount(account) {
-    return (
-      <FlatList
-        data={account.currencies}
-        renderItem={({ item }) =>
-          this.renderWallet(item, account.reference, account.name)
-        }
-        keyExtractor={item => item.currency.code}
-      />
-    );
-    // if (account.currencies.length > 0) {
-    // }
-    // return (
-    //   <Card key={account.name} textHeader={account.label}>
-    //     <Card textHeader="No currencies" />
-    //   </Card>
-    // );
-  }
-
-  renderWallet(currency, accountReference, accountLabel) {
+  renderWallet(wallet) {
     return (
       <Wallet
-        onCardPress={() =>
-          this.showDetails(currency, accountReference, accountLabel)
-        }
-        accountReference={accountReference}
-        accountLabel={accountLabel}
+        onCardPress={() => this.showDetails(wallet)}
+        wallet={wallet}
         navigation={this.props.navigation}
-        currency={currency}
       />
     );
   }
 
   renderDetails() {
-    const { currency, accountReference, accountLabel } = this.state;
-    console.log('currency', currency);
-    console.log('accountLabel', accountLabel);
+    const { wallet } = this.state;
     return (
       <View style={{ flex: 1 }}>
-        <HeaderAccount currency={currency} accountLabel={accountLabel} />
+        <HeaderWallet wallet={wallet} />
         <TransactionList
           // updateBalance={this.getBalanceInfo}
-          currencyCode={currency.currency.code}
+          currencyCode={wallet.currency.currency.code}
           // showDialog={this.showDialog}
           // logout={this.logout}
         />
@@ -130,7 +99,7 @@ class WalletsScreen extends Component {
         <View style={styles.container}>
           <Header navigation={this.props.navigation} drawer title="Wallets" />
           {/* <View style={{ flex: 1 }}> */}
-          <CardContainer>{this.renderAccounts()}</CardContainer>
+          <CardContainer>{this.renderWallets()}</CardContainer>
           {/* {this.props.loadingAccounts ? <Spinner size="small" /> : null} */}
           {/* </View> */}
         </View>
@@ -146,9 +115,9 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ rehive }) => {
-  const { accounts, loadingAccounts } = rehive;
-  return { accounts, loadingAccounts };
+const mapStateToProps = ({ accounts }) => {
+  const { wallets, loadingAccounts } = accounts;
+  return { wallets, loadingAccounts };
 };
 
 export default connect(mapStateToProps, { fetchAccounts })(WalletsScreen);

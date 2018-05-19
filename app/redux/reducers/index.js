@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 import AuthReducer from './AuthReducer';
-import RehiveReducer from './RehiveReducer';
+import AccountsReducer from './AccountsReducer';
 import UserReducer from './UserReducer';
 
 export default combineReducers({
   auth: AuthReducer,
-  rehive: RehiveReducer,
+  accounts: AccountsReducer,
   user: UserReducer,
 });

@@ -46,23 +46,28 @@ class AuthScreen extends Component {
   }
 
   onAuthComplete(props) {
-    const { token, accounts, profile, loadingAccounts, loadingProfile } = props;
+    const { token, wallets, profile, appLoading } = props;
+
     if (token) {
-      if (!loadingAccounts && !loadingProfile) {
-        if (accounts && profile) {
+      if (!appLoading) {
+        if (wallets && profile) {
           props.navigation.navigate('Home');
-        } else {
-          props.fetchProfile();
-          props.fetchEmailAddresses();
-          props.fetchMobileNumbers();
-          props.fetchAddresses();
-          props.fetchDocuments();
-          props.fetchAccounts();
-          props.fetchBankAccounts();
-          props.fetchCryptoAccounts();
         }
+      } else {
+        this.fetchData(props);
       }
     }
+  }
+
+  fetchData(props) {
+    props.fetchProfile();
+    props.fetchEmailAddresses();
+    props.fetchMobileNumbers();
+    props.fetchAddresses();
+    props.fetchDocuments();
+    props.fetchAccounts();
+    props.fetchBankAccounts();
+    props.fetchCryptoAccounts();
   }
 
   performLogin = () => {
@@ -347,7 +352,7 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ auth, rehive, user }) => {
+const mapStateToProps = ({ auth, accounts, user }) => {
   const {
     inputState,
     input,
@@ -363,8 +368,9 @@ const mapStateToProps = ({ auth, rehive, user }) => {
     textFooterRight,
     token,
     iconHeaderLeft,
+    appLoading,
   } = auth;
-  const { accounts, loadingProfile, loadingAccounts } = rehive;
+  const { wallets, loadingProfile, loadingAccounts } = accounts;
   const { profile } = user;
   return {
     inputState,
@@ -380,11 +386,12 @@ const mapStateToProps = ({ auth, rehive, user }) => {
     loading,
     textFooterRight,
     token,
-    accounts,
+    wallets,
     loadingProfile,
     loadingAccounts,
     profile,
     iconHeaderLeft,
+    appLoading,
   };
 };
 
