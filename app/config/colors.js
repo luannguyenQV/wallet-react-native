@@ -15,19 +15,23 @@ export default {
   gold: '#F8CF51',
   drawerColor: '#ffffff',
 
+  gray: '#a6a6a6',
+  lightGray: '#c4c4c4',
+
   primary: '#4d4d4d',
   secondary: '#a6a6a6',
   tertiary: '#c4c4c4',
   quaternary: '#e1e1e1',
 
-  onPrimary: '#e1e1e1',
+  onPrimary: '#f3f3f3',
   onSecondary: '#ffffff',
   onTertiary: '#000000',
   onQuaternary: '#4d4d4d',
+  onFocus: '#9797F0',
 
   warning: '#FC8755',
-  error: '#ED675A',
+  error: '#f44336',
   success: '#03DBBB',
-  positive: '#ED675A',
-  negative: '#03DBBB',
+  positive: '#4CAF50',
+  negative: '#f44336',
 };

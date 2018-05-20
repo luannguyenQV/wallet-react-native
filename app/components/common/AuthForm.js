@@ -33,7 +33,7 @@ const AuthForm = props => {
           <Icon
             style={iconStyleHeaderLeft}
             name={iconHeaderLeft}
-            size={40}
+            size={32}
             // color="black"
             onPress={onPressHeaderLeft}
           />
@@ -71,12 +71,12 @@ const styles = {
     justifyContent: 'space-between',
     flexDirection: 'row',
     height: 64,
-    paddingTop: 32,
-    padding: 12,
+    // paddingTop: 32,
+    // padding: 12,
   },
   viewStyleContent: {
     flex: 1,
-    padding: 16,
+    padding: 24,
     // backgroundColor: Colors.onPrimary,
     flexDirection: 'column',
     alignItems: 'center',
@@ -89,14 +89,14 @@ const styles = {
     padding: 16,
   },
   iconStyleHeaderLeft: {
-    // margin: 16,
+    margin: 16,
     alignSelf: 'flex-start',
     color: Colors.onPrimary,
     // opacity: 0.87,
   },
   textStyleActionRight: {
     color: Colors.onPrimary,
-    fontSize: 16,
+    fontSize: 18,
     padding: 8,
     // alignSelf: 'flex-end',
   },

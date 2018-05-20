@@ -6,7 +6,7 @@ import CountryPicker from 'react-native-country-picker-modal';
 
 class Input extends Component {
   state = {
-    textColor: Colors.black,
+    textColor: 'rgba(0, 0, 0, 0.86)',
     borderColor: 'lightgray',
     iconNameVisibility: 'visibility',
     secureTextEntry: this.props.type === 'password' ? true : false,
@@ -16,15 +16,15 @@ class Input extends Component {
 
   _OnBlur() {
     this.setState({
-      textColor: Colors.black,
+      textColor: rgba(0, 0, 0, 0.86),
       borderColor: 'lightgray',
     });
   }
 
   _OnFocus() {
     this.setState({
-      textColor: Colors.primary,
-      borderColor: Colors.primary,
+      textColor: Colors.onFocus,
+      borderColor: Colors.onFocus,
     });
   }
 
@@ -193,13 +193,13 @@ class Input extends Component {
 
 const styles = {
   viewStyleContainer: {
-    paddingLeft: 20,
-    paddingRight: 20,
+    paddingHorizontal: 16,
     minHeight: 56,
     paddingTop: 0,
   },
   viewStyleLabel: {
     height: 20,
+    backgroundColor: Colors.onPrimary,
   },
   viewStyleCountry: {
     flexDirection: 'row',
@@ -208,7 +208,9 @@ const styles = {
   viewStyleInput: {
     flexDirection: 'row',
     minHeight: 32,
-    borderBottomWidth: 1,
+    borderBottomWidth: 2,
+
+    backgroundColor: Colors.onPrimary,
   },
   viewStyleHelper: {
     height: 28,
@@ -216,11 +218,11 @@ const styles = {
   textStyleLabel: {
     fontSize: 12,
     paddingTop: 8,
-    color: 'black',
-    opacity: 0.86,
+    // color: 'black',
+    // opacity: 0.86,
   },
   textStyleInput: {
-    color: 'black',
+    // color: 'black',
     fontWeight: 'normal',
     paddingTop: 8,
     flex: 1,

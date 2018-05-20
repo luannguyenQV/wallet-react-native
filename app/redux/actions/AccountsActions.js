@@ -35,6 +35,8 @@ export const fetchAccounts = () => async dispatch => {
     let currencies;
     let account;
 
+    let showAccountLabel = false;
+
     // var wallets = _.flatten(_.flatten(accounts, 'users'));
 
     // console.log('1', _.flatten(accounts.results));
@@ -62,7 +64,7 @@ export const fetchAccounts = () => async dispatch => {
           index,
           account_reference: account.reference,
           account_name: account.name,
-          account_label: account.label,
+          account_label: account.label ? account.label : account.name,
           currency: currencies[j],
         };
         if (currencies[j].active === true) {
@@ -71,10 +73,14 @@ export const fetchAccounts = () => async dispatch => {
         index++;
       }
     }
+    if (accounts.length > 1) {
+      showAccountLabel = true;
+    }
+    showAccountLabel = false;
 
     dispatch({
       type: FETCH_ACCOUNTS_SUCCESS,
-      payload: { wallets, activeWalletIndex },
+      payload: { wallets, activeWalletIndex, showAccountLabel },
     });
   } else {
     dispatch({ type: FETCH_ACCOUNTS_FAIL });

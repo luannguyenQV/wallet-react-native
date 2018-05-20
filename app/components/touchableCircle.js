@@ -21,7 +21,7 @@ class TouchableCircle extends Component {
             height: radius * 2,
             width: radius * 2,
             borderRadius: radius,
-            backgroundColor: active ? Colors.gold : Colors.darkergray,
+            backgroundColor: active ? Colors.onFocus : Colors.lightGray,
           },
         ]}>
         <Text

@@ -16,8 +16,10 @@ import TouchableCircle from './../touchableCircle';
 const Card = props => {
   const {
     viewStyleCardContainer,
-    viewStyleCardTitleContainer,
-    textStyleCardTitle,
+    viewStyleHeaderContainer,
+    viewStyleTitleContainer,
+    textStyleTitle,
+    textStyleSubtitle,
     viewStyleActionContainer,
     buttonStyleAction,
     textStyleAction,
@@ -27,11 +29,12 @@ const Card = props => {
   } = styles;
 
   const {
-    textHeader,
+    title,
+    subtitle,
     iconHeaderLeft,
     onPressHeaderLeft,
     iconHeaderRight,
-    walletCodeHeaderRight,
+    walletCode,
     walletCodeActive,
     onPressHeaderRight,
     textActionOne,
@@ -44,8 +47,16 @@ const Card = props => {
 
   return (
     <View style={viewStyleCardContainer}>
-      {textHeader || iconHeaderLeft || iconHeaderRight ? (
-        <View resizeMode="cover" style={viewStyleCardTitleContainer}>
+      {title || iconHeaderLeft || iconHeaderRight ? (
+        <View resizeMode="cover" style={viewStyleHeaderContainer}>
+          {walletCode ? (
+            <TouchableCircle
+              text={walletCode}
+              active={walletCodeActive}
+              onPress={onPressHeaderLeft}
+              radius={24}
+            />
+          ) : null}
           {iconHeaderLeft ? (
             <Icon
               style={iconStyleHeaderLeft}
@@ -55,7 +66,10 @@ const Card = props => {
               onPress={onPressHeaderLeft}
             />
           ) : null}
-          <Text style={textStyleCardTitle}>{textHeader}</Text>
+          <View style={viewStyleTitleContainer}>
+            <Text style={textStyleTitle}>{title}</Text>
+            <Text style={textStyleSubtitle}>{subtitle}</Text>
+          </View>
           {iconHeaderLeft ? (
             <Icon
               style={iconStyleHeaderRight}
@@ -63,14 +77,6 @@ const Card = props => {
               size={32}
               // color="black"
               onPress={onPressHeaderRight}
-            />
-          ) : null}
-          {walletCodeHeaderRight ? (
-            <TouchableCircle
-              text={walletCodeHeaderRight}
-              active={walletCodeActive}
-              onPress={onPressHeaderRight}
-              radius={27}
             />
           ) : null}
         </View>
@@ -107,39 +113,37 @@ const styles = {
   viewStyleCardContainer: {
     // flex: 1,
     backgroundColor: '#ffffff',
-    borderRadius: 2,
-    borderColor: '#ffffff',
-    borderWidth: 1,
+    borderRadius: 3,
     shadowColor: 'rgba(0, 0, 0, 0.6)',
     shadowOpacity: 0.2,
     shadowRadius: 2,
-    margin: 8,
-    // marginBottom: 10,
-    // padding: 5,
-    // paddingBottom: 10,
+    marginBottom: 8,
     elevation: 2,
     shadowOffset: {
       height: 1,
       width: 2,
     },
   },
-  viewStyleCardTitleContainer: {
+  viewStyleHeaderContainer: {
     // flex: 1,
     flexDirection: 'row',
-    height: 64,
+    backgroundColor: Colors.primary,
+    height: 72,
+    alignItems: 'center',
   },
-  textStyleCardTitle: {
-    // position: 'absolute',
-    // top: 120,
-    // left: 26,
-    flex: 1,
-    backgroundColor: 'transparent',
-    paddingTop: 16,
-    paddingLeft: 16,
+  viewStyleTitleContainer: {
+    flexDirection: 'column',
+  },
+  textStyleTitle: {
     fontSize: 24,
-    color: 'black',
+    color: Colors.onPrimary,
+    // color: 'black',
     opacity: 0.87,
     fontWeight: 'bold',
+  },
+  textStyleSubtitle: {
+    fontSize: 12,
+    color: Colors.onSecondary,
   },
   viewStyleFooter: {
     height: 52,
@@ -160,7 +164,7 @@ const styles = {
     color: 'black',
     opacity: 0.87,
   },
-  iconStyleHeaderLeft: {
+  iconStyleHeaderRight: {
     padding: 16,
     alignSelf: 'flex-end',
     color: 'black',

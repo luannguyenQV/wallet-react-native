@@ -1,35 +1,115 @@
 import React, { Component } from 'react';
-import { View, Text, Dimensions } from 'react-native';
+import { View, FlatList, Dimensions } from 'react-native';
+import { connect } from 'react-redux';
+import {
+  setActiveWalletIndex,
+  setSendWallet,
+  resetSend,
+} from './../redux/actions';
+
 import Colors from './../config/colors';
-import { performDivisibility } from './../util/general';
+import HeaderButton from './HeaderButton';
+import HeaderCurrency from './HeaderCurrency';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class HeaderWallet extends Component {
+  componentDidMount() {
+    if (this.props.wallets.length > 1) {
+      this.flatListRef.scrollToIndex({
+        animated: false,
+        index: this.props.activeWalletIndex || 0,
+      });
+    }
+  }
+
+  getItemLayout = (data, index) => ({
+    length: SCREEN_WIDTH,
+    offset: SCREEN_WIDTH * index,
+    index,
+  });
+
+  renderWallets() {
+    const { wallets } = this.props;
+    if (wallets.length === 1) {
+      return <HeaderCurrency detail wallet={wallets[0]} />;
+    } else {
+      return (
+        <FlatList
+          onViewableItemsChanged={this.handleViewableItemsChanged}
+          viewabilityConfig={this.viewabilityConfig}
+          ref={ref => {
+            this.flatListRef = ref;
+          }}
+          data={this.props.wallets}
+          horizontal
+          pagingEnabled
+          getItemLayout={this.getItemLayout}
+          renderItem={({ item }) => <HeaderCurrency wallet={item} />}
+          keyExtractor={item => item.account_name + item.currency.currency.code}
+          showsHorizontalScrollIndicator={false}
+        />
+      );
+    }
+  }
+
+  handleViewableItemsChanged = info => {
+    console.log(info);
+    if (info.viewableItems.length > 0) {
+      this.props.setActiveWalletIndex(info.viewableItems[0].index);
+    }
+  };
+
+  viewabilityConfig = {
+    itemVisiblePercentThreshold: 50,
+  };
+
+  renderButtons() {
+    const { viewStyleButtons } = styles;
+    return (
+      <View>
+        <FlatList
+          contentContainerStyle={viewStyleButtons}
+          data={this.props.buttons}
+          horizontal
+          renderItem={({ item }) => (
+            <HeaderButton
+              type={item.type}
+              onPress={() => this.onButtonPress(item.type)}
+            />
+          )}
+          keyExtractor={item => item.id}
+          showsHorizontalScrollIndicator={false}
+        />
+      </View>
+    );
+  }
+
+  onButtonPress(type) {
+    switch (type) {
+      case send: {
+        this.props.resetSend();
+        this.props.setSendWallet(
+          this.props.wallets[this.props.activeWalletIndex],
+        );
+        this.props.navigation.navigate('Send');
+        break;
+      }
+      case send: {
+        this.props.navigation.navigate('Receive');
+        break;
+      }
+      default:
+        console.log('Error: unknown button type');
+    }
+  }
+
   render() {
-    const { currency, account_label } = this.props.wallet;
-    const {
-      viewStyleContainer,
-      viewStyleCurrency,
-      textStyleCode,
-      textStyleAccount,
-      textStyleSymbol,
-      textStyleAmount,
-    } = styles;
+    const { viewStyleContainer } = styles;
     return (
       <View style={viewStyleContainer}>
-        <Text style={textStyleCode}>{currency.currency.code}</Text>
-        <Text style={textStyleAccount}>{account_label.toLowerCase()}</Text>
-        <View style={viewStyleCurrency}>
-          <Text style={textStyleSymbol}>{currency.currency.symbol}</Text>
-          <Text style={textStyleAmount}>
-            {' '}
-            {performDivisibility(
-              currency.available_balance,
-              currency.currency.divisibility,
-            ).toFixed(currency.currency.divisibility)}
-          </Text>
-        </View>
+        {this.renderWallets()}
+        {this.renderButtons()}
       </View>
     );
   }
@@ -38,40 +118,34 @@ class HeaderWallet extends Component {
 const styles = {
   viewStyleContainer: {
     // flex: 1,
-    width: SCREEN_WIDTH,
     flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: Colors.primary,
+    // minHeight: 86,
+    // height: '100%',
   },
-  viewStyleCurrency: {
+  // viewStyleHeader: {
+  //   paddingTop: 16,
+  //   // backgroundColor: Colors.secondary,
+  // },
+  viewStyleButtons: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    // paddingBottom: 16,
-  },
-  textStyleCode: {
-    color: 'white',
-    fontSize: 20,
-    fontWeight: 'bold',
-    paddingBottom: 2,
-  },
-  textStyleAccount: {
-    color: 'white',
-    fontSize: 16,
-    // fontWeight: 'bold',
-    paddingBottom: 4,
-  },
-  textStyleSymbol: {
-    color: 'white',
-    fontSize: 42,
-    fontWeight: 'bold',
-    paddingRight: 8,
-  },
-  textStyleAmount: {
-    color: 'white',
-    fontSize: 42,
-    fontWeight: 'bold',
+    width: '100%',
+    justifyContent: 'space-around',
+    backgroundColor: Colors.primary,
+    padding: 8,
   },
 };
 
-export default HeaderWallet;
+const mapStateToProps = ({ accounts }) => {
+  const { user, activeWalletIndex } = accounts;
+  return {
+    user,
+    activeWalletIndex,
+  };
+};
+
+export default connect(mapStateToProps, {
+  setActiveWalletIndex,
+  setSendWallet,
+  resetSend,
+})(HeaderWallet);

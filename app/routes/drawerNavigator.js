@@ -2,7 +2,7 @@ import React from 'react';
 import { ScrollView, View, StyleSheet } from 'react-native';
 import { DrawerNavigator, DrawerItems } from 'react-navigation';
 
-import DrawerHeader from './../components/drawerHeader';
+import DrawerHeader from './../components/DrawerHeader';
 import Colors from './../config/colors';
 
 import Home from './../screens/main/homeScreen';
@@ -63,12 +63,15 @@ export default DrawerNavigator(RouteConfigs, {
   drawerToggleRoute: 'DrawerToggle',
   contentComponent: props => (
     <View style={styles.container}>
-      <DrawerHeader navigation={props.navigation} />
+      <View>
+        <DrawerHeader navigation={props.navigation} />
+      </View>
+
       <ScrollView>
         <DrawerItems
           {...props}
-          activeTintColor={Colors.drawerColor}
-          activeBackgroundColor={Colors.primary}
+          activeTintColor={Colors.onSecondary}
+          activeBackgroundColor={Colors.secondary}
           inactiveTintColor={Colors.primary}
           inactiveBackgroundColor="transparent"
           labelStyle={{
@@ -86,6 +89,6 @@ export default DrawerNavigator(RouteConfigs, {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.drawerColor,
+    backgroundColor: Colors.onPrimary,
   },
 });

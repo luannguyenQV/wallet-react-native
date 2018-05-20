@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, Image, KeyboardAvoidingView } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native';
 import { connect } from 'react-redux';
 import {
   initialLoad,
@@ -117,9 +124,9 @@ class AuthScreen extends Component {
   }
 
   renderTop() {
-    const { contentContainer, imageContainer, image } = styles;
+    const { viewStyleTopContainer, imageContainer, image } = styles;
     return (
-      <View style={contentContainer}>
+      <View style={viewStyleTopContainer}>
         <View style={imageContainer}>
           <Image
             source={require('./../../../assets/icons/Rehive_icon_white.png')}
@@ -132,7 +139,7 @@ class AuthScreen extends Component {
   }
 
   renderBottom() {
-    const { inputContainer, buttonsContainer, loading } = styles;
+    const { viewStyleBottomContainer, buttonsContainer, loading } = styles;
     const { authState } = this.props;
 
     switch (authState) {
@@ -161,7 +168,7 @@ class AuthScreen extends Component {
         );
       default:
         return (
-          <View style={inputContainer}>
+          <View style={viewStyleBottomContainer}>
             {loading ? <Spinner size="large" /> : this.renderInput()}
           </View>
         );
@@ -193,7 +200,7 @@ class AuthScreen extends Component {
               this.props.authFieldChange({ prop: 'company', value })
             }
             returnKeyType="next"
-            autoFocus
+            // autoFocus
             onSubmitEditing={() => this.props.nextAuthFormState(this.props, '')}
           />
         );
@@ -260,8 +267,16 @@ class AuthScreen extends Component {
     const { viewContainer } = styles;
 
     return (
-      <KeyboardAvoidingView style={viewContainer} behavior={'padding'}>
-        {this.renderMainContainer()}
+      <KeyboardAvoidingView
+        keyboardShouldPersistTaps={'never'}
+        style={viewContainer}
+        behavior={'padding'}>
+        <TouchableWithoutFeedback
+          style={{ flex: 1 }}
+          onPress={Keyboard.dismiss}
+          accessible={false}>
+          {this.renderMainContainer()}
+        </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     );
   }
@@ -280,19 +295,23 @@ const styles = {
     // borderRadius: 2,
     // paddingBottom: 10,
   },
-  contentContainer: {
+  viewStyleTopContainer: {
+    // alignItems: 'center',
+    justifyContent: 'center',
     // flex: 1,
+    flex: 5,
     // backgroundColor: 'white',
   },
-  inputContainer: {
+  viewStyleBottomContainer: {
     width: '100%',
-    // flex: 1,
-    backgroundColor: Colors.onPrimary,
+    justifyContent: 'center',
+    flex: 1,
+    // backgroundColor: Colors.onPrimary,
     borderRadius: 2,
-    paddingBottom: 10,
+    // paddingBottom: 16,
   },
   imageContainer: {
-    // paddingTop: 50,
+    paddingBottom: 50,
     alignItems: 'center',
     justifyContent: 'center',
   },

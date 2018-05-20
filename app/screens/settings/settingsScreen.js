@@ -12,8 +12,8 @@ import Header from './../../components/header';
 // import HeaderVerified from './../../../components/HeaderVerified';
 
 import {
-  OutputContainer,
-  Output,
+  SettingsContainer,
+  SettingsOption,
   InputContainer,
 } from './../../components/common';
 
@@ -32,7 +32,7 @@ class SettingsScreen extends Component {
     let value = profile.first_name + ' ' + profile.last_name;
 
     return (
-      <Output
+      <SettingsOption
         label="Basic info"
         value={value}
         gotoAddress="SettingsPersonalDetails"
@@ -57,7 +57,7 @@ class SettingsScreen extends Component {
     }
 
     return (
-      <Output
+      <SettingsOption
         label="Email address"
         value={value}
         gotoAddress="SettingsEmailAddresses"
@@ -82,7 +82,7 @@ class SettingsScreen extends Component {
     }
 
     return (
-      <Output
+      <SettingsOption
         label="Mobile number"
         value={value}
         gotoAddress="SettingsMobileNumbers"
@@ -115,7 +115,7 @@ class SettingsScreen extends Component {
     }
 
     return (
-      <Output
+      <SettingsOption
         label="Address"
         value={value}
         gotoAddress="SettingsAddress"
@@ -127,19 +127,19 @@ class SettingsScreen extends Component {
   renderDocuments() {
     return (
       <View>
-        <Output
+        <SettingsOption
           label="Proof of identity"
           gotoAddress="Document"
           goTo={this.goTo}
         />
 
-        <Output
+        <SettingsOption
           label="Advanced proof of identity"
           gotoAddress="Document"
           goTo={this.goTo}
         />
 
-        <Output
+        <SettingsOption
           label="Proof of address"
           gotoAddress="Document"
           goTo={this.goTo}
@@ -150,7 +150,7 @@ class SettingsScreen extends Component {
 
   renderBankAccounts() {
     return (
-      <Output
+      <SettingsOption
         label="Bank accounts"
         gotoAddress="SettingsBankAccounts"
         goTo={this.goTo}
@@ -160,13 +160,17 @@ class SettingsScreen extends Component {
 
   renderCards() {
     return (
-      <Output label="Cards" gotoAddress="SettingsCards" goTo={this.goTo} />
+      <SettingsOption
+        label="Cards"
+        gotoAddress="SettingsCards"
+        goTo={this.goTo}
+      />
     );
   }
 
   renderCryptoAccounts() {
     return (
-      <Output
+      <SettingsOption
         label="Crypto accounts"
         gotoAddress="SettingsCryptoAddresses"
         goTo={this.goTo}
@@ -177,13 +181,17 @@ class SettingsScreen extends Component {
   renderSecurity() {
     return (
       <View>
-        <Output
+        <SettingsOption
           label="Reset password"
           gotoAddress="ChangePassword"
           goTo={this.goTo}
         />
-        <Output label="Two factor" gotoAddress="TwoFactor" goTo={this.goTo} />
-        {/* <Output label="Pin" gotoAddress="Pin" goTo={this.goTo} /> */}
+        <SettingsOption
+          label="Two factor"
+          gotoAddress="TwoFactor"
+          goTo={this.goTo}
+        />
+        {/* <SettingsOption label="Pin" gotoAddress="Pin" goTo={this.goTo} /> */}
       </View>
     );
   }
@@ -199,23 +207,23 @@ class SettingsScreen extends Component {
           lastName={profile.last_name}
         /> */}
         <InputContainer>
-          <OutputContainer label="Personal details">
+          <SettingsContainer label="Personal details">
             {this.renderBasicInfo()}
             {this.renderEmailAddresses()}
             {this.renderMobileNumbers()}
             {this.renderAddresses()}
-          </OutputContainer>
-          {/* <OutputContainer label="Identity">
+          </SettingsContainer>
+          {/* <SettingsContainer label="Identity">
             {this.renderDocuments()}
-          </OutputContainer> */}
-          <OutputContainer label="External accounts">
+          </SettingsContainer> */}
+          <SettingsContainer label="External accounts">
             {this.renderBankAccounts()}
             {/* {this.renderCards()} */}
             {this.renderCryptoAccounts()}
-          </OutputContainer>
-          <OutputContainer label="Security">
+          </SettingsContainer>
+          <SettingsContainer label="Security">
             {this.renderSecurity()}
-          </OutputContainer>
+          </SettingsContainer>
         </InputContainer>
       </View>
     );

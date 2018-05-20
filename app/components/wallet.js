@@ -58,19 +58,17 @@ class Wallet extends Component {
     return (
       <Card
         onCardPress={onCardPress}
-        textHeader={header}
+        title={wallet.currency.currency.description}
+        subtitle={wallet.account_label}
         textActionOne="Send"
         onPressActionOne={() => this.send()}
         textActionTwo="Receive"
         onPressActionTwo={() => this.props.navigation.navigate('Receive')}
-        walletCodeHeaderRight={wallet.currency.currency.code}
+        walletCode={wallet.currency.currency.code}
         walletCodeActive={wallet.currency.active}
         onPressHeaderRight={() => this.setActiveCurrency()}
         loading={this.props.loadingDefaultAccountChange}>
         <View style={viewStyleContainer}>
-          <Text style={textStyleDescription}>
-            {wallet.currency.currency.description}
-          </Text>
           <Text style={textStyleLabel}>Balance</Text>
           <Text style={textStyleBalance}>{balance}</Text>
           <Text style={textStyleLabel}>Available</Text>
@@ -88,13 +86,14 @@ const styles = {
   textStyleLabel: {
     color: 'grey',
     fontSize: 12,
+    paddingTop: 8,
     paddingBottom: 4,
   },
   textStyleBalance: {
     color: 'black',
     fontWeight: 'normal',
     fontSize: 16,
-    paddingBottom: 16,
+    paddingBottom: 8,
   },
   textStyleAvailable: {
     color: 'black',

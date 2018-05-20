@@ -166,7 +166,7 @@ export default class Header extends Component {
               <TouchableOpacity
                 onPress={() => navigation.goBack()}
                 style={{ padding: 20 }}>
-                <Icon name="ios-arrow-back" size={35} color="white" />
+                <Icon name="md-arrow-back" size={24} color="white" />
               </TouchableOpacity>
             ) : null}
           </View>
@@ -209,8 +209,9 @@ export default class Header extends Component {
               </TouchableOpacity>
             ) : null}
             {headerRightTitle ? (
-              <HeaderButtons color="white">
+              <HeaderButtons color="white" key={headerRightTitle}>
                 <HeaderButtons.Item
+                  key={headerRightTitle + '_item'}
                   title={headerRightTitle}
                   onPress={headerRightOnPress}
                   // buttonStyle={{ fontSize: 12 }}
@@ -218,8 +219,13 @@ export default class Header extends Component {
               </HeaderButtons>
             ) : null}
             {headerRightIcon ? (
-              <HeaderButtons IconComponent={Icon} iconSize={23} color="white">
+              <HeaderButtons
+                IconComponent={Icon}
+                iconSize={24}
+                color="white"
+                key={headerRightTitle}>
                 <HeaderButtons.Item
+                  key={headerRightIcon + '_item'}
                   iconName={headerRightIcon}
                   onPress={headerRightOnPress}
                 />

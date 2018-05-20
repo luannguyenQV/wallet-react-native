@@ -72,6 +72,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         wallets: action.payload.wallets,
         activeWalletIndex: action.payload.activeWalletIndex,
+        showAccountLabel: action.payload.showAccountLabel,
         loadingAccounts: false,
       };
     case FETCH_ACCOUNTS_FAIL:

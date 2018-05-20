@@ -1,30 +1,60 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
 import Colors from './../config/colors';
-import Icon from 'react-native-vector-icons/Ionicons';
 
-class HeaderAccount extends Component {
-  setBalance = (balance, divisibility) => {
-    for (let i = 0; i < divisibility; i++) {
-      balance = balance / 10;
+class HeaderButton extends Component {
+  renderButton() {
+    const { type } = this.props;
+    const { viewStyleContainer, iconStyle, textStyleLabel } = styles;
+    let source = '';
+    let label = '';
+
+    switch (type) {
+      case 'send':
+        label = 'Send';
+        source = require('./../../assets/icons/send.png');
+        break;
+      case 'receive':
+        source = require('./../../assets/icons/receive.png');
+        label = 'Receive';
+        break;
+      case 'deposit':
+        source = require('./../../assets/icons/deposit.png');
+        label = 'Deposit';
+        break;
+      case 'withdraw':
+        source = require('./../../assets/icons/withdraw.png');
+        label = 'Withdraw';
+        break;
+      case 'more':
+        source = require('./../../assets/icons/more.png');
+        label = 'More';
+        break;
+      default:
+        label = 'unknown';
     }
-    let balanceString = balance.toString();
-    return balance;
-  };
+    return (
+      <View style={viewStyleContainer}>
+        <Image
+          source={source}
+          resizeMode="contain"
+          color={Colors.onPrimary}
+          style={iconStyle}
+        />
+        <Text style={textStyleLabel}>{label}</Text>
+      </View>
+    );
+  }
 
   render() {
-    const { icon, label, onPress } = this.props;
-    const { viewStyleContainer, iconStyle, textStyleLabel } = styles;
+    const { onPress } = this.props;
     return (
       <TouchableOpacity
         onPress={onPress}
         // style={this.buttonStyle()}
         // ref={reference}
       >
-        <View style={viewStyleContainer}>
-          <Icon style={iconStyle} name={icon} size={32} color="white" />
-          <Text style={textStyleLabel}>{label}</Text>
-        </View>
+        {this.renderButton()}
       </TouchableOpacity>
     );
   }
@@ -33,21 +63,24 @@ class HeaderAccount extends Component {
 const styles = {
   viewStyleContainer: {
     paddingBottom: 8,
+    paddingTop: 8,
+    paddingVertical: 16,
     flexDirection: 'column',
     // marginRight: 8,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
   iconStyle: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    height: 48,
+    width: 48,
+    marginBottom: 4,
   },
   textStyleLabel: {
-    color: 'white',
-    fontSize: 12,
+    color: Colors.onPrimary,
+    fontSize: 14,
     // fontWeight: 'bold',
-    // paddingTop: 4,
+    // paddingTop: 2,
   },
 };
 
-export default HeaderAccount;
+export default HeaderButton;

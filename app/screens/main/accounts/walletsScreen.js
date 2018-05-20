@@ -6,7 +6,7 @@ import { fetchAccounts } from './../../../redux/actions';
 import Header from './../../../components/header';
 import Wallet from './../../../components/wallet';
 import { CardContainer, EmptyListMessage } from '../../../components/common';
-import HeaderWallet from '../../../components/headerWallet';
+import HeaderWallet from '../../../components/HeaderWallet';
 import TransactionList from './../../../components/TransactionList';
 
 class WalletsScreen extends Component {
@@ -17,6 +17,8 @@ class WalletsScreen extends Component {
   state = {
     showDetails: false,
     wallet: null,
+    headerRightIcon: '',
+    headerRightOnPress: () => {},
   };
 
   componentDidMount() {
@@ -31,6 +33,8 @@ class WalletsScreen extends Component {
     this.setState({
       showDetails: true,
       wallet: wallet,
+      headerRightIcon: 'md-close',
+      headerRightOnPress: () => this.hideDetails(),
     });
   }
 
@@ -38,6 +42,8 @@ class WalletsScreen extends Component {
     this.setState({
       showDetails: false,
       wallet: null,
+      headerRightIcon: '',
+      headerRightOnPress: () => {},
     });
   };
 
@@ -68,8 +74,17 @@ class WalletsScreen extends Component {
   renderDetails() {
     const { wallet } = this.state;
     return (
-      <View style={{ flex: 1 }}>
-        <HeaderWallet wallet={wallet} />
+      <View style={styles.viewStyleDetailCard}>
+        <HeaderWallet
+          wallets={[wallet]}
+          buttons={[
+            { id: 0, type: 'deposit' },
+            { id: 1, type: 'withdraw' },
+            { id: 2, type: 'receive' },
+            { id: 3, type: 'send' },
+          ]}
+          navigation={this.props.navigation}
+        />
         <TransactionList
           // updateBalance={this.getBalanceInfo}
           currencyCode={wallet.currency.currency.code}
@@ -81,34 +96,43 @@ class WalletsScreen extends Component {
   }
 
   render() {
-    if (this.state.showDetails) {
-      return (
-        <View style={styles.container}>
-          <Header
-            navigation={this.props.navigation}
-            drawer
-            title="Wallets"
-            headerRightIcon="md-close"
-            headerRightOnPress={this.hideDetails}
-          />
-          {this.renderDetails()}
-        </View>
-      );
-    } else {
-      return (
-        <View style={styles.container}>
-          <Header navigation={this.props.navigation} drawer title="Wallets" />
-          {/* <View style={{ flex: 1 }}> */}
+    const { headerRightIcon, headerRightOnPress, showDetails } = this.state;
+    return (
+      <View style={styles.container}>
+        <Header
+          navigation={this.props.navigation}
+          drawer
+          title="Wallets"
+          headerRightIcon={headerRightIcon}
+          headerRightOnPress={headerRightOnPress}
+        />
+        {showDetails ? (
+          this.renderDetails()
+        ) : (
           <CardContainer>{this.renderWallets()}</CardContainer>
-          {/* {this.props.loadingAccounts ? <Spinner size="small" /> : null} */}
-          {/* </View> */}
-        </View>
-      );
-    }
+        )}
+      </View>
+    );
   }
 }
 
 const styles = {
+  viewStyleDetailCard: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+    // borderRadius: 2,
+    // borderColor: '#ffffff',
+    // borderWidth: 1,
+    shadowColor: 'rgba(0, 0, 0, 0.6)',
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    margin: 8,
+    elevation: 2,
+    shadowOffset: {
+      height: 1,
+      width: 2,
+    },
+  },
   container: {
     flex: 1,
     flexDirection: 'column',

@@ -10,7 +10,7 @@ class TransactionListItem extends Component {
   renderItem() {
     const { item } = this.props;
     const {
-      containerStyleHeader,
+      viewStyleContainer,
       iconStyle,
       textStyleHeader,
       textStyleDate,
@@ -54,7 +54,7 @@ class TransactionListItem extends Component {
     }
 
     return (
-      <View style={containerStyleHeader}>
+      <View style={viewStyleContainer}>
         <View style={{ flexDirection: 'row' }}>
           <Icon style={iconStyle} size={24} name={iconName} color={color} />
           <View style={{ paddingLeft: 8 }}>
@@ -81,12 +81,14 @@ class TransactionListItem extends Component {
 }
 
 const styles = {
-  containerStyleHeader: {
+  viewStyleContainer: {
     flex: 1,
     flexDirection: 'row',
     borderBottomColor: 'lightgrey',
     borderBottomWidth: 1,
-    padding: 8,
+    paddingVertical: 12,
+    paddingRight: 8,
+    paddingLeft: 4,
     justifyContent: 'space-between',
   },
   viewStyleAmount: {

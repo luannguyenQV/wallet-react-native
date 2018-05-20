@@ -225,8 +225,9 @@ class GetVerifiedScreen extends Component {
 
   render() {
     const { profile, loadingProfile } = this.props;
+    const { container, mainContainer } = styles;
     return (
-      <View style={styles.container}>
+      <View style={container}>
         <Header
           navigation={this.props.navigation}
           drawer
@@ -234,11 +235,13 @@ class GetVerifiedScreen extends Component {
         />
         <HeaderVerified
           photoLink={profile.profile}
-          username={profile.username}
-          firstName={profile.first_name}
-          lastName={profile.last_name}
+          name={
+            profile.first_name
+              ? profile.first_name + ' ' + profile.last_name
+              : profile.username
+          }
         />
-        <View style={styles.mainContainer}>
+        <View style={mainContainer}>
           {loadingProfile ? <Spinner /> : null}
           <InputContainer>
             {this.renderBasicInfo()}
@@ -264,13 +267,21 @@ const styles = {
 };
 
 const mapStateToProps = ({ user }) => {
-  const { profile, addresses, mobileNumbers, emailAddresses, documents } = user;
+  const {
+    profile,
+    addresses,
+    mobileNumbers,
+    emailAddresses,
+    documents,
+    loadingProfile,
+  } = user;
   return {
     profile,
     addresses,
     mobileNumbers,
     emailAddresses,
     documents,
+    loadingProfile,
   };
 };
 

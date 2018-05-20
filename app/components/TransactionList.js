@@ -7,6 +7,7 @@ import { Spinner, EmptyListMessage } from './common';
 
 class TransactionList extends Component {
   state = {
+    previousCurrencyCode: null,
     transactions: [],
     loading: true,
   };
@@ -20,14 +21,15 @@ class TransactionList extends Component {
   }
 
   async getTransactions(currencyCode) {
-    this.setState({
-      transactions: [],
-      loading: true,
-    });
+    if (this.state.previousCurrencyCode !== currencyCode) {
+      this.setState({ transactions: [] });
+    }
+    this.setState({ loading: true });
     let responseJson = await TransactionService.getAllTransactionsByCurrency(
       currencyCode,
     );
     this.setState({
+      previousCurrencyCode: currencyCode,
       transactions: responseJson.data.results,
       loading: false,
     });
@@ -35,43 +37,37 @@ class TransactionList extends Component {
 
   renderTransactions() {
     const { transactions, loading } = this.state;
-    if (transactions.length > 0) {
-      return (
-        <FlatList
-          // style={{ height: 0 }}
+    return (
+      <FlatList
+        refreshControl={
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={() => this.getTransactions(this.props.currencyCode)}
+          />
+        }
+        data={transactions}
+        renderItem={({ item }) => this.renderItem(item)}
+        keyExtractor={item => item.id}
+        ListEmptyComponent={this.renderEmptyList()}
+      />
+    );
+  }
 
-          refreshControl={
-            <RefreshControl
-              refreshing={loading}
-              onRefresh={() => this.getTransactions(this.props.currencyCode)}
-            />
-          }
-          data={transactions}
-          renderItem={({ item }) => this.renderItem(item)}
-          keyExtractor={item => item.id}
-        />
-      );
+  renderEmptyList() {
+    const { loading } = this.state;
+    if (!loading) {
+      return <EmptyListMessage text="No transactions" />;
     }
-    return <EmptyListMessage text="No transactions" />;
+    return;
   }
 
   renderItem = item => {
-    return (
-      <TransactionListItem
-        item={item}
-        // onPress={() => {
-        //   this.state.showDialog(item);
-        // }}
-      />
-    );
+    return <TransactionListItem item={item} />;
   };
 
   render() {
-    const { loading } = this.state;
     return (
-      <View style={styles.containerStyle}>
-        {loading ? <Spinner size="large" /> : this.renderTransactions()}
-      </View>
+      <View style={styles.containerStyle}>{this.renderTransactions()}</View>
     );
   }
 }
@@ -79,6 +75,7 @@ class TransactionList extends Component {
 const styles = {
   containerStyle: {
     flex: 1,
+    padding: 8,
   },
 };
 

@@ -10,7 +10,7 @@ import Colors from './../../config/colors';
 import HomeCard from './../../components/homeCard';
 
 import TransactionPopUp from './../../components/wallet/TransactionPopUp';
-import HeaderAccount from '../../components/headerAccount';
+import HeaderWallet from '../../components/HeaderWallet';
 import TransactionList from './../../components/TransactionList';
 import { CardContainer, Card } from '../../components/common';
 
@@ -42,7 +42,15 @@ class HomeScreen extends Component {
           drawer
           // noAccounts={this.state.noAccounts}
         />
-        <HeaderAccount navigation={this.props.navigation} />
+        <HeaderWallet
+          wallets={wallets}
+          buttons={[
+            { id: 0, type: 'receive' },
+            { id: 1, type: 'send' },
+            { id: 2, type: 'more' },
+          ]}
+          navigation={this.props.navigation}
+        />
         {/* currency={item} accountLabel={account.name} /> */}
         {/* {this.renderAccounts()} */}
         {/* <Swiper renderPagination={renderPagination} loop={false}> */}

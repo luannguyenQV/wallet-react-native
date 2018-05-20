@@ -17,19 +17,18 @@ const styles = {
   viewStyleContainer: {
     flex: 1,
     backgroundColor: 'white',
-    paddingHorizontal: 10,
+    padding: 8,
   },
   viewStyleBox: {
-    marginTop: 10,
     flexDirection: 'column',
-    backgroundColor: Colors.lightgray,
-    padding: 20,
+    backgroundColor: Colors.quaternary,
+    padding: 16,
     alignItems: 'center',
   },
   textStyle: {
     fontSize: 18,
     fontWeight: 'normal',
-    color: Colors.black,
+    color: Colors.onQuaternary,
   },
 };
 

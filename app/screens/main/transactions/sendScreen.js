@@ -7,6 +7,9 @@ import {
   Text,
   ListView,
   ActivityIndicator,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import { connect } from 'react-redux';
 import {
@@ -25,6 +28,8 @@ import {
   Button,
   CardContainer,
   Card,
+  AuthForm,
+  Spinner,
 } from './../../../components/common';
 import ContactService from './../../../services/contactService';
 import Colors from './../../../config/colors';
@@ -245,7 +250,7 @@ class SendScreen extends Component {
                 reference={input => {
                   this.input = input;
                 }}
-                keyboardType="numeric"
+                // keyboardType="numeric"
                 returnKeyType="next"
                 autoFocus
                 onSubmitEditing={() => validateSendRecipient(sendRecipient)}
@@ -396,17 +401,162 @@ class SendScreen extends Component {
     }
   }
 
+  renderMainContainer() {
+    const { loading, textFooterRight, iconHeaderLeft } = this.props;
+
+    textAction = 'Next';
+    onPressAction = () => {};
+
+    switch (sendState) {
+      case 'amount':
+        onPressAction = () => this.performSend();
+        break;
+      case 'recipient':
+        onPressAction = () => this.performSend();
+        break;
+      case 'amount':
+        onPressAction = () => this.performSend();
+        break;
+    }
+
+    return (
+      <AuthForm
+        textFooterRight={textActionOne}
+        onPressFooterRight={onPressActionOne}
+        loading={loading}>
+        {this.renderTop()}
+        <View style={viewStyleBottomContainer}>
+          {loading ? <Spinner size="large" /> : this.renderBottom()}
+        </View>
+      </AuthForm>
+    );
+  }
+
+  renderTop() {
+    const { viewStyleTopContainer, imageContainer, image } = styles;
+    return (
+      <View style={viewStyleTopContainer}>
+        {/* <View style={imageContainer}>
+          <Image
+            source={require('./../../../assets/icons/Rehive_icon_white.png')}
+            resizeMode="contain"
+            style={image}
+          />
+        </View> */}
+      </View>
+    );
+  }
+
+  renderBottom() {
+    const {
+      inputState,
+      inputError,
+      countryCode,
+      company,
+      email,
+      password,
+      emailError,
+      passwordError,
+    } = this.props;
+
+    switch (inputState) {
+      case 'company':
+        return (
+          <Input
+            key="company"
+            placeholder="e.g. Rehive"
+            label="Company"
+            requiredError={inputError}
+            value={company}
+            onChangeText={value =>
+              this.props.authFieldChange({ prop: 'company', value })
+            }
+            returnKeyType="next"
+            // autoFocus
+            onSubmitEditing={() => this.props.nextAuthFormState(this.props, '')}
+          />
+        );
+      case 'email':
+        return (
+          <Input
+            key="email"
+            placeholder="e.g. user@gmail.com"
+            label="Email"
+            value={email}
+            requiredError={inputError}
+            keyboardType="email-address"
+            onChangeText={value =>
+              this.props.authFieldChange({ prop: 'email', value })
+            }
+            returnKeyType="next"
+            autoFocus
+            onSubmitEditing={() => this.props.nextAuthFormState(this.props, '')}
+          />
+        );
+      case 'mobile':
+        return (
+          <Input
+            key="mobile"
+            type="mobile"
+            autoFocus
+            placeholder="12345678"
+            label="Mobile"
+            value={mobile}
+            requiredError={inputError}
+            keyboardType="numeric"
+            onChangeText={value =>
+              this.props.authFieldChange({ prop: 'mobile', value })
+            }
+            returnKeyType="next"
+            changeCountryCode={this.changeCountryCode}
+            countryCode={countryCode}
+            onSubmitEditing={() => this.props.nextAuthFormState(this.props, '')}
+          />
+        );
+      case 'password':
+        return (
+          <Input
+            key="password"
+            type="password"
+            placeholder="Password"
+            label="Password"
+            value={password}
+            requiredError={inputError}
+            autoFocus
+            onChangeText={value =>
+              this.props.authFieldChange({ prop: 'password', value })
+            }
+            returnKeyType="done"
+            onSubmitEditing={() => this.props.nextAuthFormState(this.props, '')}
+          />
+        );
+      default:
+        return <View />;
+    }
+  }
+
   render() {
     return (
-      <View style={{ flex: 1 }}>
-        <Header navigation={this.props.navigation} title="To" back right />
-        <CardContainer>
-          {this.renderAmount()}
-          {this.renderRecipient()}
-          {this.renderNote()}
-          {this.renderConfirm()}
-        </CardContainer>
-      </View>
+      <KeyboardAvoidingView
+        keyboardShouldPersistTaps={'never'}
+        style={viewContainer}
+        behavior={'padding'}>
+        <TouchableWithoutFeedback
+          style={{ flex: 1 }}
+          onPress={Keyboard.dismiss}
+          accessible={false}>
+          {this.renderMainContainer()}
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+      // <View style={{ flex: 1 }}>
+      //   <Header navigation={this.props.navigation} title="Send" back right />
+      //   <CardContainer>
+      //     {this.renderAmount()}
+      //     {this.renderRecipient()}
+      //     {this.renderNote()}
+      //     {this.renderConfirm()}
+      //   </CardContainer>
+      // </View>
     );
   }
 }

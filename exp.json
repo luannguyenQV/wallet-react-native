@@ -17,7 +17,7 @@
   },
   "ios": {
     "supportsTablet": true,
-    "bundleIdentifier": "com.rehive.wallet_staging"
+    "bundleIdentifier": "com.rehive.walletstaging"
   },
   "android": {
     "package": "com.rehive_wallet_staging"

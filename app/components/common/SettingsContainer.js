@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 
-class OutputContainer extends Component {
+class SettingsContainer extends Component {
   render() {
     const { label, children } = this.props;
 
@@ -28,7 +28,7 @@ const styles = {
   viewStyleContainer: {
     flexDirection: 'column',
     paddingHorizontal: 16,
-    paddingBottom: 8,
+    paddingBottom: 32,
   },
   viewStyleLabel: {
     flexDirection: 'row',
@@ -45,4 +45,4 @@ const styles = {
   },
 };
 
-export { OutputContainer };
+export { SettingsContainer };
