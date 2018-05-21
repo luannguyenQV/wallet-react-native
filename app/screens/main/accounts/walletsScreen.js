@@ -64,7 +64,7 @@ class WalletsScreen extends Component {
   renderWallet(wallet) {
     return (
       <Wallet
-        onCardPress={() => this.showDetails(wallet)}
+        showDetails={() => this.showDetails(wallet)}
         wallet={wallet}
         navigation={this.props.navigation}
       />

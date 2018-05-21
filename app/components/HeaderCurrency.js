@@ -76,13 +76,13 @@ const styles = {
     paddingBottom: 8,
   },
   textStyleSymbol: {
-    color: Colors.onFocus,
+    color: Colors.focus,
     fontSize: 42,
     fontWeight: 'bold',
     paddingRight: 4,
   },
   textStyleAmount: {
-    color: Colors.onFocus,
+    color: Colors.focus,
     fontSize: 42,
     fontWeight: 'bold',
   },

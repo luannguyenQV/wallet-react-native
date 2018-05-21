@@ -9,6 +9,8 @@ import AppNavigator from './routes/stackNavigator';
 class App extends Component {
   render() {
     const { persistor, store } = configureStore();
+    console.disableYellowBox = true;
+
     return (
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>

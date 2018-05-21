@@ -72,6 +72,7 @@ class HeaderWallet extends Component {
           contentContainerStyle={viewStyleButtons}
           data={this.props.buttons}
           horizontal
+          scrollEnabled={false}
           renderItem={({ item }) => (
             <HeaderButton
               type={item.type}
@@ -87,7 +88,7 @@ class HeaderWallet extends Component {
 
   onButtonPress(type) {
     switch (type) {
-      case send: {
+      case 'send': {
         this.props.resetSend();
         this.props.setSendWallet(
           this.props.wallets[this.props.activeWalletIndex],
@@ -95,8 +96,16 @@ class HeaderWallet extends Component {
         this.props.navigation.navigate('Send');
         break;
       }
-      case send: {
+      case 'receive': {
         this.props.navigation.navigate('Receive');
+        break;
+      }
+      case 'withdraw': {
+        this.props.navigation.navigate('Withdraw');
+        break;
+      }
+      case 'deposit': {
+        this.props.navigation.navigate('Deposit');
         break;
       }
       default:

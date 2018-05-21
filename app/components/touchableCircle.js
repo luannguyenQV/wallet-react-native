@@ -21,7 +21,7 @@ class TouchableCircle extends Component {
             height: radius * 2,
             width: radius * 2,
             borderRadius: radius,
-            backgroundColor: active ? Colors.onFocus : Colors.lightGray,
+            backgroundColor: active ? Colors.focus : Colors.lightGray,
           },
         ]}>
         <Text
@@ -41,7 +41,6 @@ class TouchableCircle extends Component {
 const styles = {
   circle: {
     margin: 8,
-    // marginRight: 8,
     justifyContent: 'center',
     alignItems: 'center',
   },

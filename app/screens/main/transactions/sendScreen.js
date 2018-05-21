@@ -23,14 +23,7 @@ import {
 } from '../../../redux/actions';
 
 import Contact from './../../../components/contact';
-import {
-  Input,
-  Button,
-  CardContainer,
-  Card,
-  AuthForm,
-  Spinner,
-} from './../../../components/common';
+import { Input, AuthForm, Spinner } from './../../../components/common';
 import ContactService from './../../../services/contactService';
 import Colors from './../../../config/colors';
 import Header from './../../../components/header';
@@ -55,6 +48,12 @@ class SendScreen extends Component {
     showContacts: false,
     contactButtonText: 'Show contacts',
   };
+
+  componentDidMount() {
+    if (this.props.sendWallet === null) {
+      this.props.setSendWallet(wallets[activeWalletIndex]);
+    }
+  }
 
   showContactsAsync = async () => {
     //await AsyncStorage.removeItem('contacts')
@@ -134,74 +133,6 @@ class SendScreen extends Component {
     this.props.setSendState(nextState);
   }
 
-  renderAmount() {
-    const {
-      sendState,
-      sendAmount,
-      sendWallet,
-      sendFieldUpdate,
-      validateSendAmount,
-      inputError,
-      wallets,
-    } = this.props;
-
-    const { textStyleOutput } = styles;
-
-    if (sendWallet === null) {
-      this.props.setSendWallet(wallets[activeWalletIndex]);
-    } else if (
-      sendState !== 'confirm' &&
-      sendState !== 'success' &&
-      sendState !== 'fail'
-    ) {
-      if (sendState === 'amount') {
-        return (
-          <Card
-            textHeader="Amount"
-            textActionOne="Next"
-            onPressActionOne={() => validateSendAmount(sendWallet, sendAmount)}>
-            <View>
-              <Input
-                key="amount"
-                placeholder="e.g. 10"
-                label={sendWallet.currency.currency.symbol}
-                prefix={sendWallet.currency.currency.symbol}
-                requiredError={inputError}
-                reference={input => {
-                  this.input = input;
-                }}
-                keyboardType="numeric"
-                value={sendAmount}
-                onChangeText={value =>
-                  sendFieldUpdate({ prop: 'sendAmount', value })
-                }
-                returnKeyType="next"
-                autoFocus
-                onSubmitEditing={() =>
-                  validateSendAmount(sendWallet, sendAmount)
-                }
-              />
-            </View>
-          </Card>
-        );
-      }
-      return (
-        <Card
-          // textHeader="Amount"
-          textActionOne="Change"
-          onPressActionOne={() => this.setSendState('amount')}>
-          <View>
-            <Text style={textStyleOutput}>
-              You are about to send {sendWallet.currency.currency.symbol}{' '}
-              {sendAmount}
-            </Text>
-          </View>
-        </Card>
-      );
-    }
-    return;
-  }
-
   toggleContacts() {
     if (this.state.showContacts) {
       this.setState({
@@ -216,318 +147,285 @@ class SendScreen extends Component {
     }
   }
 
-  renderRecipient() {
-    const {
-      sendState,
-      sendRecipient,
-      sendFieldUpdate,
-      validateSendRecipient,
-      inputError,
-    } = this.props;
+  // renderRecipient() {
+  //   const {
+  //     sendState,
+  //     sendRecipient,
+  //     sendFieldUpdate,
+  //     validateSendRecipient,
+  //     sendError,
+  //   } = this.props;
 
-    const { textStyleOutput } = styles;
+  //   const { textStyleOutput } = styles;
 
-    if (sendState === 'recipient' || sendState === 'note') {
-      if (sendState === 'recipient') {
-        return (
-          <Card
-            // textHeader="Recipient"
-            textActionOne="Next"
-            onPressActionOne={() => validateSendRecipient(sendRecipient)}
-            // textActionTwo={this.state.contactButtonText}
-            // onPressActionTwo={() => this.toggleContacts()}
-          >
-            <View>
-              <Input
-                key="recipient"
-                placeholder="e.g. user@rehive.com"
-                label={'Please enter email, crypto address or mobile number'}
-                value={sendRecipient}
-                onChangeText={value =>
-                  sendFieldUpdate({ prop: 'sendRecipient', value })
-                }
-                requiredError={inputError}
-                reference={input => {
-                  this.input = input;
-                }}
-                // keyboardType="numeric"
-                returnKeyType="next"
-                autoFocus
-                onSubmitEditing={() => validateSendRecipient(sendRecipient)}
-              />
-              {this.renderContacts()}
-            </View>
-          </Card>
-        );
-      }
-      return (
-        <Card
-          // textHeader="Amount"
-          textActionOne="Change"
-          onPressActionOne={() => this.setSendState('recipient')}>
-          <View>
-            <Text style={textStyleOutput}>To: {sendRecipient}</Text>
-          </View>
-        </Card>
-      );
-    }
-    return;
-  }
+  //   if (sendState === 'recipient' || sendState === 'note') {
+  //     if (sendState === 'recipient') {
+  //       return (
+  //         <Card
+  //           // textHeader="Recipient"
+  //           textActionOne="Next"
+  //           onPressActionOne={}
+  //           // textActionTwo={this.state.contactButtonText}
+  //           // onPressActionTwo={() => this.toggleContacts()}
+  //         >
+  //           <View>
+  //
+  //             {this.renderContacts()}
+  //           </View>
+  //         </Card>
+  //       );
+  //     }
+  //     return (
+  //       <Card
+  //         // textHeader="Amount"
+  //         textActionOne="Change"
+  //         onPressActionOne={() => this.setSendState('recipient')}>
+  //         <View>
+  //           <Text style={textStyleOutput}>To: {sendRecipient}</Text>
+  //         </View>
+  //       </Card>
+  //     );
+  //   }
+  //   return;
+  // }
 
-  renderContacts() {
-    const { showContacts } = this.state;
-    if (showContacts) {
-      if (this.state.ready) {
-        return (
-          <View style={styles.spinner}>
-            <Text>Loading Contacts</Text>
-            <ActivityIndicator animating style={{ height: 80 }} size="large" />
-          </View>
-        );
-      } else {
-        return (
-          <View style={{ flex: 1, marginHorizontal: 20, marginTop: 10 }}>
-            <ListView
-              refreshControl={
-                <RefreshControl
-                  refreshing={this.state.refreshing}
-                  onRefresh={this.showContactsAsync.bind(this)}
-                />
-              }
-              dataSource={this.state.contacts}
-              enableEmptySections
-              renderRow={rowData => (
-                <Contact selected={this.selectAContact} rowData={rowData} />
-              )}
-            />
-          </View>
-        );
-      }
-    }
-  }
+  // renderContacts() {
+  //   const { showContacts } = this.state;
+  //   if (showContacts) {
+  //     if (this.state.ready) {
+  //       return (
+  //         <View style={styles.spinner}>
+  //           <Text>Loading Contacts</Text>
+  //           <ActivityIndicator animating style={{ height: 80 }} size="large" />
+  //         </View>
+  //       );
+  //     } else {
+  //       return (
+  //         <View style={{ flex: 1, marginHorizontal: 20, marginTop: 10 }}>
+  //           <ListView
+  //             refreshControl={
+  //               <RefreshControl
+  //                 refreshing={this.state.refreshing}
+  //                 onRefresh={this.showContactsAsync.bind(this)}
+  //               />
+  //             }
+  //             dataSource={this.state.contacts}
+  //             enableEmptySections
+  //             renderRow={rowData => (
+  //               <Contact selected={this.selectAContact} rowData={rowData} />
+  //             )}
+  //           />
+  //         </View>
+  //       );
+  //     }
+  //   }
+  // }
 
-  renderNote() {
-    const {
-      sendState,
-      sendNote,
-      validateSendNote,
-      sendFieldUpdate,
-      inputError,
-    } = this.props;
+  performSend() {
+    const { sendWallet, sendAmount, sendRecipient, sendNote } = this.props;
 
-    if (sendState === 'note') {
-      return (
-        <Card
-          // textHeader="Note"
-          textActionOne="Next"
-          onPressActionOne={() => validateSendNote(sendNote)}>
-          <View>
-            <Input
-              key="note"
-              placeholder="e.g. Rent"
-              label="Note:"
-              value={sendNote}
-              onChangeText={value =>
-                sendFieldUpdate({ prop: 'sendNote', value })
-              }
-              requiredError={inputError}
-              reference={input => {
-                this.input = input;
-              }}
-              returnKeyType="next"
-              autoFocus
-              onSubmitEditing={() => validateSendNote(sendNote)}
-            />
-          </View>
-        </Card>
-      );
-    }
-    return;
-  }
-
-  renderConfirm() {
-    const {
-      sendAmount,
-      sendWallet,
-      sendRecipient,
-      sendNote,
-      sendState,
-      sending,
-    } = this.props;
-
-    const { textStyleOutput } = styles;
-
-    if (sendState === 'confirm') {
-      return (
-        <Card
-          textHeader="Confirm"
-          textActionOne="Yes"
-          onPressActionOne={() => this.performSend()}
-          textActionTwo="Change"
-          onPressActionTwo={() => this.setSendState('note')}
-          loading={sending}>
-          <View>
-            <Text style={textStyleOutput}>
-              You are about to send {sendWallet.currency.currency.symbol}{' '}
-              {sendAmount}
-            </Text>
-            <Text style={textStyleOutput}>to {sendRecipient}</Text>
-            <Text style={textStyleOutput}>with note {sendNote}</Text>
-          </View>
-        </Card>
-      );
-    }
-    if (sendState === 'success') {
-      return (
-        <Card textHeader="Success">
-          <View>
-            <Text>
-              You sent {sendWallet.currency.currency.symbol} {sendAmount}
-            </Text>
-            <Text>to {sendRecipient}</Text>
-            <Text>with note {sendNote}</Text>
-          </View>
-        </Card>
-      );
-    }
-    if (sendState === 'fail') {
-      return (
-        <Card textHeader="Fail">
-          <View>
-            <Text>Unable to send</Text>
-          </View>
-        </Card>
-      );
-    }
+    let data = {
+      amount: sendAmount,
+      recipient: sendRecipient,
+      note: sendNote,
+      currency: sendWallet.currency.currency,
+      reference: sendWallet.account_reference,
+    };
+    this.props.send(data);
   }
 
   renderMainContainer() {
-    const { loading, textFooterRight, iconHeaderLeft } = this.props;
+    const {
+      sending,
+      sendState,
+      sendWallet,
+      validateSendAmount,
+      validateSendRecipient,
+      validateSendNote,
+      sendAmount,
+      sendRecipient,
+      sendNote,
+      sendError,
+    } = this.props;
 
-    textAction = 'Next';
-    onPressAction = () => {};
+    const { viewStyleBottomContainer } = styles;
+
+    let textFooterRight = 'Next';
+    let textHeaderRight = '';
+    let onPressFooterRight = () => {};
+    let onPressHeaderRight = () => {};
 
     switch (sendState) {
       case 'amount':
-        onPressAction = () => this.performSend();
+        onPressFooterRight = () => validateSendAmount(sendWallet, sendAmount);
         break;
       case 'recipient':
-        onPressAction = () => this.performSend();
+        textHeaderRight = 'Edit';
+        onPressHeaderRight = () => this.setSendState('amount');
+        onPressFooterRight = () => validateSendRecipient(sendRecipient);
         break;
-      case 'amount':
-        onPressAction = () => this.performSend();
+      case 'note':
+        textHeaderRight = 'Edit';
+        onPressHeaderRight = () => this.setSendState('amount');
+        onPressFooterRight = () => validateSendNote(sendNote);
+        break;
+      case 'confirm':
+        textHeaderRight = 'Edit';
+        onPressHeaderRight = () => this.setSendState('amount');
+        textFooterRight = 'Confirm';
+        onPressFooterRight = () => this.performSend();
+        break;
+      case 'success':
+        // textHeaderRight = 'Close';
+        textFooterRight = 'Close';
+        onPressFooterRight = () => this.props.navigation.goBack();
+        break;
+      case 'fail':
+        // textHeaderRight = 'Close';
+        textFooterRight = 'Close';
+        onPressFooterRight = () => this.props.navigation.goBack();
         break;
     }
 
     return (
       <AuthForm
-        textFooterRight={textActionOne}
-        onPressFooterRight={onPressActionOne}
-        loading={loading}>
+        textHeaderRight={textHeaderRight}
+        onPressHeaderRight={onPressHeaderRight}
+        textFooterRight={textFooterRight}
+        onPressFooterRight={onPressFooterRight}
+        loading={sending}>
         {this.renderTop()}
-        <View style={viewStyleBottomContainer}>
-          {loading ? <Spinner size="large" /> : this.renderBottom()}
-        </View>
+        <View style={viewStyleBottomContainer}>{this.renderBottom()}</View>
       </AuthForm>
     );
   }
 
   renderTop() {
-    const { viewStyleTopContainer, imageContainer, image } = styles;
+    const {
+      sendState,
+      sendWallet,
+      sendAmount,
+      sendRecipient,
+      sendNote,
+    } = this.props;
+
+    const {
+      viewStyleTopContainer,
+      textStyleOutput,
+      textStyleOutputValue,
+    } = styles;
     return (
       <View style={viewStyleTopContainer}>
-        {/* <View style={imageContainer}>
-          <Image
-            source={require('./../../../assets/icons/Rehive_icon_white.png')}
-            resizeMode="contain"
-            style={image}
-          />
-        </View> */}
+        {sendState === 'note' ||
+        sendState === 'recipient' ||
+        sendState === 'confirm' ||
+        sendState === 'success' ? (
+          <Text style={textStyleOutput}>
+            {sendState !== 'success' ? (
+              <Text>You are about to send </Text>
+            ) : (
+              <Text>You sent </Text>
+            )}
+            <Text style={textStyleOutputValue}>
+              {sendWallet.currency.currency.symbol} {sendAmount}
+            </Text>
+          </Text>
+        ) : null}
+        {sendState === 'note' ||
+        sendState === 'confirm' ||
+        sendState === 'success' ? (
+          <Text style={textStyleOutput}>
+            <Text>to </Text>
+            <Text style={textStyleOutputValue}>{sendRecipient}</Text>
+          </Text>
+        ) : null}
+        {(sendState === 'confirm' || sendState === 'success') && sendNote ? (
+          <Text style={textStyleOutput}>
+            <Text>with note </Text>
+            <Text style={textStyleOutputValue}>{sendNote}</Text>
+          </Text>
+        ) : null}
+        {sendState === 'failed' ? (
+          <Text style={textStyleOutputValue}>
+            <Text>Send failed</Text>
+            <Text>{sendError}</Text>
+          </Text>
+        ) : null}
       </View>
     );
   }
 
   renderBottom() {
     const {
-      inputState,
-      inputError,
-      countryCode,
-      company,
-      email,
-      password,
-      emailError,
-      passwordError,
+      sendState,
+      sendAmount,
+      sendWallet,
+      sendRecipient,
+      sendFieldUpdate,
+      sendNote,
+      validateSendAmount,
+      validateSendRecipient,
+      validateSendNote,
+      sendError,
     } = this.props;
 
-    switch (inputState) {
-      case 'company':
+    switch (sendState) {
+      case 'amount':
         return (
           <Input
-            key="company"
-            placeholder="e.g. Rehive"
-            label="Company"
-            requiredError={inputError}
-            value={company}
-            onChangeText={value =>
-              this.props.authFieldChange({ prop: 'company', value })
-            }
-            returnKeyType="next"
-            // autoFocus
-            onSubmitEditing={() => this.props.nextAuthFormState(this.props, '')}
-          />
-        );
-      case 'email':
-        return (
-          <Input
-            key="email"
-            placeholder="e.g. user@gmail.com"
-            label="Email"
-            value={email}
-            requiredError={inputError}
-            keyboardType="email-address"
-            onChangeText={value =>
-              this.props.authFieldChange({ prop: 'email', value })
-            }
-            returnKeyType="next"
-            autoFocus
-            onSubmitEditing={() => this.props.nextAuthFormState(this.props, '')}
-          />
-        );
-      case 'mobile':
-        return (
-          <Input
-            key="mobile"
-            type="mobile"
-            autoFocus
-            placeholder="12345678"
-            label="Mobile"
-            value={mobile}
-            requiredError={inputError}
+            key="amount"
+            placeholder="e.g. 10"
+            label={'Amount [' + sendWallet.currency.currency.symbol + ']'}
+            prefix={sendWallet.currency.currency.symbol}
+            requiredError={sendError}
+            reference={input => {
+              this.input = input;
+            }}
             keyboardType="numeric"
+            value={sendAmount}
             onChangeText={value =>
-              this.props.authFieldChange({ prop: 'mobile', value })
+              sendFieldUpdate({ prop: 'sendAmount', value })
             }
             returnKeyType="next"
-            changeCountryCode={this.changeCountryCode}
-            countryCode={countryCode}
-            onSubmitEditing={() => this.props.nextAuthFormState(this.props, '')}
+            autoFocus
+            onSubmitEditing={() => validateSendAmount(sendWallet, sendAmount)}
           />
         );
-      case 'password':
+      case 'recipient':
         return (
           <Input
-            key="password"
-            type="password"
-            placeholder="Password"
-            label="Password"
-            value={password}
-            requiredError={inputError}
-            autoFocus
+            key="recipient"
+            placeholder="e.g. user@rehive.com"
+            label={'Please enter email, crypto address or mobile number'}
+            value={sendRecipient}
             onChangeText={value =>
-              this.props.authFieldChange({ prop: 'password', value })
+              sendFieldUpdate({ prop: 'sendRecipient', value })
             }
-            returnKeyType="done"
-            onSubmitEditing={() => this.props.nextAuthFormState(this.props, '')}
+            requiredError={sendError}
+            reference={input => {
+              this.input = input;
+            }}
+            // keyboardType="numeric"
+            returnKeyType="next"
+            autoFocus
+            onSubmitEditing={() => validateSendRecipient(sendRecipient)}
+          />
+        );
+      case 'note':
+        return (
+          <Input
+            key="note"
+            placeholder="e.g. Rent"
+            label="Note:"
+            value={sendNote}
+            onChangeText={value => sendFieldUpdate({ prop: 'sendNote', value })}
+            requiredError={sendError}
+            reference={input => {
+              this.input = input;
+            }}
+            returnKeyType="next"
+            autoFocus
+            onSubmitEditing={() => validateSendNote(sendNote)}
           />
         );
       default:
@@ -537,58 +435,41 @@ class SendScreen extends Component {
 
   render() {
     return (
-      <KeyboardAvoidingView
-        keyboardShouldPersistTaps={'never'}
-        style={viewContainer}
-        behavior={'padding'}>
-        <TouchableWithoutFeedback
-          style={{ flex: 1 }}
-          onPress={Keyboard.dismiss}
-          accessible={false}>
-          {this.renderMainContainer()}
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
-      // <View style={{ flex: 1 }}>
-      //   <Header navigation={this.props.navigation} title="Send" back right />
-      //   <CardContainer>
-      //     {this.renderAmount()}
-      //     {this.renderRecipient()}
-      //     {this.renderNote()}
-      //     {this.renderConfirm()}
-      //   </CardContainer>
-      // </View>
+      <View style={{ flex: 1 }}>
+        <Header navigation={this.props.navigation} title="Send" back right />
+        <KeyboardAvoidingView
+          keyboardShouldPersistTaps={'never'}
+          style={styles.viewStyleContainer}
+          behavior={'padding'}>
+          <TouchableWithoutFeedback
+            style={{ flex: 1 }}
+            onPress={Keyboard.dismiss}
+            accessible={false}>
+            {this.renderMainContainer()}
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
+      </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
+const styles = {
+  viewStyleContainer: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: 'white',
+    backgroundColor: Colors.focus,
     paddingTop: 10,
   },
-  spinner: {
-    flex: 1,
-    alignItems: 'center',
+  viewStyleTopContainer: {
     justifyContent: 'center',
+    flex: 2,
   },
-  submit: {
-    marginBottom: 10,
-    marginHorizontal: 20,
-    borderRadius: 25,
-    height: 50,
-    backgroundColor: Colors.lightblue,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  input: {
-    height: 60,
+  viewStyleBottomContainer: {
     width: '100%',
-    padding: 10,
-    marginTop: 20,
-    borderColor: 'white',
-    borderWidth: 1,
+    justifyContent: 'center',
+    alignSelf: 'flex-end',
+    flex: 1,
+    borderRadius: 2,
   },
   contact: {
     height: 40,
@@ -602,7 +483,11 @@ const styles = StyleSheet.create({
     padding: 8,
     paddingBottom: 0,
   },
-});
+  textStyleOutputValue: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+};
 
 const mapStateToProps = ({ accounts }) => {
   const {
@@ -615,7 +500,7 @@ const mapStateToProps = ({ accounts }) => {
     sendReference,
     sendState,
     tempCurrency,
-    inputError,
+    sendError,
     sending,
   } = accounts;
   return {
@@ -628,7 +513,7 @@ const mapStateToProps = ({ accounts }) => {
     sendNote,
     sendReference,
     sendState,
-    inputError,
+    sendError,
     sending,
   };
 };

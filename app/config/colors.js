@@ -1,7 +1,7 @@
 export default {
   red: '#ED675A',
   green: '#03DBBB',
-  black: '#4D4D4D',
+  black: '#000000',
   darkblue: '#2470A0',
   lightblue: '#3D95CE',
   lightgray: '#EBEBEB',
@@ -27,7 +27,7 @@ export default {
   onSecondary: '#ffffff',
   onTertiary: '#000000',
   onQuaternary: '#4d4d4d',
-  onFocus: '#9797F0',
+  focus: '#9797F0',
 
   warning: '#FC8755',
   error: '#f44336',

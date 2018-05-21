@@ -27,15 +27,14 @@ class SettingsContainer extends Component {
 const styles = {
   viewStyleContainer: {
     flexDirection: 'column',
-    paddingHorizontal: 16,
-    paddingBottom: 32,
+    paddingHorizontal: 8,
+    paddingBottom: 24,
   },
   viewStyleLabel: {
     flexDirection: 'row',
   },
   viewStyleChildren: {
     flexDirection: 'column',
-    paddingLeft: 8,
   },
   textStyleLabel: {
     fontSize: 14,

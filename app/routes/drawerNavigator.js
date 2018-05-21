@@ -57,7 +57,7 @@ const RouteConfigs = {
 };
 
 export default DrawerNavigator(RouteConfigs, {
-  drawerWidth: 300,
+  drawerWidth: 200,
   drawerOpenRoute: 'DrawerOpen',
   drawerCloseRoute: 'DrawerClose',
   drawerToggleRoute: 'DrawerToggle',

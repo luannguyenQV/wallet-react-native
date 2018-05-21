@@ -43,44 +43,49 @@ const Card = props => {
     onPressActionTwo,
     loading,
     onCardPress,
+    onHeaderPress,
   } = props;
 
   return (
     <View style={viewStyleCardContainer}>
-      {title || iconHeaderLeft || iconHeaderRight ? (
-        <View resizeMode="cover" style={viewStyleHeaderContainer}>
-          {walletCode ? (
-            <TouchableCircle
-              text={walletCode}
-              active={walletCodeActive}
-              onPress={onPressHeaderLeft}
-              radius={24}
-            />
-          ) : null}
-          {iconHeaderLeft ? (
-            <Icon
-              style={iconStyleHeaderLeft}
-              name={iconHeaderLeft}
-              size={32}
-              // color="black"
-              onPress={onPressHeaderLeft}
-            />
-          ) : null}
-          <View style={viewStyleTitleContainer}>
-            <Text style={textStyleTitle}>{title}</Text>
-            <Text style={textStyleSubtitle}>{subtitle}</Text>
-          </View>
-          {iconHeaderLeft ? (
-            <Icon
-              style={iconStyleHeaderRight}
-              name={iconHeaderRight}
-              size={32}
-              // color="black"
-              onPress={onPressHeaderRight}
-            />
+      <TouchableWithoutFeedback onPress={onHeaderPress}>
+        <View>
+          {title || iconHeaderLeft || iconHeaderRight ? (
+            <View resizeMode="cover" style={viewStyleHeaderContainer}>
+              {walletCode ? (
+                <TouchableCircle
+                  text={walletCode}
+                  active={walletCodeActive}
+                  onPress={onPressHeaderLeft}
+                  radius={24}
+                />
+              ) : null}
+              {iconHeaderLeft ? (
+                <Icon
+                  style={iconStyleHeaderLeft}
+                  name={iconHeaderLeft}
+                  size={32}
+                  // color="black"
+                  onPress={onPressHeaderLeft}
+                />
+              ) : null}
+              <View style={viewStyleTitleContainer}>
+                <Text style={textStyleTitle}>{title}</Text>
+                <Text style={textStyleSubtitle}>{subtitle}</Text>
+              </View>
+              {iconHeaderLeft ? (
+                <Icon
+                  style={iconStyleHeaderRight}
+                  name={iconHeaderRight}
+                  size={32}
+                  // color="black"
+                  onPress={onPressHeaderRight}
+                />
+              ) : null}
+            </View>
           ) : null}
         </View>
-      ) : null}
+      </TouchableWithoutFeedback>
       <TouchableWithoutFeedback onPress={onCardPress}>
         <View>{props.children}</View>
       </TouchableWithoutFeedback>
@@ -129,10 +134,12 @@ const styles = {
     flexDirection: 'row',
     backgroundColor: Colors.primary,
     height: 72,
+    paddingHorizontal: 8,
     alignItems: 'center',
   },
   viewStyleTitleContainer: {
     flexDirection: 'column',
+    paddingHorizontal: 8,
   },
   textStyleTitle: {
     fontSize: 24,

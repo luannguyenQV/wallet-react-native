@@ -94,13 +94,6 @@ export const setActiveWalletIndex = index => {
   };
 };
 
-export const sendFieldUpdate = ({ prop, value }) => {
-  return {
-    type: SEND_FIELD_UPDATE,
-    payload: { prop, value },
-  };
-};
-
 export const setSendWallet = wallet => {
   if (wallet) {
     return {
@@ -154,6 +147,46 @@ export const setSendState = state => {
   }
 };
 
+export const sendFieldUpdate = ({ prop, value }) => {
+  return {
+    type: SEND_FIELD_UPDATE,
+    payload: { prop, value },
+  };
+};
+
+export const resetSend = () => {
+  return {
+    type: RESET_SEND,
+  };
+};
+
+export const send = data => async dispatch => {
+  console.log(data);
+  let amount = new Big(data.amount);
+  for (let i = 0; i < data.currency.divisibility; i++) {
+    amount = amount.times(10);
+  }
+  dispatch({ type: SEND });
+  let responseJson = await TransactionService.sendMoney(
+    amount,
+    data.recipient,
+    data.note,
+    data.currency.code,
+    data.reference,
+  );
+  console.log(responseJson);
+  if (responseJson.status === 'success') {
+    dispatch({
+      type: SEND_SUCCESS,
+    });
+  } else {
+    dispatch({
+      type: SEND_FAIL,
+      payload: responseJson.message,
+    });
+  }
+};
+
 // export const fetchAccounts = () => async dispatch => {
 export const setActiveCurrency = wallet => async () => {
   let responseJson = await AccountService.setActiveCurrency(
@@ -169,36 +202,4 @@ export const setActiveCurrency = wallet => async () => {
   //     );
   //   }
   // };
-};
-
-export const resetSend = () => {
-  return {
-    type: RESET_SEND,
-  };
-};
-
-export const send = data => async dispatch => {
-  let amount = new Big(data.amount);
-  for (let i = 0; i < data.currency.currency.divisibility; i++) {
-    amount = amount.times(10);
-  }
-  dispatch({ type: SEND });
-  let responseJson = await TransactionService.sendMoney(
-    amount,
-    data.recipient,
-    data.note,
-    data.currency.currency.code,
-    data.reference,
-  );
-
-  if (responseJson.status === 'success') {
-    dispatch({
-      type: SEND_SUCCESS,
-    });
-  } else {
-    dispatch({
-      type: SEND_FAIL,
-      payload: responseJson.message,
-    });
-  }
 };

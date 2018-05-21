@@ -6,8 +6,7 @@ import CountryPicker from 'react-native-country-picker-modal';
 
 class Input extends Component {
   state = {
-    textColor: 'rgba(0, 0, 0, 0.86)',
-    borderColor: 'lightgray',
+    focused: false,
     iconNameVisibility: 'visibility',
     secureTextEntry: this.props.type === 'password' ? true : false,
     cca2: 'US',
@@ -16,15 +15,13 @@ class Input extends Component {
 
   _OnBlur() {
     this.setState({
-      textColor: rgba(0, 0, 0, 0.86),
-      borderColor: 'lightgray',
+      focused: false,
     });
   }
 
   _OnFocus() {
     this.setState({
-      textColor: Colors.onFocus,
-      borderColor: Colors.onFocus,
+      focused: true,
     });
   }
 
@@ -71,7 +68,7 @@ class Input extends Component {
 
     const {
       borderColor,
-      textColor,
+      focused,
       secureTextEntry,
       iconNameVisibility,
       cca2,
@@ -79,16 +76,7 @@ class Input extends Component {
 
     return (
       <View
-        style={[
-          viewStyleInput,
-          requiredError != '' && requiredError != null
-            ? {
-                borderColor: 'red',
-              }
-            : {
-                borderColor,
-              },
-        ]}>
+        style={[viewStyleInput, { paddingBottom: focused || value ? 8 : 0 }]}>
         {type === 'mobile' ? (
           <View style={viewStyleCountry}>
             <CountryPicker
@@ -126,7 +114,7 @@ class Input extends Component {
           underlineColorAndroid="transparent"
           autoCapitalize={autoCapitalize ? autoCapitalize : 'none'}
           autoCorrect={autoCorrect ? autoCorrect : false}
-          placeholder={placeholder}
+          placeholder={focused ? placeholder : label}
           value={value}
           onChangeText={onChangeText}
           ref={reference}
@@ -137,11 +125,19 @@ class Input extends Component {
           onSubmitEditing={onSubmitEditing}
           autoFocus={autoFocus}
           blurOnSubmit={false}
+          multiline
         />
         {type === 'password' ? (
           <View>
             <Icon
-              style={iconStyleVisibility}
+              style={[
+                iconStyleVisibility,
+                {
+                  color: requiredError
+                    ? Colors.error
+                    : focused ? Colors.focus : 'rgba(0,0,0,0.6)',
+                },
+              ]}
               name={iconNameVisibility}
               size={24}
               color={borderColor}
@@ -154,38 +150,59 @@ class Input extends Component {
   }
 
   render() {
-    const { label, required, requiredError, helperText } = this.props;
+    const { label, value, required, requiredError, helperText } = this.props;
 
     const {
       viewStyleContainer,
       viewStyleLabel,
       viewStyleHelper,
       textStyleLabel,
-      textStyleRequired,
-      textStyleHelper,
+      textStyleFooter,
+      viewStyleContent,
     } = styles;
 
-    const { textColor } = this.state;
+    const { focused } = this.state;
 
     return (
       <View style={viewStyleContainer}>
-        <View style={viewStyleLabel}>
-          <Text style={[textStyleLabel, { color: textColor }]}>
-            {label}
-            {required ? ' *' : ''}
+        <View
+          style={[
+            viewStyleContent,
+            {
+              borderColor: requiredError
+                ? Colors.error
+                : focused ? Colors.focus : 'rgba(0,0,0,0.87)',
+              borderBottomWidth: requiredError || focused ? 2 : 1,
+            },
+          ]}>
+          {focused || value ? (
+            <View style={viewStyleLabel}>
+              <Text
+                style={[
+                  textStyleLabel,
+                  {
+                    color: requiredError
+                      ? Colors.error
+                      : focused ? Colors.focus : 'rgba(0,0,0,0.6)',
+                  },
+                ]}>
+                {label}
+                {required ? ' *' : ''}
+              </Text>
+            </View>
+          ) : null}
+          {this.renderInput()}
+        </View>
+
+        <View style={viewStyleHelper}>
+          <Text
+            style={[
+              textStyleFooter,
+              { color: requiredError ? Colors.error : Colors.onPrimary },
+            ]}>
+            {requiredError ? 'Error: ' + requiredError : helperText}
           </Text>
         </View>
-        {this.renderInput()}
-
-        {requiredError ? (
-          <View style={viewStyleHelper}>
-            <Text style={textStyleRequired}>Error: {requiredError}</Text>
-          </View>
-        ) : helperText ? (
-          <View style={viewStyleHelper}>
-            <Text style={textStyleHelper}>{helperText}</Text>
-          </View>
-        ) : null}
       </View>
     );
   }
@@ -193,13 +210,22 @@ class Input extends Component {
 
 const styles = {
   viewStyleContainer: {
-    paddingHorizontal: 16,
+    minHeight: 80,
+    borderRadius: 5,
+    // borderWidth: 2,
+    // borderColor: Colors.primary,
+  },
+  viewStyleContent: {
+    // borderTopRightRadius: 3,
+    backgroundColor: Colors.onPrimary,
+    paddingHorizontal: 12,
     minHeight: 56,
-    paddingTop: 0,
+    justifyContent: 'center',
   },
   viewStyleLabel: {
-    height: 20,
-    backgroundColor: Colors.onPrimary,
+    borderTopRightRadius: 3,
+    borderTopLeftRadius: 3,
+    // height: 20,
   },
   viewStyleCountry: {
     flexDirection: 'row',
@@ -207,55 +233,39 @@ const styles = {
   },
   viewStyleInput: {
     flexDirection: 'row',
-    minHeight: 32,
-    borderBottomWidth: 2,
-
-    backgroundColor: Colors.onPrimary,
   },
   viewStyleHelper: {
     height: 28,
   },
   textStyleLabel: {
-    fontSize: 12,
-    paddingTop: 8,
-    // color: 'black',
-    // opacity: 0.86,
+    fontSize: 10,
+    paddingTop: 6,
   },
   textStyleInput: {
-    // color: 'black',
     fontWeight: 'normal',
-    paddingTop: 8,
     flex: 1,
     fontSize: 16,
-    paddingBottom: 8,
+    color: 'rgba(0,0,0,0.87)',
   },
   textStyleCode: {
     fontSize: 16,
-    color: 'black',
+    color: 'rgba(0,0,0,0.87)',
     textAlign: 'right',
     fontWeight: 'normal',
     alignItems: 'center',
     fontSize: 16,
-    paddingTop: 8,
-    paddingBottom: 8,
   },
-  textStyleRequired: {
-    paddingTop: 8,
+  textStyleFooter: {
+    paddingTop: 4,
     paddingBottom: 8,
+    paddingHorizontal: 12,
     fontSize: 12,
-    color: Colors.error,
-  },
-  textStyleHelper: {
-    paddingTop: 8,
-    paddingBottom: 8,
-    fontSize: 12,
-    color: 'gray',
   },
   iconStyleVisibility: {
     width: 24,
     height: 24,
     right: 0,
-    bottom: 8,
+    bottom: 4,
     position: 'absolute',
   },
 };

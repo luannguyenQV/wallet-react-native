@@ -15,23 +15,22 @@ class SettingsOption extends Component {
     } = styles;
 
     return (
-      <View style={viewStyleContainer}>
-        <TouchableHighlight
-          underlayColor={'white'}
-          activeOpacity={0.2}
-          onPress={() => goTo(gotoAddress, label)}>
-          <View>
-            <View style={viewStyleLabel}>
-              <Text style={[textStyleLabel]}>{label}</Text>
-            </View>
-            {value ? (
-              <View style={viewStyleValue}>
-                <Text style={textStyleValue}>{value}</Text>
-              </View>
-            ) : null}
+      <TouchableHighlight
+        underlayColor={Colors.lightGray}
+        style={viewStyleContainer}
+        // activeOpacity={0.2}
+        onPress={() => goTo(gotoAddress, label)}>
+        <View>
+          <View style={viewStyleLabel}>
+            <Text style={[textStyleLabel]}>{label}</Text>
           </View>
-        </TouchableHighlight>
-      </View>
+          {value ? (
+            <View style={viewStyleValue}>
+              <Text style={textStyleValue}>{value}</Text>
+            </View>
+          ) : null}
+        </View>
+      </TouchableHighlight>
     );
   }
 }
@@ -39,10 +38,11 @@ class SettingsOption extends Component {
 const styles = {
   viewStyleContainer: {
     flexDirection: 'column',
-    borderBottomWidth: 1,
-    borderColor: Colors.lightGray,
     flexWrap: 'wrap',
-    paddingBottom: 8,
+    paddingBottom: 4,
+    // marginBottom: 8,
+    paddingLeft: 8,
+    borderRadius: 5,
   },
   viewStyleLabel: {
     flexDirection: 'row',
@@ -50,23 +50,12 @@ const styles = {
   viewStyleValue: {
     flexDirection: 'row',
   },
-  // touchable: {
-  //   paddingVertical: 10,
-  //   paddingHorizontal: 20,
-  //   height: 60,
-  //   borderBottomWidth: 1,
-  //   borderBottomColor: Colors.lightgray,
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  // },
   textStyleLabel: {
-    paddingTop: 16,
+    paddingTop: 8,
     // height: 28,
     paddingLeft: 0,
     color: 'black',
     fontWeight: 'normal',
-    borderColor: 'white',
-    borderWidth: 1,
     flex: 1,
     // alignItems: 'center',
     fontSize: 16,

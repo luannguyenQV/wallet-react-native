@@ -299,7 +299,7 @@ const styles = {
     // alignItems: 'center',
     justifyContent: 'center',
     // flex: 1,
-    flex: 5,
+    flex: 3,
     // backgroundColor: 'white',
   },
   viewStyleBottomContainer: {

@@ -108,18 +108,18 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         sendWallet: action.payload,
         sendState: 'amount',
-        inputError: '',
+        sendError: '',
       };
     case SEND_FIELD_ERROR:
       return {
         ...state,
-        inputError: action.payload,
+        sendError: action.payload,
       };
     case SET_SEND_STATE:
       return {
         ...state,
         sendState: action.payload,
-        inputError: '',
+        sendError: '',
       };
     case RESET_SEND:
       return {
@@ -130,7 +130,7 @@ export default (state = INITIAL_STATE, action) => {
         sendNote: null,
         sendReference: null,
         sendState: 'amount',
-        inputError: '',
+        sendError: '',
       };
     case SEND:
       return {
@@ -147,7 +147,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         sendState: 'fail',
-        inputError: action.payload,
+        sendError: action.payload,
         sending: false,
       };
 
