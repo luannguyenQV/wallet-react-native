@@ -1,3 +1,5 @@
+import { createAsyncTypes } from './store/Utilities';
+
 // AUTH
 export const AUTH_FIELD_CHANGED = 'auth_field_changed';
 export const AUTH_FIELD_ERROR = 'auth_field_error';
@@ -63,3 +65,7 @@ export const FETCH_BANK_ACCOUNTS_FAIL = 'fetch_bank_accounts_fail';
 export const FETCH_CRYPTO_ACCOUNTS = 'fetch_crypto_accounts';
 export const FETCH_CRYPTO_ACCOUNTS_SUCCESS = 'fetch_crypto_accounts_success';
 export const FETCH_CRYPTO_ACCOUNTS_FAIL = 'fetch_crypto_accounts_fail';
+
+//Using ASYNC as a convention to know that I'll have three types.
+export const FETCH_DATA_ASYNC = createAsyncTypes('FETCH_DATA');
+export const FETCH_PROFILE_ASYNC = createAsyncTypes('FETCH_PROFILE');

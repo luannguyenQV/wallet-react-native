@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Alert, FlatList, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
-import { fetchEmailAddresses } from './../../../redux/actions';
+import { fetchData } from './../../../redux/actions';
 
 import Spinner from 'react-native-loading-spinner-overlay';
 import EmailAddress from './../../../components/emailAddress';
@@ -88,11 +88,7 @@ class EmailAddressesScreen extends Component {
   };
 
   render() {
-    const {
-      emailAddresses,
-      loadingEmailAddresses,
-      fetchEmailAddresses,
-    } = this.props;
+    const { email_addresses, loading_email_addresses, fetchData } = this.props;
     return (
       <View style={styles.container}>
         <Header
@@ -107,7 +103,7 @@ class EmailAddressesScreen extends Component {
           }
         />
         <CardList
-          data={emailAddresses}
+          data={email_addresses}
           textFunctionActionOne={item =>
             item ? (item.verified ? '' : 'Verify') : ''
           }
@@ -116,8 +112,8 @@ class EmailAddressesScreen extends Component {
           title={item => (item ? (item.email ? 'New email address' : '') : '')}
           subtitle={item => (item ? (item.verified ? 'Verified' : '') : '')}
           itemActive={item => (item ? (item.primary ? true : false) : false)}
-          refreshing={loadingEmailAddresses}
-          onRefresh={fetchEmailAddresses}
+          refreshing={loading_email_addresses}
+          onRefresh={() => fetchData('email_addresses')}
           deleteItem={this.delete}
           deletable
           titleDetail="Edit email address"
@@ -140,10 +136,8 @@ const styles = {
 };
 
 const mapStateToProps = ({ user }) => {
-  const { emailAddresses, loadingEmailAddresses, profile } = user;
-  return { emailAddresses, loadingEmailAddresses, profile };
+  const { email_addresses, loading_email_addresses, profile } = user;
+  return { email_addresses, loading_email_addresses, profile };
 };
 
-export default connect(mapStateToProps, { fetchEmailAddresses })(
-  EmailAddressesScreen,
-);
+export default connect(mapStateToProps, { fetchData })(EmailAddressesScreen);

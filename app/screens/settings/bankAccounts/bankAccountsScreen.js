@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, RefreshControl, FlatList } from 'react-native';
 import { connect } from 'react-redux';
-import { fetchBankAccounts } from './../../../redux/actions';
+import { fetchData } from './../../../redux/actions';
 
 import { standardizeString } from './../../../util/general';
 
@@ -184,7 +184,7 @@ class BankAccountsScreen extends Component {
   }
 
   render() {
-    const { bankAccounts, loadingBankAccounts, fetchBankAccounts } = this.props;
+    const { bank_accounts, loading_bank_accounts, fetchData } = this.props;
     return (
       <View style={styles.container}>
         <Header
@@ -200,15 +200,15 @@ class BankAccountsScreen extends Component {
           }
         />
         <CardList
-          data={bankAccounts}
+          data={bank_accounts}
           titleDetail="Edit bank account"
           renderContent={this.renderContent}
           renderDetail={this.renderDetail}
           saveItem={this.saveBankAccount}
           title={item => (item ? item.name : 'New bank account')}
           subtitle={item => (item ? standardizeString(item.status) : '')}
-          refreshing={loadingBankAccounts}
-          onRefresh={fetchBankAccounts}
+          refreshing={loading_bank_accounts}
+          onRefresh={() => fetchData('bank_accounts')}
           emptyListMessage="No bank accounts added yet"
           deleteItem={this.delete}
           deletable
@@ -242,10 +242,8 @@ const styles = {
 };
 
 const mapStateToProps = ({ user }) => {
-  const { bankAccounts, loadingBankAccounts } = user;
-  return { bankAccounts, loadingBankAccounts };
+  const { bank_accounts, loading_bank_accounts } = user;
+  return { bank_accounts, loading_bank_accounts };
 };
 
-export default connect(mapStateToProps, { fetchBankAccounts })(
-  BankAccountsScreen,
-);
+export default connect(mapStateToProps, { fetchData })(BankAccountsScreen);

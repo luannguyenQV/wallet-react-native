@@ -42,17 +42,19 @@ class SettingsScreen extends Component {
   }
 
   renderEmailAddresses() {
-    const { emailAddresses } = this.props;
+    const { email_addresses } = this.props;
 
     let value = 'Not yet provided';
 
-    for (let i = 0; i < emailAddresses.length; i++) {
-      if (emailAddresses[i].verified === true) {
-        value = emailAddresses[i].email;
-      }
-      if (emailAddresses[i].primary === true) {
-        value = emailAddresses[i].email;
-        break;
+    if (email_addresses) {
+      for (let i = 0; i < email_addresses.length; i++) {
+        if (email_addresses[i].verified === true) {
+          value = email_addresses[i].email;
+        }
+        if (email_addresses[i].primary === true) {
+          value = email_addresses[i].email;
+          break;
+        }
       }
     }
 
@@ -67,17 +69,19 @@ class SettingsScreen extends Component {
   }
 
   renderMobileNumbers() {
-    const { mobileNumbers } = this.props;
+    const { mobile_numbers } = this.props;
 
     let value = 'Not yet provided';
 
-    for (let i = 0; i < mobileNumbers.length; i++) {
-      if (mobileNumbers[i].verified) {
-        value = mobileNumbers[i].number;
-      }
-      if (mobileNumbers[i].primary) {
-        value = mobileNumbers[i].number;
-        break;
+    if (mobile_numbers) {
+      for (let i = 0; i < mobile_numbers.length; i++) {
+        if (mobile_numbers[i].verified) {
+          value = mobile_numbers[i].number;
+        }
+        if (mobile_numbers[i].primary) {
+          value = mobile_numbers[i].number;
+          break;
+        }
       }
     }
 
@@ -95,23 +99,25 @@ class SettingsScreen extends Component {
     const { addresses } = this.props;
 
     let value = '';
-    if (addresses.line_1) {
-      value = value + addresses.line_1 + ', ';
-    }
-    if (addresses.line_2) {
-      value = value + addresses.line_2 + ', ';
-    }
-    if (addresses.city) {
-      value = value + addresses.city + ', ';
-    }
-    if (addresses.state_province) {
-      value = value + addresses.state_province + ', ';
-    }
-    if (addresses.country) {
-      value = value + addresses.country + ', ';
-    }
-    if (addresses.postal_code) {
-      value = value + addresses.postal_code;
+    if (addresses) {
+      if (addresses.line_1) {
+        value = value + addresses.line_1 + ', ';
+      }
+      if (addresses.line_2) {
+        value = value + addresses.line_2 + ', ';
+      }
+      if (addresses.city) {
+        value = value + addresses.city + ', ';
+      }
+      if (addresses.state_province) {
+        value = value + addresses.state_province + ', ';
+      }
+      if (addresses.country) {
+        value = value + addresses.country + ', ';
+      }
+      if (addresses.postal_code) {
+        value = value + addresses.postal_code;
+      }
     }
 
     return (
@@ -241,12 +247,18 @@ const styles = {
 };
 
 const mapStateToProps = ({ user }) => {
-  const { profile, addresses, mobileNumbers, emailAddresses, documents } = user;
+  const {
+    profile,
+    addresses,
+    mobile_numbers,
+    email_addresses,
+    documents,
+  } = user;
   return {
     profile,
     addresses,
-    mobileNumbers,
-    emailAddresses,
+    mobile_numbers,
+    email_addresses,
     documents,
   };
 };

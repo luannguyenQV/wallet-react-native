@@ -9,13 +9,15 @@ import {
   RefreshControl,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { fetchMobileNumbers } from './../../../redux/actions';
+import { fetchData } from './../../../redux/actions';
 
 import ResetNavigation from './../../../util/resetNavigation';
 import SettingsService from './../../../services/settingsService';
 import Colors from './../../../config/colors';
 import Header from './../../../components/header';
 import { CardList } from './../../../components/common';
+
+import * as types from './../../../redux/types';
 
 class MobileNumbersScreen extends Component {
   static navigationOptions = {
@@ -119,11 +121,7 @@ class MobileNumbersScreen extends Component {
   // }
 
   render() {
-    const {
-      mobileNumbers,
-      loadingMobileNumbers,
-      fetchMobileNumbers,
-    } = this.props;
+    const { mobile_numbers, loading_mobile_numbers, fetchData } = this.props;
     return (
       <View style={styles.container}>
         <Header
@@ -143,7 +141,7 @@ class MobileNumbersScreen extends Component {
           textStyle={{ color: '#FFF' }}
         /> */}
         <CardList
-          data={mobileNumbers}
+          data={mobile_numbers}
           // makePrimaryItem={this.makePrimary}
           textFunctionActionOne={item => (item.verified ? '' : 'Verify')}
           onPressActionOne={this.verify}
@@ -151,8 +149,8 @@ class MobileNumbersScreen extends Component {
           title={item => item.number}
           subtitle={item => (item.verified ? 'Verified' : '')}
           itemActive={item => (item.primary ? true : false)}
-          refreshing={loadingMobileNumbers}
-          onRefresh={fetchMobileNumbers}
+          refreshing={loading_mobile_numbers}
+          onRefresh={() => fetchData('mobile_numbers')}
           emptyListMessage="No mobile numbers added yet"
           deleteItem={this.delete}
           deletable
@@ -181,10 +179,8 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = ({ user }) => {
-  const { mobileNumbers, loadingMobileNumbers, profile } = user;
-  return { mobileNumbers, loadingMobileNumbers, profile };
+  const { mobile_numbers, loading_mobile_numbers, profile } = user;
+  return { mobile_numbers, loading_mobile_numbers, profile };
 };
 
-export default connect(mapStateToProps, { fetchMobileNumbers })(
-  MobileNumbersScreen,
-);
+export default connect(mapStateToProps, { fetchData })(MobileNumbersScreen);

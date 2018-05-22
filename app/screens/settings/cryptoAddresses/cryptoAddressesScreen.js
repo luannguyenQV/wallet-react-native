@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, RefreshControl, FlatList } from 'react-native';
 import { connect } from 'react-redux';
-import { fetchCryptoAccounts } from './../../../redux/actions';
+import { fetchData } from './../../../redux/actions';
 
 import { standardizeString } from './../../../util/general';
 
@@ -71,9 +71,9 @@ class CryptoAddressesScreen extends Component {
 
   render() {
     const {
-      cryptoAccounts,
-      loadingCryptoAccounts,
-      fetchCryptoAccounts,
+      crypto_addresses,
+      loading_crypto_addresses,
+      fetchData,
     } = this.props;
     return (
       <View style={styles.container}>
@@ -87,15 +87,15 @@ class CryptoAddressesScreen extends Component {
           // }
         />
         <CardList
-          data={cryptoAccounts}
+          data={crypto_addresses}
           renderContent={this.renderContent}
           titleDetail="Edit bank account"
           renderDetail={this.renderDetail}
           saveItem={this.saveCryptoAddress}
           title={item => (item ? standardizeString(item.crypto_type) : '')}
           subtitle={item => (item ? standardizeString(item.status) : '')}
-          refreshing={loadingCryptoAccounts}
-          onRefresh={fetchCryptoAccounts}
+          refreshing={loading_crypto_addresses}
+          onRefresh={() => fetchData('crypto_addresses')}
           emptyListMessage="No mobile numbers added yet"
           deleteItem={this.delete}
           deletable
@@ -127,10 +127,8 @@ const styles = {
 };
 
 const mapStateToProps = ({ user }) => {
-  const { cryptoAccounts, loadingCryptoAccounts } = user;
-  return { cryptoAccounts, loadingCryptoAccounts };
+  const { crypto_addresses, loading_crypto_addresses } = user;
+  return { crypto_addresses, loading_crypto_addresses };
 };
 
-export default connect(mapStateToProps, { fetchCryptoAccounts })(
-  CryptoAddressesScreen,
-);
+export default connect(mapStateToProps, { fetchData })(CryptoAddressesScreen);

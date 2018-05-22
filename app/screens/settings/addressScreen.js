@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Alert, Text, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
-import { fetchAddresses } from './../../redux/actions';
+import { fetchData } from './../../redux/actions';
 
 import CountryPicker from 'react-native-country-picker-modal';
 import UserInfoService from './../../services/userInfoService';
@@ -19,17 +19,34 @@ class AddressScreen extends Component {
     routeName: this.props.navigation.state.params
       ? this.props.navigation.state.params.name
       : null,
-    line_1: this.props.addresses.line_1,
-    line_2: this.props.addresses.line_2,
-    city: this.props.addresses.city,
-    state_province: this.props.addresses.state_province,
-    country:
-      this.props.addresses.country !== '' ? this.props.addresses.country : 'US',
-    postal_code: this.props.addresses.postal_code,
+    line_1: '',
+    line_2: '',
+    city: '',
+    state_province: '',
+    country: 'US',
+    postal_code: '',
   };
 
   componentDidMount() {
-    this.props.fetchAddresses();
+    this.props.fetchData('addresses');
+    this.updateAddressFields(this.props.addresses);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.updateAddressFields(nextProps.addresses);
+  }
+
+  updateAddressFields(address) {
+    if (address) {
+      this.setState({
+        line_1: address.line_1,
+        line_2: address.line_2,
+        city: address.city,
+        state_province: address.state_province,
+        country: address.country !== '' ? address.country : 'US',
+        postal_code: address.postal_code,
+      });
+    }
   }
 
   save = async () => {
@@ -49,7 +66,7 @@ class AddressScreen extends Component {
   };
 
   render() {
-    const { fetchAddresses, loadingAddresses } = this.props;
+    const { fetchData, loading_addresses } = this.props;
     const {
       line_1,
       line_2,
@@ -70,8 +87,8 @@ class AddressScreen extends Component {
         <InputContainer
           refreshControl={
             <RefreshControl
-              refreshing={loadingAddresses}
-              onRefresh={fetchAddresses}
+              refreshing={loading_addresses}
+              onRefresh={fetchData}
             />
           }>
           <Input
@@ -160,8 +177,8 @@ const styles = {
 };
 
 const mapStateToProps = ({ user }) => {
-  const { profile, addresses, loadingAddresses } = user;
-  return { profile, addresses, loadingAddresses };
+  const { profile, addresses, loading_addresses } = user;
+  return { profile, addresses, loading_addresses };
 };
 
-export default connect(mapStateToProps, { fetchAddresses })(AddressScreen);
+export default connect(mapStateToProps, { fetchData })(AddressScreen);
