@@ -2,9 +2,7 @@ import {
   FETCH_PROFILE_SUCCESS,
   FETCH_PROFILE_FAIL,
   FETCH_PROFILE,
-  FETCH_ACCOUNTS,
-  FETCH_ACCOUNTS_SUCCESS,
-  FETCH_ACCOUNTS_FAIL,
+  FETCH_ACCOUNTS_ASYNC,
   UPDATE_CURRENT_INDEX,
   SET_ACTIVE_CURRENCY_SUCCESS,
   SET_ACTIVE_CURRENCY_FAIL,
@@ -62,12 +60,12 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         loadingProfile: false,
       };
-    case FETCH_ACCOUNTS:
+    case FETCH_ACCOUNTS_ASYNC.PENDING:
       return {
         ...state,
         loadingAccounts: true,
       };
-    case FETCH_ACCOUNTS_SUCCESS:
+    case FETCH_ACCOUNTS_ASYNC.SUCCESS:
       return {
         ...state,
         wallets: action.payload.wallets,
@@ -75,7 +73,7 @@ export default (state = INITIAL_STATE, action) => {
         showAccountLabel: action.payload.showAccountLabel,
         loadingAccounts: false,
       };
-    case FETCH_ACCOUNTS_FAIL:
+    case FETCH_ACCOUNTS_ASYNC.ERROR:
       return {
         ...state,
         loadingAccounts: false,

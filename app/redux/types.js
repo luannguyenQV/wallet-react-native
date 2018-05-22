@@ -1,6 +1,8 @@
 import { createAsyncTypes } from './store/Utilities';
 
 // AUTH
+export const LOGIN_USER_ASYNC = createAsyncTypes('LOGIN_USER');
+export const REGISTER_USER_ASYNC = createAsyncTypes('REGISTER_USER');
 export const AUTH_FIELD_CHANGED = 'auth_field_changed';
 export const AUTH_FIELD_ERROR = 'auth_field_error';
 export const TERMS_CHANGED = 'terms_changed';
@@ -10,21 +12,14 @@ export const UPDATE_AUTH_FORM_FIELD_FAIL = 'update_auth_form_field_fail';
 export const UPDATE_AUTH_FORM_STATE = 'update_auth_form_state';
 export const UPDATE_AUTH_INPUT_STATE = 'update_auth_input_state';
 export const LOGIN_USER = 'login_user';
-export const LOGIN_USER_SUCCESS = 'login_user_success';
-export const LOGIN_USER_FAIL = 'login_user_fail';
-export const REGISTER_USER = 'register_user';
-export const REGISTER_USER_SUCCESS = 'register_user_success';
-export const REGISTER_USER_FAIL = 'register_user_fail';
 export const AUTH_FIELD_FOCUS = 'auth_field_focus';
 export const LOGOUT_USER = 'logout_user';
-export const APP_LOAD_START = 'app_load_start';
-export const APP_LOAD_FINISH = 'app_load_finish';
+export const APP_LOAD_START = 'APP_LOAD_START';
+export const APP_LOAD_FINISH = 'APP_LOAD_FINISH';
 export const LOADING = 'loading';
 
 // ACCOUNTS
-export const FETCH_ACCOUNTS = 'fetch_accounts';
-export const FETCH_ACCOUNTS_SUCCESS = 'fetch_accounts_success';
-export const FETCH_ACCOUNTS_FAIL = 'fetch_accounts_fail';
+export const FETCH_ACCOUNTS_ASYNC = createAsyncTypes('FETCH_ACCOUNTS');
 export const UPDATE_CURRENT_INDEX = 'update_current_index';
 export const SET_ACTIVE_CURRENCY = 'set_active_currency';
 export const SET_ACTIVE_CURRENCY_SUCCESS = 'set_active_currency_success';

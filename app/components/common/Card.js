@@ -46,7 +46,7 @@ const Card = props => {
     titleStyle,
   } = props;
 
-  console.log(props);
+  // console.log(props);
 
   return (
     <View style={viewStyleCardContainer}>

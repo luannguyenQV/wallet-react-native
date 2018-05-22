@@ -22,11 +22,7 @@ class WalletsScreen extends Component {
   };
 
   componentDidMount() {
-    this.refreshAccounts();
-  }
-
-  refreshAccounts() {
-    // this.props.fetchAccounts();
+    this.props.fetchAccounts();
   }
 
   showDetails(wallet) {
@@ -103,14 +99,14 @@ class WalletsScreen extends Component {
           navigation={this.props.navigation}
           drawer
           title="Wallets"
-          headerRightIcon={headerRightIcon}
-          headerRightOnPress={headerRightOnPress}
+          // headerRightIcon={headerRightIcon}
+          // headerRightOnPress={headerRightOnPress}
         />
-        {showDetails ? (
+        {/* {showDetails ? (
           this.renderDetails()
         ) : (
           <CardContainer>{this.renderWallets()}</CardContainer>
-        )}
+        )} */}
       </View>
     );
   }
@@ -140,8 +136,8 @@ const styles = {
 };
 
 const mapStateToProps = ({ accounts }) => {
-  const { wallets, loadingAccounts } = accounts;
-  return { wallets, loadingAccounts };
+  const { wallets, loading_accounts } = accounts;
+  return { wallets, loading_accounts };
 };
 
 export default connect(mapStateToProps, { fetchAccounts })(WalletsScreen);

@@ -239,7 +239,7 @@ class SettingsScreen extends Component {
 const styles = {
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
   },
   // mainContainer: {
   //   flex: 1,

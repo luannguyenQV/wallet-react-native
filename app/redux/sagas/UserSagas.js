@@ -1,4 +1,4 @@
-import { take, call, put, takeEvery } from 'redux-saga/effects';
+import { all, call, put, takeEvery } from 'redux-saga/effects';
 
 import UserInfoService from './../../services/userInfoService';
 import SettingsService from './../../services/settingsService';
@@ -41,13 +41,12 @@ function* fetchData(action) {
         payload: { data: responseJson.error, prop: action.payload },
       });
     }
-    console.log(responseJson);
   } catch (error) {
     yield put({ type: 'FETCH_DATA_ERROR', error });
   }
 }
 
-export const userSagas = [takeEvery('FETCH_DATA_PENDING', fetchData)];
+export const userSagas = all([takeEvery('FETCH_DATA_PENDING', fetchData)]);
 
 // function* apiSaga(fn, args, successAction, errorAction) {
 //   try {

@@ -97,8 +97,8 @@ const styles = {
 
 const mapStateToProps = ({ auth, accounts }) => {
   const { token } = auth;
-  const { user, wallets, activeWalletIndex, loadingAccounts } = accounts;
-  return { token, user, wallets, activeWalletIndex, loadingAccounts };
+  const { wallets, activeWalletIndex, loadingAccounts } = accounts;
+  return { token, wallets, activeWalletIndex, loadingAccounts };
 };
 
 export default connect(mapStateToProps, { logoutUser })(HomeScreen);

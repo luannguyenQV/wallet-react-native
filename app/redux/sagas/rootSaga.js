@@ -1,7 +1,9 @@
 import { all } from 'redux-saga/effects';
 import { userSagas } from './UserSagas';
+import { authSagas } from './AuthSagas';
+import { accountsSagas } from './AccountsSagas';
 
-const sagas = [...userSagas];
+const sagas = [userSagas, authSagas, accountsSagas];
 
 // export const initSagas = sagaMiddleware =>
 //   sagas.forEach(sagaMiddleware.run.bind(sagaMiddleware));

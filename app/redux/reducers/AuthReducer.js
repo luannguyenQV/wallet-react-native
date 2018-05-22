@@ -2,12 +2,8 @@ import {
   AUTH_FIELD_CHANGED,
   AUTH_FIELD_ERROR,
   TERMS_CHANGED,
-  LOGIN_USER_SUCCESS,
-  LOGIN_USER_FAIL,
-  LOGIN_USER,
-  REGISTER_USER,
-  REGISTER_USER_SUCCESS,
-  REGISTER_USER_FAIL,
+  LOGIN_USER_ASYNC,
+  REGISTER_USER_ASYNC,
   UPDATE_AUTH_FORM_STATE,
   LOGOUT_USER,
   LOADING,
@@ -39,7 +35,7 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action) => {
-  // console.log(action);
+  // console.log('action', action);
   switch (action.type) {
     case PERSIST_REHYDRATE:
       return action.payload.auth || [];
@@ -85,14 +81,14 @@ export default (state = INITIAL_STATE, action) => {
         loading: true,
       };
 
-    case LOGIN_USER:
+    case LOGIN_USER_ASYNC.PENDING:
       return {
         ...state,
         loading: true,
         inputError: '',
         password: '',
       };
-    case LOGIN_USER_SUCCESS:
+    case LOGIN_USER_ASYNC.SUCCESS:
       return {
         ...state,
         authState: '',
@@ -100,39 +96,40 @@ export default (state = INITIAL_STATE, action) => {
         token: action.payload,
         loading: false,
       };
-    case LOGIN_USER_FAIL:
+    case LOGIN_USER_ASYNC.ERROR:
       return {
         ...state,
         token: null,
         // passwordError: 'Unable to login with provided credentials',
-        inputError:
-          'Unable to login with provided credentials, please try again',
+        inputError: action.payload,
         loading: false,
       };
 
-    case REGISTER_USER:
+    case REGISTER_USER_ASYNC.PENDING:
       return {
         ...state,
         loading: true,
         inputError: '',
       };
-    case REGISTER_USER_SUCCESS:
+    case REGISTER_USER_ASYNC.SUCCESS:
       return {
         ...state,
         token: action.payload,
         loading: false,
       };
-    case REGISTER_USER_FAIL:
+    case REGISTER_USER_ASYNC.ERROR:
       return {
         ...state,
         token: null,
         inputError: action.payload,
         loading: false,
       };
+
     case APP_LOAD_START:
       return {
         ...state,
         appLoading: true,
+        textFooterRight: '',
       };
     case APP_LOAD_FINISH:
       return {

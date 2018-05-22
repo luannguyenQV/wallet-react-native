@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, Alert, Linking } from 'react-native';
 import UserInfoService from './../../services/userInfoService';
 import Colors from './../../config/colors';
 import Header from './../../components/header';
+import AppConfig from './../../../exp.json';
 
 class AboutScreen extends Component {
   static navigationOptions = {
@@ -64,6 +65,9 @@ class AboutScreen extends Component {
               (link)
             </Text>
           </View>
+          <Text style={{ fontSize: 20, color: Colors.black }}>
+            Version: {AppConfig.version}
+          </Text>
         </View>
         <View style={styles.logo}>
           {this.state.company.logo !== null ? (

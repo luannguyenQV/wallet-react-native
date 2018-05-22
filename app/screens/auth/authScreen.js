@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {
   View,
-  Text,
   Image,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
@@ -12,78 +11,35 @@ import {
   initialLoad,
   authFieldChange,
   nextAuthFormState,
-  // updateAuthInputState,
-  updateAuthInputField,
-  loginUser,
-  registerUser,
-  fetchProfile,
-  fetchEmailAddresses,
-  fetchMobileNumbers,
-  fetchAddresses,
-  fetchDocuments,
-  fetchAccounts,
-  fetchBankAccounts,
-  fetchCryptoAccounts,
   previousAuthFormState,
 } from '../../redux/actions';
 
 import Colors from './../../config/colors';
-import Exp from './../../../exp.json';
-import {
-  Button,
-  InputContainer,
-  AuthForm,
-  Input,
-  Spinner,
-} from './../../components/common';
+import { Button, AuthForm, Input, Spinner } from './../../components/common';
 
 class AuthScreen extends Component {
   componentDidMount() {
     this.props.initialLoad(this.props);
-    this.onAuthComplete(this.props);
+    // this.onAuthComplete(this.props);
   }
   componentWillReceiveProps(nextProps) {
     this.onAuthComplete(nextProps);
-    if (
-      nextProps.authState === 'register' &&
-      nextProps.registerFormState === ''
-    ) {
-      this.props.nextAuthFormState({ nextFormState: 'landing' });
-    }
+    // if (
+    //   nextProps.authState === 'register' &&
+    //   nextProps.registerFormState === ''
+    // ) {
+    //   this.props.nextAuthFormState({ nextFormState: 'landing' });
+    // }
   }
 
   onAuthComplete(props) {
-    const { token, wallets, profile, appLoading } = props;
+    const { token, appLoading } = props;
 
-    if (token) {
-      if (!appLoading) {
-        if (wallets && profile) {
-          props.navigation.navigate('Home');
-        }
-      } else {
-        this.fetchData(props);
-      }
+    // if (token) {
+    if (!appLoading) {
+      props.navigation.navigate('Home');
     }
-  }
-
-  fetchData(props) {
-    props.fetchProfile();
-    // props.fetchEmailAddresses();
-    // props.fetchMobileNumbers();
-    // props.fetchAddresses();
-    // props.fetchDocuments();
-    props.fetchAccounts();
-    // props.fetchBankAccounts();
-    // props.fetchCryptoAccounts();
-  }
-
-  performLogin = () => {
-    const { email, company, password } = this.props;
-    this.props.loginUser({ email, company, password });
-  };
-
-  updateAuthInputField() {
-    this.props.updateAuthInputField(this.props);
+    // }
   }
 
   changeCountryCode = (code, cca2) => {
@@ -371,7 +327,7 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ auth, accounts, user }) => {
+const mapStateToProps = ({ auth }) => {
   const {
     inputState,
     input,
@@ -389,8 +345,6 @@ const mapStateToProps = ({ auth, accounts, user }) => {
     iconHeaderLeft,
     appLoading,
   } = auth;
-  const { wallets, loadingProfile, loadingAccounts } = accounts;
-  const { profile } = user;
   return {
     inputState,
     input,
@@ -405,10 +359,6 @@ const mapStateToProps = ({ auth, accounts, user }) => {
     loading,
     textFooterRight,
     token,
-    wallets,
-    loadingProfile,
-    loadingAccounts,
-    profile,
     iconHeaderLeft,
     appLoading,
   };
@@ -418,16 +368,5 @@ export default connect(mapStateToProps, {
   authFieldChange,
   initialLoad,
   nextAuthFormState,
-  updateAuthInputField,
-  loginUser,
-  registerUser,
-  fetchProfile,
-  fetchEmailAddresses,
-  fetchMobileNumbers,
-  fetchAddresses,
-  fetchDocuments,
-  fetchAccounts,
-  fetchBankAccounts,
-  fetchCryptoAccounts,
   previousAuthFormState,
 })(AuthScreen);

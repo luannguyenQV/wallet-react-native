@@ -16,7 +16,7 @@ const INITIAL_STATE = {
   loading_mobile_numbers: false,
   addresses: null,
   loadingAddresses: false,
-  documents: [],
+  documents: {},
   loadingDocuments: false,
   bankAccounts: [],
   loadingBankAccounts: false,
@@ -25,7 +25,7 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action) => {
-  console.log(action);
+  // console.log(action);
   switch (action.type) {
     case PERSIST_REHYDRATE:
       return action.payload.auth || [];

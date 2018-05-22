@@ -2,12 +2,8 @@ import {
   AUTH_FIELD_CHANGED,
   AUTH_FIELD_ERROR,
   TERMS_CHANGED,
-  LOGIN_USER,
-  LOGIN_USER_SUCCESS,
-  LOGIN_USER_FAIL,
-  REGISTER_USER,
-  REGISTER_USER_SUCCESS,
-  REGISTER_USER_FAIL,
+  LOGIN_USER_ASYNC,
+  REGISTER_USER_ASYNC,
   UPDATE_AUTH_FORM_STATE,
   LOGOUT_USER,
   LOADING,
@@ -21,8 +17,9 @@ import AuthService from './../../services/authService';
 
 export const initialLoad = props => async dispatch => {
   dispatch({ type: APP_LOAD_START });
+
   if (props.token) {
-    dispatch({ type: LOGIN_USER_SUCCESS, payload: token });
+    dispatch({ type: LOGIN_USER_ASYNC.SUCCESS, payload: props.token });
   } else {
     dispatch({
       type: AUTH_FIELD_ERROR,
@@ -104,7 +101,10 @@ export const nextAuthFormState = (props, nextFormState) => async dispatch => {
             break;
           case 'password':
             data = { company, user: email, password };
-            await performLogin(dispatch, data);
+            dispatch({
+              type: LOGIN_USER_ASYNC.PENDING,
+              payload: data,
+            });
             skip = true;
             break;
         }
@@ -242,74 +242,11 @@ export const termsChanged = ({ prop, value }) => {
   };
 };
 
-performLogin = async (dispatch, data) => {
-  dispatch({
-    type: LOGIN_USER,
-  });
-  let responseJson = await AuthService.login(data);
-
-  if (responseJson.status === 'success') {
-    const loginInfo = responseJson.data;
-    loginUserSuccess(dispatch, loginInfo.token);
-    // let twoFactorResponse = await AuthService.twoFactorAuth();
-    // if (twoFactorResponse.status === 'success') {
-    //   const authInfo = twoFactorResponse.data;
-    //   if (authInfo.sms === true || authInfo.token === true) {
-    //     this.props.navigation.navigate('AuthVerifySms', {
-    //       loginInfo: loginInfo,
-    //       isTwoFactor: true,
-    //     });
-    //   } else {
-    //     Auth.login(this.props.navigation, loginInfo);
-    //   }
-    // } else {
-    //   Alert.alert('Error', twoFactorResponse.message, [{ text: 'OK' }]);
-    // }
-  } else {
-    loginUserFail(dispatch);
-  }
-};
-
-const loginUserFail = dispatch => {
-  dispatch({ type: LOGIN_USER_FAIL });
-  dispatch(
-    previousAuthFormState({ authState: 'login', inputState: 'password' }),
-  );
-};
-
-const loginUserSuccess = (dispatch, token) => {
-  dispatch({
-    type: LOGIN_USER_SUCCESS,
-    payload: token,
-  });
-};
-
-performRegister = async (dispatch, data) => {
-  dispatch({
-    type: REGISTER_USER,
-  });
-  let responseJson = await AuthService.signup(data);
-
-  if (responseJson.status === 'success') {
-    const loginInfo = responseJson.data;
-    registerUserSuccess(dispatch, loginInfo.token);
-  } else {
-    registerUserFail(dispatch, responseJson.message);
-  }
-};
-
-const registerUserFail = (dispatch, error) => {
-  dispatch({ type: REGISTER_USER_FAIL, payload: error });
-  dispatch(
-    previousAuthFormState({ authState: 'register', inputState: 'password' }),
-  );
-};
-
-const registerUserSuccess = (dispatch, token) => {
-  dispatch({
-    type: REGISTER_USER_SUCCESS,
-    payload: token,
-  });
+performRegister = data => {
+  return {
+    type: REGISTER_USER_ASYNC.PENDING,
+    payload: data,
+  };
 };
 
 export const logoutUser = () => {

@@ -48,9 +48,9 @@ const RouteConfigs = {
   Settings: {
     screen: Settings,
   },
-  // About: {
-  //   screen: About,
-  // },
+  About: {
+    screen: About,
+  },
   Logout: {
     screen: Logout,
   },

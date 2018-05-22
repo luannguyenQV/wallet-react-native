@@ -1,7 +1,5 @@
 import {
-  FETCH_ACCOUNTS,
-  FETCH_ACCOUNTS_SUCCESS,
-  FETCH_ACCOUNTS_FAIL,
+  FETCH_ACCOUNTS_ASYNC,
   UPDATE_CURRENT_INDEX,
   SET_ACTIVE_CURRENCY_SUCCESS,
   SET_ACTIVE_CURRENCY_FAIL,
@@ -24,67 +22,8 @@ import Big from 'big.js';
 import AccountService from './../../services/accountService';
 import TransactionService from './../../services/transactionService';
 
-export const fetchAccounts = () => async dispatch => {
-  dispatch({ type: APP_LOAD_FINISH });
-  dispatch({ type: FETCH_ACCOUNTS });
-  let responseJson = await AccountService.getAllAccounts();
-
-  if (responseJson.status === 'success') {
-    const accounts = responseJson.data.results;
-    let activeWalletIndex = 0;
-    let currencies;
-    let account;
-
-    let showAccountLabel = false;
-
-    // var wallets = _.flatten(_.flatten(accounts, 'users'));
-
-    // console.log('1', _.flatten(accounts.results));
-
-    // let wallets = _.map(accounts.results, function(account) {
-    //   return _.flatten(account.currencies);
-    // });
-
-    // wallets.log('1', _.flatten(accounts));
-
-    // _.map(currencies, 'user');
-
-    // console.log(accounts);
-    let wallets;
-    let index = 0;
-    for (var i = 0; i < accounts.length; i++) {
-      account = accounts[i];
-      // console.log(account);
-      currencies = account.currencies;
-      for (var j = 0; j < currencies.length; j++) {
-        if (!wallets) {
-          wallets = [];
-        }
-        wallets[index] = {
-          index,
-          account_reference: account.reference,
-          account_name: account.name,
-          account_label: account.label ? account.label : account.name,
-          currency: currencies[j],
-        };
-        if (currencies[j].active === true) {
-          activeWalletIndex = index;
-        }
-        index++;
-      }
-    }
-    if (accounts.length > 1) {
-      showAccountLabel = true;
-    }
-    showAccountLabel = false;
-
-    dispatch({
-      type: FETCH_ACCOUNTS_SUCCESS,
-      payload: { wallets, activeWalletIndex, showAccountLabel },
-    });
-  } else {
-    dispatch({ type: FETCH_ACCOUNTS_FAIL });
-  }
+export const fetchAccounts = () => {
+  return { type: FETCH_ACCOUNTS_ASYNC.PENDING };
 };
 
 export const setActiveWalletIndex = index => {
@@ -106,7 +45,7 @@ export const setSendWallet = wallet => {
 };
 
 export const validateSendAmount = (wallet, amount) => {
-  console.log(wallet, amount);
+  // console.log(wallet, amount);
   // const currency = wallet.currency.currency;
   for (let i = 0; i < wallet.currency.currency.divisibility; i++) {
     amount = amount * 10;

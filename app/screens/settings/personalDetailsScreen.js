@@ -11,7 +11,7 @@ import {
   RefreshControl,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { fetchProfile } from './../../redux/actions';
+import { fetchData } from './../../redux/actions';
 
 import CountryPicker from 'react-native-country-picker-modal';
 import Modal from 'react-native-modal';
@@ -30,19 +30,33 @@ class PersonalDetailsScreen extends Component {
     routeName: this.props.navigation.state.params
       ? this.props.navigation.state.params.name
       : null,
-    first_name: this.props.profile.first_name,
-    last_name: this.props.profile.last_name,
-    id_number: this.props.profile.id_number,
-    nationality:
-      this.props.profile.nationality !== ''
-        ? this.props.profile.nationality
-        : 'US',
-    profile: this.props.profile.profile,
+    first_name: '', //this.props.profile.first_name,
+    last_name: '', //this.props.profile.last_name,
+    id_number: '', //this.props.profile.id_number,
+    nationality: '',
+    //this.props.profile.nationality !== ''
+    // ? this.props.profile.nationality
+    // : 'US',
+    profile: '', //this.props.profile.profile,
     modalVisible: false,
   };
 
   componentDidMount() {
-    this.props.fetchProfile();
+    this.props.fetchData('profile');
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      first_name: nextProps.profile.first_name,
+      last_name: nextProps.profile.last_name,
+      id_number: nextProps.profile.id_number,
+      nationality:
+        nextProps.profile.nationality !== ''
+          ? nextProps.profile.nationality
+          : 'US',
+      profile: nextProps.profile.profile,
+      modalVisible: false,
+    });
   }
 
   navigateToUploadImage = result => {
@@ -101,7 +115,7 @@ class PersonalDetailsScreen extends Component {
       nationality,
       modalVisible,
     } = this.state;
-    const { fetchProfile, loadingProfile } = this.props;
+    const { fetchData, loading_profile } = this.props;
     const { viewStyleContainer, imageStylePhoto } = styles;
     return (
       <View style={{ flex: 1 }}>
@@ -136,8 +150,8 @@ class PersonalDetailsScreen extends Component {
         <InputContainer
           refreshControl={
             <RefreshControl
-              refreshing={loadingProfile}
-              onRefresh={fetchProfile}
+              refreshing={loading_profile}
+              onRefresh={() => fetchData('profile')}
             />
           }>
           <Input
@@ -310,10 +324,8 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = ({ user }) => {
-  const { profile, loadingProfile } = user;
-  return { profile, loadingProfile };
+  const { profile, loading_profile } = user;
+  return { profile, loading_profile };
 };
 
-export default connect(mapStateToProps, { fetchProfile })(
-  PersonalDetailsScreen,
-);
+export default connect(mapStateToProps, { fetchData })(PersonalDetailsScreen);
