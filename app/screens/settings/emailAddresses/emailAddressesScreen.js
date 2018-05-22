@@ -9,7 +9,7 @@ import ResetNavigation from './../../../util/resetNavigation';
 import SettingsService from './../../../services/settingsService';
 import Colors from './../../../config/colors';
 import Header from './../../../components/header';
-import { EmptyListMessage } from './../../../components/common';
+import { CardList } from './../../../components/common';
 
 class EmailAddressesScreen extends Component {
   static navigationOptions = {
@@ -23,10 +23,6 @@ class EmailAddressesScreen extends Component {
     loading: false,
     loadingMessage: '',
   };
-
-  componentDidMount() {
-    this.props.fetchEmailAddresses();
-  }
 
   reload = () => {
     ResetNavigation.dispatchUnderDrawer(
@@ -110,34 +106,26 @@ class EmailAddressesScreen extends Component {
             })
           }
         />
-        <Spinner
-          visible={this.state.loading}
-          textContent={this.state.loadingMessage}
-          textStyle={{ color: '#FFF' }}
+        <CardList
+          data={emailAddresses}
+          textFunctionActionOne={item =>
+            item ? (item.verified ? '' : 'Verify') : ''
+          }
+          onPressActionOne={this.verify}
+          onPressTitleLeft={this.makePrimary}
+          title={item => (item ? (item.email ? 'New email address' : '') : '')}
+          subtitle={item => (item ? (item.verified ? 'Verified' : '') : '')}
+          itemActive={item => (item ? (item.primary ? true : false) : false)}
+          refreshing={loadingEmailAddresses}
+          onRefresh={fetchEmailAddresses}
+          deleteItem={this.delete}
+          deletable
+          titleDetail="Edit email address"
+          renderDetail={this.renderDetail}
+          saveItem={this.saveBankAccount}
+          emptyListMessage="No email addresses added yet"
+          titleStyle="secondary"
         />
-        {emailAddresses.length > 0 ? (
-          <FlatList
-            refreshControl={
-              <RefreshControl
-                refreshing={loadingEmailAddresses}
-                onRefresh={fetchEmailAddresses}
-              />
-            }
-            data={emailAddresses}
-            renderItem={({ item }) => (
-              <EmailAddress
-                email={item}
-                makePrimary={this.makePrimary}
-                verify={this.verify}
-                delete={this.delete}
-                reload={this.reload}
-              />
-            )}
-            keyExtractor={item => item.id}
-          />
-        ) : (
-          <EmptyListMessage text="No email addresses added yet" />
-        )}
       </View>
     );
   }
@@ -148,15 +136,6 @@ const styles = {
     flex: 1,
     flexDirection: 'column',
     backgroundColor: 'white',
-  },
-  submit: {
-    marginBottom: 10,
-    marginHorizontal: 20,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: Colors.lightblue,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 };
 

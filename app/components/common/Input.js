@@ -171,7 +171,7 @@ class Input extends Component {
             {
               borderColor: requiredError
                 ? Colors.error
-                : focused ? Colors.focus : 'rgba(0,0,0,0.87)',
+                : focused ? Colors.focus : Colors.lightGray,
               borderBottomWidth: requiredError || focused ? 2 : 1,
             },
           ]}>
@@ -211,7 +211,9 @@ class Input extends Component {
 const styles = {
   viewStyleContainer: {
     minHeight: 80,
-    borderRadius: 5,
+    borderTopRightRadius: 3,
+    borderTopLeftRadius: 3,
+    borderRadius: 3,
     // borderWidth: 2,
     // borderColor: Colors.primary,
   },
@@ -223,8 +225,6 @@ const styles = {
     justifyContent: 'center',
   },
   viewStyleLabel: {
-    borderTopRightRadius: 3,
-    borderTopLeftRadius: 3,
     // height: 20,
   },
   viewStyleCountry: {
@@ -238,7 +238,7 @@ const styles = {
     height: 28,
   },
   textStyleLabel: {
-    fontSize: 10,
+    fontSize: 12,
     paddingTop: 6,
   },
   textStyleInput: {

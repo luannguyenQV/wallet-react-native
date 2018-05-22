@@ -1,4 +1,3 @@
-// import lib for making component
 import React from 'react';
 import {
   View,
@@ -12,101 +11,145 @@ import Colors from './../../config/colors';
 import { Spinner } from './Spinner';
 import TouchableCircle from './../touchableCircle';
 
-// make component
 const Card = props => {
   const {
     viewStyleCardContainer,
-    viewStyleHeaderContainer,
     viewStyleTitleContainer,
+    viewStyleTitle,
     textStyleTitle,
     textStyleSubtitle,
     viewStyleActionContainer,
     buttonStyleAction,
     textStyleAction,
-    iconStyleHeaderLeft,
-    iconStyleHeaderRight,
+    iconStyleTitleLeft,
+    iconStyleTitleRight,
     viewStyleFooter,
   } = styles;
 
   const {
     title,
     subtitle,
-    iconHeaderLeft,
-    onPressHeaderLeft,
-    iconHeaderRight,
-    walletCode,
-    walletCodeActive,
-    onPressHeaderRight,
+    iconTitleLeft,
+    onPressTitleLeft,
+    textTitleLeft,
+    iconTitleRight,
+    itemCode,
+    itemActive,
+    onPressTitleRight,
     textActionOne,
     onPressActionOne,
     textActionTwo,
     onPressActionTwo,
     loading,
     onCardPress,
-    onHeaderPress,
+    onPressTitle,
+    titleStyle,
   } = props;
+
+  console.log(props);
 
   return (
     <View style={viewStyleCardContainer}>
-      <TouchableWithoutFeedback onPress={onHeaderPress}>
-        <View>
-          {title || iconHeaderLeft || iconHeaderRight ? (
-            <View resizeMode="cover" style={viewStyleHeaderContainer}>
-              {walletCode ? (
-                <TouchableCircle
-                  text={walletCode}
-                  active={walletCodeActive}
-                  onPress={onPressHeaderLeft}
-                  radius={24}
-                />
-              ) : null}
-              {iconHeaderLeft ? (
-                <Icon
-                  style={iconStyleHeaderLeft}
-                  name={iconHeaderLeft}
-                  size={32}
-                  // color="black"
-                  onPress={onPressHeaderLeft}
-                />
-              ) : null}
-              <View style={viewStyleTitleContainer}>
-                <Text style={textStyleTitle}>{title}</Text>
-                <Text style={textStyleSubtitle}>{subtitle}</Text>
+      <View>
+        {title || iconTitleLeft || iconTitleRight ? (
+          <View
+            resizeMode="cover"
+            style={[
+              viewStyleTitleContainer,
+              {
+                backgroundColor: titleStyle
+                  ? Colors[titleStyle]
+                  : Colors.primary,
+              },
+            ]}>
+            {itemCode ? (
+              <TouchableCircle
+                text={itemCode}
+                active={itemCodeActive}
+                onPress={onPressTitleLeft}
+                radius={24}
+              />
+            ) : null}
+            {textTitleLeft ? (
+              <TouchableCircle
+                text={textTitleLeft}
+                active={itemActive}
+                onPress={onPressTitleLeft}
+                radius={24}
+              />
+            ) : null}
+            {iconTitleLeft ? (
+              <Icon
+                style={iconStyleTitleLeft}
+                name={iconTitleLeft}
+                size={32}
+                // color="black"
+                onPress={onPressTitleLeft}
+              />
+            ) : null}
+            <TouchableWithoutFeedback onPress={onPressTitle}>
+              <View style={viewStyleTitle}>
+                <Text
+                  style={[
+                    textStyleTitle,
+                    {
+                      fontSize: title.length < 15 ? 24 : 18,
+                      color: titleStyle
+                        ? Colors[titleStyle + 'Contrast']
+                        : Colors.primaryContrast,
+                    },
+                  ]}>
+                  {title}
+                </Text>
+                <Text
+                  style={[
+                    textStyleSubtitle,
+                    {
+                      color: titleStyle
+                        ? Colors[titleStyle + 'Contrast']
+                        : Colors.primaryContrast,
+                      opacity: 0.8,
+                    },
+                  ]}>
+                  {subtitle}
+                </Text>
               </View>
-              {iconHeaderLeft ? (
-                <Icon
-                  style={iconStyleHeaderRight}
-                  name={iconHeaderRight}
-                  size={32}
-                  // color="black"
-                  onPress={onPressHeaderRight}
-                />
-              ) : null}
-            </View>
-          ) : null}
-        </View>
-      </TouchableWithoutFeedback>
+            </TouchableWithoutFeedback>
+            {iconTitleRight ? (
+              <Icon
+                style={iconStyleTitleRight}
+                name={iconTitleRight}
+                size={24}
+                // color="black"
+                onPress={onPressTitleRight}
+              />
+            ) : null}
+          </View>
+        ) : null}
+      </View>
       <TouchableWithoutFeedback onPress={onCardPress}>
         <View>{props.children}</View>
       </TouchableWithoutFeedback>
-      <View style={viewStyleFooter}>
-        {loading ? (
-          <Spinner size="small" />
-        ) : (
-          <View style={viewStyleActionContainer}>
-            <TouchableOpacity
-              onPress={onPressActionTwo}
-              style={buttonStyleAction}>
-              <Text style={textStyleAction}>{textActionTwo}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={onPressActionOne}
-              style={buttonStyleAction}>
-              <Text style={textStyleAction}>{textActionOne}</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      </View>
+      {textActionOne || textActionTwo ? (
+        <View style={viewStyleFooter}>
+          {loading ? (
+            <Spinner size="small" />
+          ) : (
+            <View style={viewStyleActionContainer}>
+              <TouchableOpacity
+                onPress={onPressActionTwo}
+                style={buttonStyleAction}>
+                <Text style={textStyleAction}>{textActionTwo}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={onPressActionOne}
+                style={buttonStyleAction}>
+                <Text style={textStyleAction}>{textActionOne}</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+      ) : null}
     </View>
   );
   {
@@ -129,7 +172,7 @@ const styles = {
       width: 2,
     },
   },
-  viewStyleHeaderContainer: {
+  viewStyleTitleContainer: {
     // flex: 1,
     flexDirection: 'row',
     backgroundColor: Colors.primary,
@@ -137,12 +180,14 @@ const styles = {
     paddingHorizontal: 8,
     alignItems: 'center',
   },
-  viewStyleTitleContainer: {
+  viewStyleTitle: {
     flexDirection: 'column',
     paddingHorizontal: 8,
+    // flex: 1,
+    width: '100%',
   },
   textStyleTitle: {
-    fontSize: 24,
+    // fontSize: 24,
     color: Colors.onPrimary,
     // color: 'black',
     opacity: 0.87,
@@ -165,15 +210,18 @@ const styles = {
     fontSize: 16,
     paddingLeft: 8,
   },
-  iconStyleHeaderLeft: {
+  iconStyleTitleLeft: {
     padding: 16,
     alignSelf: 'flex-start',
     color: 'black',
     opacity: 0.87,
   },
-  iconStyleHeaderRight: {
+  iconStyleTitleRight: {
     padding: 16,
-    alignSelf: 'flex-end',
+    // alignSelf: 'flex-end',
+    right: 0,
+    // bottom: 4,
+    position: 'absolute',
     color: 'black',
     opacity: 0.87,
   },
@@ -182,5 +230,4 @@ const styles = {
   },
 };
 
-// make component available to other parts of app
 export { Card };

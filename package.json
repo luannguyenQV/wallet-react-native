@@ -40,11 +40,12 @@
     "react-redux": "^5.0.7",
     "redux": "^4.0.0",
     "redux-persist": "^5.9.1",
+    "redux-saga": "^0.16.0",
     "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
-    "babel-jest": "20.0.3",
     "babel-eslint": "^7.2.3",
+    "babel-jest": "20.0.3",
     "babel-preset-flow": "^6.23.0",
     "babel-preset-react-native": "2.1.0",
     "eslint": "^3.10.2",
@@ -55,10 +56,11 @@
     "eslint-plugin-import": "^2.6.0",
     "eslint-plugin-prettier": "^2.1.2",
     "eslint-plugin-react": "^7.1.0",
+    "eslint-plugin-redux-saga": "^0.8.0",
     "flow-bin": "^0.69.0",
     "jest": "20.0.4",
-    "react-test-renderer": "16.0.0-alpha.12",
-    "prettier": "1.11.1"
+    "prettier": "1.11.1",
+    "react-test-renderer": "16.0.0-alpha.12"
   },
   "eslintConfig": {
     "extends": "exponent/react",

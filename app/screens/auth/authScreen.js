@@ -68,13 +68,13 @@ class AuthScreen extends Component {
 
   fetchData(props) {
     props.fetchProfile();
-    props.fetchEmailAddresses();
-    props.fetchMobileNumbers();
-    props.fetchAddresses();
-    props.fetchDocuments();
+    // props.fetchEmailAddresses();
+    // props.fetchMobileNumbers();
+    // props.fetchAddresses();
+    // props.fetchDocuments();
     props.fetchAccounts();
-    props.fetchBankAccounts();
-    props.fetchCryptoAccounts();
+    // props.fetchBankAccounts();
+    // props.fetchCryptoAccounts();
   }
 
   performLogin = () => {

@@ -9,6 +9,8 @@ import {
   Alert,
   AsyncStorage,
 } from 'react-native';
+import { connect } from 'react-redux';
+
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Colors from './../../../config/colors';
 import Header from './../../../components/header';
@@ -29,8 +31,7 @@ class ReceiveScreen extends Component {
   }
 
   async componentWillMount() {
-    const value = await AsyncStorage.getItem('user');
-    const user = JSON.parse(value);
+    const user = this.user.profile;
     const imageURI =
       'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=' +
       encodeURIComponent(user.email) +
@@ -109,4 +110,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ReceiveScreen;
+const mapStateToProps = ({ user }) => {
+  const { profile } = user;
+  return { profile };
+};
+
+export default connect(mapStateToProps, {})(ReceiveScreen);

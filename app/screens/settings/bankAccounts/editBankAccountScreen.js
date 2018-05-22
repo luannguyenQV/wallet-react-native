@@ -27,6 +27,10 @@ class EditBankAccountScreen extends Component {
     };
   }
 
+  updateInputField = (prop, value) => {
+    this.setState({ [prop]: value });
+  };
+
   updateName = name => {
     this.setState({ name });
   };
@@ -84,7 +88,7 @@ class EditBankAccountScreen extends Component {
         />
         <EditBankAccountComponent
           values={this.state}
-          updateName={this.updateName}
+          updateInputField={this.updateInputField}
           updateNumber={this.updateNumber}
           updateType={this.updateType}
           updateBank={this.updateBank}

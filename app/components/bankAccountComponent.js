@@ -4,6 +4,7 @@ import { Input, InputContainer } from './../components/common';
 
 export default class BankAccountComponent extends Component {
   render() {
+    console.log(this.props);
     return (
       <InputContainer>
         <Input
@@ -11,7 +12,7 @@ export default class BankAccountComponent extends Component {
           placeholder="e.g. John Snow"
           autoCapitalize="none"
           value={this.props.values.name}
-          onChangeText={text => this.props.updateName(text)}
+          onChangeText={text => this.props.updateInputField('name', text)}
         />
         <Input
           label="Account number"

@@ -23,6 +23,11 @@ export default {
   tertiary: '#c4c4c4',
   quaternary: '#e1e1e1',
 
+  primaryContrast: '#f3f3f3',
+  secondaryContrast: '#2d2d2d',
+  tertiaryContrast: '#000000',
+  quaternaryContrast: '#4d4d4d',
+
   onPrimary: '#f3f3f3',
   onSecondary: '#ffffff',
   onTertiary: '#000000',

@@ -13,7 +13,6 @@ class InputContainer extends Component {
         behavior={'padding'}
         keyboardVerticalOffset={5}>
         <ScrollView
-          style={containerStyleScroll}
           keyboardDismissMode={'interactive'}
           keyboardShouldPersistTaps="always"
           ref={reference}
@@ -32,11 +31,7 @@ const styles = {
     backgroundColor: '#00000000',
     // paddingVertical: 10,
     justifyContent: 'flex-start',
-    // paddingRight: 25,
-  },
-  containerStyleScroll: {
-    paddingBottom: 25,
-    // paddingRight: 10,
+    padding: 8,
   },
 };
 

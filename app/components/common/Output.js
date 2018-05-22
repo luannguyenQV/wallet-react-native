@@ -78,7 +78,7 @@ const styles = {
     // height: 28,
     paddingLeft: 0,
     paddingBottom: 8,
-    paddingTop: 4,
+    paddingTop: 2,
     color: 'black',
     fontWeight: 'normal',
     borderColor: 'white',

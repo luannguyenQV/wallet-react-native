@@ -3,23 +3,71 @@ import { View, RefreshControl, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import { fetchCryptoAccounts } from './../../../redux/actions';
 
+import { standardizeString } from './../../../util/general';
+
 import Account from './../../../components/bankAccount';
 import Colors from './../../../config/colors';
 import Header from './../../../components/header';
-import { EmptyListMessage } from './../../../components/common';
+import {
+  CardList,
+  Input,
+  Output,
+  InputContainer,
+} from './../../../components/common';
 
 class CryptoAddressesScreen extends Component {
   static navigationOptions = {
     title: 'Crypto addresses',
   };
 
-  componentDidMount() {
-    this.props.fetchCryptoAccounts();
-  }
-
   goToEdit = reference => {
     this.props.navigation.navigate('EditCryptoAddress', { reference });
   };
+
+  renderContent(item) {
+    const { viewStyleContent } = styles;
+    const { address } = item;
+    return (
+      <View style={viewStyleContent}>
+        {address ? <Output label="Address" value={address} /> : null}
+      </View>
+    );
+  }
+
+  renderDetail(item) {
+    const { address } = item;
+
+    this.setState({
+      address: item ? address : '',
+    });
+
+    return (
+      <InputContainer>
+        <Input
+          label="Address"
+          placeholder="e.g. 78weiytuyiw3begnf3i4uhtqueyrt43"
+          autoCapitalize="none"
+          value={address}
+          onChangeText={input => this.updateInputField('address', input)}
+        />
+      </InputContainer>
+    );
+  }
+
+  saveCryptoAddress() {
+    // update = async () => {
+    //   let responseJson = await SettingsService.editCryptoAddresses(
+    //     this.state.id,
+    //     this.state,
+    //   );
+    //   if (responseJson.status === 'success') {
+    //     this.reload();
+    //   } else {
+    //     Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
+    //   }
+    // };
+    // let responseJson = await SettingsService.addCryptoAddresses(this.state);
+  }
 
   render() {
     const {
@@ -34,40 +82,34 @@ class CryptoAddressesScreen extends Component {
           back
           title="Crypto addresses"
           headerRightTitle="Add"
-          headerRightOnPress={() =>
-            this.props.navigation.navigate('AddCryptoAddress', {
-              parentRoute: 'Settings',
-              nextRoute: 'SettingsCryptoAddresses',
-            })
-          }
+          // headerRightOnPress={() =>
+          //   // this.setState({})
+          // }
         />
-        {cryptoAccounts.length > 0 ? (
-          <FlatList
-            refreshControl={
-              <RefreshControl
-                refreshing={loadingCryptoAccounts}
-                onRefresh={fetchCryptoAccounts}
-              />
-            }
-            data={cryptoAccounts}
-            renderItem={({ item }) => (
-              <Account
-                onPress={this.goToEdit}
-                reference={item}
-                name={item.address}
-              />
-            )}
-            keyExtractor={item => item.id}
-          />
-        ) : (
-          <EmptyListMessage text="No crypto addresses added yet" />
-        )}
+        <CardList
+          data={cryptoAccounts}
+          renderContent={this.renderContent}
+          titleDetail="Edit bank account"
+          renderDetail={this.renderDetail}
+          saveItem={this.saveCryptoAddress}
+          title={item => (item ? standardizeString(item.crypto_type) : '')}
+          subtitle={item => (item ? standardizeString(item.status) : '')}
+          refreshing={loadingCryptoAccounts}
+          onRefresh={fetchCryptoAccounts}
+          emptyListMessage="No mobile numbers added yet"
+          deleteItem={this.delete}
+          deletable
+          titleStyle="secondary"
+        />
       </View>
     );
   }
 }
 
 const styles = {
+  viewStyleContent: {
+    paddingLeft: 16,
+  },
   container: {
     flex: 1,
     flexDirection: 'column',

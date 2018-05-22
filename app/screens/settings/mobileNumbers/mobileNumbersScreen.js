@@ -11,13 +11,11 @@ import {
 import { connect } from 'react-redux';
 import { fetchMobileNumbers } from './../../../redux/actions';
 
-import Spinner from 'react-native-loading-spinner-overlay';
-import MobileNumber from './../../../components/mobileNumber';
 import ResetNavigation from './../../../util/resetNavigation';
 import SettingsService from './../../../services/settingsService';
 import Colors from './../../../config/colors';
 import Header from './../../../components/header';
-import { EmptyListMessage } from './../../../components/common';
+import { CardList } from './../../../components/common';
 
 class MobileNumbersScreen extends Component {
   static navigationOptions = {
@@ -31,10 +29,6 @@ class MobileNumbersScreen extends Component {
     loading: false,
     loadingMessage: '',
   };
-
-  componentWillMount() {
-    this.props.fetchMobileNumbers();
-  }
 
   reload = () => {
     ResetNavigation.dispatchUnderDrawer(
@@ -99,6 +93,31 @@ class MobileNumbersScreen extends Component {
     }
   };
 
+  // if (item.number) {
+  //   title = item.number;
+  // }
+  // if (item.email) {
+  //   title = item.email;
+  // }
+
+  // if (item.primary) {
+  //   itemCodeActive = true;
+  // } else {
+  //   iconHeaderRight = 'md-trash';
+  //   onPressHeaderRight = deleteItem;
+  // }
+  // if (item.verified) {
+  //   subtitle = 'Verified';
+  //   if (item.primary) {
+  //     textActionOne = 'Make primary';
+  //     onPressActionOne = makePrimaryItem;
+  //     onPressHeaderLeft = makePrimaryItem;
+  //   }
+  // } else {
+  //   textActionOne = 'Verify';
+  //   onPressActionOne = verifyItem;
+  // }
+
   render() {
     const {
       mobileNumbers,
@@ -118,34 +137,27 @@ class MobileNumbersScreen extends Component {
             })
           }
         />
-        <Spinner
+        {/* <Spinner
           visible={this.state.loading}
           textContent={this.state.loadingMessage}
           textStyle={{ color: '#FFF' }}
+        /> */}
+        <CardList
+          data={mobileNumbers}
+          // makePrimaryItem={this.makePrimary}
+          textFunctionActionOne={item => (item.verified ? '' : 'Verify')}
+          onPressActionOne={this.verify}
+          // deleteItem={this.delete}
+          title={item => item.number}
+          subtitle={item => (item.verified ? 'Verified' : '')}
+          itemActive={item => (item.primary ? true : false)}
+          refreshing={loadingMobileNumbers}
+          onRefresh={fetchMobileNumbers}
+          emptyListMessage="No mobile numbers added yet"
+          deleteItem={this.delete}
+          deletable
+          titleStyle="secondary"
         />
-        {mobileNumbers.length > 0 ? (
-          <FlatList
-            refreshControl={
-              <RefreshControl
-                refreshing={loadingMobileNumbers}
-                onRefresh={fetchMobileNumbers}
-              />
-            }
-            data={mobileNumbers}
-            renderItem={({ item }) => (
-              <MobileNumber
-                mobile={item}
-                makePrimary={this.makePrimary}
-                verify={this.verify}
-                delete={this.delete}
-                reload={this.reload}
-              />
-            )}
-            keyExtractor={item => item.id}
-          />
-        ) : (
-          <EmptyListMessage text="No mobile numbers added yet" />
-        )}
       </View>
     );
   }

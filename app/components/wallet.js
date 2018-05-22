@@ -9,7 +9,7 @@ import {
 
 import Colors from './../config/colors';
 
-import { Card } from './../components/common';
+import { Card, Output } from './../components/common';
 
 class Wallet extends Component {
   getBalance = (balance, divisibility) => {
@@ -37,10 +37,7 @@ class Wallet extends Component {
       textStyleBalance,
       textStyleAvailable,
       viewStyleContainer,
-      textStyleDescription,
     } = styles;
-    const header =
-      wallet.currency.currency.code + ' ' + wallet.account_label.toLowerCase();
     const balance =
       wallet.currency.currency.symbol +
       ' ' +
@@ -57,22 +54,20 @@ class Wallet extends Component {
       ).toFixed(wallet.currency.currency.divisibility);
     return (
       <Card
-        onHeaderPress={showDetails}
+        onPressTitle={showDetails}
         title={wallet.currency.currency.description}
         subtitle={wallet.account_label}
         textActionOne="Send"
         onPressActionOne={() => this.send()}
         textActionTwo="Receive"
         onPressActionTwo={() => this.props.navigation.navigate('Receive')}
-        walletCode={wallet.currency.currency.code}
-        walletCodeActive={wallet.currency.active}
-        onPressHeaderRight={() => this.setActiveCurrency()}
+        textTitleLeft={wallet.currency.currency.code}
+        itemActive={wallet.currency.active}
+        onPressTitleLeft={() => this.setActiveCurrency()}
         loading={this.props.loadingDefaultAccountChange}>
         <View style={viewStyleContainer}>
-          <Text style={textStyleLabel}>Balance</Text>
-          <Text style={textStyleBalance}>{balance}</Text>
-          <Text style={textStyleLabel}>Available</Text>
-          <Text style={textStyleAvailable}>{available}</Text>
+          <Output label="Balance" value={balance} />
+          <Output label="Available" value={available} />
         </View>
       </Card>
     );
