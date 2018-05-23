@@ -4,8 +4,12 @@ import { connect } from 'react-redux';
 import { fetchAccounts } from './../../../redux/actions';
 
 import Header from './../../../components/header';
-import Wallet from './../../../components/wallet';
-import { CardContainer, EmptyListMessage } from '../../../components/common';
+// import Wallet from './../../../components/wallet';
+import { CardList, Output } from '../../../components/common';
+import {
+  standardizeString,
+  performDivisibility,
+} from './../../../util/general';
 import HeaderWallet from '../../../components/HeaderWallet';
 import TransactionList from './../../../components/TransactionList';
 
@@ -43,47 +47,61 @@ class WalletsScreen extends Component {
     });
   };
 
-  renderWallets() {
-    const { wallets } = this.props;
-    if (wallets.length > 0) {
-      return (
-        <FlatList
-          data={wallets}
-          renderItem={({ item }) => this.renderWallet(item)}
-          keyExtractor={item => item.account_name + item.currency.currency.code}
-        />
-      );
-    }
-    return <EmptyListMessage text="No wallets" />;
-  }
+  // renderWallets() {
+  //   const { wallets } = this.props;
+  //   if (wallets.length > 0) {
+  //     return (
+  //       <FlatList
+  //         data={wallets}
+  //         renderItem={({ item }) => this.renderWallet(item)}
+  //         keyExtractor={item => item.account_name + item.currency.currency.code}
+  //       />
+  //     );
+  //   }
+  //   return <EmptyListMessage text="No wallets" />;
+  // }
 
-  renderWallet(wallet) {
+  renderContent(item) {
+    const balance =
+      item.currency.currency.symbol +
+      ' ' +
+      performDivisibility(
+        item.currency.balance,
+        item.currency.currency.divisibility,
+      ).toFixed(item.currency.currency.divisibility);
+    const available =
+      item.currency.currency.symbol +
+      ' ' +
+      performDivisibility(
+        item.currency.available_balance,
+        item.currency.currency.divisibility,
+      ).toFixed(item.currency.currency.divisibility);
+
     return (
-      <Wallet
-        showDetails={() => this.showDetails(wallet)}
-        wallet={wallet}
-        navigation={this.props.navigation}
-      />
+      <View style={styles.viewStyleContainer}>
+        <Output label="Balance" value={balance} />
+        <Output label="Available" value={available} />
+      </View>
     );
   }
 
-  renderDetails() {
-    const { wallet } = this.state;
+  renderDetail(item, navigation) {
+    // const { wallet } = this.state;
     return (
       <View style={styles.viewStyleDetailCard}>
         <HeaderWallet
-          wallets={[wallet]}
+          wallets={[item]}
           buttons={[
             { id: 0, type: 'deposit' },
             { id: 1, type: 'withdraw' },
             { id: 2, type: 'receive' },
             { id: 3, type: 'send' },
           ]}
-          navigation={this.props.navigation}
+          navigation={navigation}
         />
         <TransactionList
           // updateBalance={this.getBalanceInfo}
-          currencyCode={wallet.currency.currency.code}
+          currencyCode={item.currency.currency.code}
           // showDialog={this.showDialog}
           // logout={this.logout}
         />
@@ -92,7 +110,13 @@ class WalletsScreen extends Component {
   }
 
   render() {
-    const { headerRightIcon, headerRightOnPress, showDetails } = this.state;
+    const {
+      // headerRightIcon,
+      // headerRightOnPress,
+      fetchAccounts,
+      loading_accounts,
+      wallets,
+    } = this.props;
     return (
       <View style={styles.container}>
         <Header
@@ -101,6 +125,29 @@ class WalletsScreen extends Component {
           title="Wallets"
           // headerRightIcon={headerRightIcon}
           // headerRightOnPress={headerRightOnPress}
+        />
+        <CardList
+          navigation={this.props.navigation}
+          data={wallets}
+          renderContent={this.renderContent}
+          renderDetail={(item, navigation) =>
+            this.renderDetail(item, navigation)
+          }
+          saveItem={this.saveCryptoAddress}
+          itemActive={item => (item ? item.currency.active : false)}
+          title={item => (item ? item.currency.currency.description : '')}
+          subtitle={item => (item ? standardizeString(item.account_name) : '')}
+          refreshing={loading_accounts}
+          onRefresh={fetchAccounts}
+          emptyListMessage="No wallets added yet"
+          titleStyle="primary"
+          keyExtractor={item => item.index + item.currency.currency.code}
+          textActionOne="Send"
+          onPressActionOne={() => this.send()}
+          textActionTwo="Receive"
+          onPressActionTwo={() => this.props.navigation.navigate('Receive')}
+          textTitleLeft={item => (item ? item.currency.currency.code : '')}
+          // onPressTitleLeft={() => this.setActiveCurrency()}
         />
         {/* {showDetails ? (
           this.renderDetails()
@@ -113,6 +160,9 @@ class WalletsScreen extends Component {
 }
 
 const styles = {
+  viewStyleContainer: {
+    paddingLeft: 16,
+  },
   viewStyleDetailCard: {
     flex: 1,
     backgroundColor: '#ffffff',
@@ -122,7 +172,6 @@ const styles = {
     shadowColor: 'rgba(0, 0, 0, 0.6)',
     shadowOpacity: 0.2,
     shadowRadius: 2,
-    margin: 8,
     elevation: 2,
     shadowOffset: {
       height: 1,

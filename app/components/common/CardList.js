@@ -52,7 +52,9 @@ class CardList extends Component {
       <Card
         headerComponent={headerComponent}
         onPressHeader={onPressHeader}
-        textTitleLeft={textTitleLeft ? textTitleLeft : (index + 1).toString()}
+        textTitleLeft={
+          textTitleLeft ? textTitleLeft(item) : (index + 1).toString()
+        }
         iconTitleLeft={iconTitleLeft}
         itemActive={itemActive ? itemActive(item) : false}
         onPressTitleLeft={onPressTitleLeft}
@@ -120,8 +122,11 @@ class CardList extends Component {
       renderDetail,
       titleStyle,
       titleDetail,
-      saveItem,
+      iconTitleRightDetail,
+      textActionOneDetail,
+      onPressActionOneDetail,
       addNew,
+      navigation,
     } = this.props;
     const { showDetail, item } = this.state;
     return (
@@ -131,18 +136,18 @@ class CardList extends Component {
         keyboardVerticalOffset={15}
         enabled>
         <ScrollView
-          // style={containerStyle}
+          style={{ flex: 1 }}
           keyboardDismissMode={'interactive'}
           keyboardShouldPersistTaps="always">
           {showDetail || addNew ? (
             <Card
-              title={titleDetail}
+              title={titleDetail ? titleDetail : ''}
               // subtitle={subtitle ? subtitle(item) : ''}
               titleStyle={titleStyle}
-              iconTitleRight="md-close"
-              onPressTitleRight={() => this.toggleDetail()}
-              textActionOne="Save"
-              onPressActionOne={saveItem}
+              iconTitleRightDetail={iconTitleRightDetail}
+              onPressTitleRightDetail={() => this.toggleDetail()}
+              textActionOneDetail={textActionOneDetail}
+              onPressActionOneDetail={onPressActionOneDetail}
               // textActionTwo={
               //   textFunctionActionTwo
               //     ? textFunctionActionTwo(item)
@@ -151,7 +156,7 @@ class CardList extends Component {
               // onPressActionTwo={onPressActionTwo}
               // loading={loading}
             >
-              {renderDetail(item ? item : null)}
+              {renderDetail(item ? item : null, navigation ? navigation : null)}
             </Card>
           ) : (
             <FlatList
@@ -176,6 +181,7 @@ const styles = {
   containerStyle: {
     flex: 1,
     padding: 8,
+    backgroundColor: 'whitesmoke',
   },
 };
 

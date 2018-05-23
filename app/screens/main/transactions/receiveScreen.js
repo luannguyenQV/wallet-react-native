@@ -31,7 +31,7 @@ class ReceiveScreen extends Component {
   }
 
   async componentWillMount() {
-    const user = this.user.profile;
+    const user = this.props.profile;
     const imageURI =
       'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=' +
       encodeURIComponent(user.email) +

@@ -1,7 +1,7 @@
 {
   "name": "Rehive Wallet",
   "description": "A multi-currency wallet built on the Rehive platform.",
-  "version": "0.3.0",
+  "version": "0.3.3",
   "slug": "rehive-wallet-staging",
   "privacy": "public",
   "sdkVersion": "24.0.0",

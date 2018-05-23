@@ -31,7 +31,7 @@ class TouchableCircle extends Component {
               fontSize: text.length <= 2 ? 24 : text.length <= 4 ? 16 : 12,
             },
           ]}>
-          {text.substr(0, 6).toUpperCase()}
+          {text ? text.substr(0, 6).toUpperCase() : ''}
         </Text>
       </TouchableHighlight>
     );

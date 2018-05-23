@@ -42,7 +42,6 @@ function* fetchAccounts() {
             index,
             account_reference: account.reference,
             account_name: account.name,
-            account_label: account.label ? account.label : account.name,
             currency: currencies[j],
           };
           if (currencies[j].active === true) {

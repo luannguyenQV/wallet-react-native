@@ -12,18 +12,7 @@ class LogoutScreen extends Component {
 
   componentDidMount() {
     this.props.logoutUser();
-    this.onLogoutComplete(this.props);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.onLogoutComplete(nextProps);
-  }
-
-  onLogoutComplete(props) {
-    if (!props.token && !this.state.loggingOut) {
-      this.setState({ loggingOut: true });
-      this.props.navigation.navigate('AuthScreen');
-    }
+    this.props.navigation.navigate('AuthScreen');
   }
 
   render() {

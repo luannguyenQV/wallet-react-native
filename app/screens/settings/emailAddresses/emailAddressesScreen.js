@@ -109,14 +109,18 @@ class EmailAddressesScreen extends Component {
           }
           onPressActionOne={this.verify}
           onPressTitleLeft={this.makePrimary}
-          title={item => (item ? (item.email ? 'New email address' : '') : '')}
+          title={item => (item ? item.email : '')}
           subtitle={item => (item ? (item.verified ? 'Verified' : '') : '')}
           itemActive={item => (item ? (item.primary ? true : false) : false)}
           refreshing={loading_email_addresses}
           onRefresh={() => fetchData('email_addresses')}
           deleteItem={this.delete}
           deletable
-          titleDetail="Edit email address"
+          titleDetail={item =>
+            item
+              ? item.email ? 'New email address' : 'Edit email address'
+              : ''
+          }
           renderDetail={this.renderDetail}
           saveItem={this.saveBankAccount}
           emptyListMessage="No email addresses added yet"

@@ -139,6 +139,7 @@ export default (state = INITIAL_STATE, action) => {
 
     case LOGOUT_USER:
       return {
+        token: null,
         company: state.company,
         email: state.email,
       };

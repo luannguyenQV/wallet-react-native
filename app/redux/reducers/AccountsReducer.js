@@ -28,8 +28,8 @@ const INITIAL_STATE = {
   // accounts: null,
   wallets: null,
   activeWalletIndex: 0,
-  loadingProfile: false,
-  loadingAccounts: false,
+  loading_profile: false,
+  loading_accounts: false,
   loadingActiveCurrencyChange: false,
   sendAmount: null,
   sendWallet: null,
@@ -47,23 +47,23 @@ export default (state = INITIAL_STATE, action) => {
     case FETCH_PROFILE:
       return {
         ...state,
-        loadingProfile: true,
+        loading_profile: true,
       };
     case FETCH_PROFILE_SUCCESS:
       return {
         ...state,
         profile: action.payload,
-        loadingProfile: false,
+        loading_profile: false,
       };
     case FETCH_PROFILE_FAIL:
       return {
         ...state,
-        loadingProfile: false,
+        loading_profile: false,
       };
     case FETCH_ACCOUNTS_ASYNC.PENDING:
       return {
         ...state,
-        loadingAccounts: true,
+        loading_accounts: true,
       };
     case FETCH_ACCOUNTS_ASYNC.SUCCESS:
       return {
@@ -71,12 +71,12 @@ export default (state = INITIAL_STATE, action) => {
         wallets: action.payload.wallets,
         activeWalletIndex: action.payload.activeWalletIndex,
         showAccountLabel: action.payload.showAccountLabel,
-        loadingAccounts: false,
+        loading_accounts: false,
       };
     case FETCH_ACCOUNTS_ASYNC.ERROR:
       return {
         ...state,
-        loadingAccounts: false,
+        loading_accounts: false,
       };
     case UPDATE_CURRENT_INDEX:
       return {

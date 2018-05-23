@@ -15,13 +15,13 @@ const INITIAL_STATE = {
   mobile_numbers: [],
   loading_mobile_numbers: false,
   addresses: null,
-  loadingAddresses: false,
+  loading_addresses: false,
   documents: {},
-  loadingDocuments: false,
+  loading_documents: false,
   bankAccounts: [],
-  loadingBankAccounts: false,
+  loading_bank_accounts: false,
   cryptoAccounts: [],
-  loadingCryptoAccounts: false,
+  loading_crypto_accounts: false,
 };
 
 export default (state = INITIAL_STATE, action) => {

@@ -56,7 +56,7 @@ class Wallet extends Component {
       <Card
         onPressTitle={showDetails}
         title={wallet.currency.currency.description}
-        subtitle={wallet.account_label}
+        subtitle={wallet.account_name}
         textActionOne="Send"
         onPressActionOne={() => this.send()}
         textActionTwo="Receive"

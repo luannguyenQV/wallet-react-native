@@ -10,7 +10,7 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 class HeaderCurrency extends Component {
   render() {
     const { detail, showAccountLabel } = this.props;
-    const { currency, account_label } = this.props.wallet;
+    const { currency, account_name } = this.props.wallet;
     const {
       viewStyleContainer,
       viewStyleCurrency,
@@ -32,7 +32,7 @@ class HeaderCurrency extends Component {
         ]}>
         <Text style={textStyleCode}>{currency.currency.code}</Text>
         {showAccountLabel ? (
-          <Text style={textStyleAccount}>{account_label.toLowerCase()}</Text>
+          <Text style={textStyleAccount}>{account_name}</Text>
         ) : null}
         <View
           style={[viewStyleCurrency, detail ? null : { paddingBottom: 16 }]}>

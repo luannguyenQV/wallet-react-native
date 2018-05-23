@@ -54,7 +54,7 @@ class HeaderWallet extends Component {
   }
 
   handleViewableItemsChanged = info => {
-    if (info.viewableItems.length > 0) {
+    if (info.viewableItems && info.viewableItems.length > 0) {
       this.props.setActiveWalletIndex(info.viewableItems[0].index);
     }
   };

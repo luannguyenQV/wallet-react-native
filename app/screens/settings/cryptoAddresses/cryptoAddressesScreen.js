@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, RefreshControl, FlatList } from 'react-native';
 import { connect } from 'react-redux';
-import { fetchData } from './../../../redux/actions';
+import { fetchData, updateInputField } from './../../../redux/actions';
 
 import { standardizeString } from './../../../util/general';
 
@@ -34,12 +34,14 @@ class CryptoAddressesScreen extends Component {
     );
   }
 
-  renderDetail(item) {
+  renderDetail = item => {
     const { address } = item;
 
-    this.setState({
-      address: item ? address : '',
-    });
+    // this.setState({
+    //   address: item ? address : '',
+    // });
+
+    let tempAddress = address;
 
     return (
       <InputContainer>
@@ -47,12 +49,12 @@ class CryptoAddressesScreen extends Component {
           label="Address"
           placeholder="e.g. 78weiytuyiw3begnf3i4uhtqueyrt43"
           autoCapitalize="none"
-          value={address}
-          onChangeText={input => this.updateInputField('address', input)}
+          value={tempAddress}
+          onChangeText={input => this.props.updateInputField('address', input)}
         />
       </InputContainer>
     );
-  }
+  };
 
   saveCryptoAddress() {
     // update = async () => {
@@ -87,10 +89,13 @@ class CryptoAddressesScreen extends Component {
           // }
         />
         <CardList
+          navigation={this.props.navigation}
           data={crypto_addresses}
           renderContent={this.renderContent}
           titleDetail="Edit bank account"
-          renderDetail={this.renderDetail}
+          renderDetail={item => this.renderDetail(item)}
+          onPressActionOneDetail={() => console.log('save')}
+          textActionOneDetail="Save"
           saveItem={this.saveCryptoAddress}
           title={item => (item ? standardizeString(item.crypto_type) : '')}
           subtitle={item => (item ? standardizeString(item.status) : '')}
@@ -131,4 +136,6 @@ const mapStateToProps = ({ user }) => {
   return { crypto_addresses, loading_crypto_addresses };
 };
 
-export default connect(mapStateToProps, { fetchData })(CryptoAddressesScreen);
+export default connect(mapStateToProps, { fetchData, updateInputField })(
+  CryptoAddressesScreen,
+);
