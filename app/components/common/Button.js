@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Colors from './../../config/colors';
+import * as Animatable from 'react-native-animatable';
 
 class Button extends Component {
   buttonStyle() {
@@ -38,14 +39,14 @@ class Button extends Component {
     const { onPress, label, reference } = this.props;
     const { containerStyle } = styles;
     return (
-      <View style={containerStyle}>
-        <TouchableOpacity
-          onPress={onPress}
-          style={this.buttonStyle()}
-          ref={reference}>
+      <Animatable.View
+        ref={reference}
+        style={containerStyle}
+        animation="fadeInUpBig">
+        <TouchableOpacity onPress={onPress} style={this.buttonStyle()}>
           <Text style={this.textStyle()}>{label}</Text>
         </TouchableOpacity>
-      </View>
+      </Animatable.View>
     );
   }
 }

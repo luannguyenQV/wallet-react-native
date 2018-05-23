@@ -5,7 +5,10 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
+  UIManager,
+  LayoutManager,
 } from 'react-native';
+import * as Animatable from 'react-native-animatable';
 import { connect } from 'react-redux';
 import {
   initialLoad,
@@ -16,6 +19,9 @@ import {
 
 import Colors from './../../config/colors';
 import { Button, AuthForm, Input, Spinner } from './../../components/common';
+
+UIManager.setLayoutAnimationEnabledExperimental &&
+  UIManager.setLayoutAnimationEnabledExperimental(true);
 
 class AuthScreen extends Component {
   componentDidMount() {
@@ -31,6 +37,9 @@ class AuthScreen extends Component {
     //   this.props.nextAuthFormState({ nextFormState: 'landing' });
     // }
   }
+  // componentWillUnmount() {
+
+  // }
 
   onAuthComplete(props) {
     const { token, appLoading } = props;
@@ -83,13 +92,13 @@ class AuthScreen extends Component {
     const { viewStyleTopContainer, imageContainer, image } = styles;
     return (
       <View style={viewStyleTopContainer}>
-        <View style={imageContainer}>
+        <Animatable.View style={imageContainer} animation="fadeInDownBig">
           <Image
             source={require('./../../../assets/icons/Rehive_icon_white.png')}
             resizeMode="contain"
             style={image}
           />
-        </View>
+        </Animatable.View>
       </View>
     );
   }
