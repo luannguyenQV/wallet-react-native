@@ -74,6 +74,8 @@ class Input extends Component {
       cca2,
     } = this.state;
 
+    console.log(this.state);
+
     return (
       <View
         style={[viewStyleInput, { paddingBottom: focused || value ? 8 : 0 }]}>
@@ -119,7 +121,7 @@ class Input extends Component {
           onChangeText={onChangeText}
           ref={reference}
           selectTextOnFocus
-          secureTextEntry={secureTextEntry ? secureTextEntry : false}
+          secureTextEntry={secureTextEntry}
           keyboardType={keyboardType}
           returnKeyType={returnKeyType}
           onSubmitEditing={onSubmitEditing}
@@ -141,7 +143,7 @@ class Input extends Component {
               name={iconNameVisibility}
               size={24}
               color={borderColor}
-              onPress={this.togglePasswordVisibility}
+              // onPress={this.togglePasswordVisibility}
             />
           </View>
         ) : null}

@@ -55,6 +55,7 @@ const styles = {
     // height: 240,
     paddingTop: 48,
     padding: 16,
+    paddingBottom: 8,
   },
   imageStylePhoto: {
     width: 100,

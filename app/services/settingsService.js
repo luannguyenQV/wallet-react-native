@@ -70,6 +70,14 @@ var settingsService = {
     return BaseService.delete('user/emails/' + id + '/');
   },
 
+  deleteCryptoAddress: id => {
+    return BaseService.delete('user/crypto-accounts/' + id + '/');
+  },
+
+  deleteBankAccount: id => {
+    return BaseService.delete('user/bank-accounts/' + id + '/');
+  },
+
   getAllNotifications: () => {
     return BaseService.get('user/notifications/');
   },

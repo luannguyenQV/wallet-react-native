@@ -13,8 +13,6 @@ import { EmptyListMessage } from './EmptyListMessage';
 
 // make component
 class CardList extends Component {
-  state = { showDetail: false, item: null };
-
   componentDidMount() {
     if (this.props.onRefresh) {
       this.props.onRefresh();
@@ -22,6 +20,7 @@ class CardList extends Component {
   }
 
   renderItem = (item, index) => {
+    console.log(item);
     const {
       headerComponent,
       onPressHeader,
@@ -61,24 +60,22 @@ class CardList extends Component {
         title={title ? title(item) : ''}
         subtitle={subtitle ? subtitle(item) : ''}
         titleStyle={titleStyle}
-        onPressTitle={
-          onPressTitle
-            ? onPressTitle
-            : renderDetail ? () => this.toggleDetail(item) : null
-        }
+        onPressTitle={onPressTitle ? onPressTitle(item) : null}
         textTitleRight={textTitleRight}
         iconTitleRight={
           iconTitleRight
             ? iconTitleRight
             : deletable
-              ? (itemActive ? !itemActive(item) : false) ? 'md-trash' : ''
+              ? (itemActive ? !itemActive(item) : true) ? 'md-trash' : ''
               : ''
         }
         onPressTitleRight={
           onPressTitleRight
             ? onPressTitleRight
             : deletable
-              ? (itemActive ? !itemActive(item) : false) ? deleteItem : null
+              ? (itemActive ? !itemActive(item) : true)
+                ? deleteItem(item)
+                : null
               : null
         }
         onPressContent={onPressContent ? onPressContent : null}
@@ -105,14 +102,6 @@ class CardList extends Component {
     return;
   }
 
-  toggleDetail = item => {
-    console.log(item);
-    this.setState({
-      showDetail: !this.state.showDetail,
-      item,
-    });
-  };
-
   render() {
     const {
       refreshing,
@@ -123,12 +112,13 @@ class CardList extends Component {
       titleStyle,
       titleDetail,
       iconTitleRightDetail,
+      onPressTitleRightDetail,
       textActionOneDetail,
       onPressActionOneDetail,
-      addNew,
       navigation,
+      tempItem,
+      showDetail,
     } = this.props;
-    const { showDetail, item } = this.state;
     return (
       <KeyboardAvoidingView
         style={styles.containerStyle}
@@ -139,24 +129,19 @@ class CardList extends Component {
           style={{ flex: 1 }}
           keyboardDismissMode={'interactive'}
           keyboardShouldPersistTaps="always">
-          {showDetail || addNew ? (
+          {showDetail ? (
             <Card
               title={titleDetail ? titleDetail : ''}
               // subtitle={subtitle ? subtitle(item) : ''}
               titleStyle={titleStyle}
-              iconTitleRightDetail={iconTitleRightDetail}
-              onPressTitleRightDetail={() => this.toggleDetail()}
-              textActionOneDetail={textActionOneDetail}
-              onPressActionOneDetail={onPressActionOneDetail}
-              // textActionTwo={
-              //   textFunctionActionTwo
-              //     ? textFunctionActionTwo(item)
-              //     : textActionTwo
-              // }
-              // onPressActionTwo={onPressActionTwo}
-              // loading={loading}
-            >
-              {renderDetail(item ? item : null, navigation ? navigation : null)}
+              iconTitleRight={iconTitleRightDetail}
+              onPressTitleRight={onPressTitleRightDetail}
+              textActionOne={textActionOneDetail}
+              onPressActionOne={onPressActionOneDetail}>
+              {renderDetail(
+                tempItem ? tempItem : null,
+                navigation ? navigation : null,
+              )}
             </Card>
           ) : (
             <FlatList

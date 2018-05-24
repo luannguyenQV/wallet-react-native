@@ -1,8 +1,8 @@
 import { createAsyncTypes } from './store/Utilities';
 
 // AUTH
-export const LOGIN_USER_ASYNC = createAsyncTypes('LOGIN_USER');
-export const REGISTER_USER_ASYNC = createAsyncTypes('REGISTER_USER');
+export const LOGIN_USER_ASYNC = createAsyncTypes('login_user');
+export const REGISTER_USER_ASYNC = createAsyncTypes('register_user');
 export const AUTH_FIELD_CHANGED = 'auth_field_changed';
 export const AUTH_FIELD_ERROR = 'auth_field_error';
 export const TERMS_CHANGED = 'terms_changed';
@@ -19,7 +19,7 @@ export const APP_LOAD_FINISH = 'APP_LOAD_FINISH';
 export const LOADING = 'loading';
 
 // ACCOUNTS
-export const FETCH_ACCOUNTS_ASYNC = createAsyncTypes('FETCH_ACCOUNTS');
+export const FETCH_ACCOUNTS_ASYNC = createAsyncTypes('fetch_accounts');
 export const UPDATE_CURRENT_INDEX = 'update_current_index';
 export const SET_ACTIVE_CURRENCY = 'set_active_currency';
 export const SET_ACTIVE_CURRENCY_SUCCESS = 'set_active_currency_success';
@@ -39,28 +39,11 @@ export const SEND_SUCCESS = 'send_success';
 export const SEND_FAIL = 'send_fail';
 
 // USER
-export const FETCH_PROFILE = 'fetch_profile';
-export const FETCH_PROFILE_SUCCESS = 'fetch_profile_success';
-export const FETCH_PROFILE_FAIL = 'fetch_profile_fail';
-export const FETCH_EMAIL_ADDRESSES = 'fetch_email_addresses';
-export const FETCH_EMAIL_ADDRESSES_SUCCESS = 'fetch_email_addresses_success';
-export const FETCH_EMAIL_ADDRESSES_FAIL = 'fetch_email_addresses_fail';
-export const FETCH_MOBILE_NUMBERS = 'fetch_mobile_numbers';
-export const FETCH_MOBILE_NUMBERS_SUCCESS = 'fetch_mobile_numbers_success';
-export const FETCH_MOBILE_NUMBERS_FAIL = 'fetch_mobile_numbers_fail';
-export const FETCH_ADDRESSES = 'fetch_addresses';
-export const FETCH_ADDRESSES_SUCCESS = 'fetch_addresses_success';
-export const FETCH_ADDRESSES_FAIL = 'fetch_addresses_fail';
-export const FETCH_DOCUMENTS = 'fetch_documents';
-export const FETCH_DOCUMENTS_SUCCESS = 'fetch_documents_success';
-export const FETCH_DOCUMENTS_FAIL = 'fetch_documents_fail';
-export const FETCH_BANK_ACCOUNTS = 'fetch_bank_accounts';
-export const FETCH_BANK_ACCOUNTS_SUCCESS = 'fetch_bank_accounts_success';
-export const FETCH_BANK_ACCOUNTS_FAIL = 'fetch_bank_accounts_fail';
-export const FETCH_CRYPTO_ACCOUNTS = 'fetch_crypto_accounts';
-export const FETCH_CRYPTO_ACCOUNTS_SUCCESS = 'fetch_crypto_accounts_success';
-export const FETCH_CRYPTO_ACCOUNTS_FAIL = 'fetch_crypto_accounts_fail';
-
-//Using ASYNC as a convention to know that I'll have three types.
-export const FETCH_DATA_ASYNC = createAsyncTypes('FETCH_DATA');
-export const FETCH_PROFILE_ASYNC = createAsyncTypes('FETCH_PROFILE');
+export const FETCH_DATA_ASYNC = createAsyncTypes('fetch_data');
+export const REFRESH_PROFILE_ASYNC = createAsyncTypes('refresh_profile');
+export const INPUT_FIELD_CHANGED = 'input_field_changed';
+export const UPDATE_ASYNC = createAsyncTypes('update');
+export const DELETE_ASYNC = createAsyncTypes('delete');
+export const EDIT_ITEM = 'edit_item';
+export const NEW_ITEM = 'new_item';
+export const EDIT_PROFILE = 'edit_profile';

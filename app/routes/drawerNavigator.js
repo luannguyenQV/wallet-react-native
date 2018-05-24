@@ -7,13 +7,7 @@ import Colors from './../config/colors';
 
 import Home from './../screens/main/homeScreen';
 
-import Transactions from './../screens/main/transactions/transactionHistoryScreen';
-import Send from './../screens/main/transactions/sendScreen';
-import Receive from './../screens/main/transactions/receiveScreen';
-
 import Wallets from './../screens/main/accounts/walletsScreen';
-import Deposit from './../screens/main/wallets/depositScreen';
-import Withdraw from './../screens/main/wallets/withdrawScreen';
 
 import GetVerified from './../screens/settings/getVerified/getVerifiedScreen';
 import Settings from './../screens/settings/settingsScreen';

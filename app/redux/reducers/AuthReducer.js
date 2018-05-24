@@ -81,14 +81,14 @@ export default (state = INITIAL_STATE, action) => {
         loading: true,
       };
 
-    case LOGIN_USER_ASYNC.PENDING:
+    case LOGIN_USER_ASYNC.pending:
       return {
         ...state,
         loading: true,
         inputError: '',
         password: '',
       };
-    case LOGIN_USER_ASYNC.SUCCESS:
+    case LOGIN_USER_ASYNC.success:
       return {
         ...state,
         authState: '',
@@ -96,7 +96,7 @@ export default (state = INITIAL_STATE, action) => {
         token: action.payload,
         loading: false,
       };
-    case LOGIN_USER_ASYNC.ERROR:
+    case LOGIN_USER_ASYNC.error:
       return {
         ...state,
         token: null,
@@ -105,19 +105,19 @@ export default (state = INITIAL_STATE, action) => {
         loading: false,
       };
 
-    case REGISTER_USER_ASYNC.PENDING:
+    case REGISTER_USER_ASYNC.pending:
       return {
         ...state,
         loading: true,
         inputError: '',
       };
-    case REGISTER_USER_ASYNC.SUCCESS:
+    case REGISTER_USER_ASYNC.success:
       return {
         ...state,
         token: action.payload,
         loading: false,
       };
-    case REGISTER_USER_ASYNC.ERROR:
+    case REGISTER_USER_ASYNC.error:
       return {
         ...state,
         token: null,
@@ -140,6 +140,7 @@ export default (state = INITIAL_STATE, action) => {
     case LOGOUT_USER:
       return {
         token: null,
+        appLoading: true,
         company: state.company,
         email: state.email,
       };

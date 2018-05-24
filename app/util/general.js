@@ -6,5 +6,8 @@ export const performDivisibility = (balance, divisibility) => {
 };
 
 export const standardizeString = string => {
-  return (string.charAt(0).toUpperCase() + string.slice(1)).replace('_', ' ');
+  if (string) {
+    return (string.charAt(0).toUpperCase() + string.slice(1)).replace('_', ' ');
+  }
+  return '';
 };

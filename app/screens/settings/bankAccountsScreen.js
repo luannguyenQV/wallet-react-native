@@ -1,50 +1,33 @@
 import React, { Component } from 'react';
-import { View, RefreshControl, FlatList } from 'react-native';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
-import { fetchData } from './../../../redux/actions';
+import {
+  fetchData,
+  newItem,
+  editItem,
+  updateItem,
+  deleteItem,
+  updateInputField,
+} from './../../redux/actions';
 
-import { standardizeString } from './../../../util/general';
+import { standardizeString } from './../../util/general';
 
-import Account from './../../../components/bankAccount';
-import Colors from './../../../config/colors';
-import Header from './../../../components/header';
+import Header from './../../components/header';
 import {
   CardList,
   Output,
   Input,
   InputContainer,
-} from './../../../components/common';
+} from './../../components/common';
 
 class BankAccountsScreen extends Component {
   static navigationOptions = {
     title: 'Bank accounts',
   };
 
-  state = {
-    name: '',
-    number: '',
-    type: '',
-    bank_name: '',
-    bank_code: '',
-    branch_code: '',
-    swift: '',
-    iban: '',
-    bic: '',
-    editing: false,
-    addNew: false,
-  };
-
-  toggleAdd() {
-    this.setState({ addNew: !this.state.addNew });
-  }
-
   updateInputField = (prop, value) => {
     this.setState({ [prop]: value });
   };
-
-  saveBankAccount() {
-    console.log('save bank account');
-  }
 
   renderContent(item) {
     const { viewStyleContent } = styles;
@@ -75,35 +58,20 @@ class BankAccountsScreen extends Component {
   }
 
   renderDetail(item) {
-    console.log('this.state', this.state);
-    debugger;
+    // if (bank_account) {
     const {
       name,
+      number,
+      type,
       bank_name,
       bank_code,
       branch_code,
-      type,
-      number,
       swift,
       iban,
       bic,
-    } = this.state;
+    } = item;
 
-    console.log('item', item);
-    debugger;
-
-    this.setState({
-      name: item ? item.name : '',
-      number: item ? item.number : '',
-      type: item ? item.type : '',
-      bank_name: item ? item.bank_name : '',
-      bank_code: item ? item.bank_code : '',
-      branch_code: item ? item.branch_code : '',
-      swift: item ? item.swift : '',
-      iban: item ? item.iban : '',
-      bic: item ? item.bic : '',
-      editing: item ? true : false,
-    });
+    const updateInputField = this.props.updateInputField;
 
     return (
       <InputContainer>
@@ -112,108 +80,133 @@ class BankAccountsScreen extends Component {
           placeholder="e.g. John Snow"
           autoCapitalize="none"
           value={name}
-          onChangeText={input => this.updateInputField('name', input)}
+          onChangeText={input =>
+            updateInputField('bank_account', 'name', input)
+          }
         />
         <Input
           label="Account number"
           placeholder="e.g. 4083764677"
           autoCapitalize="none"
           value={number}
-          onChangeText={input => this.updateInputField('number', input)}
+          onChangeText={input =>
+            updateInputField('bank_account', 'number', input)
+          }
         />
         <Input
           label="Account type"
           placeholder="e.g. Cheque account"
           autoCapitalize="none"
           value={type}
-          onChangeText={input => this.updateInputField('type', input)}
+          onChangeText={input =>
+            updateInputField('bank_account', 'type', input)
+          }
         />
         <Input
           label="Bank name"
           placeholder="e.g. Bank of World"
           autoCapitalize="none"
           value={bank_name}
-          onChangeText={input => this.updateInputField('bank_name', input)}
+          onChangeText={input =>
+            updateInputField('bank_account', 'bank_name', input)
+          }
         />
         <Input
           label="Bank code"
           placeholder="e.g. 12324"
           autoCapitalize="none"
           value={bank_code}
-          onChangeText={input => this.updateInputField('bank_code', input)}
+          onChangeText={input =>
+            updateInputField('bank_account', 'bank_code', input)
+          }
         />
         <Input
           label="Branch code"
           placeholder="e.g. 46589"
           autoCapitalize="none"
           value={branch_code}
-          onChangeText={input => this.updateInputField('branch_code', input)}
+          onChangeText={input =>
+            updateInputField('bank_account', 'branch_code', input)
+          }
         />
         <Input
           label="Swift code"
           placeholder="Usually 8 or 11 characters"
           autoCapitalize="none"
           value={swift}
-          onChangeText={input => this.updateInputField('swift', input)}
+          onChangeText={input =>
+            updateInputField('bank_account', 'swift', input)
+          }
         />
         <Input
           label="IBAN number"
           placeholder="34 alphanumeric characters"
           autoCapitalize="none"
           value={iban}
-          onChangeText={input => this.updateInputField('iban', input)}
+          onChangeText={input =>
+            updateInputField('bank_account', 'iban', input)
+          }
         />
         <Input
           label="BIC number"
           placeholder="Usually 8 or 11 characters"
           autoCapitalize="none"
           value={bic}
-          onChangeText={input => this.props.updateBIC('bic', input)}
+          onChangeText={input => updateInputField('bank_account', 'bic', input)}
         />
       </InputContainer>
     );
-  }
-
-  saveBankAccount() {
-    // let responseJson = await SettingsService.addBankAccount(this.state);
-    // if (responseJson.status === 'success') {
-    //   this.goToHome();
-    // } else {
-    //   Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
     // }
+    return;
   }
 
   render() {
-    const { bank_accounts, loading_bank_accounts, fetchData } = this.props;
+    const {
+      bank_account,
+      loading_bank_account,
+      fetchData,
+      temp_bank_account,
+      newItem,
+      editItem,
+      updateItem,
+      deleteItem,
+      showDetail,
+    } = this.props;
     return (
       <View style={styles.container}>
         <Header
           navigation={this.props.navigation}
           back
           title="Bank accounts"
-          headerRightTitle="Add"
-          headerRightOnPress={() =>
-            this.props.navigation.navigate('AddBankAccount', {
-              parentRoute: 'Settings',
-              nextRoute: 'SettingsBankAccounts',
-            })
+          headerRightTitle={showDetail ? 'Save' : 'Add'}
+          headerRightOnPress={
+            showDetail
+              ? () => updateItem('bank_account', temp_bank_account)
+              : () => newItem('bank_account')
           }
         />
         <CardList
-          data={bank_accounts}
-          titleDetail="Edit bank account"
-          renderContent={this.renderContent}
-          renderDetail={this.renderDetail}
-          saveItem={this.saveBankAccount}
+          data={bank_account}
+          tempItem={temp_bank_account}
           title={item => (item ? item.name : 'New bank account')}
           subtitle={item => (item ? standardizeString(item.status) : '')}
-          refreshing={loading_bank_accounts}
-          onRefresh={() => fetchData('bank_accounts')}
+          onPressTitle={item => () => editItem('bank_account', item)}
+          renderContent={this.renderContent}
+          showDetail={showDetail}
+          titleDetail="Edit bank account"
+          renderDetail={tempItem => this.renderDetail(tempItem)}
+          iconTitleRightDetail="md-close"
+          onPressTitleRightDetail={() => fetchData('bank_account')}
+          // textActionOneDetail="Save"
+          // onPressActionOneDetail={() =>
+          //   updateItem('bank_account', temp_bank_account)
+          // }
+          refreshing={loading_bank_account}
+          onRefresh={() => fetchData('bank_account')}
           emptyListMessage="No bank accounts added yet"
-          deleteItem={this.delete}
+          deleteItem={item => () => deleteItem('bank_account', item)}
           deletable
           editing
-          addNew={this.state.addNew}
           titleStyle="secondary"
         />
       </View>
@@ -230,20 +223,28 @@ const styles = {
     flexDirection: 'column',
     backgroundColor: 'white',
   },
-  submit: {
-    marginBottom: 10,
-    marginHorizontal: 20,
-    borderRadius: 25,
-    height: 50,
-    backgroundColor: Colors.lightblue,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
 };
 
 const mapStateToProps = ({ user }) => {
-  const { bank_accounts, loading_bank_accounts } = user;
-  return { bank_accounts, loading_bank_accounts };
+  const {
+    bank_account,
+    loading_bank_account,
+    temp_bank_account,
+    showDetail,
+  } = user;
+  return {
+    bank_account,
+    loading_bank_account,
+    temp_bank_account,
+    showDetail,
+  };
 };
 
-export default connect(mapStateToProps, { fetchData })(BankAccountsScreen);
+export default connect(mapStateToProps, {
+  fetchData,
+  newItem,
+  editItem,
+  updateItem,
+  deleteItem,
+  updateInputField,
+})(BankAccountsScreen);

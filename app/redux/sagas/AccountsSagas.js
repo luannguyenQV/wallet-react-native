@@ -1,4 +1,5 @@
 import { all, call, put, takeEvery } from 'redux-saga/effects';
+import { FETCH_ACCOUNTS_ASYNC } from './../types';
 import Big from 'big.js';
 
 import AccountService from './../../services/accountService';
@@ -55,20 +56,20 @@ function* fetchAccounts() {
       }
 
       yield put({
-        type: 'FETCH_ACCOUNTS_SUCCESS',
+        type: FETCH_ACCOUNTS_ASYNC.success,
         payload: { wallets, activeWalletIndex, showAccountLabel },
       });
     } else {
       yield put({
-        type: 'FETCH_ACCOUNTS_ERROR',
+        type: FETCH_ACCOUNTS_ASYNC.error,
         payload: responseJson.error,
       });
     }
   } catch (error) {
-    yield put({ type: 'FETCH_DATA_ERROR', error });
+    yield put({ type: FETCH_ACCOUNTS_ASYNC.error, error });
   }
 }
 
 export const accountsSagas = all([
-  takeEvery('FETCH_ACCOUNTS_PENDING', fetchAccounts),
+  takeEvery(FETCH_ACCOUNTS_ASYNC.pending, fetchAccounts),
 ]);

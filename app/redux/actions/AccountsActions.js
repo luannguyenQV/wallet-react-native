@@ -23,7 +23,7 @@ import AccountService from './../../services/accountService';
 import TransactionService from './../../services/transactionService';
 
 export const fetchAccounts = () => {
-  return { type: FETCH_ACCOUNTS_ASYNC.PENDING };
+  return { type: FETCH_ACCOUNTS_ASYNC.pending };
 };
 
 export const setActiveWalletIndex = index => {

@@ -18,13 +18,29 @@ export default {
   gray: '#a6a6a6',
   lightGray: '#c4c4c4',
 
-  primary: '#4d4d4d',
-  secondary: '#a6a6a6',
-  tertiary: '#c4c4c4',
-  quaternary: '#e1e1e1',
+  // primary: '#4d4d4d',
+  // secondary: '#a6a6a6',
+  // tertiary: '#c4c4c4',
+  // quaternary: '#e1e1e1',
+
+  // primaryContrast: '#f3f3f3',
+  // secondaryContrast: '#2d2d2d',
+  // tertiaryContrast: '#000000',
+  // quaternaryContrast: '#4d4d4d',
+
+  // onPrimary: '#f3f3f3',
+  // onSecondary: '#ffffff',
+  // onTertiary: '#000000',
+  // onQuaternary: '#4d4d4d',
+  // focus: '#9797F0',
+
+  primary: '#018B66',
+  secondary: '#8CC13F',
+  tertiary: '#767676',
+  quaternary: '#F3F3F3',
 
   primaryContrast: '#f3f3f3',
-  secondaryContrast: '#2d2d2d',
+  secondaryContrast: '#ffffff',
   tertiaryContrast: '#000000',
   quaternaryContrast: '#4d4d4d',
 
@@ -32,7 +48,7 @@ export default {
   onSecondary: '#ffffff',
   onTertiary: '#000000',
   onQuaternary: '#4d4d4d',
-  focus: '#9797F0',
+  focus: '#1FB9D6',
 
   warning: '#FC8755',
   error: '#f44336',

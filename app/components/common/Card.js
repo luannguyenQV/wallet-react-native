@@ -93,7 +93,7 @@ const Card = props => {
                   style={[
                     textStyleTitle,
                     {
-                      fontSize: title.length < 15 ? 24 : 18,
+                      fontSize: title ? (title.length < 15 ? 24 : 18) : 24,
                       color: titleStyle
                         ? Colors[titleStyle + 'Contrast']
                         : Colors.primaryContrast,
@@ -190,7 +190,7 @@ const styles = {
     // fontSize: 24,
     color: Colors.onPrimary,
     // color: 'black',
-    opacity: 0.87,
+    // opacity: 0.87,
     fontWeight: 'bold',
   },
   textStyleSubtitle: {

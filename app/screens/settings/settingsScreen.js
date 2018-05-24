@@ -1,13 +1,7 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { connect } from 'react-redux';
-import {
-  fetchProfile,
-  fetchEmailAddresses,
-  fetchMobileNumbers,
-  fetchAddresses,
-  fetchDocuments,
-} from './../../redux/actions';
+import {} from './../../redux/actions';
 import Header from './../../components/header';
 // import HeaderVerified from './../../../components/HeaderVerified';
 
@@ -29,7 +23,9 @@ class SettingsScreen extends Component {
   renderBasicInfo() {
     const { profile } = this.props;
 
-    let value = profile.first_name + ' ' + profile.last_name;
+    let value = profile.first_name
+      ? profile.first_name
+      : '' + ' ' + profile.last_name ? profile.last_name : '';
 
     return (
       <SettingsOption
@@ -42,17 +38,17 @@ class SettingsScreen extends Component {
   }
 
   renderEmailAddresses() {
-    const { email_addresses } = this.props;
+    const { email_address } = this.props;
 
     let value = 'Not yet provided';
 
-    if (email_addresses) {
-      for (let i = 0; i < email_addresses.length; i++) {
-        if (email_addresses[i].verified === true) {
-          value = email_addresses[i].email;
+    if (email_address) {
+      for (let i = 0; i < email_address.length; i++) {
+        if (email_address[i].verified === true) {
+          value = email_address[i].email;
         }
-        if (email_addresses[i].primary === true) {
-          value = email_addresses[i].email;
+        if (email_address[i].primary === true) {
+          value = email_address[i].email;
           break;
         }
       }
@@ -69,17 +65,17 @@ class SettingsScreen extends Component {
   }
 
   renderMobileNumbers() {
-    const { mobile_numbers } = this.props;
+    const { mobile_number } = this.props;
 
     let value = 'Not yet provided';
 
-    if (mobile_numbers) {
-      for (let i = 0; i < mobile_numbers.length; i++) {
-        if (mobile_numbers[i].verified) {
-          value = mobile_numbers[i].number;
+    if (mobile_number) {
+      for (let i = 0; i < mobile_number.length; i++) {
+        if (mobile_number[i].verified) {
+          value = mobile_number[i].number;
         }
-        if (mobile_numbers[i].primary) {
-          value = mobile_numbers[i].number;
+        if (mobile_number[i].primary) {
+          value = mobile_number[i].number;
           break;
         }
       }
@@ -96,27 +92,27 @@ class SettingsScreen extends Component {
   }
 
   renderAddresses() {
-    const { addresses } = this.props;
+    const { address } = this.props;
 
     let value = '';
-    if (addresses) {
-      if (addresses.line_1) {
-        value = value + addresses.line_1 + ', ';
+    if (address) {
+      if (address.line_1) {
+        value = value + address.line_1 + ', ';
       }
-      if (addresses.line_2) {
-        value = value + addresses.line_2 + ', ';
+      if (address.line_2) {
+        value = value + address.line_2 + ', ';
       }
-      if (addresses.city) {
-        value = value + addresses.city + ', ';
+      if (address.city) {
+        value = value + address.city + ', ';
       }
-      if (addresses.state_province) {
-        value = value + addresses.state_province + ', ';
+      if (address.state_province) {
+        value = value + address.state_province + ', ';
       }
-      if (addresses.country) {
-        value = value + addresses.country + ', ';
+      if (address.country) {
+        value = value + address.country + ', ';
       }
-      if (addresses.postal_code) {
-        value = value + addresses.postal_code;
+      if (address.postal_code) {
+        value = value + address.postal_code;
       }
     }
 
@@ -247,26 +243,13 @@ const styles = {
 };
 
 const mapStateToProps = ({ user }) => {
-  const {
-    profile,
-    addresses,
-    mobile_numbers,
-    email_addresses,
-    documents,
-  } = user;
+  const { profile, address, mobile_number, email_address } = user;
   return {
     profile,
-    addresses,
-    mobile_numbers,
-    email_addresses,
-    documents,
+    address,
+    mobile_number,
+    email_address,
   };
 };
 
-export default connect(mapStateToProps, {
-  fetchProfile,
-  fetchEmailAddresses,
-  fetchMobileNumbers,
-  fetchAddresses,
-  fetchDocuments,
-})(SettingsScreen);
+export default connect(mapStateToProps, {})(SettingsScreen);

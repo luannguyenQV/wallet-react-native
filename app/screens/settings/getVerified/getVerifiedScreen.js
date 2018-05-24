@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { connect } from 'react-redux';
-// import {  } from './../redux/actions';
+import { refreshGetVerified } from './../../../redux/actions';
 
 import Header from './../../../components/header';
 import GetVerifiedOption from './../../../components/getVerifiedOption';
@@ -13,6 +13,10 @@ class GetVerifiedScreen extends Component {
   static navigationOptions = {
     title: 'Get verified',
   };
+
+  componentDidMount() {
+    this.props.refreshGetVerified();
+  }
 
   goTo = (path, name) => {
     this.props.navigation.navigate(path, { name });
@@ -36,18 +40,18 @@ class GetVerifiedScreen extends Component {
   }
 
   renderEmailAddresses() {
-    const { email_addresses } = this.props;
+    const { email_address } = this.props;
 
     let value = 'Not yet provided';
     let status = 'INCOMPLETE';
 
-    for (let i = 0; i < email_addresses.length; i++) {
-      if (email_addresses[i].verified === true) {
+    for (let i = 0; i < email_address.length; i++) {
+      if (email_address[i].verified === true) {
         status = 'VERIFIED';
-        value = email_addresses[i].email;
+        value = email_address[i].email;
       }
-      if (email_addresses[i].primary === true) {
-        value = email_addresses[i].email;
+      if (email_address[i].primary === true) {
+        value = email_address[i].email;
       }
     }
 
@@ -63,18 +67,18 @@ class GetVerifiedScreen extends Component {
   }
 
   renderMobileNumbers() {
-    const { mobile_numbers } = this.props;
+    const { mobile_number } = this.props;
 
     let value = 'Not yet provided';
     let status = 'INCOMPLETE';
 
-    for (let i = 0; i < mobile_numbers.length; i++) {
-      if (mobile_numbers[i].verified) {
+    for (let i = 0; i < mobile_number.length; i++) {
+      if (mobile_number[i].verified) {
         status = 'VERIFIED';
-        value = mobile_numbers[i].number;
+        value = mobile_number[i].number;
       }
-      if (mobile_numbers[i].primary) {
-        value = mobile_numbers[i].number;
+      if (mobile_number[i].primary) {
+        value = mobile_number[i].number;
       }
     }
 
@@ -90,28 +94,28 @@ class GetVerifiedScreen extends Component {
   }
 
   renderAddresses() {
-    const { addresses } = this.props;
+    const { address } = this.props;
 
     let value = '';
-    if (addresses.line_1) {
-      value = value + addresses.line_1 + ', ';
+    if (address.line_1) {
+      value = value + address.line_1 + ', ';
     }
-    if (addresses.line_2) {
-      value = value + addresses.line_2 + ', ';
+    if (address.line_2) {
+      value = value + address.line_2 + ', ';
     }
-    if (addresses.city) {
-      value = value + addresses.city + ', ';
+    if (address.city) {
+      value = value + address.city + ', ';
     }
-    if (addresses.state_province) {
-      value = value + addresses.state_province + ', ';
+    if (address.state_province) {
+      value = value + address.state_province + ', ';
     }
-    if (addresses.country) {
-      value = value + addresses.country + ', ';
+    if (address.country) {
+      value = value + address.country + ', ';
     }
-    if (addresses.postal_code) {
-      value = value + addresses.postal_code;
+    if (address.postal_code) {
+      value = value + address.postal_code;
     }
-    let status = addresses.status.toUpperCase();
+    let status = address.status.toUpperCase();
 
     return (
       <GetVerifiedOption
@@ -125,11 +129,11 @@ class GetVerifiedScreen extends Component {
   }
 
   renderDocuments() {
-    const { documents } = this.props;
+    const { document } = this.props;
 
     let valueIdentity = 'Not yet provided';
     let statusIdentity = 'INCOMPLETE';
-    let idDocuments = documents.results.filter(
+    let idDocuments = document.results.filter(
       doc => doc.document_category === 'Proof Of Identity',
     );
     let idVerified = idDocuments.filter(doc => doc.status === 'verified');
@@ -148,7 +152,7 @@ class GetVerifiedScreen extends Component {
 
     let valueAdvancedIdentity = 'Not yet provided';
     let statusAdvancedIdentity = 'INCOMPLETE';
-    let idSelfieDocuments = documents.results.filter(
+    let idSelfieDocuments = document.results.filter(
       doc => doc.document_category === 'Advanced Proof Of Identity',
     );
     let idSelfieVerified = idSelfieDocuments.filter(
@@ -173,7 +177,7 @@ class GetVerifiedScreen extends Component {
 
     let valueAddress = 'Not yet provided';
     let statusAddress = 'INCOMPLETE';
-    let addressDocuments = documents.results.filter(
+    let addressDocuments = document.results.filter(
       doc => doc.document_category === 'Proof Of Address',
     );
     let addressVerified = addressDocuments.filter(
@@ -269,20 +273,22 @@ const styles = {
 const mapStateToProps = ({ user }) => {
   const {
     profile,
-    addresses,
-    mobile_numbers,
-    email_addresses,
-    documents,
+    address,
+    mobile_number,
+    email_address,
+    document,
     loading_profile,
   } = user;
   return {
     profile,
-    addresses,
-    mobile_numbers,
-    email_addresses,
-    documents,
+    address,
+    mobile_number,
+    email_address,
+    document,
     loading_profile,
   };
 };
 
-export default connect(mapStateToProps, {})(GetVerifiedScreen);
+export default connect(mapStateToProps, { refreshGetVerified })(
+  GetVerifiedScreen,
+);

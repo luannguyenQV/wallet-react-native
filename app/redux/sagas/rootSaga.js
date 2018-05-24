@@ -3,7 +3,7 @@ import { userSagas } from './UserSagas';
 import { authSagas } from './AuthSagas';
 import { accountsSagas } from './AccountsSagas';
 
-const sagas = [userSagas, authSagas, accountsSagas];
+const sagas = [authSagas, userSagas, accountsSagas];
 
 // export const initSagas = sagaMiddleware =>
 //   sagas.forEach(sagaMiddleware.run.bind(sagaMiddleware));
@@ -29,5 +29,9 @@ const sagas = [userSagas, authSagas, accountsSagas];
 // }
 
 export default function* rootSaga() {
-  yield all(sagas);
+  try {
+    yield all(sagas);
+  } catch (error) {
+    console.log(error);
+  }
 }

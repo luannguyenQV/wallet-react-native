@@ -26,7 +26,7 @@ import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 const INITIAL_STATE = {
   user: null,
   // accounts: null,
-  wallets: null,
+  wallets: [],
   activeWalletIndex: 0,
   loading_profile: false,
   loading_accounts: false,
@@ -60,12 +60,12 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         loading_profile: false,
       };
-    case FETCH_ACCOUNTS_ASYNC.PENDING:
+    case FETCH_ACCOUNTS_ASYNC.pending:
       return {
         ...state,
         loading_accounts: true,
       };
-    case FETCH_ACCOUNTS_ASYNC.SUCCESS:
+    case FETCH_ACCOUNTS_ASYNC.success:
       return {
         ...state,
         wallets: action.payload.wallets,
@@ -73,7 +73,7 @@ export default (state = INITIAL_STATE, action) => {
         showAccountLabel: action.payload.showAccountLabel,
         loading_accounts: false,
       };
-    case FETCH_ACCOUNTS_ASYNC.ERROR:
+    case FETCH_ACCOUNTS_ASYNC.error:
       return {
         ...state,
         loading_accounts: false,
@@ -149,8 +149,8 @@ export default (state = INITIAL_STATE, action) => {
         sending: false,
       };
 
-    case LOGOUT_USER:
-      return INITIAL_STATE;
+    // case LOGOUT_USER:
+    //   return INITIAL_STATE;
     default:
       return state;
   }

@@ -7,9 +7,7 @@ import NoNetConnection from './../screens/auth/noNetConnectionScreen';
 
 import Home from './drawerNavigator';
 
-// import AccountsB from './../screens/accounts/accountsB';
 import Wallets from './../screens/main/accounts/walletsScreen';
-import AddAccount from './../screens/main/accounts/addAccountScreen';
 
 import Send from './../screens/main/transactions/sendScreen';
 import Receive from './../screens/main/transactions/receiveScreen';
@@ -19,24 +17,15 @@ import BankAccounts from './../screens/main/wallets/withdrawBankAccountsScreen';
 import CryptoAddresses from './../screens/main/wallets/withdrawCryptoAddressesScreen';
 import WithdrawAmountEntry from './../screens/main/wallets/withdrawAmountEntryScreen';
 
-import SettingsBankAccounts from './../screens/settings/bankAccounts/bankAccountsScreen';
-import AddBankAccount from './../screens/settings/bankAccounts/addBankAccountScreen';
-import EditBankAccount from './../screens/settings/bankAccounts/editBankAccountScreen';
-
-import SettingsCryptoAddresses from './../screens/settings/cryptoAddresses/cryptoAddressesScreen';
-import AddCryptoAddress from './../screens/settings/cryptoAddresses/addCryptoAddressScreen';
-import EditCryptoAddress from './../screens/settings/cryptoAddresses/editCryptoAddressScreen';
-
-import SettingsEmailAddresses from './../screens/settings/emailAddresses/emailAddressesScreen';
-import AddEmailAddress from './../screens/settings/emailAddresses/addEmailAddressScreen';
+import SettingsEmailAddresses from './../screens/settings/emailAddressesScreen';
+import VerifyMobileNumber from './../screens/settings/verifyMobileScreen';
+import SettingsMobileNumbers from './../screens/settings/mobileNumbersScreen';
+import SettingsBankAccounts from './../screens/settings/bankAccountsScreen';
+import SettingsCryptoAddresses from './../screens/settings/cryptoAddressesScreen';
 
 import SettingsGetVerified from './../screens/settings/getVerified/getVerifiedScreen';
 import Document from './../screens/settings/getVerified/documentScreen';
 import DocumentUpload from './../screens/settings/getVerified/documentUploadScreen';
-
-import AddMobileNumber from './../screens/settings/mobileNumbers/addMobileNumberScreen';
-import VerifyMobileNumber from './../screens/settings/mobileNumbers/verifyMobileScreen';
-import SettingsMobileNumbers from './../screens/settings/mobileNumbers/mobileNumbersScreen';
 
 import SettingsNotifications from './../screens/settings/notifications/notificationsScreen';
 import EmailNotifications from './../screens/settings/notifications/emailNotificationsScreen';
@@ -92,9 +81,6 @@ const Stack = {
   Wallets: {
     screen: Wallets,
   },
-  AddAccount: {
-    screen: AddAccount,
-  },
   UploadImage: {
     screen: UploadImage,
   },
@@ -104,17 +90,11 @@ const Stack = {
   SettingsMobileNumbers: {
     screen: SettingsMobileNumbers,
   },
-  AddMobileNumber: {
-    screen: AddMobileNumber,
-  },
   VerifyMobileNumber: {
     screen: VerifyMobileNumber,
   },
   SettingsEmailAddresses: {
     screen: SettingsEmailAddresses,
-  },
-  AddEmailAddress: {
-    screen: AddEmailAddress,
   },
   SettingsGetVerified: {
     screen: SettingsGetVerified,
@@ -133,18 +113,6 @@ const Stack = {
   },
   SettingsCryptoAddresses: {
     screen: SettingsCryptoAddresses,
-  },
-  AddBankAccount: {
-    screen: AddBankAccount,
-  },
-  EditBankAccount: {
-    screen: EditBankAccount,
-  },
-  AddCryptoAddress: {
-    screen: AddCryptoAddress,
-  },
-  EditCryptoAddress: {
-    screen: EditCryptoAddress,
   },
   SettingsCards: {
     screen: SettingsCards,

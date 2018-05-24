@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
-import SettingsService from './../../../services/settingsService';
-import ResetNavigation from './../../../util/resetNavigation';
-import { Input, InputContainer, Button } from './../../../components/common';
-import Colors from './../../../config/colors';
-import Header from './../../../components/header';
+import { View, Alert } from 'react-native';
+import SettingsService from './../../services/settingsService';
+import ResetNavigation from './../../util/resetNavigation';
+import { Input, InputContainer, Button } from './../../components/common';
+import Colors from './../../config/colors';
+import Header from './../../components/header';
 
 class VerifyMobileScreen extends Component {
   static navigationOptions = {
@@ -80,7 +80,7 @@ class VerifyMobileScreen extends Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flex: 1,
     flexDirection: 'column',
@@ -109,6 +109,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignSelf: 'stretch',
   },
-});
+};
 
 export default VerifyMobileScreen;

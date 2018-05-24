@@ -5,13 +5,16 @@ import {
   Alert,
   Text,
   Image,
-  StyleSheet,
-  AsyncStorage,
   TouchableHighlight,
   RefreshControl,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { fetchData } from './../../redux/actions';
+import {
+  fetchData,
+  editItem,
+  updateItem,
+  updateInputField,
+} from './../../redux/actions';
 
 import CountryPicker from 'react-native-country-picker-modal';
 import Modal from 'react-native-modal';
@@ -26,37 +29,22 @@ class PersonalDetailsScreen extends Component {
     title: 'Personal details',
   };
 
-  state = {
-    routeName: this.props.navigation.state.params
-      ? this.props.navigation.state.params.name
-      : null,
-    first_name: '', //this.props.profile.first_name,
-    last_name: '', //this.props.profile.last_name,
-    id_number: '', //this.props.profile.id_number,
-    nationality: '',
-    //this.props.profile.nationality !== ''
-    // ? this.props.profile.nationality
-    // : 'US',
-    profile: '', //this.props.profile.profile,
-    modalVisible: false,
-  };
-
   componentDidMount() {
     this.props.fetchData('profile');
+    const data = {
+      first_name: this.props.profile.first_name,
+      last_name: this.props.profile.last_name,
+      id_number: this.props.profile.id_number,
+      nationality: this.props.profile.nationality,
+      // profile: this.props.profile.profile,
+    };
+    this.props.editItem('profile', data);
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({
-      first_name: nextProps.profile.first_name,
-      last_name: nextProps.profile.last_name,
-      id_number: nextProps.profile.id_number,
-      nationality:
-        nextProps.profile.nationality !== ''
-          ? nextProps.profile.nationality
-          : 'US',
-      profile: nextProps.profile.profile,
-      modalVisible: false,
-    });
+    if (!nextProps.showDetail) {
+      this.props.navigation.goBack();
+    }
   }
 
   navigateToUploadImage = result => {
@@ -89,33 +77,15 @@ class PersonalDetailsScreen extends Component {
     }
   };
 
-  save = async () => {
-    let responseJson = await UserInfoService.updateUserDetails({
-      first_name: this.state.first_name,
-      last_name: this.state.last_name,
-      id_number: this.state.id_number,
-      nationality: this.state.nationality,
-      language: this.state.language,
-    });
-    if (responseJson.status === 'success') {
-      ResetNavigation.dispatchToDrawerRoute(
-        this.props.navigation,
-        this.state.routeName ? 'GetVerified' : 'Settings',
-      );
-    } else {
-      Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
-    }
-  };
-
   render() {
     const {
-      first_name,
-      last_name,
-      id_number,
-      nationality,
-      modalVisible,
-    } = this.state;
-    const { fetchData, loading_profile } = this.props;
+      loading_profile,
+      fetchData,
+      temp_profile,
+      updateItem,
+      updateInputField,
+    } = this.props;
+    const { first_name, last_name, id_number, nationality } = temp_profile;
     const { viewStyleContainer, imageStylePhoto } = styles;
     return (
       <View style={{ flex: 1 }}>
@@ -124,20 +94,20 @@ class PersonalDetailsScreen extends Component {
           back
           title="Personal details"
           headerRightTitle="Save"
-          headerRightOnPress={this.save}
+          headerRightOnPress={() => updateItem('profile', temp_profile)}
         />
         <View style={viewStyleContainer}>
-          <TouchableHighlight
+          {/* <TouchableHighlight
             style={{ width: 100 }}
             onPress={() => this.openModal()}>
-            {this.state.profile ? (
+            {temp_profile.profile ? (
               <Image
                 style={imageStylePhoto}
                 source={{
-                  uri: this.state.profile,
-                  cache: 'only-if-cached',
+                  uri: temp_profile.profile,
+                  // cache: 'only-if-cached',
                 }}
-                key={this.state.profile}
+                key={temp_profile.profile}
               />
             ) : (
               <Image
@@ -145,7 +115,7 @@ class PersonalDetailsScreen extends Component {
                 style={styles.photo}
               />
             )}
-          </TouchableHighlight>
+          </TouchableHighlight> */}
         </View>
         <InputContainer
           refreshControl={
@@ -159,7 +129,9 @@ class PersonalDetailsScreen extends Component {
             placeholder=""
             autoCapitalize="none"
             value={first_name}
-            onChangeText={text => this.setState({ first_name: text })}
+            onChangeText={input =>
+              updateInputField('profile', 'first_name', input)
+            }
           />
 
           <Input
@@ -167,7 +139,9 @@ class PersonalDetailsScreen extends Component {
             placeholder=""
             autoCapitalize="none"
             value={last_name}
-            onChangeText={text => this.setState({ last_name: text })}
+            onChangeText={input =>
+              updateInputField('profile', 'last_name', input)
+            }
           />
 
           <Input
@@ -175,10 +149,12 @@ class PersonalDetailsScreen extends Component {
             placeholder=""
             autoCapitalize="none"
             value={id_number}
-            onChangeText={text => this.setState({ id_number: text })}
+            onChangeText={input =>
+              updateInputField('profile', 'id_number', input)
+            }
           />
-          <View style={[styles.pickerContainer, { paddingVertical: 20 }]}>
-            <Text style={[styles.text, { flex: 4 }]}>Country</Text>
+          {/* <View style={[styles.pickerContainer, { paddingVertical: 20 }]}>
+            <Text style={[styles.input, { flex: 4 }]}>Country</Text>
             <View style={{ flex: 5, alignItems: 'flex-end' }}>
               <CountryPicker
                 onChange={value => {
@@ -195,10 +171,10 @@ class PersonalDetailsScreen extends Component {
                 }}
               />
             </View>
-          </View>
+          </View> */}
         </InputContainer>
 
-        <Modal
+        {/* <Modal
           animationInTiming={500}
           animationOutTiming={500}
           backdropTransitionOutTiming={500}
@@ -236,13 +212,13 @@ class PersonalDetailsScreen extends Component {
               </TouchableHighlight>
             </View>
           </View>
-        </Modal>
+        </Modal> */}
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flex: 1,
     flexDirection: 'column',
@@ -253,7 +229,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingLeft: 15,
   },
-  text: {
+  input: {
     flex: 4,
     fontSize: 14,
     borderRightColor: 'lightgray',
@@ -321,11 +297,16 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 18,
   },
-});
-
-const mapStateToProps = ({ user }) => {
-  const { profile, loading_profile } = user;
-  return { profile, loading_profile };
 };
 
-export default connect(mapStateToProps, { fetchData })(PersonalDetailsScreen);
+const mapStateToProps = ({ user }) => {
+  const { profile, loading_profile, temp_profile, showDetail } = user;
+  return { profile, loading_profile, temp_profile, showDetail };
+};
+
+export default connect(mapStateToProps, {
+  fetchData,
+  editItem,
+  updateItem,
+  updateInputField,
+})(PersonalDetailsScreen);

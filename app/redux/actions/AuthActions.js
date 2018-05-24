@@ -19,7 +19,7 @@ export const initialLoad = props => async dispatch => {
   dispatch({ type: APP_LOAD_START });
 
   if (props.token) {
-    dispatch({ type: LOGIN_USER_ASYNC.SUCCESS, payload: props.token });
+    dispatch({ type: LOGIN_USER_ASYNC.success, payload: props.token });
   } else {
     dispatch({
       type: AUTH_FIELD_ERROR,
@@ -96,13 +96,14 @@ export const nextAuthFormState = (props, nextFormState) => async dispatch => {
       case 'login':
         switch (inputState) {
           case 'email':
+            iconHeaderLeft = 'md-arrow-back';
             nextInputState = 'password';
             textFooterRight = 'Log in';
             break;
           case 'password':
             data = { company, user: email, password };
             dispatch({
-              type: LOGIN_USER_ASYNC.PENDING,
+              type: LOGIN_USER_ASYNC.pending,
               payload: data,
             });
             skip = true;
@@ -112,6 +113,7 @@ export const nextAuthFormState = (props, nextFormState) => async dispatch => {
       case 'register':
         switch (inputState) {
           case 'email':
+            iconHeaderLeft = 'md-arrow-back';
             nextInputState = 'password';
             textFooterRight = 'Register';
             break;
@@ -122,7 +124,10 @@ export const nextAuthFormState = (props, nextFormState) => async dispatch => {
               password1: password,
               password2: password,
             };
-            await performRegister(dispatch, data);
+            dispatch({
+              type: REGISTER_USER_ASYNC.pending,
+              payload: data,
+            });
             skip = true;
             break;
         }
@@ -244,7 +249,7 @@ export const termsChanged = ({ prop, value }) => {
 
 performRegister = data => {
   return {
-    type: REGISTER_USER_ASYNC.PENDING,
+    type: REGISTER_USER_ASYNC.pending,
     payload: data,
   };
 };

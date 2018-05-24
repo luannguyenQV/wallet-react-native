@@ -28,15 +28,14 @@ class AuthScreen extends Component {
     this.props.initialLoad(this.props);
     // this.onAuthComplete(this.props);
   }
-  componentWillReceiveProps(nextProps) {
-    this.onAuthComplete(nextProps);
-    // if (
-    //   nextProps.authState === 'register' &&
-    //   nextProps.registerFormState === ''
-    // ) {
-    //   this.props.nextAuthFormState({ nextFormState: 'landing' });
-    // }
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   // if (
+  //   //   nextProps.authState === 'register' &&
+  //   //   nextProps.registerFormState === ''
+  //   // ) {
+  //   //   this.props.nextAuthFormState({ nextFormState: 'landing' });
+  //   // }
+  // }
   // componentWillUnmount() {
 
   // }
@@ -57,6 +56,28 @@ class AuthScreen extends Component {
       // countryName: cca2,
     });
   };
+
+  componentWillReceiveProps(newProps) {
+    //check for the mounted props
+    this.onAuthComplete(newProps);
+    if (!newProps.mounted) return this.unMountStyle(); //call outro animation when mounted prop is false
+    this.setState({
+      //remount the node when the mounted prop is true
+      show: true,
+    });
+    setTimeout(this.mountStyle, 10); //call the into animiation
+  }
+
+  unMountStyle() {
+    //css for unmount animation
+    this.setState({
+      style: {
+        fontSize: 60,
+        opacity: 0,
+        transition: 'all 1s ease',
+      },
+    });
+  }
 
   renderMainContainer() {
     const { loading, textFooterRight, iconHeaderLeft } = this.props;

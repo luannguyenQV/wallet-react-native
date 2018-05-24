@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import { View, Alert, Text, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
-import { fetchData } from './../../redux/actions';
+import {
+  fetchData,
+  editItem,
+  updateItem,
+  updateInputField,
+} from './../../redux/actions';
 
 import CountryPicker from 'react-native-country-picker-modal';
 import UserInfoService from './../../services/userInfoService';
@@ -15,58 +20,25 @@ class AddressScreen extends Component {
     title: 'Address',
   };
 
-  state = {
-    routeName: this.props.navigation.state.params
-      ? this.props.navigation.state.params.name
-      : null,
-    line_1: '',
-    line_2: '',
-    city: '',
-    state_province: '',
-    country: 'US',
-    postal_code: '',
-  };
-
   componentDidMount() {
-    this.props.fetchData('addresses');
-    this.updateAddressFields(this.props.addresses);
+    this.props.fetchData('address');
+    this.props.editItem('address', this.props.address);
   }
 
   componentWillReceiveProps(nextProps) {
-    this.updateAddressFields(nextProps.addresses);
-  }
-
-  updateAddressFields(address) {
-    if (address) {
-      this.setState({
-        line_1: address.line_1,
-        line_2: address.line_2,
-        city: address.city,
-        state_province: address.state_province,
-        country: address.country !== '' ? address.country : 'US',
-        postal_code: address.postal_code,
-      });
+    if (!nextProps.showDetail) {
+      this.props.navigation.goBack();
     }
   }
-
-  save = async () => {
-    let responseJson = await UserInfoService.updateAddress(this.state);
-    if (responseJson.status === 'success') {
-      this.reload();
-    } else {
-      Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
-    }
-  };
-
-  reload = () => {
-    ResetNavigation.dispatchToDrawerRoute(
-      this.props.navigation,
-      this.state.routeName != null ? 'GetVerified' : 'Settings',
-    );
-  };
 
   render() {
-    const { fetchData, loading_addresses } = this.props;
+    const {
+      loading_address,
+      fetchData,
+      temp_address,
+      updateItem,
+      updateInputField,
+    } = this.props;
     const {
       line_1,
       line_2,
@@ -74,7 +46,7 @@ class AddressScreen extends Component {
       state_province,
       postal_code,
       country,
-    } = this.state;
+    } = temp_address;
     return (
       <View style={styles.container}>
         <Header
@@ -82,13 +54,13 @@ class AddressScreen extends Component {
           back
           title="Address"
           headerRightTitle="Save"
-          headerRightOnPress={this.save}
+          headerRightOnPress={() => updateItem('address', temp_address)}
         />
         <InputContainer
           refreshControl={
             <RefreshControl
-              refreshing={loading_addresses}
-              onRefresh={fetchData}
+              refreshing={loading_address}
+              onRefresh={() => fetchData('address')}
             />
           }>
           <Input
@@ -96,7 +68,7 @@ class AddressScreen extends Component {
             placeholder="e.g. 158 Kloof Street"
             autoCapitalize="none"
             value={line_1}
-            onChangeText={line_1 => this.setState({ line_1 })}
+            onChangeText={input => updateInputField('address', 'line_1', input)}
           />
 
           <Input
@@ -104,7 +76,7 @@ class AddressScreen extends Component {
             placeholder="e.g. Gardens"
             autoCapitalize="none"
             value={line_2}
-            onChangeText={line_2 => this.setState({ line_2 })}
+            onChangeText={input => updateInputField('address', 'line_2', input)}
           />
 
           <Input
@@ -112,7 +84,7 @@ class AddressScreen extends Component {
             placeholder="e.g. Cape Town"
             autoCapitalize="none"
             value={city}
-            onChangeText={city => this.setState({ city })}
+            onChangeText={input => updateInputField('address', 'city', input)}
           />
 
           <Input
@@ -120,7 +92,9 @@ class AddressScreen extends Component {
             placeholder="e.g. Western Cape"
             autoCapitalize="none"
             value={state_province}
-            onChangeText={state_province => this.setState({ state_province })}
+            onChangeText={input =>
+              updateInputField('address', 'state_province', input)
+            }
           />
 
           <Input
@@ -128,10 +102,12 @@ class AddressScreen extends Component {
             placeholder="e.g. 9001"
             autoCapitalize="none"
             value={postal_code}
-            onChangeText={postal_code => this.setState({ postal_code })}
+            onChangeText={input =>
+              updateInputField('address', 'postal_code', input)
+            }
           />
 
-          <View style={styles.pickerContainer}>
+          {/* <View style={styles.pickerContainer}>
             <Text style={[styles.text, { flex: 4 }]}>Country</Text>
             <View style={{ flex: 5, alignItems: 'flex-end' }}>
               <CountryPicker
@@ -149,7 +125,7 @@ class AddressScreen extends Component {
                 }}
               />
             </View>
-          </View>
+          </View> */}
         </InputContainer>
       </View>
     );
@@ -177,8 +153,13 @@ const styles = {
 };
 
 const mapStateToProps = ({ user }) => {
-  const { profile, addresses, loading_addresses } = user;
-  return { profile, addresses, loading_addresses };
+  const { address, loading_address, temp_address, showDetail } = user;
+  return { address, loading_address, temp_address, showDetail };
 };
 
-export default connect(mapStateToProps, { fetchData })(AddressScreen);
+export default connect(mapStateToProps, {
+  fetchData,
+  editItem,
+  updateItem,
+  updateInputField,
+})(AddressScreen);
