@@ -44,6 +44,9 @@ import SettingsCards from './../screens/settings/cardsScreen';
 import SettingsAddress from './../screens/settings/addressScreen';
 import SettingsPersonalDetails from './../screens/settings/personalDetailsScreen';
 
+import Deposit from './../screens/main/wallets/depositScreen';
+import Withdraw from './../screens/main/wallets/withdrawScreen';
+
 const Stack = {
   AuthScreen: {
     screen: AuthScreen,
@@ -143,6 +146,12 @@ const Stack = {
   },
   MobileNotifications: {
     screen: MobileNotifications,
+  },
+  Deposit: {
+    screen: Deposit,
+  },
+  Withdraw: {
+    screen: Withdraw,
   },
 };
 

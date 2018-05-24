@@ -11,15 +11,12 @@ import {
   SEND_FIELD_ERROR,
   SET_SEND_STATE,
   SET_SEND_WALLET,
-  SET_SEND_AMOUNT,
-  SET_SEND_RECIPIENT,
-  SET_SEND_NOTE,
   RESET_SEND,
   SEND_SUCCESS,
   SEND_FAIL,
   SEND,
-  LOGOUT_USER,
-  // APP_LOAD_FINISH,
+  VIEW_WALLET,
+  HIDE_WALLET,
 } from './../types';
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 
@@ -37,6 +34,8 @@ const INITIAL_STATE = {
   sendNote: '',
   sendReference: null,
   sendState: '',
+  tempWallet: null,
+  showWallet: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -147,6 +146,21 @@ export default (state = INITIAL_STATE, action) => {
         sendState: 'fail',
         sendError: action.payload,
         sending: false,
+      };
+    case VIEW_WALLET:
+      return {
+        ...state,
+        showWallet: true,
+        tempWallet: action.payload,
+        // sendWallet: action.payload,
+        // sendState: 'amount',
+        // sendError: '',
+      };
+    case HIDE_WALLET:
+      return {
+        ...state,
+        tempWallet: null,
+        showWallet: false,
       };
 
     // case LOGOUT_USER:

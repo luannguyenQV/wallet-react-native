@@ -38,6 +38,9 @@ export const SEND = 'send';
 export const SEND_SUCCESS = 'send_success';
 export const SEND_FAIL = 'send_fail';
 
+export const VIEW_WALLET = 'view_wallet';
+export const HIDE_WALLET = 'hide_wallet';
+
 // USER
 export const FETCH_DATA_ASYNC = createAsyncTypes('fetch_data');
 export const REFRESH_PROFILE_ASYNC = createAsyncTypes('refresh_profile');

@@ -20,7 +20,7 @@ class CardList extends Component {
   }
 
   renderItem = (item, index) => {
-    console.log(item);
+    // console.log(item);
     const {
       headerComponent,
       onPressHeader,
@@ -82,11 +82,11 @@ class CardList extends Component {
         textActionOne={
           textFunctionActionOne ? textFunctionActionOne(item) : textActionOne
         }
-        onPressActionOne={onPressActionOne ? onPressActionOne : null}
+        onPressActionOne={onPressActionOne ? onPressActionOne(item) : null}
         textActionTwo={
           textFunctionActionTwo ? textFunctionActionTwo(item) : textActionTwo
         }
-        onPressActionTwo={onPressActionTwo ? onPressActionTwo : null}
+        onPressActionTwo={onPressActionTwo ? onPressActionTwo(item) : null}
         // loading={loading}
       >
         {renderContent ? renderContent(item) : null}

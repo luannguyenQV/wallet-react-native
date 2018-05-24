@@ -27,6 +27,7 @@ import { Input, AuthForm, Spinner } from './../../../components/common';
 import ContactService from './../../../services/contactService';
 import Colors from './../../../config/colors';
 import Header from './../../../components/header';
+import { performDivisibility } from './../../../util/general';
 
 class SendScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
@@ -308,6 +309,12 @@ class SendScreen extends Component {
       sendRecipient,
       sendNote,
     } = this.props;
+    // let amount;
+    // if (sendAmount) {
+    //   amount = performDivisibility(sendAmount, 0).toFixed(
+    //     sendWallet.currency.currency.divisibility,
+    //   );
+    // }
 
     const {
       viewStyleTopContainer,

@@ -14,7 +14,8 @@ import {
   SEND_SUCCESS,
   SEND_FAIL,
   SEND,
-  APP_LOAD_FINISH,
+  VIEW_WALLET,
+  HIDE_WALLET,
 } from './../types';
 import _ from 'lodash';
 import Big from 'big.js';
@@ -100,7 +101,7 @@ export const resetSend = () => {
 };
 
 export const send = data => async dispatch => {
-  console.log(data);
+  // console.log(data);
   let amount = new Big(data.amount);
   for (let i = 0; i < data.currency.divisibility; i++) {
     amount = amount.times(10);
@@ -113,7 +114,7 @@ export const send = data => async dispatch => {
     data.currency.code,
     data.reference,
   );
-  console.log(responseJson);
+  // console.log(responseJson);
   if (responseJson.status === 'success') {
     dispatch({
       type: SEND_SUCCESS,
@@ -141,4 +142,17 @@ export const setActiveCurrency = wallet => async () => {
   //     );
   //   }
   // };
+};
+
+export const viewWallet = wallet => {
+  return {
+    type: VIEW_WALLET,
+    payload: wallet,
+  };
+};
+
+export const hideWallet = () => {
+  return {
+    type: HIDE_WALLET,
+  };
 };

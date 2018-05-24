@@ -74,7 +74,7 @@ class Input extends Component {
       cca2,
     } = this.state;
 
-    console.log(this.state);
+    // console.log(this.state);
 
     return (
       <View

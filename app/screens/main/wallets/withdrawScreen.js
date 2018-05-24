@@ -15,7 +15,7 @@ class WithdrawScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Header navigation={this.props.navigation} drawer title="Withdraw" />
+        <Header navigation={this.props.navigation} back title="Withdraw" />
         <Option
           name="Bank accounts"
           gotoAddress="BankAccounts"

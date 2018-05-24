@@ -59,7 +59,7 @@ class DepositScreen extends Component {
     if (!this.state.bank.reference) {
       return (
         <View style={styles.container}>
-          <Header navigation={this.props.navigation} drawer title="Deposit" />
+          <Header navigation={this.props.navigation} back title="Deposit" />
           <View style={styles.comment}>
             <Text style={styles.commentText}>
               No deposit instructions have been provided.
@@ -71,7 +71,7 @@ class DepositScreen extends Component {
     } else {
       return (
         <View style={styles.container}>
-          <Header navigation={this.props.navigation} drawer title="Deposit" />
+          <Header navigation={this.props.navigation} back title="Deposit" />
           <View style={{ flex: 1 }}>
             <View style={styles.comment}>
               <Text style={styles.commentText}>

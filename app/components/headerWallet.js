@@ -86,6 +86,8 @@ class HeaderWallet extends Component {
   }
 
   onButtonPress(type) {
+    console.log(type);
+    console.log(this.props);
     switch (type) {
       case 'send': {
         this.props.resetSend();
@@ -156,4 +158,5 @@ export default connect(mapStateToProps, {
   setActiveWalletIndex,
   setSendWallet,
   resetSend,
+  // tempWallet,
 })(HeaderWallet);

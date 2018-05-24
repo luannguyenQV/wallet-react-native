@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
-import { View, FlatList } from 'react-native';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
-import { fetchAccounts } from './../../../redux/actions';
+import {
+  fetchAccounts,
+  resetSend,
+  setSendWallet,
+  viewWallet,
+  hideWallet,
+} from './../../../redux/actions';
 
 import Header from './../../../components/header';
 // import Wallet from './../../../components/wallet';
@@ -18,48 +24,40 @@ class WalletsScreen extends Component {
     title: 'Wallets',
   };
 
-  state = {
-    showDetails: false,
-    wallet: null,
-    headerRightIcon: '',
-    headerRightOnPress: () => {},
-  };
+  // state = {
+  //   showDetails: false,
+  //   wallet: null,
+  //   headerRightIcon: '',
+  //   headerRightOnPress: () => {},
+  // };
 
   componentDidMount() {
     this.props.fetchAccounts();
+    this.props.hideWallet();
   }
 
-  showDetails(wallet) {
-    this.setState({
-      showDetails: true,
-      wallet: wallet,
-      headerRightIcon: 'md-close',
-      headerRightOnPress: () => this.hideDetails(),
-    });
-  }
-
-  hideDetails = () => {
-    this.setState({
-      showDetails: false,
-      wallet: null,
-      headerRightIcon: '',
-      headerRightOnPress: () => {},
-    });
-  };
-
-  // renderWallets() {
-  //   const { wallets } = this.props;
-  //   if (wallets.length > 0) {
-  //     return (
-  //       <FlatList
-  //         data={wallets}
-  //         renderItem={({ item }) => this.renderWallet(item)}
-  //         keyExtractor={item => item.account_name + item.currency.currency.code}
-  //       />
-  //     );
-  //   }
-  //   return <EmptyListMessage text="No wallets" />;
+  // showDetails(wallet) {
+  //   this.setState({
+  //     showDetails: true,
+  //     wallet: wallet,
+  //   });
   // }
+
+  // hideDetails = () => {
+  //   this.setState({
+  //     showDetails: false,
+  //     wallet: null,
+  //     headerRightIcon: '',
+  //     headerRightOnPress: () => {},
+  //   });
+  // };
+
+  send = item => {
+    console.log(item);
+    this.props.resetSend();
+    this.props.setSendWallet(item);
+    this.props.navigation.navigate('Send');
+  };
 
   renderContent(item) {
     const balance =
@@ -111,11 +109,13 @@ class WalletsScreen extends Component {
 
   render() {
     const {
-      // headerRightIcon,
-      // headerRightOnPress,
       fetchAccounts,
       loading_accounts,
       wallets,
+      hideWallet,
+      viewWallet,
+      showWallet,
+      tempWallet,
     } = this.props;
     return (
       <View style={styles.container}>
@@ -123,12 +123,14 @@ class WalletsScreen extends Component {
           navigation={this.props.navigation}
           drawer
           title="Wallets"
-          // headerRightIcon={headerRightIcon}
-          // headerRightOnPress={headerRightOnPress}
+          headerRightIcon={showWallet ? 'md-close' : ''}
+          headerRightOnPress={showWallet ? () => hideWallet() : () => {}}
         />
         <CardList
           navigation={this.props.navigation}
           data={wallets}
+          tempItem={tempWallet}
+          showDetail={showWallet}
           renderContent={this.renderContent}
           renderDetail={(item, navigation) =>
             this.renderDetail(item, navigation)
@@ -137,15 +139,17 @@ class WalletsScreen extends Component {
           itemActive={item => (item ? item.currency.active : false)}
           title={item => (item ? item.currency.currency.description : '')}
           subtitle={item => (item ? standardizeString(item.account_name) : '')}
+          onPressTitle={tempWallet => () => viewWallet(tempWallet)}
           refreshing={loading_accounts}
           onRefresh={fetchAccounts}
           emptyListMessage="No wallets added yet"
-          titleStyle="primary"
+          titleStyle="secondary"
           keyExtractor={item => item.index + item.currency.currency.code}
           textActionOne="Send"
-          onPressActionOne={() => this.send()}
+          onPressActionOne={item => () => this.send(item)}
           textActionTwo="Receive"
-          onPressActionTwo={() => this.props.navigation.navigate('Receive')}
+          onPressActionTwo={() => () =>
+            this.props.navigation.navigate('Receive')}
           textTitleLeft={item => (item ? item.currency.currency.code : '')}
           // onPressTitleLeft={() => this.setActiveCurrency()}
         />
@@ -185,8 +189,14 @@ const styles = {
 };
 
 const mapStateToProps = ({ accounts }) => {
-  const { wallets, loading_accounts } = accounts;
-  return { wallets, loading_accounts };
+  const { wallets, loading_accounts, tempWallet, showWallet } = accounts;
+  return { wallets, loading_accounts, tempWallet, showWallet };
 };
 
-export default connect(mapStateToProps, { fetchAccounts })(WalletsScreen);
+export default connect(mapStateToProps, {
+  fetchAccounts,
+  resetSend,
+  setSendWallet,
+  viewWallet,
+  hideWallet,
+})(WalletsScreen);
