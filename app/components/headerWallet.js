@@ -8,7 +8,7 @@ import {
 } from './../redux/actions';
 
 import Colors from './../config/colors';
-import HeaderButton from './HeaderButton';
+import WalletAction from './WalletAction';
 import HeaderCurrency from './HeaderCurrency';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -30,9 +30,11 @@ class HeaderWallet extends Component {
   });
 
   renderWallets() {
-    const { wallets } = this.props;
+    const { wallets, showClose } = this.props;
     if (wallets.length === 1) {
-      return <HeaderCurrency detail wallet={wallets[0]} />;
+      return (
+        <HeaderCurrency detail wallet={wallets[0]} showClose={showClose} />
+      );
     } else {
       return (
         <FlatList
@@ -73,7 +75,7 @@ class HeaderWallet extends Component {
           horizontal
           scrollEnabled={false}
           renderItem={({ item }) => (
-            <HeaderButton
+            <WalletAction
               type={item.type}
               onPress={() => this.onButtonPress(item.type)}
             />

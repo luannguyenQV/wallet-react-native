@@ -95,7 +95,7 @@ class EmailAddressesScreen extends Component {
           navigation={this.props.navigation}
           back
           title="Email addresses"
-          headerRightTitle={showDetail ? 'Save' : 'Add'}
+          headerRightIcon={showDetail ? 'save' : 'add'}
           headerRightOnPress={
             showDetail
               ? () => updateItem('email_address', temp_email_address)
@@ -116,7 +116,7 @@ class EmailAddressesScreen extends Component {
           renderDetail={tempItem => this.renderDetail(tempItem)}
           textFunctionActionOne={item => (item.verified ? '' : 'Verify')}
           // onPressActionOne={this.verify}
-          iconTitleRightDetail="md-close"
+          iconTitleRightDetail="close"
           onPressTitleRightDetail={() => fetchData('email_address')}
           // textActionOneDetail="Save"
           // onPressActionOneDetail={() =>

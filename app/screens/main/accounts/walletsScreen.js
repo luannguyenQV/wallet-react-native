@@ -96,6 +96,7 @@ class WalletsScreen extends Component {
             { id: 3, type: 'send' },
           ]}
           navigation={navigation}
+          showClose
         />
         <TransactionList
           // updateBalance={this.getBalanceInfo}
@@ -123,7 +124,7 @@ class WalletsScreen extends Component {
           navigation={this.props.navigation}
           drawer
           title="Wallets"
-          headerRightIcon={showWallet ? 'md-close' : ''}
+          headerRightIcon={showWallet ? 'close' : ''}
           headerRightOnPress={showWallet ? () => hideWallet() : () => {}}
         />
         <CardList

@@ -29,7 +29,7 @@ export const initialLoad = props => async dispatch => {
       dispatch({
         type: UPDATE_AUTH_FORM_STATE,
         payload: {
-          iconHeaderLeft: 'md-arrow-back',
+          iconHeaderLeft: 'arrow-back',
           authState: 'landing',
         },
       });
@@ -84,11 +84,11 @@ export const nextAuthFormState = (props, nextFormState) => async dispatch => {
           });
         } else {
           nextAuthState = 'landing';
-          iconHeaderLeft = 'md-arrow-back';
+          iconHeaderLeft = 'arrow-back';
         }
         break;
       case 'landing':
-        iconHeaderLeft = 'md-arrow-back';
+        iconHeaderLeft = 'arrow-back';
         nextAuthState = nextFormState;
         nextInputState = 'email';
         textFooterRight = 'Next';
@@ -96,7 +96,7 @@ export const nextAuthFormState = (props, nextFormState) => async dispatch => {
       case 'login':
         switch (inputState) {
           case 'email':
-            iconHeaderLeft = 'md-arrow-back';
+            iconHeaderLeft = 'arrow-back';
             nextInputState = 'password';
             textFooterRight = 'Log in';
             break;
@@ -113,7 +113,7 @@ export const nextAuthFormState = (props, nextFormState) => async dispatch => {
       case 'register':
         switch (inputState) {
           case 'email':
-            iconHeaderLeft = 'md-arrow-back';
+            iconHeaderLeft = 'arrow-back';
             nextInputState = 'password';
             textFooterRight = 'Register';
             break;
@@ -170,7 +170,7 @@ export const previousAuthFormState = props => {
       break;
     case 'login':
     case 'register':
-      iconHeaderLeft = 'md-arrow-back';
+      iconHeaderLeft = 'arrow-back';
       switch (inputState) {
         case 'email':
           nextAuthState = 'landing';

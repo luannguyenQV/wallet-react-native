@@ -67,7 +67,7 @@ class MobileNumbersScreen extends Component {
   // if (item.primary) {
   //   itemCodeActive = true;
   // } else {
-  //   iconHeaderRight = 'md-trash';
+  //   iconHeaderRight = 'trash';
   //   onPressHeaderRight = deleteItem;
   // }
   // if (item.verified) {
@@ -119,7 +119,7 @@ class MobileNumbersScreen extends Component {
           navigation={this.props.navigation}
           back
           title="Mobile numbers"
-          headerRightTitle={showDetail ? 'Save' : 'Add'}
+          headerRightIcon={showDetail ? 'save' : 'add'}
           headerRightOnPress={
             showDetail
               ? () => updateItem('mobile_number', temp_mobile_number)
@@ -140,7 +140,7 @@ class MobileNumbersScreen extends Component {
           renderDetail={tempItem => this.renderDetail(tempItem)}
           textFunctionActionOne={item => (item.verified ? '' : 'Verify')}
           // onPressActionOne={this.verify}
-          iconTitleRightDetail="md-close"
+          iconTitleRightDetail="close"
           onPressTitleRightDetail={() => fetchData('mobile_number')}
           // textActionOneDetail="Save"
           // onPressActionOneDetail={() =>

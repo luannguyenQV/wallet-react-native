@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 import Colors from './../../config/colors';
 import { Spinner } from './Spinner';
+import { HeaderButton } from './HeaderButton';
 
 const AuthForm = props => {
   const {
@@ -30,12 +31,11 @@ const AuthForm = props => {
     <View style={viewStyleContainer}>
       <View style={viewStyleHeader}>
         {iconHeaderLeft ? (
-          <Icon
-            style={iconStyleHeaderLeft}
-            name={iconHeaderLeft}
-            size={32}
-            // color="black"
+          <HeaderButton
+            icon={iconHeaderLeft}
+            // text={textHeaderLeft}
             onPress={onPressHeaderLeft}
+            color={Colors.primaryContrast}
           />
         ) : null}
         {textHeaderRight ? (

@@ -72,7 +72,7 @@ class CryptoAddressesScreen extends Component {
           navigation={this.props.navigation}
           back
           title="Crypto addresses"
-          headerRightTitle={showDetail ? 'Save' : 'Add'}
+          headerRightIcon={showDetail ? 'save' : 'add'}
           headerRightOnPress={
             showDetail
               ? () => updateItem('crypto_address', temp_crypto_address)
@@ -89,7 +89,7 @@ class CryptoAddressesScreen extends Component {
           renderContent={this.renderContent}
           showDetail={showDetail}
           renderDetail={tempItem => this.renderDetail(tempItem)}
-          iconTitleRightDetail="md-close"
+          iconTitleRightDetail="close"
           onPressTitleRightDetail={() => fetchData('crypto_address')}
           // textActionOneDetail="Save"
           // onPressActionOneDetail={() =>

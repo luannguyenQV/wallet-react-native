@@ -93,7 +93,7 @@ class PersonalDetailsScreen extends Component {
           navigation={this.props.navigation}
           back
           title="Personal details"
-          headerRightTitle="Save"
+          headerRightIcon="save"
           headerRightOnPress={() => updateItem('profile', temp_profile)}
         />
         <View style={viewStyleContainer}>

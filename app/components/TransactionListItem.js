@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, Dimensions, TouchableHighlight } from 'react-native';
 import { Icon } from 'react-native-elements';
 import moment from 'moment';
 import { performDivisibility } from './../util/general';
 
 import Colors from './../config/colors';
 
+const SCREEN_WIDTH = Dimensions.get('window').width;
+
 class TransactionListItem extends Component {
   renderItem() {
-    const { item } = this.props;
+    const { item, onPress } = this.props;
     const {
       viewStyleContainer,
       iconStyle,
@@ -22,28 +24,24 @@ class TransactionListItem extends Component {
     let headerText = '';
     let color = '';
 
-    // console.log(this.state.tx_type);
-
     switch (item.tx_type) {
       case 'debit':
         // console.log('Debit');
         iconName = 'call-made';
-        headerText = 'Sent';
+        headerTextOne = 'Sent';
         if (item.destination_transaction) {
-          //  && item.destination_transaction.user
-          headerText =
-            headerText + ' to ' + item.destination_transaction.user.email;
+          headerTextOne = headerTextOne + ' to ';
+          headerTextTwo = item.destination_transaction.user.email;
         }
         color = Colors.positive;
         break;
       case 'credit':
         // console.log('Credit');
         iconName = 'call-received';
-        headerText = 'Received';
+        headerTextOne = 'Received';
         if (item.source_transaction) {
-          // && item.source_transaction.user
-          headerText =
-            headerText + ' from ' + item.source_transaction.user.email;
+          headerTextOne = headerTextOne + ' from ';
+          headerTextTwo = item.source_transaction.user.email;
         }
         color = Colors.negative;
         break;
@@ -54,15 +52,30 @@ class TransactionListItem extends Component {
     }
 
     return (
-      <View style={viewStyleContainer}>
-        <View style={{ flexDirection: 'row' }}>
+      // <View style={viewStyleContainer}>
+      <TouchableHighlight
+        // style={{ flexDirection: 'row' }}
+        underlayColor={Colors.lightGray}
+        style={{ flex: 1 }}
+        // activeOpacity={0.2}
+        onPress={() => onPress(item)}>
+        <View style={viewStyleContainer}>
           <Icon style={iconStyle} size={24} name={iconName} color={color} />
-          <View style={{ paddingLeft: 8 }}>
-            <Text style={textStyleHeader}>{headerText}</Text>
+          <View style={{ paddingLeft: 8, paddingRight: 2 }}>
+            {SCREEN_WIDTH < 350 ? (
+              <View>
+                <Text style={textStyleHeader}>{headerTextOne}</Text>
+                <Text style={textStyleHeader}>{headerTextTwo}</Text>
+              </View>
+            ) : (
+              <Text style={textStyleHeader}>
+                {headerTextOne}
+                {headerTextTwo}
+              </Text>
+            )}
+
             <Text style={textStyleDate}>{moment(item.created).fromNow()}</Text>
           </View>
-        </View>
-        <View style={viewStyleAmount}>
           <Text style={[textStyleAmount, { color: color }]}>
             {item.currency.symbol}{' '}
             {performDivisibility(
@@ -71,7 +84,7 @@ class TransactionListItem extends Component {
             ).toFixed(item.currency.divisibility)}
           </Text>
         </View>
-      </View>
+      </TouchableHighlight>
     );
   }
 
@@ -86,18 +99,17 @@ const styles = {
     flexDirection: 'row',
     borderBottomColor: 'lightgrey',
     borderBottomWidth: 1,
-    paddingVertical: 12,
+    paddingVertical: 8,
     paddingRight: 8,
     paddingLeft: 4,
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
   },
   viewStyleAmount: {
     // right: 0,
-    // justifyContent: 'flex-end',
   },
   textStyleHeader: {
     fontSize: 14,
-    flexWrap: 'wrap',
+    // padding: 1,
   },
   textStyleDate: {
     fontSize: 10,
@@ -105,6 +117,10 @@ const styles = {
   },
   textStyleAmount: {
     // width: 60,
+    // justifyContent: 'flex-end',
+    position: 'absolute',
+    right: 4,
+    top: 8,
     fontSize: 14,
   },
 };

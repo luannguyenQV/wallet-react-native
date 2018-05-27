@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import Colors from './../config/colors';
 
-class HeaderButton extends Component {
+class WalletAction extends Component {
   renderButton() {
     const { type } = this.props;
     const { viewStyleContainer, iconStyle, textStyleLabel } = styles;
@@ -83,4 +83,4 @@ const styles = {
   },
 };
 
-export default HeaderButton;
+export default WalletAction;

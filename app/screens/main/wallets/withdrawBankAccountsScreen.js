@@ -95,7 +95,7 @@ class WithdrawBankAccountsScreen extends Component {
           navigation={this.props.navigation}
           back
           title="Select bank account"
-          headerRightTitle="Add"
+          headerRightText="Add"
           headerRightOnPress={() =>
             this.props.navigation.navigate('AddBankAccount', {
               parentRoute: 'Withdraw',

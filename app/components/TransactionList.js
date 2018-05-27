@@ -3,13 +3,15 @@ import { View, FlatList, Text, RefreshControl } from 'react-native';
 
 import TransactionService from './../services/transactionService';
 import TransactionListItem from './TransactionListItem';
-import { Spinner, EmptyListMessage } from './common';
+import { Card, EmptyListMessage, PopUpGeneral, Output } from './common';
 
 class TransactionList extends Component {
   state = {
     previousCurrencyCode: null,
     transactions: [],
     loading: true,
+    showDetail: false,
+    transaction: null,
   };
 
   async componentDidMount() {
@@ -61,13 +63,79 @@ class TransactionList extends Component {
     return;
   }
 
-  renderItem = item => {
-    return <TransactionListItem item={item} />;
+  showModal = item => {
+    console.log(item);
+
+    this.setState({ showDetail: true, transaction: item });
   };
+
+  hideModal = () => {
+    this.setState({ showDetail: false, transaction: null });
+  };
+
+  renderItem = item => {
+    return (
+      <TransactionListItem item={item} onPress={item => this.showModal(item)} />
+    );
+  };
+
+  // renderDetail() {
+  //   const { showDetail, transaction } = this.state;
+  //   console.log(transaction);
+
+  //   let iconName = '';
+  //   let headerText = '';
+  //   let color = '';
+
+  //   switch (transaction.tx_type) {
+  //     case 'debit':
+  //       // console.log('Debit');
+  //       iconName = 'call-made';
+  //       headerTextOne = 'Sent';
+  //       if (item.destination_transaction) {
+  //         headerTextOne = headerTextOne + ' to ';
+  //         headerTextTwo = transaction.destination_transaction.user.email;
+  //       }
+  //       color = Colors.positive;
+  //       break;
+  //     case 'credit':
+  //       // console.log('Credit');
+  //       iconName = 'call-received';
+  //       headerTextOne = 'Received';
+  //       if (transaction.source_transaction) {
+  //         headerTextOne = headerTextOne + ' from ';
+  //         headerTextTwo = transaction.source_transaction.user.email;
+  //       }
+  //       color = Colors.negative;
+  //       break;
+  //     default:
+  //       iconName = 'question';
+  //       headerText = 'Unknown transaction type';
+  //       color = Colors.warning;
+  //   }
+
+  //   if (transaction) {
+  //     return (
+  //       <PopUpGeneral
+  //         visible={showDetail}
+  //         // iconTitleLeft={iconTitleLeft}
+  //         title={'Transaction details'}
+  //         subtitle={'Subtitle?'}
+  //         // titleStyle={titleStyle}
+  //         iconTitleRight={'close'}
+  //         onPressTitleRight={() => this.hideModal()}>
+  //         <Output label="Transaction type" value={transaction.label} />
+  //       </PopUpGeneral>
+  //     );
+  //   }
+  // }
 
   render() {
     return (
-      <View style={styles.containerStyle}>{this.renderTransactions()}</View>
+      <View style={styles.containerStyle}>
+        {this.renderTransactions()}
+        {/* {this.renderDetail()} */}
+      </View>
     );
   }
 }

@@ -6,13 +6,11 @@ import _ from 'lodash';
 import Swiper from 'react-native-swiper';
 
 import Header from './../../components/header';
-import Colors from './../../config/colors';
-import HomeCard from './../../components/homeCard';
 
 import TransactionPopUp from './../../components/wallet/TransactionPopUp';
 import HeaderWallet from '../../components/HeaderWallet';
 import TransactionList from './../../components/TransactionList';
-import { CardContainer, Card } from '../../components/common';
+import HomeCards from './../../components/HomeCards';
 
 const renderPagination = (index, total, context) => {
   return (
@@ -53,24 +51,16 @@ class HomeScreen extends Component {
         />
         {/* currency={item} accountLabel={account.name} /> */}
         {/* {this.renderAccounts()} */}
-        {/* <Swiper renderPagination={renderPagination} loop={false}> */}
-        {/* <View style={{ flex: 1 }} /> */}
-        {/* <CardContainer>
-          <Card
-            key={0}
-            textHeader="Welcome to Rehive"
-            image={require('./../../../assets/icons/new_logo.png')}
-            textActionOne="Cool">
-            <Text>Put your logo and brand here.</Text>
-          </Card>
-        </CardContainer> */}
-        <TransactionList
-          // updateBalance={this.getBalanceInfo}
-          currencyCode={wallets[activeWalletIndex].currency.currency.code}
-          // showDialog={this.showDialog}
-          // logout={this.logout}
-        />
-        {/* </Swiper> */}
+        <Swiper renderPagination={renderPagination} loop={false}>
+          {/* <View style={{ flex: 1 }} /> */}
+          <HomeCards navigation={this.props.navigation} />
+          <TransactionList
+            // updateBalance={this.getBalanceInfo}
+            currencyCode={wallets[activeWalletIndex].currency.currency.code}
+            // showDialog={this.showDialog}
+            // logout={this.logout}
+          />
+        </Swiper>
         {/* <TransactionPopUp
           popupDialog={popupDialog => {
             this.popupDialog = popupDialog;

@@ -66,7 +66,7 @@ class CardList extends Component {
           iconTitleRight
             ? iconTitleRight
             : deletable
-              ? (itemActive ? !itemActive(item) : true) ? 'md-trash' : ''
+              ? (itemActive ? !itemActive(item) : true) ? 'delete' : ''
               : ''
         }
         onPressTitleRight={
@@ -118,6 +118,8 @@ class CardList extends Component {
       navigation,
       tempItem,
       showDetail,
+      iconHeaderRight,
+      onPressHeaderRight,
     } = this.props;
     return (
       <KeyboardAvoidingView
@@ -137,7 +139,9 @@ class CardList extends Component {
               iconTitleRight={iconTitleRightDetail}
               onPressTitleRight={onPressTitleRightDetail}
               textActionOne={textActionOneDetail}
-              onPressActionOne={onPressActionOneDetail}>
+              onPressActionOne={onPressActionOneDetail}
+              iconHeaderRight={iconHeaderRight}
+              onPressHeaderRight={onPressHeaderRight}>
               {renderDetail(
                 tempItem ? tempItem : null,
                 navigation ? navigation : null,
@@ -166,7 +170,7 @@ const styles = {
   containerStyle: {
     flex: 1,
     padding: 8,
-    backgroundColor: 'whitesmoke',
+    backgroundColor: '#f0f0f0',
   },
 };
 

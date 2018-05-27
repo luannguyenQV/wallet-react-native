@@ -178,7 +178,7 @@ class BankAccountsScreen extends Component {
           navigation={this.props.navigation}
           back
           title="Bank accounts"
-          headerRightTitle={showDetail ? 'Save' : 'Add'}
+          headerRightIcon={showDetail ? 'save' : 'add'}
           headerRightOnPress={
             showDetail
               ? () => updateItem('bank_account', temp_bank_account)
@@ -195,12 +195,8 @@ class BankAccountsScreen extends Component {
           showDetail={showDetail}
           titleDetail="Edit bank account"
           renderDetail={tempItem => this.renderDetail(tempItem)}
-          iconTitleRightDetail="md-close"
+          iconTitleRightDetail="close"
           onPressTitleRightDetail={() => fetchData('bank_account')}
-          // textActionOneDetail="Save"
-          // onPressActionOneDetail={() =>
-          //   updateItem('bank_account', temp_bank_account)
-          // }
           refreshing={loading_bank_account}
           onRefresh={() => fetchData('bank_account')}
           emptyListMessage="No bank accounts added yet"

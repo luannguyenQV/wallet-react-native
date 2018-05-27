@@ -87,7 +87,7 @@ class DocumentScreen extends Component {
           navigation={this.props.navigation}
           back
           title="Document"
-          headerRightTitle="Add"
+          headerRightText="Add"
           headerRightOnPress={() => this.openModal()}
         />
         <View style={styles.topContainer}>{this.renderHelperText()}</View>

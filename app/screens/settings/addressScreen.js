@@ -53,7 +53,7 @@ class AddressScreen extends Component {
           navigation={this.props.navigation}
           back
           title="Address"
-          headerRightTitle="Save"
+          headerRightIcon="save"
           headerRightOnPress={() => updateItem('address', temp_address)}
         />
         <InputContainer

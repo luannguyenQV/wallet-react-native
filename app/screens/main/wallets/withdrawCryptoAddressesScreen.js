@@ -76,7 +76,7 @@ class WithdrawCryptoAddressesScreen extends Component {
           navigation={this.props.navigation}
           back
           title="Select crypto address"
-          headerRightTitle="Add"
+          headerRightText="Add"
           headerRightOnPress={() =>
             this.props.navigation.navigate('AddCryptoAddress', {
               parentRoute: 'Withdraw',

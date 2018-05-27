@@ -3,13 +3,14 @@ import { View, Text, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 
 import Colors from './../config/colors';
+import { HeaderButton } from './common';
 import { performDivisibility } from './../util/general';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class HeaderCurrency extends Component {
   render() {
-    const { detail, showAccountLabel } = this.props;
+    const { detail, showAccountLabel, showClose } = this.props;
     const { currency, account_name } = this.props.wallet;
     const {
       viewStyleContainer,
@@ -34,6 +35,17 @@ class HeaderCurrency extends Component {
         {showAccountLabel ? (
           <Text style={textStyleAccount}>{account_name}</Text>
         ) : null}
+        {/* {showClose ? (
+          <HeaderButton
+            icon='close'
+            onPress={onPressTitleRight}
+            color={
+              titleStyle
+                ? Colors[titleStyle + 'Contrast']
+                : Colors.primaryContrast
+            }
+          />
+        ) : null} */}
         <View
           style={[viewStyleCurrency, detail ? null : { paddingBottom: 16 }]}>
           <Text style={textStyleSymbol}>{currency.currency.symbol}</Text>

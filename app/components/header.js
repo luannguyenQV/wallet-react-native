@@ -11,7 +11,7 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import HeaderButtons from 'react-navigation-header-buttons';
 import Colors from './../config/colors';
-import DrawerButton from './drawerButton';
+import { HeaderButton } from './common';
 
 export default class Header extends Component {
   constructor(props) {
@@ -67,8 +67,7 @@ export default class Header extends Component {
       title,
       right,
       smallTitle,
-      homeRight,
-      headerRightTitle,
+      headerRightText,
       headerRightOnPress,
       headerRightIcon,
     } = this.props;
@@ -161,13 +160,18 @@ export default class Header extends Component {
         )}
         <View style={styles.options}>
           <View style={styles.left}>
-            {drawer ? <DrawerButton navigation={navigation} /> : null}
+            {drawer ? (
+              <HeaderButton
+                onPress={() => navigation.navigate('DrawerOpen')}
+                icon="menu"
+              />
+            ) : null}
             {back ? (
-              <TouchableOpacity
+              <HeaderButton
                 onPress={() => navigation.goBack()}
-                style={{ padding: 20 }}>
-                <Icon name="md-arrow-back" size={24} color="white" />
-              </TouchableOpacity>
+                style={{ padding: 20 }}
+                icon="arrow-back"
+              />
             ) : null}
           </View>
           <View style={styles.title}>
@@ -180,56 +184,17 @@ export default class Header extends Component {
           </View>
           <View style={styles.rightIcon}>
             {right ? (
-              <TouchableOpacity
+              <HeaderButton
                 onPress={() => navigation.navigate('QRcodeScanner')}
-                style={{ padding: 10 }}>
-                <Icon
-                  name="ios-qr-scanner-outline"
-                  size={30}
-                  color="white"
-                  style={{ paddingRight: 10 }}
-                />
-              </TouchableOpacity>
+                icon="camera"
+              />
             ) : null}
-            {homeRight ? (
-              <TouchableOpacity
-                onPress={() => navigation.navigate('AccountsB')}
-                style={{
-                  flex: 1,
-                  padding: 10,
-                  alignItems: 'flex-end',
-                  justifyContent: 'flex-start',
-                }}>
-                <Icon
-                  name="ios-arrow-up-outline"
-                  size={30}
-                  color="white"
-                  style={{ paddingRight: 10 }}
-                />
-              </TouchableOpacity>
-            ) : null}
-            {headerRightTitle ? (
-              <HeaderButtons color="white" key={headerRightTitle}>
-                <HeaderButtons.Item
-                  key={headerRightTitle + '_item'}
-                  title={headerRightTitle}
-                  onPress={headerRightOnPress}
-                  // buttonStyle={{ fontSize: 12 }}
-                />
-              </HeaderButtons>
-            ) : null}
-            {headerRightIcon ? (
-              <HeaderButtons
-                IconComponent={Icon}
-                iconSize={24}
-                color="white"
-                key={headerRightTitle}>
-                <HeaderButtons.Item
-                  key={headerRightIcon + '_item'}
-                  iconName={headerRightIcon}
-                  onPress={headerRightOnPress}
-                />
-              </HeaderButtons>
+            {headerRightText || headerRightIcon ? (
+              <HeaderButton
+                text={headerRightText}
+                onPress={headerRightOnPress}
+                icon={headerRightIcon}
+              />
             ) : null}
           </View>
         </View>
