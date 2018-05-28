@@ -13,12 +13,8 @@ import {
 import { standardizeString } from './../../util/general';
 
 import Header from './../../components/header';
-import {
-  CardList,
-  Output,
-  Input,
-  InputContainer,
-} from './../../components/common';
+import { Output, Input, InputContainer } from './../../components/common';
+import CardList from './../../components/CardList';
 
 class BankAccountsScreen extends Component {
   static navigationOptions = {

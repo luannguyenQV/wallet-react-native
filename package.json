@@ -23,8 +23,7 @@
     "moment": "^2.20.0",
     "prop-types": "^15.6.0",
     "react": "16.0.0",
-    "react-native":
-      "https://github.com/expo/react-native/archive/sdk-24.0.0.tar.gz",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-24.0.0.tar.gz",
     "react-native-animatable": "^1.2.4",
     "react-native-country-picker-modal": "^0.5.1",
     "react-native-device-info": "^0.10.2",
@@ -43,7 +42,8 @@
     "redux": "^4.0.0",
     "redux-persist": "^5.9.1",
     "redux-saga": "^0.16.0",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "rehive": "^1.10.0"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",

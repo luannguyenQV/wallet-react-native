@@ -11,30 +11,39 @@ import {
 
 import Header from './../../../components/header';
 // import Wallet from './../../../components/wallet';
-import { CardList, Output } from '../../../components/common';
+import { Output, PopUpGeneral } from '../../../components/common';
 import {
   standardizeString,
   performDivisibility,
 } from './../../../util/general';
 import HeaderWallet from '../../../components/HeaderWallet';
 import TransactionList from './../../../components/TransactionList';
+import CardList from './../../../components/CardList';
 
 class WalletsScreen extends Component {
   static navigationOptions = {
     title: 'Wallets',
   };
 
-  // state = {
-  //   showDetails: false,
-  //   wallet: null,
-  //   headerRightIcon: '',
-  //   headerRightOnPress: () => {},
-  // };
+  state = {
+    showModal: false,
+    wallet: null,
+  };
 
   componentDidMount() {
     this.props.fetchAccounts();
     this.props.hideWallet();
   }
+
+  showModal = item => {
+    console.log(item);
+
+    this.setState({ showModal: true, wallet: item });
+  };
+
+  hideModal = () => {
+    this.setState({ showModal: false, wallet: null });
+  };
 
   // showDetails(wallet) {
   //   this.setState({
@@ -131,13 +140,15 @@ class WalletsScreen extends Component {
           navigation={this.props.navigation}
           data={wallets}
           tempItem={tempWallet}
-          showDetail={showWallet}
+          // showDetail={showWallet}
           renderContent={this.renderContent}
           renderDetail={(item, navigation) =>
             this.renderDetail(item, navigation)
           }
           saveItem={this.saveCryptoAddress}
           itemActive={item => (item ? item.currency.active : false)}
+          textTitleLeft={item => (item ? item.currency.currency.code : '')}
+          onPressTitleLeft={item => this.showModal(item)}
           title={item => (item ? item.currency.currency.description : '')}
           subtitle={item => (item ? standardizeString(item.account_name) : '')}
           onPressTitle={tempWallet => () => viewWallet(tempWallet)}
@@ -151,14 +162,21 @@ class WalletsScreen extends Component {
           textActionTwo="Receive"
           onPressActionTwo={() => () =>
             this.props.navigation.navigate('Receive')}
-          textTitleLeft={item => (item ? item.currency.currency.code : '')}
-          // onPressTitleLeft={() => this.setActiveCurrency()}
         />
-        {/* {showDetails ? (
-          this.renderDetails()
-        ) : (
-          <CardContainer>{this.renderWallets()}</CardContainer>
-        )} */}
+        <PopUpGeneral
+          visible={this.state.showModal}
+          // iconTitleLeft={iconTitleLeft}
+          // title={'Transaction details'}
+          // subtitle={'Subtitle?'}
+          // titleStyle={titleStyle}
+          // iconTitleRight={'close'}
+          contentText="This will update your default currency"
+          textActionOne="Set default"
+          // onPressActionOne={() => this.hideModal()}
+          textActionTwo="Cancel"
+          onDismiss={() => this.hideModal()}
+          onPressActionTwo={() => this.hideModal()}
+        />
       </View>
     );
   }

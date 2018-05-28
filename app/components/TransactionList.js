@@ -4,7 +4,10 @@ import { View, FlatList, Text, RefreshControl } from 'react-native';
 import TransactionService from './../services/transactionService';
 import TransactionListItem from './TransactionListItem';
 import { Card, EmptyListMessage, PopUpGeneral, Output } from './common';
+import Colors from './../config/colors';
+import { performDivisibility } from './../util/general';
 
+import moment from 'moment';
 class TransactionList extends Component {
   state = {
     previousCurrencyCode: null,
@@ -65,7 +68,6 @@ class TransactionList extends Component {
 
   showModal = item => {
     console.log(item);
-
     this.setState({ showDetail: true, transaction: item });
   };
 
@@ -79,62 +81,138 @@ class TransactionList extends Component {
     );
   };
 
-  // renderDetail() {
-  //   const { showDetail, transaction } = this.state;
-  //   console.log(transaction);
+  renderDetail() {
+    const {
+      textStyleLeft,
+      textStyleRight,
+      viewStyleFooter,
+      textStyleHeader,
+    } = styles;
+    const { showDetail, transaction } = this.state;
 
-  //   let iconName = '';
-  //   let headerText = '';
-  //   let color = '';
+    console.log(transaction);
 
-  //   switch (transaction.tx_type) {
-  //     case 'debit':
-  //       // console.log('Debit');
-  //       iconName = 'call-made';
-  //       headerTextOne = 'Sent';
-  //       if (item.destination_transaction) {
-  //         headerTextOne = headerTextOne + ' to ';
-  //         headerTextTwo = transaction.destination_transaction.user.email;
-  //       }
-  //       color = Colors.positive;
-  //       break;
-  //     case 'credit':
-  //       // console.log('Credit');
-  //       iconName = 'call-received';
-  //       headerTextOne = 'Received';
-  //       if (transaction.source_transaction) {
-  //         headerTextOne = headerTextOne + ' from ';
-  //         headerTextTwo = transaction.source_transaction.user.email;
-  //       }
-  //       color = Colors.negative;
-  //       break;
-  //     default:
-  //       iconName = 'question';
-  //       headerText = 'Unknown transaction type';
-  //       color = Colors.warning;
-  //   }
+    let iconName = '';
+    let headerText = '';
+    let color = '';
 
-  //   if (transaction) {
-  //     return (
-  //       <PopUpGeneral
-  //         visible={showDetail}
-  //         // iconTitleLeft={iconTitleLeft}
-  //         title={'Transaction details'}
-  //         subtitle={'Subtitle?'}
-  //         // titleStyle={titleStyle}
-  //         iconTitleRight={'close'}
-  //         onPressTitleRight={() => this.hideModal()}>
-  //         <Output label="Transaction type" value={transaction.label} />
-  //       </PopUpGeneral>
-  //     );
-  //   }
-  // }
+    if (transaction) {
+      const { amount, label, currency, fee, balance } = transaction;
+      switch (transaction.tx_type) {
+        case 'debit':
+          // console.log('Debit');
+          iconName = 'call-made';
+          headerText = 'Sent ' + transaction.currency.code;
+          if (transaction.destination_transaction) {
+            headerText =
+              headerText +
+              ' to ' +
+              transaction.destination_transaction.user.email;
+          }
+          color = Colors.positive;
+          break;
+        case 'credit':
+          // console.log('Credit');
+          iconName = 'call-received';
+          headerText = 'Received ' + transaction.currency.code;
+          if (transaction.source_transaction) {
+            headerText =
+              headerText + ' from ' + transaction.source_transaction.user.email;
+          }
+          color = Colors.negative;
+          break;
+        default:
+          iconName = 'question';
+          headerText = 'Unknown transaction type';
+          color = Colors.warning;
+      }
+
+      return (
+        <PopUpGeneral
+          visible={showDetail}
+          // iconTitleLeft={iconTitleLeft}
+          // title={headerText}
+          // subtitle={'Subtitle?'}
+          // titleStyle={titleStyle}
+          // iconTitleRight={'close'}
+          // onPressTitleRight={() => this.hideModal()}
+          onDismiss={() => this.hideModal()}>
+          <Text style={textStyleHeader}>{headerText}</Text>
+          <Output label="Transaction type" value={label} />
+          {/* <Output label="Total amount" value={transaction.label} /> */}
+          <Output
+            label="Amount"
+            value={
+              currency.symbol +
+              ' ' +
+              performDivisibility(amount, currency.divisibility).toFixed(
+                currency.divisibility,
+              )
+            }
+          />
+          <Output
+            label="Fees"
+            value={
+              currency.symbol +
+              ' ' +
+              performDivisibility(fee, currency.divisibility).toFixed(
+                currency.divisibility,
+              )
+            }
+          />
+          <Output
+            label="Balance"
+            value={
+              currency.symbol +
+              ' ' +
+              performDivisibility(balance, currency.divisibility).toFixed(
+                currency.divisibility,
+              )
+            }
+          />
+
+          {/* <PopUpInfo
+            textSize={19}
+            label={'Total amount:'}
+            sign={total_amount < 0 ? '-' : ''}
+            currency={currency}
+            value={total_amount}
+          />
+          <PopUpInfo
+            textSize={17}
+            label={'Fees:'}
+            sign={fee < 0 ? '-' : ''}
+            currency={currency}
+            value={fee}
+          />
+          <PopUpInfoLine />
+          <PopUpInfo
+            textSize={19}
+            label={'Balance:'}
+            sign={balance < 0 ? '-' : ''}
+            currency={currency}
+            value={balance}
+          /> */}
+          <View style={viewStyleFooter}>
+            <View>
+              <Text style={textStyleLeft}>
+                {moment(transaction.created).format('lll')}
+              </Text>
+            </View>
+            <View>
+              <Text style={textStyleRight}>{transaction.status}</Text>
+            </View>
+          </View>
+        </PopUpGeneral>
+      );
+    }
+  }
 
   render() {
     return (
       <View style={styles.containerStyle}>
         {this.renderTransactions()}
-        {/* {this.renderDetail()} */}
+        {this.renderDetail()}
       </View>
     );
   }
@@ -144,6 +222,26 @@ const styles = {
   containerStyle: {
     flex: 1,
     padding: 8,
+  },
+  textStyleHeader: {
+    fontSize: 20,
+    textAlign: 'center',
+    paddingBottom: 16,
+    fontWeight: 'bold',
+    // alignSelf: 'flex-start',
+    color: Colors.black,
+  },
+  textStyleFooter: {
+    fontSize: 14,
+    // alignSelf: 'flex-end',
+    color: Colors.black,
+  },
+  viewStyleFooter: {
+    // flex: 2,
+    paddingTop: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
   },
 };
 

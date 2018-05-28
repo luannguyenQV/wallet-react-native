@@ -1,6 +1,14 @@
 import React from 'react';
-import { Text, Modal, View, TouchableOpacity, Spinner } from 'react-native';
+import {
+  Text,
+  Modal,
+  View,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  TouchableHighlight,
+} from 'react-native';
 import { HeaderButton } from './HeaderButton';
+import { Spinner } from './Spinner';
 import Colors from './../../config/colors';
 
 const PopUpGeneral = props => {
@@ -17,6 +25,8 @@ const PopUpGeneral = props => {
     iconStyleTitleRight,
     viewStyleFooter,
     viewStyleContent,
+    textStyleContent,
+    textStyleError,
   } = styles;
 
   const {
@@ -31,7 +41,10 @@ const PopUpGeneral = props => {
     loading,
     titleStyle,
     children,
+    contentText,
     visible,
+    onDismiss,
+    errorText,
   } = props;
 
   return (
@@ -40,83 +53,98 @@ const PopUpGeneral = props => {
       animationType="fade"
       onRequestClose={() => {}}
       transparent>
-      <View style={backgroundStyle}>
+      <TouchableHighlight
+        style={backgroundStyle}
+        onPress={onDismiss}
+        underlayColor={'transparent'}>
         <View style={containerStyle}>
-          {title || iconTitleRight ? (
-            <View
-              resizeMode="cover"
-              style={[
-                viewStyleTitleContainer,
-                {
-                  backgroundColor: titleStyle
-                    ? Colors[titleStyle]
-                    : Colors.primary,
-                },
-              ]}>
-              <View style={viewStyleTitle}>
-                <Text
+          <TouchableWithoutFeedback
+            // style={containerStyle}
+            onPress={() => {}}
+            underlayColor={'transparent'}>
+            <View>
+              {title || iconTitleRight ? (
+                <View
+                  resizeMode="cover"
                   style={[
-                    textStyleTitle,
+                    viewStyleTitleContainer,
                     {
-                      fontSize: title ? (title.length < 15 ? 24 : 18) : 24,
-                      color: titleStyle
-                        ? Colors[titleStyle + 'Contrast']
-                        : Colors.primaryContrast,
+                      backgroundColor: titleStyle
+                        ? Colors[titleStyle]
+                        : Colors.primary,
                     },
                   ]}>
-                  {title}
-                </Text>
-                <Text
-                  style={[
-                    textStyleSubtitle,
-                    {
-                      color: titleStyle
-                        ? Colors[titleStyle + 'Contrast']
-                        : Colors.primaryContrast,
-                      opacity: 0.8,
-                    },
-                  ]}>
-                  {subtitle}
-                </Text>
+                  <View style={viewStyleTitle}>
+                    <Text
+                      style={[
+                        textStyleTitle,
+                        {
+                          fontSize: title ? (title.length < 15 ? 24 : 18) : 24,
+                          color: titleStyle
+                            ? Colors[titleStyle + 'Contrast']
+                            : Colors.primaryContrast,
+                        },
+                      ]}>
+                      {title}
+                    </Text>
+                    <Text
+                      style={[
+                        textStyleSubtitle,
+                        {
+                          color: titleStyle
+                            ? Colors[titleStyle + 'Contrast']
+                            : Colors.primaryContrast,
+                          opacity: 0.8,
+                        },
+                      ]}>
+                      {subtitle}
+                    </Text>
+                  </View>
+                  {iconTitleRight ? (
+                    <View style={iconStyleTitleRight}>
+                      <HeaderButton
+                        icon={iconTitleRight}
+                        onPress={onPressTitleRight}
+                        color={
+                          titleStyle
+                            ? Colors[titleStyle + 'Contrast']
+                            : Colors.primaryContrast
+                        }
+                      />
+                    </View>
+                  ) : null}
+                </View>
+              ) : null}
+              <View style={viewStyleContent}>
+                {children}
+                <Text style={textStyleContent}>{contentText}</Text>
+                <Text style={textStyleError}>{errorText}</Text>
               </View>
-              {iconTitleRight ? (
-                <View style={iconStyleTitleRight}>
-                  <HeaderButton
-                    icon={iconTitleRight}
-                    onPress={onPressTitleRight}
-                    color={
-                      titleStyle
-                        ? Colors[titleStyle + 'Contrast']
-                        : Colors.primaryContrast
-                    }
-                  />
+
+              {textActionOne || textActionTwo ? (
+                <View style={viewStyleFooter}>
+                  {loading ? (
+                    <Spinner size="small" />
+                  ) : (
+                    <View style={viewStyleActionContainer}>
+                      <TouchableOpacity
+                        onPress={onPressActionTwo}
+                        style={buttonStyleAction}>
+                        <Text style={textStyleAction}>{textActionTwo}</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={onPressActionOne}
+                        style={buttonStyleAction}>
+                        <Text style={textStyleAction}>{textActionOne}</Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
                 </View>
               ) : null}
             </View>
-          ) : null}
-          <View style={viewStyleContent}>{children}</View>
-          {textActionOne || textActionTwo ? (
-            <View style={viewStyleFooter}>
-              {loading ? (
-                <Spinner size="small" />
-              ) : (
-                <View style={viewStyleActionContainer}>
-                  <TouchableOpacity
-                    onPress={onPressActionTwo}
-                    style={buttonStyleAction}>
-                    <Text style={textStyleAction}>{textActionTwo}</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={onPressActionOne}
-                    style={buttonStyleAction}>
-                    <Text style={textStyleAction}>{textActionOne}</Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-            </View>
-          ) : null}
+          </TouchableWithoutFeedback>
         </View>
-      </View>
+      </TouchableHighlight>
     </Modal>
   );
 };
@@ -125,21 +153,23 @@ const styles = {
   containerStyle: {
     backgroundColor: '#fff',
     margin: 16,
+    borderRadius: 4,
     // justifyContent: 'center',
     // alignItems: 'center',
     // flex: 1,
     // height: '100%',
+    overflow: 'hidden',
   },
   backgroundStyle: {
-    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
     flex: 1,
     justifyContent: 'center',
   },
   viewStyleContent: {
-    paddingHorizontal: 8,
+    paddingTop: 8,
+    paddingHorizontal: 16,
   },
   viewStyleTitleContainer: {
-    // flex: 1,
     flexDirection: 'row',
     backgroundColor: Colors.primary,
     height: 64,
@@ -163,6 +193,9 @@ const styles = {
     fontSize: 12,
     color: Colors.onSecondary,
   },
+  textStyleContent: {
+    fontSize: 16,
+  },
   viewStyleFooter: {
     height: 52,
     padding: 8,
@@ -171,16 +204,16 @@ const styles = {
     flexDirection: 'row',
     justifyContent: 'flex-end',
   },
+  textStyleError: {
+    paddingTop: 8,
+    fontSize: 14,
+    color: Colors.error,
+  },
   textStyleAction: {
     color: Colors.primary,
     fontSize: 16,
     paddingLeft: 8,
-  },
-  iconStyleTitleLeft: {
-    padding: 16,
-    alignSelf: 'flex-start',
-    color: 'black',
-    opacity: 0.87,
+    fontWeight: 'bold',
   },
   iconStyleTitleRight: {
     right: 0,

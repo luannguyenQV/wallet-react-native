@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Expo from 'expo';
 import {
   View,
   Image,
@@ -272,6 +273,8 @@ const styles = {
   viewContainer: {
     flex: 1,
     backgroundColor: Colors.primary,
+    paddingTop: Expo.Constants.statusBarHeight,
+
     // paddingHorizontal: 8,
   },
   buttonsContainer: {

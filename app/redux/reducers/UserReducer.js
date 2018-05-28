@@ -4,7 +4,12 @@ import {
   EDIT_PROFILE,
   NEW_ITEM,
   FETCH_DATA_ASYNC,
+  UPDATE_ASYNC,
+  PRIMARY_ITEM,
   LOGOUT_USER,
+  HIDE_MODAL,
+  HIDE_WALLET,
+  VIEW_WALLET,
 } from './../types';
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 
@@ -54,10 +59,13 @@ const INITIAL_STATE = {
     postal_code: '',
   },
   showDetail: false,
+  showModal: false,
+  loading: false,
+  updateError: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
-  // console.log(action);
+  console.log(action);
   switch (action.type) {
     case PERSIST_REHYDRATE:
       return action.payload.auth || [];
@@ -68,14 +76,21 @@ export default (state = INITIAL_STATE, action) => {
           ...state['temp_' + action.payload.type],
           [action.payload.prop]: action.payload.value,
         },
-        // [action.payload.prop + 'Error']: action.payload.error,
       };
     case EDIT_ITEM:
       return {
         ...state,
         [action.payload.type]: action.payload.data,
         showDetail: true,
-        // [action.payload.prop + 'Error']: action.payload.error,
+        editing: true,
+      };
+    case PRIMARY_ITEM:
+      return {
+        ...state,
+        [action.payload.type]: action.payload.data,
+        showModal: true,
+        loading: false,
+        updateError: '',
       };
     case EDIT_PROFILE:
       return {
@@ -96,6 +111,14 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         [action.payload.type]: {},
         showDetail: true,
+        editing: false,
+      };
+    case HIDE_MODAL:
+      return {
+        ...state,
+        showModal: false,
+        loading: false,
+        updateError: '',
       };
 
     case FETCH_DATA_ASYNC.pending:
@@ -103,6 +126,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         ['loading_' + action.payload]: true,
         showDetail: false,
+        updateError: '',
       };
     case FETCH_DATA_ASYNC.success:
       return {
@@ -114,6 +138,46 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         ['loading_' + action.payload]: false,
+      };
+
+    case UPDATE_ASYNC.pending:
+      return {
+        ...state,
+        loading: true,
+        updateError: '',
+        // ['loading_' + action.payload]: true,
+        // showDetail: false,
+      };
+    case UPDATE_ASYNC.success:
+      return {
+        ...state,
+        loading: false,
+        showModal: false,
+        // [action.payload.prop]: action.payload.data,
+        // ['loading_' + action.payload.prop]: false,
+      };
+    case UPDATE_ASYNC.error:
+      return {
+        ...state,
+        updateError: action.payload,
+        loading: false,
+      };
+    case VIEW_WALLET:
+      return {
+        ...state,
+        showDetail: true,
+        wallet: true,
+        // tempWallet: action.payload,
+        // sendWallet: action.payload,
+        // sendState: 'amount',
+        // sendError: '',
+      };
+    case HIDE_WALLET:
+      return {
+        ...state,
+        // tempWallet: null,
+        wallet: false,
+        showDetail: false,
       };
 
     case LOGOUT_USER:

@@ -11,7 +11,8 @@ import {
 } from './../../redux/actions';
 
 import Header from './../../components/header';
-import { CardList, InputContainer, Input } from './../../components/common';
+import { InputContainer, Input } from './../../components/common';
+import CardList from './../../components/CardList';
 
 class MobileNumbersScreen extends Component {
   static navigationOptions = {

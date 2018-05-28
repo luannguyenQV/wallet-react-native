@@ -86,10 +86,10 @@ var settingsService = {
     return BaseService.patch('user/notifications/' + id + '/', data);
   },
 
-  documentUpload: (file, type) => {
+  documentUpload: (file, category, type) => {
     let formData = new FormData();
     formData.append('file', file);
-    formData.append('document_category', type);
+    formData.append('document_category', category);
     formData.append('document_type', type);
     return BaseService.documentUpload('user/documents/', formData);
   },

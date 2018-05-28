@@ -468,15 +468,18 @@ const styles = {
     paddingTop: 10,
   },
   viewStyleTopContainer: {
-    justifyContent: 'center',
+    // justifyContent: 'center',
     flex: 2,
   },
   viewStyleBottomContainer: {
     width: '100%',
-    justifyContent: 'center',
-    alignSelf: 'flex-end',
+    // justifyContent: 'center',
+    // alignSelf: 'flex-end',
     flex: 1,
+    // minHeight: 100,
     borderRadius: 2,
+    // position: 'absolute',
+    // bottom: 0,
   },
   contact: {
     height: 40,

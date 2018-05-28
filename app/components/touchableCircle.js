@@ -28,7 +28,7 @@ class TouchableCircle extends Component {
           style={[
             textStyle,
             {
-              fontSize: text.length <= 2 ? 24 : text.length <= 4 ? 16 : 12,
+              fontSize: text.length <= 2 ? 24 : text.length <= 4 ? 15 : 10,
             },
           ]}>
           {text ? text.substr(0, 6).toUpperCase() : ''}

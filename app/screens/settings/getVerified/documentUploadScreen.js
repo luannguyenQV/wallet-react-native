@@ -23,8 +23,8 @@ class DocumentUploadScreen extends Component {
     const params = this.props.navigation.state.params;
     this.state = {
       image: params.image,
+      category: params.category,
       type: params.type,
-      doc_type: params.doc_type,
       getVerified: params.getVerified,
       loading: false,
     };
@@ -48,20 +48,16 @@ class DocumentUploadScreen extends Component {
       name,
       type: 'image/jpg',
     };
-    var type = this.state.doc_type;
+    var category = this.state.category;
+    var type = this.state.type;
 
-    // if (this.state.type === "ID Document") {
-
-    // }
-    // else if (this.state.type === "ID Selfie") {
-
-    // }
-    // else if (this.state.type === "Proof Of Address") {
-
-    // }
-
-    let responseJson = await SettingsService.documentUpload(file, type);
+    let responseJson = await SettingsService.documentUpload(
+      file,
+      category,
+      type,
+    );
     if (responseJson.status === 'success') {
+      this.setState({ loading: false });
       Alert.alert(
         'Upload successful',
         'Your information will shortly be reviewed by our team.',

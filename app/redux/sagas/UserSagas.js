@@ -10,38 +10,49 @@ import {
 import UserInfoService from './../../services/userInfoService';
 import SettingsService from './../../services/settingsService';
 
+import * as rehive from './../../util/rehive';
+
 function* fetchData(action) {
   try {
     let responseJson = null;
     switch (action.payload) {
       case 'mobile_number':
+        // responseJson = yield call(rehive.getMobiles);
         responseJson = yield call(SettingsService.getAllMobiles);
         break;
       case 'email_address':
+        // responseJson = yield call(rehive.getEmails);
         responseJson = yield call(SettingsService.getAllEmails);
         break;
       case 'crypto_address':
+        // responseJson = yield call(rehive.getCryptoAccounts);
         responseJson = yield call(SettingsService.getAllCryptoAddresses);
         break;
       case 'bank_account':
+        // responseJson = yield call(rehive.getBankAccounts);
         responseJson = yield call(SettingsService.getAllBankAccounts);
         break;
       case 'profile':
+        // responseJson = yield call(rehive.getEmails);
         responseJson = yield call(UserInfoService.getUserDetails);
         break;
       case 'address':
+        // responseJson = yield call(rehive.getAddress);
         responseJson = yield call(UserInfoService.getAddress);
         break;
       case 'document':
+        // responseJson = yield call(rehive.getDocuments);
         responseJson = yield call(UserInfoService.getAllDocuments);
         break;
     }
+    console.log(responseJson);
     if (responseJson && responseJson.status === 'success') {
       yield put({
         type: FETCH_DATA_ASYNC.success,
         payload: { data: responseJson.data, prop: action.payload },
       });
     } else {
+      // console.log(responseJson);
       yield put({
         type: FETCH_DATA_ASYNC.error,
         payload: { data: responseJson.message, prop: action.payload },
@@ -79,10 +90,26 @@ function* updateItem(action) {
     let responseJson = null;
     switch (type) {
       case 'mobile_numbers':
-        responseJson = yield call(SettingsService.addMobile, data);
+        if (data.id) {
+          responseJson = yield call(
+            SettingsService.makeMobilePrimary,
+            data.id,
+            data,
+          );
+        } else {
+          responseJson = yield call(SettingsService.addMobile, data);
+        }
         break;
       case 'email_address':
+        // if (data.id) {
+        //   responseJson = yield call(
+        //     SettingsService.makeEmailPrimary,
+        //     data.id,
+        //     data,
+        //   );
+        // } else {
         responseJson = yield call(SettingsService.addEmail, data);
+        // }
         break;
       case 'crypto_address':
         if (data.id) {
@@ -122,9 +149,10 @@ function* updateItem(action) {
         put({ type: FETCH_DATA_ASYNC.pending, payload: type }),
       ]);
     } else {
+      console.log(responseJson.message);
       yield put({
-        type: UPDATE_ASYNC.message,
-        payload: responseJson.error,
+        type: UPDATE_ASYNC.error,
+        payload: responseJson.message,
       });
     }
   } catch (error) {

@@ -3,25 +3,35 @@ import React, { Component } from 'react';
 import {
   ScrollView,
   KeyboardAvoidingView,
-  // View,
   FlatList,
   RefreshControl,
 } from 'react-native';
+import { connect } from 'react-redux';
+import {
+  fetchData,
+  newItem,
+  editItem,
+  updateItem,
+  deleteItem,
+  primaryItem,
+  hideModal,
+} from './../redux/actions';
+import { standardizeString } from './../util/general';
 
-import { Card } from './Card';
-import { EmptyListMessage } from './EmptyListMessage';
+import { Card, PopUpGeneral, EmptyListMessage } from './common';
 
 // make component
 class CardList extends Component {
   componentDidMount() {
-    if (this.props.onRefresh) {
-      this.props.onRefresh();
-    }
+    this.props.fetchData(this.props.type);
+    // if (this.props.onRefresh) {
+    //   this.props.onRefresh();
+    // }
   }
 
   renderItem = (item, index) => {
-    // console.log(item);
     const {
+      type,
       headerComponent,
       onPressHeader,
       textTitleLeft,
@@ -56,7 +66,9 @@ class CardList extends Component {
         }
         iconTitleLeft={iconTitleLeft}
         itemActive={itemActive ? itemActive(item) : false}
-        onPressTitleLeft={onPressTitleLeft}
+        onPressTitleLeft={() =>
+          onPressTitleLeft ? onPressTitleLeft(item) : null
+        }
         title={title ? title(item) : ''}
         subtitle={subtitle ? subtitle(item) : ''}
         titleStyle={titleStyle}
@@ -74,7 +86,7 @@ class CardList extends Component {
             ? onPressTitleRight
             : deletable
               ? (itemActive ? !itemActive(item) : true)
-                ? deleteItem(item)
+                ? () => deleteItem(type, item)
                 : null
               : null
         }
@@ -104,7 +116,11 @@ class CardList extends Component {
 
   render() {
     const {
-      refreshing,
+      loading,
+      loadingData,
+      editing,
+      type,
+      identifier,
       onRefresh,
       data,
       keyExtractor,
@@ -120,6 +136,12 @@ class CardList extends Component {
       showDetail,
       iconHeaderRight,
       onPressHeaderRight,
+      showModal,
+      updateError,
+      loadingModal,
+      fetchData,
+      wallet,
+      updateItem,
     } = this.props;
     return (
       <KeyboardAvoidingView
@@ -133,15 +155,21 @@ class CardList extends Component {
           keyboardShouldPersistTaps="always">
           {showDetail ? (
             <Card
-              title={titleDetail ? titleDetail : ''}
-              // subtitle={subtitle ? subtitle(item) : ''}
+              title={
+                wallet
+                  ? null
+                  : standardizeString((editing ? 'Edit ' : 'Add ') + type)
+              }
               titleStyle={titleStyle}
-              iconTitleRight={iconTitleRightDetail}
-              onPressTitleRight={onPressTitleRightDetail}
-              textActionOne={textActionOneDetail}
-              onPressActionOne={onPressActionOneDetail}
-              iconHeaderRight={iconHeaderRight}
-              onPressHeaderRight={onPressHeaderRight}>
+              iconTitleRight={wallet ? '' : 'close'}
+              onPressTitleRight={() => fetchData(type)}
+              textActionOne={wallet ? '' : 'Save'}
+              onPressActionOne={() => updateItem(type, tempItem)}
+              loading={loading}
+              errorText={updateError}
+              // iconHeaderRight={iconHeaderRight}
+              // onPressHeaderRight={onPressHeaderRight}
+            >
               {renderDetail(
                 tempItem ? tempItem : null,
                 navigation ? navigation : null,
@@ -150,7 +178,10 @@ class CardList extends Component {
           ) : (
             <FlatList
               refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                <RefreshControl
+                  refreshing={loadingData}
+                  onRefresh={() => fetchData(this.props.type)}
+                />
               }
               data={data}
               renderItem={({ item, index }) => this.renderItem(item, index)}
@@ -161,6 +192,17 @@ class CardList extends Component {
             />
           )}
         </ScrollView>
+        {/* <PopUpGeneral
+          visible={showModal}
+          // contentText={textPopUp}
+          // textActionOne={textPopUpActionOne}
+          // onPressActionOne={onPressPopUpAction}
+          onDismiss={hideModal}
+          textActionTwo="Cancel"
+          onPressActionTwo={hideModal}
+          loading={loadingModal}
+          errorText={updateError}
+        /> */}
       </KeyboardAvoidingView>
     );
   }
@@ -174,5 +216,24 @@ const styles = {
   },
 };
 
-// make component available to other parts of app
-export { CardList };
+const mapStateToProps = ({ user }) => {
+  const { showDetail, updateError, showModal, loading, editing, wallet } = user;
+  return {
+    showDetail,
+    updateError,
+    showModal,
+    loading,
+    editing,
+    wallet,
+  };
+};
+
+export default connect(mapStateToProps, {
+  fetchData,
+  newItem,
+  editItem,
+  updateItem,
+  deleteItem,
+  primaryItem,
+  hideModal,
+})(CardList);

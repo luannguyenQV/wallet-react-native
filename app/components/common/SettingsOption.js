@@ -4,7 +4,7 @@ import Colors from './../../config/colors';
 
 class SettingsOption extends Component {
   render() {
-    const { goTo, gotoAddress, label, value } = this.props;
+    const { gotoAddress, label, value, onPress } = this.props;
 
     const {
       viewStyleContainer,
@@ -19,7 +19,7 @@ class SettingsOption extends Component {
         underlayColor={Colors.lightGray}
         style={viewStyleContainer}
         // activeOpacity={0.2}
-        onPress={() => goTo(gotoAddress, label)}>
+        onPress={() => onPress(gotoAddress, label)}>
         <View>
           <View style={viewStyleLabel}>
             <Text style={[textStyleLabel]}>{label}</Text>

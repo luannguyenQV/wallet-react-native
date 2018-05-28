@@ -12,6 +12,8 @@ import HeaderWallet from '../../components/HeaderWallet';
 import TransactionList from './../../components/TransactionList';
 import HomeCards from './../../components/HomeCards';
 
+import * as rehive from './../../util/rehive';
+
 const renderPagination = (index, total, context) => {
   return (
     <View style={styles.paginationStyle}>
@@ -33,6 +35,8 @@ class HomeScreen extends Component {
   render() {
     const { wallets, activeWalletIndex } = this.props;
     // console.log(accounts);
+    // console.log(rehive.rehive);
+    console.log('rehive.getEmails', rehive.getEmails);
     return (
       <View style={styles.container}>
         <Header

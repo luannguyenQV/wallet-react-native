@@ -76,11 +76,12 @@ const styles = {
   },
   viewStyleContent: {
     flex: 1,
-    padding: 24,
+    paddingHorizontal: 24,
+    paddingBottom: 12,
     // backgroundColor: Colors.onPrimary,
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
   },
   viewStyleFooter: {
     justifyContent: 'flex-end',

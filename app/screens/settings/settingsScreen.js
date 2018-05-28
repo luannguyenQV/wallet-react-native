@@ -32,7 +32,7 @@ class SettingsScreen extends Component {
         label="Basic info"
         value={value}
         gotoAddress="SettingsPersonalDetails"
-        goTo={this.goTo}
+        onPress={this.goTo}
       />
     );
   }
@@ -59,7 +59,7 @@ class SettingsScreen extends Component {
         label="Email address"
         value={value}
         gotoAddress="SettingsEmailAddresses"
-        goTo={this.goTo}
+        onPress={this.goTo}
       />
     );
   }
@@ -86,7 +86,7 @@ class SettingsScreen extends Component {
         label="Mobile number"
         value={value}
         gotoAddress="SettingsMobileNumbers"
-        goTo={this.goTo}
+        onPress={this.goTo}
       />
     );
   }
@@ -121,7 +121,7 @@ class SettingsScreen extends Component {
         label="Address"
         value={value}
         gotoAddress="SettingsAddress"
-        goTo={this.goTo}
+        onPress={this.goTo}
       />
     );
   }
@@ -132,19 +132,19 @@ class SettingsScreen extends Component {
         <SettingsOption
           label="Proof of identity"
           gotoAddress="Document"
-          goTo={this.goTo}
+          onPress={this.goTo}
         />
 
         <SettingsOption
           label="Advanced proof of identity"
           gotoAddress="Document"
-          goTo={this.goTo}
+          onPress={this.goTo}
         />
 
         <SettingsOption
           label="Proof of address"
           gotoAddress="Document"
-          goTo={this.goTo}
+          onPress={this.goTo}
         />
       </View>
     );
@@ -155,7 +155,7 @@ class SettingsScreen extends Component {
       <SettingsOption
         label="Bank accounts"
         gotoAddress="SettingsBankAccounts"
-        goTo={this.goTo}
+        onPress={this.goTo}
       />
     );
   }
@@ -165,7 +165,7 @@ class SettingsScreen extends Component {
       <SettingsOption
         label="Cards"
         gotoAddress="SettingsCards"
-        goTo={this.goTo}
+        onPress={this.goTo}
       />
     );
   }
@@ -175,7 +175,7 @@ class SettingsScreen extends Component {
       <SettingsOption
         label="Crypto accounts"
         gotoAddress="SettingsCryptoAddresses"
-        goTo={this.goTo}
+        onPress={this.goTo}
       />
     );
   }
@@ -186,12 +186,12 @@ class SettingsScreen extends Component {
         <SettingsOption
           label="Reset password"
           gotoAddress="ChangePassword"
-          goTo={this.goTo}
+          onPress={this.goTo}
         />
         <SettingsOption
           label="Two factor"
           gotoAddress="TwoFactor"
-          goTo={this.goTo}
+          onPress={this.goTo}
         />
         {/* <SettingsOption label="Pin" gotoAddress="Pin" goTo={this.goTo} /> */}
       </View>

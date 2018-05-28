@@ -5,17 +5,18 @@ import {
   StyleSheet,
   Text,
   TouchableHighlight,
+  FlatList,
 } from 'react-native';
 import { ImagePicker } from 'expo';
 import Colors from './../../../config/colors';
 import Header from './../../../components/header';
 import DocumentUploadHelperText from './../../../components/DocumentUploadHelperText';
-import { InputContainer, Output } from '../../../components/common';
+import { SettingsOption, Output } from '../../../components/common';
 import document_categories from './../../../config/document_types.json';
 
 class DocumentScreen extends Component {
   static navigationOptions = {
-    title: 'Document',
+    title: 'Documents',
   };
 
   constructor(props) {
@@ -25,12 +26,12 @@ class DocumentScreen extends Component {
       title: params.name,
       getVerified: false,
       modalVisible: false,
-      type: 'other',
+      category: params.name,
     };
   }
 
-  openModal = async () => {
-    this.setState({ modalVisible: true });
+  openModal = type => {
+    this.setState({ modalVisible: true, type });
   };
 
   launchCamera = async () => {
@@ -43,7 +44,7 @@ class DocumentScreen extends Component {
       this.props.navigation.navigate('DocumentUpload', {
         getVerified: this.state.getVerified,
         image: result,
-        doc_type: this.state.type,
+        category: this.state.category,
         type: this.state.title,
       });
     }
@@ -59,7 +60,7 @@ class DocumentScreen extends Component {
       this.props.navigation.navigate('DocumentUpload', {
         getVerified: this.state.getVerified,
         image: result,
-        doc_type: this.state.type,
+        category: this.state.category,
         type: this.state.title,
       });
     }
@@ -67,6 +68,12 @@ class DocumentScreen extends Component {
 
   renderHelperText() {
     const { title } = this.state;
+    const {
+      // viewStyleContainer,
+      textStyleHeader,
+      textStyleDescription,
+      viewStyleOptions,
+    } = styles;
 
     let document_category = document_categories.filter(
       document_category => document_category.document_category === title,
@@ -77,8 +84,43 @@ class DocumentScreen extends Component {
     console.log('document_category', document_category);
     console.log('options', options);
 
-    return <DocumentUploadHelperText title={title} options={options} />;
+    // return <DocumentUploadHelperText title={title} options={options} />;
+    return (
+      <View>
+        <Text style={textStyleHeader}>{title}</Text>
+        <Text style={textStyleDescription}>
+          Please upload one of the following documents.{' '}
+          {title === 'Proof of Address'
+            ? 'Your name and address must be clearly visible and be dated within the last 3 months.'
+            : ''}
+        </Text>
+        <FlatList
+          contentContainerStyle={viewStyleOptions}
+          data={options}
+          renderItem={({ item }) => this.renderItem(item)}
+          keyExtractor={item => item.id}
+          scrollEnabled={false}
+        />
+      </View>
+    );
   }
+
+  renderItem = item => {
+    const { viewStyleOptions, textStyleOptions } = styles;
+    console.log(item);
+    return (
+      <SettingsOption
+        label={'>  ' + item.description}
+        onPress={() => this.openModal(item.document_type)}
+      />
+    );
+    // return (
+    //   <View>
+    //     <Text>{'> ' + item.description + ' <'}</Text>
+    //     <Text>hi there</Text>
+    //   </View>
+    // );
+  };
 
   render() {
     return (
@@ -86,9 +128,9 @@ class DocumentScreen extends Component {
         <Header
           navigation={this.props.navigation}
           back
-          title="Document"
-          headerRightText="Add"
-          headerRightOnPress={() => this.openModal()}
+          title="Documents"
+          // headerRightText="Add"
+          // headerRightOnPress={() => this.openModal()}
         />
         <View style={styles.topContainer}>{this.renderHelperText()}</View>
         {/* <Output label={'> ' + 'item.description' + ' <'} /> */}
@@ -179,6 +221,23 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 18,
     color: Colors.black,
+  },
+  textStyleHeader: {
+    fontSize: 20,
+    padding: 16,
+    textAlign: 'center',
+  },
+  textStyleDescription: {
+    fontSize: 14,
+    flexWrap: 'wrap',
+    paddingHorizontal: 16,
+    paddingBottom: 8,
+    textAlign: 'center',
+  },
+  textStyleOptions: {
+    fontSize: 14,
+    paddingHorizontal: 16,
+    textAlign: 'center',
   },
 });
 

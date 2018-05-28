@@ -12,12 +12,8 @@ import {
 
 import { standardizeString } from './../../util/general';
 import Header from './../../components/header';
-import {
-  CardList,
-  Input,
-  Output,
-  InputContainer,
-} from './../../components/common';
+import { Input, Output, InputContainer } from './../../components/common';
+import CardList from './../../components/CardList';
 
 class CryptoAddressesScreen extends Component {
   static navigationOptions = {

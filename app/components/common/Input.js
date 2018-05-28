@@ -212,10 +212,11 @@ class Input extends Component {
 
 const styles = {
   viewStyleContainer: {
-    minHeight: 80,
+    minHeight: 88,
     borderTopRightRadius: 3,
-    borderTopLeftRadius: 3,
-    borderRadius: 3,
+    borderTopLeftRadius: 4,
+    overflow: 'hidden',
+    // borderRadius: 3,
     // borderWidth: 2,
     // borderColor: Colors.primary,
   },

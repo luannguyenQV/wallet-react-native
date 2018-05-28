@@ -4,8 +4,10 @@ import {
   FETCH_DATA_ASYNC,
   EDIT_ITEM,
   NEW_ITEM,
+  PRIMARY_ITEM,
   UPDATE_ASYNC,
   DELETE_ASYNC,
+  HIDE_MODAL,
 } from './../types';
 
 export const updateInputField = (type, prop, value) => {
@@ -30,6 +32,13 @@ export const editItem = (type, item) => {
   };
 };
 
+export const primaryItem = (type, item) => {
+  return {
+    type: PRIMARY_ITEM,
+    payload: { type: 'temp_' + type, data: { ...item, primary: true } },
+  };
+};
+
 export const newItem = type => {
   return {
     type: NEW_ITEM,
@@ -50,3 +59,16 @@ export const deleteItem = (type, item) => {
     payload: { type, data: item },
   };
 };
+
+export const hideModal = () => {
+  return {
+    type: HIDE_MODAL,
+  };
+};
+
+// export const verifyItem = (type, item) => {
+//   return {
+//     type: VERIFY_ASYNC.pending,
+//     payload: { type, data: item },
+//   };
+// };

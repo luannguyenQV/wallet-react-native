@@ -21,10 +21,10 @@ const Card = props => {
     viewStyleActionContainer,
     buttonStyleAction,
     textStyleAction,
-    iconStyleTitleLeft,
+    textStyleError,
     iconStyleTitleRight,
     viewStyleFooter,
-    headerStyle,
+    viewStyleContent,
   } = styles;
 
   const {
@@ -46,6 +46,7 @@ const Card = props => {
     onCardPress,
     onPressTitle,
     titleStyle,
+    errorText,
   } = props;
 
   // console.log(props);
@@ -53,13 +54,14 @@ const Card = props => {
   return (
     <View style={viewStyleCardContainer}>
       <View>{renderHeader ? renderHeader : null}</View>
-      {title || iconTitleLeft || iconTitleRight ? (
+      {title || subtitle || iconTitleLeft || iconTitleRight ? (
         <View
           resizeMode="cover"
           style={[
             viewStyleTitleContainer,
             {
               backgroundColor: titleStyle ? Colors[titleStyle] : Colors.primary,
+              height: itemCode ? 72 : 64,
             },
           ]}>
           {itemCode ? (
@@ -133,7 +135,10 @@ const Card = props => {
         </View>
       ) : null}
       <TouchableWithoutFeedback onPress={onCardPress}>
-        <View>{props.children}</View>
+        <View style={viewStyleContent}>
+          {props.children}
+          {errorText ? <Text style={textStyleError}>{errorText}</Text> : null}
+        </View>
       </TouchableWithoutFeedback>
       {textActionOne || textActionTwo ? (
         <View style={viewStyleFooter}>
@@ -181,7 +186,7 @@ const styles = {
     flex: 1,
     flexDirection: 'row',
     backgroundColor: Colors.primary,
-    height: 72,
+    // height: 72,
     paddingHorizontal: 8,
     alignItems: 'center',
   },
@@ -197,6 +202,10 @@ const styles = {
     flexShrink: 1,
     flexWrap: 'wrap',
     fontWeight: 'bold',
+  },
+  viewStyleContent: {
+    // paddingTop: 8,
+    // paddingHorizontal: 8,
   },
   textStyleSubtitle: {
     fontSize: 12,
@@ -214,6 +223,12 @@ const styles = {
     color: Colors.primary,
     fontSize: 16,
     paddingLeft: 8,
+  },
+  textStyleError: {
+    paddingTop: 8,
+    paddingHorizontal: 8,
+    fontSize: 14,
+    color: Colors.error,
   },
   iconStyleTitleLeft: {
     padding: 16,
