@@ -51,7 +51,7 @@ export const validateSendAmount = (wallet, amount) => {
   for (let i = 0; i < wallet.currency.currency.divisibility; i++) {
     amount = amount * 10;
   }
-  if (amount < wallet.currency.available_balance && amount) {
+  if (amount <= wallet.currency.available_balance && amount) {
     return setSendState('recipient');
   } else {
     return {

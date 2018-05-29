@@ -128,31 +128,33 @@ class MobileNumbersScreen extends Component {
           }
         />
         <CardList
+          type="mobile_number"
           data={mobile_number}
           tempItem={temp_mobile_number}
+          loadingData={loading_mobile_number}
           title={item => (item ? item.number : 'New mobile number')}
           subtitle={item => (item.verified ? 'Verified' : '')}
           itemActive={item => (item.primary ? true : false)}
           // makePrimaryItem={this.makePrimary}
           // onPressTitle={item => () => editItem('mobile_number', item)}
           // renderContent={this.renderContent}
-          showDetail={showDetail}
-          titleDetail="Edit mobile number"
+          // showDetail={showDetail}
+          // titleDetail="Edit mobile number"
           renderDetail={tempItem => this.renderDetail(tempItem)}
-          textFunctionActionOne={item => (item.verified ? '' : 'Verify')}
+          // textFunctionActionOne={item => (item.verified ? '' : 'Verify')}
           // onPressActionOne={this.verify}
-          iconTitleRightDetail="close"
-          onPressTitleRightDetail={() => fetchData('mobile_number')}
+          // iconTitleRightDetail="close"
+          // onPressTitleRightDetail={() => fetchData('mobile_number')}
           // textActionOneDetail="Save"
           // onPressActionOneDetail={() =>
           //   updateItem('mobile_number', temp_mobile_number)
           // }
-          refreshing={loading_mobile_number}
-          onRefresh={() => fetchData('mobile_number')}
+          // refreshing={loading_mobile_number}
+          // onRefresh={() => fetchData('mobile_number')}
           emptyListMessage="No mobile numbers added yet"
-          deleteItem={item => () => deleteItem('mobile_number', item)}
+          // deleteItem={item => () => deleteItem('mobile_number', item)}
           deletable
-          editing
+          // editing
           titleStyle="secondary"
         />
       </View>

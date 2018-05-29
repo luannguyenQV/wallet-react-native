@@ -45,7 +45,7 @@ function* fetchData(action) {
         responseJson = yield call(UserInfoService.getAllDocuments);
         break;
     }
-    console.log(responseJson);
+    // console.log(responseJson);
     if (responseJson && responseJson.status === 'success') {
       yield put({
         type: FETCH_DATA_ASYNC.success,
@@ -101,15 +101,15 @@ function* updateItem(action) {
         }
         break;
       case 'email_address':
-        // if (data.id) {
-        //   responseJson = yield call(
-        //     SettingsService.makeEmailPrimary,
-        //     data.id,
-        //     data,
-        //   );
-        // } else {
-        responseJson = yield call(SettingsService.addEmail, data);
-        // }
+        if (data.id) {
+          responseJson = yield call(
+            SettingsService.makeEmailPrimary,
+            data.id,
+            data,
+          );
+        } else {
+          responseJson = yield call(SettingsService.addEmail, data);
+        }
         break;
       case 'crypto_address':
         if (data.id) {
@@ -179,6 +179,7 @@ function* deleteItem(action) {
         responseJson = yield call(SettingsService.deleteBankAccount, data.id);
         break;
     }
+    console.log(responseJson);
     if (responseJson && responseJson.status === 'success') {
       yield all([
         put({ type: DELETE_ASYNC.success }),

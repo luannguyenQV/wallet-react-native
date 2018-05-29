@@ -14,6 +14,7 @@ import {
   updateItem,
   deleteItem,
   primaryItem,
+  showModal,
   hideModal,
 } from './../redux/actions';
 import { standardizeString } from './../util/general';
@@ -56,6 +57,9 @@ class CardList extends Component {
       deletable,
       renderContent,
       renderDetail,
+      showModal,
+      editItem,
+      primaryItem,
     } = this.props;
     return (
       <Card
@@ -67,12 +71,14 @@ class CardList extends Component {
         iconTitleLeft={iconTitleLeft}
         itemActive={itemActive ? itemActive(item) : false}
         onPressTitleLeft={() =>
-          onPressTitleLeft ? onPressTitleLeft(item) : null
+          onPressTitleLeft ? onPressTitleLeft(item) : primaryItem(type, item)
         }
         title={title ? title(item) : ''}
         subtitle={subtitle ? subtitle(item) : ''}
         titleStyle={titleStyle}
-        onPressTitle={onPressTitle ? onPressTitle(item) : null}
+        onPressTitle={() =>
+          onPressTitle ? onPressTitle(item) : editItem(type, item)
+        }
         textTitleRight={textTitleRight}
         iconTitleRight={
           iconTitleRight
@@ -86,7 +92,7 @@ class CardList extends Component {
             ? onPressTitleRight
             : deletable
               ? (itemActive ? !itemActive(item) : true)
-                ? () => deleteItem(type, item)
+                ? () => showModal(type, item, 'delete')
                 : null
               : null
         }
@@ -136,12 +142,17 @@ class CardList extends Component {
       showDetail,
       iconHeaderRight,
       onPressHeaderRight,
+      hideModal,
       showModal,
+      deleteItem,
+      modalVisible,
       updateError,
       loadingModal,
       fetchData,
       wallet,
       updateItem,
+      modalType,
+      primaryItem,
     } = this.props;
     return (
       <KeyboardAvoidingView
@@ -192,17 +203,27 @@ class CardList extends Component {
             />
           )}
         </ScrollView>
-        {/* <PopUpGeneral
-          visible={showModal}
-          // contentText={textPopUp}
-          // textActionOne={textPopUpActionOne}
-          // onPressActionOne={onPressPopUpAction}
+        <PopUpGeneral
+          visible={modalVisible}
+          contentText={standardizeString(
+            (modalType === 'delete'
+              ? 'Delete '
+              : 'Make ' + tempItem[identifier] + ' primary ') +
+              type +
+              '?',
+          )}
+          textActionOne={modalType === 'delete' ? 'Delete' : 'Make primary'}
+          onPressActionOne={() =>
+            modalType === 'delete'
+              ? deleteItem(type, tempItem)
+              : updateItem(type, tempItem)
+          }
           onDismiss={hideModal}
           textActionTwo="Cancel"
           onPressActionTwo={hideModal}
-          loading={loadingModal}
+          loading={loading}
           errorText={updateError}
-        /> */}
+        />
       </KeyboardAvoidingView>
     );
   }
@@ -217,14 +238,23 @@ const styles = {
 };
 
 const mapStateToProps = ({ user }) => {
-  const { showDetail, updateError, showModal, loading, editing, wallet } = user;
-  return {
+  const {
     showDetail,
     updateError,
-    showModal,
+    modalVisible,
     loading,
     editing,
     wallet,
+    modalType,
+  } = user;
+  return {
+    showDetail,
+    updateError,
+    modalVisible,
+    loading,
+    editing,
+    wallet,
+    modalType,
   };
 };
 
@@ -235,5 +265,6 @@ export default connect(mapStateToProps, {
   updateItem,
   deleteItem,
   primaryItem,
+  showModal,
   hideModal,
 })(CardList);

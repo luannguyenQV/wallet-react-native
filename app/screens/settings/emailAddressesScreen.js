@@ -2,14 +2,11 @@ import React, { Component } from 'react';
 import { View } from 'react-native';
 import { connect } from 'react-redux';
 import {
-  fetchData,
   newItem,
   editItem,
   updateItem,
   deleteItem,
   updateInputField,
-  primaryItem,
-  hideModal,
 } from './../../redux/actions';
 
 import Header from './../../components/header';
@@ -96,16 +93,12 @@ class EmailAddressesScreen extends Component {
     const {
       email_address,
       loading_email_address,
-      fetchData,
       temp_email_address,
       newItem,
       updateItem,
       deleteItem,
       showDetail,
-      showModal,
-      hideModal,
       updateError,
-      loadingModal,
     } = this.props;
     return (
       <View style={styles.container}>
@@ -145,9 +138,9 @@ class EmailAddressesScreen extends Component {
           //   updateItem('email_address', temp_email_address)
           // }
           emptyListMessage="No email addresses added yet"
-          deleteItem={item => () => deleteItem('email_address', item)}
+          // deleteItem={item => () => deleteItem('email_address', item)}
           deletable
-          editing
+          // editing
           titleStyle="secondary"
           // textPopUp={
           //   temp_email_address
@@ -197,12 +190,9 @@ const mapStateToProps = ({ user }) => {
 };
 
 export default connect(mapStateToProps, {
-  fetchData,
   newItem,
   editItem,
   updateItem,
   deleteItem,
   updateInputField,
-  primaryItem,
-  hideModal,
 })(EmailAddressesScreen);

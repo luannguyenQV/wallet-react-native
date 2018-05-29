@@ -5,8 +5,10 @@ import {
   NEW_ITEM,
   FETCH_DATA_ASYNC,
   UPDATE_ASYNC,
+  DELETE_ASYNC,
   PRIMARY_ITEM,
   LOGOUT_USER,
+  SHOW_MODAL,
   HIDE_MODAL,
   HIDE_WALLET,
   VIEW_WALLET,
@@ -59,13 +61,15 @@ const INITIAL_STATE = {
     postal_code: '',
   },
   showDetail: false,
-  showModal: false,
+  modalVisible: false,
+  // showDeleteModal: false,
   loading: false,
   updateError: '',
+  modalType: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
-  console.log(action);
+  // console.log(action);
   switch (action.type) {
     case PERSIST_REHYDRATE:
       return action.payload.auth || [];
@@ -88,9 +92,10 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         [action.payload.type]: action.payload.data,
-        showModal: true,
+        modalVisible: true,
         loading: false,
         updateError: '',
+        modalType: 'primary',
       };
     case EDIT_PROFILE:
       return {
@@ -116,7 +121,16 @@ export default (state = INITIAL_STATE, action) => {
     case HIDE_MODAL:
       return {
         ...state,
-        showModal: false,
+        modalVisible: false,
+        loading: false,
+        updateError: '',
+      };
+    case SHOW_MODAL:
+      return {
+        ...state,
+        [action.payload.type]: action.payload.data,
+        modalType: action.payload.modalType,
+        modalVisible: true,
         loading: false,
         updateError: '',
       };
@@ -125,6 +139,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         ['loading_' + action.payload]: true,
+        modalVisible: false,
         showDetail: false,
         updateError: '',
       };
@@ -152,11 +167,30 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
-        showModal: false,
+        modalVisible: false,
         // [action.payload.prop]: action.payload.data,
         // ['loading_' + action.payload.prop]: false,
       };
     case UPDATE_ASYNC.error:
+      return {
+        ...state,
+        updateError: action.payload,
+        loading: false,
+      };
+
+    case DELETE_ASYNC.pending:
+      return {
+        ...state,
+        loading: true,
+        updateError: '',
+      };
+    case DELETE_ASYNC.success:
+      return {
+        ...state,
+        loading: false,
+        modalVisible: false,
+      };
+    case DELETE_ASYNC.error:
       return {
         ...state,
         updateError: action.payload,

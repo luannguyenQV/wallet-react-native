@@ -7,6 +7,7 @@ import {
   PRIMARY_ITEM,
   UPDATE_ASYNC,
   DELETE_ASYNC,
+  SHOW_MODAL,
   HIDE_MODAL,
 } from './../types';
 
@@ -57,6 +58,14 @@ export const deleteItem = (type, item) => {
   return {
     type: DELETE_ASYNC.pending,
     payload: { type, data: item },
+  };
+};
+
+export const showModal = (type, item, modalType) => {
+  console.log(type);
+  return {
+    type: SHOW_MODAL,
+    payload: { type: 'temp_' + type, data: item, modalType },
   };
 };
 

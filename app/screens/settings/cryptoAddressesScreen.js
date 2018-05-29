@@ -76,27 +76,29 @@ class CryptoAddressesScreen extends Component {
           }
         />
         <CardList
+          type="crypto_address"
           data={crypto_address}
           tempItem={temp_crypto_address}
-          titleDetail="Edit crypto address"
+          loadingData={loading_crypto_address}
+          identifier="address"
           title={item => (item ? standardizeString(item.crypto_type) : '')}
           subtitle={item => (item ? standardizeString(item.status) : '')}
-          onPressTitle={item => () => editItem('crypto_address', item)}
+          // onPressTitle={item => () => editItem('crypto_address', item)}
           renderContent={this.renderContent}
-          showDetail={showDetail}
+          // showDetail={showDetail}
           renderDetail={tempItem => this.renderDetail(tempItem)}
-          iconTitleRightDetail="close"
-          onPressTitleRightDetail={() => fetchData('crypto_address')}
+          // iconTitleRightDetail="close"
+          // onPressTitleRightDetail={() => fetchData('crypto_address')}
           // textActionOneDetail="Save"
           // onPressActionOneDetail={() =>
           //   updateItem('crypto_address', temp_crypto_address)
           // }
-          refreshing={loading_crypto_address}
-          onRefresh={() => fetchData('crypto_address')}
+          // refreshing={loading_crypto_address}
+          // onRefresh={() => fetchData('crypto_address')}
           emptyListMessage="No crypto accounts added yet"
-          deleteItem={item => () => deleteItem('crypto_address', item)}
+          // deleteItem={item => () => deleteItem('crypto_address', item)}
           deletable
-          editing
+          // editing
           titleStyle="secondary"
         />
       </View>
@@ -121,17 +123,18 @@ const mapStateToProps = ({ user }) => {
     loading_crypto_address,
     temp_crypto_address,
     showDetail,
+    updateError,
   } = user;
   return {
     crypto_address,
     loading_crypto_address,
     temp_crypto_address,
     showDetail,
+    updateError,
   };
 };
 
 export default connect(mapStateToProps, {
-  fetchData,
   newItem,
   editItem,
   updateItem,

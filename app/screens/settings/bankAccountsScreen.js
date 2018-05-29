@@ -182,23 +182,25 @@ class BankAccountsScreen extends Component {
           }
         />
         <CardList
+          type="bank_account"
           data={bank_account}
           tempItem={temp_bank_account}
+          loadingData={loading_bank_account}
           title={item => (item ? item.name : 'New bank account')}
           subtitle={item => (item ? standardizeString(item.status) : '')}
-          onPressTitle={item => () => editItem('bank_account', item)}
+          // onPressTitle={item => () => editItem('bank_account', item)}
           renderContent={this.renderContent}
-          showDetail={showDetail}
-          titleDetail="Edit bank account"
+          // showDetail={showDetail}
+          // titleDetail="Edit bank account"
           renderDetail={tempItem => this.renderDetail(tempItem)}
-          iconTitleRightDetail="close"
-          onPressTitleRightDetail={() => fetchData('bank_account')}
-          refreshing={loading_bank_account}
-          onRefresh={() => fetchData('bank_account')}
+          // iconTitleRightDetail="close"
+          // onPressTitleRightDetail={() => fetchData('bank_account')}
+          // refreshing={loading_bank_account}
+          // onRefresh={() => fetchData('bank_account')}
           emptyListMessage="No bank accounts added yet"
-          deleteItem={item => () => deleteItem('bank_account', item)}
+          // deleteItem={item => () => deleteItem('bank_account', item)}
           deletable
-          editing
+          // editing
           titleStyle="secondary"
         />
       </View>

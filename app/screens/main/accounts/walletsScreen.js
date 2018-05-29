@@ -152,7 +152,7 @@ class WalletsScreen extends Component {
           title={item => (item ? item.currency.currency.description : '')}
           subtitle={item => (item ? standardizeString(item.account_name) : '')}
           onPressTitle={tempWallet => () => viewWallet(tempWallet)}
-          refreshing={loading_accounts}
+          loading={loading_accounts}
           onRefresh={fetchAccounts}
           emptyListMessage="No wallets added yet"
           titleStyle="secondary"
@@ -163,7 +163,7 @@ class WalletsScreen extends Component {
           onPressActionTwo={() => () =>
             this.props.navigation.navigate('Receive')}
         />
-        <PopUpGeneral
+        {/* <PopUpGeneral
           visible={this.state.showModal}
           // iconTitleLeft={iconTitleLeft}
           // title={'Transaction details'}
@@ -176,7 +176,7 @@ class WalletsScreen extends Component {
           textActionTwo="Cancel"
           onDismiss={() => this.hideModal()}
           onPressActionTwo={() => this.hideModal()}
-        />
+        /> */}
       </View>
     );
   }

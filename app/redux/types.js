@@ -54,3 +54,4 @@ export const PRIMARY_ITEM = 'primary_item';
 export const NEW_ITEM = 'new_item';
 export const EDIT_PROFILE = 'edit_profile';
 export const HIDE_MODAL = 'hide_modal';
+export const SHOW_MODAL = 'show_modal';
