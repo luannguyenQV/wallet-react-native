@@ -3,7 +3,6 @@ import {
   Text,
   Modal,
   View,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   TouchableHighlight,
 } from 'react-native';
@@ -68,11 +67,11 @@ const PopUpGeneral = props => {
                   resizeMode="cover"
                   style={[
                     viewStyleTitleContainer,
-                    {
-                      backgroundColor: titleStyle
-                        ? Colors[titleStyle]
-                        : Colors.primary,
-                    },
+                    // {
+                    //   backgroundColor: titleStyle
+                    //     ? Colors[titleStyle]
+                    //     : Colors.primary,
+                    // },
                   ]}>
                   <View style={viewStyleTitle}>
                     <Text
@@ -80,9 +79,9 @@ const PopUpGeneral = props => {
                         textStyleTitle,
                         {
                           fontSize: title ? (title.length < 15 ? 24 : 18) : 24,
-                          color: titleStyle
-                            ? Colors[titleStyle + 'Contrast']
-                            : Colors.primaryContrast,
+                          // color: titleStyle
+                          //   ? Colors[titleStyle + 'Contrast']
+                          //   : Colors.primaryContrast,
                         },
                       ]}>
                       {title}
@@ -106,9 +105,10 @@ const PopUpGeneral = props => {
                         icon={iconTitleRight}
                         onPress={onPressTitleRight}
                         color={
-                          titleStyle
-                            ? Colors[titleStyle + 'Contrast']
-                            : Colors.primaryContrast
+                          Colors.lightGray
+                          // titleStyle
+                          //   ? Colors[titleStyle + 'Contrast']
+                          //   : Colors.primaryContrast
                         }
                       />
                     </View>
@@ -117,8 +117,12 @@ const PopUpGeneral = props => {
               ) : null}
               <View style={viewStyleContent}>
                 {children}
-                <Text style={textStyleContent}>{contentText}</Text>
-                <Text style={textStyleError}>{errorText}</Text>
+                {contentText ? (
+                  <Text style={textStyleContent}>{contentText}</Text>
+                ) : null}
+                {errorText ? (
+                  <Text style={textStyleError}>{errorText}</Text>
+                ) : null}
               </View>
 
               {textActionOne || textActionTwo ? (
@@ -127,16 +131,22 @@ const PopUpGeneral = props => {
                     <Spinner size="small" />
                   ) : (
                     <View style={viewStyleActionContainer}>
-                      <TouchableOpacity
-                        onPress={onPressActionTwo}
-                        style={buttonStyleAction}>
-                        <Text style={textStyleAction}>{textActionTwo}</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        onPress={onPressActionOne}
-                        style={buttonStyleAction}>
-                        <Text style={textStyleAction}>{textActionOne}</Text>
-                      </TouchableOpacity>
+                      {textActionTwo ? (
+                        <TouchableHighlight
+                          onPress={onPressActionTwo}
+                          underlayColor={Colors.lightGray}
+                          style={buttonStyleAction}>
+                          <Text style={textStyleAction}>{textActionTwo}</Text>
+                        </TouchableHighlight>
+                      ) : null}
+                      {textActionOne ? (
+                        <TouchableHighlight
+                          onPress={onPressActionOne}
+                          underlayColor={Colors.lightGray}
+                          style={buttonStyleAction}>
+                          <Text style={textStyleAction}>{textActionOne}</Text>
+                        </TouchableHighlight>
+                      ) : null}
                     </View>
                   )}
                 </View>
@@ -154,10 +164,6 @@ const styles = {
     backgroundColor: '#fff',
     margin: 16,
     borderRadius: 4,
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    // flex: 1,
-    // height: '100%',
     overflow: 'hidden',
   },
   backgroundStyle: {
@@ -166,64 +172,80 @@ const styles = {
     justifyContent: 'center',
   },
   viewStyleContent: {
-    paddingTop: 8,
-    paddingHorizontal: 16,
+    padding: 8,
   },
   viewStyleTitleContainer: {
     flexDirection: 'row',
-    backgroundColor: Colors.primary,
-    height: 64,
-    paddingHorizontal: 8,
+    backgroundColor: 'white',
+    height: 48,
+    paddingTop: 8,
+    // paddingHorizontal: 8,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   viewStyleTitle: {
+    alignItems: 'center',
+    justifyContent: 'center',
     flexDirection: 'column',
+    // color: 'black',
     paddingHorizontal: 8,
     // flexGrow: 1,
     flex: 1,
     width: 0,
   },
   textStyleTitle: {
-    color: Colors.onPrimary,
+    color: Colors.primary,
     flexShrink: 1,
     flexWrap: 'wrap',
     fontWeight: 'bold',
   },
   textStyleSubtitle: {
     fontSize: 12,
-    color: Colors.onSecondary,
+    color: Colors.secondary,
   },
   textStyleContent: {
     fontSize: 16,
-  },
-  viewStyleFooter: {
-    height: 52,
     padding: 8,
-  },
-  viewStyleActionContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
   },
   textStyleError: {
     paddingTop: 8,
     fontSize: 14,
     color: Colors.error,
   },
-  textStyleAction: {
-    color: Colors.primary,
-    fontSize: 16,
-    paddingLeft: 8,
-    fontWeight: 'bold',
-  },
   iconStyleTitleRight: {
-    right: 0,
+    right: -8,
+    top: -8,
     margin: 0,
-    height: 64,
-    width: 64,
+    // height: 48,
+    // width: 48,
     position: 'absolute',
   },
+  viewStyleFooter: {
+    flexDirection: 'row',
+    // height: 52,
+    width: '100%',
+    alignItems: 'center',
+  },
+  viewStyleActionContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    width: '100%',
+    height: 52,
+    padding: 8,
+  },
+  textStyleAction: {
+    color: Colors.primary,
+    fontSize: 14,
+    fontWeight: 'bold',
+    // padding: 8,
+  },
   buttonStyleAction: {
-    padding: 10,
+    padding: 8,
+    marginLeft: 8,
+    // marginHorizontal: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 3,
   },
 };
 

@@ -9,7 +9,6 @@ const CardContainer = props => {
     <KeyboardAvoidingView
       style={styles.containerStyle}
       behavior={'padding'}
-      keyboardVerticalOffset={15}
       enabled>
       <ScrollView
         // style={containerStyle}
@@ -24,9 +23,10 @@ const CardContainer = props => {
 const styles = {
   containerStyle: {
     flex: 1,
+    backgroundColor: '#e4e4e4',
     // alignItems: 'stretch',
     // paddingVertical: 16,
-    padding: 8,
+    // padding: 8,
     // paddingBottom: 10,
     // marginTop: 8,
   },

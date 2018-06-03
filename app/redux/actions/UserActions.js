@@ -6,6 +6,7 @@ import {
   NEW_ITEM,
   PRIMARY_ITEM,
   UPDATE_ASYNC,
+  VERIFY_ASYNC,
   DELETE_ASYNC,
   SHOW_MODAL,
   HIDE_MODAL,
@@ -47,6 +48,17 @@ export const newItem = type => {
   };
 };
 
+export const verifyItem = (type, value, company) => {
+  return {
+    type: VERIFY_ASYNC.pending,
+    payload: {
+      type,
+      value,
+      company,
+    },
+  };
+};
+
 export const updateItem = (type, data) => {
   return {
     type: UPDATE_ASYNC.pending,
@@ -62,7 +74,7 @@ export const deleteItem = (type, item) => {
 };
 
 export const showModal = (type, item, modalType) => {
-  console.log(type);
+  console.log('item', item);
   return {
     type: SHOW_MODAL,
     payload: { type: 'temp_' + type, data: item, modalType },

@@ -39,10 +39,8 @@ const styles = {
   viewStyleContainer: {
     flexDirection: 'column',
     flexWrap: 'wrap',
-    paddingBottom: 4,
-    // marginBottom: 8,
-    paddingLeft: 8,
-    borderRadius: 5,
+    padding: 8,
+    borderRadius: 3,
   },
   viewStyleLabel: {
     flexDirection: 'row',
@@ -51,9 +49,6 @@ const styles = {
     flexDirection: 'row',
   },
   textStyleLabel: {
-    paddingTop: 8,
-    // height: 28,
-    paddingLeft: 0,
     color: 'black',
     fontWeight: 'normal',
     flex: 1,
@@ -65,8 +60,6 @@ const styles = {
     fontSize: 14,
     color: 'black',
     opacity: 0.6,
-    paddingBottom: 4,
-    // paddingTop: 4,
   },
 };
 

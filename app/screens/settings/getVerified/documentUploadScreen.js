@@ -12,6 +12,8 @@ import SettingsService from './../../../services/settingsService';
 import ResetNavigation from './../../../util/resetNavigation';
 import Colors from './../../../config/colors';
 import Header from './../../../components/header';
+import { Button } from './../../../components/common';
+import { snakeString } from './../../../util/general';
 
 class DocumentUploadScreen extends Component {
   static navigationOptions = {
@@ -48,8 +50,10 @@ class DocumentUploadScreen extends Component {
       name,
       type: 'image/jpg',
     };
-    var category = this.state.category;
+    var category = snakeString(this.state.category);
     var type = this.state.type;
+
+    console.log(category);
 
     let responseJson = await SettingsService.documentUpload(
       file,
@@ -89,16 +93,11 @@ class DocumentUploadScreen extends Component {
             />
           </TouchableHighlight>
           <View style={styles.buttonbar}>
-            <TouchableHighlight
-              style={[styles.submit, { backgroundColor: Colors.red }]}
-              onPress={() => this.props.navigation.goBack()}>
-              <Text style={{ color: 'white', fontSize: 20 }}>Cancel</Text>
-            </TouchableHighlight>
-            <TouchableHighlight
-              style={[styles.submit, { marginLeft: 25 }]}
-              onPress={() => this.saveImage()}>
-              <Text style={{ color: 'white', fontSize: 20 }}>Upload</Text>
-            </TouchableHighlight>
+            <Button
+              label="cancel"
+              onPress={() => this.props.navigation.goBack()}
+            />
+            <Button label="upload" onPress={() => this.saveImage()} />
           </View>
         </View>
       </View>
@@ -117,19 +116,12 @@ const styles = StyleSheet.create({
   buttonbar: {
     position: 'absolute',
     bottom: 0,
-    flexDirection: 'row',
+    flexDirection: 'column',
     paddingHorizontal: 25,
+    width: '100%',
     justifyContent: 'center',
     paddingVertical: 10,
     backgroundColor: 'transparent',
-  },
-  submit: {
-    backgroundColor: Colors.lightblue,
-    height: 50,
-    borderRadius: 25,
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
 

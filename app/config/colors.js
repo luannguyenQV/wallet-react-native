@@ -1,6 +1,6 @@
 export default {
   red: '#ED675A',
-  green: '#03DBBB',
+  green: '#4CAF50',
   black: '#000000',
   darkblue: '#2470A0',
   lightblue: '#3D95CE',
@@ -16,7 +16,9 @@ export default {
   drawerColor: '#ffffff',
 
   gray: '#a6a6a6',
-  lightGray: '#c4c4c4',
+  lightGray: '#e1e1e1',
+  white: '#ffffff',
+  black: '#000000',
 
   primary: '#4d4d4d',
   secondary: '#a6a6a6',
@@ -27,6 +29,7 @@ export default {
   secondaryContrast: '#2d2d2d',
   tertiaryContrast: '#000000',
   quaternaryContrast: '#4d4d4d',
+  focusContrast: '#2d2d2d',
 
   onPrimary: '#f3f3f3',
   onSecondary: '#ffffff',
@@ -52,7 +55,7 @@ export default {
 
   warning: '#FC8755',
   error: '#f44336',
-  success: '#03DBBB',
+  success: '#4CAF50',
   positive: '#4CAF50',
   negative: '#f44336',
 };

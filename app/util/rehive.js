@@ -1,4 +1,10 @@
 import Rehive from 'rehive';
+import store from './../redux/store';
+
+export const getStore = () => {
+  console.log(store.getState().user);
+  return;
+};
 
 let r = new Rehive({ apiVersion: 3 });
 

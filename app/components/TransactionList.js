@@ -30,6 +30,9 @@ class TransactionList extends Component {
       this.setState({ transactions: [] });
     }
     this.setState({ loading: true });
+    // if (this.props.fetchAccounts) {
+    //   this.props.fetchAccounts();
+    // }
     let responseJson = await TransactionService.getAllTransactionsByCurrency(
       currencyCode,
     );
@@ -67,7 +70,6 @@ class TransactionList extends Component {
   }
 
   showModal = item => {
-    console.log(item);
     this.setState({ showDetail: true, transaction: item });
   };
 
@@ -89,12 +91,11 @@ class TransactionList extends Component {
       textStyleHeader,
     } = styles;
     const { showDetail, transaction } = this.state;
-
-    console.log(transaction);
-
     let iconName = '';
     let headerText = '';
     let color = '';
+    let user = '';
+    let userLabel = '';
 
     if (transaction) {
       const { amount, label, currency, fee, balance } = transaction;
@@ -104,10 +105,12 @@ class TransactionList extends Component {
           iconName = 'call-made';
           headerText = 'Sent ' + transaction.currency.code;
           if (transaction.destination_transaction) {
-            headerText =
-              headerText +
-              ' to ' +
-              transaction.destination_transaction.user.email;
+            user = transaction.destination_transaction.user.email;
+            userLabel = 'Recipient';
+            // headerText =
+            //   headerText +
+            //   ' to ' +
+            //   transaction.destination_transaction.user.email;
           }
           color = Colors.positive;
           break;
@@ -116,8 +119,10 @@ class TransactionList extends Component {
           iconName = 'call-received';
           headerText = 'Received ' + transaction.currency.code;
           if (transaction.source_transaction) {
-            headerText =
-              headerText + ' from ' + transaction.source_transaction.user.email;
+            user = transaction.source_transaction.user.email;
+            userLabel = 'Sender';
+            // headerText =
+            //   headerText + ' from ' + transaction.source_transaction.user.email;
           }
           color = Colors.negative;
           break;
@@ -131,13 +136,14 @@ class TransactionList extends Component {
         <PopUpGeneral
           visible={showDetail}
           // iconTitleLeft={iconTitleLeft}
-          // title={headerText}
+          title={headerText}
           // subtitle={'Subtitle?'}
           // titleStyle={titleStyle}
-          // iconTitleRight={'close'}
-          // onPressTitleRight={() => this.hideModal()}
+          iconTitleRight={'close'}
+          onPressTitleRight={() => this.hideModal()}
           onDismiss={() => this.hideModal()}>
-          <Text style={textStyleHeader}>{headerText}</Text>
+          {/* <Text style={textStyleHeader}>{headerText}</Text> */}
+          {user ? <Output label={userLabel} value={user} /> : null}
           <Output label="Transaction type" value={label} />
           {/* <Output label="Total amount" value={transaction.label} /> */}
           <Output
@@ -226,7 +232,7 @@ const styles = {
   textStyleHeader: {
     fontSize: 20,
     textAlign: 'center',
-    paddingBottom: 16,
+    paddingVertical: 8,
     fontWeight: 'bold',
     // alignSelf: 'flex-start',
     color: Colors.black,
@@ -238,7 +244,7 @@ const styles = {
   },
   viewStyleFooter: {
     // flex: 2,
-    paddingTop: 8,
+    padding: 8,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',

@@ -63,6 +63,7 @@ var settingsService = {
   },
 
   resendEmailVerification: data => {
+    // console.log(data);
     return BaseService.post('auth/email/verify/resend/', data);
   },
 
@@ -91,6 +92,7 @@ var settingsService = {
     formData.append('file', file);
     formData.append('document_category', category);
     formData.append('document_type', type);
+    console.log(formData);
     return BaseService.documentUpload('user/documents/', formData);
   },
 };

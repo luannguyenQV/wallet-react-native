@@ -24,14 +24,14 @@ export default class BankAccount extends Component {
             /> */}
             {this.props.name ? (
               <Text
-                style={{ fontSize: 18, paddingLeft: 20, color: Colors.black }}>
+                style={{ fontSize: 18, paddingLeft: 0, color: Colors.black }}>
                 {this.props.name}
               </Text>
             ) : (
               <Text
                 style={{
                   fontSize: 18,
-                  paddingLeft: 20,
+                  // paddingLeft: 20,
                   fontStyle: 'italic',
                   color: Colors.black,
                 }}>
@@ -42,7 +42,7 @@ export default class BankAccount extends Component {
           <View style={styles.optionsIcon}>
             <IconFontAwesome
               name="angle-right"
-              size={45}
+              size={32}
               color={Colors.black}
             />
           </View>
@@ -54,7 +54,7 @@ export default class BankAccount extends Component {
 
 const styles = StyleSheet.create({
   options: {
-    height: 80,
+    height: 60,
     paddingHorizontal: 20,
 
     borderBottomWidth: 1,

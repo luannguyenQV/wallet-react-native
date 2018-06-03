@@ -21,11 +21,11 @@ class WithdrawScreen extends Component {
           gotoAddress="BankAccounts"
           goTo={this.goTo}
         />
-        <Option
+        {/* <Option
           name="Bitcoin addresses"
           gotoAddress="BitcoinAddresses"
           goTo={this.goTo}
-        />
+        /> */}
       </View>
     );
   }

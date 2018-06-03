@@ -12,7 +12,7 @@ import {
 
 import { standardizeString } from './../../util/general';
 import Header from './../../components/header';
-import { Input, Output, InputContainer } from './../../components/common';
+import { Input, Output } from './../../components/common';
 import CardList from './../../components/CardList';
 
 class CryptoAddressesScreen extends Component {
@@ -20,7 +20,7 @@ class CryptoAddressesScreen extends Component {
     title: 'Crypto addresses',
   };
 
-  renderContent(item) {
+  renderContent = item => {
     const { viewStyleContent } = styles;
     const { address } = item;
     return (
@@ -28,25 +28,23 @@ class CryptoAddressesScreen extends Component {
         {address ? <Output label="Address" value={address} /> : null}
       </View>
     );
-  }
+  };
 
-  renderDetail = item => {
-    const { address } = item;
-
-    const updateInputField = this.props.updateInputField;
+  renderDetail = () => {
+    const { temp_crypto_address, updateError, updateInputField } = this.props;
+    const { address } = temp_crypto_address;
 
     return (
-      <InputContainer>
-        <Input
-          label="Address"
-          placeholder="e.g. 78weiytuyiw3begnf3i4uhtqueyrt43"
-          autoCapitalize="none"
-          value={address}
-          onChangeText={input =>
-            updateInputField('crypto_address', 'address', input)
-          }
-        />
-      </InputContainer>
+      <Input
+        label="Address"
+        placeholder="e.g. 78weiytuyiw3begnf3i4uheyrt43"
+        autoCapitalize="none"
+        value={address}
+        inputError={updateError}
+        onChangeText={input =>
+          updateInputField('crypto_address', 'address', input)
+        }
+      />
     );
   };
 
@@ -54,12 +52,9 @@ class CryptoAddressesScreen extends Component {
     const {
       crypto_address,
       loading_crypto_address,
-      fetchData,
       temp_crypto_address,
       newItem,
-      editItem,
       updateItem,
-      deleteItem,
       showDetail,
     } = this.props;
     return (
@@ -68,7 +63,7 @@ class CryptoAddressesScreen extends Component {
           navigation={this.props.navigation}
           back
           title="Crypto addresses"
-          headerRightIcon={showDetail ? 'save' : 'add'}
+          headerRightIcon={showDetail ? 'done' : 'add'}
           headerRightOnPress={
             showDetail
               ? () => updateItem('crypto_address', temp_crypto_address)
@@ -81,25 +76,11 @@ class CryptoAddressesScreen extends Component {
           tempItem={temp_crypto_address}
           loadingData={loading_crypto_address}
           identifier="address"
-          title={item => (item ? standardizeString(item.crypto_type) : '')}
-          subtitle={item => (item ? standardizeString(item.status) : '')}
-          // onPressTitle={item => () => editItem('crypto_address', item)}
           renderContent={this.renderContent}
-          // showDetail={showDetail}
-          renderDetail={tempItem => this.renderDetail(tempItem)}
-          // iconTitleRightDetail="close"
-          // onPressTitleRightDetail={() => fetchData('crypto_address')}
-          // textActionOneDetail="Save"
-          // onPressActionOneDetail={() =>
-          //   updateItem('crypto_address', temp_crypto_address)
-          // }
-          // refreshing={loading_crypto_address}
-          // onRefresh={() => fetchData('crypto_address')}
+          renderDetail={this.renderDetail}
           emptyListMessage="No crypto accounts added yet"
-          // deleteItem={item => () => deleteItem('crypto_address', item)}
-          deletable
-          // editing
-          titleStyle="secondary"
+          canDelete
+          canEdit
         />
       </View>
     );
@@ -108,7 +89,7 @@ class CryptoAddressesScreen extends Component {
 
 const styles = {
   viewStyleContent: {
-    paddingLeft: 16,
+    padding: 8,
   },
   container: {
     flex: 1,

@@ -112,17 +112,21 @@ class AuthScreen extends Component {
 
   renderTop() {
     const { viewStyleTopContainer, imageContainer, image } = styles;
-    return (
-      <View style={viewStyleTopContainer}>
-        <Animatable.View style={imageContainer} animation="fadeInDownBig">
-          <Image
-            source={require('./../../../assets/icons/Rehive_icon_white.png')}
-            resizeMode="contain"
-            style={image}
-          />
-        </Animatable.View>
-      </View>
-    );
+    const { authState } = this.props;
+
+    if (authState === 'landing') {
+      return (
+        <View style={viewStyleTopContainer}>
+          <Animatable.View style={imageContainer} animation="fadeInDownBig">
+            <Image
+              source={require('./../../../assets/icons/Rehive_icon_white.png')}
+              resizeMode="contain"
+              style={image}
+            />
+          </Animatable.View>
+        </View>
+      );
+    }
   }
 
   renderBottom() {
@@ -135,21 +139,26 @@ class AuthScreen extends Component {
           <View style={buttonsContainer}>
             <Button
               label="LOG IN"
-              type="secondary"
+              type="contained"
+              color="secondary"
+              size="large"
               reference={input => {
                 this.login = input;
               }}
               onPress={() => this.props.nextAuthFormState(this.props, 'login')}
+              animate
             />
             <Button
               label="Register"
               type="text"
+              color="primaryContrast"
               reference={input => {
                 this.login = input;
               }}
               onPress={() =>
                 this.props.nextAuthFormState(this.props, 'register')
               }
+              animate
             />
           </View>
         );
@@ -181,7 +190,7 @@ class AuthScreen extends Component {
             key="company"
             placeholder="e.g. Rehive"
             label="Company"
-            requiredError={inputError}
+            inputError={inputError}
             value={company}
             onChangeText={value =>
               this.props.authFieldChange({ prop: 'company', value })
@@ -198,7 +207,7 @@ class AuthScreen extends Component {
             placeholder="e.g. user@gmail.com"
             label="Email"
             value={email}
-            requiredError={inputError}
+            inputError={inputError}
             keyboardType="email-address"
             onChangeText={value =>
               this.props.authFieldChange({ prop: 'email', value })
@@ -217,7 +226,7 @@ class AuthScreen extends Component {
             placeholder="12345678"
             label="Mobile"
             value={mobile}
-            requiredError={inputError}
+            inputError={inputError}
             keyboardType="numeric"
             onChangeText={value =>
               this.props.authFieldChange({ prop: 'mobile', value })
@@ -230,20 +239,35 @@ class AuthScreen extends Component {
         );
       case 'password':
         return (
-          <Input
-            key="password"
-            type="password"
-            placeholder="Password"
-            label="Password"
-            value={password}
-            requiredError={inputError}
-            autoFocus
-            onChangeText={value =>
-              this.props.authFieldChange({ prop: 'password', value })
-            }
-            returnKeyType="done"
-            onSubmitEditing={() => this.props.nextAuthFormState(this.props, '')}
-          />
+          <View>
+            <Input
+              key="password"
+              type="password"
+              placeholder="Password"
+              label="Password"
+              value={password}
+              inputError={inputError}
+              autoFocus
+              onChangeText={value =>
+                this.props.authFieldChange({ prop: 'password', value })
+              }
+              returnKeyType="done"
+              onSubmitEditing={() =>
+                this.props.nextAuthFormState(this.props, '')
+              }
+            />
+            {/* <Button
+              label="Forgot password?"
+              type="text"
+              color="primaryContrast"
+              // reference={f => {
+              //   this.login = input;
+              // }}
+              // onPress={() =>
+              //   this.props.nextAuthFormState(this.props, 'forgotPassword')
+              // }
+            /> */}
+          </View>
         );
       default:
         return <View />;
@@ -274,6 +298,7 @@ const styles = {
     flex: 1,
     backgroundColor: Colors.primary,
     paddingTop: Expo.Constants.statusBarHeight,
+    justifyContent: 'center',
 
     // paddingHorizontal: 8,
   },
@@ -295,12 +320,13 @@ const styles = {
     width: '100%',
     justifyContent: 'center',
     flex: 1,
+    paddingTop: 48,
     // backgroundColor: Colors.onPrimary,
-    borderRadius: 2,
+    // borderRadius: 2,
     // paddingBottom: 16,
   },
   imageContainer: {
-    paddingBottom: 50,
+    // paddingBottom: 50,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -323,40 +349,6 @@ const styles = {
   textTerms: {
     fontSize: 12,
     color: Colors.primary,
-  },
-
-  cardContainer: {
-    flex: 1,
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    padding: 20,
-    marginTop: 0,
-  },
-  cardTitleContainer: {
-    // flex: 1,
-    height: 170,
-  },
-  cardTitle: {
-    position: 'absolute',
-    // top: 120,
-    // left: 26,
-    backgroundColor: 'transparent',
-    padding: 16,
-    fontSize: 24,
-    color: '#000000',
-    fontWeight: 'bold',
-  },
-
-  cardContent: {
-    padding: 0,
-    color: 'rgba(0, 0, 0, 0.54)',
-  },
-
-  cardAction: {
-    borderStyle: 'solid',
-    borderTopColor: 'rgba(0, 0, 0, 0.1)',
-    borderTopWidth: 1,
-    padding: 15,
   },
 };
 

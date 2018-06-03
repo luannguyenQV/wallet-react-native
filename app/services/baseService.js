@@ -70,10 +70,10 @@ let _apiCallWithoutData = async (url, method) => {
 
 let _apiCallFileUpload = async (url, method, data) => {
   try {
-    const token = await AsyncStorage.getItem('token');
+    // const token = await AsyncStorage.getItem('token');
     let headers = {
       'Content-Type': 'multipart/form-data',
-      Authorization: 'Token ' + token,
+      // Authorization: 'Token ' + token,
     };
     let response = await fetch(url, {
       method,

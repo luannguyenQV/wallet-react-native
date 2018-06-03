@@ -23,6 +23,8 @@ class TransactionListItem extends Component {
     let iconName = '';
     let headerText = '';
     let color = '';
+    let headerTextOne = '';
+    let headerTextTwo = '';
 
     switch (item.tx_type) {
       case 'debit':

@@ -52,7 +52,7 @@ class HeaderCurrency extends Component {
           <Text style={textStyleAmount}>
             {' '}
             {performDivisibility(
-              currency.available_balance,
+              currency.balance,
               currency.currency.divisibility,
             ).toFixed(currency.currency.divisibility)}
           </Text>

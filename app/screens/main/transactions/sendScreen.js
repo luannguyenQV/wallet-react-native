@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import {
   View,
-  StyleSheet,
   AsyncStorage,
-  RefreshControl,
   Text,
   ListView,
-  ActivityIndicator,
+  TouchableHighlight,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
@@ -23,7 +21,7 @@ import {
 } from '../../../redux/actions';
 
 import Contact from './../../../components/contact';
-import { Input, AuthForm, Spinner } from './../../../components/common';
+import { Input, AuthForm, Output } from './../../../components/common';
 import ContactService from './../../../services/contactService';
 import Colors from './../../../config/colors';
 import Header from './../../../components/header';
@@ -252,37 +250,37 @@ class SendScreen extends Component {
     const { viewStyleBottomContainer } = styles;
 
     let textFooterRight = 'Next';
-    let textHeaderRight = '';
+    let textFooterLeft = '';
     let onPressFooterRight = () => {};
-    let onPressHeaderRight = () => {};
+    let onPressFooterLeft = () => {};
 
     switch (sendState) {
       case 'amount':
         onPressFooterRight = () => validateSendAmount(sendWallet, sendAmount);
         break;
       case 'recipient':
-        textHeaderRight = 'Edit';
-        onPressHeaderRight = () => this.setSendState('amount');
+        textFooterLeft = 'Edit';
+        onPressFooterLeft = () => this.setSendState('amount');
         onPressFooterRight = () => validateSendRecipient(sendRecipient);
         break;
       case 'note':
-        textHeaderRight = 'Edit';
-        onPressHeaderRight = () => this.setSendState('amount');
+        textFooterLeft = 'Edit';
+        onPressFooterLeft = () => this.setSendState('amount');
         onPressFooterRight = () => validateSendNote(sendNote);
         break;
       case 'confirm':
-        textHeaderRight = 'Edit';
-        onPressHeaderRight = () => this.setSendState('amount');
+        textFooterLeft = 'Edit';
+        onPressFooterLeft = () => this.setSendState('amount');
         textFooterRight = 'Confirm';
         onPressFooterRight = () => this.performSend();
         break;
       case 'success':
-        // textHeaderRight = 'Close';
+        // textFooterLeft = 'Close';
         textFooterRight = 'Close';
         onPressFooterRight = () => this.props.navigation.goBack();
         break;
       case 'fail':
-        // textHeaderRight = 'Close';
+        // textFooterLeft = 'Close';
         textFooterRight = 'Close';
         onPressFooterRight = () => this.props.navigation.goBack();
         break;
@@ -290,8 +288,8 @@ class SendScreen extends Component {
 
     return (
       <AuthForm
-        textHeaderRight={textHeaderRight}
-        onPressHeaderRight={onPressHeaderRight}
+        textFooterLeft={textFooterLeft}
+        onPressFooterLeft={onPressFooterLeft}
         textFooterRight={textFooterRight}
         onPressFooterRight={onPressFooterRight}
         loading={sending}>
@@ -308,55 +306,64 @@ class SendScreen extends Component {
       sendAmount,
       sendRecipient,
       sendNote,
+      sendError,
     } = this.props;
-    // let amount;
-    // if (sendAmount) {
-    //   amount = performDivisibility(sendAmount, 0).toFixed(
-    //     sendWallet.currency.currency.divisibility,
-    //   );
-    // }
+    const currency = sendWallet.currency.currency;
 
     const {
       viewStyleTopContainer,
-      textStyleOutput,
-      textStyleOutputValue,
+      buttonStyleOutput,
+      viewStyleError,
+      textStyleError,
     } = styles;
     return (
       <View style={viewStyleTopContainer}>
+        {sendState === 'success' ? (
+          <View style={viewStyleError}>
+            <Text style={textStyleError}>Send successful!</Text>
+          </View>
+        ) : null}
         {sendState === 'note' ||
         sendState === 'recipient' ||
         sendState === 'confirm' ||
         sendState === 'success' ? (
-          <Text style={textStyleOutput}>
-            {sendState !== 'success' ? (
-              <Text>You are about to send </Text>
-            ) : (
-              <Text>You sent </Text>
-            )}
-            <Text style={textStyleOutputValue}>
-              {sendWallet.currency.currency.symbol} {sendAmount}
-            </Text>
-          </Text>
+          <TouchableHighlight
+            onPress={() => this.setSendState('amount')}
+            underlayColor={Colors.lightGray}
+            style={buttonStyleOutput}>
+            <Output
+              label="Amount"
+              value={
+                currency.symbol +
+                ' ' +
+                parseFloat(sendAmount).toFixed(currency.divisibility)
+              }
+            />
+          </TouchableHighlight>
         ) : null}
         {sendState === 'note' ||
         sendState === 'confirm' ||
         sendState === 'success' ? (
-          <Text style={textStyleOutput}>
-            <Text>to </Text>
-            <Text style={textStyleOutputValue}>{sendRecipient}</Text>
-          </Text>
+          <TouchableHighlight
+            onPress={() => this.setSendState('recipient')}
+            underlayColor={Colors.lightGray}
+            style={buttonStyleOutput}>
+            <Output label="Recipient" value={sendRecipient} />
+          </TouchableHighlight>
         ) : null}
         {(sendState === 'confirm' || sendState === 'success') && sendNote ? (
-          <Text style={textStyleOutput}>
-            <Text>with note </Text>
-            <Text style={textStyleOutputValue}>{sendNote}</Text>
-          </Text>
+          <TouchableHighlight
+            onPress={() => this.setSendState('note')}
+            underlayColor={Colors.lightGray}
+            style={buttonStyleOutput}>
+            <Output label="Note" value={sendNote} />
+          </TouchableHighlight>
         ) : null}
-        {sendState === 'failed' ? (
-          <Text style={textStyleOutputValue}>
-            <Text>Send failed</Text>
-            <Text>{sendError}</Text>
-          </Text>
+        {sendState === 'fail' ? (
+          <View style={viewStyleError}>
+            <Text style={textStyleError}>Send failed</Text>
+            <Text style={textStyleError}>{sendError}</Text>
+          </View>
         ) : null}
       </View>
     );
@@ -384,7 +391,7 @@ class SendScreen extends Component {
             placeholder="e.g. 10"
             label={'Amount [' + sendWallet.currency.currency.symbol + ']'}
             prefix={sendWallet.currency.currency.symbol}
-            requiredError={sendError}
+            inputError={sendError}
             reference={input => {
               this.input = input;
             }}
@@ -403,12 +410,12 @@ class SendScreen extends Component {
           <Input
             key="recipient"
             placeholder="e.g. user@rehive.com"
-            label={'Please enter email, crypto address or mobile number'}
+            label={'Please enter recipient'}
             value={sendRecipient}
             onChangeText={value =>
               sendFieldUpdate({ prop: 'sendRecipient', value })
             }
-            requiredError={sendError}
+            inputError={sendError}
             reference={input => {
               this.input = input;
             }}
@@ -426,7 +433,7 @@ class SendScreen extends Component {
             label="Note:"
             value={sendNote}
             onChangeText={value => sendFieldUpdate({ prop: 'sendNote', value })}
-            requiredError={sendError}
+            inputError={sendError}
             reference={input => {
               this.input = input;
             }}
@@ -443,7 +450,7 @@ class SendScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <Header navigation={this.props.navigation} title="Send" back right />
+        <Header navigation={this.props.navigation} title="Send" back />
         <KeyboardAvoidingView
           keyboardShouldPersistTaps={'never'}
           style={styles.viewStyleContainer}
@@ -465,14 +472,20 @@ const styles = {
     flex: 1,
     flexDirection: 'column',
     backgroundColor: Colors.focus,
-    paddingTop: 10,
+    // paddingTop: 10,
   },
   viewStyleTopContainer: {
     // justifyContent: 'center',
+    paddingTop: 16,
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    // backgroundColor: 'orange',
     flex: 2,
   },
+  buttonStyleOutput: { width: '100%', borderRadius: 3, marginHorizontal: 8 },
   viewStyleBottomContainer: {
-    width: '100%',
+    // width: '100%',
     // justifyContent: 'center',
     // alignSelf: 'flex-end',
     flex: 1,
@@ -481,19 +494,26 @@ const styles = {
     // position: 'absolute',
     // bottom: 0,
   },
-  contact: {
-    height: 40,
+  // contact: {
+  //   height: 40,
+  //   flexDirection: 'column',
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  // },
+  textStyleOutput: {
+    fontSize: 16,
+    // alignSelf: 'center',
+    padding: 8,
+    paddingBottom: 0,
+  },
+  viewStyleError: {
+    flex: 1,
+    width: '100%',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  textStyleOutput: {
-    fontSize: 16,
-    alignSelf: 'center',
-    padding: 8,
-    paddingBottom: 0,
-  },
-  textStyleOutputValue: {
+  textStyleError: {
     fontSize: 20,
     fontWeight: 'bold',
   },

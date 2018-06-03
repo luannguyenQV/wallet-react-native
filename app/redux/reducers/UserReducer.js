@@ -6,6 +6,7 @@ import {
   FETCH_DATA_ASYNC,
   UPDATE_ASYNC,
   DELETE_ASYNC,
+  VERIFY_ASYNC,
   PRIMARY_ITEM,
   LOGOUT_USER,
   SHOW_MODAL,
@@ -87,6 +88,7 @@ export default (state = INITIAL_STATE, action) => {
         [action.payload.type]: action.payload.data,
         showDetail: true,
         editing: true,
+        wallet: false,
       };
     case PRIMARY_ITEM:
       return {
@@ -196,6 +198,27 @@ export default (state = INITIAL_STATE, action) => {
         updateError: action.payload,
         loading: false,
       };
+
+    case VERIFY_ASYNC.pending:
+      return {
+        ...state,
+        loading: true,
+        updateError: '',
+      };
+    case VERIFY_ASYNC.success:
+      return {
+        ...state,
+        loading: false,
+        modalVisible: true,
+        modalType: 'verify',
+      };
+    case VERIFY_ASYNC.error:
+      return {
+        ...state,
+        updateError: action.payload,
+        loading: false,
+      };
+
     case VIEW_WALLET:
       return {
         ...state,

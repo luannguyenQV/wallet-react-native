@@ -11,3 +11,11 @@ export const standardizeString = string => {
   }
   return '';
 };
+
+export const snakeString = string => {
+  console.log(string);
+  if (string) {
+    return string.toLowerCase().replace(' ', '_');
+  }
+  return '';
+};

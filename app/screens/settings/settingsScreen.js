@@ -188,11 +188,11 @@ class SettingsScreen extends Component {
           gotoAddress="ChangePassword"
           onPress={this.goTo}
         />
-        <SettingsOption
+        {/* <SettingsOption
           label="Two factor"
           gotoAddress="TwoFactor"
           onPress={this.goTo}
-        />
+        /> */}
         {/* <SettingsOption label="Pin" gotoAddress="Pin" goTo={this.goTo} /> */}
       </View>
     );
@@ -235,7 +235,7 @@ class SettingsScreen extends Component {
 const styles = {
   container: {
     flex: 1,
-    // backgroundColor: 'white',
+    backgroundColor: 'white',
   },
   // mainContainer: {
   //   flex: 1,

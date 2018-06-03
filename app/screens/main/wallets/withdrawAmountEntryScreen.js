@@ -3,14 +3,12 @@ import {
   View,
   KeyboardAvoidingView,
   StyleSheet,
-  TouchableHighlight,
   AsyncStorage,
-  Text,
   Alert,
 } from 'react-native';
 import TransectionService from './../../../services/transactionService';
 import ResetNavigation from './../../../util/resetNavigation';
-import { Input } from './../../../components/common';
+import { Input, Button } from './../../../components/common';
 import Colors from './../../../config/colors';
 import Header from './../../../components/header';
 import Big from 'big.js';
@@ -110,9 +108,7 @@ class WithdrawAmountEntryScreen extends Component {
               onChangeText={this.changeAmount}
             />
           </View>
-          <TouchableHighlight style={styles.submit} onPress={this.withdraw}>
-            <Text style={{ color: 'white', fontSize: 20 }}>Withdraw</Text>
-          </TouchableHighlight>
+          <Button onPress={this.withdraw} label="Withdraw" />
         </KeyboardAvoidingView>
       </View>
     );

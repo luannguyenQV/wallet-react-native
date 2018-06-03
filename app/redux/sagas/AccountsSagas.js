@@ -1,5 +1,5 @@
 import { all, call, put, takeEvery } from 'redux-saga/effects';
-import { FETCH_ACCOUNTS_ASYNC } from './../types';
+import { FETCH_ACCOUNTS_ASYNC, SEND_SUCCESS } from './../types';
 import Big from 'big.js';
 
 import AccountService from './../../services/accountService';
@@ -72,4 +72,5 @@ function* fetchAccounts() {
 
 export const accountsSagas = all([
   takeEvery(FETCH_ACCOUNTS_ASYNC.pending, fetchAccounts),
+  takeEvery(SEND_SUCCESS, fetchAccounts),
 ]);

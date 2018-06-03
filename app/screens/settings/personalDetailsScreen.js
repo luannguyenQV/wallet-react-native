@@ -1,13 +1,6 @@
 import React, { Component } from 'react';
 import { ImagePicker } from 'expo';
-import {
-  View,
-  Alert,
-  Text,
-  Image,
-  TouchableHighlight,
-  RefreshControl,
-} from 'react-native';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
 import {
   fetchData,
@@ -17,12 +10,9 @@ import {
 } from './../../redux/actions';
 
 import CountryPicker from 'react-native-country-picker-modal';
-import Modal from 'react-native-modal';
-import UserInfoService from './../../services/userInfoService';
-import ResetNavigation from './../../util/resetNavigation';
 import Colors from './../../config/colors';
 import Header from './../../components/header';
-import { Input, InputContainer } from './../../components/common';
+import { Input, Output, Card, CardContainer } from './../../components/common';
 
 class PersonalDetailsScreen extends Component {
   static navigationOptions = {
@@ -31,6 +21,9 @@ class PersonalDetailsScreen extends Component {
 
   componentDidMount() {
     this.props.fetchData('profile');
+  }
+
+  toggleEdit = () => {
     const data = {
       first_name: this.props.profile.first_name,
       last_name: this.props.profile.last_name,
@@ -39,13 +32,7 @@ class PersonalDetailsScreen extends Component {
       // profile: this.props.profile.profile,
     };
     this.props.editItem('profile', data);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (!nextProps.showDetail) {
-      this.props.navigation.goBack();
-    }
-  }
+  };
 
   navigateToUploadImage = result => {
     this.props.navigation.navigate('UploadImage', { image: result });
@@ -82,10 +69,14 @@ class PersonalDetailsScreen extends Component {
       loading_profile,
       fetchData,
       temp_profile,
+      profile,
       updateItem,
       updateInputField,
+      updateError,
+      showDetail,
     } = this.props;
-    const { first_name, last_name, id_number, nationality } = temp_profile;
+    const { first_name, last_name, id_number } = profile;
+    console.log(temp_profile);
     const { viewStyleContainer, imageStylePhoto } = styles;
     return (
       <View style={{ flex: 1 }}>
@@ -93,8 +84,10 @@ class PersonalDetailsScreen extends Component {
           navigation={this.props.navigation}
           back
           title="Personal details"
-          headerRightIcon="save"
-          headerRightOnPress={() => updateItem('profile', temp_profile)}
+          headerRightIcon={showDetail ? 'done' : 'edit'}
+          headerRightOnPress={() =>
+            showDetail ? updateItem('profile', temp_profile) : this.toggleEdit()
+          }
         />
         <View style={viewStyleContainer}>
           {/* <TouchableHighlight
@@ -117,43 +110,67 @@ class PersonalDetailsScreen extends Component {
             )}
           </TouchableHighlight> */}
         </View>
-        <InputContainer
-          refreshControl={
-            <RefreshControl
-              refreshing={loading_profile}
-              onRefresh={() => fetchData('profile')}
-            />
-          }>
-          <Input
-            label="First name"
-            placeholder=""
-            autoCapitalize="none"
-            value={first_name}
-            onChangeText={input =>
-              updateInputField('profile', 'first_name', input)
-            }
-          />
+        <CardContainer>
+          <Card
+            textActionOne={showDetail ? 'SAVE' : ''}
+            onPressActionOne={() => updateItem('profile', temp_profile)}
+            textActionTwo={showDetail ? 'CANCEL' : ''}
+            onPressActionTwo={() => fetchData('profile')}
+            loading={loading_profile}
+            errorText={updateError}
+            onPressContent={() => (!showDetail ? this.toggleEdit() : null)}>
+            <View>
+              {showDetail ? (
+                <View>
+                  <Input
+                    label="First name"
+                    placeholder="eg. John"
+                    autoCapitalize="none"
+                    value={temp_profile.first_name}
+                    onChangeText={input =>
+                      updateInputField('profile', 'first_name', input)
+                    }
+                  />
 
-          <Input
-            label="Last name"
-            placeholder=""
-            autoCapitalize="none"
-            value={last_name}
-            onChangeText={input =>
-              updateInputField('profile', 'last_name', input)
-            }
-          />
+                  <Input
+                    label="Last name"
+                    placeholder="eg. Smith"
+                    autoCapitalize="none"
+                    value={temp_profile.last_name}
+                    onChangeText={input =>
+                      updateInputField('profile', 'last_name', input)
+                    }
+                  />
 
-          <Input
-            label="ID No"
-            placeholder=""
-            autoCapitalize="none"
-            value={id_number}
-            onChangeText={input =>
-              updateInputField('profile', 'id_number', input)
-            }
-          />
-          {/* <View style={[styles.pickerContainer, { paddingVertical: 20 }]}>
+                  <Input
+                    label="ID number"
+                    placeholder="eg. 0123456789012"
+                    autoCapitalize="none"
+                    value={temp_profile.id_number}
+                    onChangeText={input =>
+                      updateInputField('profile', 'id_number', input)
+                    }
+                  />
+                </View>
+              ) : first_name || last_name || id_number ? (
+                <View style={{ padding: 8 }}>
+                  {first_name ? (
+                    <Output label="First name" value={first_name} />
+                  ) : null}
+                  {last_name ? (
+                    <Output label="Last name" value={last_name} />
+                  ) : null}
+                  {id_number ? (
+                    <Output label="ID number" value={id_number} />
+                  ) : null}
+                </View>
+              ) : (
+                <View style={{ padding: 8 }}>
+                  <Output label="No profile info saved" />
+                </View>
+              )}
+
+              {/* <View style={[styles.pickerContainer, { paddingVertical: 20 }]}>
             <Text style={[styles.input, { flex: 4 }]}>Country</Text>
             <View style={{ flex: 5, alignItems: 'flex-end' }}>
               <CountryPicker
@@ -172,7 +189,10 @@ class PersonalDetailsScreen extends Component {
               />
             </View>
           </View> */}
-        </InputContainer>
+              {/* </InputContainer> */}
+            </View>
+          </Card>
+        </CardContainer>
 
         {/* <Modal
           animationInTiming={500}
@@ -300,8 +320,14 @@ const styles = {
 };
 
 const mapStateToProps = ({ user }) => {
-  const { profile, loading_profile, temp_profile, showDetail } = user;
-  return { profile, loading_profile, temp_profile, showDetail };
+  const {
+    profile,
+    loading_profile,
+    temp_profile,
+    showDetail,
+    updateError,
+  } = user;
+  return { profile, loading_profile, temp_profile, showDetail, updateError };
 };
 
 export default connect(mapStateToProps, {

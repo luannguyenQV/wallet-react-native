@@ -9,11 +9,9 @@ import {
 } from './../../redux/actions';
 
 import CountryPicker from 'react-native-country-picker-modal';
-import UserInfoService from './../../services/userInfoService';
-import { Input, InputContainer } from './../../components/common';
+import { Input, Output, CardContainer, Card } from './../../components/common';
 import Colors from './../../config/colors';
 import Header from './../../components/header';
-import ResetNavigation from './../../util/resetNavigation';
 
 class AddressScreen extends Component {
   static navigationOptions = {
@@ -22,13 +20,10 @@ class AddressScreen extends Component {
 
   componentDidMount() {
     this.props.fetchData('address');
-    this.props.editItem('address', this.props.address);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (!nextProps.showDetail) {
-      this.props.navigation.goBack();
-    }
+  toggleEdit() {
+    this.props.editItem('address', this.props.address);
   }
 
   render() {
@@ -36,78 +31,134 @@ class AddressScreen extends Component {
       loading_address,
       fetchData,
       temp_address,
+      address,
+      showDetail,
+      updateError,
       updateItem,
       updateInputField,
     } = this.props;
-    const {
-      line_1,
-      line_2,
-      city,
-      state_province,
-      postal_code,
-      country,
-    } = temp_address;
+    const { line_1, line_2, city, state_province, postal_code } = address;
     return (
       <View style={styles.container}>
         <Header
           navigation={this.props.navigation}
           back
           title="Address"
-          headerRightIcon="save"
-          headerRightOnPress={() => updateItem('address', temp_address)}
+          headerRightIcon={showDetail ? 'done' : 'edit'}
+          headerRightOnPress={() =>
+            showDetail ? updateItem('address', temp_address) : this.toggleEdit()
+          }
         />
-        <InputContainer
-          refreshControl={
-            <RefreshControl
-              refreshing={loading_address}
-              onRefresh={() => fetchData('address')}
-            />
-          }>
-          <Input
-            label="Address Line 1"
-            placeholder="e.g. 158 Kloof Street"
-            autoCapitalize="none"
-            value={line_1}
-            onChangeText={input => updateInputField('address', 'line_1', input)}
-          />
 
-          <Input
-            label="Address Line 2"
-            placeholder="e.g. Gardens"
-            autoCapitalize="none"
-            value={line_2}
-            onChangeText={input => updateInputField('address', 'line_2', input)}
-          />
+        <CardContainer>
+          <Card
+            textActionOne={showDetail ? 'SAVE' : ''}
+            onPressActionOne={() => updateItem('address', temp_address)}
+            textActionTwo={showDetail ? 'CANCEL' : ''}
+            onPressActionTwo={() => fetchData('address')}
+            loading={loading_address}
+            errorText={updateError}
+            onPressContent={() => (!showDetail ? this.toggleEdit() : null)}>
+            <View>
+              {showDetail ? (
+                <View>
+                  <Input
+                    label="Address line 1"
+                    placeholder="e.g. 158 Kloof Street"
+                    autoCapitalize="none"
+                    value={temp_address.line_1}
+                    onChangeText={input =>
+                      updateInputField('address', 'line_1', input)
+                    }
+                  />
 
-          <Input
-            label="City"
-            placeholder="e.g. Cape Town"
-            autoCapitalize="none"
-            value={city}
-            onChangeText={input => updateInputField('address', 'city', input)}
-          />
+                  <Input
+                    label="Address line 2"
+                    placeholder="e.g. Gardens"
+                    autoCapitalize="none"
+                    value={temp_address.line_2}
+                    onChangeText={input =>
+                      updateInputField('address', 'line_2', input)
+                    }
+                  />
 
-          <Input
-            label="State province"
-            placeholder="e.g. Western Cape"
-            autoCapitalize="none"
-            value={state_province}
-            onChangeText={input =>
-              updateInputField('address', 'state_province', input)
-            }
-          />
+                  <Input
+                    label="City"
+                    placeholder="e.g. Cape Town"
+                    autoCapitalize="none"
+                    value={temp_address.city}
+                    onChangeText={input =>
+                      updateInputField('address', 'city', input)
+                    }
+                  />
 
-          <Input
-            label="Postal code"
-            placeholder="e.g. 9001"
-            autoCapitalize="none"
-            value={postal_code}
-            onChangeText={input =>
-              updateInputField('address', 'postal_code', input)
-            }
-          />
+                  <Input
+                    label="State province"
+                    placeholder="e.g. Western Cape"
+                    autoCapitalize="none"
+                    value={temp_address.state_province}
+                    onChangeText={input =>
+                      updateInputField('address', 'state_province', input)
+                    }
+                  />
 
-          {/* <View style={styles.pickerContainer}>
+                  <Input
+                    label="Postal code"
+                    placeholder="e.g. 9001"
+                    autoCapitalize="none"
+                    value={temp_address.postal_code}
+                    onChangeText={input =>
+                      updateInputField('address', 'postal_code', input)
+                    }
+                  />
+                </View>
+              ) : line_1 || line_2 || city || state_province || postal_code ? (
+                <View style={{ padding: 8 }}>
+                  {line_1 ? (
+                    <Output label="Address line 1" value={line_1} />
+                  ) : null}
+                  {line_2 ? (
+                    <Output label="Address line 2" value={line_2} />
+                  ) : null}
+                  {city ? <Output label="City" value={city} /> : null}
+                  {state_province ? (
+                    <Output label="State province" value={state_province} />
+                  ) : null}
+                  {postal_code ? (
+                    <Output label="Postal code" value={postal_code} />
+                  ) : null}
+                </View>
+              ) : (
+                <View style={{ padding: 8 }}>
+                  <Output label="No address info saved" />
+                </View>
+              )}
+
+              {/* <View style={[styles.pickerContainer, { paddingVertical: 20 }]}>
+            <Text style={[styles.input, { flex: 4 }]}>Country</Text>
+            <View style={{ flex: 5, alignItems: 'flex-end' }}>
+              <CountryPicker
+                onChange={value => {
+                  this.setState({ nationality: value.cca2 });
+                }}
+                closeable
+                filterable
+                cca2={nationality}
+                translation="eng"
+                styles={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              />
+            </View>
+          </View> */}
+              {/* </InputContainer> */}
+            </View>
+          </Card>
+        </CardContainer>
+
+        {/* <View style={styles.pickerContainer}>
             <Text style={[styles.text, { flex: 4 }]}>Country</Text>
             <View style={{ flex: 5, alignItems: 'flex-end' }}>
               <CountryPicker
@@ -126,7 +177,6 @@ class AddressScreen extends Component {
               />
             </View>
           </View> */}
-        </InputContainer>
       </View>
     );
   }
@@ -135,7 +185,7 @@ class AddressScreen extends Component {
 const styles = {
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
   },
   text: {
     fontSize: 14,
@@ -153,8 +203,14 @@ const styles = {
 };
 
 const mapStateToProps = ({ user }) => {
-  const { address, loading_address, temp_address, showDetail } = user;
-  return { address, loading_address, temp_address, showDetail };
+  const {
+    address,
+    loading_address,
+    temp_address,
+    showDetail,
+    updateError,
+  } = user;
+  return { address, loading_address, temp_address, showDetail, updateError };
 };
 
 export default connect(mapStateToProps, {

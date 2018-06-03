@@ -21,11 +21,7 @@ class BankAccountsScreen extends Component {
     title: 'Bank accounts',
   };
 
-  updateInputField = (prop, value) => {
-    this.setState({ [prop]: value });
-  };
-
-  renderContent(item) {
+  renderContent = item => {
     const { viewStyleContent } = styles;
     const {
       bank_name,
@@ -51,10 +47,10 @@ class BankAccountsScreen extends Component {
         {bic ? <Output label="BIC" value={bic} /> : null}
       </View>
     );
-  }
+  };
 
-  renderDetail(item) {
-    // if (bank_account) {
+  renderDetail = () => {
+    const { temp_bank_account, updateError, updateInputField } = this.props;
     const {
       name,
       number,
@@ -65,17 +61,16 @@ class BankAccountsScreen extends Component {
       swift,
       iban,
       bic,
-    } = item;
-
-    const updateInputField = this.props.updateInputField;
+    } = temp_bank_account;
 
     return (
-      <InputContainer>
+      <View>
         <Input
           label="Account holder"
           placeholder="e.g. John Snow"
           autoCapitalize="none"
           value={name}
+          inputError={updateError}
           onChangeText={input =>
             updateInputField('bank_account', 'name', input)
           }
@@ -150,22 +145,19 @@ class BankAccountsScreen extends Component {
           value={bic}
           onChangeText={input => updateInputField('bank_account', 'bic', input)}
         />
-      </InputContainer>
+      </View>
     );
     // }
     return;
-  }
+  };
 
   render() {
     const {
       bank_account,
       loading_bank_account,
-      fetchData,
       temp_bank_account,
       newItem,
-      editItem,
       updateItem,
-      deleteItem,
       showDetail,
     } = this.props;
     return (
@@ -174,7 +166,7 @@ class BankAccountsScreen extends Component {
           navigation={this.props.navigation}
           back
           title="Bank accounts"
-          headerRightIcon={showDetail ? 'save' : 'add'}
+          headerRightIcon={showDetail ? 'done' : 'add'}
           headerRightOnPress={
             showDetail
               ? () => updateItem('bank_account', temp_bank_account)
@@ -186,22 +178,12 @@ class BankAccountsScreen extends Component {
           data={bank_account}
           tempItem={temp_bank_account}
           loadingData={loading_bank_account}
-          title={item => (item ? item.name : 'New bank account')}
-          subtitle={item => (item ? standardizeString(item.status) : '')}
-          // onPressTitle={item => () => editItem('bank_account', item)}
+          identifier="bank_name"
           renderContent={this.renderContent}
-          // showDetail={showDetail}
-          // titleDetail="Edit bank account"
-          renderDetail={tempItem => this.renderDetail(tempItem)}
-          // iconTitleRightDetail="close"
-          // onPressTitleRightDetail={() => fetchData('bank_account')}
-          // refreshing={loading_bank_account}
-          // onRefresh={() => fetchData('bank_account')}
+          renderDetail={this.renderDetail}
           emptyListMessage="No bank accounts added yet"
-          // deleteItem={item => () => deleteItem('bank_account', item)}
-          deletable
-          // editing
-          titleStyle="secondary"
+          canDelete
+          canEdit
         />
       </View>
     );
@@ -210,7 +192,7 @@ class BankAccountsScreen extends Component {
 
 const styles = {
   viewStyleContent: {
-    paddingLeft: 16,
+    padding: 8,
   },
   container: {
     flex: 1,

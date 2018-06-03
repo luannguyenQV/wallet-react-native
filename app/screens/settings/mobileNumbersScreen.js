@@ -11,29 +11,13 @@ import {
 } from './../../redux/actions';
 
 import Header from './../../components/header';
-import { InputContainer, Input } from './../../components/common';
+import { Input, Output } from './../../components/common';
 import CardList from './../../components/CardList';
 
 class MobileNumbersScreen extends Component {
   static navigationOptions = {
     title: 'Mobile numbers',
   };
-
-  // makePrimary = async id => {
-  //   this.setState({
-  //     loading: true,
-  //     loadingMessage: 'Updating...',
-  //   });
-  //   const body = { primary: true };
-  //   let responseJson = await SettingsService.makeMobilePrimary(id, body);
-
-  //   if (responseJson.status === 'success') {
-  //     this.setState({ loading: false });
-  //     this.reload();
-  //   } else {
-  //     Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
-  //   }
-  // };
 
   // verify = async number => {
   //   this.setState({
@@ -83,23 +67,32 @@ class MobileNumbersScreen extends Component {
   //   onPressActionOne = verifyItem;
   // }
 
-  renderDetail = item => {
+  renderContent = item => {
+    const { viewStyleContent } = styles;
     const { number } = item;
+    console.log(item);
+    return (
+      <View style={viewStyleContent}>
+        {number ? <Output label="" value={number} /> : null}
+      </View>
+    );
+  };
 
-    const updateInputField = this.props.updateInputField;
+  renderDetail = () => {
+    const { temp_mobile_number, updateError, updateInputField } = this.props;
+    const { number } = temp_mobile_number;
 
     return (
-      <InputContainer>
-        <Input
-          label="Mobile number"
-          placeholder="e.g. +278412345687"
-          autoCapitalize="none"
-          value={number}
-          onChangeText={input =>
-            updateInputField('mobile_number', 'number', input)
-          }
-        />
-      </InputContainer>
+      <Input
+        label="Mobile number"
+        placeholder="e.g. +278412345687"
+        autoCapitalize="none"
+        value={number}
+        inputError={updateError}
+        onChangeText={input =>
+          updateInputField('mobile_number', 'number', input)
+        }
+      />
     );
   };
 
@@ -107,11 +100,9 @@ class MobileNumbersScreen extends Component {
     const {
       mobile_number,
       loading_mobile_number,
-      fetchData,
       temp_mobile_number,
       newItem,
       updateItem,
-      deleteItem,
       showDetail,
     } = this.props;
     return (
@@ -120,7 +111,7 @@ class MobileNumbersScreen extends Component {
           navigation={this.props.navigation}
           back
           title="Mobile numbers"
-          headerRightIcon={showDetail ? 'save' : 'add'}
+          headerRightIcon={showDetail ? 'done' : 'add'}
           headerRightOnPress={
             showDetail
               ? () => updateItem('mobile_number', temp_mobile_number)
@@ -132,30 +123,13 @@ class MobileNumbersScreen extends Component {
           data={mobile_number}
           tempItem={temp_mobile_number}
           loadingData={loading_mobile_number}
-          title={item => (item ? item.number : 'New mobile number')}
-          subtitle={item => (item.verified ? 'Verified' : '')}
-          itemActive={item => (item.primary ? true : false)}
-          // makePrimaryItem={this.makePrimary}
-          // onPressTitle={item => () => editItem('mobile_number', item)}
-          // renderContent={this.renderContent}
-          // showDetail={showDetail}
-          // titleDetail="Edit mobile number"
-          renderDetail={tempItem => this.renderDetail(tempItem)}
-          // textFunctionActionOne={item => (item.verified ? '' : 'Verify')}
-          // onPressActionOne={this.verify}
-          // iconTitleRightDetail="close"
-          // onPressTitleRightDetail={() => fetchData('mobile_number')}
-          // textActionOneDetail="Save"
-          // onPressActionOneDetail={() =>
-          //   updateItem('mobile_number', temp_mobile_number)
-          // }
-          // refreshing={loading_mobile_number}
-          // onRefresh={() => fetchData('mobile_number')}
+          identifier="number"
+          renderContent={this.renderContent}
+          renderDetail={this.renderDetail}
           emptyListMessage="No mobile numbers added yet"
-          // deleteItem={item => () => deleteItem('mobile_number', item)}
-          deletable
-          // editing
-          titleStyle="secondary"
+          canDelete
+          // canVerify
+          canPrimary
         />
       </View>
     );
@@ -167,6 +141,9 @@ const styles = {
     flex: 1,
     flexDirection: 'column',
     backgroundColor: 'white',
+  },
+  viewStyleContent: {
+    padding: 8,
   },
 };
 

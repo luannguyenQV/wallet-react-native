@@ -5,6 +5,7 @@ import {
   setActiveWalletIndex,
   setSendWallet,
   resetSend,
+  viewWallet,
 } from './../redux/actions';
 
 import Colors from './../config/colors';
@@ -88,8 +89,6 @@ class HeaderWallet extends Component {
   }
 
   onButtonPress(type) {
-    console.log(type);
-    console.log(this.props);
     switch (type) {
       case 'send': {
         this.props.resetSend();
@@ -111,6 +110,11 @@ class HeaderWallet extends Component {
         this.props.navigation.navigate('Deposit');
         break;
       }
+      case 'more':
+        this.props.navigation.navigate('Wallets', {
+          wallet: this.props.wallets[this.props.activeWalletIndex],
+        });
+        break;
       default:
         console.log('Error: unknown button type');
     }
@@ -160,5 +164,5 @@ export default connect(mapStateToProps, {
   setActiveWalletIndex,
   setSendWallet,
   resetSend,
-  // tempWallet,
+  viewWallet,
 })(HeaderWallet);

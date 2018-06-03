@@ -3,48 +3,75 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Colors from './../../config/colors';
 import * as Animatable from 'react-native-animatable';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 class Button extends Component {
   buttonStyle() {
-    const { buttonStyle, buttonStyleText } = styles;
-    const { type } = this.props;
-    switch (type) {
-      case 'primary':
-        return [buttonStyle, { backgroundColor: Colors.primary }];
-      case 'secondary':
-        return [buttonStyle, { backgroundColor: Colors.secondary }];
-      case 'text':
-        return [buttonStyleText];
-      default:
-        return [buttonStyle, { backgroundColor: Colors.primary }];
-    }
+    const { buttonStyle } = styles;
+    const { type, color, size, label } = this.props;
+    return [
+      buttonStyle,
+      {
+        backgroundColor:
+          type && type !== 'contained'
+            ? 'transparent'
+            : color ? Colors[color] : Colors.primary,
+        height: size === 'large' ? 40 : size === 'small' ? 30 : 36,
+        // minWidth: label ?
+      },
+    ];
   }
 
   textStyle() {
-    const { textStyle, textStyleText } = styles;
-    const { type } = this.props;
-    switch (type) {
-      case 'primary':
-        return [textStyle, { color: Colors.onPrimary }];
-      case 'secondary':
-        return [textStyle, { color: Colors.onSecondary }];
-      case 'text':
-        return [textStyleText];
-      default:
-        return [textStyle, { color: 'white' }];
-    }
+    const { textStyle } = styles;
+    const { size } = this.props;
+    return [
+      textStyle,
+      {
+        color: this.contrastColor(),
+        fontSize: size === 'large' ? 18 : size === 'small' ? 10 : 14,
+      },
+    ];
+  }
+
+  contrastColor() {
+    const { type, color } = this.props;
+    return type === 'text'
+      ? color ? Colors[color] : Colors.primary
+      : color ? Colors[color + 'Contrast'] : Colors.primaryContrast;
   }
 
   render() {
-    const { onPress, label, reference } = this.props;
+    const {
+      onPress,
+      label,
+      reference,
+      animate,
+      disabled,
+      size,
+      icon,
+    } = this.props;
     const { containerStyle } = styles;
     return (
       <Animatable.View
         ref={reference}
         style={containerStyle}
-        animation="fadeInUpBig">
-        <TouchableOpacity onPress={onPress} style={this.buttonStyle()}>
-          <Text style={this.textStyle()}>{label}</Text>
+        animation={animate ? 'fadeInUpBig' : ''}>
+        <TouchableOpacity
+          onPress={onPress}
+          style={this.buttonStyle()}
+          disabled={disabled}>
+          <View style={{ flexDirection: 'row' }}>
+            {icon ? (
+              <Icon
+                // style={{ alignSelf: 'flex-end' }}
+                name={icon}
+                size={size === 'large' ? 26 : size === 'small' ? 18 : 22}
+                color={this.contrastColor()}
+              />
+            ) : null}
+            <Text style={this.textStyle()}>{label}</Text>
+          </View>
         </TouchableOpacity>
       </Animatable.View>
     );
@@ -53,18 +80,18 @@ class Button extends Component {
 
 const styles = {
   containerStyle: {
-    height: 52,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 24,
-    paddingVertical: 8,
+    margin: 8,
+    // width: '100%',
     backgroundColor: '#00000000',
   },
   buttonStyle: {
     flex: 1,
-    height: 38,
+    flexDirection: 'row',
     borderRadius: 3,
     minWidth: 64,
+    padding: 8,
     // backgroundColor: Colors.primary,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
@@ -82,14 +109,8 @@ const styles = {
     justifyContent: 'center',
   },
   textStyle: {
-    // color: 'white',
-    fontSize: 18,
+    textAlign: 'center',
     fontWeight: 'bold',
-  },
-  textStyleText: {
-    color: Colors.onPrimary,
-    fontSize: 16,
-    // fontWeight: 'bold',
   },
 };
 

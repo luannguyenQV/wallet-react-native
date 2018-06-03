@@ -14,7 +14,7 @@ class Output extends Component {
 
     return (
       <View>
-        {value ? (
+        {value && label ? (
           <View style={viewStyleLabel}>
             <Text style={[textStyleLabel]}>{label}</Text>
           </View>
@@ -52,6 +52,7 @@ const styles = {
     flexDirection: 'column',
     borderBottomWidth: 0,
     flexWrap: 'wrap',
+    margin: 8,
   },
   viewStyleLabel: {
     flexDirection: 'row',
@@ -70,19 +71,19 @@ const styles = {
   // },
   textStyleLabel: {
     fontSize: 12,
-    paddingTop: 8,
+    // paddingTop: 8,
     color: 'black',
     opacity: 0.6,
   },
   textStyleValue: {
     // height: 28,
     paddingLeft: 0,
-    paddingBottom: 8,
+    // paddingBottom: 8,
     paddingTop: 2,
     color: 'black',
     fontWeight: 'normal',
-    borderColor: 'white',
-    borderWidth: 1,
+    // borderColor: 'white',
+    // borderWidth: 1,
     flex: 1,
     // alignItems: 'center',
     fontSize: 16,

@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import { View, Text, ScrollView, FlatList } from 'react-native';
 import { connect } from 'react-redux';
-import { logoutUser, setActiveWalletIndex } from './../../redux/actions';
+import {
+  logoutUser,
+  setActiveWalletIndex,
+  fetchAccounts,
+} from './../../redux/actions';
 import _ from 'lodash';
 import Swiper from 'react-native-swiper';
 
@@ -33,10 +37,10 @@ class HomeScreen extends Component {
   };
 
   render() {
-    const { wallets, activeWalletIndex } = this.props;
+    const { wallets, activeWalletIndex, fetchAccounts } = this.props;
     // console.log(accounts);
     // console.log(rehive.rehive);
-    console.log('rehive.getEmails', rehive.getEmails);
+    // console.log('rehive.getEmails', rehive.getEmails);
     return (
       <View style={styles.container}>
         <Header
@@ -60,6 +64,7 @@ class HomeScreen extends Component {
           <HomeCards navigation={this.props.navigation} />
           <TransactionList
             // updateBalance={this.getBalanceInfo}
+            // fetchAccounts={fetchAccounts}
             currencyCode={wallets[activeWalletIndex].currency.currency.code}
             // showDialog={this.showDialog}
             // logout={this.logout}
@@ -95,4 +100,6 @@ const mapStateToProps = ({ auth, accounts }) => {
   return { token, wallets, activeWalletIndex, loadingAccounts };
 };
 
-export default connect(mapStateToProps, { logoutUser })(HomeScreen);
+export default connect(mapStateToProps, { logoutUser, fetchAccounts })(
+  HomeScreen,
+);

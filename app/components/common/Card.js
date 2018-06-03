@@ -2,7 +2,7 @@ import React from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
+  TouchableHighlight,
   TouchableWithoutFeedback,
 } from 'react-native';
 
@@ -10,6 +10,8 @@ import Colors from './../../config/colors';
 import { Spinner } from './Spinner';
 import { HeaderButton } from './HeaderButton';
 import TouchableCircle from './../touchableCircle';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import Swipeable from 'react-native-swipeable';
 
 const Card = props => {
   const {
@@ -43,16 +45,23 @@ const Card = props => {
     textActionTwo,
     onPressActionTwo,
     loading,
-    onCardPress,
+    onPressContent,
     onPressTitle,
+    iconFooter,
+    onPressFooter,
     titleStyle,
     errorText,
+    backgroundColor,
+    swipeableContent,
+    disableActionOne,
+    disableActionTwo,
   } = props;
 
   // console.log(props);
 
   return (
     <View style={viewStyleCardContainer}>
+      {/* <Swipeable rightContent={swipeableContent}> */}
       <View>{renderHeader ? renderHeader : null}</View>
       {title || subtitle || iconTitleLeft || iconTitleRight ? (
         <View
@@ -134,32 +143,64 @@ const Card = props => {
           ) : null}
         </View>
       ) : null}
-      <TouchableWithoutFeedback onPress={onCardPress}>
-        <View style={viewStyleContent}>
+      <TouchableWithoutFeedback onPress={onPressContent}>
+        <View
+          style={[
+            viewStyleContent,
+            {
+              backgroundColor: backgroundColor
+                ? Colors[backgroundColor]
+                : 'white',
+            },
+          ]}>
           {props.children}
           {errorText ? <Text style={textStyleError}>{errorText}</Text> : null}
         </View>
       </TouchableWithoutFeedback>
-      {textActionOne || textActionTwo ? (
+      {textActionOne || textActionTwo || iconFooter ? (
         <View style={viewStyleFooter}>
           {loading ? (
             <Spinner size="small" />
           ) : (
             <View style={viewStyleActionContainer}>
-              <TouchableOpacity
-                onPress={onPressActionTwo}
-                style={buttonStyleAction}>
-                <Text style={textStyleAction}>{textActionTwo}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={onPressActionOne}
-                style={buttonStyleAction}>
-                <Text style={textStyleAction}>{textActionOne}</Text>
-              </TouchableOpacity>
+              {iconFooter ? (
+                <Icon
+                  style={{
+                    position: 'absolute',
+                    left: 8,
+                    bottom: 8,
+                    margin: 0,
+                    padding: 8,
+                  }}
+                  name={iconFooter}
+                  size={22}
+                  onPress={onPressFooter}
+                  color={Colors.secondary}
+                />
+              ) : null}
+              {textActionTwo ? (
+                <TouchableHighlight
+                  disabled={disableActionTwo}
+                  underlayColor={Colors.lightGray}
+                  style={buttonStyleAction}
+                  onPress={onPressActionTwo}>
+                  <Text style={textStyleAction}>{textActionTwo}</Text>
+                </TouchableHighlight>
+              ) : null}
+              {textActionOne ? (
+                <TouchableHighlight
+                  disabled={disableActionOne}
+                  underlayColor={Colors.lightGray}
+                  style={buttonStyleAction}
+                  onPress={onPressActionOne}>
+                  <Text style={textStyleAction}>{textActionOne}</Text>
+                </TouchableHighlight>
+              ) : null}
             </View>
           )}
         </View>
       ) : null}
+      {/* </Swipeable> */}
     </View>
   );
   {
@@ -175,7 +216,7 @@ const styles = {
     shadowColor: 'rgba(0, 0, 0, 0.6)',
     shadowOpacity: 0.2,
     shadowRadius: 2,
-    marginBottom: 8,
+    margin: 8,
     elevation: 2,
     shadowOffset: {
       height: 1,
@@ -211,22 +252,9 @@ const styles = {
     fontSize: 12,
     color: Colors.onSecondary,
   },
-  viewStyleFooter: {
-    height: 52,
-    padding: 8,
-  },
-  viewStyleActionContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
-  textStyleAction: {
-    color: Colors.primary,
-    fontSize: 16,
-    paddingLeft: 8,
-  },
   textStyleError: {
     paddingTop: 8,
-    paddingHorizontal: 8,
+    paddingHorizontal: 16,
     fontSize: 14,
     color: Colors.error,
   },
@@ -243,8 +271,32 @@ const styles = {
     width: 64,
     position: 'absolute',
   },
+  viewStyleFooter: {
+    flexDirection: 'row',
+    // height: 52,
+    width: '100%',
+    alignItems: 'center',
+  },
+  viewStyleActionContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    width: '100%',
+    height: 52,
+    padding: 8,
+  },
+  textStyleAction: {
+    color: Colors.primary,
+    fontSize: 14,
+    fontWeight: 'bold',
+    // padding: 8,
+  },
   buttonStyleAction: {
-    padding: 10,
+    padding: 8,
+    marginLeft: 8,
+    // marginHorizontal: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 3,
   },
 };
 

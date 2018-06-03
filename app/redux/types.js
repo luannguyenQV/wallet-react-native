@@ -34,6 +34,7 @@ export const SET_SEND_NOTE = 'set_send_note';
 export const SET_SEND_STATE = 'set_send_state';
 export const RESET_SEND = 'reset_send';
 
+// export const SEND_ASYNC = createAsyncTypes('send');
 export const SEND = 'send';
 export const SEND_SUCCESS = 'send_success';
 export const SEND_FAIL = 'send_fail';
@@ -48,7 +49,7 @@ export const INPUT_FIELD_CHANGED = 'input_field_changed';
 export const UPDATE_ASYNC = createAsyncTypes('update');
 export const DELETE_ASYNC = createAsyncTypes('delete');
 // export const DEFAULT_ASYNC = createAsyncTypes('default');
-// export const VERIFY_ASYNC = createAsyncTypes('verify');
+export const VERIFY_ASYNC = createAsyncTypes('verify');
 export const EDIT_ITEM = 'edit_item';
 export const PRIMARY_ITEM = 'primary_item';
 export const NEW_ITEM = 'new_item';

@@ -5,6 +5,8 @@ import {
   REFRESH_PROFILE_ASYNC,
   UPDATE_ASYNC,
   DELETE_ASYNC,
+  VERIFY_ASYNC,
+  SHOW_MODAL,
 } from './../types';
 
 import UserInfoService from './../../services/userInfoService';
@@ -134,15 +136,18 @@ function* updateItem(action) {
         }
         break;
       case 'profile':
+        console.log('data', data);
         responseJson = yield call(UserInfoService.updateUserDetails, data);
         break;
       case 'address':
+        console.log('data', data);
         responseJson = yield call(UserInfoService.updateAddress, data);
         break;
       // case 'documents':
       //   responseJson = yield call(UserInfoService.getAllDocuments, data);
       //   break;
     }
+    console.log('responseJson', responseJson);
     if (responseJson && responseJson.status === 'success') {
       yield all([
         put({ type: UPDATE_ASYNC.success }),
@@ -187,7 +192,7 @@ function* deleteItem(action) {
       ]);
     } else {
       yield put({
-        type: DELETE_ASYNC.message,
+        type: DELETE_ASYNC.error,
         payload: responseJson.error,
       });
     }
@@ -197,11 +202,61 @@ function* deleteItem(action) {
   }
 }
 
+function* verifyItem(action) {
+  try {
+    const { type, value, company } = action.payload;
+    let responseJson = null;
+    let message = '';
+    let data;
+    console.log(action);
+    switch (type) {
+      case 'mobile_number':
+        data = {
+          mobile: value,
+          company,
+        };
+        responseJson = yield call(
+          SettingsService.resendMobileVerification,
+          data,
+        );
+        // message =
+        break;
+      case 'email_address':
+        data = {
+          email: value,
+          company,
+        };
+        console.log(data);
+        responseJson = yield call(
+          SettingsService.resendEmailVerification,
+          data,
+        );
+        break;
+    }
+    console.log(responseJson);
+    if (responseJson && responseJson.status === 'success') {
+      yield all([
+        put({ type: VERIFY_ASYNC.success }),
+        // put({ type: FETCH_DATA_ASYNC.pending, payload: type }),
+      ]);
+    } else {
+      yield put({
+        type: VERIFY_ASYNC.error,
+        payload: responseJson.error,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    yield put({ type: VERIFY_ASYNC.error, error });
+  }
+}
+
 export const userSagas = all([
   takeEvery(FETCH_DATA_ASYNC.pending, fetchData),
   takeEvery(REFRESH_PROFILE_ASYNC.pending, refreshProfile),
   takeEvery(UPDATE_ASYNC.pending, updateItem),
   takeEvery(DELETE_ASYNC.pending, deleteItem),
+  takeEvery(VERIFY_ASYNC.pending, verifyItem),
 ]);
 
 // function* apiSaga(fn, args, successAction, errorAction) {

@@ -14,7 +14,7 @@ const AuthForm = props => {
     viewStyleFooter,
     iconStyleHeaderLeft,
     buttonStyleActionRight,
-    textStyleActionRight,
+    textStyleAction,
   } = styles;
 
   const {
@@ -22,6 +22,8 @@ const AuthForm = props => {
     onPressHeaderLeft,
     textHeaderRight,
     onPressHeaderRight,
+    textFooterLeft,
+    onPressFooterLeft,
     textFooterRight,
     onPressFooterRight,
     loading,
@@ -29,34 +31,44 @@ const AuthForm = props => {
 
   return (
     <View style={viewStyleContainer}>
-      <View style={viewStyleHeader}>
-        {iconHeaderLeft ? (
-          <HeaderButton
-            icon={iconHeaderLeft}
-            // text={textHeaderLeft}
-            onPress={onPressHeaderLeft}
-            color={Colors.primaryContrast}
-          />
-        ) : null}
-        {textHeaderRight ? (
-          <TouchableOpacity
-            onPress={onPressHeaderRight}
-            style={buttonStyleActionRight}>
-            <Text style={textStyleActionRight}>{textHeaderRight}</Text>
-          </TouchableOpacity>
-        ) : null}
-      </View>
+      {iconHeaderLeft || textHeaderRight ? (
+        <View style={viewStyleHeader}>
+          {iconHeaderLeft ? (
+            <HeaderButton
+              icon={iconHeaderLeft}
+              onPress={onPressHeaderLeft}
+              color={Colors.primaryContrast}
+            />
+          ) : (
+            <View />
+          )}
+          {textHeaderRight ? (
+            <TouchableOpacity onPress={onPressHeaderRight}>
+              <Text style={textStyleAction}>{textHeaderRight}</Text>
+            </TouchableOpacity>
+          ) : (
+            <View />
+          )}
+        </View>
+      ) : null}
       <View style={viewStyleContent}>
         {loading ? <Spinner size="small" /> : props.children}
       </View>
       <View style={viewStyleFooter}>
-        {textFooterRight ? (
-          <TouchableOpacity
-            onPress={onPressFooterRight}
-            style={buttonStyleActionRight}>
-            <Text style={textStyleActionRight}>{textFooterRight}</Text>
+        {textFooterLeft ? (
+          <TouchableOpacity onPress={onPressFooterLeft}>
+            <Text style={textStyleAction}>{textFooterLeft}</Text>
           </TouchableOpacity>
-        ) : null}
+        ) : (
+          <View />
+        )}
+        {textFooterRight ? (
+          <TouchableOpacity onPress={onPressFooterRight}>
+            <Text style={textStyleAction}>{textFooterRight}</Text>
+          </TouchableOpacity>
+        ) : (
+          <View />
+        )}
       </View>
     </View>
   );
@@ -76,33 +88,28 @@ const styles = {
   },
   viewStyleContent: {
     flex: 1,
-    paddingHorizontal: 24,
+    paddingHorizontal: 16,
     paddingBottom: 12,
     // backgroundColor: Colors.onPrimary,
     flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
+    // alignItems: 'center',
+    // justifyContent: 'center',
   },
   viewStyleFooter: {
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     flexDirection: 'row',
     height: 64,
-    padding: 16,
+    padding: 8,
   },
   iconStyleHeaderLeft: {
     margin: 16,
-    alignSelf: 'flex-start',
     color: Colors.onPrimary,
     // opacity: 0.87,
   },
-  textStyleActionRight: {
+  textStyleAction: {
     color: Colors.onPrimary,
     fontSize: 18,
-    padding: 8,
-    // alignSelf: 'flex-end',
-  },
-  buttonStyleActionRight: {
-    // padding: 8,
+    padding: 16,
     // alignSelf: 'flex-end',
   },
 };

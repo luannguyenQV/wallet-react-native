@@ -6,12 +6,14 @@ import {
   Text,
   TouchableHighlight,
   FlatList,
+  Alert,
+  Image,
 } from 'react-native';
-import { ImagePicker } from 'expo';
+import { ImagePicker, Permissions } from 'expo';
 import Colors from './../../../config/colors';
 import Header from './../../../components/header';
-import DocumentUploadHelperText from './../../../components/DocumentUploadHelperText';
-import { SettingsOption, Output } from '../../../components/common';
+import SettingsService from './../../../services/settingsService';
+import { SettingsOption, Button, Spinner } from '../../../components/common';
 import document_categories from './../../../config/document_types.json';
 
 class DocumentScreen extends Component {
@@ -19,125 +21,195 @@ class DocumentScreen extends Component {
     title: 'Documents',
   };
 
-  constructor(props) {
-    super(props);
-    const params = this.props.navigation.state.params;
-    this.state = {
-      title: params.name,
-      getVerified: false,
-      modalVisible: false,
-      category: params.name,
-    };
+  state = {
+    document_type: '',
+    state: '',
+    category: '',
+    showModal: false,
+  };
+
+  componentDidMount() {
+    this.resetState();
   }
 
-  openModal = type => {
-    this.setState({ modalVisible: true, type });
+  resetState() {
+    this.setState({
+      document_type: '',
+      state: 'document_type',
+      category: this.props.navigation.state.params.name,
+    });
+  }
+
+  selectType = document_type => {
+    this.setState({
+      state: 'upload_option',
+      document_type,
+    });
   };
 
   launchCamera = async () => {
+    Permissions.askAsync(Permissions.CAMERA);
+    Permissions.askAsync(Permissions.CAMERA_ROLL);
     let result = await ImagePicker.launchCameraAsync({
+      mediaTypes: 'Images',
       allowsEditing: true,
-      aspect: [4, 3],
+      // aspect: [4, 3],
     });
-    this.setState({ modalVisible: false });
     if (!result.cancelled) {
-      this.props.navigation.navigate('DocumentUpload', {
-        getVerified: this.state.getVerified,
-        image: result,
-        category: this.state.category,
-        type: this.state.title,
+      this.setState({
+        image: result.uri,
+        state: 'confirm',
       });
     }
   };
 
   launchImageLibrary = async () => {
+    Permissions.askAsync(Permissions.CAMERA_ROLL);
     let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: 'Images',
       allowsEditing: true,
-      aspect: [4, 3],
     });
-    this.setState({ modalVisible: false });
     if (!result.cancelled) {
-      this.props.navigation.navigate('DocumentUpload', {
-        getVerified: this.state.getVerified,
-        image: result,
-        category: this.state.category,
-        type: this.state.title,
+      this.setState({
+        image: result.uri,
+        state: 'confirm',
       });
     }
   };
 
-  renderHelperText() {
-    const { title } = this.state;
-    const {
-      // viewStyleContainer,
-      textStyleHeader,
-      textStyleDescription,
-      viewStyleOptions,
-    } = styles;
+  uploadDocument = async () => {
+    const { image, category, document_type } = this.state;
+    this.setState({ loading: true });
+
+    const parts = image.split('/');
+    const name = parts[parts.length - 1];
+    const file = {
+      image,
+      name,
+      type: 'image/jpg',
+    };
+
+    let responseJson = await SettingsService.documentUpload(
+      file,
+      category,
+      document_type,
+    );
+    if (responseJson.status === 'success') {
+      this.setState({ loading: false });
+      Alert.alert(
+        'Upload successful',
+        'Your information will shortly be reviewed by our team.',
+        [
+          {
+            text: 'OK',
+            onPress: () => this.setState({ loading: false }),
+          },
+        ],
+      );
+    } else {
+      Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
+      this.setState({ loading: false });
+    }
+  };
+
+  renderContent() {
+    const { category, state, loading } = this.state;
+    const { textStyleDescription, viewStyleButtonContainer } = styles;
+    console.log(this.state);
+    let options;
 
     let document_category = document_categories.filter(
-      document_category => document_category.document_category === title,
+      document_category => document_category.document_category === category,
     );
-    let options = document_category[0].document_types;
+    console.log(document_category);
+    if (category) {
+      options = document_category[0].document_types;
+    }
 
-    console.log('document_categories', document_categories);
-    console.log('document_category', document_category);
-    console.log('options', options);
-
-    // return <DocumentUploadHelperText title={title} options={options} />;
-    return (
-      <View>
-        <Text style={textStyleHeader}>{title}</Text>
-        <Text style={textStyleDescription}>
-          Please upload one of the following documents.{' '}
-          {title === 'Proof of Address'
-            ? 'Your name and address must be clearly visible and be dated within the last 3 months.'
-            : ''}
-        </Text>
-        <FlatList
-          contentContainerStyle={viewStyleOptions}
-          data={options}
-          renderItem={({ item }) => this.renderItem(item)}
-          keyExtractor={item => item.id}
-          scrollEnabled={false}
-        />
-      </View>
-    );
+    switch (state) {
+      case 'document_type':
+        return (
+          <View>
+            <Text style={textStyleDescription}>
+              Please upload one of the following documents.{' '}
+              {category === 'Proof of Address'
+                ? 'Your name and address must be clearly visible and be dated within the last 3 months.'
+                : ''}
+            </Text>
+            <FlatList
+              contentContainerStyle={viewStyleButtonContainer}
+              data={options}
+              renderItem={({ item }) => this.renderTypeButton(item)}
+              keyExtractor={item => item.id}
+            />
+          </View>
+        );
+      case 'upload_option':
+        return (
+          <View style={viewStyleButtonContainer}>
+            <Button
+              label="Use camera"
+              onPress={this.launchCamera} //this.openModal(item.document_type)}
+            />
+            <Button
+              label="Choose from gallery"
+              onPress={this.launchImageLibrary} //this.openModal(item.document_type)}
+            />
+            <Button
+              label="Cancel"
+              onPress={() => this.resetState()} //this.openModal(item.document_type)}
+            />
+          </View>
+        );
+      case 'confirm':
+        return (
+          <View style={viewStyleButtonContainer}>
+            <Image
+              style={{ height: 300, width: 300 }}
+              source={{ uri: this.state.image }}
+            />
+            {loading ? (
+              <Spinner size="large" />
+            ) : (
+              <View>
+                <Button
+                  label="Upload"
+                  onPress={this.uploadDocument} //this.openModal(item.document_type)}
+                />
+                <Button
+                  label="Cancel"
+                  onPress={() => this.resetState()} //this.openModal(item.document_type)}
+                />{' '}
+              </View>
+            )}
+          </View>
+        );
+    }
   }
 
-  renderItem = item => {
-    const { viewStyleOptions, textStyleOptions } = styles;
+  renderTypeButton = item => {
     console.log(item);
     return (
-      <SettingsOption
-        label={'>  ' + item.description}
-        onPress={() => this.openModal(item.document_type)}
+      <Button
+        label={item.description}
+        onPress={() => this.selectType(item.document_type)}
       />
     );
-    // return (
-    //   <View>
-    //     <Text>{'> ' + item.description + ' <'}</Text>
-    //     <Text>hi there</Text>
-    //   </View>
-    // );
   };
 
   render() {
+    const { category } = this.state;
+    const { textStyleHeader, viewStyleContent } = styles;
     return (
       <View style={styles.container}>
-        <Header
-          navigation={this.props.navigation}
-          back
-          title="Documents"
-          // headerRightText="Add"
-          // headerRightOnPress={() => this.openModal()}
-        />
-        <View style={styles.topContainer}>{this.renderHelperText()}</View>
+        <Header navigation={this.props.navigation} back title="Documents" />
+        <Text style={textStyleHeader}>{category}</Text>
+        <View style={viewStyleContent}>{this.renderContent()}</View>
         {/* <Output label={'> ' + 'item.description' + ' <'} /> */}
         <Modal
           animationType={'slide'}
           transparent
-          visible={this.state.modalVisible}
+          visible={this.state.showModal}
           onRequestClose={() => {
             console.log('Modal has been closed.');
           }}>
@@ -145,25 +217,14 @@ class DocumentScreen extends Component {
             <View style={styles.bottomModal}>
               <View style={[styles.button, { borderBottomColor: 'black' }]}>
                 <Text style={{ fontSize: 22, fontWeight: 'bold' }}>
-                  Upload Image
+                  {this.state.status}
                 </Text>
               </View>
               <TouchableHighlight
-                style={styles.button}
-                onPress={() => this.launchCamera()}>
-                <Text style={styles.buttonText}>Use Camera</Text>
-              </TouchableHighlight>
-              <TouchableHighlight
-                style={styles.button}
-                onPress={() => this.launchImageLibrary()}>
-                <Text style={styles.buttonText}>Choose From Gallery</Text>
-              </TouchableHighlight>
-              <TouchableHighlight
-                style={styles.button}
                 onPress={() => {
-                  this.setState({ modalVisible: false });
+                  this.setState({ showModal: false });
                 }}>
-                <Text style={styles.buttonText}>Cancel</Text>
+                <Text>Cancel</Text>
               </TouchableHighlight>
             </View>
           </View>
@@ -179,12 +240,20 @@ const styles = StyleSheet.create({
     // flexDirection: 'column',
     backgroundColor: 'white',
   },
-  topContainer: {
+  viewStyleContent: {
     // flex: 1,
     // backgroundColor: Colors.lightgray,
-    padding: 20,
+    // padding: 8,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  viewStyleButtonContainer: {
+    // flex: 1,
+    // padding: 8,
+    // justifyContent: 'flex-start',
+    // alignItems: 'center',
+    width: '100%',
+    // height: '100%',
   },
   upload: {
     marginBottom: 10,
@@ -210,18 +279,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  button: {
-    height: 50,
-    width: '100%',
-    borderWidth: 1,
-    borderColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonText: {
-    fontSize: 18,
-    color: Colors.black,
-  },
   textStyleHeader: {
     fontSize: 20,
     padding: 16,
@@ -232,11 +289,6 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     paddingHorizontal: 16,
     paddingBottom: 8,
-    textAlign: 'center',
-  },
-  textStyleOptions: {
-    fontSize: 14,
-    paddingHorizontal: 16,
     textAlign: 'center',
   },
 });

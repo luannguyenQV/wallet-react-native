@@ -6,9 +6,6 @@ import { Input, InputContainer } from './../components/common';
 
 class BankAccountComponent extends Component {
   render() {
-    console.log('inside bank acc component');
-    console.log(this.props);
-
     const {
       name,
       number,

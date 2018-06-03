@@ -71,7 +71,11 @@ class ChangePasswordScreen extends Component {
             onChangeText={new_password2 => this.setState({ new_password2 })}
           />
 
-          <Button label="CONFIRM" onPress={() => this.save()} />
+          <Button
+            label="CONFIRM"
+            // type="contained"
+            onPress={() => this.save()}
+          />
         </InputContainer>
       </View>
     );

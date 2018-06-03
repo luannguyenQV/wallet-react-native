@@ -1,11 +1,6 @@
 // import lib for making component
 import React, { Component } from 'react';
-import {
-  ScrollView,
-  KeyboardAvoidingView,
-  FlatList,
-  RefreshControl,
-} from 'react-native';
+import { FlatList, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
 import {
   fetchData,
@@ -14,20 +9,22 @@ import {
   updateItem,
   deleteItem,
   primaryItem,
+  verifyItem,
   showModal,
   hideModal,
 } from './../redux/actions';
 import { standardizeString } from './../util/general';
 
-import { Card, PopUpGeneral, EmptyListMessage } from './common';
+import { Card, CardContainer, PopUpGeneral, EmptyListMessage } from './common';
 
 // make component
 class CardList extends Component {
   componentDidMount() {
-    this.props.fetchData(this.props.type);
-    // if (this.props.onRefresh) {
-    //   this.props.onRefresh();
-    // }
+    if (this.props.onRefresh) {
+      this.props.onRefresh();
+    } else {
+      this.props.fetchData(this.props.type);
+    }
   }
 
   renderItem = (item, index) => {
@@ -44,6 +41,7 @@ class CardList extends Component {
       titleStyle,
       onPressTitle,
       textTitleRight,
+      identifier,
       iconTitleRight,
       onPressTitleRight,
       onPressContent,
@@ -53,21 +51,26 @@ class CardList extends Component {
       textActionTwo,
       textFunctionActionTwo,
       onPressActionTwo,
-      deleteItem,
-      deletable,
       renderContent,
       renderDetail,
       showModal,
       editItem,
+      canEdit,
+      canVerify,
+      verifyItem,
+      canPrimary,
       primaryItem,
+      canDelete,
+      deleteItem,
+      profile,
+      onPressFooter,
+      iconFooter,
     } = this.props;
     return (
       <Card
         headerComponent={headerComponent}
         onPressHeader={onPressHeader}
-        textTitleLeft={
-          textTitleLeft ? textTitleLeft(item) : (index + 1).toString()
-        }
+        textTitleLeft={textTitleLeft ? textTitleLeft(item) : ''}
         iconTitleLeft={iconTitleLeft}
         itemActive={itemActive ? itemActive(item) : false}
         onPressTitleLeft={() =>
@@ -77,35 +80,56 @@ class CardList extends Component {
         subtitle={subtitle ? subtitle(item) : ''}
         titleStyle={titleStyle}
         onPressTitle={() =>
-          onPressTitle ? onPressTitle(item) : editItem(type, item)
+          onPressTitle
+            ? onPressTitle(item)
+            : canEdit ? editItem(type, item) : null
         }
-        textTitleRight={textTitleRight}
-        iconTitleRight={
-          iconTitleRight
-            ? iconTitleRight
-            : deletable
-              ? (itemActive ? !itemActive(item) : true) ? 'delete' : ''
-              : ''
+        onPressContent={() =>
+          onPressContent
+            ? onPressContent(item)
+            : canEdit ? editItem(type, item) : null
         }
-        onPressTitleRight={
-          onPressTitleRight
-            ? onPressTitleRight
-            : deletable
+        iconFooter={
+          iconFooter
+            ? iconFooter
+            : canDelete ? (!item.primary ? 'delete' : '') : ''
+        }
+        onPressFooter={
+          onPressFooter
+            ? onPressFooter
+            : canDelete
               ? (itemActive ? !itemActive(item) : true)
                 ? () => showModal(type, item, 'delete')
                 : null
               : null
         }
-        onPressContent={onPressContent ? onPressContent : null}
-        textActionOne={
-          textFunctionActionOne ? textFunctionActionOne(item) : textActionOne
-        }
-        onPressActionOne={onPressActionOne ? onPressActionOne(item) : null}
         textActionTwo={
-          textFunctionActionTwo ? textFunctionActionTwo(item) : textActionTwo
+          textActionTwo
+            ? textActionTwo
+            : canVerify ? (!item.verified ? 'VERIFY' : 'Verified') : ''
         }
-        onPressActionTwo={onPressActionTwo ? onPressActionTwo(item) : null}
+        disableActionTwo={canVerify ? (!item.verified ? false : true) : false}
+        onPressActionTwo={() =>
+          onPressActionTwo
+            ? onPressActionTwo(item)
+            : canVerify
+              ? verifyItem(type, item[identifier], profile.company)
+              : null
+        }
+        textActionOne={
+          textActionOne
+            ? textActionOne
+            : canPrimary ? (item.primary ? 'Primary' : 'MAKE PRIMARY') : ''
+        }
+        // disableActionOne={canPrimary ? (!item.primary ? false : true) : false}
+        onPressActionOne={() =>
+          onPressActionOne
+            ? onPressActionOne(item)
+            : canPrimary ? primaryItem(type, item) : null
+        }
+        // backgroundColor={canPrimary ? (item.primary ? 'focus' : '') : ''}
         // loading={loading}
+        // swipeableContent={<Text>Pull to activate</Text>}
       >
         {renderContent ? renderContent(item) : null}
       </Card>
@@ -120,125 +144,115 @@ class CardList extends Component {
     return;
   }
 
+  renderModal() {
+    const {
+      modalVisible,
+      modalType,
+      hideModal,
+      loading,
+      type,
+      tempItem,
+      identifier,
+      updateError,
+      updateItem,
+      deleteItem,
+    } = this.props;
+
+    let contentText = '';
+    let textActionOne = '';
+    let onPressActionOne = null;
+    let textActionTwo = 'CANCEL';
+    let onPressActionTwo = hideModal;
+    if (identifier && tempItem) {
+      switch (modalType) {
+        case 'delete':
+          contentText = 'Delete ' + tempItem[identifier] + '?';
+          textActionOne = 'DELETE';
+          onPressActionOne = () => deleteItem(type, tempItem);
+          break;
+        case 'primary':
+          contentText = 'Make ' + tempItem[identifier] + ' primary?';
+          textActionOne = 'MAKE PRIMARY';
+          onPressActionOne = () => updateItem(type, tempItem);
+          break;
+        case 'verify':
+          contentText =
+            'Verification email has been sent to  ' + tempItem[identifier];
+          textActionTwo = 'CLOSE';
+          break;
+      }
+    }
+
+    return (
+      <PopUpGeneral
+        visible={modalVisible}
+        contentText={standardizeString(contentText)}
+        textActionOne={textActionOne}
+        onPressActionOne={onPressActionOne}
+        onDismiss={hideModal}
+        textActionTwo={textActionTwo}
+        onPressActionTwo={onPressActionTwo}
+        loading={loading}
+        errorText={updateError}
+      />
+    );
+  }
+
   render() {
     const {
       loading,
       loadingData,
-      editing,
       type,
-      identifier,
-      onRefresh,
       data,
       keyExtractor,
       renderDetail,
-      titleStyle,
-      titleDetail,
-      iconTitleRightDetail,
-      onPressTitleRightDetail,
-      textActionOneDetail,
-      onPressActionOneDetail,
       navigation,
       tempItem,
       showDetail,
-      iconHeaderRight,
-      onPressHeaderRight,
-      hideModal,
-      showModal,
-      deleteItem,
-      modalVisible,
       updateError,
-      loadingModal,
       fetchData,
       wallet,
       updateItem,
-      modalType,
-      primaryItem,
     } = this.props;
     return (
-      <KeyboardAvoidingView
-        style={styles.containerStyle}
-        behavior={'padding'}
-        keyboardVerticalOffset={15}
-        enabled>
-        <ScrollView
-          style={{ flex: 1 }}
-          keyboardDismissMode={'interactive'}
-          keyboardShouldPersistTaps="always">
-          {showDetail ? (
-            <Card
-              title={
-                wallet
-                  ? null
-                  : standardizeString((editing ? 'Edit ' : 'Add ') + type)
-              }
-              titleStyle={titleStyle}
-              iconTitleRight={wallet ? '' : 'close'}
-              onPressTitleRight={() => fetchData(type)}
-              textActionOne={wallet ? '' : 'Save'}
-              onPressActionOne={() => updateItem(type, tempItem)}
-              loading={loading}
-              errorText={updateError}
-              // iconHeaderRight={iconHeaderRight}
-              // onPressHeaderRight={onPressHeaderRight}
-            >
-              {renderDetail(
-                tempItem ? tempItem : null,
-                navigation ? navigation : null,
-              )}
-            </Card>
-          ) : (
-            <FlatList
-              refreshControl={
-                <RefreshControl
-                  refreshing={loadingData}
-                  onRefresh={() => fetchData(this.props.type)}
-                />
-              }
-              data={data}
-              renderItem={({ item, index }) => this.renderItem(item, index)}
-              keyExtractor={
-                keyExtractor ? keyExtractor : item => (item.id ? item.id : null)
-              }
-              ListEmptyComponent={this.renderEmptyList()}
-            />
-          )}
-        </ScrollView>
-        <PopUpGeneral
-          visible={modalVisible}
-          contentText={standardizeString(
-            (modalType === 'delete'
-              ? 'Delete '
-              : 'Make ' + tempItem[identifier] + ' primary ') +
-              type +
-              '?',
-          )}
-          textActionOne={modalType === 'delete' ? 'Delete' : 'Make primary'}
-          onPressActionOne={() =>
-            modalType === 'delete'
-              ? deleteItem(type, tempItem)
-              : updateItem(type, tempItem)
-          }
-          onDismiss={hideModal}
-          textActionTwo="Cancel"
-          onPressActionTwo={hideModal}
-          loading={loading}
-          errorText={updateError}
-        />
-      </KeyboardAvoidingView>
+      <CardContainer>
+        {showDetail ? (
+          <Card
+            textActionOne={wallet ? '' : 'SAVE'}
+            onPressActionOne={() => updateItem(type, tempItem)}
+            textActionTwo={wallet ? '' : 'CANCEL'}
+            onPressActionTwo={() => fetchData(type)}
+            loading={loading}>
+            {renderDetail(
+              tempItem ? tempItem : null,
+              navigation ? navigation : null,
+            )}
+          </Card>
+        ) : (
+          <FlatList
+            refreshControl={
+              <RefreshControl
+                refreshing={loadingData}
+                onRefresh={() => fetchData(this.props.type)}
+              />
+            }
+            data={data}
+            renderItem={({ item, index }) => this.renderItem(item, index)}
+            keyExtractor={
+              keyExtractor ? keyExtractor : item => (item.id ? item.id : null)
+            }
+            ListEmptyComponent={this.renderEmptyList()}
+          />
+        )}
+        {this.renderModal()}
+      </CardContainer>
     );
   }
 }
 
-const styles = {
-  containerStyle: {
-    flex: 1,
-    padding: 8,
-    backgroundColor: '#f0f0f0',
-  },
-};
-
 const mapStateToProps = ({ user }) => {
   const {
+    profile,
     showDetail,
     updateError,
     modalVisible,
@@ -248,6 +262,7 @@ const mapStateToProps = ({ user }) => {
     modalType,
   } = user;
   return {
+    profile,
     showDetail,
     updateError,
     modalVisible,
@@ -265,6 +280,7 @@ export default connect(mapStateToProps, {
   updateItem,
   deleteItem,
   primaryItem,
+  verifyItem,
   showModal,
   hideModal,
 })(CardList);

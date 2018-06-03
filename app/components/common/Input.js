@@ -54,7 +54,7 @@ class Input extends Component {
       type,
       countryCode,
       changeCountryCode,
-      requiredError,
+      inputError,
       autoCorrect,
     } = this.props;
 
@@ -135,7 +135,7 @@ class Input extends Component {
               style={[
                 iconStyleVisibility,
                 {
-                  color: requiredError
+                  color: inputError
                     ? Colors.error
                     : focused ? Colors.focus : 'rgba(0,0,0,0.6)',
                 },
@@ -152,7 +152,7 @@ class Input extends Component {
   }
 
   render() {
-    const { label, value, required, requiredError, helperText } = this.props;
+    const { label, value, required, inputError, helperText } = this.props;
 
     const {
       viewStyleContainer,
@@ -171,10 +171,10 @@ class Input extends Component {
           style={[
             viewStyleContent,
             {
-              borderColor: requiredError
+              borderColor: inputError
                 ? Colors.error
                 : focused ? Colors.focus : Colors.lightGray,
-              borderBottomWidth: requiredError || focused ? 2 : 1,
+              borderBottomWidth: inputError || focused ? 2 : 1,
             },
           ]}>
           {focused || value ? (
@@ -183,7 +183,7 @@ class Input extends Component {
                 style={[
                   textStyleLabel,
                   {
-                    color: requiredError
+                    color: inputError
                       ? Colors.error
                       : focused ? Colors.focus : 'rgba(0,0,0,0.6)',
                   },
@@ -196,15 +196,17 @@ class Input extends Component {
           {this.renderInput()}
         </View>
 
-        <View style={viewStyleHelper}>
-          <Text
-            style={[
-              textStyleFooter,
-              { color: requiredError ? Colors.error : Colors.onPrimary },
-            ]}>
-            {requiredError ? 'Error: ' + requiredError : helperText}
-          </Text>
-        </View>
+        {inputError || helperText ? (
+          <View style={viewStyleHelper}>
+            <Text
+              style={[
+                textStyleFooter,
+                { color: inputError ? Colors.error : Colors.onPrimary },
+              ]}>
+              {inputError ? 'Error: ' + inputError : helperText}
+            </Text>
+          </View>
+        ) : null}
       </View>
     );
   }
@@ -212,10 +214,11 @@ class Input extends Component {
 
 const styles = {
   viewStyleContainer: {
-    minHeight: 88,
-    borderTopRightRadius: 3,
-    borderTopLeftRadius: 4,
+    minHeight: 60,
+    borderTopRightRadius: 5,
+    borderTopLeftRadius: 5,
     overflow: 'hidden',
+    margin: 8,
     // borderRadius: 3,
     // borderWidth: 2,
     // borderColor: Colors.primary,
@@ -228,7 +231,7 @@ const styles = {
     justifyContent: 'center',
   },
   viewStyleLabel: {
-    // height: 20,
+    height: 20,
   },
   viewStyleCountry: {
     flexDirection: 'row',
@@ -238,7 +241,7 @@ const styles = {
     flexDirection: 'row',
   },
   viewStyleHelper: {
-    height: 28,
+    minHeight: 28,
   },
   textStyleLabel: {
     fontSize: 12,

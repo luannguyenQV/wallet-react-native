@@ -31,8 +31,17 @@ class WalletsScreen extends Component {
   };
 
   componentDidMount() {
-    this.props.fetchAccounts();
-    this.props.hideWallet();
+    let wallet = null;
+    console.log(this.props.navigation.state.params);
+    if (this.props.navigation.state.params) {
+      wallet = this.props.navigation.state.params.wallet;
+      this.props.navigation.state.params.wallet = null;
+    }
+    if (wallet) {
+      this.props.viewWallet(wallet);
+    } else {
+      this.props.hideWallet();
+    }
   }
 
   showModal = item => {
@@ -62,7 +71,6 @@ class WalletsScreen extends Component {
   // };
 
   send = item => {
-    console.log(item);
     this.props.resetSend();
     this.props.setSendWallet(item);
     this.props.navigation.navigate('Send');
@@ -137,31 +145,33 @@ class WalletsScreen extends Component {
           headerRightOnPress={showWallet ? () => hideWallet() : () => {}}
         />
         <CardList
+          type="wallet"
           navigation={this.props.navigation}
           data={wallets}
           tempItem={tempWallet}
+          loadingData={loading_accounts}
+          // identifier="reference"
+          onRefresh={fetchAccounts}
           // showDetail={showWallet}
           renderContent={this.renderContent}
           renderDetail={(item, navigation) =>
             this.renderDetail(item, navigation)
           }
-          saveItem={this.saveCryptoAddress}
           itemActive={item => (item ? item.currency.active : false)}
           textTitleLeft={item => (item ? item.currency.currency.code : '')}
           onPressTitleLeft={item => this.showModal(item)}
           title={item => (item ? item.currency.currency.description : '')}
           subtitle={item => (item ? standardizeString(item.account_name) : '')}
-          onPressTitle={tempWallet => () => viewWallet(tempWallet)}
-          loading={loading_accounts}
-          onRefresh={fetchAccounts}
+          onPressTitle={item => viewWallet(item)}
+          onPressContent={item => viewWallet(item)}
           emptyListMessage="No wallets added yet"
           titleStyle="secondary"
           keyExtractor={item => item.index + item.currency.currency.code}
-          textActionOne="Send"
-          onPressActionOne={item => () => this.send(item)}
-          textActionTwo="Receive"
-          onPressActionTwo={() => () =>
-            this.props.navigation.navigate('Receive')}
+          textActionOne="SEND"
+          // onPressActionOne={() => console.log('hello')}
+          onPressActionOne={item => this.send(item)}
+          textActionTwo="RECEIVE"
+          onPressActionTwo={() => this.props.navigation.navigate('Receive')}
         />
         {/* <PopUpGeneral
           visible={this.state.showModal}

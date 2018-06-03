@@ -58,7 +58,7 @@ class GetVerifiedOption extends Component {
 const styles = {
   options: {
     paddingVertical: 4,
-    paddingHorizontal: 16,
+    paddingRight: 8,
     // height: 70,
   },
   optionsElement: {

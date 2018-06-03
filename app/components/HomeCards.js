@@ -81,7 +81,7 @@ class HomeCards extends Component {
             require('./../../assets/icons/card1.png'),
           )}
           // image={require()}
-          textActionOne="Cool"
+          // textActionOne="Cool"
           style="secondary">
           <Text style={textStyleContent}>
             Let's get you started with setting up your wallet!
@@ -94,7 +94,7 @@ class HomeCards extends Component {
             require('./../../assets/icons/card2.png'),
           )}
           // image={require()}
-          textActionOne="Get verified"
+          textActionOne="GET VERIFIED"
           onPressActionOne={() => this.props.navigation.navigate('GetVerified')}
           style="secondary">
           <Text style={textStyleContent}>Please verify your account</Text>
@@ -118,7 +118,7 @@ class HomeCards extends Component {
 const styles = {
   containerStyle: {
     flex: 1,
-    padding: 8,
+    // padding: 8,
   },
   imageStylePhoto: {
     width: SCREEN_WIDTH - 16,

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
+import Colors from './../../config/colors';
 
 class SettingsContainer extends Component {
   render() {
@@ -32,15 +33,21 @@ const styles = {
   },
   viewStyleLabel: {
     flexDirection: 'row',
+    borderBottomWidth: 2,
+    marginBottom: 4,
+    paddingBottom: 4,
+    borderColor: Colors.lightGray,
   },
   viewStyleChildren: {
     flexDirection: 'column',
   },
   textStyleLabel: {
-    fontSize: 14,
+    fontSize: 22,
     paddingTop: 8,
     color: 'black',
+    paddingLeft: 8,
     opacity: 0.86,
+    // color: Colors.lightGray,
   },
 };
 
