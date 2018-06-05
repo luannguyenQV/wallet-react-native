@@ -116,10 +116,10 @@ const PopUpGeneral = props => {
                 </View>
               ) : null}
               <View style={viewStyleContent}>
-                {children}
                 {contentText ? (
                   <Text style={textStyleContent}>{contentText}</Text>
                 ) : null}
+                {children}
                 {errorText ? (
                   <Text style={textStyleError}>{errorText}</Text>
                 ) : null}

@@ -6,6 +6,7 @@ import {
   REGISTER_USER_ASYNC,
   UPDATE_AUTH_FORM_STATE,
   APP_LOAD_FINISH,
+  CHANGE_PASSWORD_ASYNC,
 } from './../types';
 
 import AuthService from './../../services/authService';
@@ -78,7 +79,7 @@ function* registerUser(action) {
     }
   } catch (error) {
     console.log(responseJson);
-    yield put({ type: REGISTER_USER_ASYNC.FAIL, error });
+    yield put({ type: REGISTER_USER_ASYNC.error, error });
   }
 }
 
@@ -93,8 +94,11 @@ function* appLoad() {
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'bank_account' }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'address' }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'document' }),
+      put({ type: FETCH_DATA_ASYNC.pending, payload: 'company' }),
+      put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_bank_account' }),
+      put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_currency' }),
     ]);
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 11; i++) {
       yield take([FETCH_ACCOUNTS_ASYNC.success, FETCH_DATA_ASYNC.success]);
     }
     yield put({ type: APP_LOAD_FINISH });
@@ -104,9 +108,30 @@ function* appLoad() {
   }
 }
 
+function* changePassword(action) {
+  try {
+    let responseJson = yield call(AuthService.changePassword, action.payload);
+    if (responseJson.status === 'success') {
+      yield put({
+        type: CHANGE_PASSWORD_ASYNC.success,
+      });
+    } else {
+      console.log(responseJson);
+      yield put({
+        type: CHANGE_PASSWORD_ASYNC.error,
+        payload: responseJson.message,
+      });
+    }
+  } catch (error) {
+    console.log(responseJson);
+    yield put({ type: CHANGE_PASSWORD_ASYNC.error, error });
+  }
+}
+
 export const authSagas = all([
   takeEvery(LOGIN_USER_ASYNC.success, appLoad),
   takeEvery(LOGIN_USER_ASYNC.pending, loginUser),
   takeEvery(REGISTER_USER_ASYNC.success, appLoad),
   takeEvery(REGISTER_USER_ASYNC.pending, registerUser),
+  takeEvery(CHANGE_PASSWORD_ASYNC.pending, changePassword),
 ]);

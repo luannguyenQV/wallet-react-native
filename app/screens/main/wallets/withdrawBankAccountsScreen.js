@@ -18,6 +18,10 @@ class WithdrawBankAccountsScreen extends Component {
     title: 'Select bank account',
   };
 
+  componentDidMount() {
+    this.props.setWithdrawType('bank_account');
+  }
+
   constructor(props) {
     super(props);
     this.state = {

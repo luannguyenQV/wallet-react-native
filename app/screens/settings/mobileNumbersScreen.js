@@ -19,54 +19,6 @@ class MobileNumbersScreen extends Component {
     title: 'Mobile numbers',
   };
 
-  // verify = async number => {
-  //   this.setState({
-  //     loading: true,
-  //     loadingMessage: 'Sending verification code...',
-  //   });
-
-  //   const body = {
-  //     mobile: number,
-  //     company: this.props.profile.company,
-  //   };
-
-  //   let responseJson = await SettingsService.resendMobileVerification(body);
-
-  //   if (responseJson.status === 'success') {
-  //     this.setState({ loading: false });
-  //     this.props.navigation.navigate('VerifyMobileNumber', {
-  //       routeName: this.state.routeName,
-  //     });
-  //   } else {
-  //     Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
-  //   }
-  // };
-
-  // if (item.number) {
-  //   title = item.number;
-  // }
-  // if (item.email) {
-  //   title = item.email;
-  // }
-
-  // if (item.primary) {
-  //   itemCodeActive = true;
-  // } else {
-  //   iconHeaderRight = 'trash';
-  //   onPressHeaderRight = deleteItem;
-  // }
-  // if (item.verified) {
-  //   subtitle = 'Verified';
-  //   if (item.primary) {
-  //     textActionOne = 'Make primary';
-  //     onPressActionOne = makePrimaryItem;
-  //     onPressHeaderLeft = makePrimaryItem;
-  //   }
-  // } else {
-  //   textActionOne = 'Verify';
-  //   onPressActionOne = verifyItem;
-  // }
-
   renderContent = item => {
     const { viewStyleContent } = styles;
     const { number } = item;
@@ -128,7 +80,7 @@ class MobileNumbersScreen extends Component {
           renderDetail={this.renderDetail}
           emptyListMessage="No mobile numbers added yet"
           canDelete
-          // canVerify
+          canVerify
           canPrimary
         />
       </View>

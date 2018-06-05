@@ -12,10 +12,17 @@ import {
   verifyItem,
   showModal,
   hideModal,
+  setActiveCurrency,
 } from './../redux/actions';
 import { standardizeString } from './../util/general';
 
-import { Card, CardContainer, PopUpGeneral, EmptyListMessage } from './common';
+import {
+  Card,
+  CardContainer,
+  PopUpGeneral,
+  EmptyListMessage,
+  Input,
+} from './common';
 
 // make component
 class CardList extends Component {
@@ -61,7 +68,7 @@ class CardList extends Component {
       canPrimary,
       primaryItem,
       canDelete,
-      deleteItem,
+      canActive,
       profile,
       onPressFooter,
       iconFooter,
@@ -74,7 +81,9 @@ class CardList extends Component {
         iconTitleLeft={iconTitleLeft}
         itemActive={itemActive ? itemActive(item) : false}
         onPressTitleLeft={() =>
-          onPressTitleLeft ? onPressTitleLeft(item) : primaryItem(type, item)
+          onPressTitleLeft
+            ? onPressTitleLeft(item)
+            : canActive ? showModal(type, item, 'active') : null
         }
         title={title ? title(item) : ''}
         subtitle={subtitle ? subtitle(item) : ''}
@@ -156,6 +165,9 @@ class CardList extends Component {
       updateError,
       updateItem,
       deleteItem,
+      profile,
+      verifyItem,
+      otp,
     } = this.props;
 
     let contentText = '';
@@ -163,6 +175,7 @@ class CardList extends Component {
     let onPressActionOne = null;
     let textActionTwo = 'CANCEL';
     let onPressActionTwo = hideModal;
+    let content = null;
     if (identifier && tempItem) {
       switch (modalType) {
         case 'delete':
@@ -175,10 +188,40 @@ class CardList extends Component {
           textActionOne = 'MAKE PRIMARY';
           onPressActionOne = () => updateItem(type, tempItem);
           break;
+        case 'active':
+          contentText = 'Make ' + tempItem.currency.code + ' active wallet?';
+          textActionOne = 'MAKE ACTIVE';
+          onPressActionOne = () => setActiveCurrency(type, tempItem);
+          break;
         case 'verify':
-          contentText =
-            'Verification email has been sent to  ' + tempItem[identifier];
+          // textActionOne = 'RESEND';
+
+          onPressActionOne = () =>
+            verifyItem(type, tempItem[identifier], profile.company);
           textActionTwo = 'CLOSE';
+          if (type === 'email_address') {
+            contentText =
+              'Verification email has been sent to ' + tempItem[identifier];
+          } else if (type === 'mobile_number') {
+            contentText =
+              'Verification sms has been sent to ' + tempItem[identifier];
+            content = (
+              <Input
+                label="OTP"
+                placeholder="e.g. 1234"
+                autoCapitalize="none"
+                value={otp}
+                inputError={updateError}
+                onChangeText={input =>
+                  updateInputField('mobile_number', 'otp', input)
+                }
+              />
+            );
+            if (otp.length >= 4) {
+              verifyItem('mobile_number_otp', otp, '');
+            }
+          }
+
           break;
       }
     }
@@ -193,10 +236,21 @@ class CardList extends Component {
         textActionTwo={textActionTwo}
         onPressActionTwo={onPressActionTwo}
         loading={loading}
-        errorText={updateError}
-      />
+        errorText={updateError}>
+        {content}
+      </PopUpGeneral>
     );
   }
+
+  // orderData(data) {
+  //   let orderedData = data;
+  //   const primaryIndex = data.findIndex(item => item.primary === true);
+  //   const primaryItem = data[primaryIndex];
+  //   orderedData[primaryIndex] = data[0];
+  //   orderedData[0] = primaryItem;
+
+  //   return orderedData;
+  // }
 
   render() {
     const {
@@ -209,7 +263,6 @@ class CardList extends Component {
       navigation,
       tempItem,
       showDetail,
-      updateError,
       fetchData,
       wallet,
       updateItem,
@@ -223,17 +276,19 @@ class CardList extends Component {
             textActionTwo={wallet ? '' : 'CANCEL'}
             onPressActionTwo={() => fetchData(type)}
             loading={loading}>
-            {renderDetail(
-              tempItem ? tempItem : null,
-              navigation ? navigation : null,
-            )}
+            {renderDetail
+              ? renderDetail(
+                  tempItem ? tempItem : null,
+                  navigation ? navigation : null,
+                )
+              : null}
           </Card>
         ) : (
           <FlatList
             refreshControl={
               <RefreshControl
                 refreshing={loadingData}
-                onRefresh={() => fetchData(this.props.type)}
+                onRefresh={() => fetchData(type)}
               />
             }
             data={data}
@@ -260,6 +315,7 @@ const mapStateToProps = ({ user }) => {
     editing,
     wallet,
     modalType,
+    otp,
   } = user;
   return {
     profile,
@@ -270,6 +326,7 @@ const mapStateToProps = ({ user }) => {
     editing,
     wallet,
     modalType,
+    otp,
   };
 };
 
@@ -283,4 +340,5 @@ export default connect(mapStateToProps, {
   verifyItem,
   showModal,
   hideModal,
+  setActiveCurrency,
 })(CardList);

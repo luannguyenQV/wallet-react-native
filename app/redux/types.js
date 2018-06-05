@@ -17,16 +17,20 @@ export const LOGOUT_USER = 'logout_user';
 export const APP_LOAD_START = 'APP_LOAD_START';
 export const APP_LOAD_FINISH = 'APP_LOAD_FINISH';
 export const LOADING = 'loading';
+export const CHANGE_PASSWORD_ASYNC = createAsyncTypes('change_password');
 
 // ACCOUNTS
 export const FETCH_ACCOUNTS_ASYNC = createAsyncTypes('fetch_accounts');
 export const UPDATE_CURRENT_INDEX = 'update_current_index';
-export const SET_ACTIVE_CURRENCY = 'set_active_currency';
-export const SET_ACTIVE_CURRENCY_SUCCESS = 'set_active_currency_success';
-export const SET_ACTIVE_CURRENCY_FAIL = 'set_active_currency_fail';
+export const SET_ACTIVE_CURRENCY_ASYNC = createAsyncTypes(
+  'set_active_currency',
+);
 
-export const SEND_FIELD_UPDATE = 'send_field_update';
-export const SEND_FIELD_ERROR = 'send_field_error';
+export const SET_PIN = 'set_pin';
+
+export const INPUT_FIELD_UPDATE = 'input_field_update';
+export const INPUT_FIELD_ERROR = 'input_field_error';
+export const SEND_ASYNC = createAsyncTypes('send');
 export const SET_SEND_WALLET = 'set_send_wallet';
 export const SET_SEND_AMOUNT = 'set_send_amount';
 export const SET_SEND_RECIPIENT = 'set_send_recipient';
@@ -34,13 +38,18 @@ export const SET_SEND_NOTE = 'set_send_note';
 export const SET_SEND_STATE = 'set_send_state';
 export const RESET_SEND = 'reset_send';
 
-// export const SEND_ASYNC = createAsyncTypes('send');
-export const SEND = 'send';
-export const SEND_SUCCESS = 'send_success';
-export const SEND_FAIL = 'send_fail';
-
 export const VIEW_WALLET = 'view_wallet';
 export const HIDE_WALLET = 'hide_wallet';
+
+export const WITHDRAW_FIELD_UPDATE = 'withdraw_field_update';
+export const WITHDRAW_FIELD_ERROR = 'withdraw_field_error';
+export const WITHDRAW_ASYNC = createAsyncTypes('withdraw');
+export const SET_WITHDRAW_WALLET = 'set_withdraw_wallet';
+export const SET_WITHDRAW_AMOUNT = 'set_withdraw_amount';
+export const SET_WITHDRAW_RECIPIENT = 'set_withdraw_recipient';
+export const SET_WITHDRAW_NOTE = 'set_withdraw_note';
+export const SET_WITHDRAW_STATE = 'set_withdraw_state';
+export const RESET_WITHDRAW = 'reset_withdraw';
 
 // USER
 export const FETCH_DATA_ASYNC = createAsyncTypes('fetch_data');

@@ -3,23 +3,93 @@ import { View, Alert, Text, StyleSheet } from 'react-native';
 import Colors from './../../../config/colors';
 import Header from './../../../components/header';
 
+import {
+  InputContainer,
+  Input,
+  Button,
+  PopUpGeneral,
+} from './../../../components/common';
+
 class PinScreen extends Component {
   static navigationOptions = {
-    title: 'Pin',
+    title: 'Update pin',
   };
 
-  constructor() {
-    super();
+  state = {
+    old_pin: '',
+    new_pin1: '',
+    new_pin2: '',
+    modalVisible: false,
+    modalText: '',
+    modalAction: null,
+  };
+
+  save() {
+    if (responseJson.status === 'success') {
+      modalText = 'Pin updated';
+      modalAction = () => this.props.navigation.goBack();
+    } else {
+      modalText = 'Error: ' + responseJson.message;
+      modalAction = () => this.setState({ modalVisible: false });
+    }
+    this.setState({ modalText, modalAction });
   }
 
   render() {
+    const {
+      modalVisible,
+      modalAction,
+      modalText,
+      old_pin,
+      new_pin1,
+      new_pin2,
+    } = this.state;
     return (
       <View style={styles.container}>
         <Header navigation={this.props.navigation} back title="Pin" />
-        <View style={styles.comment}>
-          <Text style={styles.commentText}>Coming soon...</Text>
-        </View>
-        <View style={[styles.pinInfo, { flex: 6 }]} />
+        <InputContainer>
+          <Input
+            type="pin"
+            label="Old pin"
+            placeholder="e.g. 1234"
+            autoCapitalize="none"
+            value={old_pin}
+            underlineColorAndroid="white"
+            onChangeText={old_pin => this.setState({ old_pin })}
+          />
+          <Input
+            type="pin"
+            label="New pin"
+            autoCapitalize="none"
+            placeholder="e.g. 1234"
+            value={new_pin1}
+            onChangeText={new_pin1 => this.setState({ new_pin1 })}
+            underlineColorAndroid="white"
+          />
+
+          <Input
+            type="pin"
+            label="Confirm new pin"
+            autoCapitalize="none"
+            placeholder="e.g. 1234"
+            value={new_pin2}
+            underlineColorAndroid="white"
+            onChangeText={new_pin2 => this.setState({ new_pin2 })}
+          />
+
+          <Button
+            label="CONFIRM"
+            // type="contained"
+            onPress={() => this.save()}
+          />
+          <PopUpGeneral
+            visible={modalVisible}
+            contentText={modalText}
+            textActionOne={'Close'}
+            onPressActionOne={modalAction}
+            onDismiss={modalAction}
+          />
+        </InputContainer>
       </View>
     );
   }

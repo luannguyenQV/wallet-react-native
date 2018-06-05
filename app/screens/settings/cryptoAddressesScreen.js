@@ -17,7 +17,7 @@ import CardList from './../../components/CardList';
 
 class CryptoAddressesScreen extends Component {
   static navigationOptions = {
-    title: 'Crypto addresses',
+    title: 'Crypto accounts',
   };
 
   renderContent = item => {
@@ -62,7 +62,7 @@ class CryptoAddressesScreen extends Component {
         <Header
           navigation={this.props.navigation}
           back
-          title="Crypto addresses"
+          title="Crypto accounts"
           headerRightIcon={showDetail ? 'done' : 'add'}
           headerRightOnPress={
             showDetail

@@ -8,6 +8,8 @@ import {
   LOGOUT_USER,
   LOADING,
   APP_LOAD_START,
+  HIDE_MODAL,
+  CHANGE_PASSWORD_ASYNC,
 } from './../types';
 
 import clientConfig from './../../config/client';
@@ -244,6 +246,46 @@ export const termsChanged = ({ prop, value }) => {
   return {
     type: TERMS_CHANGED,
     payload: { prop, value: !value },
+  };
+};
+
+export const changePassword = (old_password, new_password) => {
+  console.log(old_password, new_password);
+  if (!old_password || old_password.length < 8) {
+    error = 'Password must be at least 8 characters in length';
+    return {
+      type: AUTH_FIELD_ERROR,
+      payload: {
+        prop: 'old_password',
+        error,
+      },
+    };
+  }
+
+  // if (!new_password || new_password.length < 8) {
+  //   error = 'Password must be at least 8 characters in length';
+  //   return {
+  //     type: AUTH_FIELD_ERROR,
+  //     payload: {
+  //       prop: 'new_password',
+  //       error,
+  //     },
+  //   };
+  // }
+
+  // return {
+  //   type: CHANGE_PASSWORD_ASYNC,
+  //   payload: {
+  //     old_password,
+  //     new_password1: new_password,
+  //     new_password2: new_password,
+  //   },
+  // };
+};
+
+hideModal = () => {
+  return {
+    type: HIDE_MODAL,
   };
 };
 

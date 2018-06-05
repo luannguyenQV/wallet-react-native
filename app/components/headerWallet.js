@@ -6,11 +6,13 @@ import {
   setSendWallet,
   resetSend,
   viewWallet,
+  hideWallet,
 } from './../redux/actions';
 
 import Colors from './../config/colors';
 import WalletAction from './WalletAction';
 import HeaderCurrency from './HeaderCurrency';
+import { HeaderButton } from './common';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -31,10 +33,15 @@ class HeaderWallet extends Component {
   });
 
   renderWallets() {
-    const { wallets, showClose } = this.props;
+    const { wallets, showClose, hideWallet } = this.props;
     if (wallets.length === 1) {
       return (
-        <HeaderCurrency detail wallet={wallets[0]} showClose={showClose} />
+        <HeaderCurrency
+          detail
+          wallet={wallets[0]}
+          showClose={showClose}
+          closeWallet={hideWallet}
+        />
       );
     } else {
       return (
@@ -89,6 +96,7 @@ class HeaderWallet extends Component {
   }
 
   onButtonPress(type) {
+    console.log(this.props.activeWalletIndex);
     switch (type) {
       case 'send': {
         this.props.resetSend();
@@ -103,6 +111,9 @@ class HeaderWallet extends Component {
         break;
       }
       case 'withdraw': {
+        this.props.setWithdrawWallet(
+          this.props.wallets[this.props.activeWalletIndex],
+        );
         this.props.navigation.navigate('Withdraw');
         break;
       }
@@ -165,4 +176,5 @@ export default connect(mapStateToProps, {
   setSendWallet,
   resetSend,
   viewWallet,
+  hideWallet,
 })(HeaderWallet);

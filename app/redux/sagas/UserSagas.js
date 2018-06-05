@@ -46,12 +46,39 @@ function* fetchData(action) {
         // responseJson = yield call(rehive.getDocuments);
         responseJson = yield call(UserInfoService.getAllDocuments);
         break;
+      case 'company':
+        // responseJson = yield call(rehive.getCompany);
+        responseJson = yield call(UserInfoService.getCompany);
+        break;
+      case 'company_bank_account':
+        // responseJson = yield call(rehive.getDepositInfo);
+        responseJson = yield call(UserInfoService.getDepositInfo);
+        break;
+      case 'company_currency':
+        // responseJson = yield call(rehive.getAllCompanyCurrencies);
+        responseJson = yield call(UserInfoService.getAllCompanyCurrencies);
+        break;
     }
-    // console.log(responseJson);
+
     if (responseJson && responseJson.status === 'success') {
+      let data = responseJson.data;
+      if (
+        data.length > 0 &&
+        action.payload === ('email_address' || 'mobile_number')
+      ) {
+        const primaryIndex = data.findIndex(item => item.primary === true);
+        const primaryItem = data[primaryIndex];
+        data[primaryIndex] = data[0];
+        data[0] = primaryItem;
+      }
+      if (data.results) {
+        //action.payload === ('company_bank_account' || 'company_currency')) {
+        console.log('hi');
+        data = data.results;
+      }
       yield put({
         type: FETCH_DATA_ASYNC.success,
-        payload: { data: responseJson.data, prop: action.payload },
+        payload: { data, prop: action.payload },
       });
     } else {
       // console.log(responseJson);
@@ -221,6 +248,12 @@ function* verifyItem(action) {
         );
         // message =
         break;
+      case 'mobile_number_otp':
+        data = {
+          otp: value,
+        };
+        responseJson = yield call(SettingsService.verifyMobile, data);
+        break;
       case 'email_address':
         data = {
           email: value,
@@ -233,7 +266,7 @@ function* verifyItem(action) {
         );
         break;
     }
-    console.log(responseJson);
+    // console.log(responseJson);
     if (responseJson && responseJson.status === 'success') {
       yield all([
         put({ type: VERIFY_ASYNC.success }),

@@ -9,6 +9,8 @@ import {
   LOADING,
   APP_LOAD_START,
   APP_LOAD_FINISH,
+  CHANGE_PASSWORD_ASYNC,
+  HIDE_MODAL,
 } from './../types';
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 
@@ -32,10 +34,12 @@ const INITIAL_STATE = {
   loading: false,
   hasFetched: false,
   appLoading: true,
+  old_password: '',
+  new_password: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
-  // console.log('action', action);
+  console.log('action', action);
   switch (action.type) {
     case PERSIST_REHYDRATE:
       return action.payload.auth || [];
@@ -50,6 +54,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         inputError: action.payload.error,
+        [action.payload.prop + 'Error']: action.payload.error,
       };
     case TERMS_CHANGED:
       return {
@@ -95,6 +100,10 @@ export default (state = INITIAL_STATE, action) => {
         inputState: '',
         token: action.payload,
         loading: false,
+        old_passwordError: '',
+        new_passwordError: '',
+        old_password: '',
+        new_password: '',
       };
     case LOGIN_USER_ASYNC.error:
       return {
@@ -123,6 +132,41 @@ export default (state = INITIAL_STATE, action) => {
         token: null,
         inputError: action.payload,
         loading: false,
+      };
+
+    case CHANGE_PASSWORD_ASYNC.pending:
+      return {
+        ...state,
+        loading: true,
+        inputError: '',
+        modalVisible: false,
+      };
+    case CHANGE_PASSWORD_ASYNC.success:
+      return {
+        ...state,
+        old_password: '',
+        new_password1: '',
+        new_password2: '',
+        modalVisible: true,
+        loading: false,
+      };
+    case CHANGE_PASSWORD_ASYNC.error:
+      return {
+        ...state,
+        inputError: action.payload,
+        // [action.payload.prop + 'Error']: action.payload.error,
+        old_password: '',
+        new_password1: '',
+        new_password2: '',
+        loading: false,
+        modalVisible: true,
+      };
+
+    case HIDE_MODAL:
+      return {
+        ...state,
+        inputError: '',
+        modalVisible: false,
       };
 
     case APP_LOAD_START:

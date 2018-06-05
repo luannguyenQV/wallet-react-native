@@ -3,187 +3,164 @@ import {
   View,
   Text,
   StyleSheet,
-  AsyncStorage,
   Alert,
   TouchableHighlight,
   Clipboard,
 } from 'react-native';
+import { connect } from 'react-redux';
+import { fetchData } from './../../../redux/actions';
+
 import UserInfoService from './../../../services/userInfoService';
 import Colors from './../../../config/colors';
 import Header from './../../../components/header';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import { Output } from './../../../components/common';
+import CardList from './../../../components/CardList';
 
 class DepositScreen extends Component {
   static navigationOptions = {
     title: 'Deposit',
   };
 
-  constructor() {
-    super();
-
-    this.state = {
-      bank: {},
-      bankAccount: {},
-      currencyCode: '',
-    };
-  }
-
   componentDidMount() {
-    this.getBankInfo();
-    this.getCurrencyCode();
+    this.props.fetchData('company_bank_account');
   }
 
-  getBankInfo = async () => {
-    let responseJson = await UserInfoService.getDepositInfo();
-    if (responseJson.status === 'success') {
-      if (responseJson.data[0]) {
-        this.setState({
-          bank: responseJson.data[0],
-          bankAccount: responseJson.data[0].bank_account,
-        });
-      }
-    } else {
-      Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
-    }
+  renderContent = item => {
+    const { viewStyleContent } = styles;
+    const {
+      name,
+      type,
+      number,
+      bank_name,
+      bank_code,
+      branch_code,
+      swift,
+      iban,
+      bic,
+      currencies,
+    } = item;
+    return (
+      <View style={viewStyleContent}>
+        <Output label="Currencies" value={this.renderCurrencies(currencies)} />
+        {name ? <Output label="Name" value={name} /> : null}
+        {type ? <Output label="Type" value={type} /> : null}
+        {number ? <Output label="Number" value={number} /> : null}
+        {bank_name ? <Output label="Bank name" value={bank_name} /> : null}
+        {bank_code ? <Output label="Bank code" value={bank_code} /> : null}
+        {branch_code ? (
+          <Output label="Branch name" value={branch_code} />
+        ) : null}
+        {swift ? <Output label="Swift" value={swift} /> : null}
+        {iban ? <Output label="IBAN" value={iban} /> : null}
+        {bic ? <Output label="BIC" value={bic} /> : null}
+      </View>
+    );
   };
 
-  getCurrencyCode = async () => {
-    const currencyStr = await AsyncStorage.getItem('currency');
-    const currency = JSON.parse(currencyStr);
-    this.setState({
-      currencyCode: currency.code,
-    });
-  };
+  renderCurrencies(currencies) {
+    let currencyText = '';
+    if (currencies.length > 0) {
+      currencyText = currencies[0].code;
+      for (let i = 0; i < currencies.length; i++) {
+        currencyText =
+          currencyText +
+          (i < currencies.length - 1 ? ', ' : ' or ') +
+          currencies[i].code;
+      }
+    }
+    return currencyText;
+  }
 
   render() {
-    if (!this.state.bank.reference) {
-      return (
-        <View style={styles.container}>
-          <Header navigation={this.props.navigation} back title="Deposit" />
-          <View style={styles.comment}>
-            <Text style={styles.commentText}>
-              No deposit instructions have been provided.
-            </Text>
-          </View>
-          <View style={[styles.bankInfo, { flex: 6 }]} />
+    const {
+      company_bank_account,
+      loading_company_bank_account,
+      tempWallet,
+    } = this.props;
+    const {
+      containerStyle,
+      containerStyleComment,
+      textStyleComment,
+      containerStyleReference,
+      textStyleCommentReference,
+    } = styles;
+    return (
+      <View style={containerStyle}>
+        <Header navigation={this.props.navigation} back title="Deposit" />
+        <View style={containerStyleComment}>
+          <Text style={textStyleComment}>
+            Fund your account by transferring one of the listed currencies with
+            the unique reference number below.
+          </Text>
         </View>
-      );
-    } else {
-      return (
-        <View style={styles.container}>
-          <Header navigation={this.props.navigation} back title="Deposit" />
-          <View style={{ flex: 1 }}>
-            <View style={styles.comment}>
-              <Text style={styles.commentText}>
-                Fund your account by transferring {this.state.currencyCode} to
-                the unique reference number below.
-              </Text>
-            </View>
-            <View style={styles.reference}>
-              <Text style={styles.referenceText}>
-                {this.state.bank.reference}
-              </Text>
-              <TouchableHighlight
-                underlayColor={'white'}
-                onPress={() => {
-                  Clipboard.setString(this.state.bank.reference);
-                  Alert.alert(null, 'Copied');
-                }}>
-                <Icon name="content-copy" size={30} color={Colors.black} />
-              </TouchableHighlight>
-            </View>
-          </View>
-          <View style={styles.bankInfo}>
-            <View style={styles.infoColumn}>
-              <Text style={styles.infoTitle}>Bank</Text>
-              <Text style={styles.infoText}>
-                {this.state.bankAccount.bank_name}
-              </Text>
-            </View>
-            <View style={styles.infoColumn}>
-              <Text style={styles.infoTitle}>Account Holder</Text>
-              <Text style={styles.infoText}>{this.state.bankAccount.name}</Text>
-            </View>
-            <View style={styles.infoColumn}>
-              <Text style={styles.infoTitle}>Account Number</Text>
-              <Text style={styles.infoText}>
-                {this.state.bankAccount.number}
-              </Text>
-            </View>
-
-            <View style={styles.infoColumn}>
-              <Text style={styles.infoTitle}>Account Type</Text>
-              <Text style={styles.infoText}>{this.state.bankAccount.type}</Text>
-            </View>
-            <View style={styles.infoColumn}>
-              <Text style={styles.infoTitle}>Bank Code</Text>
-              <Text style={styles.infoText}>
-                {this.state.bankAccount.bank_code}
-              </Text>
-            </View>
-          </View>
+        <View style={containerStyleReference}>
+          <Text style={textStyleCommentReference}>
+            {tempWallet.account_reference}
+          </Text>
+          <TouchableHighlight
+            underlayColor={'white'}
+            onPress={() => {
+              Clipboard.setString(tempWallet.account_reference);
+              Alert.alert(null, 'Copied');
+            }}>
+            <Icon name="content-copy" size={24} color={Colors.black} />
+          </TouchableHighlight>
         </View>
-      );
-    }
+        <CardList
+          type="company_bank_account"
+          data={company_bank_account}
+          loadingData={loading_company_bank_account}
+          renderContent={this.renderContent}
+          emptyListMessage="No company bank accounts added yet"
+        />
+      </View>
+    );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
+const styles = {
+  containerStyle: {
     flex: 1,
     backgroundColor: 'white',
   },
-  comment: {
-    flex: 2,
+  viewStyleContent: {
+    padding: 8,
+  },
+  containerStyleComment: {
+    // flex: 2,
     backgroundColor: Colors.lightgray,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingRight: 30,
-    paddingLeft: 30,
+    paddingHorizontal: 16,
+    padding: 8,
   },
-  commentText: {
+  textStyleComment: {
     fontSize: 16,
     textAlign: 'center',
     color: Colors.black,
   },
-  reference: {
-    flex: 1,
+  containerStyleReference: {
     backgroundColor: Colors.green,
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
-    paddingHorizontal: 20,
+    padding: 4,
+    paddingHorizontal: 16,
   },
-  referenceText: {
+  textStyleCommentReference: {
     fontSize: 28,
     flex: 1,
     textAlign: 'center',
     color: 'white',
   },
-  bankInfo: {
-    flex: 2,
-    flexDirection: 'column',
-    padding: 20,
-  },
-  infoColumn: {
-    flexDirection: 'row',
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  infoTitle: {
-    flex: 1,
-    fontSize: 17,
-    textAlign: 'left',
-    fontWeight: 'bold',
-    color: Colors.black,
-  },
-  infoText: {
-    flex: 1,
-    fontSize: 17,
-    textAlign: 'right',
-    color: Colors.black,
-  },
-});
+};
 
-export default DepositScreen;
+const mapStateToProps = ({ user, accounts }) => {
+  const { company_bank_account, loading_company_bank_account } = user;
+  const { tempWallet } = accounts;
+  return { company_bank_account, loading_company_bank_account, tempWallet };
+};
+
+export default connect(mapStateToProps, { fetchData })(DepositScreen);

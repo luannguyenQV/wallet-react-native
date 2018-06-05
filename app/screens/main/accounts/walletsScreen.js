@@ -102,16 +102,19 @@ class WalletsScreen extends Component {
 
   renderDetail(item, navigation) {
     // const { wallet } = this.state;
+    let i = 0;
+    let buttons = [];
+    if (this.props.company_bank_account.length > 0) {
+      buttons[i] = { id: i++, type: 'deposit' };
+    }
+    buttons[i] = { id: i++, type: 'withdraw' };
+    buttons[i] = { id: i++, type: 'receive' };
+    buttons[i] = { id: i++, type: 'send' };
     return (
       <View style={styles.viewStyleDetailCard}>
         <HeaderWallet
           wallets={[item]}
-          buttons={[
-            { id: 0, type: 'deposit' },
-            { id: 1, type: 'withdraw' },
-            { id: 2, type: 'receive' },
-            { id: 3, type: 'send' },
-          ]}
+          buttons={buttons}
           navigation={navigation}
           showClose
         />
@@ -137,21 +140,16 @@ class WalletsScreen extends Component {
     } = this.props;
     return (
       <View style={styles.container}>
-        <Header
-          navigation={this.props.navigation}
-          drawer
-          title="Wallets"
-          headerRightIcon={showWallet ? 'close' : ''}
-          headerRightOnPress={showWallet ? () => hideWallet() : () => {}}
-        />
+        <Header navigation={this.props.navigation} drawer title="Wallets" />
         <CardList
           type="wallet"
           navigation={this.props.navigation}
           data={wallets}
           tempItem={tempWallet}
           loadingData={loading_accounts}
-          // identifier="reference"
+          identifier="reference"
           onRefresh={fetchAccounts}
+          // primaryItem={showModal('wallet', item, 'active')}
           // showDetail={showWallet}
           renderContent={this.renderContent}
           renderDetail={(item, navigation) =>
@@ -159,7 +157,7 @@ class WalletsScreen extends Component {
           }
           itemActive={item => (item ? item.currency.active : false)}
           textTitleLeft={item => (item ? item.currency.currency.code : '')}
-          onPressTitleLeft={item => this.showModal(item)}
+          // onPressTitleLeft={item => this.showModal(item)}
           title={item => (item ? item.currency.currency.description : '')}
           subtitle={item => (item ? standardizeString(item.account_name) : '')}
           onPressTitle={item => viewWallet(item)}
@@ -168,25 +166,11 @@ class WalletsScreen extends Component {
           titleStyle="secondary"
           keyExtractor={item => item.index + item.currency.currency.code}
           textActionOne="SEND"
-          // onPressActionOne={() => console.log('hello')}
           onPressActionOne={item => this.send(item)}
           textActionTwo="RECEIVE"
           onPressActionTwo={() => this.props.navigation.navigate('Receive')}
+          canActive
         />
-        {/* <PopUpGeneral
-          visible={this.state.showModal}
-          // iconTitleLeft={iconTitleLeft}
-          // title={'Transaction details'}
-          // subtitle={'Subtitle?'}
-          // titleStyle={titleStyle}
-          // iconTitleRight={'close'}
-          contentText="This will update your default currency"
-          textActionOne="Set default"
-          // onPressActionOne={() => this.hideModal()}
-          textActionTwo="Cancel"
-          onDismiss={() => this.hideModal()}
-          onPressActionTwo={() => this.hideModal()}
-        /> */}
       </View>
     );
   }
@@ -217,9 +201,16 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ accounts }) => {
+const mapStateToProps = ({ accounts, user }) => {
   const { wallets, loading_accounts, tempWallet, showWallet } = accounts;
-  return { wallets, loading_accounts, tempWallet, showWallet };
+  const { company_bank_account } = user;
+  return {
+    wallets,
+    loading_accounts,
+    tempWallet,
+    showWallet,
+    company_bank_account,
+  };
 };
 
 export default connect(mapStateToProps, {

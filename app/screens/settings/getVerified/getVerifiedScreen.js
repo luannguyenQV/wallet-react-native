@@ -133,7 +133,7 @@ class GetVerifiedScreen extends Component {
 
     let valueIdentity = 'Not yet provided';
     let statusIdentity = 'INCOMPLETE';
-    let idDocuments = document.results.filter(
+    let idDocuments = document.filter(
       doc => doc.document_category === 'Proof Of Identity',
     );
     let idVerified = idDocuments.filter(doc => doc.status === 'verified');
@@ -152,7 +152,7 @@ class GetVerifiedScreen extends Component {
 
     let valueAdvancedIdentity = 'Not yet provided';
     let statusAdvancedIdentity = 'INCOMPLETE';
-    let idSelfieDocuments = document.results.filter(
+    let idSelfieDocuments = document.filter(
       doc => doc.document_category === 'Advanced Proof Of Identity',
     );
     let idSelfieVerified = idSelfieDocuments.filter(
@@ -177,7 +177,7 @@ class GetVerifiedScreen extends Component {
 
     let valueAddress = 'Not yet provided';
     let statusAddress = 'INCOMPLETE';
-    let addressDocuments = document.results.filter(
+    let addressDocuments = document.filter(
       doc => doc.document_category === 'Proof Of Address',
     );
     let addressVerified = addressDocuments.filter(

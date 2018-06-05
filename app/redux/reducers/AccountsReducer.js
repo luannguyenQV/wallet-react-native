@@ -7,14 +7,15 @@ import {
   SET_ACTIVE_CURRENCY_SUCCESS,
   SET_ACTIVE_CURRENCY_FAIL,
   SET_ACTIVE_CURRENCY,
-  SEND_FIELD_UPDATE,
-  SEND_FIELD_ERROR,
+  INPUT_FIELD_UPDATE,
+  INPUT_FIELD_ERROR,
   SET_SEND_STATE,
   SET_SEND_WALLET,
   RESET_SEND,
-  SEND_SUCCESS,
-  SEND_FAIL,
-  SEND,
+  SEND_ASYNC,
+  WITHDRAW_ASYNC,
+  SET_WITHDRAW_WALLET,
+  RESET_WITHDRAW,
   VIEW_WALLET,
   HIDE_WALLET,
 } from './../types';
@@ -98,7 +99,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         loadingActiveCurrencyChange: false,
       };
-    case SEND_FIELD_UPDATE:
+    case INPUT_FIELD_UPDATE:
       return { ...state, [action.payload.prop]: action.payload.value };
     case SET_SEND_WALLET:
       return {
@@ -107,7 +108,7 @@ export default (state = INITIAL_STATE, action) => {
         sendState: 'amount',
         sendError: '',
       };
-    case SEND_FIELD_ERROR:
+    case INPUT_FIELD_ERROR:
       return {
         ...state,
         sendError: action.payload,
@@ -129,18 +130,18 @@ export default (state = INITIAL_STATE, action) => {
         sendState: 'amount',
         sendError: '',
       };
-    case SEND:
+    case SEND_ASYNC.pending:
       return {
         ...state,
         sending: true,
       };
-    case SEND_SUCCESS:
+    case SEND_ASYNC.success:
       return {
         ...state,
         sendState: 'success',
         sending: false,
       };
-    case SEND_FAIL:
+    case SEND_ASYNC.error:
       return {
         ...state,
         sendState: 'fail',

@@ -32,6 +32,13 @@ const INITIAL_STATE = {
   loading_bank_account: false,
   crypto_account: [],
   loading_crypto_account: false,
+  company: [],
+  loading_company: false,
+  company_bank_account: [],
+  loading_company_bank_account: false,
+  company_currency: [],
+  loading_company_currency: false,
+
   temp_profile: {
     first_name: '',
     last_name: '',
@@ -65,6 +72,7 @@ const INITIAL_STATE = {
   modalVisible: false,
   // showDeleteModal: false,
   loading: false,
+
   updateError: '',
   modalType: '',
 };

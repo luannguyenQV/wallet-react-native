@@ -10,7 +10,7 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class HeaderCurrency extends Component {
   render() {
-    const { detail, showAccountLabel, showClose } = this.props;
+    const { detail, showAccountLabel, showClose, closeWallet } = this.props;
     const { currency, account_name } = this.props.wallet;
     const {
       viewStyleContainer,
@@ -19,6 +19,7 @@ class HeaderCurrency extends Component {
       textStyleAccount,
       textStyleSymbol,
       textStyleAmount,
+      iconStyleTitleRight,
     } = styles;
     return (
       <View
@@ -31,6 +32,15 @@ class HeaderCurrency extends Component {
               }
             : { width: SCREEN_WIDTH },
         ]}>
+        {showClose ? (
+          <View style={iconStyleTitleRight}>
+            <HeaderButton
+              icon="close"
+              onPress={closeWallet}
+              color={Colors.lightGray}
+            />
+          </View>
+        ) : null}
         <Text style={textStyleCode}>{currency.currency.code}</Text>
         {showAccountLabel ? (
           <Text style={textStyleAccount}>{account_name}</Text>
@@ -97,6 +107,12 @@ const styles = {
     color: Colors.focus,
     fontSize: 42,
     fontWeight: 'bold',
+  },
+  iconStyleTitleRight: {
+    right: -8,
+    top: -8,
+    margin: 0,
+    position: 'absolute',
   },
 };
 
