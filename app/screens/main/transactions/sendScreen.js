@@ -128,10 +128,6 @@ class SendScreen extends Component {
     this.props.navigation.navigate('QRcodeScanner');
   };
 
-  setSendState(nextState) {
-    this.props.setSendState(nextState);
-  }
-
   toggleContacts() {
     if (this.state.showContacts) {
       this.setState({
@@ -145,80 +141,6 @@ class SendScreen extends Component {
       });
     }
   }
-
-  // renderRecipient() {
-  //   const {
-  //     sendState,
-  //     sendRecipient,
-  //     sendFieldUpdate,
-  //     validateSendRecipient,
-  //     sendError,
-  //   } = this.props;
-
-  //   const { textStyleOutput } = styles;
-
-  //   if (sendState === 'recipient' || sendState === 'note') {
-  //     if (sendState === 'recipient') {
-  //       return (
-  //         <Card
-  //           // textHeader="Recipient"
-  //           textActionOne="Next"
-  //           onPressActionOne={}
-  //           // textActionTwo={this.state.contactButtonText}
-  //           // onPressActionTwo={() => this.toggleContacts()}
-  //         >
-  //           <View>
-  //
-  //             {this.renderContacts()}
-  //           </View>
-  //         </Card>
-  //       );
-  //     }
-  //     return (
-  //       <Card
-  //         // textHeader="Amount"
-  //         textActionOne="Change"
-  //         onPressActionOne={() => this.setSendState('recipient')}>
-  //         <View>
-  //           <Text style={textStyleOutput}>To: {sendRecipient}</Text>
-  //         </View>
-  //       </Card>
-  //     );
-  //   }
-  //   return;
-  // }
-
-  // renderContacts() {
-  //   const { showContacts } = this.state;
-  //   if (showContacts) {
-  //     if (this.state.ready) {
-  //       return (
-  //         <View style={styles.spinner}>
-  //           <Text>Loading Contacts</Text>
-  //           <ActivityIndicator animating style={{ height: 80 }} size="large" />
-  //         </View>
-  //       );
-  //     } else {
-  //       return (
-  //         <View style={{ flex: 1, marginHorizontal: 20, marginTop: 10 }}>
-  //           <ListView
-  //             refreshControl={
-  //               <RefreshControl
-  //                 refreshing={this.state.refreshing}
-  //                 onRefresh={this.showContactsAsync.bind(this)}
-  //               />
-  //             }
-  //             dataSource={this.state.contacts}
-  //             enableEmptySections
-  //             renderRow={rowData => (
-  //               <Contact selected={this.selectAContact} rowData={rowData} />
-  //             )}
-  //           />
-  //         </View>
-  //       );
-  //     }
-  //   }
-  // }
 
   performSend() {
     const { sendWallet, sendAmount, sendRecipient, sendNote } = this.props;
@@ -245,6 +167,7 @@ class SendScreen extends Component {
       sendRecipient,
       sendNote,
       sendError,
+      setSendState,
     } = this.props;
 
     const { viewStyleBottomContainer } = styles;
@@ -260,17 +183,17 @@ class SendScreen extends Component {
         break;
       case 'recipient':
         textFooterLeft = 'Edit';
-        onPressFooterLeft = () => this.setSendState('amount');
+        onPressFooterLeft = () => setSendState('amount');
         onPressFooterRight = () => validateSendRecipient(sendRecipient);
         break;
       case 'note':
         textFooterLeft = 'Edit';
-        onPressFooterLeft = () => this.setSendState('amount');
+        onPressFooterLeft = () => setSendState('amount');
         onPressFooterRight = () => validateSendNote(sendNote);
         break;
       case 'confirm':
         textFooterLeft = 'Edit';
-        onPressFooterLeft = () => this.setSendState('amount');
+        onPressFooterLeft = () => setSendState('amount');
         textFooterRight = 'Confirm';
         onPressFooterRight = () => this.performSend();
         break;
@@ -450,7 +373,7 @@ class SendScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <Header navigation={this.props.navigation} title="Send" back />
+        <Header navigation={this.props.navigation} title="Send" right back />
         <KeyboardAvoidingView
           keyboardShouldPersistTaps={'never'}
           style={styles.viewStyleContainer}

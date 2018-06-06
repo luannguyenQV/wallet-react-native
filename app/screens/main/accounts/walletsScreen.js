@@ -32,7 +32,6 @@ class WalletsScreen extends Component {
 
   componentDidMount() {
     let wallet = null;
-    console.log(this.props.navigation.state.params);
     if (this.props.navigation.state.params) {
       wallet = this.props.navigation.state.params.wallet;
       this.props.navigation.state.params.wallet = null;
@@ -45,8 +44,6 @@ class WalletsScreen extends Component {
   }
 
   showModal = item => {
-    console.log(item);
-
     this.setState({ showModal: true, wallet: item });
   };
 

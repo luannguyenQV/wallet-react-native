@@ -22,7 +22,6 @@ class MobileNumbersScreen extends Component {
   renderContent = item => {
     const { viewStyleContent } = styles;
     const { number } = item;
-    console.log(item);
     return (
       <View style={viewStyleContent}>
         {number ? <Output label="" value={number} /> : null}

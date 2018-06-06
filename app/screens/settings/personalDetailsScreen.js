@@ -76,7 +76,6 @@ class PersonalDetailsScreen extends Component {
       showDetail,
     } = this.props;
     const { first_name, last_name, id_number } = profile;
-    console.log(temp_profile);
     const { viewStyleContainer, imageStylePhoto } = styles;
     return (
       <View style={{ flex: 1 }}>

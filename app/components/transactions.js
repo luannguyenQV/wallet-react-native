@@ -68,8 +68,6 @@ export default class Transactions extends Component {
         nextUrl: responseJson.data.next,
       });
     } else {
-      console.log('logout2');
-      // this.props.logout();
     }
 
     if (this.state.data.length === 0) {
@@ -97,8 +95,6 @@ export default class Transactions extends Component {
           });
         }
       } else {
-        console.log('logout3');
-        // this.props.logout();
       }
     }
     if (this.state.data.length > 0) {

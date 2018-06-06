@@ -53,8 +53,6 @@ class DocumentUploadScreen extends Component {
     var category = snakeString(this.state.category);
     var type = this.state.type;
 
-    console.log(category);
-
     let responseJson = await SettingsService.documentUpload(
       file,
       category,

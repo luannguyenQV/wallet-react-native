@@ -76,7 +76,7 @@ class WithdrawAmountEntryScreen extends Component {
       this.state.reference,
       this.state.currency,
     );
-    console.log(responseJson);
+    // console.log(responseJson);
     if (responseJson.status === 'success') {
       Alert.alert('Success', 'Transaction successful', [
         {

@@ -168,7 +168,9 @@ class CardList extends Component {
       profile,
       verifyItem,
       otp,
+      setActiveCurrency,
     } = this.props;
+    console.log(this.props);
 
     let contentText = '';
     let textActionOne = '';
@@ -189,9 +191,10 @@ class CardList extends Component {
           onPressActionOne = () => updateItem(type, tempItem);
           break;
         case 'active':
-          contentText = 'Make ' + tempItem.currency.code + ' active wallet?';
+          contentText =
+            'Make ' + tempItem.currency.currency.code + ' active wallet?';
           textActionOne = 'MAKE ACTIVE';
-          onPressActionOne = () => setActiveCurrency(type, tempItem);
+          onPressActionOne = () => setActiveCurrency(tempItem);
           break;
         case 'verify':
           // textActionOne = 'RESEND';

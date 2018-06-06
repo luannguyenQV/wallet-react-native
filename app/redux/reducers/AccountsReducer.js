@@ -4,9 +4,7 @@ import {
   FETCH_PROFILE,
   FETCH_ACCOUNTS_ASYNC,
   UPDATE_CURRENT_INDEX,
-  SET_ACTIVE_CURRENCY_SUCCESS,
-  SET_ACTIVE_CURRENCY_FAIL,
-  SET_ACTIVE_CURRENCY,
+  SET_ACTIVE_CURRENCY_ASYNC,
   INPUT_FIELD_UPDATE,
   INPUT_FIELD_ERROR,
   SET_SEND_STATE,
@@ -18,6 +16,7 @@ import {
   RESET_WITHDRAW,
   VIEW_WALLET,
   HIDE_WALLET,
+  SHOW_MODAL,
 } from './../types';
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 
@@ -83,22 +82,31 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         activeWalletIndex: action.payload,
       };
-    case SET_ACTIVE_CURRENCY:
-      return {
-        ...state,
-        loadingActiveCurrencyChange: true,
-      };
-    case SET_ACTIVE_CURRENCY_SUCCESS:
-      return {
-        ...state,
-        // user: action.payload,
-        loadingActiveCurrencyChange: false,
-      };
-    case SET_ACTIVE_CURRENCY_FAIL:
-      return {
-        ...state,
-        loadingActiveCurrencyChange: false,
-      };
+
+    // case SET_ACTIVE_CURRENCY_ASYNC.pending:
+    //   return {
+    //     ...state,
+    //     tempWallet: action.payload,
+    //   };
+    // case SET_ACTIVE_CURRENCY_ASYNC.success:
+    //   return {
+    //     ...state,
+    //     tempWallet: null,
+    //   };
+    // case SET_ACTIVE_CURRENCY_ASYNC.error:
+    //   return {
+    //     ...state,
+    //   };
+
+    case SHOW_MODAL:
+      if (action.payload.type === 'temp_wallet') {
+        return {
+          ...state,
+          tempWallet: action.payload.data,
+        };
+      }
+      return { ...state };
+
     case INPUT_FIELD_UPDATE:
       return { ...state, [action.payload.prop]: action.payload.value };
     case SET_SEND_WALLET:

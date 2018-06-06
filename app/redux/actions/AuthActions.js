@@ -250,7 +250,7 @@ export const termsChanged = ({ prop, value }) => {
 };
 
 export const changePassword = (old_password, new_password) => {
-  console.log(old_password, new_password);
+  // console.log(old_password, new_password);
   if (!old_password || old_password.length < 8) {
     error = 'Password must be at least 8 characters in length';
     return {

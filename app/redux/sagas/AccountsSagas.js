@@ -3,6 +3,7 @@ import {
   FETCH_ACCOUNTS_ASYNC,
   SET_ACTIVE_CURRENCY_ASYNC,
   SEND_ASYNC,
+  HIDE_MODAL,
 } from './../types';
 import Big from 'big.js';
 
@@ -85,10 +86,10 @@ function* setActiveCurrency(action) {
       action.payload.currency.currency.code,
     );
 
-    console.log('responseJson', responseJson);
     if (responseJson && responseJson.status === 'success') {
       yield all([
         put({ type: SET_ACTIVE_CURRENCY_ASYNC.success }),
+        put({ type: HIDE_MODAL }),
         put({ type: FETCH_ACCOUNTS_ASYNC.pending }),
       ]);
     } else {
@@ -107,5 +108,5 @@ function* setActiveCurrency(action) {
 export const accountsSagas = all([
   takeEvery(FETCH_ACCOUNTS_ASYNC.pending, fetchAccounts),
   takeEvery(SEND_ASYNC.success, fetchAccounts),
-  takeEvery(SET_ACTIVE_CURRENCY_ASYNC.success, setActiveCurrency),
+  takeEvery(SET_ACTIVE_CURRENCY_ASYNC.pending, setActiveCurrency),
 ]);

@@ -217,6 +217,7 @@ const styles = {
     shadowOpacity: 0.2,
     shadowRadius: 2,
     margin: 8,
+    // marginVertical: 8,
     elevation: 2,
     shadowOffset: {
       height: 1,

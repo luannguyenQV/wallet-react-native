@@ -88,12 +88,13 @@ class DocumentScreen extends Component {
       name,
       type: 'image/jpg',
     };
-
     let responseJson = await SettingsService.documentUpload(
-      file,
+      image,
       category,
       document_type,
     );
+    console.log('responseJson', responseJson);
+    // this.setState({ loading: false });
     if (responseJson.status === 'success') {
       this.setState({ loading: false });
       Alert.alert(
@@ -107,14 +108,18 @@ class DocumentScreen extends Component {
         ],
       );
     } else {
-      Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
       this.setState({ loading: false });
+      Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
     }
   };
 
   renderContent() {
     const { category, state, loading } = this.state;
-    const { textStyleDescription, viewStyleButtonContainer } = styles;
+    const {
+      textStyleDescription,
+      viewStyleButtonContainer,
+      viewStyleImageContainer,
+    } = styles;
     console.log(this.state);
     let options;
 
@@ -163,15 +168,17 @@ class DocumentScreen extends Component {
         );
       case 'confirm':
         return (
-          <View style={viewStyleButtonContainer}>
-            <Image
-              style={{ height: 300, width: 300 }}
-              source={{ uri: this.state.image }}
-            />
+          <View>
+            <View style={viewStyleImageContainer}>
+              <Image
+                style={{ height: 300, width: 300 }}
+                source={{ uri: this.state.image }}
+              />
+            </View>
             {loading ? (
               <Spinner size="large" />
             ) : (
-              <View>
+              <View style={viewStyleButtonContainer}>
                 <Button
                   label="Upload"
                   onPress={this.uploadDocument} //this.openModal(item.document_type)}
@@ -179,7 +186,7 @@ class DocumentScreen extends Component {
                 <Button
                   label="Cancel"
                   onPress={() => this.resetState()} //this.openModal(item.document_type)}
-                />{' '}
+                />
               </View>
             )}
           </View>
@@ -251,9 +258,12 @@ const styles = StyleSheet.create({
     // flex: 1,
     // padding: 8,
     // justifyContent: 'flex-start',
-    // alignItems: 'center',
     width: '100%',
     // height: '100%',
+  },
+  viewStyleImageContainer: {
+    // alignItems: 'center',
+    justifyContent: 'center',
   },
   upload: {
     marginBottom: 10,

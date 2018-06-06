@@ -96,7 +96,6 @@ class HeaderWallet extends Component {
   }
 
   onButtonPress(type) {
-    console.log(this.props.activeWalletIndex);
     switch (type) {
       case 'send': {
         this.props.resetSend();

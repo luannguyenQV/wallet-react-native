@@ -74,7 +74,7 @@ export const deleteItem = (type, item) => {
 };
 
 export const showModal = (type, item, modalType) => {
-  console.log('item', item);
+  // console.log('item', item);
   return {
     type: SHOW_MODAL,
     payload: { type: 'temp_' + type, data: item, modalType },

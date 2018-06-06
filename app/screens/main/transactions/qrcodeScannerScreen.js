@@ -1,113 +1,115 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TouchableHighlight } from 'react-native';
-import Expo, { Permissions } from 'expo';
-import Colors from './../../../config/colors';
+import { Text, View } from 'react-native';
+import { BarCodeScanner, Permissions } from 'expo';
 import Header from './../../../components/header';
+import { connect } from 'react-redux';
+import {
+  resetSend,
+  setSendWallet,
+  sendFieldUpdate,
+} from './../../../redux/actions';
+
+import { Output, Button } from './../../../components/common';
 
 class QRCodeScannerScreen extends Component {
   static navigationOptions = {
     title: 'QR code scanner',
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      camera: true,
-      reference: '',
-    };
-  }
+  state = {
+    camera: true,
+    reference: '',
+    data: {
+      amount: '',
+      recipient: '',
+      note: '',
+    },
+  };
 
-  async componentWillMount() {
+  async componentDidMount() {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     this.setState({ hasCameraPermission: status === 'granted' });
   }
 
-  goToSendTo = () => {
-    this.props.navigation.navigate('SendMoney', {
-      recipient: this.state.reference,
-    });
+  accept = () => {
+    const { amount, recipient, note } = this.state.data;
+    this.props.resetSend();
+    // this.props.setSendWallet(this.props.wallets[this.props.activeWalletIndex]);
+    this.props.sendFieldUpdate({ prop: 'sendAmount', value: amount });
+    this.props.sendFieldUpdate({ prop: 'sendRecipient', value: recipient });
+    this.props.sendFieldUpdate({ prop: 'sendNote', value: note });
+    this.props.navigation.goBack();
+    // this.props.navigation.navigate('Send');
+  };
+
+  _handleBarCodeRead = data => {
+    let dataJSON = JSON.parse(data.data);
+    this.setState({ camera: false, data: dataJSON });
   };
 
   render() {
-    const { hasCameraPermission } = this.state;
-    if (hasCameraPermission === null) {
-      return <Text>No access to camera</Text>;
-    } else if (hasCameraPermission === false) {
-      return <Text>No access to camera</Text>;
-    } else {
-      if (this.state.camera === true) {
-        return (
-          <View style={{ flex: 1 }}>
-            <Header
-              navigation={this.props.navigation}
-              back
-              title="QR code scanner"
-            />
-            <Expo.BarCodeScanner
+    const { hasCameraPermission, data } = this.state;
+    const { amount, recipient, note } = data;
+    const { viewStyleConfirm } = styles;
+
+    return (
+      <View style={{ flex: 1 }}>
+        <Header
+          navigation={this.props.navigation}
+          back
+          title="QR code scanner"
+        />
+        {hasCameraPermission ? (
+          this.state.camera ? (
+            <BarCodeScanner
               onBarCodeRead={this._handleBarCodeRead}
               style={{ flex: 1 }}
             />
-          </View>
-        );
-      } else {
-        return (
-          <View style={{ flex: 1 }}>
-            <Header
-              navigation={this.props.navigation}
-              back
-              title="QR code scanner"
-            />
-            <View style={styles.container}>
-              <Text style={styles.input}>To: {this.state.reference}</Text>
-            </View>
-            <View style={styles.footer}>
-              <TouchableHighlight
-                style={[styles.buttons, { backgroundColor: Colors.red }]}
-                onPress={() => this.setState({ camera: true })}>
-                <Text style={{ color: 'white', fontSize: 20 }}>Again</Text>
-              </TouchableHighlight>
-              <TouchableHighlight
-                style={[styles.buttons, { backgroundColor: Colors.lightblue }]}
-                onPress={this.goToSendTo}>
-                <Text style={{ color: 'white', fontSize: 20 }}>Next</Text>
-              </TouchableHighlight>
-            </View>
-          </View>
-        );
-      }
-    }
-  }
+          ) : (
+            <View style={viewStyleConfirm}>
+              {amount ? <Output label="Amount" value={amount} /> : null}
+              {recipient ? (
+                <Output label="Recipient" value={recipient} />
+              ) : null}
+              {note ? <Output label="Note" value={note} /> : null}
 
-  _handleBarCodeRead = data => {
-    this.setState({ camera: false, reference: data.data });
-  };
+              <Button label="Accept" onPress={this.accept} />
+              <Button
+                label="Scan again"
+                onPress={() => this.setState({ camera: true })}
+              />
+            </View>
+          )
+        ) : (
+          <Text>No access to camera</Text>
+        )}
+      </View>
+    );
+  }
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flex: 1,
     flexDirection: 'column',
     backgroundColor: 'white',
-  },
-  footer: {
-    height: 65,
-    flexDirection: 'row',
-    width: '100%',
-    alignSelf: 'stretch',
   },
   buttons: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  input: {
-    height: 60,
-    width: '100%',
-    padding: 10,
-    marginTop: 20,
-    borderColor: 'white',
-    borderWidth: 1,
+  viewStyleConfirm: {
+    padding: 16,
   },
-});
+};
 
-export default QRCodeScannerScreen;
+const mapStateToProps = ({}) => {
+  return {};
+};
+
+export default connect(mapStateToProps, {
+  resetSend,
+  setSendWallet,
+  sendFieldUpdate,
+})(QRCodeScannerScreen);
