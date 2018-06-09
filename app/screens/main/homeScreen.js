@@ -14,6 +14,14 @@ import HeaderWallet from '../../components/HeaderWallet';
 import TransactionList from './../../components/TransactionList';
 import HomeCards from './../../components/HomeCards';
 
+const renderPagination = (index, total, context) => {
+  return (
+    <View style={styles.paginationStyle}>
+      <Text style={{ color: 'grey' }} />
+    </View>
+  );
+};
+
 class HomeScreen extends Component {
   static navigationOptions = {
     label: 'Home',
@@ -45,7 +53,7 @@ class HomeScreen extends Component {
         />
         {/* currency={item} accountLabel={account.name} /> */}
         {/* {this.renderAccounts()} */}
-        <Swiper showsPagination={false}>
+        <Swiper renderPagination={renderPagination} loop={false}>
           {/* <View style={{ flex: 1 }} /> */}
           <HomeCards navigation={this.props.navigation} />
           <TransactionList
