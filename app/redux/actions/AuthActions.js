@@ -78,7 +78,7 @@ export const nextAuthFormState = (props, nextFormState) => async dispatch => {
         dispatch({
           type: LOADING,
         });
-        error = await performCompanyServerValidation(company);
+        // error = await performCompanyServerValidation(company);
         if (error) {
           dispatch({
             type: AUTH_FIELD_ERROR,

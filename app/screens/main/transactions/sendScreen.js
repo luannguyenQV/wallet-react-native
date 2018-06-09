@@ -16,7 +16,7 @@ import {
   validateSendRecipient,
   validateSendNote,
   setSendState,
-  sendFieldUpdate,
+  inputFieldUpdate,
   send,
 } from '../../../redux/actions';
 
@@ -298,7 +298,7 @@ class SendScreen extends Component {
       sendAmount,
       sendWallet,
       sendRecipient,
-      sendFieldUpdate,
+      inputFieldUpdate,
       sendNote,
       validateSendAmount,
       validateSendRecipient,
@@ -321,7 +321,7 @@ class SendScreen extends Component {
             keyboardType="numeric"
             value={sendAmount}
             onChangeText={value =>
-              sendFieldUpdate({ prop: 'sendAmount', value })
+              inputFieldUpdate({ prop: 'sendAmount', value })
             }
             returnKeyType="next"
             autoFocus
@@ -336,7 +336,7 @@ class SendScreen extends Component {
             label={'Please enter recipient'}
             value={sendRecipient}
             onChangeText={value =>
-              sendFieldUpdate({ prop: 'sendRecipient', value })
+              inputFieldUpdate({ prop: 'sendRecipient', value })
             }
             inputError={sendError}
             reference={input => {
@@ -355,7 +355,9 @@ class SendScreen extends Component {
             placeholder="e.g. Rent"
             label="Note:"
             value={sendNote}
-            onChangeText={value => sendFieldUpdate({ prop: 'sendNote', value })}
+            onChangeText={value =>
+              inputFieldUpdate({ prop: 'sendNote', value })
+            }
             inputError={sendError}
             reference={input => {
               this.input = input;
@@ -444,7 +446,6 @@ const styles = {
 
 const mapStateToProps = ({ accounts }) => {
   const {
-    user,
     wallets,
     sendAmount,
     sendWallet,
@@ -457,7 +458,6 @@ const mapStateToProps = ({ accounts }) => {
     sending,
   } = accounts;
   return {
-    user,
     wallets,
     tempCurrency,
     sendAmount,
@@ -472,7 +472,7 @@ const mapStateToProps = ({ accounts }) => {
 };
 
 export default connect(mapStateToProps, {
-  sendFieldUpdate,
+  inputFieldUpdate,
   setSendWallet,
   validateSendAmount,
   validateSendRecipient,

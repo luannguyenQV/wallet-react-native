@@ -17,6 +17,7 @@ import {
   nextAuthFormState,
   previousAuthFormState,
 } from '../../redux/actions';
+import { initializeSDK } from './../../util/rehive';
 
 import Colors from './../../config/colors';
 import { Button, AuthForm, Input, Spinner } from './../../components/common';
@@ -26,6 +27,7 @@ UIManager.setLayoutAnimationEnabledExperimental &&
 
 class AuthScreen extends Component {
   componentDidMount() {
+    initializeSDK();
     this.props.initialLoad(this.props);
     // this.onAuthComplete(this.props);
   }

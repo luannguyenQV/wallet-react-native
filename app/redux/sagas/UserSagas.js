@@ -7,86 +7,64 @@ import {
   DELETE_ASYNC,
   VERIFY_ASYNC,
   SHOW_MODAL,
+  UPLOAD_PROFILE_PHOTO,
 } from './../types';
 
-import UserInfoService from './../../services/userInfoService';
-import SettingsService from './../../services/settingsService';
-
-import * as rehive from './../../util/rehive';
+import * as Rehive from './../../util/rehive';
 
 function* fetchData(action) {
   try {
-    let responseJson = null;
+    let response = null;
     switch (action.payload) {
       case 'mobile_number':
-        // responseJson = yield call(rehive.getMobiles);
-        responseJson = yield call(SettingsService.getAllMobiles);
+        response = yield call(Rehive.getMobiles);
         break;
       case 'email_address':
-        // responseJson = yield call(rehive.getEmails);
-        responseJson = yield call(SettingsService.getAllEmails);
+        response = yield call(Rehive.getEmails);
         break;
       case 'crypto_address':
-        // responseJson = yield call(rehive.getCryptoAccounts);
-        responseJson = yield call(SettingsService.getAllCryptoAddresses);
+        response = yield call(Rehive.getCryptoAccounts);
         break;
       case 'bank_account':
-        // responseJson = yield call(rehive.getBankAccounts);
-        responseJson = yield call(SettingsService.getAllBankAccounts);
+        response = yield call(Rehive.getBankAccounts);
         break;
       case 'profile':
-        // responseJson = yield call(rehive.getEmails);
-        responseJson = yield call(UserInfoService.getUserDetails);
+        response = yield call(Rehive.getProfile);
         break;
       case 'address':
-        // responseJson = yield call(rehive.getAddress);
-        responseJson = yield call(UserInfoService.getAddress);
+        response = yield call(Rehive.getAddress);
         break;
       case 'document':
-        // responseJson = yield call(rehive.getDocuments);
-        responseJson = yield call(UserInfoService.getAllDocuments);
+        response = yield call(Rehive.getDocuments);
         break;
       case 'company':
-        // responseJson = yield call(rehive.getCompany);
-        responseJson = yield call(UserInfoService.getCompany);
+        response = yield call(Rehive.getCompany);
         break;
       case 'company_bank_account':
-        // responseJson = yield call(rehive.getDepositInfo);
-        responseJson = yield call(UserInfoService.getDepositInfo);
+        response = yield call(Rehive.getCompanyBankAccounts);
         break;
       case 'company_currency':
-        // responseJson = yield call(rehive.getAllCompanyCurrencies);
-        responseJson = yield call(UserInfoService.getAllCompanyCurrencies);
+        response = yield call(Rehive.getCompanyCurrencies);
         break;
     }
 
-    if (responseJson && responseJson.status === 'success') {
-      let data = responseJson.data;
-      if (
-        data.length > 0 &&
-        action.payload === ('email_address' || 'mobile_number')
-      ) {
-        const primaryIndex = data.findIndex(item => item.primary === true);
-        const primaryItem = data[primaryIndex];
-        data[primaryIndex] = data[0];
-        data[0] = primaryItem;
-      }
-      if (data.results) {
-        //action.payload === ('company_bank_account' || 'company_currency')) {
-        console.log('hi');
-        data = data.results;
-      }
-      yield put({
-        type: FETCH_DATA_ASYNC.success,
-        payload: { data, prop: action.payload },
-      });
-    } else {
-      // console.log(responseJson);
-      yield put({
-        type: FETCH_DATA_ASYNC.error,
-        payload: { data: responseJson.message, prop: action.payload },
-      });
+    let data = response;
+    if (
+      data.length > 0 &&
+      action.payload === ('email_address' || 'mobile_number')
+    ) {
+      const primaryIndex = data.findIndex(item => item.primary === true);
+      const primaryItem = data[primaryIndex];
+      data[primaryIndex] = data[0];
+      data[0] = primaryItem;
     }
+    if (data.results) {
+      data = data.results;
+    }
+    yield put({
+      type: FETCH_DATA_ASYNC.success,
+      payload: { data, prop: action.payload },
+    });
   } catch (error) {
     console.log(error);
     yield put({ type: FETCH_DATA_ASYNC.error, error });
@@ -116,77 +94,50 @@ function* updateItem(action) {
   try {
     const { data, type } = action.payload;
     console.log(data);
-    let responseJson = null;
+    let response = null;
     switch (type) {
       case 'mobile_numbers':
         if (data.id) {
-          responseJson = yield call(
-            SettingsService.makeMobilePrimary,
-            data.id,
-            data,
-          );
+          response = yield call(Rehive.updateMobile, data.id, data);
         } else {
-          responseJson = yield call(SettingsService.addMobile, data);
+          response = yield call(Rehive.createMobile, data);
         }
         break;
       case 'email_address':
         if (data.id) {
-          responseJson = yield call(
-            SettingsService.makeEmailPrimary,
-            data.id,
-            data,
-          );
+          response = yield call(Rehive.updateEmail, data.id, data);
         } else {
-          responseJson = yield call(SettingsService.addEmail, data);
+          response = yield call(Rehive.createEmail, data);
         }
         break;
       case 'crypto_address':
         if (data.id) {
-          responseJson = yield call(
-            SettingsService.editCryptoAddresses,
-            data.id,
-            data,
-          );
+          response = yield call(Rehive.updateCryptoAccount, data.id, data);
         } else {
-          responseJson = yield call(SettingsService.addCryptoAddresses, data);
+          response = yield call(Rehive.createCryptoAccount, data);
         }
         break;
       case 'bank_account':
         if (data.id) {
-          responseJson = yield call(
-            SettingsService.editBankAccount,
-            data.id,
-            data,
-          );
+          response = yield call(Rehive.updateBankAccount, data.id, data);
         } else {
-          responseJson = yield call(SettingsService.addBankAccount, data);
+          response = yield call(Rehive.createBankAccount, data);
         }
         break;
       case 'profile':
-        console.log('data', data);
-        responseJson = yield call(UserInfoService.updateUserDetails, data);
+        response = yield call(Rehive.updateProfile, data);
         break;
       case 'address':
-        console.log('data', data);
-        responseJson = yield call(UserInfoService.updateAddress, data);
+        response = yield call(Rehive.updateAddress, data);
         break;
       // case 'documents':
-      //   responseJson = yield call(UserInfoService.getAllDocuments, data);
+      //   response = yield call(Rehive.getAllDocuments, data);
       //   break;
     }
-    console.log('responseJson', responseJson);
-    if (responseJson && responseJson.status === 'success') {
-      yield all([
-        put({ type: UPDATE_ASYNC.success }),
-        put({ type: FETCH_DATA_ASYNC.pending, payload: type }),
-      ]);
-    } else {
-      console.log(responseJson.message);
-      yield put({
-        type: UPDATE_ASYNC.error,
-        payload: responseJson.message,
-      });
-    }
+    yield all([
+      put({ type: UPDATE_ASYNC.success }),
+      put({ type: FETCH_DATA_ASYNC.pending, payload: type }),
+    ]);
   } catch (error) {
     console.log(error);
     yield put({ type: UPDATE_ASYNC.error, error });
@@ -196,33 +147,25 @@ function* updateItem(action) {
 function* deleteItem(action) {
   try {
     const { data, type } = action.payload;
-    let responseJson = null;
+    let response = null;
     switch (type) {
       case 'mobile_number':
-        responseJson = yield call(SettingsService.deleteMobile, data.id);
+        response = yield call(Rehive.deleteMobile, data.id);
         break;
       case 'email_address':
-        responseJson = yield call(SettingsService.deleteEmail, data.id);
+        response = yield call(Rehive.deleteEmail, data.id);
         break;
       case 'crypto_address':
-        responseJson = yield call(SettingsService.deleteCryptoAddress, data.id);
+        response = yield call(Rehive.deleteCryptoAccount, data.id);
         break;
       case 'bank_account':
-        responseJson = yield call(SettingsService.deleteBankAccount, data.id);
+        response = yield call(Rehive.deleteBankAccount, data.id);
         break;
     }
-    console.log(responseJson);
-    if (responseJson && responseJson.status === 'success') {
-      yield all([
-        put({ type: DELETE_ASYNC.success }),
-        put({ type: FETCH_DATA_ASYNC.pending, payload: type }),
-      ]);
-    } else {
-      yield put({
-        type: DELETE_ASYNC.error,
-        payload: responseJson.error,
-      });
-    }
+    yield all([
+      put({ type: DELETE_ASYNC.success }),
+      put({ type: FETCH_DATA_ASYNC.pending, payload: type }),
+    ]);
   } catch (error) {
     console.log(error);
     yield put({ type: DELETE_ASYNC.error, error });
@@ -232,55 +175,35 @@ function* deleteItem(action) {
 function* verifyItem(action) {
   try {
     const { type, value, company } = action.payload;
-    let responseJson = null;
-    let message = '';
-    let data;
-    console.log(action);
+    let response = null;
     switch (type) {
       case 'mobile_number':
-        data = {
-          mobile: value,
-          company,
-        };
-        responseJson = yield call(
-          SettingsService.resendMobileVerification,
-          data,
-        );
-        // message =
+        response = yield call(Rehive.resendMobileVerification, value, company);
         break;
       case 'mobile_number_otp':
-        data = {
-          otp: value,
-        };
-        responseJson = yield call(SettingsService.verifyMobile, data);
+        response = yield call(Rehive.submitOTP, value);
         break;
       case 'email_address':
-        data = {
-          email: value,
-          company,
-        };
-        console.log(data);
-        responseJson = yield call(
-          SettingsService.resendEmailVerification,
-          data,
-        );
+        response = yield call(Rehive.resendEmailVerification, value, company);
         break;
     }
-    // console.log(responseJson);
-    if (responseJson && responseJson.status === 'success') {
-      yield all([
-        put({ type: VERIFY_ASYNC.success }),
-        // put({ type: FETCH_DATA_ASYNC.pending, payload: type }),
-      ]);
-    } else {
-      yield put({
-        type: VERIFY_ASYNC.error,
-        payload: responseJson.error,
-      });
-    }
+    yield all([
+      put({ type: VERIFY_ASYNC.success }),
+      put({ type: FETCH_DATA_ASYNC.pending, payload: type }),
+    ]);
   } catch (error) {
     console.log(error);
     yield put({ type: VERIFY_ASYNC.error, error });
+  }
+}
+
+function* uploadProfilePhoto(action) {
+  try {
+    yield call(Rehive.updateProfileImage, action.payload);
+    yield put({ type: FETCH_DATA_ASYNC.pending, payload: 'profile' });
+  } catch (error) {
+    console.log(error);
+    // yield put({ type: VERIFY_ASYNC.error, error });
   }
 }
 
@@ -290,6 +213,7 @@ export const userSagas = all([
   takeEvery(UPDATE_ASYNC.pending, updateItem),
   takeEvery(DELETE_ASYNC.pending, deleteItem),
   takeEvery(VERIFY_ASYNC.pending, verifyItem),
+  takeEvery(UPLOAD_PROFILE_PHOTO, uploadProfilePhoto),
 ]);
 
 // function* apiSaga(fn, args, successAction, errorAction) {

@@ -11,8 +11,10 @@ import {
   SET_SEND_WALLET,
   RESET_SEND,
   SEND_ASYNC,
+  SET_WITHDRAW_STATE,
   WITHDRAW_ASYNC,
   SET_WITHDRAW_WALLET,
+  SET_WITHDRAW_BANK_ACCOUNT,
   RESET_WITHDRAW,
   VIEW_WALLET,
   HIDE_WALLET,
@@ -120,6 +122,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         sendError: action.payload,
+        WithdrawError: action.payload,
       };
     case SET_SEND_STATE:
       return {
@@ -156,6 +159,56 @@ export default (state = INITIAL_STATE, action) => {
         sendError: action.payload,
         sending: false,
       };
+
+    case SET_WITHDRAW_WALLET:
+      return {
+        ...state,
+        withdrawWallet: action.payload,
+        withdrawState: 'amount',
+        withdrawError: '',
+      };
+    case SET_WITHDRAW_STATE:
+      return {
+        ...state,
+        withdrawState: action.payload,
+        withdrawError: '',
+      };
+    case SET_WITHDRAW_BANK_ACCOUNT:
+      return {
+        ...state,
+        withdrawBankAccount: action.payload,
+        withdrawError: '',
+      };
+    case RESET_WITHDRAW:
+      return {
+        ...state,
+        withdrawAmount: '',
+        withdrawWallet: null,
+        withdrawBankAccount: null,
+        withdrawNote: '',
+        withdrawAccountName: '',
+        withdrawState: 'amount',
+        withdrawError: '',
+      };
+    case WITHDRAW_ASYNC.pending:
+      return {
+        ...state,
+        withdrawing: true,
+      };
+    case WITHDRAW_ASYNC.success:
+      return {
+        ...state,
+        withdrawState: 'success',
+        withdrawing: false,
+      };
+    case WITHDRAW_ASYNC.error:
+      return {
+        ...state,
+        withdrawState: 'fail',
+        withdrawError: action.payload,
+        withdrawing: false,
+      };
+
     case VIEW_WALLET:
       return {
         ...state,

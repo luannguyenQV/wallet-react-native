@@ -6,7 +6,6 @@ import {
   Alert,
   RefreshControl,
 } from 'react-native';
-import Spinner from 'react-native-loading-spinner-overlay';
 import Notification from './../../../components/notification';
 import SettingsService from './../../../services/settingsService';
 import ResetNavigation from './../../../util/resetNavigation';
@@ -86,11 +85,11 @@ class MobileNotificationsScreen extends Component {
           back
           title="Mobile Notifications"
         />
-        <Spinner
+        {/* <Spinner
           visible={this.state.loading}
           textContent={'Updating...'}
           textStyle={{ color: '#FFF' }}
-        />
+        /> */}
         <ListView
           refreshControl={
             <RefreshControl

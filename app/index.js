@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import configureStore from './redux/store';
+// import configureStore from './redux/store';
+import { persistor, store } from './redux/store';
 import { AppLoading, Asset, Font } from 'expo';
 // import { store, persistor } from './redux/store';
 
 import AppNavigator from './routes/stackNavigator';
+
+// const _XHR = GLOBAL.originalXMLHttpRequest
+//   ? GLOBAL.originalXMLHttpRequest
+//   : GLOBAL.XMLHttpRequest;
+
+// XMLHttpRequest = _XHR;
 
 function cacheImages(images) {
   return images.map(image => {
@@ -44,7 +51,7 @@ class App extends Component {
   }
 
   render() {
-    const { persistor, store } = configureStore();
+    // const { persistor, store } = configureStore();
     console.disableYellowBox = true;
 
     return (

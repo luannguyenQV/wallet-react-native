@@ -170,7 +170,7 @@ class CardList extends Component {
       otp,
       setActiveCurrency,
     } = this.props;
-    console.log(this.props);
+    // console.log(this.props);
 
     let contentText = '';
     let textActionOne = '';
@@ -297,7 +297,9 @@ class CardList extends Component {
             data={data}
             renderItem={({ item, index }) => this.renderItem(item, index)}
             keyExtractor={
-              keyExtractor ? keyExtractor : item => (item.id ? item.id : null)
+              keyExtractor
+                ? keyExtractor
+                : item => (item.id ? item.id.toString() : null)
             }
             ListEmptyComponent={this.renderEmptyList()}
           />

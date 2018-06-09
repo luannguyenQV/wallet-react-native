@@ -17,20 +17,22 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const sagaMiddleware = createSagaMiddleware();
 
-export default function configureStore(initialState = {}) {
-  const store = createStore(
-    persistedReducer,
-    initialState,
-    compose(
-      applyMiddleware(thunk, sagaMiddleware),
-      global.reduxNativeDevTools
-        ? global.reduxNativeDevTools(/*options*/)
-        : noop => noop,
-    ),
-  );
-  sagaMiddleware.run(rootSaga);
+const initialState = {};
 
-  const persistor = persistStore(store);
-  // persistor.purge();
-  return { persistor, store };
-}
+// export default function configureStore() {
+export const store = createStore(
+  persistedReducer,
+  initialState,
+  compose(
+    applyMiddleware(thunk, sagaMiddleware),
+    global.reduxNativeDevTools
+      ? global.reduxNativeDevTools(/*options*/)
+      : noop => noop,
+  ),
+);
+sagaMiddleware.run(rootSaga);
+
+export const persistor = persistStore(store);
+// persistor.purge();
+// return { persistor, store };
+// }

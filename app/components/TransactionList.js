@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { View, FlatList, Text, RefreshControl } from 'react-native';
 
-import TransactionService from './../services/transactionService';
+import * as Rehive from './../util/rehive';
+
 import TransactionListItem from './TransactionListItem';
 import { Card, EmptyListMessage, PopUpGeneral, Output } from './common';
 import Colors from './../config/colors';
@@ -33,12 +34,10 @@ class TransactionList extends Component {
     // if (this.props.fetchAccounts) {
     //   this.props.fetchAccounts();
     // }
-    let responseJson = await TransactionService.getAllTransactionsByCurrency(
-      currencyCode,
-    );
+    let response = await Rehive.getTransactions(currencyCode);
     this.setState({
       previousCurrencyCode: currencyCode,
-      transactions: responseJson.data.results,
+      transactions: response.results,
       loading: false,
     });
   }

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput } from 'react-native';
+import { View, Text, TextInput, FlatList } from 'react-native';
 import Colors from './../../config/colors';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import CountryPicker from 'react-native-country-picker-modal';
+import { ListItem } from './ListItem';
 
 class Input extends Component {
   state = {
@@ -73,8 +74,6 @@ class Input extends Component {
       iconNameVisibility,
       cca2,
     } = this.state;
-
-    // console.log(this.state);
 
     return (
       <View
@@ -152,7 +151,19 @@ class Input extends Component {
   }
 
   render() {
-    const { label, value, required, inputError, helperText } = this.props;
+    const {
+      label,
+      value,
+      required,
+      inputError,
+      helperText,
+      data,
+      loadingData,
+      title,
+      subtitle,
+      type,
+      onPressListItem,
+    } = this.props;
 
     const {
       viewStyleContainer,
@@ -161,52 +172,85 @@ class Input extends Component {
       textStyleLabel,
       textStyleFooter,
       viewStyleContent,
+      viewStylePopUp,
     } = styles;
 
     const { focused } = this.state;
 
+    console.log(value, this.props);
+
     return (
-      <View style={viewStyleContainer}>
-        <View
-          style={[
-            viewStyleContent,
-            {
-              borderColor: inputError
-                ? Colors.error
-                : focused ? Colors.focus : Colors.lightGray,
-              borderBottomWidth: inputError || focused ? 2 : 1,
-            },
-          ]}>
-          {focused || value ? (
-            <View style={viewStyleLabel}>
+      <View>
+        <View style={viewStyleContainer}>
+          <View
+            style={[
+              viewStyleContent,
+              {
+                borderColor: inputError
+                  ? Colors.error
+                  : focused ? Colors.focus : Colors.lightGray,
+                borderBottomWidth: inputError || focused ? 2 : 1,
+              },
+            ]}>
+            {focused || value ? (
+              <View style={viewStyleLabel}>
+                <Text
+                  style={[
+                    textStyleLabel,
+                    {
+                      color: inputError
+                        ? Colors.error
+                        : focused ? Colors.focus : 'rgba(0,0,0,0.6)',
+                    },
+                  ]}>
+                  {label}
+                  {required ? ' *' : ''}
+                </Text>
+              </View>
+            ) : null}
+            {this.renderInput()}
+          </View>
+
+          {data ? (
+            <FlatList
+              // refreshControl={
+              //   <RefreshControl
+              //     refreshing={loadingData}
+              //     onRefresh={() => fetchData(type)}
+              //   />string.indexOf(substring) !== -1
+              // }
+              keyboardShouldPersistTaps="handled"
+              style={{ backgroundColor: Colors.onPrimary }}
+              // data={data.filter(item => item[title] === value)}
+              data={
+                value
+                  ? data.filter(item => item[title].indexOf(value) !== -1)
+                  : data
+              }
+              renderItem={({ item }) => (
+                <ListItem
+                  onPress={() => onPressListItem(item)}
+                  title={item[title]}
+                  subtitle={item[subtitle]}
+                />
+              )}
+              keyExtractor={item => (item.id ? item.id.toString() : '')}
+              // ListEmptyComponent={<ListItem title="No data" />}
+            />
+          ) : null}
+
+          {inputError || helperText ? (
+            <View style={viewStyleHelper}>
               <Text
                 style={[
-                  textStyleLabel,
-                  {
-                    color: inputError
-                      ? Colors.error
-                      : focused ? Colors.focus : 'rgba(0,0,0,0.6)',
-                  },
+                  textStyleFooter,
+                  { color: inputError ? Colors.error : Colors.onPrimary },
                 ]}>
-                {label}
-                {required ? ' *' : ''}
+                {inputError ? 'Error: ' + inputError : helperText}
               </Text>
             </View>
           ) : null}
-          {this.renderInput()}
         </View>
-
-        {inputError || helperText ? (
-          <View style={viewStyleHelper}>
-            <Text
-              style={[
-                textStyleFooter,
-                { color: inputError ? Colors.error : Colors.onPrimary },
-              ]}>
-              {inputError ? 'Error: ' + inputError : helperText}
-            </Text>
-          </View>
-        ) : null}
       </View>
     );
   }
@@ -230,6 +274,15 @@ const styles = {
     minHeight: 56,
     justifyContent: 'center',
   },
+  viewStylePopUp: {
+    // position: 'absolute',
+    // top: 8,
+    // flex: 1,
+    elevation: 20,
+    backgroundColor: 'orange',
+    height: 200,
+    // width: 100,
+  },
   viewStyleLabel: {
     height: 20,
   },
@@ -239,6 +292,7 @@ const styles = {
   },
   viewStyleInput: {
     flexDirection: 'row',
+    // height: 32,
   },
   viewStyleHelper: {
     minHeight: 28,
@@ -251,6 +305,7 @@ const styles = {
     fontWeight: 'normal',
     flex: 1,
     fontSize: 16,
+    // height: 24,
     color: 'rgba(0,0,0,0.87)',
   },
   textStyleCode: {
@@ -259,7 +314,6 @@ const styles = {
     textAlign: 'right',
     fontWeight: 'normal',
     alignItems: 'center',
-    fontSize: 16,
   },
   textStyleFooter: {
     paddingTop: 4,

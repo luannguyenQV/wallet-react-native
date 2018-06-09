@@ -10,21 +10,9 @@ import _ from 'lodash';
 import Swiper from 'react-native-swiper';
 
 import Header from './../../components/header';
-
-import TransactionPopUp from './../../components/wallet/TransactionPopUp';
 import HeaderWallet from '../../components/HeaderWallet';
 import TransactionList from './../../components/TransactionList';
 import HomeCards from './../../components/HomeCards';
-
-import * as rehive from './../../util/rehive';
-
-const renderPagination = (index, total, context) => {
-  return (
-    <View style={styles.paginationStyle}>
-      <Text style={{ color: 'grey' }} />
-    </View>
-  );
-};
 
 class HomeScreen extends Component {
   static navigationOptions = {
@@ -38,9 +26,7 @@ class HomeScreen extends Component {
 
   render() {
     const { wallets, activeWalletIndex, fetchAccounts } = this.props;
-    // console.log(accounts);
-    // console.log(rehive.rehive);
-    // console.log('rehive.getEmails', rehive.getEmails);
+
     return (
       <View style={styles.container}>
         <Header
@@ -59,7 +45,7 @@ class HomeScreen extends Component {
         />
         {/* currency={item} accountLabel={account.name} /> */}
         {/* {this.renderAccounts()} */}
-        <Swiper renderPagination={renderPagination} loop={false}>
+        <Swiper showsPagination={false}>
           {/* <View style={{ flex: 1 }} /> */}
           <HomeCards navigation={this.props.navigation} />
           <TransactionList
@@ -86,11 +72,6 @@ const styles = {
     flex: 1,
     flexDirection: 'column',
     backgroundColor: 'white',
-  },
-  paginationStyle: {
-    position: 'absolute',
-    bottom: 10,
-    right: 10,
   },
 };
 

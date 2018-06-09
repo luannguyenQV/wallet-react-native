@@ -5,18 +5,20 @@ import {
   INPUT_FIELD_UPDATE,
   SET_SEND_WALLET,
   INPUT_FIELD_ERROR,
-  SET_SEND_RECIPIENT,
-  SET_SEND_NOTE,
+  SET_WITHDRAW_WALLET,
+  SET_WITHDRAW_BANK_ACCOUNT,
+  SET_WITHDRAW_STATE,
+  RESET_WITHDRAW,
   SET_SEND_STATE,
   RESET_SEND,
   SEND_ASYNC,
   VIEW_WALLET,
   HIDE_WALLET,
+  WITHDRAW_ASYNC,
 } from './../types';
 import _ from 'lodash';
+import * as Rehive from './../../util/rehive';
 import Big from 'big.js';
-
-import TransactionService from './../../services/transactionService';
 
 export const fetchAccounts = () => {
   return { type: FETCH_ACCOUNTS_ASYNC.pending };
@@ -82,7 +84,7 @@ export const setSendState = state => {
   }
 };
 
-export const sendFieldUpdate = ({ prop, value }) => {
+export const inputFieldUpdate = ({ prop, value }) => {
   return {
     type: INPUT_FIELD_UPDATE,
     payload: { prop, value },
@@ -102,35 +104,45 @@ export const send = data => async dispatch => {
     amount = amount.times(10);
   }
   dispatch({ type: SEND_ASYNC.pending });
-  let responseJson = await TransactionService.sendMoney(
-    amount,
-    data.recipient,
-    data.note,
-    data.currency.code,
-    data.reference,
-  );
-  // console.log(responseJson);
-  if (responseJson.status === 'success') {
+  try {
+    await Rehive.createTransfer(
+      amount,
+      data.recipient,
+      data.note,
+      data.currency.code,
+      data.reference,
+    );
     dispatch({
       type: SEND_ASYNC.success,
     });
-  } else {
+  } catch (error) {
     dispatch({
       type: SEND_ASYNC.error,
-      payload: responseJson.message,
+      payload: error,
     });
   }
 };
 
 export const setWithdrawWallet = wallet => {
-  if (wallet) {
-    return {
-      type: SET_WITHDRAW_WALLET,
-      payload: wallet,
-    };
-  } else {
-    // Return fail?
-  }
+  return {
+    type: SET_WITHDRAW_WALLET,
+    payload: wallet,
+  };
+};
+
+export const setWithdrawBankAccount = bankAccount => {
+  return {
+    type: SET_WITHDRAW_BANK_ACCOUNT,
+    payload: bankAccount,
+  };
+};
+
+export const validateWithdrawBankAccount = note => {
+  return setWithdrawState('note');
+};
+
+export const validateWithdrawNote = note => {
+  return setWithdrawState('confirm');
 };
 
 export const validateWithdrawAmount = (wallet, amount) => {
@@ -140,7 +152,7 @@ export const validateWithdrawAmount = (wallet, amount) => {
     amount = amount * 10;
   }
   if (amount <= wallet.currency.available_balance && amount) {
-    return setWithdrawState('recipient');
+    return setWithdrawState('account');
   } else {
     return {
       type: WITHDRAW_FIELD_ERROR,
@@ -149,12 +161,23 @@ export const validateWithdrawAmount = (wallet, amount) => {
   }
 };
 
-export const withdrawFieldUpdate = ({ prop, value }) => {
-  return {
-    type: WITHDRAW_FIELD_UPDATE,
-    payload: { prop, value },
-  };
+export const setWithdrawState = state => {
+  if (state) {
+    return {
+      type: SET_WITHDRAW_STATE,
+      payload: state,
+    };
+  } else {
+    // Return fail?
+  }
 };
+
+// export const withdrawFieldUpdate = ({ prop, value }) => {
+//   return {
+//     type: WITHDRAW_FIELD_UPDATE,
+//     payload: { prop, value },
+//   };
+// };
 
 export const resetWithdraw = () => {
   return {
@@ -163,28 +186,27 @@ export const resetWithdraw = () => {
 };
 
 export const withdraw = data => async dispatch => {
-  // console.log(data);
   let amount = new Big(data.amount);
   for (let i = 0; i < data.currency.divisibility; i++) {
     amount = amount.times(10);
   }
-  dispatch({ type: WITHDRAW });
-  let responseJson = await TransactionService.sendMoney(
-    amount,
-    data.recipient,
-    data.note,
-    data.currency.code,
-    data.reference,
-  );
-  // console.log(responseJson);
-  if (responseJson.status === 'success') {
+  dispatch({ type: WITHDRAW_ASYNC.pending });
+  try {
+    await Rehive.createDebit(
+      amount,
+      data.currency.code,
+      data.reference,
+      data.note,
+      data.metadata,
+    );
     dispatch({
-      type: WITHDRAW_SUCCESS,
+      type: WITHDRAW_ASYNC.success,
     });
-  } else {
+  } catch (error) {
+    console.log(error);
     dispatch({
-      type: WITHDRAW_FAIL,
-      payload: responseJson.message,
+      type: WITHDRAW_ASYNC.error,
+      payload: error,
     });
   }
 };
@@ -195,13 +217,6 @@ export const setActiveCurrency = wallet => {
     payload: wallet,
   };
 };
-
-// export const setActiveCurrency = wallet => async () => {
-//   let responseJson = await AccountService.setActiveCurrency(
-//     wallet.account_reference,
-//     wallet.currency.currency.code,
-//   );
-// };
 
 export const viewWallet = wallet => {
   return {

@@ -3,6 +3,7 @@ import { createAsyncTypes } from './store/Utilities';
 // AUTH
 export const LOGIN_USER_ASYNC = createAsyncTypes('login_user');
 export const REGISTER_USER_ASYNC = createAsyncTypes('register_user');
+export const LOGOUT_USER_ASYNC = createAsyncTypes('logout_user');
 export const AUTH_FIELD_CHANGED = 'auth_field_changed';
 export const AUTH_FIELD_ERROR = 'auth_field_error';
 export const TERMS_CHANGED = 'terms_changed';
@@ -46,8 +47,7 @@ export const WITHDRAW_FIELD_ERROR = 'withdraw_field_error';
 export const WITHDRAW_ASYNC = createAsyncTypes('withdraw');
 export const SET_WITHDRAW_WALLET = 'set_withdraw_wallet';
 export const SET_WITHDRAW_AMOUNT = 'set_withdraw_amount';
-export const SET_WITHDRAW_RECIPIENT = 'set_withdraw_recipient';
-export const SET_WITHDRAW_NOTE = 'set_withdraw_note';
+export const SET_WITHDRAW_BANK_ACCOUNT = 'set_withdraw_bank_account';
 export const SET_WITHDRAW_STATE = 'set_withdraw_state';
 export const RESET_WITHDRAW = 'reset_withdraw';
 
@@ -65,3 +65,4 @@ export const NEW_ITEM = 'new_item';
 export const EDIT_PROFILE = 'edit_profile';
 export const HIDE_MODAL = 'hide_modal';
 export const SHOW_MODAL = 'show_modal';
+export const UPLOAD_PROFILE_PHOTO = 'upload_profile_photo';

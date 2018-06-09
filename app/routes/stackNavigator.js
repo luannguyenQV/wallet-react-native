@@ -13,9 +13,8 @@ import Send from './../screens/main/transactions/sendScreen';
 import Receive from './../screens/main/transactions/receiveScreen';
 import QRcodeScanner from './../screens/main/transactions/qrcodeScannerScreen';
 
-import BankAccounts from './../screens/main/wallets/withdrawBankAccountsScreen';
-import CryptoAddresses from './../screens/main/wallets/withdrawCryptoAddressesScreen';
-import WithdrawAmountEntry from './../screens/main/wallets/withdrawAmountEntryScreen';
+import Deposit from './../screens/main/wallets/depositScreen';
+import Withdraw from './../screens/main/wallets/withdrawScreen';
 
 import SettingsEmailAddresses from './../screens/settings/emailAddressesScreen';
 import VerifyMobileNumber from './../screens/settings/verifyMobileScreen';
@@ -25,13 +24,10 @@ import SettingsCryptoAddresses from './../screens/settings/cryptoAddressesScreen
 
 import SettingsGetVerified from './../screens/settings/getVerified/getVerifiedScreen';
 import Document from './../screens/settings/getVerified/documentScreen';
-import DocumentUpload from './../screens/settings/getVerified/documentUploadScreen';
 
 import SettingsNotifications from './../screens/settings/notifications/notificationsScreen';
 import EmailNotifications from './../screens/settings/notifications/emailNotificationsScreen';
 import MobileNotifications from './../screens/settings/notifications/mobileNotificationsScreen';
-
-import UploadImage from './../screens/settings/profileImage/uploadImageScreen';
 
 import ChangePassword from './../screens/settings/security/changePasswordScreen';
 import TwoFactor from '../screens/settings/security/twoFactor/twoFactorScreen';
@@ -43,9 +39,6 @@ import Pin from './../screens/settings/security/pinScreen';
 import SettingsCards from './../screens/settings/cardsScreen';
 import SettingsAddress from './../screens/settings/addressScreen';
 import SettingsPersonalDetails from './../screens/settings/personalDetailsScreen';
-
-import Deposit from './../screens/main/wallets/depositScreen';
-import Withdraw from './../screens/main/wallets/withdrawScreen';
 
 const Stack = {
   AuthScreen: {
@@ -63,30 +56,28 @@ const Stack = {
   AuthVerifyMobile: {
     screen: AuthVerifyMobile,
   },
+  Wallets: {
+    screen: Wallets,
+  },
+  QRcodeScanner: {
+    screen: QRcodeScanner,
+  },
   Send: {
     screen: Send,
   },
   Receive: {
     screen: Receive,
   },
-  BankAccounts: {
-    screen: BankAccounts,
+  Deposit: {
+    screen: Deposit,
   },
-  CryptoAddresses: {
-    screen: CryptoAddresses,
+  Withdraw: {
+    screen: Withdraw,
   },
-  WithdrawAmountEntry: {
-    screen: WithdrawAmountEntry,
+  Document: {
+    screen: Document,
   },
-  QRcodeScanner: {
-    screen: QRcodeScanner,
-  },
-  Wallets: {
-    screen: Wallets,
-  },
-  UploadImage: {
-    screen: UploadImage,
-  },
+
   SettingsPersonalDetails: {
     screen: SettingsPersonalDetails,
   },
@@ -101,12 +92,6 @@ const Stack = {
   },
   SettingsGetVerified: {
     screen: SettingsGetVerified,
-  },
-  Document: {
-    screen: Document,
-  },
-  DocumentUpload: {
-    screen: DocumentUpload,
   },
   SettingsAddress: {
     screen: SettingsAddress,
@@ -146,12 +131,6 @@ const Stack = {
   },
   MobileNotifications: {
     screen: MobileNotifications,
-  },
-  Deposit: {
-    screen: Deposit,
-  },
-  Withdraw: {
-    screen: Withdraw,
   },
 };
 

@@ -30,7 +30,7 @@
       {
         "id": 0,
         "document_type": "id_confirmation",
-        "description": "ID Confirmation Photo / Selfie",
+        "description": "ID Confirmation Photo (Selfie)",
         "require": [{ "id": 0, "type": "front" }]
       }
     ]
@@ -84,7 +84,7 @@
       {
         "id": 7,
         "document_type": "retail_store",
-        "description": "Statement of Account Issued by a Retail Store",
+        "description": "Statement of Account (Retail Store)",
         "require": [{ "id": 0, "type": "front" }]
       }
     ]

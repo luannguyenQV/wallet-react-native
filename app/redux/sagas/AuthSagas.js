@@ -7,35 +7,30 @@ import {
   UPDATE_AUTH_FORM_STATE,
   APP_LOAD_FINISH,
   CHANGE_PASSWORD_ASYNC,
+  LOGOUT_USER_ASYNC,
 } from './../types';
 
-import AuthService from './../../services/authService';
+import * as Rehive from './../../util/rehive';
 
 function* loginUser(action) {
   try {
-    let responseJson = yield call(AuthService.login, action.payload);
+    let response = yield call(Rehive.login, action.payload);
 
-    if (responseJson.status === 'success') {
-      yield put({
-        type: LOGIN_USER_ASYNC.success,
-        payload: responseJson.data.token,
-      });
-    } else {
-      yield put({
-        type: LOGIN_USER_ASYNC.error,
-        payload: responseJson.message,
-      });
-      yield put({
-        type: UPDATE_AUTH_FORM_STATE,
-        payload: {
-          inputState: 'email',
-          authState: 'login',
-          textFooterRight: 'Next',
-        },
-      });
-    }
+    yield put({
+      type: LOGIN_USER_ASYNC.success,
+      payload: response.token,
+    });
   } catch (error) {
+    console.log(error);
     yield put({ type: LOGIN_USER_ASYNC.error, error });
+    yield put({
+      type: UPDATE_AUTH_FORM_STATE,
+      payload: {
+        inputState: 'email',
+        authState: 'login',
+        textFooterRight: 'next',
+      },
+    });
   }
   // let twoFactorResponse = await AuthService.twoFactorAuth();
   // if (twoFactorResponse.status === 'success') {
@@ -55,36 +50,42 @@ function* loginUser(action) {
 
 function* registerUser(action) {
   try {
-    let responseJson = yield call(AuthService.signup, action.payload);
+    let response = yield call(Rehive.register, action.payload);
 
-    if (responseJson.status === 'success') {
-      yield put({
-        type: REGISTER_USER_ASYNC.success,
-        payload: responseJson.data.token,
-      });
-    } else {
-      console.log(responseJson);
-      yield put({
-        type: REGISTER_USER_ASYNC.error,
-        payload: responseJson.message,
-      });
-      yield put({
-        type: UPDATE_AUTH_FORM_STATE,
-        payload: {
-          inputState: 'email',
-          authState: 'register',
-          textFooterRight: 'Next',
-        },
-      });
-    }
+    yield put({
+      type: REGISTER_USER_ASYNC.success,
+      payload: response.token,
+    });
   } catch (error) {
-    console.log(responseJson);
+    console.log(error);
     yield put({ type: REGISTER_USER_ASYNC.error, error });
+    yield put({
+      type: UPDATE_AUTH_FORM_STATE,
+      payload: {
+        inputState: 'email',
+        authState: 'register',
+        textFooterRight: 'Next',
+      },
+    });
+  }
+}
+
+function* logoutUser() {
+  try {
+    let response = yield call(Rehive.logout);
+    yield put({
+      type: LOGOUT_USER_ASYNC.success,
+      payload: response.token,
+    });
+  } catch (error) {
+    console.log(error);
+    yield put({ type: LOGOUT_USER_ASYNC.error, error });
   }
 }
 
 function* appLoad() {
   try {
+    Rehive.initializeSDK();
     yield all([
       put({ type: FETCH_ACCOUNTS_ASYNC.pending }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'profile' }),
@@ -110,20 +111,12 @@ function* appLoad() {
 
 function* changePassword(action) {
   try {
-    let responseJson = yield call(AuthService.changePassword, action.payload);
-    if (responseJson.status === 'success') {
-      yield put({
-        type: CHANGE_PASSWORD_ASYNC.success,
-      });
-    } else {
-      console.log(responseJson);
-      yield put({
-        type: CHANGE_PASSWORD_ASYNC.error,
-        payload: responseJson.message,
-      });
-    }
+    yield call(Rehive.changePassword, action.payload);
+    yield put({
+      type: CHANGE_PASSWORD_ASYNC.success,
+    });
   } catch (error) {
-    console.log(responseJson);
+    console.log(error);
     yield put({ type: CHANGE_PASSWORD_ASYNC.error, error });
   }
 }
@@ -134,4 +127,5 @@ export const authSagas = all([
   takeEvery(REGISTER_USER_ASYNC.success, appLoad),
   takeEvery(REGISTER_USER_ASYNC.pending, registerUser),
   takeEvery(CHANGE_PASSWORD_ASYNC.pending, changePassword),
+  takeEvery(LOGOUT_USER_ASYNC.pending, logoutUser),
 ]);

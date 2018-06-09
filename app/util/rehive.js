@@ -1,128 +1,160 @@
 import Rehive from 'rehive';
-import store from './../redux/store';
+import { store } from './../redux/store';
 
-export const getStore = () => {
-  console.log(store.getState().user);
-  return;
+// SDK initialization
+export let r;
+export const initializeSDK = () => {
+  const token = store.getState().auth.token;
+  if (token) {
+    r = new Rehive({ apiVersion: 3, apiToken: token });
+  } else {
+    r = new Rehive({ apiVersion: 3 });
+  }
 };
 
-let r = new Rehive({ apiVersion: 3 });
+/* AUTHENTICATION */
+export const login = data => r.auth.login(data, { session_duration: 0 });
 
-export const rehive = r;
+export const register = data => r.auth.register(data);
 
-export const login = data => r.auth.login(data).then(user => user, err => err);
+export const logout = () => r.auth.logout();
 
-export const register = data =>
-  r.auth.register(data).then(user => user, err => err);
+export const resendEmailVerification = (email, company) =>
+  r.auth.email.resendEmailVerification({ email, company });
 
-export const logout = () => r.auth.logout().then(res => res, err => err);
+export const resendMobileVerification = (mobile, company) =>
+  r.auth.mobile.resendMobileVerification({ mobile, company });
 
-export const getAccounts = () => r.accounts.get().then(res => res, err => err);
+export const changePassword = (old_password, new_password) =>
+  r.auth.password.change({
+    old_password,
+    new_password1: new_password,
+    new_password2: new_password,
+  });
 
+export const submitOTP = otp => r.auth.mobile.verify({ otp });
+
+// rehive.auth..change({
+//   old_password: "joe1234",
+//   new_password1: "joe1234",
+//   new_password2: "joe1234"
+/* USERS */
+// Profile
+export const getProfile = () => r.user.get();
+
+export const updateProfile = () => r.user.update();
+
+export const updateProfileImage = file => {
+  let formData = new FormData();
+  formData.append('profile', file);
+  r.user.update(formData);
+};
+
+// Address
+export const getAddress = () => r.user.address.get();
+
+export const updateAddress = () => r.user.address.update();
+
+// Bank Accounts
+export const getBankAccounts = () => r.user.bankAccounts.get();
+
+export const createBankAccount = data => r.user.bankAccounts.create(data);
+
+export const updateBankAccount = (id, data) =>
+  r.user.bankAccounts.update(id, data);
+
+export const deleteBankAccount = id => r.user.bankAccounts.delete(id);
+
+// Crypto Accounts
+export const getCryptoAccounts = () => r.user.cryptoAccounts.get();
+
+export const createCryptoAccount = data => r.user.cryptoAccounts.create(data);
+
+export const updateCryptoAccount = (id, data) =>
+  r.user.cryptoAccounts.update(id, data);
+
+export const deleteCryptoAccount = id => r.user.cryptoAccounts.delete(id);
+
+// Documents
+export const getDocuments = () => r.user.documents.get();
+
+export const createDocument = (file, category, type) => {
+  let formData = new FormData();
+  formData.append('file', file);
+  formData.append('document_category', category);
+  formData.append('document_type', type);
+  console.log('formData', formData);
+  return r.user.documents.create(formData);
+};
+
+// Emails
+export const getEmails = () => r.user.emails.get();
+
+export const createEmail = data => r.user.emails.create(data);
+
+export const updateEmail = (id, data) => r.user.emails.update(id, data);
+
+export const deleteEmail = id => r.user.emails.delete(id);
+
+// Mobiles
+export const getMobiles = () => r.user.mobiles.get();
+
+export const updateMobile = (id, data) => r.user.mobiles.update(id, data);
+
+export const createMobile = data => r.user.mobiles.create(data);
+
+export const deleteMobile = id => r.user.mobiles.delete(id);
+
+/* TRANSACTIONS */
 export const getTransactions = currency =>
-  r.transactions
-    .get({ filters: { currency: currency } })
-    .then(res => res, err => err);
+  r.transactions.get({ filters: { currency: currency } });
 
-export const createTransfer = (amount, recipient, memo, currency) =>
-  r.transactions.createTransfer({
+export const createCredit = (amount, currency) =>
+  r.transactions.createCredit({
     amount: parseInt(amount, 0),
-    recipient,
     currency,
   });
 
-export const createDebit = (amount, currency) =>
+export const createDebit = (amount, currency, reference, note, metadata) =>
   r.transactions.createDebit({
     amount: parseInt(amount, 0),
     currency,
+    metadata,
+    reference,
+    note,
   });
 
-export const getProfile = () => r.user.get().then(res => res, err => err);
+export const createTransfer = (
+  amount,
+  recipient,
+  note,
+  currency,
+  debit_account,
+) =>
+  r.transactions.createTransfer({
+    amount: parseInt(amount, 0),
+    recipient,
+    note,
+    currency,
+    debit_account,
+  });
 
-// Mobiles
-export const getMobiles = () =>
-  r.user.mobiles.get().then(res => res, err => err);
+/* ACCOUNTS */
+export const getAccounts = () => r.accounts.get();
 
-export const updateMobile = (id, primary) =>
-  r.user.mobiles.update(id, { primary }).then(res => res, err => err);
+// Create, retrieve, currencies?
 
-export const createMobile = (number, primary) =>
-  r.user.mobiles.create({ number, primary }).then(res => res, err => err);
+export const setActiveCurrency = (reference, currencyCode) =>
+  r.accounts.currencies.update(reference, currencyCode, { active: true });
 
-export const deleteMobile = id =>
-  r.user.mobiles.delete(id).then(res => res, err => err);
+/* COMPANY */
+export const getCompany = () => r.company.get();
 
-// Address
-export const getAddress = () =>
-  r.user.address.get().then(res => res, err => err);
+export const getCompanyCurrencies = () => r.company.currencies.get();
 
-// Company Bank Accounts
-export const getCompanyBankAccounts = () =>
-  r.company.bankAccounts.get().then(res => res, err => err);
+export const getCompanyBankAccounts = () => r.company.bankAccounts.get();
 
-// Bank Accounts
-export const getBankAccounts = () =>
-  r.user.bankAccounts.get().then(res => res, err => err);
-
-export const updateBankAccount = (id, data) =>
-  r.user.bankAccounts.update(id, data).then(res => res, err => err);
-
-export const createBankAccount = data =>
-  r.user.bankAccounts.create(data).then(res => res, err => err);
-
-export const deleteBankAccount = id =>
-  r.user.bankAccounts.delete(id).then(res => res, err => err);
-
-export const updateCurrency = (reference, currencyCode) =>
-  r.accounts.currencies
-    .update(reference, currencyCode, { active: true })
-    .then(res => res, err => err);
-
-// Crypto Accounts
-export const getCryptoAccounts = () =>
-  r.user.cryptoAccounts.get().then(res => res, err => err);
-
-export const updateCryptoAccount = (id, data) =>
-  r.user.cryptoAccounts.update(id, data).then(res => res, err => err);
-
-export const createCryptoAccount = data =>
-  r.user.cryptoAccounts.create(data).then(res => res, err => err);
-
-export const deleteCryptoAccount = id =>
-  r.user.cryptoAccounts.delete(id).then(res => res, err => err);
-
-// Documents
-export const getDocuments = () =>
-  r.user.documents.get().then(res => res, err => err);
-
-export const createDocument = data =>
-  r.user.documents.create(data).then(res => res, err => err);
-
-// Emails
-export const getEmails = () => r.user.emails.get().then(res => res, err => err);
-
-export const updateEmail = (id, email, primary) =>
-  r.user.emails.update(id, { email, primary }).then(res => res, err => err);
-
-export const createEmail = (email, primary) =>
-  r.user.emails.create({ email, primary }).then(res => res, err => err);
-
-export const deleteEmail = id =>
-  r.user.emails.delete(id).then(res => res, err => err);
-
-export const resendEmailVerification = (email, company) =>
-  r.auth.email
-    .resendEmailVerification({ email, company })
-    .then(res => res, err => err);
-
-export const resendMobileVerification = (mobile, company) =>
-  r.auth.mobile
-    .resendMobileVerification({ mobile, company })
-    .then(res => res, err => err);
-
-export const submitOTP = otp =>
-  r.auth.mobile.verify({ otp }).then(res => res, err => err);
-
+/* GENERAL */
 export const callApi = (method, route, token, data) => {
   let headers = {
     Accept: 'application/json',

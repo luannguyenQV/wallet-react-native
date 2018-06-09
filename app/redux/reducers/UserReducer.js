@@ -134,6 +134,7 @@ export default (state = INITIAL_STATE, action) => {
         modalVisible: false,
         loading: false,
         updateError: '',
+        modalType: '',
       };
     case SHOW_MODAL:
       return {
@@ -150,6 +151,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         ['loading_' + action.payload]: true,
         modalVisible: false,
+        modalType: '',
         showDetail: false,
         updateError: '',
       };

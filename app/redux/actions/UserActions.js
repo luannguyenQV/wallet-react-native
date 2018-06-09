@@ -10,6 +10,7 @@ import {
   DELETE_ASYNC,
   SHOW_MODAL,
   HIDE_MODAL,
+  UPLOAD_PROFILE_PHOTO,
 } from './../types';
 
 export const updateInputField = (type, prop, value) => {
@@ -84,6 +85,18 @@ export const showModal = (type, item, modalType) => {
 export const hideModal = () => {
   return {
     type: HIDE_MODAL,
+  };
+};
+
+export const uploadProfilePhoto = image => {
+  const file = {
+    uri: image,
+    name: 'profile',
+    type: 'image/jpg',
+  };
+  return {
+    type: UPLOAD_PROFILE_PHOTO,
+    payload: file,
   };
 };
 

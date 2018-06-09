@@ -5,13 +5,21 @@ import { refreshGetVerified } from './../../../redux/actions';
 
 import Header from './../../../components/header';
 import GetVerifiedOption from './../../../components/getVerifiedOption';
-import HeaderVerified from './../../../components/HeaderVerified';
+import HeaderProfile from '../../../components/HeaderProfile';
 
-import { Spinner, InputContainer } from './../../../components/common';
+import {
+  Spinner,
+  InputContainer,
+  ImageUpload,
+} from './../../../components/common';
 
 class GetVerifiedScreen extends Component {
   static navigationOptions = {
     title: 'Get verified',
+  };
+
+  state = {
+    imageUpload: true,
   };
 
   componentDidMount() {
@@ -237,7 +245,7 @@ class GetVerifiedScreen extends Component {
           drawer
           title="Get verified"
         />
-        <HeaderVerified
+        <HeaderProfile
           photoLink={profile.profile}
           name={
             profile.first_name

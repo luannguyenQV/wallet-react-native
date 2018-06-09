@@ -67,7 +67,9 @@ class TransactionListItem extends Component {
             {SCREEN_WIDTH < 350 ? (
               <View>
                 <Text style={textStyleHeader}>{headerTextOne}</Text>
-                <Text style={textStyleHeader}>{headerTextTwo}</Text>
+                {headerTextTwo ? (
+                  <Text style={textStyleHeader}>{headerTextTwo}</Text>
+                ) : null}
               </View>
             ) : (
               <Text style={textStyleHeader}>

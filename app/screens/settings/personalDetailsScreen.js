@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ImagePicker } from 'expo';
-import { View } from 'react-native';
+import { View, Image, Text, TouchableHighlight, Modal } from 'react-native';
 import { connect } from 'react-redux';
 import {
   fetchData,
@@ -13,10 +13,15 @@ import CountryPicker from 'react-native-country-picker-modal';
 import Colors from './../../config/colors';
 import Header from './../../components/header';
 import { Input, Output, Card, CardContainer } from './../../components/common';
+import HeaderProfile from './../../components/HeaderProfile';
 
 class PersonalDetailsScreen extends Component {
   static navigationOptions = {
     title: 'Personal details',
+  };
+
+  state = {
+    modalVisible: false,
   };
 
   componentDidMount() {
@@ -38,9 +43,9 @@ class PersonalDetailsScreen extends Component {
     this.props.navigation.navigate('UploadImage', { image: result });
   };
 
-  openModal = async () => {
-    this.setState({ modalVisible: true });
-  };
+  // openModal = () => {
+  //   this.setState({ modalVisible: true });
+  // };
 
   launchCamera = async () => {
     let result = await ImagePicker.launchCameraAsync({
@@ -77,6 +82,7 @@ class PersonalDetailsScreen extends Component {
     } = this.props;
     const { first_name, last_name, id_number } = profile;
     const { viewStyleContainer, imageStylePhoto } = styles;
+    const { modalVisible } = this.state;
     return (
       <View style={{ flex: 1 }}>
         <Header
@@ -88,10 +94,19 @@ class PersonalDetailsScreen extends Component {
             showDetail ? updateItem('profile', temp_profile) : this.toggleEdit()
           }
         />
-        <View style={viewStyleContainer}>
-          {/* <TouchableHighlight
+        <HeaderProfile
+          photoLink={profile.profile}
+          name={
+            profile.first_name
+              ? profile.first_name + ' ' + profile.last_name
+              : profile.username
+          }
+        />
+        {/* <View style={viewStyleContainer}>
+          <TouchableHighlight
             style={{ width: 100 }}
-            onPress={() => this.openModal()}>
+            // onPress={() => this.openModal()}
+          >
             {temp_profile.profile ? (
               <Image
                 style={imageStylePhoto}
@@ -107,8 +122,8 @@ class PersonalDetailsScreen extends Component {
                 style={styles.photo}
               />
             )}
-          </TouchableHighlight> */}
-        </View>
+          </TouchableHighlight>
+        </View> */}
         <CardContainer>
           <Card
             textActionOne={showDetail ? 'SAVE' : ''}
@@ -200,7 +215,7 @@ class PersonalDetailsScreen extends Component {
           backdropTransitionInTiming={500}
           backdropColor="black"
           onBackdropPress={() => this.setState({ modalVisible: false })}
-          isVisible={modalVisible}>
+          isVisible={false}>
           <View style={styles.modal}>
             <View style={styles.bottomModal}>
               <View

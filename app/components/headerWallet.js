@@ -5,6 +5,8 @@ import {
   setActiveWalletIndex,
   setSendWallet,
   resetSend,
+  setWithdrawWallet,
+  resetWithdraw,
   viewWallet,
   hideWallet,
 } from './../redux/actions';
@@ -12,7 +14,6 @@ import {
 import Colors from './../config/colors';
 import WalletAction from './WalletAction';
 import HeaderCurrency from './HeaderCurrency';
-import { HeaderButton } from './common';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -88,7 +89,7 @@ class HeaderWallet extends Component {
               onPress={() => this.onButtonPress(item.type)}
             />
           )}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.id.toString()}
           showsHorizontalScrollIndicator={false}
         />
       </View>
@@ -110,9 +111,8 @@ class HeaderWallet extends Component {
         break;
       }
       case 'withdraw': {
-        this.props.setWithdrawWallet(
-          this.props.wallets[this.props.activeWalletIndex],
-        );
+        this.props.resetWithdraw();
+        this.props.setWithdrawWallet(this.props.tempWallet);
         this.props.navigation.navigate('Withdraw');
         break;
       }
@@ -143,7 +143,7 @@ class HeaderWallet extends Component {
 
 const styles = {
   viewStyleContainer: {
-    // flex: 1,
+    flex: 1,
     flexDirection: 'column',
     backgroundColor: Colors.primary,
     // minHeight: 86,
@@ -163,10 +163,11 @@ const styles = {
 };
 
 const mapStateToProps = ({ accounts }) => {
-  const { user, activeWalletIndex } = accounts;
+  const { user, activeWalletIndex, tempWallet } = accounts;
   return {
     user,
     activeWalletIndex,
+    tempWallet,
   };
 };
 
@@ -174,6 +175,8 @@ export default connect(mapStateToProps, {
   setActiveWalletIndex,
   setSendWallet,
   resetSend,
+  setWithdrawWallet,
+  resetWithdraw,
   viewWallet,
   hideWallet,
 })(HeaderWallet);

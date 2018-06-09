@@ -12,8 +12,16 @@ import {
 import { ImagePicker, Permissions } from 'expo';
 import Colors from './../../../config/colors';
 import Header from './../../../components/header';
+
+import * as Rehive from './../../../util/rehive';
+
 import SettingsService from './../../../services/settingsService';
-import { SettingsOption, Button, Spinner } from '../../../components/common';
+import {
+  ImageUpload,
+  Button,
+  Spinner,
+  ButtonList,
+} from '../../../components/common';
 import document_categories from './../../../config/document_types.json';
 
 class DocumentScreen extends Component {
@@ -42,39 +50,9 @@ class DocumentScreen extends Component {
 
   selectType = document_type => {
     this.setState({
-      state: 'upload_option',
+      showModal: true,
       document_type,
     });
-  };
-
-  launchCamera = async () => {
-    Permissions.askAsync(Permissions.CAMERA);
-    Permissions.askAsync(Permissions.CAMERA_ROLL);
-    let result = await ImagePicker.launchCameraAsync({
-      mediaTypes: 'Images',
-      allowsEditing: true,
-      // aspect: [4, 3],
-    });
-    if (!result.cancelled) {
-      this.setState({
-        image: result.uri,
-        state: 'confirm',
-      });
-    }
-  };
-
-  launchImageLibrary = async () => {
-    Permissions.askAsync(Permissions.CAMERA_ROLL);
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: 'Images',
-      allowsEditing: true,
-    });
-    if (!result.cancelled) {
-      this.setState({
-        image: result.uri,
-        state: 'confirm',
-      });
-    }
   };
 
   uploadDocument = async () => {
@@ -84,18 +62,12 @@ class DocumentScreen extends Component {
     const parts = image.split('/');
     const name = parts[parts.length - 1];
     const file = {
-      image,
+      uri: image,
       name,
       type: 'image/jpg',
     };
-    let responseJson = await SettingsService.documentUpload(
-      image,
-      category,
-      document_type,
-    );
-    console.log('responseJson', responseJson);
-    // this.setState({ loading: false });
-    if (responseJson.status === 'success') {
+    try {
+      await Rehive.createDocument(file, category, document_type);
       this.setState({ loading: false });
       Alert.alert(
         'Upload successful',
@@ -103,11 +75,11 @@ class DocumentScreen extends Component {
         [
           {
             text: 'OK',
-            onPress: () => this.setState({ loading: false }),
+            onPress: () => this.props.navigation.goBack(),
           },
         ],
       );
-    } else {
+    } catch (error) {
       this.setState({ loading: false });
       Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
     }
@@ -120,13 +92,11 @@ class DocumentScreen extends Component {
       viewStyleButtonContainer,
       viewStyleImageContainer,
     } = styles;
-    console.log(this.state);
     let options;
 
     let document_category = document_categories.filter(
       document_category => document_category.document_category === category,
     );
-    console.log(document_category);
     if (category) {
       options = document_category[0].document_types;
     }
@@ -141,29 +111,14 @@ class DocumentScreen extends Component {
                 ? 'Your name and address must be clearly visible and be dated within the last 3 months.'
                 : ''}
             </Text>
+            {/* <ButtonList> */}
             <FlatList
               contentContainerStyle={viewStyleButtonContainer}
               data={options}
               renderItem={({ item }) => this.renderTypeButton(item)}
               keyExtractor={item => item.id}
             />
-          </View>
-        );
-      case 'upload_option':
-        return (
-          <View style={viewStyleButtonContainer}>
-            <Button
-              label="Use camera"
-              onPress={this.launchCamera} //this.openModal(item.document_type)}
-            />
-            <Button
-              label="Choose from gallery"
-              onPress={this.launchImageLibrary} //this.openModal(item.document_type)}
-            />
-            <Button
-              label="Cancel"
-              onPress={() => this.resetState()} //this.openModal(item.document_type)}
-            />
+            {/* </ButtonList> */}
           </View>
         );
       case 'confirm':
@@ -178,7 +133,7 @@ class DocumentScreen extends Component {
             {loading ? (
               <Spinner size="large" />
             ) : (
-              <View style={viewStyleButtonContainer}>
+              <ButtonList>
                 <Button
                   label="Upload"
                   onPress={this.uploadDocument} //this.openModal(item.document_type)}
@@ -187,7 +142,7 @@ class DocumentScreen extends Component {
                   label="Cancel"
                   onPress={() => this.resetState()} //this.openModal(item.document_type)}
                 />
-              </View>
+              </ButtonList>
             )}
           </View>
         );
@@ -195,10 +150,10 @@ class DocumentScreen extends Component {
   }
 
   renderTypeButton = item => {
-    console.log(item);
     return (
       <Button
         label={item.description}
+        // size="small"
         onPress={() => this.selectType(item.document_type)}
       />
     );
@@ -210,32 +165,21 @@ class DocumentScreen extends Component {
     return (
       <View style={styles.container}>
         <Header navigation={this.props.navigation} back title="Documents" />
-        <Text style={textStyleHeader}>{category}</Text>
-        <View style={viewStyleContent}>{this.renderContent()}</View>
-        {/* <Output label={'> ' + 'item.description' + ' <'} /> */}
-        <Modal
-          animationType={'slide'}
-          transparent
+        <View style={viewStyleContent}>
+          <Text style={textStyleHeader}>{category}</Text>
+          {this.renderContent()}
+        </View>
+
+        <ImageUpload
           visible={this.state.showModal}
-          onRequestClose={() => {
-            console.log('Modal has been closed.');
-          }}>
-          <View style={styles.modal}>
-            <View style={styles.bottomModal}>
-              <View style={[styles.button, { borderBottomColor: 'black' }]}>
-                <Text style={{ fontSize: 22, fontWeight: 'bold' }}>
-                  {this.state.status}
-                </Text>
-              </View>
-              <TouchableHighlight
-                onPress={() => {
-                  this.setState({ showModal: false });
-                }}>
-                <Text>Cancel</Text>
-              </TouchableHighlight>
-            </View>
-          </View>
-        </Modal>
+          onSave={image =>
+            this.setState({
+              image,
+              state: 'confirm',
+            })
+          }
+          onDismiss={() => this.setState({ showModal: false })}
+        />
       </View>
     );
   }
@@ -244,61 +188,31 @@ class DocumentScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // flexDirection: 'column',
-    backgroundColor: 'white',
+    // justifyContent: 'flex-start',
+    // backgroundColor: 'white',
   },
   viewStyleContent: {
-    // flex: 1,
-    // backgroundColor: Colors.lightgray,
-    // padding: 8,
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 16,
   },
   viewStyleButtonContainer: {
-    // flex: 1,
-    // padding: 8,
-    // justifyContent: 'flex-start',
-    width: '100%',
-    // height: '100%',
+    // width: '100%',
   },
   viewStyleImageContainer: {
-    // alignItems: 'center',
-    justifyContent: 'center',
-  },
-  upload: {
-    marginBottom: 10,
-    marginHorizontal: 20,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: Colors.lightblue,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  modal: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  bottomModal: {
-    width: '70%',
-    height: 220,
-    borderWidth: 1,
-    borderRadius: 10,
-    backgroundColor: 'white',
-    borderColor: Colors.black,
     alignItems: 'center',
     justifyContent: 'center',
   },
   textStyleHeader: {
     fontSize: 20,
-    padding: 16,
+    // padding: 16,
+    // marginBottom: 16,
     textAlign: 'center',
   },
   textStyleDescription: {
     fontSize: 14,
-    flexWrap: 'wrap',
-    paddingHorizontal: 16,
-    paddingBottom: 8,
+    // flexWrap: 'wrap',
+    // paddingBottom: 8,
     textAlign: 'center',
   },
 });
