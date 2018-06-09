@@ -11,7 +11,7 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import HeaderButtons from 'react-navigation-header-buttons';
 import Colors from './../config/colors';
-import DrawerButton from './drawerButton';
+import { HeaderButton } from './common';
 
 export default class Header extends Component {
   constructor(props) {
@@ -57,13 +57,27 @@ export default class Header extends Component {
   };
 
   render() {
+    const {
+      navigation,
+      noAccounts,
+      creditSwitch,
+      debitSwitch,
+      drawer,
+      back,
+      title,
+      right,
+      smallTitle,
+      headerRightText,
+      headerRightOnPress,
+      headerRightIcon,
+    } = this.props;
     return (
       <View
         style={{
           paddingTop: Expo.Constants.statusBarHeight,
-          backgroundColor: Colors.lightblue,
+          backgroundColor: Colors.primary,
         }}>
-        {this.props.noAccounts === true && (
+        {noAccounts === true && (
           <View
             style={{
               paddingVertical: 4,
@@ -77,8 +91,8 @@ export default class Header extends Component {
             </Text>
           </View>
         )}
-        {this.props.creditSwitch === false &&
-          this.props.debitSwitch === true && (
+        {creditSwitch === false &&
+          debitSwitch === true && (
             <View
               style={{
                 paddingVertical: 4,
@@ -92,8 +106,8 @@ export default class Header extends Component {
               </Text>
             </View>
           )}
-        {this.props.debitSwitch === false &&
-          this.props.creditSwitch === true && (
+        {debitSwitch === false &&
+          creditSwitch === true && (
             <View
               style={{
                 paddingVertical: 4,
@@ -107,8 +121,8 @@ export default class Header extends Component {
               </Text>
             </View>
           )}
-        {this.props.debitSwitch === false &&
-          this.props.creditSwitch === false && (
+        {debitSwitch === false &&
+          creditSwitch === false && (
             <View
               style={{
                 paddingVertical: 4,
@@ -146,65 +160,41 @@ export default class Header extends Component {
         )}
         <View style={styles.options}>
           <View style={styles.left}>
-            {this.props.drawer ? (
-              <DrawerButton navigation={this.props.navigation} />
+            {drawer ? (
+              <HeaderButton
+                onPress={() => navigation.navigate('DrawerOpen')}
+                icon="menu"
+              />
             ) : null}
-            {this.props.back ? (
-              <TouchableOpacity
-                onPress={() => this.props.navigation.goBack()}
-                style={{ padding: 20 }}>
-                <Icon name="ios-arrow-back" size={35} color="white" />
-              </TouchableOpacity>
+            {back ? (
+              <HeaderButton
+                onPress={() => navigation.goBack()}
+                style={{ padding: 20 }}
+                icon="arrow-back"
+              />
             ) : null}
           </View>
           <View style={styles.title}>
-            {this.props.title ? (
+            {title ? (
               <Text
-                style={[
-                  styles.titleText,
-                  { fontSize: this.props.smallTitle ? 16 : 20 },
-                ]}>
-                {this.props.title}
+                style={[styles.titleText, { fontSize: smallTitle ? 16 : 20 }]}>
+                {title}
               </Text>
             ) : null}
           </View>
           <View style={styles.rightIcon}>
-            {this.props.right ? (
-              <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('QRcodeScanner')}
-                style={{ padding: 10 }}>
-                <Icon
-                  name="ios-qr-scanner-outline"
-                  size={30}
-                  color="white"
-                  style={{ paddingRight: 10 }}
-                />
-              </TouchableOpacity>
+            {right ? (
+              <HeaderButton
+                onPress={() => navigation.navigate('QRcodeScanner')}
+                icon="camera"
+              />
             ) : null}
-            {this.props.homeRight ? (
-              <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('AccountsB')}
-                style={{
-                  flex: 1,
-                  padding: 10,
-                  alignItems: 'flex-end',
-                  justifyContent: 'flex-start',
-                }}>
-                <Icon
-                  name="ios-arrow-up-outline"
-                  size={30}
-                  color="white"
-                  style={{ paddingRight: 10 }}
-                />
-              </TouchableOpacity>
-            ) : null}
-            {this.props.headerRightTitle ? (
-              <HeaderButtons color="white">
-                <HeaderButtons.Item
-                  title={this.props.headerRightTitle}
-                  onPress={this.props.headerRightOnPress}
-                />
-              </HeaderButtons>
+            {headerRightText || headerRightIcon ? (
+              <HeaderButton
+                text={headerRightText}
+                onPress={headerRightOnPress}
+                icon={headerRightIcon}
+              />
             ) : null}
           </View>
         </View>
@@ -217,8 +207,8 @@ const styles = StyleSheet.create({
   options: {
     width: '100%',
     flexDirection: 'row',
-    backgroundColor: Colors.lightblue,
-    height: 55,
+    backgroundColor: Colors.primary,
+    height: 64,
   },
   left: {
     flex: 1,
@@ -227,7 +217,7 @@ const styles = StyleSheet.create({
   },
   title: {
     flex: 3,
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'center',
   },
   rightIcon: {
@@ -238,5 +228,6 @@ const styles = StyleSheet.create({
   titleText: {
     color: 'white',
     fontSize: 20,
+    paddingLeft: 0,
   },
 });

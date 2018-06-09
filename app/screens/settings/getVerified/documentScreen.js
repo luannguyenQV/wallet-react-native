@@ -5,140 +5,181 @@ import {
   StyleSheet,
   Text,
   TouchableHighlight,
+  FlatList,
+  Alert,
+  Image,
 } from 'react-native';
-import { ImagePicker } from 'expo';
+import { ImagePicker, Permissions } from 'expo';
 import Colors from './../../../config/colors';
 import Header from './../../../components/header';
 
+import * as Rehive from './../../../util/rehive';
+
+import SettingsService from './../../../services/settingsService';
+import {
+  ImageUpload,
+  Button,
+  Spinner,
+  ButtonList,
+} from '../../../components/common';
+import document_categories from './../../../config/document_types.json';
+
 class DocumentScreen extends Component {
   static navigationOptions = {
-    title: 'Document',
+    title: 'Documents',
   };
 
-  constructor(props) {
-    super(props);
-    const params = this.props.navigation.state.params;
-    this.state = {
-      title: params.name,
-      getVerified: false,
-      modalVisible: false,
-      type: 'other',
+  state = {
+    document_type: '',
+    state: '',
+    category: '',
+    showModal: false,
+  };
+
+  componentDidMount() {
+    this.resetState();
+  }
+
+  resetState() {
+    this.setState({
+      document_type: '',
+      state: 'document_type',
+      category: this.props.navigation.state.params.name,
+    });
+  }
+
+  selectType = document_type => {
+    this.setState({
+      showModal: true,
+      document_type,
+    });
+  };
+
+  uploadDocument = async () => {
+    const { image, category, document_type } = this.state;
+    this.setState({ loading: true });
+
+    const parts = image.split('/');
+    const name = parts[parts.length - 1];
+    const file = {
+      uri: image,
+      name,
+      type: 'image/jpg',
     };
-  }
-
-  componentWillMount() {
-    if (this.state.title === 'Proof of Identity') {
-      this.setState({
-        type: 'government_id',
-      });
-    }
-    if (this.state.title === 'Advanced Proof of Identity') {
-      this.setState({
-        type: 'id_confirmation',
-      });
-    }
-    if (this.state.title === 'Proof of Address') {
-      this.setState({
-        type: 'utility_bill',
-      });
-    }
-    if (
-      this.state.title === 'Proof of Identity' ||
-      this.state.title === 'Advanced Proof of Identity' ||
-      this.state.title === 'Proof of Address'
-    ) {
-      this.setState({
-        getVerified: true,
-      });
-    }
-  }
-
-  openModal = async () => {
-    this.setState({ modalVisible: true });
-  };
-
-  launchCamera = async () => {
-    let result = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-      aspect: [4, 3],
-    });
-    this.setState({ modalVisible: false });
-    if (!result.cancelled) {
-      this.props.navigation.navigate('DocumentUpload', {
-        getVerified: this.state.getVerified,
-        image: result,
-        doc_type: this.state.type,
-        type: this.state.title,
-      });
+    try {
+      await Rehive.createDocument(file, category, document_type);
+      this.setState({ loading: false });
+      Alert.alert(
+        'Upload successful',
+        'Your information will shortly be reviewed by our team.',
+        [
+          {
+            text: 'OK',
+            onPress: () => this.props.navigation.goBack(),
+          },
+        ],
+      );
+    } catch (error) {
+      this.setState({ loading: false });
+      Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
     }
   };
 
-  launchImageLibrary = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      aspect: [4, 3],
-    });
-    this.setState({ modalVisible: false });
-    if (!result.cancelled) {
-      this.props.navigation.navigate('DocumentUpload', {
-        getVerified: this.state.getVerified,
-        image: result,
-        doc_type: this.state.type,
-        type: this.state.title,
-      });
+  renderContent() {
+    const { category, state, loading } = this.state;
+    const {
+      textStyleDescription,
+      viewStyleButtonContainer,
+      viewStyleImageContainer,
+    } = styles;
+    let options;
+
+    let document_category = document_categories.filter(
+      document_category => document_category.document_category === category,
+    );
+    if (category) {
+      options = document_category[0].document_types;
     }
+
+    switch (state) {
+      case 'document_type':
+        return (
+          <View>
+            <Text style={textStyleDescription}>
+              Please upload one of the following documents.{' '}
+              {category === 'Proof of Address'
+                ? 'Your name and address must be clearly visible and be dated within the last 3 months.'
+                : ''}
+            </Text>
+            {/* <ButtonList> */}
+            <FlatList
+              contentContainerStyle={viewStyleButtonContainer}
+              data={options}
+              renderItem={({ item }) => this.renderTypeButton(item)}
+              keyExtractor={item => item.id}
+            />
+            {/* </ButtonList> */}
+          </View>
+        );
+      case 'confirm':
+        return (
+          <View>
+            <View style={viewStyleImageContainer}>
+              <Image
+                style={{ height: 300, width: 300 }}
+                source={{ uri: this.state.image }}
+              />
+            </View>
+            {loading ? (
+              <Spinner size="large" />
+            ) : (
+              <ButtonList>
+                <Button
+                  label="Upload"
+                  onPress={this.uploadDocument} //this.openModal(item.document_type)}
+                />
+                <Button
+                  label="Cancel"
+                  onPress={() => this.resetState()} //this.openModal(item.document_type)}
+                />
+              </ButtonList>
+            )}
+          </View>
+        );
+    }
+  }
+
+  renderTypeButton = item => {
+    return (
+      <Button
+        label={item.description}
+        // size="small"
+        onPress={() => this.selectType(item.document_type)}
+      />
+    );
   };
 
   render() {
+    const { category } = this.state;
+    const { textStyleHeader, viewStyleContent } = styles;
     return (
       <View style={styles.container}>
-        <Header
-          navigation={this.props.navigation}
-          back
-          title="Document"
-          headerRightTitle="Upload"
-          headerRightOnPress={() => this.openModal()}
-        />
-        <View style={styles.topContainer}>
-          <Text style={{ fontSize: 18, textAlign: 'center' }}>
-            Instructions of why and how to upload a picture of{' '}
-            {this.state.title}.
-          </Text>
+        <Header navigation={this.props.navigation} back title="Documents" />
+        <View style={viewStyleContent}>
+          <Text style={textStyleHeader}>{category}</Text>
+          {this.renderContent()}
         </View>
-        <Modal
-          animationType={'slide'}
-          transparent
-          visible={this.state.modalVisible}
-          onRequestClose={() => {
-            console.log('Modal has been closed.');
-          }}>
-          <View style={styles.modal}>
-            <View style={styles.bottomModal}>
-              <View style={[styles.button, { borderBottomColor: 'black' }]}>
-                <Text style={{ fontSize: 22, fontWeight: 'bold' }}>
-                  Upload Image
-                </Text>
-              </View>
-              <TouchableHighlight
-                style={styles.button}
-                onPress={() => this.launchCamera()}>
-                <Text style={styles.buttonText}>Use Camera</Text>
-              </TouchableHighlight>
-              <TouchableHighlight
-                style={styles.button}
-                onPress={() => this.launchImageLibrary()}>
-                <Text style={styles.buttonText}>Choose From Gallery</Text>
-              </TouchableHighlight>
-              <TouchableHighlight
-                style={styles.button}
-                onPress={() => {
-                  this.setState({ modalVisible: false });
-                }}>
-                <Text style={styles.buttonText}>Cancel</Text>
-              </TouchableHighlight>
-            </View>
-          </View>
-        </Modal>
+
+        <ImageUpload
+          visible={this.state.showModal}
+          onSave={image =>
+            this.setState({
+              image,
+              state: 'confirm',
+            })
+          }
+          onDismiss={() => this.setState({ showModal: false })}
+        />
       </View>
     );
   }
@@ -147,55 +188,32 @@ class DocumentScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
-    backgroundColor: 'white',
+    // justifyContent: 'flex-start',
+    // backgroundColor: 'white',
   },
-  topContainer: {
-    flex: 1,
-    backgroundColor: Colors.lightgray,
-    padding: 20,
+  viewStyleContent: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+  },
+  viewStyleButtonContainer: {
+    // width: '100%',
+  },
+  viewStyleImageContainer: {
     alignItems: 'center',
     justifyContent: 'center',
   },
-  bottomContainer: {
-    flex: 3,
-    flexDirection: 'column',
+  textStyleHeader: {
+    fontSize: 20,
+    // padding: 16,
+    // marginBottom: 16,
+    textAlign: 'center',
   },
-  upload: {
-    marginBottom: 10,
-    marginHorizontal: 20,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: Colors.lightblue,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  modal: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  bottomModal: {
-    width: '70%',
-    height: 220,
-    borderWidth: 1,
-    borderRadius: 10,
-    backgroundColor: 'white',
-    borderColor: Colors.black,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  button: {
-    height: 50,
-    width: '100%',
-    borderWidth: 1,
-    borderColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonText: {
-    fontSize: 18,
-    color: Colors.black,
+  textStyleDescription: {
+    fontSize: 14,
+    // flexWrap: 'wrap',
+    // paddingBottom: 8,
+    textAlign: 'center',
   },
 });
 

@@ -1,38 +1,28 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput } from 'react-native';
+import { View, Text, TextInput, FlatList } from 'react-native';
 import Colors from './../../config/colors';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import CountryPicker from 'react-native-country-picker-modal';
+import { ListItem } from './ListItem';
 
 class Input extends Component {
   state = {
-    textColor: Colors.black,
-    borderColor: Colors.lightgray,
-    iconNameVisibility: 'visibility-off',
-    secureTextEntry: this.props.type == 'password' ? true : false,
+    focused: false,
+    iconNameVisibility: 'visibility',
+    secureTextEntry: this.props.type === 'password' ? true : false,
     cca2: 'US',
     countryCode: '+1',
   };
 
-  // componentWillReceiveProps(nextProps) {
-  //   if (nextProps.requiredError != '') {
-  //     this.setState({
-  //       borderColor: Colors.red,
-  //     });
-  //   }
-  // }
-
   _OnBlur() {
     this.setState({
-      textColor: Colors.black,
-      borderColor: 'lightgray',
+      focused: false,
     });
   }
 
   _OnFocus() {
     this.setState({
-      textColor: Colors.primary,
-      borderColor: Colors.primary,
+      focused: true,
     });
   }
 
@@ -65,7 +55,8 @@ class Input extends Component {
       type,
       countryCode,
       changeCountryCode,
-      requiredError,
+      inputError,
+      autoCorrect,
     } = this.props;
 
     const {
@@ -78,7 +69,7 @@ class Input extends Component {
 
     const {
       borderColor,
-      textColor,
+      focused,
       secureTextEntry,
       iconNameVisibility,
       cca2,
@@ -86,16 +77,7 @@ class Input extends Component {
 
     return (
       <View
-        style={[
-          viewStyleInput,
-          requiredError != '' && requiredError != null
-            ? {
-                borderColor: 'red',
-              }
-            : {
-                borderColor,
-              },
-        ]}>
+        style={[viewStyleInput, { paddingBottom: focused || value ? 8 : 0 }]}>
         {type === 'mobile' ? (
           <View style={viewStyleCountry}>
             <CountryPicker
@@ -132,7 +114,8 @@ class Input extends Component {
           onBlur={() => this._OnBlur()}
           underlineColorAndroid="transparent"
           autoCapitalize={autoCapitalize ? autoCapitalize : 'none'}
-          placeholder={placeholder}
+          autoCorrect={autoCorrect ? autoCorrect : false}
+          placeholder={focused ? placeholder : label}
           value={value}
           onChangeText={onChangeText}
           ref={reference}
@@ -143,15 +126,23 @@ class Input extends Component {
           onSubmitEditing={onSubmitEditing}
           autoFocus={autoFocus}
           blurOnSubmit={false}
+          multiline
         />
         {type === 'password' ? (
           <View>
             <Icon
-              style={iconStyleVisibility}
+              style={[
+                iconStyleVisibility,
+                {
+                  color: inputError
+                    ? Colors.error
+                    : focused ? Colors.focus : 'rgba(0,0,0,0.6)',
+                },
+              ]}
               name={iconNameVisibility}
               size={24}
               color={borderColor}
-              onPress={this.togglePasswordVisibility}
+              // onPress={this.togglePasswordVisibility}
             />
           </View>
         ) : null}
@@ -160,38 +151,106 @@ class Input extends Component {
   }
 
   render() {
-    const { label, required, requiredError, helperText } = this.props;
+    const {
+      label,
+      value,
+      required,
+      inputError,
+      helperText,
+      data,
+      loadingData,
+      title,
+      subtitle,
+      type,
+      onPressListItem,
+    } = this.props;
 
     const {
       viewStyleContainer,
       viewStyleLabel,
       viewStyleHelper,
       textStyleLabel,
-      textStyleRequired,
-      textStyleHelper,
+      textStyleFooter,
+      viewStyleContent,
+      viewStylePopUp,
     } = styles;
 
-    const { textColor } = this.state;
+    const { focused } = this.state;
+
+    console.log(value, this.props);
 
     return (
-      <View style={viewStyleContainer}>
-        <View style={viewStyleLabel}>
-          <Text style={[textStyleLabel, { color: textColor }]}>
-            {label}
-            {required ? ' *' : ''}
-          </Text>
-        </View>
-        {this.renderInput()}
+      <View>
+        <View style={viewStyleContainer}>
+          <View
+            style={[
+              viewStyleContent,
+              {
+                borderColor: inputError
+                  ? Colors.error
+                  : focused ? Colors.focus : Colors.lightGray,
+                borderBottomWidth: inputError || focused ? 2 : 1,
+              },
+            ]}>
+            {focused || value ? (
+              <View style={viewStyleLabel}>
+                <Text
+                  style={[
+                    textStyleLabel,
+                    {
+                      color: inputError
+                        ? Colors.error
+                        : focused ? Colors.focus : 'rgba(0,0,0,0.6)',
+                    },
+                  ]}>
+                  {label}
+                  {required ? ' *' : ''}
+                </Text>
+              </View>
+            ) : null}
+            {this.renderInput()}
+          </View>
 
-        {requiredError ? (
-          <View style={viewStyleHelper}>
-            <Text style={textStyleRequired}>Error: {requiredError}</Text>
-          </View>
-        ) : helperText ? (
-          <View style={viewStyleHelper}>
-            <Text style={textStyleHelper}>{helperText}</Text>
-          </View>
-        ) : null}
+          {data ? (
+            <FlatList
+              // refreshControl={
+              //   <RefreshControl
+              //     refreshing={loadingData}
+              //     onRefresh={() => fetchData(type)}
+              //   />string.indexOf(substring) !== -1
+              // }
+              keyboardShouldPersistTaps="handled"
+              style={{ backgroundColor: Colors.onPrimary }}
+              // data={data.filter(item => item[title] === value)}
+              data={
+                value
+                  ? data.filter(item => item[title].indexOf(value) !== -1)
+                  : data
+              }
+              renderItem={({ item }) => (
+                <ListItem
+                  onPress={() => onPressListItem(item)}
+                  title={item[title]}
+                  subtitle={item[subtitle]}
+                />
+              )}
+              keyExtractor={item => (item.id ? item.id.toString() : '')}
+              // ListEmptyComponent={<ListItem title="No data" />}
+            />
+          ) : null}
+
+          {inputError || helperText ? (
+            <View style={viewStyleHelper}>
+              <Text
+                style={[
+                  textStyleFooter,
+                  { color: inputError ? Colors.error : Colors.onPrimary },
+                ]}>
+                {inputError ? 'Error: ' + inputError : helperText}
+              </Text>
+            </View>
+          ) : null}
+        </View>
       </View>
     );
   }
@@ -199,10 +258,30 @@ class Input extends Component {
 
 const styles = {
   viewStyleContainer: {
-    paddingLeft: 20,
-    paddingRight: 20,
+    minHeight: 60,
+    borderTopRightRadius: 5,
+    borderTopLeftRadius: 5,
+    overflow: 'hidden',
+    margin: 8,
+    // borderRadius: 3,
+    // borderWidth: 2,
+    // borderColor: Colors.primary,
+  },
+  viewStyleContent: {
+    // borderTopRightRadius: 3,
+    backgroundColor: Colors.onPrimary,
+    paddingHorizontal: 12,
     minHeight: 56,
-    paddingTop: 0,
+    justifyContent: 'center',
+  },
+  viewStylePopUp: {
+    // position: 'absolute',
+    // top: 8,
+    // flex: 1,
+    elevation: 20,
+    backgroundColor: 'orange',
+    height: 200,
+    // width: 100,
   },
   viewStyleLabel: {
     height: 20,
@@ -213,51 +292,40 @@ const styles = {
   },
   viewStyleInput: {
     flexDirection: 'row',
-    minHeight: 32,
-    borderBottomWidth: 1,
+    // height: 32,
   },
   viewStyleHelper: {
-    height: 28,
+    minHeight: 28,
   },
   textStyleLabel: {
     fontSize: 12,
-    paddingTop: 8,
+    paddingTop: 6,
   },
   textStyleInput: {
-    color: 'black',
     fontWeight: 'normal',
-    paddingTop: 8,
     flex: 1,
     fontSize: 16,
-    paddingBottom: 8,
+    // height: 24,
+    color: 'rgba(0,0,0,0.87)',
   },
   textStyleCode: {
     fontSize: 16,
-    color: 'black',
+    color: 'rgba(0,0,0,0.87)',
     textAlign: 'right',
     fontWeight: 'normal',
     alignItems: 'center',
-    fontSize: 16,
-    paddingTop: 8,
-    paddingBottom: 8,
   },
-  textStyleRequired: {
-    paddingTop: 8,
+  textStyleFooter: {
+    paddingTop: 4,
     paddingBottom: 8,
+    paddingHorizontal: 12,
     fontSize: 12,
-    color: Colors.error,
-  },
-  textStyleHelper: {
-    paddingTop: 8,
-    paddingBottom: 8,
-    fontSize: 12,
-    color: 'gray',
   },
   iconStyleVisibility: {
     width: 24,
     height: 24,
     right: 0,
-    bottom: 8,
+    bottom: 4,
     position: 'absolute',
   },
 };

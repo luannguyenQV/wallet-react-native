@@ -2,18 +2,12 @@ import React from 'react';
 import { ScrollView, View, StyleSheet } from 'react-native';
 import { DrawerNavigator, DrawerItems } from 'react-navigation';
 
-import DrawerHeader from './../components/drawerHeader';
+import DrawerHeader from './../components/DrawerHeader';
 import Colors from './../config/colors';
 
 import Home from './../screens/main/homeScreen';
 
-import Transactions from './../screens/main/transactions/transactionHistoryScreen';
-import Send from './../screens/main/transactions/sendScreen';
-import Receive from './../screens/main/transactions/receiveScreen';
-
-import Accounts from './../screens/main/accounts/accountsScreen';
-import Deposit from './../screens/main/wallets/depositScreen';
-import Withdraw from './../screens/main/wallets/withdrawScreen';
+import Wallets from './../screens/main/accounts/walletsScreen';
 
 import GetVerified from './../screens/settings/getVerified/getVerifiedScreen';
 import Settings from './../screens/settings/settingsScreen';
@@ -24,52 +18,55 @@ const RouteConfigs = {
   Home: {
     screen: Home,
   },
-  Accounts: {
-    screen: Accounts,
+  Wallets: {
+    screen: Wallets,
   },
-  Transactions: {
-    screen: Transactions,
-  },
-  Deposit: {
-    screen: Deposit,
-  },
-  Withdraw: {
-    screen: Withdraw,
-  },
-  SendTo: {
-    screen: Send,
-  },
-  Receive: {
-    screen: Receive,
-  },
+  // Transactions: {
+  //   screen: Transactions,
+  // },
+  // Deposit: {
+  //   screen: Deposit,
+  // },
+  // Withdraw: {
+  //   screen: Withdraw,
+  // },
+  // SendTo: {
+  //   screen: Send,
+  // },
+  // Receive: {
+  //   screen: Receive,
+  // },
   GetVerified: {
     screen: GetVerified,
   },
   Settings: {
     screen: Settings,
   },
-  About: {
-    screen: About,
-  },
+  // About: {
+  //   screen: About,
+  // },
   Logout: {
     screen: Logout,
   },
 };
 
 export default DrawerNavigator(RouteConfigs, {
-  drawerWidth: 300,
+  drawerWidth: 200,
   drawerOpenRoute: 'DrawerOpen',
   drawerCloseRoute: 'DrawerClose',
   drawerToggleRoute: 'DrawerToggle',
   contentComponent: props => (
     <View style={styles.container}>
-      <DrawerHeader navigation={props.navigation} />
+      <View>
+        <DrawerHeader navigation={props.navigation} />
+      </View>
+
       <ScrollView>
         <DrawerItems
           {...props}
-          activeTintColor="#6EBDF7"
-          activeBackgroundColor="#485159"
-          inactiveTintColor="white"
+          activeTintColor={Colors.onSecondary}
+          activeBackgroundColor={Colors.secondary}
+          inactiveTintColor={Colors.primary}
           inactiveBackgroundColor="transparent"
           labelStyle={{
             margin: 15,
@@ -86,6 +83,6 @@ export default DrawerNavigator(RouteConfigs, {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.drawerColor,
+    backgroundColor: Colors.onPrimary,
   },
 });

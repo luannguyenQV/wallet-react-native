@@ -7,14 +7,13 @@ import {
   TouchableHighlight,
   Text,
   Alert,
-  Button,
 } from 'react-native';
 import AuthService from '../../../../services/authService';
 import Header from '../../../../components/header';
 import Colors from '../../../../config/colors';
 import Auth from './../../../../util/auth';
 import resetNavigation from './../../../../util/resetNavigation';
-import { Input } from './../../../../components/common';
+import { Input, Button } from './../../../../components/common';
 
 class AuthVerifySmsScreen extends Component {
   static navigationOptions = {

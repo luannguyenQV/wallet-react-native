@@ -7,9 +7,10 @@
     "plugin:import/warnings",
     "prettier",
     "prettier/flowtype",
-    "prettier/react"
+    "prettier/react",
+    "plugin:redux-saga/recommended"
   ],
-  "plugins": ["flowtype", "react", "prettier"],
+  "plugins": ["flowtype", "react", "prettier", "redux-saga"],
   "globals": {
     "document": false
   },

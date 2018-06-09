@@ -6,7 +6,6 @@ import {
   Alert,
   RefreshControl,
 } from 'react-native';
-import Spinner from 'react-native-loading-spinner-overlay';
 import Notification from './../../../components/notification';
 import SettingsService from './../../../services/settingsService';
 import ResetNavigation from './../../../util/resetNavigation';
@@ -40,7 +39,6 @@ class MobileNotificationsScreen extends Component {
         rowHasChanged: (r1, r2) => JSON.stringify(r1) !== JSON.stringify(r2),
       });
       const data = responseJson.data;
-      //console.log(data)
       let ids = data.map((obj, index) => index);
       this.setState({
         refreshing: false,
@@ -87,11 +85,11 @@ class MobileNotificationsScreen extends Component {
           back
           title="Mobile Notifications"
         />
-        <Spinner
+        {/* <Spinner
           visible={this.state.loading}
           textContent={'Updating...'}
           textStyle={{ color: '#FFF' }}
-        />
+        /> */}
         <ListView
           refreshControl={
             <RefreshControl

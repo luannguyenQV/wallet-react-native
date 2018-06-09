@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {
   View,
   Text,
-  Button,
   StyleSheet,
   KeyboardAvoidingView,
   Alert,
@@ -11,7 +10,7 @@ import {
 import Header from './../../../../components/header';
 import Colors from './../../../../config/colors';
 import AuthService from './../../../../services/authService';
-import { Input } from './../../../../components/common';
+import { Input, Button } from './../../../../components/common';
 
 class twoFactorSmsAuthScreen extends Component {
   static navigationOptions = {
@@ -97,17 +96,10 @@ class twoFactorSmsAuthScreen extends Component {
               countryCode={this.state.code}
             />
           </View>
-          <TouchableHighlight
-            style={styles.submit}
-            onPress={() => this.sendSms()}>
-            <Text style={{ color: 'white', fontSize: 20 }}>Save</Text>
-          </TouchableHighlight>
+
+          <Button label="SAVE" onPress={() => this.sendSms()} />
           {this.state.delete && (
-            <TouchableHighlight
-              style={[styles.submit, { backgroundColor: Colors.red }]}
-              onPress={() => this.deleteTwoFactorAuth()}>
-              <Text style={{ color: 'white', fontSize: 20 }}> Delete</Text>
-            </TouchableHighlight>
+            <Button label="DELETE" onPress={() => this.deleteTwoFactorAuth()} />
           )}
         </KeyboardAvoidingView>
       </View>

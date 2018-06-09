@@ -13,7 +13,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Colors from './../../../../config/colors';
 import AuthService from './../../../../services/authService';
 import resetNavigation from './../../../../util/resetNavigation';
-import { Input, InputForm, Button } from './../../../../components/common';
+import { Input, InputContainer, Button } from './../../../../components/common';
 
 class TwoFactorTokenScreen extends Component {
   static navigationOptions = {
@@ -99,7 +99,7 @@ class TwoFactorTokenScreen extends Component {
           back
           title="Token authentication"
         />
-        <InputForm>
+        <InputContainer>
           <Image
             style={{ width: 250, height: 250, alignSelf: 'center' }}
             source={{ uri: this.state.imageURI }}
@@ -152,7 +152,7 @@ class TwoFactorTokenScreen extends Component {
           {this.state.delete && (
             <Button label="DELETE" onPress={() => this.deleteTwoFactorAuth()} />
           )}
-        </InputForm>
+        </InputContainer>
       </View>
     );
   }

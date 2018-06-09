@@ -1,72 +1,51 @@
 import React, { Component } from 'react';
 import { ImagePicker } from 'expo';
+import { View, Image, Text, TouchableHighlight, Modal } from 'react-native';
+import { connect } from 'react-redux';
 import {
-  View,
-  Alert,
-  Text,
-  Image,
-  StyleSheet,
-  AsyncStorage,
-  TouchableHighlight,
-} from 'react-native';
+  fetchData,
+  editItem,
+  updateItem,
+  updateInputField,
+} from './../../redux/actions';
+
 import CountryPicker from 'react-native-country-picker-modal';
-import Modal from 'react-native-modal';
-import UserInfoService from './../../services/userInfoService';
-import ResetNavigation from './../../util/resetNavigation';
 import Colors from './../../config/colors';
 import Header from './../../components/header';
-import { Input, InputForm } from './../../components/common';
+import { Input, Output, Card, CardContainer } from './../../components/common';
+import HeaderProfile from './../../components/HeaderProfile';
 
 class PersonalDetailsScreen extends Component {
   static navigationOptions = {
     title: 'Personal details',
   };
 
-  constructor(props) {
-    super(props);
+  state = {
+    modalVisible: false,
+  };
 
-    this.state = {
-      routeName: this.props.navigation.state.params
-        ? this.props.navigation.state.params.name
-        : null,
-      nationality: '',
-      first_name: '',
-      last_name: '',
-      id_number: '',
-      skype_name: '',
-      mobile_number: '',
-      modalVisible: false,
-      languageModalVisible: false,
-      first_name_color: false,
-      last_name_color: false,
-      id_no_color: false,
+  componentDidMount() {
+    this.props.fetchData('profile');
+  }
+
+  toggleEdit = () => {
+    const data = {
+      first_name: this.props.profile.first_name,
+      last_name: this.props.profile.last_name,
+      id_number: this.props.profile.id_number,
+      nationality: this.props.profile.nationality,
+      // profile: this.props.profile.profile,
     };
-  }
-
-  async componentWillMount() {
-    const value = await AsyncStorage.getItem('user');
-
-    const user = JSON.parse(value);
-
-    if (user.language === '' || !user.language) {
-      user.language = 'en';
-    }
-    this.setState({
-      first_name: user.first_name,
-      last_name: user.last_name,
-      id_number: user.id_number,
-      nationality: user.nationality !== '' ? user.nationality : 'US',
-      profile: user.profile,
-    });
-  }
+    this.props.editItem('profile', data);
+  };
 
   navigateToUploadImage = result => {
     this.props.navigation.navigate('UploadImage', { image: result });
   };
 
-  openModal = async () => {
-    this.setState({ modalVisible: true });
-  };
+  // openModal = () => {
+  //   this.setState({ modalVisible: true });
+  // };
 
   launchCamera = async () => {
     let result = await ImagePicker.launchCameraAsync({
@@ -90,91 +69,123 @@ class PersonalDetailsScreen extends Component {
     }
   };
 
-  languageSelected = lang => {
-    this.setState({
-      languageModalVisible: false,
-      language: lang,
-    });
-  };
-
-  save = async () => {
-    let responseJson = await UserInfoService.updateUserDetails({
-      first_name: this.state.first_name,
-      last_name: this.state.last_name,
-      id_number: this.state.id_number,
-      nationality: this.state.nationality,
-      language: this.state.language,
-    });
-    if (responseJson.status === 'success') {
-      await AsyncStorage.removeItem('user');
-      await AsyncStorage.setItem('user', JSON.stringify(responseJson.data));
-      ResetNavigation.dispatchToDrawerRoute(
-        this.props.navigation,
-        this.state.routeName ? 'GetVerified' : 'Settings',
-      );
-    } else {
-      Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
-    }
-  };
-
   render() {
+    const {
+      loading_profile,
+      fetchData,
+      temp_profile,
+      profile,
+      updateItem,
+      updateInputField,
+      updateError,
+      showDetail,
+    } = this.props;
+    const { first_name, last_name, id_number } = profile;
+    const { viewStyleContainer, imageStylePhoto } = styles;
+    const { modalVisible } = this.state;
     return (
       <View style={{ flex: 1 }}>
         <Header
           navigation={this.props.navigation}
           back
           title="Personal details"
-          headerRightTitle="Save"
-          headerRightOnPress={this.save}
+          headerRightIcon={showDetail ? 'done' : 'edit'}
+          headerRightOnPress={() =>
+            showDetail ? updateItem('profile', temp_profile) : this.toggleEdit()
+          }
         />
-        <InputForm>
-          <View style={styles.profile}>
-            <TouchableHighlight
-              style={{ width: 100 }}
-              onPress={() => this.openModal()}>
-              {this.state.profile ? (
-                <Image
-                  style={styles.photo}
-                  source={{
-                    uri: this.state.profile,
-                    cache: 'only-if-cached',
-                  }}
-                  key={this.state.profile}
-                />
+        <HeaderProfile
+          photoLink={profile.profile}
+          name={
+            profile.first_name
+              ? profile.first_name + ' ' + profile.last_name
+              : profile.username
+          }
+        />
+        {/* <View style={viewStyleContainer}>
+          <TouchableHighlight
+            style={{ width: 100 }}
+            // onPress={() => this.openModal()}
+          >
+            {temp_profile.profile ? (
+              <Image
+                style={imageStylePhoto}
+                source={{
+                  uri: temp_profile.profile,
+                  // cache: 'only-if-cached',
+                }}
+                key={temp_profile.profile}
+              />
+            ) : (
+              <Image
+                source={require('./../../../assets/icons/profile.png')}
+                style={styles.photo}
+              />
+            )}
+          </TouchableHighlight>
+        </View> */}
+        <CardContainer>
+          <Card
+            textActionOne={showDetail ? 'SAVE' : ''}
+            onPressActionOne={() => updateItem('profile', temp_profile)}
+            textActionTwo={showDetail ? 'CANCEL' : ''}
+            onPressActionTwo={() => fetchData('profile')}
+            loading={loading_profile}
+            errorText={updateError}
+            onPressContent={() => (!showDetail ? this.toggleEdit() : null)}>
+            <View>
+              {showDetail ? (
+                <View>
+                  <Input
+                    label="First name"
+                    placeholder="eg. John"
+                    autoCapitalize="none"
+                    value={temp_profile.first_name}
+                    onChangeText={input =>
+                      updateInputField('profile', 'first_name', input)
+                    }
+                  />
+
+                  <Input
+                    label="Last name"
+                    placeholder="eg. Smith"
+                    autoCapitalize="none"
+                    value={temp_profile.last_name}
+                    onChangeText={input =>
+                      updateInputField('profile', 'last_name', input)
+                    }
+                  />
+
+                  <Input
+                    label="ID number"
+                    placeholder="eg. 0123456789012"
+                    autoCapitalize="none"
+                    value={temp_profile.id_number}
+                    onChangeText={input =>
+                      updateInputField('profile', 'id_number', input)
+                    }
+                  />
+                </View>
+              ) : first_name || last_name || id_number ? (
+                <View style={{ padding: 8 }}>
+                  {first_name ? (
+                    <Output label="First name" value={first_name} />
+                  ) : null}
+                  {last_name ? (
+                    <Output label="Last name" value={last_name} />
+                  ) : null}
+                  {id_number ? (
+                    <Output label="ID number" value={id_number} />
+                  ) : null}
+                </View>
               ) : (
-                <Image
-                  source={require('./../../../assets/icons/profile.png')}
-                  style={styles.photo}
-                />
+                <View style={{ padding: 8 }}>
+                  <Output label="No profile info saved" />
+                </View>
               )}
-            </TouchableHighlight>
-          </View>
 
-          <Input
-            label="First name"
-            placeholder=""
-            autoCapitalize="none"
-            value={this.state.first_name}
-            onChangeText={text => this.setState({ first_name: text })}
-          />
-
-          <Input
-            label="Last name"
-            placeholder=""
-            autoCapitalize="none"
-            value={this.state.last_name}
-            onChangeText={text => this.setState({ last_name: text })}
-          />
-
-          <Input
-            label="ID No"
-            placeholder=""
-            autoCapitalize="none"
-            value={this.state.id_number}
-            onChangeText={text => this.setState({ id_number: text })}
-          />
-          <View style={[styles.pickerContainer, { paddingVertical: 20 }]}>
-            <Text style={[styles.text, { flex: 4 }]}>Country</Text>
+              {/* <View style={[styles.pickerContainer, { paddingVertical: 20 }]}>
+            <Text style={[styles.input, { flex: 4 }]}>Country</Text>
             <View style={{ flex: 5, alignItems: 'flex-end' }}>
               <CountryPicker
                 onChange={value => {
@@ -182,7 +193,7 @@ class PersonalDetailsScreen extends Component {
                 }}
                 closeable
                 filterable
-                cca2={this.state.nationality}
+                cca2={nationality}
                 translation="eng"
                 styles={{
                   flex: 1,
@@ -191,17 +202,20 @@ class PersonalDetailsScreen extends Component {
                 }}
               />
             </View>
-          </View>
-        </InputForm>
+          </View> */}
+              {/* </InputContainer> */}
+            </View>
+          </Card>
+        </CardContainer>
 
-        <Modal
+        {/* <Modal
           animationInTiming={500}
           animationOutTiming={500}
           backdropTransitionOutTiming={500}
           backdropTransitionInTiming={500}
           backdropColor="black"
           onBackdropPress={() => this.setState({ modalVisible: false })}
-          isVisible={this.state.modalVisible}>
+          isVisible={false}>
           <View style={styles.modal}>
             <View style={styles.bottomModal}>
               <View
@@ -232,27 +246,27 @@ class PersonalDetailsScreen extends Component {
               </TouchableHighlight>
             </View>
           </View>
-        </Modal>
+        </Modal> */}
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
   },
   input: {
     flex: 5,
     fontSize: 16,
     paddingLeft: 15,
   },
-  text: {
+  input: {
     flex: 4,
-    fontSize: 16,
-    borderRightColor: Colors.lightgray,
+    fontSize: 14,
+    borderRightColor: 'lightgray',
     color: Colors.black,
   },
   submit: {
@@ -261,7 +275,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     height: 50,
     borderRadius: 25,
-    backgroundColor: Colors.lightblue,
+    backgroundColor: 'lightblue',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -272,19 +286,19 @@ const styles = StyleSheet.create({
     paddingVertical: 30,
     marginHorizontal: 20,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.lightgray,
+    borderBottomColor: 'lightgray',
   },
-  profile: {
-    height: 140,
-    flexDirection: 'column',
-    backgroundColor: Colors.lightgray,
-    paddingHorizontal: 20,
-    justifyContent: 'center',
+  viewStyleContainer: {
+    backgroundColor: Colors.primary,
+    alignItems: 'center',
+    paddingBottom: 8,
   },
-  photo: {
+  imageStylePhoto: {
     width: 100,
     height: 100,
     borderRadius: 50,
+    borderColor: Colors.secondary,
+    borderWidth: 5,
   },
   modal: {
     flex: 1,
@@ -317,6 +331,22 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 18,
   },
-});
+};
 
-export default PersonalDetailsScreen;
+const mapStateToProps = ({ user }) => {
+  const {
+    profile,
+    loading_profile,
+    temp_profile,
+    showDetail,
+    updateError,
+  } = user;
+  return { profile, loading_profile, temp_profile, showDetail, updateError };
+};
+
+export default connect(mapStateToProps, {
+  fetchData,
+  editItem,
+  updateItem,
+  updateInputField,
+})(PersonalDetailsScreen);

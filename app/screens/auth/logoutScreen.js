@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+
+import { connect } from 'react-redux';
+import { logoutUser } from './../../redux/actions';
+
 import Auth from './../../util/auth';
 import Header from './../../components/header';
 
 class LogoutScreen extends Component {
-  componentWillMount() {
-    this.logout();
-  }
+  state = { loggingOut: false };
 
-  logout = async () => {
-    Auth.logout(this.props.navigation);
-  };
+  componentDidMount() {
+    this.props.logoutUser();
+    this.props.navigation.navigate('AuthScreen');
+  }
 
   render() {
     return (
@@ -33,4 +36,8 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LogoutScreen;
+const mapStateToProps = ({ auth }) => {
+  return auth;
+};
+
+export default connect(mapStateToProps, { logoutUser })(LogoutScreen);

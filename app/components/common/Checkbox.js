@@ -24,8 +24,8 @@ class Checkbox extends Component {
       <View style={viewStyleContainer}>
         <View style={viewStyleContainerCheckbox}>
           <Icon
-            onPress={onPress} //value ? {this.setState({ value })} : 'md-square-outline'}
-            name={value ? 'md-checkbox' : 'md-square-outline'}
+            onPress={onPress} //value ? {this.setState({ value })} : 'square-outline'}
+            name={value ? 'checkbox' : 'square-outline'}
             size={30}
             color={value ? Colors.primary : Colors.lightgray}
           />

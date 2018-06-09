@@ -1,15 +1,15 @@
 {
   "name": "Rehive Wallet",
   "description": "A multi-currency wallet built on the Rehive platform.",
-  "version": "0.1.1",
-  "slug": "rehive-wallet",
+  "version": "0.4.0",
+  "slug": "rehive-wallet-staging",
   "privacy": "public",
-  "sdkVersion": "24.0.0",
+  "sdkVersion": "27.0.0",
   "orientation": "portrait",
   "primaryColor": "#cccccc",
-  "icon": "./assets/icons/app.png",
+  "icon": "./assets/icons/Rehive_icon_primary.png",
   "loading": {
-    "icon": "./assets/icons/new_loading.png",
+    "icon": "./assets/icons/Rehive_icon_primary.png",
     "hideExponentText": false
   },
   "packagerOpts": {
@@ -17,9 +17,9 @@
   },
   "ios": {
     "supportsTablet": true,
-    "bundleIdentifier": "com.rehive.wallet"
+    "bundleIdentifier": "com.rehive.walletstaging"
   },
   "android": {
-    "package": "com.rehive_wallet"
+    "package": "com.rehive_wallet_staging"
   }
 }

@@ -1,129 +1,171 @@
 import React, { Component } from 'react';
-import { View, Alert, Text, StyleSheet } from 'react-native';
+import { View, Alert, Text, RefreshControl } from 'react-native';
+import { connect } from 'react-redux';
+import {
+  fetchData,
+  editItem,
+  updateItem,
+  updateInputField,
+} from './../../redux/actions';
+
 import CountryPicker from 'react-native-country-picker-modal';
-import UserInfoService from './../../services/userInfoService';
-import { Input, InputForm } from './../../components/common';
+import { Input, Output, CardContainer, Card } from './../../components/common';
 import Colors from './../../config/colors';
 import Header from './../../components/header';
-import ResetNavigation from './../../util/resetNavigation';
 
 class AddressScreen extends Component {
   static navigationOptions = {
     title: 'Address',
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      routeName: this.props.navigation.state.params
-        ? this.props.navigation.state.params.name
-        : null,
-      line_1: '',
-      line_2: '',
-      city: '',
-      state_province: '',
-      country: 'US',
-      postal_code: '',
-    };
-  }
-
   componentDidMount() {
-    this.getAddress();
+    this.props.fetchData('address');
   }
 
-  getAddress = async () => {
-    let responseJson = await UserInfoService.getAddress();
-    if (responseJson.status === 'success') {
-      const address = responseJson.data;
-      this.setState({
-        line_1: address.line_1,
-        line_2: address.line_2,
-        city: address.city,
-        state_province: address.state_province,
-        country: user.nationality !== '' ? user.nationality : 'US',
-        postal_code: address.postal_code,
-      });
-    } else {
-      Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
-    }
-  };
-
-  save = async () => {
-    let responseJson = await UserInfoService.updateAddress(this.state);
-    //console.log(responseJson)
-    if (responseJson.status === 'success') {
-      this.reload();
-    } else {
-      Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
-    }
-  };
-
-  reload = () => {
-    ResetNavigation.dispatchToDrawerRoute(
-      this.props.navigation,
-      this.state.routeName != null ? 'GetVerified' : 'Settings',
-    );
-  };
+  toggleEdit() {
+    this.props.editItem('address', this.props.address);
+  }
 
   render() {
+    const {
+      loading_address,
+      fetchData,
+      temp_address,
+      address,
+      showDetail,
+      updateError,
+      updateItem,
+      updateInputField,
+    } = this.props;
+    const { line_1, line_2, city, state_province, postal_code } = address;
     return (
       <View style={styles.container}>
         <Header
           navigation={this.props.navigation}
           back
           title="Address"
-          headerRightTitle="Save"
-          headerRightOnPress={this.save}
+          headerRightIcon={showDetail ? 'done' : 'edit'}
+          headerRightOnPress={() =>
+            showDetail ? updateItem('address', temp_address) : this.toggleEdit()
+          }
         />
-        <InputForm>
-          <Input
-            label="Address Line 1"
-            placeholder="e.g. 158 Kloof Street"
-            autoCapitalize="none"
-            value={this.state.line_1}
-            onChangeText={line_1 => this.setState({ line_1 })}
-          />
 
-          <Input
-            label="Address Line 2"
-            placeholder="e.g. Gardens"
-            autoCapitalize="none"
-            value={this.state.line_2}
-            onChangeText={line_2 => this.setState({ line_2 })}
-          />
+        <CardContainer>
+          <Card
+            textActionOne={showDetail ? 'SAVE' : ''}
+            onPressActionOne={() => updateItem('address', temp_address)}
+            textActionTwo={showDetail ? 'CANCEL' : ''}
+            onPressActionTwo={() => fetchData('address')}
+            loading={loading_address}
+            errorText={updateError}
+            onPressContent={() => (!showDetail ? this.toggleEdit() : null)}>
+            <View>
+              {showDetail ? (
+                <View>
+                  <Input
+                    label="Address line 1"
+                    placeholder="e.g. 158 Kloof Street"
+                    autoCapitalize="none"
+                    value={temp_address.line_1}
+                    onChangeText={input =>
+                      updateInputField('address', 'line_1', input)
+                    }
+                  />
 
-          <Input
-            label="City"
-            placeholder="e.g. Cape Town"
-            autoCapitalize="none"
-            value={this.state.city}
-            onChangeText={city => this.setState({ city })}
-          />
+                  <Input
+                    label="Address line 2"
+                    placeholder="e.g. Gardens"
+                    autoCapitalize="none"
+                    value={temp_address.line_2}
+                    onChangeText={input =>
+                      updateInputField('address', 'line_2', input)
+                    }
+                  />
 
-          <Input
-            label="State province"
-            placeholder="e.g. Western Cape"
-            autoCapitalize="none"
-            value={this.state.state_province}
-            onChangeText={state_province => this.setState({ state_province })}
-          />
+                  <Input
+                    label="City"
+                    placeholder="e.g. Cape Town"
+                    autoCapitalize="none"
+                    value={temp_address.city}
+                    onChangeText={input =>
+                      updateInputField('address', 'city', input)
+                    }
+                  />
 
-          <Input
-            label="Postal code"
-            placeholder="e.g. 9001"
-            autoCapitalize="none"
-            value={this.state.postal_code}
-            onChangeText={postal_code => this.setState({ postal_code })}
-          />
+                  <Input
+                    label="State province"
+                    placeholder="e.g. Western Cape"
+                    autoCapitalize="none"
+                    value={temp_address.state_province}
+                    onChangeText={input =>
+                      updateInputField('address', 'state_province', input)
+                    }
+                  />
 
-          <View style={styles.pickerContainer}>
+                  <Input
+                    label="Postal code"
+                    placeholder="e.g. 9001"
+                    autoCapitalize="none"
+                    value={temp_address.postal_code}
+                    onChangeText={input =>
+                      updateInputField('address', 'postal_code', input)
+                    }
+                  />
+                </View>
+              ) : line_1 || line_2 || city || state_province || postal_code ? (
+                <View style={{ padding: 8 }}>
+                  {line_1 ? (
+                    <Output label="Address line 1" value={line_1} />
+                  ) : null}
+                  {line_2 ? (
+                    <Output label="Address line 2" value={line_2} />
+                  ) : null}
+                  {city ? <Output label="City" value={city} /> : null}
+                  {state_province ? (
+                    <Output label="State province" value={state_province} />
+                  ) : null}
+                  {postal_code ? (
+                    <Output label="Postal code" value={postal_code} />
+                  ) : null}
+                </View>
+              ) : (
+                <View style={{ padding: 8 }}>
+                  <Output label="No address info saved" />
+                </View>
+              )}
+
+              {/* <View style={[styles.pickerContainer, { paddingVertical: 20 }]}>
+            <Text style={[styles.input, { flex: 4 }]}>Country</Text>
+            <View style={{ flex: 5, alignItems: 'flex-end' }}>
+              <CountryPicker
+                onChange={value => {
+                  this.setState({ nationality: value.cca2 });
+                }}
+                closeable
+                filterable
+                cca2={nationality}
+                translation="eng"
+                styles={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              />
+            </View>
+          </View> */}
+              {/* </InputContainer> */}
+            </View>
+          </Card>
+        </CardContainer>
+
+        {/* <View style={styles.pickerContainer}>
             <Text style={[styles.text, { flex: 4 }]}>Country</Text>
             <View style={{ flex: 5, alignItems: 'flex-end' }}>
               <CountryPicker
                 onChange={value => {
                   this.setState({ country: value.cca2 });
                 }}
-                cca2={this.state.country}
+                cca2={country}
                 closeable
                 filterable
                 translation="eng"
@@ -134,8 +176,7 @@ class AddressScreen extends Component {
                 }}
               />
             </View>
-          </View>
-        </InputForm>
+          </View> */}
       </View>
     );
   }
@@ -144,21 +185,37 @@ class AddressScreen extends Component {
 const styles = {
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
   },
   text: {
-    fontSize: 16,
+    fontSize: 14,
     color: Colors.black,
   },
   pickerContainer: {
     flexDirection: 'row',
     marginHorizontal: 20,
     paddingVertical: 20,
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'center',
     borderBottomWidth: 1,
-    borderColor: 'lightgrey',
+    borderColor: 'lightgray',
   },
 };
 
-export default AddressScreen;
+const mapStateToProps = ({ user }) => {
+  const {
+    address,
+    loading_address,
+    temp_address,
+    showDetail,
+    updateError,
+  } = user;
+  return { address, loading_address, temp_address, showDetail, updateError };
+};
+
+export default connect(mapStateToProps, {
+  fetchData,
+  editItem,
+  updateItem,
+  updateInputField,
+})(AddressScreen);
