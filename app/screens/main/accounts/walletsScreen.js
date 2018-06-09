@@ -16,7 +16,7 @@ import {
   standardizeString,
   performDivisibility,
 } from './../../../util/general';
-import HeaderWallet from '../../../components/HeaderWallet';
+import HeaderWallet from './../../../components/HeaderWallet';
 import TransactionList from './../../../components/TransactionList';
 import CardList from './../../../components/CardList';
 

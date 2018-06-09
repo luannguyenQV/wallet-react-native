@@ -2,7 +2,7 @@ import React from 'react';
 import { ScrollView, View, StyleSheet } from 'react-native';
 import { DrawerNavigator, DrawerItems } from 'react-navigation';
 
-import DrawerHeader from './../components/DrawerHeader';
+import DrawerHeader from './../components/drawerHeader';
 import Colors from './../config/colors';
 
 import Home from './../screens/main/homeScreen';
