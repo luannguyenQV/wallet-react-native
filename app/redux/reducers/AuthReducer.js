@@ -11,6 +11,7 @@ import {
   APP_LOAD_FINISH,
   CHANGE_PASSWORD_ASYNC,
   HIDE_MODAL,
+  LOGOUT_USER_ASYNC,
 } from './../types';
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 
@@ -181,7 +182,7 @@ export default (state = INITIAL_STATE, action) => {
         appLoading: false,
       };
 
-    case LOGOUT_USER:
+    case LOGOUT_USER_ASYNC.success:
       return {
         token: null,
         appLoading: true,

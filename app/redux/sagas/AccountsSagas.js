@@ -64,6 +64,11 @@ function* fetchAccounts() {
       payload: { wallets, activeWalletIndex, showAccountLabel },
     });
   } catch (error) {
+    if (error.status === 401) {
+      yield put({
+        type: LOGOUT_USER_ASYNC.success,
+      });
+    }
     yield put({ type: FETCH_ACCOUNTS_ASYNC.error, error });
   }
 }

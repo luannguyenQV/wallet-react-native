@@ -8,6 +8,7 @@ import {
   VERIFY_ASYNC,
   SHOW_MODAL,
   UPLOAD_PROFILE_PHOTO,
+  LOGOUT_USER_ASYNC,
 } from './../types';
 
 import * as Rehive from './../../util/rehive';
@@ -67,6 +68,11 @@ function* fetchData(action) {
     });
   } catch (error) {
     console.log(error);
+    if (error.status === 401) {
+      yield put({
+        type: LOGOUT_USER_ASYNC.success,
+      });
+    }
     yield put({ type: FETCH_DATA_ASYNC.error, error });
   }
 }

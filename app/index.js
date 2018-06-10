@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-// import configureStore from './redux/store';
-import { persistor, store } from './redux/store';
 import { AppLoading, Asset, Font } from 'expo';
-// import { store, persistor } from './redux/store';
 
+import { persistor, store } from './redux/store';
+import NavigationService from './util/navigation';
 import AppNavigator from './routes/stackNavigator';
 
 // const _XHR = GLOBAL.originalXMLHttpRequest
@@ -58,7 +57,11 @@ class App extends Component {
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           {/* {this.state.isReady ? ( */}
-          <AppNavigator />
+          <AppNavigator
+            ref={navigatorRef => {
+              NavigationService.setTopLevelNavigator(navigatorRef);
+            }}
+          />
           {/* ) : (
             <AppLoading
               startAsync={this._loadAssetsAsync}

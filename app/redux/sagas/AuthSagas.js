@@ -11,6 +11,7 @@ import {
 } from './../types';
 
 import * as Rehive from './../../util/rehive';
+import NavigationService from './../../util/navigation';
 
 function* loginUser(action) {
   try {
@@ -72,14 +73,28 @@ function* registerUser(action) {
 
 function* logoutUser() {
   try {
-    let response = yield call(Rehive.logout);
+    yield call(Rehive.logout);
     yield put({
       type: LOGOUT_USER_ASYNC.success,
-      payload: response.token,
+    });
+    yield put({
+      type: UPDATE_AUTH_FORM_STATE,
+      payload: {
+        iconHeaderLeft: 'arrow-back',
+        authState: 'landing',
+      },
     });
   } catch (error) {
     console.log(error);
     yield put({ type: LOGOUT_USER_ASYNC.error, error });
+  }
+}
+
+function* resetAuth() {
+  try {
+    NavigationService.navigate('AuthScreen');
+  } catch (error) {
+    console.log(error);
   }
 }
 
@@ -128,4 +143,5 @@ export const authSagas = all([
   takeEvery(REGISTER_USER_ASYNC.pending, registerUser),
   takeEvery(CHANGE_PASSWORD_ASYNC.pending, changePassword),
   takeEvery(LOGOUT_USER_ASYNC.pending, logoutUser),
+  takeEvery(LOGOUT_USER_ASYNC.success, resetAuth),
 ]);

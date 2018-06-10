@@ -13,9 +13,11 @@ export const initializeSDK = () => {
 };
 
 /* AUTHENTICATION */
-export const login = data => r.auth.login(data, { session_duration: 0 });
+export const login = data =>
+  r.auth.login(data, { session_duration: 2592000000 });
 
-export const register = data => r.auth.register(data);
+export const register = data =>
+  r.auth.register(data, { session_duration: 2592000000 });
 
 export const logout = () => r.auth.logout();
 

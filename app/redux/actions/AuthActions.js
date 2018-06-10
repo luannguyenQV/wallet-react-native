@@ -5,7 +5,7 @@ import {
   LOGIN_USER_ASYNC,
   REGISTER_USER_ASYNC,
   UPDATE_AUTH_FORM_STATE,
-  LOGOUT_USER,
+  LOGOUT_USER_ASYNC,
   LOADING,
   APP_LOAD_START,
   HIDE_MODAL,
@@ -298,6 +298,6 @@ performRegister = data => {
 
 export const logoutUser = () => {
   return {
-    type: LOGOUT_USER,
+    type: LOGOUT_USER_ASYNC.pending,
   };
 };

@@ -177,8 +177,6 @@ class Input extends Component {
 
     const { focused } = this.state;
 
-    console.log(value, this.props);
-
     return (
       <View>
         <View style={viewStyleContainer}>
