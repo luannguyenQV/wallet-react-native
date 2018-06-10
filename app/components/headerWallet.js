@@ -100,7 +100,7 @@ class HeaderWallet extends Component {
     const {
       wallets,
       activeWalletIndex,
-      tempWallet,
+      setWithdrawWallet,
       resetSend,
       setSendWallet,
       navigation,
@@ -120,7 +120,9 @@ class HeaderWallet extends Component {
       }
       case 'withdraw': {
         resetWithdraw();
-        setWithdrawWallet(tempWallet);
+        setWithdrawWallet(
+          wallets.length > 1 ? wallets[activeWalletIndex] : wallets[0],
+        );
         navigation.navigate('Withdraw');
         break;
       }

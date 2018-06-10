@@ -110,6 +110,7 @@ export default (state = INITIAL_STATE, action) => {
         modalVisible: true,
         modalType: 'loginError',
         loading: false,
+        appLoading: false,
         inputState: 'email',
         authState: 'login',
       };
@@ -125,6 +126,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         token: action.payload,
         loading: false,
+        appLoading: false,
       };
     case REGISTER_USER_ASYNC.error:
       return {
@@ -132,6 +134,7 @@ export default (state = INITIAL_STATE, action) => {
         token: null,
         inputError: action.payload,
         loading: false,
+        appLoading: false,
       };
 
     case CHANGE_PASSWORD_ASYNC.pending:
