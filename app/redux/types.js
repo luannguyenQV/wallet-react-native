@@ -19,6 +19,9 @@ export const APP_LOAD_START = 'APP_LOAD_START';
 export const APP_LOAD_FINISH = 'APP_LOAD_FINISH';
 export const LOADING = 'loading';
 export const CHANGE_PASSWORD_ASYNC = createAsyncTypes('change_password');
+export const VALIDATE_COMPANY_ASYNC = createAsyncTypes('validate_company');
+export const RESET_AUTH = 'reset_auth';
+export const RESET_PASSWORD_ASYNC = createAsyncTypes('reset_password');
 
 // ACCOUNTS
 export const FETCH_ACCOUNTS_ASYNC = createAsyncTypes('fetch_accounts');

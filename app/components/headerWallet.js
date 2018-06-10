@@ -97,32 +97,40 @@ class HeaderWallet extends Component {
   }
 
   onButtonPress(type) {
+    const {
+      wallets,
+      activeWalletIndex,
+      tempWallet,
+      resetSend,
+      setSendWallet,
+      navigation,
+    } = this.props;
     switch (type) {
       case 'send': {
-        this.props.resetSend();
-        this.props.setSendWallet(
-          this.props.wallets[this.props.activeWalletIndex],
+        resetSend();
+        setSendWallet(
+          wallets.length > 1 ? wallets[activeWalletIndex] : wallets[0],
         );
-        this.props.navigation.navigate('Send');
+        navigation.navigate('Send');
         break;
       }
       case 'receive': {
-        this.props.navigation.navigate('Receive');
+        navigation.navigate('Receive');
         break;
       }
       case 'withdraw': {
-        this.props.resetWithdraw();
-        this.props.setWithdrawWallet(this.props.tempWallet);
-        this.props.navigation.navigate('Withdraw');
+        resetWithdraw();
+        setWithdrawWallet(tempWallet);
+        navigation.navigate('Withdraw');
         break;
       }
       case 'deposit': {
-        this.props.navigation.navigate('Deposit');
+        navigation.navigate('Deposit');
         break;
       }
       case 'more':
-        this.props.navigation.navigate('Wallets', {
-          wallet: this.props.wallets[this.props.activeWalletIndex],
+        navigation.navigate('Wallets', {
+          wallet: wallets[activeWalletIndex],
         });
         break;
       default:

@@ -245,16 +245,6 @@ class CardList extends Component {
     );
   }
 
-  // orderData(data) {
-  //   let orderedData = data;
-  //   const primaryIndex = data.findIndex(item => item.primary === true);
-  //   const primaryItem = data[primaryIndex];
-  //   orderedData[primaryIndex] = data[0];
-  //   orderedData[0] = primaryItem;
-
-  //   return orderedData;
-  // }
-
   render() {
     const {
       loading,

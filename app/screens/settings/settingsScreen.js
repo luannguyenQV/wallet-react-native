@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import { connect } from 'react-redux';
 import {} from './../../redux/actions';
 import Header from './../../components/header';
+import AppConfig from './../../../app.json';
 // import HeaderVerified from './../../../components/HeaderVerified';
 
 import {
@@ -226,6 +227,9 @@ class SettingsScreen extends Component {
           <SettingsContainer label="Security">
             {this.renderSecurity()}
           </SettingsContainer>
+          <Text style={{ position: 'absolute', bottom: 4 }}>
+            Version: {AppConfig.version}
+          </Text>
         </InputContainer>
       </View>
     );

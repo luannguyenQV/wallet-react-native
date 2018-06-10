@@ -16,11 +16,20 @@ import {
   authFieldChange,
   nextAuthFormState,
   previousAuthFormState,
+  resetPassword,
+  resetAuth,
+  hideModal,
 } from '../../redux/actions';
 import { initializeSDK } from './../../util/rehive';
 
 import Colors from './../../config/colors';
-import { Button, AuthForm, Input, Spinner } from './../../components/common';
+import {
+  Button,
+  AuthForm,
+  Input,
+  Spinner,
+  PopUpGeneral,
+} from './../../components/common';
 
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -31,27 +40,6 @@ class AuthScreen extends Component {
     this.props.initialLoad(this.props);
     // this.onAuthComplete(this.props);
   }
-  // componentWillReceiveProps(nextProps) {
-  //   // if (
-  //   //   nextProps.authState === 'register' &&
-  //   //   nextProps.registerFormState === ''
-  //   // ) {
-  //   //   this.props.nextAuthFormState({ nextFormState: 'landing' });
-  //   // }
-  // }
-  // componentWillUnmount() {
-
-  // }
-
-  onAuthComplete(props) {
-    const { token, appLoading } = props;
-
-    // if (token) {
-    if (!appLoading) {
-      props.navigation.navigate('Home');
-    }
-    // }
-  }
 
   changeCountryCode = (code, cca2) => {
     this.setState({
@@ -60,42 +48,67 @@ class AuthScreen extends Component {
     });
   };
 
-  componentWillReceiveProps(newProps) {
-    //check for the mounted props
-    this.onAuthComplete(newProps);
-    if (!newProps.mounted) return this.unMountStyle(); //call outro animation when mounted prop is false
-    this.setState({
-      //remount the node when the mounted prop is true
-      show: true,
-    });
-    setTimeout(this.mountStyle, 10); //call the into animiation
-  }
-
-  unMountStyle() {
-    //css for unmount animation
-    this.setState({
-      style: {
-        fontSize: 60,
-        opacity: 0,
-        transition: 'all 1s ease',
-      },
-    });
-  }
+  // componentWillReceiveProps(newProps) {
+  //   //check for the mounted props
+  //   // this.onAuthComplete(newProps);
+  //   if (!newProps.mounted) return this.unMountStyle(); //call outro animation when mounted prop is false
+  //   this.setState({
+  //     //remount the node when the mounted prop is true
+  //     show: true,
+  //   });
+  //   setTimeout(this.mountStyle, 10); //call the into animiation
+  // }
 
   renderMainContainer() {
-    const { loading, textFooterRight, iconHeaderLeft } = this.props;
+    const {
+      loading,
+      authState,
+      inputState,
+      nextAuthFormState,
+      company,
+      email,
+      resetPassword,
+    } = this.props;
 
-    // let iconHeaderLeft = '';
-    let textHeaderRight = '';
-    // let textFooterRight = textFooterRight;
-
+    let iconHeaderLeft = 'arrow-back';
     let onPressHeaderLeft = () => {
       this.props.previousAuthFormState(this.props);
     };
+
+    let textHeaderRight = '';
     let onPressHeaderRight = () => {};
+
+    let textFooterRight = 'Next';
     let onPressFooterRight = () => {
-      this.props.nextAuthFormState(this.props, '');
+      nextAuthFormState(this.props, '');
     };
+
+    // set text / icons
+    switch (authState) {
+      case 'company':
+        iconHeaderLeft = '';
+        break;
+      case 'landing':
+        textFooterRight = '';
+        break;
+      case 'forgot':
+        textFooterRight = 'Send';
+        onPressFooterRight = () => resetPassword(company, email);
+        break;
+      case 'login':
+        textHeaderRight = 'Forgot?';
+        onPressHeaderRight = () => nextAuthFormState(this.props, 'forgot');
+        if (inputState === 'password') {
+          textFooterRight = 'Log in';
+        }
+        break;
+      case 'register':
+        if (inputState === 'password') {
+          textFooterRight = 'Register';
+        }
+        break;
+      default:
+    }
 
     return (
       <AuthForm
@@ -106,70 +119,60 @@ class AuthScreen extends Component {
         textFooterRight={textFooterRight}
         onPressFooterRight={onPressFooterRight}
         loading={loading}>
-        {this.renderTop()}
-        {this.renderBottom()}
+        {this.renderContent()}
       </AuthForm>
     );
   }
 
-  renderTop() {
-    const { viewStyleTopContainer, imageContainer, image } = styles;
-    const { authState } = this.props;
-
-    if (authState === 'landing') {
-      return (
-        <View style={viewStyleTopContainer}>
-          <Animatable.View style={imageContainer} animation="fadeInDownBig">
-            <Image
-              source={require('./../../../assets/icons/Rehive_icon_white.png')}
-              resizeMode="contain"
-              style={image}
-            />
-          </Animatable.View>
-        </View>
-      );
-    }
-  }
-
-  renderBottom() {
-    const { viewStyleBottomContainer, buttonsContainer, loading } = styles;
-    const { authState } = this.props;
+  renderContent() {
+    const {
+      viewStyleInput,
+      buttonsContainer,
+      loading,
+      viewStyleLanding,
+      imageContainer,
+      image,
+    } = styles;
+    const { authState, nextAuthFormState } = this.props;
 
     switch (authState) {
       case 'landing':
         return (
-          <View style={buttonsContainer}>
-            <Button
-              label="LOG IN"
-              type="contained"
-              color="secondary"
-              size="large"
-              reference={input => {
-                this.login = input;
-              }}
-              onPress={() => this.props.nextAuthFormState(this.props, 'login')}
-              animate
-            />
-            <Button
-              label="Register"
-              type="text"
-              color="primaryContrast"
-              reference={input => {
-                this.login = input;
-              }}
-              onPress={() =>
-                this.props.nextAuthFormState(this.props, 'register')
-              }
-              animate
-            />
+          <View style={viewStyleLanding}>
+            <Animatable.View style={imageContainer} animation="fadeInDownBig">
+              <Image
+                source={require('./../../../assets/icons/Rehive_icon_white.png')}
+                resizeMode="contain"
+                style={image}
+              />
+            </Animatable.View>
+            <View style={buttonsContainer}>
+              <Button
+                label="LOG IN"
+                type="contained"
+                color="secondary"
+                size="large"
+                reference={input => {
+                  this.login = input;
+                }}
+                onPress={() => nextAuthFormState(this.props, 'login')}
+                animate
+              />
+              <Button
+                label="Register"
+                type="text"
+                color="primaryContrast"
+                reference={input => {
+                  this.login = input;
+                }}
+                onPress={() => nextAuthFormState(this.props, 'register')}
+                animate
+              />
+            </View>
           </View>
         );
       default:
-        return (
-          <View style={viewStyleBottomContainer}>
-            {loading ? <Spinner size="large" /> : this.renderInput()}
-          </View>
-        );
+        return <View style={viewStyleInput}>{this.renderInput()}</View>;
     }
   }
 
@@ -181,6 +184,7 @@ class AuthScreen extends Component {
       company,
       email,
       password,
+      companyError,
       emailError,
       passwordError,
     } = this.props;
@@ -192,7 +196,7 @@ class AuthScreen extends Component {
             key="company"
             placeholder="e.g. Rehive"
             label="Company"
-            inputError={inputError}
+            inputError={companyError}
             value={company}
             onChangeText={value =>
               this.props.authFieldChange({ prop: 'company', value })
@@ -209,13 +213,13 @@ class AuthScreen extends Component {
             placeholder="e.g. user@gmail.com"
             label="Email"
             value={email}
-            inputError={inputError}
+            inputError={emailError}
             keyboardType="email-address"
             onChangeText={value =>
               this.props.authFieldChange({ prop: 'email', value })
             }
             returnKeyType="next"
-            autoFocus
+            // autoFocus
             onSubmitEditing={() => this.props.nextAuthFormState(this.props, '')}
           />
         );
@@ -228,7 +232,7 @@ class AuthScreen extends Component {
             placeholder="12345678"
             label="Mobile"
             value={mobile}
-            inputError={inputError}
+            inputError={mobileError}
             keyboardType="numeric"
             onChangeText={value =>
               this.props.authFieldChange({ prop: 'mobile', value })
@@ -248,8 +252,8 @@ class AuthScreen extends Component {
               placeholder="Password"
               label="Password"
               value={password}
-              inputError={inputError}
-              autoFocus
+              inputError={passwordError}
+              // autoFocus
               onChangeText={value =>
                 this.props.authFieldChange({ prop: 'password', value })
               }
@@ -276,27 +280,74 @@ class AuthScreen extends Component {
     }
   }
 
+  renderModal() {
+    const {
+      modalVisible,
+      modalType,
+      hideModal,
+      resetAuth,
+      loading,
+      email,
+      authError,
+    } = this.props;
+    // console.log(this.props);
+
+    let contentText = '';
+    let textActionOne = 'OK';
+    let onPressActionOne = hideModal;
+    let content = null;
+    switch (modalType) {
+      case 'loginError':
+        contentText = 'Unable to log in with provided credentials';
+        break;
+      case 'forgot':
+        contentText =
+          'Instructions on how to reset your password have been sent to ' +
+          email;
+        onPressActionOne = resetAuth;
+        break;
+    }
+
+    return (
+      <PopUpGeneral
+        visible={modalVisible}
+        contentText={contentText}
+        textActionOne={textActionOne}
+        onPressActionOne={onPressActionOne}
+        onDismiss={onPressActionOne}
+        // loading={loading}
+        // errorText={updateError}
+      />
+    );
+  }
+
   render() {
-    const { viewContainer } = styles;
+    const { loading, appLoading } = this.props;
+    const { viewStyleContainer } = styles;
 
     return (
       <KeyboardAvoidingView
         keyboardShouldPersistTaps={'never'}
-        style={viewContainer}
+        style={viewStyleContainer}
         behavior={'padding'}>
         <TouchableWithoutFeedback
           style={{ flex: 1 }}
           onPress={Keyboard.dismiss}
           accessible={false}>
-          {this.renderMainContainer()}
+          {loading || appLoading ? (
+            <Spinner size="large" />
+          ) : (
+            this.renderMainContainer()
+          )}
         </TouchableWithoutFeedback>
+        {this.renderModal()}
       </KeyboardAvoidingView>
     );
   }
 }
 
 const styles = {
-  viewContainer: {
+  viewStyleContainer: {
     flex: 1,
     backgroundColor: Colors.primary,
     paddingTop: Expo.Constants.statusBarHeight,
@@ -311,18 +362,19 @@ const styles = {
     // borderRadius: 2,
     // paddingBottom: 10,
   },
-  viewStyleTopContainer: {
-    // alignItems: 'center',
-    justifyContent: 'center',
-    // flex: 1,
-    flex: 3,
+  viewStyleLanding: {
+    paddingTop: 80,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flex: 1,
+    // flex: 3,
     // backgroundColor: 'white',
   },
-  viewStyleBottomContainer: {
+  viewStyleInput: {
     width: '100%',
     justifyContent: 'center',
     flex: 1,
-    paddingTop: 48,
+    // flex: 1,
     // backgroundColor: Colors.onPrimary,
     // borderRadius: 2,
     // paddingBottom: 16,
@@ -357,37 +409,35 @@ const styles = {
 const mapStateToProps = ({ auth }) => {
   const {
     inputState,
-    input,
-    inputError,
     countryCode,
     authState,
     company,
+    companyError,
     email,
-    password,
     emailError,
+    password,
     passwordError,
     loading,
-    textFooterRight,
     token,
-    iconHeaderLeft,
     appLoading,
+    modalVisible,
+    modalType,
   } = auth;
   return {
     inputState,
-    input,
-    inputError,
     countryCode,
     authState,
     company,
+    companyError,
     email,
-    password,
     emailError,
+    password,
     passwordError,
     loading,
-    textFooterRight,
     token,
-    iconHeaderLeft,
     appLoading,
+    modalVisible,
+    modalType,
   };
 };
 
@@ -396,4 +446,7 @@ export default connect(mapStateToProps, {
   initialLoad,
   nextAuthFormState,
   previousAuthFormState,
+  resetPassword,
+  resetAuth,
+  hideModal,
 })(AuthScreen);

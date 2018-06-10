@@ -10,12 +10,14 @@ import {
   APP_LOAD_START,
   HIDE_MODAL,
   CHANGE_PASSWORD_ASYNC,
+  VALIDATE_COMPANY_ASYNC,
+  RESET_PASSWORD_ASYNC,
+  RESET_AUTH,
 } from './../types';
 
 import clientConfig from './../../config/client';
 
 import { IsEmail } from './../../util/validation';
-import AuthService from './../../services/authService';
 
 export const initialLoad = props => async dispatch => {
   dispatch({ type: APP_LOAD_START });
@@ -55,153 +57,119 @@ export const authFieldChange = ({ prop, value }) => {
   };
 };
 
-export const nextAuthFormState = (props, nextFormState) => async dispatch => {
+export const nextAuthFormState = (props, nextFormState) => {
   const { authState, inputState, company, password, email } = props;
 
-  let error = validation(props);
-  let textFooterRight = '';
-  let nextAuthState = '';
+  let nextAuthState = authState;
   let nextInputState = '';
-  let iconHeaderLeft = '';
   let data = {};
 
-  let skip = false;
-
-  if (error) {
-    dispatch({
-      type: AUTH_FIELD_ERROR,
-      payload: { error },
-    });
+  if (nextFormState) {
+    nextAuthState = nextFormState;
+    nextInputState = 'email';
   } else {
-    switch (authState) {
-      case 'company':
-        dispatch({
-          type: LOADING,
-        });
-        // error = await performCompanyServerValidation(company);
-        if (error) {
-          dispatch({
-            type: AUTH_FIELD_ERROR,
-            payload: { error },
-          });
-        } else {
-          nextAuthState = 'landing';
-          iconHeaderLeft = 'arrow-back';
-        }
-        break;
-      case 'landing':
-        iconHeaderLeft = 'arrow-back';
-        nextAuthState = nextFormState;
-        nextInputState = 'email';
-        textFooterRight = 'Next';
-        break;
-      case 'login':
-        switch (inputState) {
-          case 'email':
-            iconHeaderLeft = 'arrow-back';
-            nextInputState = 'password';
-            textFooterRight = 'Log in';
-            break;
-          case 'password':
-            data = { company, user: email, password };
-            dispatch({
-              type: LOGIN_USER_ASYNC.pending,
-              payload: data,
-            });
-            skip = true;
-            break;
-        }
-        break;
-      case 'register':
-        switch (inputState) {
-          case 'email':
-            iconHeaderLeft = 'arrow-back';
-            nextInputState = 'password';
-            textFooterRight = 'Register';
-            break;
-          case 'password':
-            data = {
-              company,
-              email,
-              password1: password,
-              password2: password,
-            };
-            dispatch({
-              type: REGISTER_USER_ASYNC.pending,
-              payload: data,
-            });
-            skip = true;
-            break;
-        }
-        break;
-      default:
-        nextAuthState = 'company';
-        nextInputState = 'company';
-    }
-    if (!nextAuthState) {
-      nextAuthState = authState;
-    }
-    if (!skip) {
-      dispatch({
-        type: UPDATE_AUTH_FORM_STATE,
-        payload: {
-          textFooterRight,
-          iconHeaderLeft,
-          inputState: nextInputState,
-          authState: nextAuthState,
-        },
-      });
+    let error = validation(props);
+    if (error) {
+      return {
+        type: AUTH_FIELD_ERROR,
+        payload: { prop: inputState, error },
+      };
+    } else {
+      switch (authState) {
+        case 'company':
+          return {
+            type: VALIDATE_COMPANY_ASYNC.pending,
+            payload: company,
+          };
+        // case 'landing':
+        //   nextAuthState = nextFormState;
+        //   nextInputState = 'email';
+        //   break;
+        case 'login':
+          switch (inputState) {
+            case 'email':
+              nextInputState = 'password';
+              break;
+            case 'password':
+              data = { company, user: email, password };
+              return {
+                type: LOGIN_USER_ASYNC.pending,
+                payload: data,
+              };
+              break;
+          }
+          break;
+        case 'register':
+          switch (inputState) {
+            case 'email':
+              nextInputState = 'password';
+              break;
+            case 'password':
+              data = {
+                company,
+                email,
+                password1: password,
+                password2: password,
+              };
+              return {
+                type: REGISTER_USER_ASYNC.pending,
+                payload: data,
+              };
+              break;
+          }
+          break;
+        default:
+          nextAuthState = 'company';
+          nextInputState = 'company';
+      }
     }
   }
-  return;
+  return {
+    type: UPDATE_AUTH_FORM_STATE,
+    payload: {
+      inputState: nextInputState,
+      authState: nextAuthState,
+    },
+  };
 };
 
 export const previousAuthFormState = props => {
   const { authState, inputState } = props;
 
-  let iconHeaderLeft = '';
-  let textFooterRight = '';
-  let nextAuthState = '';
+  let nextAuthState = authState;
   let nextInputState = '';
 
   switch (authState) {
     case 'landing':
       nextAuthState = 'company';
       nextInputState = 'company';
-      textFooterRight = 'Next';
+      break;
+    case 'forgot':
+      nextAuthState = 'login';
+      nextInputState = 'email';
       break;
     case 'login':
     case 'register':
-      iconHeaderLeft = 'arrow-back';
       switch (inputState) {
         case 'email':
           nextAuthState = 'landing';
           break;
         case 'password':
           nextInputState = 'email';
-          textFooterRight = 'Next';
           break;
       }
       break;
     default:
       nextAuthState = 'company';
       nextInputState = 'company';
-      textFooterRight = 'Next';
-  }
-  if (!nextAuthState) {
-    nextAuthState = authState;
   }
   return {
     type: UPDATE_AUTH_FORM_STATE,
     payload: {
-      iconHeaderLeft,
-      textFooterRight,
       inputState: nextInputState,
       authState: nextAuthState,
     },
   };
-
-  return;
 };
 
 validation = props => {
@@ -232,14 +200,6 @@ validation = props => {
       error = '';
   }
   return error;
-};
-
-performCompanyServerValidation = async company => {
-  let responseJson = await AuthService.signup({ company });
-  if (responseJson.data.company) {
-    return 'Please enter a valid company ID';
-  }
-  return '';
 };
 
 export const termsChanged = ({ prop, value }) => {
@@ -283,9 +243,22 @@ export const changePassword = (old_password, new_password) => {
   // };
 };
 
-hideModal = () => {
+export const resetAuth = () => {
   return {
-    type: HIDE_MODAL,
+    type: RESET_AUTH,
+  };
+};
+
+// export const hideModal = () => {
+//   return {
+//     type: HIDE_MODAL,
+//   };
+// };
+
+export const resetPassword = (company, email) => {
+  return {
+    type: RESET_PASSWORD_ASYNC.pending,
+    payload: { user: email, company },
   };
 };
 

@@ -5,13 +5,15 @@ import {
   LOGIN_USER_ASYNC,
   REGISTER_USER_ASYNC,
   UPDATE_AUTH_FORM_STATE,
-  LOGOUT_USER,
   LOADING,
   APP_LOAD_START,
   APP_LOAD_FINISH,
   CHANGE_PASSWORD_ASYNC,
   HIDE_MODAL,
   LOGOUT_USER_ASYNC,
+  VALIDATE_COMPANY_ASYNC,
+  RESET_AUTH,
+  RESET_PASSWORD_ASYNC,
 } from './../types';
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 
@@ -34,13 +36,14 @@ const INITIAL_STATE = {
   token: '',
   loading: false,
   hasFetched: false,
-  appLoading: true,
+  appLoading: false,
   old_password: '',
   new_password: '',
+  modalVisible: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
-  // console.log('action', action);
+  console.log('action', action);
   switch (action.type) {
     case PERSIST_REHYDRATE:
       return action.payload.auth || [];
@@ -48,13 +51,14 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         [action.payload.prop]: action.payload.value,
-        inputError: '',
-        [action.payload.prop + 'Error']: action.payload.error,
+        // inputError: '',
+        [action.payload.prop + 'Error']: '',
       };
     case AUTH_FIELD_ERROR:
       return {
         ...state,
-        inputError: action.payload.error,
+        appLoading: false,
+        // inputError: action.payload.error,
         [action.payload.prop + 'Error']: action.payload.error,
       };
     case TERMS_CHANGED:
@@ -64,19 +68,11 @@ export default (state = INITIAL_STATE, action) => {
       };
 
     case UPDATE_AUTH_FORM_STATE:
-      const {
-        authState,
-        inputState,
-        textFooterRight,
-        iconHeaderLeft,
-      } = action.payload;
+      const { authState, inputState } = action.payload;
       return {
         ...state,
         authState,
         inputState,
-        textFooterRight,
-        iconHeaderLeft,
-        // inputError: '',
         password: '',
         loading: false,
       };
@@ -101,6 +97,7 @@ export default (state = INITIAL_STATE, action) => {
         inputState: '',
         token: action.payload,
         loading: false,
+        appLoading: true,
         old_passwordError: '',
         new_passwordError: '',
         old_password: '',
@@ -110,9 +107,11 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         token: null,
-        // passwordError: 'Unable to login with provided credentials',
-        inputError: action.payload,
+        modalVisible: true,
+        modalType: 'loginError',
         loading: false,
+        inputState: 'email',
+        authState: 'login',
       };
 
     case REGISTER_USER_ASYNC.pending:
@@ -163,10 +162,59 @@ export default (state = INITIAL_STATE, action) => {
         modalVisible: true,
       };
 
+    case VALIDATE_COMPANY_ASYNC.pending:
+      return {
+        ...state,
+        loading: true,
+      };
+    case VALIDATE_COMPANY_ASYNC.success:
+      return {
+        ...state,
+        loading: false,
+      };
+    case VALIDATE_COMPANY_ASYNC.error:
+      return {
+        ...state,
+        companyError: action.payload,
+        loading: false,
+      };
+
+    case RESET_PASSWORD_ASYNC.pending:
+      return {
+        ...state,
+        loading: true,
+      };
+    case RESET_PASSWORD_ASYNC.success:
+      return {
+        ...state,
+        modalType: 'forgot',
+        modalVisible: true,
+        loading: false,
+      };
+    case RESET_PASSWORD_ASYNC.error:
+      return {
+        ...state,
+        // companyError: action.payload,
+        loading: false,
+      };
+
+    case RESET_AUTH:
+      return {
+        ...state,
+        companyError: '',
+        passwordError: '',
+        emailError: '',
+        password: '',
+        authState: 'landing',
+        inputState: '',
+        modalVisible: false,
+        loading: false,
+        appLoading: false,
+      };
+
     case HIDE_MODAL:
       return {
         ...state,
-        inputError: '',
         modalVisible: false,
       };
 
@@ -174,7 +222,6 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         appLoading: true,
-        textFooterRight: '',
       };
     case APP_LOAD_FINISH:
       return {

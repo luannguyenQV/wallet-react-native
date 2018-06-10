@@ -8,6 +8,10 @@ import {
   APP_LOAD_FINISH,
   CHANGE_PASSWORD_ASYNC,
   LOGOUT_USER_ASYNC,
+  AUTH_FIELD_ERROR,
+  RESET_AUTH,
+  VALIDATE_COMPANY_ASYNC,
+  RESET_PASSWORD_ASYNC,
 } from './../types';
 
 import * as Rehive from './../../util/rehive';
@@ -16,7 +20,6 @@ import NavigationService from './../../util/navigation';
 function* loginUser(action) {
   try {
     let response = yield call(Rehive.login, action.payload);
-
     yield put({
       type: LOGIN_USER_ASYNC.success,
       payload: response.token,
@@ -24,14 +27,6 @@ function* loginUser(action) {
   } catch (error) {
     console.log(error);
     yield put({ type: LOGIN_USER_ASYNC.error, error });
-    yield put({
-      type: UPDATE_AUTH_FORM_STATE,
-      payload: {
-        inputState: 'email',
-        authState: 'login',
-        textFooterRight: 'next',
-      },
-    });
   }
   // let twoFactorResponse = await AuthService.twoFactorAuth();
   // if (twoFactorResponse.status === 'success') {
@@ -68,6 +63,10 @@ function* registerUser(action) {
         textFooterRight: 'Next',
       },
     });
+    yield put({
+      type: AUTH_FIELD_ERROR,
+      payload: { prop: 'email', error: error.message },
+    });
   }
 }
 
@@ -92,7 +91,18 @@ function* logoutUser() {
 
 function* resetAuth() {
   try {
+    yield put({
+      type: RESET_AUTH,
+    });
     NavigationService.navigate('AuthScreen');
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function* navigateHome() {
+  try {
+    NavigationService.navigate('Home');
   } catch (error) {
     console.log(error);
   }
@@ -118,6 +128,7 @@ function* appLoad() {
       yield take([FETCH_ACCOUNTS_ASYNC.success, FETCH_DATA_ASYNC.success]);
     }
     yield put({ type: APP_LOAD_FINISH });
+    NavigationService.navigate('Home');
   } catch (error) {
     console.log(error);
     yield put({ type: LOGIN_USER_ASYNC.error, error });
@@ -136,6 +147,36 @@ function* changePassword(action) {
   }
 }
 
+function* resetPassword(action) {
+  try {
+    yield call(Rehive.resetPassword, action.payload);
+    yield put({
+      type: RESET_PASSWORD_ASYNC.success,
+    });
+  } catch (error) {
+    console.log(error);
+    yield put({ type: RESET_PASSWORD_ASYNC.error, error });
+  }
+}
+
+function* validateCompany(action) {
+  try {
+    let response = yield call(Rehive.register, { company: action.payload });
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+    if (error.data.company) {
+      yield put({
+        type: VALIDATE_COMPANY_ASYNC.error,
+        payload: 'Please enter a valid company ID',
+      });
+    } else {
+      yield put({ type: VALIDATE_COMPANY_ASYNC.success });
+      yield put({ type: RESET_AUTH });
+    }
+  }
+}
+
 export const authSagas = all([
   takeEvery(LOGIN_USER_ASYNC.success, appLoad),
   takeEvery(LOGIN_USER_ASYNC.pending, loginUser),
@@ -144,4 +185,7 @@ export const authSagas = all([
   takeEvery(CHANGE_PASSWORD_ASYNC.pending, changePassword),
   takeEvery(LOGOUT_USER_ASYNC.pending, logoutUser),
   takeEvery(LOGOUT_USER_ASYNC.success, resetAuth),
+  takeEvery(VALIDATE_COMPANY_ASYNC.pending, validateCompany),
+  takeEvery(RESET_PASSWORD_ASYNC.pending, resetPassword),
+  // takeEvery(APP_LOAD_FINISH, navigateHome),
 ]);

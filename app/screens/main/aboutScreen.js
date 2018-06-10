@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, Alert, Linking } from 'react-native';
 import UserInfoService from './../../services/userInfoService';
 import Colors from './../../config/colors';
 import Header from './../../components/header';
-import AppConfig from './../../../exp.json';
+import AppConfig from './../../../app.json';
 
 class AboutScreen extends Component {
   static navigationOptions = {

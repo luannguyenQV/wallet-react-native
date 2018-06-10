@@ -50,25 +50,24 @@ class App extends Component {
   }
 
   render() {
-    // const { persistor, store } = configureStore();
-    console.disableYellowBox = true;
+    // console.disableYellowBox = true;
 
     return (
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          {/* {this.state.isReady ? ( */}
-          <AppNavigator
-            ref={navigatorRef => {
-              NavigationService.setTopLevelNavigator(navigatorRef);
-            }}
-          />
-          {/* ) : (
+          {this.state.isReady ? (
+            <AppNavigator
+              ref={navigatorRef => {
+                NavigationService.setTopLevelNavigator(navigatorRef);
+              }}
+            />
+          ) : (
             <AppLoading
               startAsync={this._loadAssetsAsync}
               onFinish={() => this.setState({ isReady: true })}
               onError={console.warn}
             />
-          )} */}
+          )}
         </PersistGate>
       </Provider>
     );

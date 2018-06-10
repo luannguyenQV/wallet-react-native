@@ -27,6 +27,8 @@ export const resendEmailVerification = (email, company) =>
 export const resendMobileVerification = (mobile, company) =>
   r.auth.mobile.resendMobileVerification({ mobile, company });
 
+export const resetPassword = data => r.auth.password.reset(data);
+
 export const changePassword = (old_password, new_password) =>
   r.auth.password.change({
     old_password,
