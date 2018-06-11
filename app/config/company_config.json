@@ -1,0 +1,111 @@
+{
+  "cards": [
+    {
+      "id": "0",
+      "title": "Card 1",
+      "description": "This is your custom text for card 1",
+      "image": "card1",
+      "dismiss": true
+    },
+    {
+      "id": "1",
+      "title": "Card 2",
+      "description": "This is your custom text for card 2",
+      "image": "card2",
+      "dismiss": false
+    },
+    {
+      "id": "2",
+      "title": "Card 3",
+      "description": "This is your custom text for card 3",
+      "image": "card3",
+      "dismiss": true,
+      "actionLabel": "CUSTOM DISMISS"
+    }
+  ],
+  "sliders": [
+    {
+      "name": "landing",
+      "slides": [
+        {
+          "id": "0",
+          "title": "Slide 1",
+          "description": "This is your custom text for slide 1",
+          "image": "card1"
+        },
+        {
+          "id": "1",
+          "title": "Slide 2",
+          "description": "This is your custom text for slide 2",
+          "image": "card2"
+        },
+        {
+          "id": "2",
+          "title": "Slide 3",
+          "description": "This is your custom text for slide 3",
+          "image": "card3"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "requirePersonal": true,
+    "requireAddress": false,
+    "requireMobile": true,
+    "requireDocumentID": true
+  },
+  "auth": {
+    "require2FA": true,
+    "requireEmail": true,
+    "requireMobile": true,
+    "requirePin": true
+  },
+  "colors": {
+    "gray": "#a6a6a6",
+    "lightGray": "#e1e1e1",
+    "white": "#ffffff",
+    "black": "#000000",
+
+    "primary": "#4d4d4d",
+    "secondary": "#a6a6a6",
+    "tertiary": "#c4c4c4",
+    "quaternary": "#e1e1e1",
+    "focus": "#9797F0",
+
+    "primaryContrast": "#f3f3f3",
+    "secondaryContrast": "#2d2d2d",
+    "tertiaryContrast": "#000000",
+    "quaternaryContrast": "#4d4d4d",
+    "focusContrast": "#2d2d2d",
+
+    "warning": "#FC8755",
+    "error": "#f44336",
+    "success": "#4CAF50",
+    "positive": "#4CAF50",
+    "negative": "#f44336"
+  },
+  "colors2": {
+    "gray": "#a6a6a6",
+    "lightGray": "#e1e1e1",
+    "white": "#ffffff",
+    "black": "#000000",
+
+    "primary": "#018B66",
+    "secondary": "#8CC13F",
+    "tertiary": "#767676",
+    "quaternary": "#F3F3F3",
+    "focus": "#9797F0",
+
+    "primaryContrast": "#f3f3f3",
+    "secondaryContrast": "#ffffff",
+    "tertiaryContrast": "#000000",
+    "quaternaryContrast": "#4d4d4d",
+    "focusContrast": "#2d2d2d",
+
+    "warning": "#FC8755",
+    "error": "#f44336",
+    "success": "#4CAF50",
+    "positive": "#4CAF50",
+    "negative": "#f44336"
+  }
+}

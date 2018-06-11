@@ -13,6 +13,8 @@ import {
   HIDE_MODAL,
   HIDE_WALLET,
   VIEW_WALLET,
+  CARD_DISMISS,
+  CARD_RESTORE_ALL,
 } from './../types';
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 
@@ -75,6 +77,7 @@ const INITIAL_STATE = {
 
   updateError: '',
   modalType: '',
+  dismissedCards: [],
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -245,6 +248,18 @@ export default (state = INITIAL_STATE, action) => {
         // tempWallet: null,
         wallet: false,
         showDetail: false,
+      };
+
+    case CARD_DISMISS:
+      return {
+        ...state,
+        dismissedCards: [...state.dismissedCards, action.payload],
+      };
+
+    case CARD_RESTORE_ALL:
+      return {
+        ...state,
+        dismissedCards: [],
       };
 
     case LOGOUT_USER:

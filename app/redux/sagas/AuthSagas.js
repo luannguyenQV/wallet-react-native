@@ -123,8 +123,9 @@ function* appLoad() {
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'company' }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_bank_account' }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_currency' }),
+      put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_config' }),
     ]);
-    for (let i = 0; i < 11; i++) {
+    for (let i = 0; i < 12; i++) {
       yield take([FETCH_ACCOUNTS_ASYNC.success, FETCH_DATA_ASYNC.success]);
     }
     yield put({ type: APP_LOAD_FINISH });
@@ -171,6 +172,7 @@ function* validateCompany(action) {
         payload: 'Please enter a valid company ID',
       });
     } else {
+      yield put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_config' });
       yield put({ type: VALIDATE_COMPANY_ASYNC.success });
       yield put({ type: RESET_AUTH });
     }

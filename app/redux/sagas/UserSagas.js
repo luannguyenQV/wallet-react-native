@@ -47,6 +47,10 @@ function* fetchData(action) {
       case 'company_currency':
         response = yield call(Rehive.getCompanyCurrencies);
         break;
+      case 'company_config':
+        response = yield call(Rehive.getCompanyConfig);
+        console.log('config', response);
+        break;
     }
 
     let data = response;
