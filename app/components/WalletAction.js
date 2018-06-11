@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import Colors from './../config/colors';
+import { CustomIcon } from './../components/common';
 
 class WalletAction extends Component {
   renderButton() {
@@ -35,12 +36,13 @@ class WalletAction extends Component {
     }
     return (
       <View style={viewStyleContainer}>
-        <Image
+        <CustomIcon name={type} size={48} color="tertiary" />
+        {/* <Image
           source={source}
           resizeMode="contain"
           color={Colors.onPrimary}
           style={iconStyle}
-        />
+        /> */}
         <Text style={textStyleLabel}>{label}</Text>
       </View>
     );

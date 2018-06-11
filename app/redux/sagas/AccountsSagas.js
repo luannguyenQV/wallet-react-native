@@ -4,6 +4,7 @@ import {
   SET_ACTIVE_CURRENCY_ASYNC,
   SEND_ASYNC,
   HIDE_MODAL,
+  LOGOUT_USER_ASYNC,
 } from './../types';
 // import Big from 'big.js';
 import * as Rehive from './../../util/rehive';
