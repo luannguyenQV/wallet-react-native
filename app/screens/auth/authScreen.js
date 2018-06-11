@@ -8,6 +8,7 @@ import {
   Keyboard,
   UIManager,
   LayoutManager,
+  Dimensions,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { connect } from 'react-redux';
@@ -29,7 +30,10 @@ import {
   Input,
   Spinner,
   PopUpGeneral,
+  Slides,
 } from './../../components/common';
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
 
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -133,18 +137,25 @@ class AuthScreen extends Component {
       imageContainer,
       image,
     } = styles;
-    const { authState, nextAuthFormState } = this.props;
+    const { authState, nextAuthFormState, company_config } = this.props;
+    // console.log(company_config);
+
+    const slides = company_config ? company_config.sliders.landing : null;
 
     switch (authState) {
       case 'landing':
         return (
           <View style={viewStyleLanding}>
-            <Animatable.View style={imageContainer} animation="fadeInDownBig">
-              <Image
-                source={require('./../../../assets/icons/Rehive_icon_white.png')}
-                resizeMode="contain"
-                style={image}
-              />
+            <Animatable.View style={imageContainer} animation="fadeIn">
+              {slides && slides.length > 0 ? (
+                <Slides data={slides} height={200} width={SCREEN_WIDTH} />
+              ) : (
+                <Image
+                  source={require('./../../../assets/icons/Rehive_icon_white.png')}
+                  resizeMode="contain"
+                  style={image}
+                />
+              )}
             </Animatable.View>
             <View style={buttonsContainer}>
               <Button
@@ -331,7 +342,7 @@ class AuthScreen extends Component {
         style={viewStyleContainer}
         behavior={'padding'}>
         <TouchableWithoutFeedback
-          style={{ flex: 1 }}
+          // style={{ flex: 1 }}
           onPress={Keyboard.dismiss}
           accessible={false}>
           {loading || appLoading ? (
@@ -358,14 +369,15 @@ const styles = {
   buttonsContainer: {
     width: '100%',
     // flex: 1,
-    // backgroundColor: Colors.onPrimary,
     // borderRadius: 2,
     // paddingBottom: 10,
+    padding: 16,
   },
   viewStyleLanding: {
-    paddingTop: 80,
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    // paddingTop: 80,
+    // flexDirection: 'column',
+    // alignItems: 'center',
+    justifyContent: 'space-around',
     flex: 1,
     // flex: 3,
     // backgroundColor: 'white',
@@ -374,6 +386,7 @@ const styles = {
     width: '100%',
     justifyContent: 'center',
     flex: 1,
+    padding: 16,
     // flex: 1,
     // backgroundColor: Colors.onPrimary,
     // borderRadius: 2,
@@ -406,7 +419,7 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ auth }) => {
+const mapStateToProps = ({ auth, user }) => {
   const {
     inputState,
     countryCode,
@@ -423,6 +436,7 @@ const mapStateToProps = ({ auth }) => {
     modalVisible,
     modalType,
   } = auth;
+  const { company_config } = user;
   return {
     inputState,
     countryCode,
@@ -438,6 +452,7 @@ const mapStateToProps = ({ auth }) => {
     appLoading,
     modalVisible,
     modalType,
+    company_config,
   };
 };
 

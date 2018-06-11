@@ -5,6 +5,7 @@ import {
   TouchableHighlight,
   TouchableWithoutFeedback,
 } from 'react-native';
+// import { connect } from 'react-redux';
 
 import Colors from './../../config/colors';
 import { Spinner } from './Spinner';
@@ -55,9 +56,11 @@ const Card = props => {
     swipeableContent,
     disableActionOne,
     disableActionTwo,
+    colorTitle,
+    colorTitleBackground,
+    colorContent,
+    colorContentBackground,
   } = props;
-
-  // console.log(props);
 
   return (
     <View style={viewStyleCardContainer}>
@@ -69,7 +72,9 @@ const Card = props => {
           style={[
             viewStyleTitleContainer,
             {
-              backgroundColor: titleStyle ? Colors[titleStyle] : Colors.primary,
+              backgroundColor: colorTitleBackground
+                ? colorTitleBackground
+                : Colors.primary,
               height: itemCode ? 72 : 64,
             },
           ]}>
@@ -93,11 +98,7 @@ const Card = props => {
             <HeaderButton
               name={iconTitleLeft}
               onPress={onPressTitleLeft}
-              color={
-                titleStyle
-                  ? Colors[titleStyle + 'Contrast']
-                  : Colors.primaryContrast
-              }
+              color={colorTitle ? colorTitle : Colors.primaryContrast}
             />
           ) : null}
           <TouchableWithoutFeedback onPress={onPressTitle}>
@@ -107,9 +108,7 @@ const Card = props => {
                   textStyleTitle,
                   {
                     fontSize: title ? (title.length < 15 ? 24 : 18) : 24,
-                    color: titleStyle
-                      ? Colors[titleStyle + 'Contrast']
-                      : Colors.primaryContrast,
+                    color: colorTitle ? colorTitle : Colors.primaryContrast,
                   },
                 ]}>
                 {title}
@@ -118,10 +117,7 @@ const Card = props => {
                 style={[
                   textStyleSubtitle,
                   {
-                    color: titleStyle
-                      ? Colors[titleStyle + 'Contrast']
-                      : Colors.primaryContrast,
-                    opacity: 0.8,
+                    color: colorTitle ? colorTitle : Colors.primaryContrast,
                   },
                 ]}>
                 {subtitle}
@@ -133,11 +129,7 @@ const Card = props => {
               <HeaderButton
                 icon={iconTitleRight}
                 onPress={onPressTitleRight}
-                color={
-                  titleStyle
-                    ? Colors[titleStyle + 'Contrast']
-                    : Colors.primaryContrast
-                }
+                color={colorTitle ? colorTitle : Colors.primaryContrast}
               />
             </View>
           ) : null}
@@ -148,8 +140,8 @@ const Card = props => {
           style={[
             viewStyleContent,
             {
-              backgroundColor: backgroundColor
-                ? Colors[backgroundColor]
+              backgroundColor: colorContentBackground
+                ? colorContentBackground
                 : 'white',
             },
           ]}>
@@ -175,7 +167,7 @@ const Card = props => {
                   name={iconFooter}
                   size={22}
                   onPress={onPressFooter}
-                  color={Colors.secondary}
+                  color={colorContent ? colorContent : Colors.gray}
                 />
               ) : null}
               {textActionTwo ? (
@@ -227,7 +219,6 @@ const styles = {
   viewStyleTitleContainer: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: Colors.primary,
     // height: 72,
     paddingHorizontal: 8,
     alignItems: 'center',
@@ -240,7 +231,6 @@ const styles = {
     width: 0,
   },
   textStyleTitle: {
-    color: Colors.onPrimary,
     flexShrink: 1,
     flexWrap: 'wrap',
     fontWeight: 'bold',
@@ -250,8 +240,8 @@ const styles = {
     // paddingHorizontal: 8,
   },
   textStyleSubtitle: {
+    opacity: 0.6,
     fontSize: 12,
-    color: Colors.onSecondary,
   },
   textStyleError: {
     paddingTop: 8,
@@ -300,5 +290,12 @@ const styles = {
     borderRadius: 3,
   },
 };
+
+// const mapStateToProps = ({ user }) => {
+//   const { company_config } = user;
+//   return { company_config };
+// };
+
+// connect(mapStateToProps, {})(props => Card(props));
 
 export { Card };

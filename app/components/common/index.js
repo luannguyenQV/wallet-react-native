@@ -19,3 +19,4 @@ export * from './HeaderButton';
 export * from './ImageUpload';
 export * from './ListItem';
 export * from './CustomIcon';
+export * from './Slides';
