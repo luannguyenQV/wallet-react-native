@@ -222,7 +222,7 @@ class SettingsScreen extends Component {
           <SettingsContainer label="External accounts">
             {this.renderBankAccounts()}
             {/* {this.renderCards()} */}
-            {this.renderCryptoAccounts()}
+            {/* {this.renderCryptoAccounts()} */}
           </SettingsContainer>
           <SettingsContainer label="Security">
             {this.renderSecurity()}

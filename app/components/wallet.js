@@ -77,6 +77,7 @@ class Wallet extends Component {
 const styles = {
   viewStyleContainer: {
     paddingLeft: 16,
+    paddingTop: 8,
   },
   textStyleLabel: {
     color: 'grey',

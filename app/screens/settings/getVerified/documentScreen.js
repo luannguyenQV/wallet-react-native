@@ -199,12 +199,15 @@ const styles = StyleSheet.create({
   },
   textStyleHeader: {
     fontSize: 20,
+    padding: 8,
+    paddingTop: 12,
     // padding: 16,
     // marginBottom: 16,
     textAlign: 'center',
   },
   textStyleDescription: {
     fontSize: 14,
+    padding: 8,
     // flexWrap: 'wrap',
     // paddingBottom: 8,
     textAlign: 'center',

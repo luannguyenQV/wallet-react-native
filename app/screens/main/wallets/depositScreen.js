@@ -133,8 +133,8 @@ const styles = {
     backgroundColor: Colors.lightgray,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 16,
-    padding: 8,
+    // paddingHorizontal: 16,
+    padding: 16,
   },
   textStyleComment: {
     fontSize: 16,
@@ -146,7 +146,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
-    padding: 4,
+    padding: 8,
     paddingHorizontal: 16,
   },
   textStyleCommentReference: {
