@@ -88,8 +88,8 @@ const styles = {
   },
   viewStyleContent: {
     flex: 1,
-    paddingHorizontal: 16,
-    paddingBottom: 12,
+    // paddingHorizontal: 16,
+    // paddingBottom: 12,
     // backgroundColor: Colors.onPrimary,
     flexDirection: 'column',
     // alignItems: 'center',

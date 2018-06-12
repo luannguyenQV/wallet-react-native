@@ -136,7 +136,7 @@ class GetVerifiedScreen extends Component {
     );
   }
 
-  renderDocuments() {
+  renderDocumentID() {
     const { document } = this.props;
 
     let valueIdentity = 'Not yet provided';
@@ -157,6 +157,57 @@ class GetVerifiedScreen extends Component {
       statusIdentity = 'denied';
       valueIdentity = idDenied[0].note;
     }
+
+    return (
+      <GetVerifiedOption
+        label="Proof of Identity"
+        value={valueIdentity}
+        status={statusIdentity.toUpperCase()}
+        gotoAddress="Document"
+        goTo={this.goTo}
+      />
+    );
+  }
+
+  renderDocumentAddress() {
+    const { document } = this.props;
+
+    let valueAddress = 'Not yet provided';
+    let statusAddress = 'INCOMPLETE';
+    let addressDocuments = document.filter(
+      doc => doc.document_category === 'Proof Of Address',
+    );
+    let addressVerified = addressDocuments.filter(
+      doc => doc.status === 'verified',
+    );
+    let addressPending = addressDocuments.filter(
+      doc => doc.status === 'pending',
+    );
+    let addressDenied = addressDocuments.filter(doc => doc.status === 'denied');
+    if (addressVerified.length > 0) {
+      statusAddress = 'verified';
+      valueAddress = 'Verified';
+    } else if (addressPending.length > 0) {
+      statusAddress = 'pending';
+      valueAddress = 'Waiting for approval';
+    } else if (addressDenied.length > 0) {
+      statusAddress = 'denied';
+      valueAddress = idDenied[0].note;
+    }
+
+    return (
+      <GetVerifiedOption
+        label="Proof of Address"
+        value={valueAddress}
+        status={statusAddress.toUpperCase()}
+        gotoAddress="Document"
+        goTo={this.goTo}
+      />
+    );
+  }
+
+  renderDocumentAdvID() {
+    const { document } = this.props;
 
     let valueAdvancedIdentity = 'Not yet provided';
     let statusAdvancedIdentity = 'INCOMPLETE';
@@ -183,61 +234,30 @@ class GetVerifiedScreen extends Component {
       valueAdvancedIdentity = idSelfieDenied[0].note;
     }
 
-    let valueAddress = 'Not yet provided';
-    let statusAddress = 'INCOMPLETE';
-    let addressDocuments = document.filter(
-      doc => doc.document_category === 'Proof Of Address',
-    );
-    let addressVerified = addressDocuments.filter(
-      doc => doc.status === 'verified',
-    );
-    let addressPending = addressDocuments.filter(
-      doc => doc.status === 'pending',
-    );
-    let addressDenied = addressDocuments.filter(doc => doc.status === 'denied');
-    if (addressVerified.length > 0) {
-      statusAddress = 'verified';
-      valueAddress = 'Verified';
-    } else if (addressPending.length > 0) {
-      statusAddress = 'pending';
-      valueAddress = 'Waiting for approval';
-    } else if (addressDenied.length > 0) {
-      statusAddress = 'denied';
-      valueAddress = idDenied[0].note;
-    }
-
     return (
-      <View>
-        <GetVerifiedOption
-          label="Proof of Identity"
-          value={valueIdentity}
-          status={statusIdentity.toUpperCase()}
-          gotoAddress="Document"
-          goTo={this.goTo}
-        />
-
-        <GetVerifiedOption
-          label="Advanced Proof of Identity"
-          value={valueAdvancedIdentity}
-          status={statusAdvancedIdentity.toUpperCase()}
-          gotoAddress="Document"
-          goTo={this.goTo}
-        />
-
-        <GetVerifiedOption
-          label="Proof of Address"
-          value={valueAddress}
-          status={statusAddress.toUpperCase()}
-          gotoAddress="Document"
-          goTo={this.goTo}
-        />
-      </View>
+      <GetVerifiedOption
+        label="Advanced Proof of Identity"
+        value={valueAdvancedIdentity}
+        status={statusAdvancedIdentity.toUpperCase()}
+        gotoAddress="Document"
+        goTo={this.goTo}
+      />
     );
   }
 
   render() {
-    const { profile, loading_profile } = this.props;
+    const { profile, loading_profile, company_config } = this.props;
     const { container, mainContainer } = styles;
+    // console.log(cm)
+    const {
+      requirePersonal,
+      requireEmail,
+      requireMobile,
+      requireAddress,
+      requireDocumentID,
+      requireDocumentAddress,
+      requireDocumentAdvID,
+    } = company_config.verification;
     return (
       <View style={container}>
         <Header
@@ -256,11 +276,13 @@ class GetVerifiedScreen extends Component {
         <View style={mainContainer}>
           {loading_profile ? <Spinner /> : null}
           <InputContainer>
-            {this.renderBasicInfo()}
-            {this.renderEmailAddresses()}
-            {this.renderMobileNumbers()}
-            {this.renderAddresses()}
-            {this.renderDocuments()}
+            {!requirePersonal ? null : this.renderBasicInfo()}
+            {!requireEmail ? null : this.renderEmailAddresses()}
+            {!requireMobile ? null : this.renderMobileNumbers()}
+            {!requireAddress ? null : this.renderAddresses()}
+            {!requireDocumentID ? null : this.renderDocumentID()}
+            {!requireDocumentAddress ? null : this.renderDocumentAddress()}
+            {!requireDocumentAdvID ? null : this.renderDocumentAdvID()}
           </InputContainer>
         </View>
       </View>
@@ -286,6 +308,7 @@ const mapStateToProps = ({ user }) => {
     email_address,
     document,
     loading_profile,
+    company_config,
   } = user;
   return {
     profile,
@@ -294,6 +317,7 @@ const mapStateToProps = ({ user }) => {
     email_address,
     document,
     loading_profile,
+    company_config,
   };
 };
 

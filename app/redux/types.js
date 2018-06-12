@@ -69,3 +69,5 @@ export const EDIT_PROFILE = 'edit_profile';
 export const HIDE_MODAL = 'hide_modal';
 export const SHOW_MODAL = 'show_modal';
 export const UPLOAD_PROFILE_PHOTO = 'upload_profile_photo';
+export const CARD_DISMISS = 'card_dismiss';
+export const CARD_RESTORE_ALL = 'card_restore_all';

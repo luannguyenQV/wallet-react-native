@@ -47,6 +47,10 @@ function* fetchData(action) {
       case 'company_currency':
         response = yield call(Rehive.getCompanyCurrencies);
         break;
+      case 'company_config':
+        response = yield call(Rehive.getCompanyConfig);
+        // console.log('config', response);
+        break;
     }
 
     let data = response;
@@ -99,7 +103,7 @@ function* refreshProfile() {
 function* updateItem(action) {
   try {
     const { data, type } = action.payload;
-    console.log(data);
+    // console.log(data);
     let response = null;
     switch (type) {
       case 'mobile_numbers':

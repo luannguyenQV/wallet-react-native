@@ -7,33 +7,17 @@ import {
   Image,
   Dimensions,
 } from 'react-native';
+import { connect } from 'react-redux';
+import { cardDismiss, cardRestoreAll } from './../redux/actions';
 
 // import { AreaChart, Grid } from 'react-native-svg-charts';
 // import * as shape from 'd3-shape';
 
-import { CardContainer, Card } from './common';
+import { CardContainer, Card, Button } from './common';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class HomeCards extends Component {
-  renderTransactions() {
-    const { transactions, loading } = this.state;
-    return (
-      <FlatList
-        refreshControl={
-          <RefreshControl
-            refreshing={loading}
-            onRefresh={() => this.getTransactions(this.props.currencyCode)}
-          />
-        }
-        data={transactions}
-        renderItem={({ item }) => this.renderItem(item)}
-        keyExtractor={item => item.id}
-        ListEmptyComponent={this.renderEmptyList()}
-      />
-    );
-  }
-
   // renderChart() {
   //   const data = [
   //     50,
@@ -69,49 +53,103 @@ class HomeCards extends Component {
     return <Image style={styles.imageStylePhoto} source={image} />;
   }
 
-  render() {
-    const { textStyleContent } = styles;
+  renderCards() {
+    const { profile, company_config, dismissedCards } = this.props;
+    // add welcome card
+    let cards = [];
+    let i = 0;
+    if (!dismissedCards || !dismissedCards.includes('welcome')) {
+      cards[i++] = {
+        id: 'welcome',
+        title: 'Welcome to Rehive',
+        description: 'A multi-currency wallet built on the Rehive platform.',
+        image: 'card1',
+        dismiss: true,
+      };
+    }
+
+    if (profile.verified) {
+      cards[i++] = {
+        id: 'verify',
+        description: 'Please verify your account',
+        image: 'card2',
+        actionLabel: 'GET VERIFIED',
+        navigate: 'GetVerified',
+      };
+    }
+    if (company_config && company_config.cards) {
+      for (let j = 0; j < company_config.cards.length; j++) {
+        if (
+          !dismissedCards ||
+          !dismissedCards.includes(company_config.cards[j].id)
+        ) {
+          cards[i++] = company_config.cards[j];
+        }
+      }
+    }
 
     return (
-      <CardContainer>
-        <Card
-          key={0}
-          title="Welcome to Rehive"
-          renderHeader={this.renderImage(
-            require('./../../assets/icons/card1.png'),
-          )}
-          // image={require()}
-          // textActionOne="Cool"
-          style="secondary">
-          <Text style={textStyleContent}>
-            Let's get you started with setting up your wallet!
-          </Text>
-        </Card>
-        <Card
-          key={1}
-          // title="Please verify your account"
-          renderHeader={this.renderImage(
-            require('./../../assets/icons/card2.png'),
-          )}
-          // image={require()}
-          textActionOne="GET VERIFIED"
-          onPressActionOne={() => this.props.navigation.navigate('GetVerified')}
-          style="secondary">
-          <Text style={textStyleContent}>Please verify your account</Text>
-        </Card>
-        {/* <Card
-          key={2}
-          // title="Chart example"
-          renderHeader={this.renderChart()}
-          // image={require()}
-          textActionOne="Awesome"
-          style="secondary">
-          <Text style={textStyleContent}>
-            We can even include charts of your data
-          </Text>
-        </Card> */}
-      </CardContainer>
+      <FlatList
+        // refreshControl={
+        //   <RefreshControl
+        //     refreshing={loadingData}
+        //     onRefresh={() => fetchData(type)}
+        //   />
+        // }
+        keyboardShouldPersistTaps="always"
+        data={cards}
+        renderItem={({ item }) => this.renderCard(item)}
+        keyExtractor={item => (item.id ? item.id.toString() : null)}
+        ListFooterComponent={this.renderFooter()}
+      />
     );
+
+    // add verify card
+    // add custom cards
+    // render
+  }
+
+  renderCard(item) {
+    const { textStyleContent } = styles;
+    // console.log(item.image);
+    let imageString = './../../assets/icons/' + item.image + '.png';
+    return (
+      <Card
+        key={item.id}
+        title={item.title}
+        renderHeader={this.renderImage(
+          require('./../../assets/icons/card1.png'),
+        )}
+        onPressActionOne={() =>
+          item.navigate
+            ? this.props.navigation.navigate(item.navigate)
+            : item.dismiss ? this.props.cardDismiss(item.id) : null
+        }
+        textActionOne={
+          item.actionLabel ? item.actionLabel : item.dismiss ? 'DISMISS' : ''
+        }
+        style="secondary">
+        {item.description ? (
+          <Text style={textStyleContent}>{item.description}</Text>
+        ) : null}
+      </Card>
+    );
+  }
+
+  renderFooter() {
+    const { dismissedCards, cardRestoreAll } = this.props;
+    const { viewStyleFooter } = styles;
+    if (dismissedCards && dismissedCards.length > 0) {
+      return (
+        <View style={viewStyleFooter}>
+          <Button label="RESTORE ALL" type="text" onPress={cardRestoreAll} />
+        </View>
+      );
+    }
+  }
+
+  render() {
+    return <CardContainer>{this.renderCards()}</CardContainer>;
   }
 }
 
@@ -130,8 +168,22 @@ const styles = {
   textStyleContent: {
     fontSize: 16,
     padding: 8,
-    fontWeight: 'bold',
+    paddingHorizontal: 16,
+    // fontWeight: 'bold',
+  },
+  viewStyleFooter: {
+    width: '100%',
+    height: 80,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 };
 
-export default HomeCards;
+const mapStateToProps = ({ user }) => {
+  const { company_config, profile, dismissedCards } = user;
+  return { company_config, profile, dismissedCards };
+};
+
+export default connect(mapStateToProps, { cardDismiss, cardRestoreAll })(
+  HomeCards,
+);

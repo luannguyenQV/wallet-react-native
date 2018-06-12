@@ -11,6 +11,8 @@ import {
   SHOW_MODAL,
   HIDE_MODAL,
   UPLOAD_PROFILE_PHOTO,
+  CARD_DISMISS,
+  CARD_RESTORE_ALL,
 } from './../types';
 
 export const updateInputField = (type, prop, value) => {
@@ -85,6 +87,19 @@ export const showModal = (type, item, modalType) => {
 export const hideModal = () => {
   return {
     type: HIDE_MODAL,
+  };
+};
+
+export const cardDismiss = card_id => {
+  return {
+    type: CARD_DISMISS,
+    payload: card_id,
+  };
+};
+
+export const cardRestoreAll = () => {
+  return {
+    type: CARD_RESTORE_ALL,
   };
 };
 

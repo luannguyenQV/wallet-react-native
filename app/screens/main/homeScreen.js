@@ -17,7 +17,7 @@ import HomeCards from './../../components/HomeCards';
 const renderPagination = (index, total, context) => {
   return (
     <View style={styles.paginationStyle}>
-      <Text style={{ color: 'grey' }} />
+      {/* <Text style={{ color: 'grey' }} /> */}
     </View>
   );
 };

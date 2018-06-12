@@ -1,5 +1,6 @@
 import Rehive from 'rehive';
 import { store } from './../redux/store';
+import * as companyConfig from './../config/company_config.json';
 
 // SDK initialization
 export let r;
@@ -157,6 +158,8 @@ export const getCompany = () => r.company.get();
 export const getCompanyCurrencies = () => r.company.currencies.get();
 
 export const getCompanyBankAccounts = () => r.company.bankAccounts.get();
+
+export const getCompanyConfig = () => companyConfig;
 
 /* GENERAL */
 export const callApi = (method, route, token, data) => {
