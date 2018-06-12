@@ -77,13 +77,14 @@ class HomeCards extends Component {
         navigate: 'GetVerified',
       };
     }
-
-    for (let j = 0; j < company_config.cards.length; j++) {
-      if (
-        !dismissedCards ||
-        !dismissedCards.includes(company_config.cards[j].id)
-      ) {
-        cards[i++] = company_config.cards[j];
+    if (company_config && company_config.cards) {
+      for (let j = 0; j < company_config.cards.length; j++) {
+        if (
+          !dismissedCards ||
+          !dismissedCards.includes(company_config.cards[j].id)
+        ) {
+          cards[i++] = company_config.cards[j];
+        }
       }
     }
 
@@ -95,6 +96,7 @@ class HomeCards extends Component {
         //     onRefresh={() => fetchData(type)}
         //   />
         // }
+        keyboardShouldPersistTaps="always"
         data={cards}
         renderItem={({ item }) => this.renderCard(item)}
         keyExtractor={item => (item.id ? item.id.toString() : null)}
@@ -137,7 +139,7 @@ class HomeCards extends Component {
   renderFooter() {
     const { dismissedCards, cardRestoreAll } = this.props;
     const { viewStyleFooter } = styles;
-    if (dismissedCards.length > 0) {
+    if (dismissedCards && dismissedCards.length > 0) {
       return (
         <View style={viewStyleFooter}>
           <Button label="RESTORE ALL" type="text" onPress={cardRestoreAll} />
@@ -147,47 +149,7 @@ class HomeCards extends Component {
   }
 
   render() {
-    return (
-      <CardContainer>
-        {this.renderCards()}
-        {/* <Card
-          key={0}
-          title="Welcome to Rehive"
-          renderHeader={this.renderImage(
-            require('./../../assets/icons/card1.png'),
-          )}
-          // image={require()}
-          // textActionOne="Cool"
-          style="secondary">
-          <Text style={textStyleContent}>
-            Let's get you started with setting up your wallet!
-          </Text>
-        </Card>
-        <Card
-          key={1}
-          // title="Please verify your account"
-          renderHeader={this.renderImage(
-            require('./../../assets/icons/card2.png'),
-          )}
-          // image={require()}
-          textActionOne="GET VERIFIED"
-          onPressActionOne={() => this.props.navigation.navigate('GetVerified')}
-          style="secondary">
-          <Text style={textStyleContent}>Please verify your account</Text>
-        </Card> */}
-        {/* <Card
-          key={2}
-          // title="Chart example"
-          renderHeader={this.renderChart()}
-          // image={require()}
-          textActionOne="Awesome"
-          style="secondary">
-          <Text style={textStyleContent}>
-            We can even include charts of your data
-          </Text>
-        </Card> */}
-      </CardContainer>
-    );
+    return <CardContainer>{this.renderCards()}</CardContainer>;
   }
 }
 

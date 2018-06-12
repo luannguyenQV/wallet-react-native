@@ -21,6 +21,7 @@ class HeaderCurrency extends Component {
       textStyleAmount,
       iconStyleTitleRight,
     } = styles;
+    console.log();
     return (
       <View
         style={[
@@ -59,16 +60,31 @@ class HeaderCurrency extends Component {
         <View
           style={[viewStyleCurrency, detail ? null : { paddingBottom: 16 }]}>
           <Text style={textStyleSymbol}>{currency.currency.symbol}</Text>
-          <Text style={textStyleAmount}>
+          <Text style={this.getAmountTextStyle(currency)}>
             {' '}
             {performDivisibility(
-              currency.balance,
+              currency.available_balance,
               currency.currency.divisibility,
             ).toFixed(currency.currency.divisibility)}
           </Text>
         </View>
       </View>
     );
+  }
+
+  getAmountTextStyle(currency) {
+    let fontSize = 42;
+    let length =
+      currency.available_balance.toString().length +
+      currency.currency.divisibility;
+    if (length > 16) {
+      fontSize = 20;
+    } else if (length > 12) {
+      fontSize = 30;
+    } else if (length > 8) {
+      fontSize = 38;
+    }
+    return [styles.textStyleAmount, { fontSize }];
   }
 }
 
@@ -101,11 +117,12 @@ const styles = {
     color: Colors.focus,
     fontSize: 42,
     fontWeight: 'bold',
-    paddingRight: 4,
   },
   textStyleAmount: {
     color: Colors.focus,
     fontSize: 42,
+    // paddingHorizontal: 2,
+    // flexWrap: 'no-wrap',
     fontWeight: 'bold',
   },
   iconStyleTitleRight: {

@@ -29,20 +29,8 @@ class Slides extends Component {
         outputRange: [0.05, 1, 0.05],
         extrapolate: 'clamp',
       });
-      // let heightScale = position.interpolate({
-      //   inputRange: [i - 1, i, i + 1],
-      //   outputRange: [0.2 * height, height, 0.2 * height],
-      //   extrapolate: 'clamp',
-      // });
-      // console.log(heightScale);
       return (
-        <Animated.View // we will animate the opacity of the dots so use Animated.View instead of View here
-          key={slide.id} // we will use i for the key because no two (or more) elements in an array will have the same index
-          style={{
-            opacity,
-            // height: heightScale,
-            width,
-          }}>
+        <Animated.View key={slide.id} style={{ opacity, width }}>
           <Image
             style={[imageStylePhoto, { width, height }]}
             source={require('./../../../assets/icons/card1.png')}

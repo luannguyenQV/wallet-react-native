@@ -146,7 +146,7 @@ class AuthScreen extends Component {
       case 'landing':
         return (
           <View style={viewStyleLanding}>
-            <Animatable.View style={imageContainer} animation="fadeIn">
+            <Animatable.View style={imageContainer} animation="zoomInRight">
               {slides && slides.length > 0 ? (
                 <Slides data={slides} height={200} width={SCREEN_WIDTH} />
               ) : (

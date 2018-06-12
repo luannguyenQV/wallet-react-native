@@ -13,7 +13,7 @@ class TransactionList extends Component {
   state = {
     previousCurrencyCode: null,
     transactions: [],
-    loading: true,
+    loading: false,
     showDetail: false,
     transaction: null,
   };
@@ -30,7 +30,7 @@ class TransactionList extends Component {
     if (this.state.previousCurrencyCode !== currencyCode) {
       this.setState({ transactions: [] });
     }
-    this.setState({ loading: true });
+    // this.setState({ loading: true });
     // if (this.props.fetchAccounts) {
     //   this.props.fetchAccounts();
     // }

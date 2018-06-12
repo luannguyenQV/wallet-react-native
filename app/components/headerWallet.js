@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, FlatList, Dimensions } from 'react-native';
+import { View, FlatList, Dimensions, Animated } from 'react-native';
 import { connect } from 'react-redux';
 import {
   setActiveWalletIndex,
@@ -18,6 +18,8 @@ import HeaderCurrency from './HeaderCurrency';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class HeaderWallet extends Component {
+  scrollX = new Animated.Value(0);
+
   componentDidMount() {
     if (this.props.wallets.length > 1) {
       this.flatListRef.scrollToIndex({
@@ -56,12 +58,38 @@ class HeaderWallet extends Component {
           horizontal
           pagingEnabled
           getItemLayout={this.getItemLayout}
-          renderItem={({ item }) => <HeaderCurrency wallet={item} />}
+          renderItem={({ item, index }) => this.renderItem(item, index)}
           keyExtractor={item => item.account_name + item.currency.currency.code}
           showsHorizontalScrollIndicator={false}
         />
       );
     }
+  }
+
+  renderItem(item, index) {
+    // let position = Animated.divide(this.scrollX, SCREEN_WIDTH);
+    // let i = index;
+    // // console.log(i);
+    // // console.log(position);
+    // let opacity = position.interpolate({
+    //   inputRange: [
+    //     SCREEN_WIDTH * (i - 1),
+    //     SCREEN_WIDTH * i,
+    //     SCREEN_WIDTH * (i + 1),
+    //   ],
+    //   outputRange: [0.5, 1, 0.5],
+    //   extrapolate: 'clamp',
+    // });
+    return (
+      <Animated.View
+        key={item.account_name + item.currency.currency.code}
+        // style={{ opacity }}
+      >
+        <HeaderCurrency wallet={item} />
+      </Animated.View>
+    );
+
+    return;
   }
 
   handleViewableItemsChanged = info => {
@@ -153,7 +181,7 @@ class HeaderWallet extends Component {
 
 const styles = {
   viewStyleContainer: {
-    flex: 1,
+    // flex: 1,
     flexDirection: 'column',
     backgroundColor: Colors.primary,
     // minHeight: 86,

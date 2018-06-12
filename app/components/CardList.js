@@ -1,6 +1,11 @@
 // import lib for making component
 import React, { Component } from 'react';
-import { FlatList, RefreshControl } from 'react-native';
+import {
+  FlatList,
+  RefreshControl,
+  KeyboardAvoidingView,
+  ScrollView,
+} from 'react-native';
 import { connect } from 'react-redux';
 import {
   fetchData,
@@ -261,21 +266,31 @@ class CardList extends Component {
       updateItem,
     } = this.props;
     return (
-      <CardContainer>
+      <KeyboardAvoidingView
+        style={{
+          flex: 1,
+          backgroundColor: '#e4e4e4',
+        }}
+        behavior={'padding'}
+        enabled>
         {showDetail ? (
-          <Card
-            textActionOne={wallet ? '' : 'SAVE'}
-            onPressActionOne={() => updateItem(type, tempItem)}
-            textActionTwo={wallet ? '' : 'CANCEL'}
-            onPressActionTwo={() => fetchData(type)}
-            loading={loading}>
-            {renderDetail
-              ? renderDetail(
-                  tempItem ? tempItem : null,
-                  navigation ? navigation : null,
-                )
-              : null}
-          </Card>
+          <ScrollView
+            keyboardDismissMode={'interactive'}
+            keyboardShouldPersistTaps="always">
+            <Card
+              textActionOne={wallet ? '' : 'SAVE'}
+              onPressActionOne={() => updateItem(type, tempItem)}
+              textActionTwo={wallet ? '' : 'CANCEL'}
+              onPressActionTwo={() => fetchData(type)}
+              loading={loading}>
+              {renderDetail
+                ? renderDetail(
+                    tempItem ? tempItem : null,
+                    navigation ? navigation : null,
+                  )
+                : null}
+            </Card>
+          </ScrollView>
         ) : (
           <FlatList
             refreshControl={
@@ -295,7 +310,7 @@ class CardList extends Component {
           />
         )}
         {this.renderModal()}
-      </CardContainer>
+      </KeyboardAvoidingView>
     );
   }
 }
