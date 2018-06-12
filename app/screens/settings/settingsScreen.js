@@ -24,9 +24,9 @@ class SettingsScreen extends Component {
   renderBasicInfo() {
     const { profile } = this.props;
 
-    let value = profile.first_name
-      ? profile.first_name
-      : '' + ' ' + profile.last_name ? profile.last_name : '';
+    let value =
+      (profile.first_name ? profile.first_name : '') +
+      (profile.last_name ? ' ' + profile.last_name : '');
 
     return (
       <SettingsOption
@@ -227,9 +227,9 @@ class SettingsScreen extends Component {
           <SettingsContainer label="Security">
             {this.renderSecurity()}
           </SettingsContainer>
-          <Text style={{ position: 'absolute', bottom: 4 }}>
+          {/* <Text style={{ position: 'absolute', bottom: 4 }}>
             Version: {AppConfig.version}
-          </Text>
+          </Text> */}
         </InputContainer>
       </View>
     );

@@ -113,8 +113,8 @@ class WithdrawScreen extends Component {
 
     return (
       <AuthForm
-        textFooterLeft={textFooterLeft}
-        onPressFooterLeft={onPressFooterLeft}
+        // textFooterLeft={textFooterLeft}
+        // onPressFooterLeft={onPressFooterLeft}
         textFooterRight={textFooterRight}
         onPressFooterRight={onPressFooterRight}
         loading={withdrawing}>
@@ -132,6 +132,7 @@ class WithdrawScreen extends Component {
       withdrawBankAccount,
       withdrawNote,
       withdrawError,
+      setWithdrawState,
     } = this.props;
     const currency = withdrawWallet.currency.currency;
 
@@ -153,7 +154,7 @@ class WithdrawScreen extends Component {
         withdrawState === 'confirm' ||
         withdrawState === 'success' ? (
           <TouchableHighlight
-            onPress={() => this.setWithdrawState('amount')}
+            onPress={() => setWithdrawState('amount')}
             underlayColor={Colors.lightGray}
             style={buttonStyleOutput}>
             <Output
@@ -170,7 +171,7 @@ class WithdrawScreen extends Component {
         withdrawState === 'confirm' ||
         withdrawState === 'success' ? (
           <TouchableHighlight
-            onPress={() => this.setWithdrawState('account')}
+            onPress={() => setWithdrawState('account')}
             underlayColor={Colors.lightGray}
             style={buttonStyleOutput}>
             <Output label="Account" value={withdrawBankAccount.name} />
@@ -179,7 +180,7 @@ class WithdrawScreen extends Component {
         {(withdrawState === 'confirm' || withdrawState === 'success') &&
         withdrawNote ? (
           <TouchableHighlight
-            onPress={() => this.setWithdrawState('note')}
+            onPress={() => setWithdrawState('note')}
             underlayColor={Colors.lightGray}
             style={buttonStyleOutput}>
             <Output label="Note" value={withdrawNote} />
@@ -327,14 +328,14 @@ const styles = {
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
     // backgroundColor: 'orange',
-    flex: 2,
+    // flex: 2,
   },
   buttonStyleOutput: { width: '100%', borderRadius: 3, marginHorizontal: 8 },
   viewStyleBottomContainer: {
     // width: '100%',
     // justifyContent: 'center',
     // alignSelf: 'flex-end',
-    flex: 1,
+    // flex: 1,
     // minHeight: 100,
     borderRadius: 2,
     // position: 'absolute',

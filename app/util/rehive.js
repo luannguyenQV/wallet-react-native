@@ -58,7 +58,7 @@ export const updateProfileImage = file => {
 // Address
 export const getAddress = () => r.user.address.get();
 
-export const updateAddress = () => r.user.address.update();
+export const updateAddress = data => r.user.address.update(data);
 
 // Bank Accounts
 export const getBankAccounts = () => r.user.bankAccounts.get();
@@ -83,7 +83,7 @@ export const deleteCryptoAccount = id => r.user.cryptoAccounts.delete(id);
 // Documents
 export const getDocuments = () => r.user.documents.get();
 
-export const createDocument = (file, category, type) => {
+export const createDocument = ({ file, category, type }) => {
   let formData = new FormData();
   formData.append('file', file);
   formData.append('document_category', category);

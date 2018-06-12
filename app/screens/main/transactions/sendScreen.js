@@ -211,8 +211,8 @@ class SendScreen extends Component {
 
     return (
       <AuthForm
-        textFooterLeft={textFooterLeft}
-        onPressFooterLeft={onPressFooterLeft}
+        // textFooterLeft={textFooterLeft}
+        // onPressFooterLeft={onPressFooterLeft}
         textFooterRight={textFooterRight}
         onPressFooterRight={onPressFooterRight}
         loading={sending}>
@@ -230,6 +230,7 @@ class SendScreen extends Component {
       sendRecipient,
       sendNote,
       sendError,
+      setSendState,
     } = this.props;
     const currency = sendWallet.currency.currency;
 
@@ -251,7 +252,7 @@ class SendScreen extends Component {
         sendState === 'confirm' ||
         sendState === 'success' ? (
           <TouchableHighlight
-            onPress={() => this.setSendState('amount')}
+            onPress={() => setSendState('amount')}
             underlayColor={Colors.lightGray}
             style={buttonStyleOutput}>
             <Output
@@ -268,7 +269,7 @@ class SendScreen extends Component {
         sendState === 'confirm' ||
         sendState === 'success' ? (
           <TouchableHighlight
-            onPress={() => this.setSendState('recipient')}
+            onPress={() => setSendState('recipient')}
             underlayColor={Colors.lightGray}
             style={buttonStyleOutput}>
             <Output label="Recipient" value={sendRecipient} />
@@ -276,7 +277,7 @@ class SendScreen extends Component {
         ) : null}
         {(sendState === 'confirm' || sendState === 'success') && sendNote ? (
           <TouchableHighlight
-            onPress={() => this.setSendState('note')}
+            onPress={() => setSendState('note')}
             underlayColor={Colors.lightGray}
             style={buttonStyleOutput}>
             <Output label="Note" value={sendNote} />
@@ -375,7 +376,7 @@ class SendScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <Header navigation={this.props.navigation} title="Send" right back />
+        <Header navigation={this.props.navigation} title="Send" back />
         <KeyboardAvoidingView
           keyboardShouldPersistTaps={'never'}
           style={styles.viewStyleContainer}
@@ -406,14 +407,14 @@ const styles = {
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
     // backgroundColor: 'orange',
-    flex: 2,
+    // flex: 2,
   },
   buttonStyleOutput: { width: '100%', borderRadius: 3, marginHorizontal: 8 },
   viewStyleBottomContainer: {
     // width: '100%',
     // justifyContent: 'center',
     // alignSelf: 'flex-end',
-    flex: 1,
+    // flex: 1,
     // minHeight: 100,
     borderRadius: 2,
     // position: 'absolute',

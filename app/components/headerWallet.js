@@ -58,7 +58,7 @@ class HeaderWallet extends Component {
           horizontal
           pagingEnabled
           getItemLayout={this.getItemLayout}
-          renderItem={({ item, index }) => this.renderItem(item, index)}
+          renderItem={({ item }) => <HeaderCurrency wallet={item} />}
           keyExtractor={item => item.account_name + item.currency.currency.code}
           showsHorizontalScrollIndicator={false}
         />
@@ -132,6 +132,7 @@ class HeaderWallet extends Component {
       resetSend,
       setSendWallet,
       navigation,
+      resetWithdraw,
     } = this.props;
     switch (type) {
       case 'send': {

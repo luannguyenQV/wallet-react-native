@@ -11,6 +11,7 @@ import {
   SHOW_MODAL,
   HIDE_MODAL,
   UPLOAD_PROFILE_PHOTO,
+  UPLOAD_DOCUMENT_ASYNC,
   CARD_DISMISS,
   CARD_RESTORE_ALL,
 } from './../types';
@@ -91,6 +92,7 @@ export const hideModal = () => {
 };
 
 export const cardDismiss = card_id => {
+  console.log(card_id);
   return {
     type: CARD_DISMISS,
     payload: card_id,
@@ -110,8 +112,26 @@ export const uploadProfilePhoto = image => {
     type: 'image/jpg',
   };
   return {
-    type: UPLOAD_PROFILE_PHOTO,
+    type: UPLOAD_PROFILE_PHOTO.pending,
     payload: file,
+  };
+};
+
+export const uploadDocument = (image, category, document_type) => {
+  const parts = image.split('/');
+  const name = parts[parts.length - 1];
+  const file = {
+    uri: image,
+    name,
+    type: 'image/jpg',
+  };
+  return {
+    type: UPLOAD_DOCUMENT_ASYNC.pending,
+    payload: {
+      file,
+      category,
+      type: document_type,
+    },
   };
 };
 

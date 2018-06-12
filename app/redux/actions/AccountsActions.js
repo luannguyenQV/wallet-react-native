@@ -15,6 +15,7 @@ import {
   VIEW_WALLET,
   HIDE_WALLET,
   WITHDRAW_ASYNC,
+  WITHDRAW_FIELD_ERROR,
 } from './../types';
 import _ from 'lodash';
 import * as Rehive from './../../util/rehive';
@@ -155,7 +156,7 @@ export const validateWithdrawAmount = (wallet, amount) => {
     return setWithdrawState('account');
   } else {
     return {
-      type: WITHDRAW_FIELD_ERROR,
+      type: INPUT_FIELD_ERROR,
       payload: 'Invalid send amount',
     };
   }

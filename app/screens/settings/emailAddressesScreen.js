@@ -103,12 +103,14 @@ const mapStateToProps = ({ user }) => {
     loading_email_address,
     temp_email_address,
     updateError,
+    showDetail,
   } = user;
   return {
     email_address,
     loading_email_address,
     temp_email_address,
     updateError,
+    showDetail,
   };
 };
 

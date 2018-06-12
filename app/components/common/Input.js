@@ -126,7 +126,7 @@ class Input extends Component {
           onSubmitEditing={onSubmitEditing}
           autoFocus={autoFocus}
           blurOnSubmit={false}
-          multiline
+          // multiline
         />
         {type === 'password' ? (
           <View>
@@ -142,7 +142,7 @@ class Input extends Component {
               name={iconNameVisibility}
               size={24}
               color={borderColor}
-              // onPress={this.togglePasswordVisibility}
+              onPress={this.togglePasswordVisibility}
             />
           </View>
         ) : null}

@@ -21,9 +21,11 @@ class ImageUpload extends Component {
       // aspect: [4, 3],
     });
     if (!result.cancelled) {
-      this.setState({
-        image: result.uri,
-      });
+      this.props.onSave(result.uri);
+      this.props.onDismiss();
+      // this.setState({
+      //   image: result.uri,
+      // });
     }
   };
 
@@ -46,7 +48,7 @@ class ImageUpload extends Component {
     const { visible, onDismiss } = this.props;
 
     return (
-      <PopUpGeneral visible={visible}>
+      <PopUpGeneral visible={visible} onDismiss={onDismiss}>
         <ButtonList>
           <Button
             label="Use camera"

@@ -111,7 +111,6 @@ class HomeCards extends Component {
 
   renderCard(item) {
     const { textStyleContent } = styles;
-    // console.log(item.image);
     let imageString = './../../assets/icons/' + item.image + '.png';
     return (
       <Card

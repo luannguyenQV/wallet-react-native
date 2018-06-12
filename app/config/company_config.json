@@ -49,7 +49,10 @@
     "requirePersonal": true,
     "requireAddress": false,
     "requireMobile": true,
-    "requireDocumentID": true
+    "requireEmail": true,
+    "requireDocumentID": true,
+    "requireDocumentAddress": true,
+    "requireDocumentAdvID": true
   },
   "auth": {
     "require2FA": true,

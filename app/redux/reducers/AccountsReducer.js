@@ -85,21 +85,6 @@ export default (state = INITIAL_STATE, action) => {
         activeWalletIndex: action.payload,
       };
 
-    // case SET_ACTIVE_CURRENCY_ASYNC.pending:
-    //   return {
-    //     ...state,
-    //     tempWallet: action.payload,
-    //   };
-    // case SET_ACTIVE_CURRENCY_ASYNC.success:
-    //   return {
-    //     ...state,
-    //     tempWallet: null,
-    //   };
-    // case SET_ACTIVE_CURRENCY_ASYNC.error:
-    //   return {
-    //     ...state,
-    //   };
-
     case SHOW_MODAL:
       if (action.payload.type === 'temp_wallet') {
         return {
@@ -122,7 +107,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         sendError: action.payload,
-        WithdrawError: action.payload,
+        withdrawError: action.payload,
       };
     case SET_SEND_STATE:
       return {
@@ -163,6 +148,9 @@ export default (state = INITIAL_STATE, action) => {
     case SET_WITHDRAW_WALLET:
       return {
         ...state,
+        withdrawAmount: '',
+        withdrawBankAccount: null,
+        withdrawNote: '',
         withdrawWallet: action.payload,
         withdrawState: 'amount',
         withdrawError: '',

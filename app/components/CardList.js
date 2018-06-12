@@ -278,6 +278,7 @@ class CardList extends Component {
             keyboardDismissMode={'interactive'}
             keyboardShouldPersistTaps="always">
             <Card
+              key={type}
               textActionOne={wallet ? '' : 'SAVE'}
               onPressActionOne={() => updateItem(type, tempItem)}
               textActionTwo={wallet ? '' : 'CANCEL'}

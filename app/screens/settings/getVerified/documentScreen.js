@@ -9,6 +9,8 @@ import {
   Alert,
   Image,
 } from 'react-native';
+import { connect } from 'react-redux';
+import { uploadDocument } from './../../../redux/actions';
 import { ImagePicker, Permissions } from 'expo';
 import Colors from './../../../config/colors';
 import Header from './../../../components/header';
@@ -55,38 +57,30 @@ class DocumentScreen extends Component {
     });
   };
 
-  uploadDocument = async () => {
+  uploadDocument = () => {
     const { image, category, document_type } = this.state;
-    this.setState({ loading: true });
-
-    const parts = image.split('/');
-    const name = parts[parts.length - 1];
-    const file = {
-      uri: image,
-      name,
-      type: 'image/jpg',
-    };
-    try {
-      await Rehive.createDocument(file, category, document_type);
-      this.setState({ loading: false });
-      Alert.alert(
-        'Upload successful',
-        'Your information will shortly be reviewed by our team.',
-        [
-          {
-            text: 'OK',
-            onPress: () => this.props.navigation.goBack(),
-          },
-        ],
-      );
-    } catch (error) {
-      this.setState({ loading: false });
-      Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
-    }
+    this.props.uploadDocument(image, category, document_type);
+    // try {
+    //   // await Rehive.createDocument(file, category, document_type);
+    //   this.setState({ loading: false });
+    //   Alert.alert(
+    //     'Upload successful',
+    //     'Your information will shortly be reviewed by our team.',
+    //     [
+    //       {
+    //         text: 'OK',
+    //         onPress: () => this.props.navigation.goBack(),
+    //       },
+    //     ],
+    //   );
+    // } catch (error) {
+    //   this.setState({ loading: false });
+    //   Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
+    // }
   };
 
   renderContent() {
-    const { category, state, loading } = this.state;
+    const { category, state } = this.state;
     const {
       textStyleDescription,
       viewStyleButtonContainer,
@@ -116,7 +110,7 @@ class DocumentScreen extends Component {
               contentContainerStyle={viewStyleButtonContainer}
               data={options}
               renderItem={({ item }) => this.renderTypeButton(item)}
-              keyExtractor={item => item.id}
+              keyExtractor={item => item.id.toString()}
             />
             {/* </ButtonList> */}
           </View>
@@ -130,7 +124,7 @@ class DocumentScreen extends Component {
                 source={{ uri: this.state.image }}
               />
             </View>
-            {loading ? (
+            {this.props.loading ? (
               <Spinner size="large" />
             ) : (
               <ButtonList>
@@ -216,5 +210,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+const mapStateToProps = user => {
+  const { loading } = user;
+  return { loading };
+};
 
-export default DocumentScreen;
+export default connect(mapStateToProps, {
+  uploadDocument,
+})(DocumentScreen);

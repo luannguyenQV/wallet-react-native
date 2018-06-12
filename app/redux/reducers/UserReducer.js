@@ -15,6 +15,7 @@ import {
   VIEW_WALLET,
   CARD_DISMISS,
   CARD_RESTORE_ALL,
+  UPLOAD_DOCUMENT_ASYNC,
 } from './../types';
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 
@@ -232,6 +233,26 @@ export default (state = INITIAL_STATE, action) => {
         loading: false,
       };
 
+    case UPLOAD_DOCUMENT_ASYNC.pending:
+      return {
+        ...state,
+        loading: true,
+        updateError: '',
+      };
+    case UPLOAD_DOCUMENT_ASYNC.success:
+      return {
+        ...state,
+        loading: false,
+        // modalVisible: true,
+        // modalType: 'verify',
+      };
+    case UPLOAD_DOCUMENT_ASYNC.error:
+      return {
+        ...state,
+        updateError: action.payload,
+        loading: false,
+      };
+
     case VIEW_WALLET:
       return {
         ...state,
@@ -253,7 +274,9 @@ export default (state = INITIAL_STATE, action) => {
     case CARD_DISMISS:
       return {
         ...state,
-        dismissedCards: [...state.dismissedCards, action.payload],
+        dismissedCards: state.dismissedCards
+          ? [...state.dismissedCards, action.payload]
+          : [action.payload],
       };
 
     case CARD_RESTORE_ALL:

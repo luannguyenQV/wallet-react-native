@@ -8,8 +8,10 @@ import {
   VERIFY_ASYNC,
   SHOW_MODAL,
   UPLOAD_PROFILE_PHOTO,
+  UPLOAD_DOCUMENT_ASYNC,
   LOGOUT_USER_ASYNC,
 } from './../types';
+import NavigationService from './../../util/navigation';
 
 import * as Rehive from './../../util/rehive';
 
@@ -77,7 +79,7 @@ function* fetchData(action) {
         type: LOGOUT_USER_ASYNC.success,
       });
     }
-    yield put({ type: FETCH_DATA_ASYNC.error, error });
+    yield put({ type: FETCH_DATA_ASYNC.error, payload: error });
   }
 }
 
@@ -96,7 +98,7 @@ function* refreshProfile() {
     yield put({ type: REFRESH_PROFILE_ASYNC.success });
   } catch (error) {
     console.log(error);
-    yield put({ type: REFRESH_PROFILE_ASYNC.error, error });
+    yield put({ type: REFRESH_PROFILE_ASYNC.error, payload: error });
   }
 }
 
@@ -110,6 +112,7 @@ function* updateItem(action) {
         if (data.id) {
           response = yield call(Rehive.updateMobile, data.id, data);
         } else {
+          console.log('hi');
           response = yield call(Rehive.createMobile, data);
         }
         break;
@@ -144,13 +147,14 @@ function* updateItem(action) {
       //   response = yield call(Rehive.getAllDocuments, data);
       //   break;
     }
+    // console.log(response);
     yield all([
       put({ type: UPDATE_ASYNC.success }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: type }),
     ]);
   } catch (error) {
     console.log(error);
-    yield put({ type: UPDATE_ASYNC.error, error });
+    yield put({ type: UPDATE_ASYNC.error, payload: error });
   }
 }
 
@@ -178,7 +182,7 @@ function* deleteItem(action) {
     ]);
   } catch (error) {
     console.log(error);
-    yield put({ type: DELETE_ASYNC.error, error });
+    yield put({ type: DELETE_ASYNC.error, payload: error });
   }
 }
 
@@ -203,17 +207,30 @@ function* verifyItem(action) {
     ]);
   } catch (error) {
     console.log(error);
-    yield put({ type: VERIFY_ASYNC.error, error });
+    yield put({ type: VERIFY_ASYNC.error, payload: error });
   }
 }
 
 function* uploadProfilePhoto(action) {
   try {
     yield call(Rehive.updateProfileImage, action.payload);
+    yield put({ type: UPLOAD_PROFILE_PHOTO.success });
     yield put({ type: FETCH_DATA_ASYNC.pending, payload: 'profile' });
   } catch (error) {
     console.log(error);
-    // yield put({ type: VERIFY_ASYNC.error, error });
+    yield put({ type: UPLOAD_PROFILE_PHOTO.error, payload: error });
+  }
+}
+
+function* uploadDocument(action) {
+  try {
+    yield call(Rehive.createDocument, action.payload);
+    yield put({ type: UPLOAD_DOCUMENT_ASYNC.success });
+    yield put({ type: FETCH_DATA_ASYNC.pending, payload: 'document' });
+    NavigationService.navigate('GetVerified');
+  } catch (error) {
+    console.log(error);
+    yield put({ type: UPLOAD_DOCUMENT_ASYNC.error, payload: error });
   }
 }
 
@@ -223,7 +240,8 @@ export const userSagas = all([
   takeEvery(UPDATE_ASYNC.pending, updateItem),
   takeEvery(DELETE_ASYNC.pending, deleteItem),
   takeEvery(VERIFY_ASYNC.pending, verifyItem),
-  takeEvery(UPLOAD_PROFILE_PHOTO, uploadProfilePhoto),
+  takeEvery(UPLOAD_PROFILE_PHOTO.pending, uploadProfilePhoto),
+  takeEvery(UPLOAD_DOCUMENT_ASYNC.pending, uploadDocument),
 ]);
 
 // function* apiSaga(fn, args, successAction, errorAction) {
