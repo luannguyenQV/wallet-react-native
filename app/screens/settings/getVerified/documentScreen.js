@@ -127,7 +127,7 @@ class DocumentScreen extends Component {
             {this.props.loading ? (
               <Spinner size="large" />
             ) : (
-              <ButtonList>
+              <View style={{ paddingHorizontal: 24 }}>
                 <Button
                   label="Upload"
                   onPress={this.uploadDocument} //this.openModal(item.document_type)}
@@ -136,7 +136,7 @@ class DocumentScreen extends Component {
                   label="Cancel"
                   onPress={() => this.resetState()} //this.openModal(item.document_type)}
                 />
-              </ButtonList>
+              </View>
             )}
           </View>
         );
@@ -187,20 +187,22 @@ const styles = StyleSheet.create({
   },
   viewStyleContent: {
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     padding: 16,
   },
   viewStyleButtonContainer: {
     // width: '100%',
+    paddingVertical: 8,
   },
   viewStyleImageContainer: {
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 8,
   },
   textStyleHeader: {
     fontSize: 20,
     padding: 8,
-    paddingTop: 12,
+    // paddingTop: 12,
     // padding: 16,
     // marginBottom: 16,
     textAlign: 'center',

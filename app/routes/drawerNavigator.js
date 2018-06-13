@@ -7,7 +7,7 @@ import Colors from './../config/colors';
 
 import Home from './../screens/main/homeScreen';
 
-import Wallets from './../screens/main/accounts/walletsScreen';
+import Wallets from '../screens/main/walletsScreen';
 
 import GetVerified from './../screens/settings/getVerified/getVerifiedScreen';
 import Settings from './../screens/settings/settingsScreen';

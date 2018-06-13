@@ -12,8 +12,8 @@ import {
 import { connect } from 'react-redux';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Colors from './../../../config/colors';
-import Header from './../../../components/header';
+import Colors from './../../config/colors';
+import Header from './../../components/header';
 
 class ReceiveScreen extends Component {
   static navigationOptions = {

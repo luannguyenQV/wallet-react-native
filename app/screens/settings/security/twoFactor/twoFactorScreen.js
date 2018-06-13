@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, Alert } from 'react-native';
 import Colors from '../../../../config/colors';
 import Header from '../../../../components/header';
-import Option from '../../../../components/settingsOption';
+import { SettingsOption } from '../../../../components/common';
 import AuthService from '../../../../services/authService';
 
 class TwoFactorScreen extends Component {
@@ -24,8 +24,16 @@ class TwoFactorScreen extends Component {
     return (
       <View style={styles.container}>
         <Header navigation={this.props.navigation} back title="Two factor" />
-        <Option name="SMS" gotoAddress="TwoFactorSmsAuth" goTo={this.goTo} />
-        <Option name="Token" gotoAddress="TwoFactorToken" goTo={this.goTo} />
+        <SettingsOption
+          label="SMS"
+          gotoAddress="TwoFactorSmsAuth"
+          goTo={this.goTo}
+        />
+        <SettingsOption
+          label="Token"
+          gotoAddress="TwoFactorToken"
+          goTo={this.goTo}
+        />
       </View>
     );
   }

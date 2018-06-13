@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { Text, View } from 'react-native';
 import { BarCodeScanner, Permissions } from 'expo';
-import Header from './../../../components/header';
+import Header from './../../components/header';
 import { connect } from 'react-redux';
 import {
   resetSend,
   setSendWallet,
   sendFieldUpdate,
-} from './../../../redux/actions';
+} from './../../redux/actions';
 
-import { Output, Button } from './../../../components/common';
+import { Output, Button } from './../../components/common';
 
 class QRCodeScannerScreen extends Component {
   static navigationOptions = {

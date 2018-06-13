@@ -19,11 +19,11 @@ import {
   setWithdrawState,
   inputFieldUpdate,
   withdraw,
-} from '../../../redux/actions';
+} from '../../redux/actions';
 
-import { Input, AuthForm, Output } from './../../../components/common';
-import Colors from './../../../config/colors';
-import Header from './../../../components/header';
+import { Input, AuthForm, Output } from './../../components/common';
+import Colors from './../../config/colors';
+import Header from './../../components/header';
 
 class WithdrawScreen extends Component {
   static navigationOptions = () => ({

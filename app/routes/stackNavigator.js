@@ -1,20 +1,17 @@
 import { StackNavigator } from 'react-navigation';
 
 import AuthScreen from './../screens/auth/authScreen';
-import AuthVerifyMobile from './../screens/auth/verifyMobileScreen';
-import ForgotPassword from './../screens/auth/forgotPasswordScreen';
-import NoNetConnection from './../screens/auth/noNetConnectionScreen';
 
 import Home from './drawerNavigator';
 
-import Wallets from './../screens/main/accounts/walletsScreen';
+import Wallets from '../screens/main/walletsScreen';
 
-import Send from './../screens/main/transactions/sendScreen';
-import Receive from './../screens/main/transactions/receiveScreen';
-import QRcodeScanner from './../screens/main/transactions/qrcodeScannerScreen';
+import Send from '../screens/main/sendScreen';
+import Receive from '../screens/main/receiveScreen';
+import QRcodeScanner from '../screens/main/qrcodeScannerScreen';
 
-import Deposit from './../screens/main/wallets/depositScreen';
-import Withdraw from './../screens/main/wallets/withdrawScreen';
+import Deposit from '../screens/main/depositScreen';
+import Withdraw from '../screens/main/withdrawScreen';
 
 import SettingsEmailAddresses from './../screens/settings/emailAddressesScreen';
 import VerifyMobileNumber from './../screens/settings/verifyMobileScreen';
@@ -46,15 +43,6 @@ const Stack = {
   },
   Home: {
     screen: Home,
-  },
-  ForgotPassword: {
-    screen: ForgotPassword,
-  },
-  NoNetConnection: {
-    screen: NoNetConnection,
-  },
-  AuthVerifyMobile: {
-    screen: AuthVerifyMobile,
   },
   Wallets: {
     screen: Wallets,
