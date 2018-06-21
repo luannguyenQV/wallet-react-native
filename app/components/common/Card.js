@@ -5,7 +5,7 @@ import {
   TouchableHighlight,
   TouchableWithoutFeedback,
 } from 'react-native';
-// import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import Colors from './../../config/colors';
 import { Spinner } from './Spinner';
@@ -28,64 +28,50 @@ const Card = props => {
     iconStyleTitleRight,
     viewStyleFooter,
     viewStyleContent,
+    iconStyleFooter,
   } = styles;
 
   const {
     renderHeader,
     title,
     subtitle,
+    colorTitleBackground,
+    colorTitleText,
     iconTitleLeft,
-    onPressTitleLeft,
-    textTitleLeft,
-    iconTitleRight,
+    onPressTitle,
     itemCode,
     itemActive,
+    textTitleLeft,
+    onPressTitleLeft,
+    iconTitleRight,
     onPressTitleRight,
-    textActionOne,
-    onPressActionOne,
-    textActionTwo,
-    onPressActionTwo,
-    loading,
+    backgroundColor,
     onPressContent,
-    onPressTitle,
+    colorIcon,
+    errorText,
     iconFooter,
     onPressFooter,
-    titleStyle,
-    errorText,
-    backgroundColor,
-    swipeableContent,
+    textActionOne,
+    onPressActionOne,
     disableActionOne,
+    textActionTwo,
+    onPressActionTwo,
     disableActionTwo,
-    colorTitle,
-    colorTitleBackground,
-    colorContent,
-    colorContentBackground,
+    loading,
+    swipeableContent,
   } = props;
 
   return (
     <View style={viewStyleCardContainer}>
       {/* <Swipeable rightContent={swipeableContent}> */}
-      <View>{renderHeader ? renderHeader : null}</View>
+      {renderHeader ? <View>{renderHeader}</View> : null}
       {title || subtitle || iconTitleLeft || iconTitleRight ? (
         <View
           resizeMode="cover"
           style={[
             viewStyleTitleContainer,
-            {
-              backgroundColor: colorTitleBackground
-                ? colorTitleBackground
-                : Colors.primary,
-              height: itemCode ? 72 : 64,
-            },
+            { backgroundColor: colorTitleBackground },
           ]}>
-          {itemCode ? (
-            <TouchableCircle
-              text={itemCode}
-              active={itemCodeActive}
-              onPress={onPressTitleLeft}
-              radius={24}
-            />
-          ) : null}
           {textTitleLeft ? (
             <TouchableCircle
               text={textTitleLeft}
@@ -107,21 +93,17 @@ const Card = props => {
                 style={[
                   textStyleTitle,
                   {
-                    fontSize: title ? (title.length < 15 ? 24 : 18) : 24,
-                    color: colorTitle ? colorTitle : Colors.primaryContrast,
+                    fontSize: title ? (title.length < 18 ? 24 : 18) : 24,
+                    color: colorTitleText,
                   },
                 ]}>
                 {title}
               </Text>
-              <Text
-                style={[
-                  textStyleSubtitle,
-                  {
-                    color: colorTitle ? colorTitle : Colors.primaryContrast,
-                  },
-                ]}>
-                {subtitle}
-              </Text>
+              {subtitle ? (
+                <Text style={[textStyleSubtitle, { color: colorTitleText }]}>
+                  {subtitle}
+                </Text>
+              ) : null}
             </View>
           </TouchableWithoutFeedback>
           {iconTitleRight ? (
@@ -136,38 +118,24 @@ const Card = props => {
         </View>
       ) : null}
       <TouchableWithoutFeedback onPress={onPressContent}>
-        <View
-          style={[
-            viewStyleContent,
-            {
-              backgroundColor: colorContentBackground
-                ? colorContentBackground
-                : 'white',
-            },
-          ]}>
+        <View style={[viewStyleContent, { backgroundColor }]}>
           {props.children}
           {errorText ? <Text style={textStyleError}>{errorText}</Text> : null}
         </View>
       </TouchableWithoutFeedback>
       {textActionOne || textActionTwo || iconFooter ? (
-        <View style={viewStyleFooter}>
+        <View style={[viewStyleFooter, { backgroundColor }]}>
           {loading ? (
             <Spinner size="small" />
           ) : (
             <View style={viewStyleActionContainer}>
               {iconFooter ? (
                 <Icon
-                  style={{
-                    position: 'absolute',
-                    left: 8,
-                    bottom: 8,
-                    margin: 0,
-                    padding: 8,
-                  }}
+                  style={iconStyleFooter}
                   name={iconFooter}
                   size={22}
                   onPress={onPressFooter}
-                  color={colorContent ? colorContent : Colors.gray}
+                  color={colorIcon ? colorIcon : Colors.gray}
                 />
               ) : null}
               {textActionTwo ? (
@@ -200,16 +168,42 @@ const Card = props => {
   }
 };
 
+Card.defaultProps = {
+  title: '',
+  subtitle: '',
+  renderHeader: null,
+  animation: 'fadeInDownBig',
+  disabled: false,
+  onPress: () => {},
+  icon: '',
+  size: '',
+  type: 'contained',
+  colorTitleBackground: Colors.secondary,
+  colorTitleText: Colors.secondaryContrast,
+  backgroundColor: 'white',
+};
+
+Card.propTypes = {
+  title: PropTypes.string,
+  subtitle: PropTypes.string,
+  renderHeader: PropTypes.object,
+  animation: PropTypes.string,
+  disabled: PropTypes.bool,
+  onPress: PropTypes.func,
+  icon: PropTypes.string,
+  size: PropTypes.string,
+  type: PropTypes.string,
+  backgroundColor: PropTypes.string,
+  textColor: PropTypes.string,
+};
+
 const styles = {
   viewStyleCardContainer: {
-    // flex: 1,
-    backgroundColor: '#ffffff',
-    borderRadius: 3,
+    borderRadius: 1,
     shadowColor: 'rgba(0, 0, 0, 0.6)',
     shadowOpacity: 0.2,
     shadowRadius: 2,
     margin: 8,
-    // marginVertical: 8,
     elevation: 2,
     shadowOffset: {
       height: 1,
@@ -220,7 +214,7 @@ const styles = {
     flex: 1,
     flexDirection: 'row',
     // height: 72,
-    paddingHorizontal: 8,
+    padding: 8,
     alignItems: 'center',
   },
   viewStyleTitle: {
@@ -235,32 +229,37 @@ const styles = {
     flexWrap: 'wrap',
     fontWeight: 'bold',
   },
-  viewStyleContent: {
-    // paddingTop: 8,
-    // paddingHorizontal: 8,
-  },
   textStyleSubtitle: {
     opacity: 0.6,
     fontSize: 12,
   },
-  textStyleError: {
-    paddingTop: 8,
-    paddingHorizontal: 16,
-    fontSize: 14,
-    color: Colors.error,
+  viewStyleContent: {
+    // paddingTop: 8,
+    // paddingHorizontal: 8,
   },
   iconStyleTitleLeft: {
-    padding: 16,
+    paddingHorizontal: 8,
     alignSelf: 'flex-start',
     color: 'black',
     opacity: 0.87,
   },
   iconStyleTitleRight: {
     right: 0,
-    margin: 0,
     height: 64,
     width: 64,
     position: 'absolute',
+  },
+  iconStyleFooter: {
+    position: 'absolute',
+    left: 8,
+    bottom: 8,
+    padding: 8,
+  },
+  textStyleError: {
+    paddingTop: 8,
+    paddingHorizontal: 16,
+    fontSize: 14,
+    color: Colors.error,
   },
   viewStyleFooter: {
     flexDirection: 'row',
@@ -279,7 +278,6 @@ const styles = {
     color: Colors.primary,
     fontSize: 14,
     fontWeight: 'bold',
-    // padding: 8,
   },
   buttonStyleAction: {
     padding: 8,

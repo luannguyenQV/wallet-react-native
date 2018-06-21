@@ -72,7 +72,7 @@ class MobileNumbersScreen extends Component {
         <CardList
           type="mobile_number"
           data={mobile_number}
-          tempItem={temp_mobile_number}
+          // tempItem={temp_mobile_number}
           loadingData={loading_mobile_number}
           identifier="number"
           renderContent={this.renderContent}

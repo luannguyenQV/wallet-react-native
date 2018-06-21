@@ -159,7 +159,9 @@ export const getCompanyCurrencies = () => r.company.currencies.get();
 
 export const getCompanyBankAccounts = () => r.company.bankAccounts.get();
 
-export const getCompanyConfig = () => companyConfig;
+export const getCompanyConfig = () =>
+  companyConfig.filter(item => item[company] !== store.getState().auth.company);
+// NEEDS TESTING TODO:
 
 /* GENERAL */
 export const callApi = (method, route, token, data) => {

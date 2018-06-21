@@ -1,44 +1,36 @@
-// import lib for making component
+/* BUTTON */
+/* Component | Stateless | Styled */
+/* This is the main button component. Takes props to adjust it's size, type, color etc */
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import Colors from './../../config/colors';
+import PropTypes from 'prop-types';
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import Colors from './../../config/colors';
 
 class Button extends Component {
   buttonStyle() {
     const { buttonStyle } = styles;
-    const { type, color, size, label } = this.props;
+    const { backgroundColor, size } = this.props;
     return [
       buttonStyle,
       {
-        backgroundColor:
-          type && type !== 'contained'
-            ? 'transparent'
-            : color ? Colors[color] : Colors.primary,
+        backgroundColor,
         height: size === 'large' ? 40 : size === 'small' ? 30 : 36,
-        // minWidth: label ?
       },
     ];
   }
 
   textStyle() {
     const { textStyle } = styles;
-    const { size } = this.props;
+    const { size, textColor } = this.props;
     return [
       textStyle,
       {
-        color: this.contrastColor(),
+        color: textColor,
         fontSize: size === 'large' ? 18 : size === 'small' ? 10 : 14,
       },
     ];
-  }
-
-  contrastColor() {
-    const { type, color } = this.props;
-    return type === 'text'
-      ? color ? Colors[color] : Colors.primary
-      : color ? Colors[color + 'Contrast'] : Colors.primaryContrast;
   }
 
   render() {
@@ -46,7 +38,7 @@ class Button extends Component {
       onPress,
       label,
       reference,
-      animate,
+      animation,
       disabled,
       size,
       icon,
@@ -56,7 +48,7 @@ class Button extends Component {
       <Animatable.View
         ref={reference}
         style={containerStyle}
-        animation={animate ? 'fadeInUpBig' : ''}>
+        animation={animation}>
         <TouchableOpacity
           onPress={onPress}
           style={this.buttonStyle()}
@@ -64,10 +56,9 @@ class Button extends Component {
           <View style={{ flexDirection: 'row' }}>
             {icon ? (
               <Icon
-                // style={{ alignSelf: 'flex-end' }}
                 name={icon}
                 size={size === 'large' ? 26 : size === 'small' ? 18 : 22}
-                color={this.contrastColor()}
+                color={textColor}
               />
             ) : null}
             <Text style={this.textStyle()}>{label}</Text>
@@ -78,35 +69,49 @@ class Button extends Component {
   }
 }
 
+Button.propTypes = {
+  label: PropTypes.string, // Text displayed on button
+  reference: PropTypes.func, // For animations
+  animation: PropTypes.string, // Animation type
+  disabled: PropTypes.bool, // Disable touchable component
+  onPress: PropTypes.func, // Function to execute on press
+  icon: PropTypes.string, // Icon displayed on left of button
+  size: PropTypes.string, // Size of button (small / default or '' / large)
+  type: PropTypes.string, // Type of button (text, contained, TODO: outlined)
+  backgroundColor: PropTypes.string, // Button color
+  textColor: PropTypes.string, // Text color
+};
+
+Button.defaultProps = {
+  label: '',
+  reference: () => {},
+  animation: '',
+  disabled: false,
+  onPress: () => {},
+  icon: '',
+  size: '',
+  type: 'contained',
+  backgroundColor: Colors.primary,
+  textColor: Colors.primaryContrast,
+};
+
 const styles = {
   containerStyle: {
     flexDirection: 'row',
-    alignItems: 'center',
     margin: 8,
-    // width: '100%',
-    backgroundColor: '#00000000',
   },
   buttonStyle: {
     flex: 1,
     flexDirection: 'row',
-    borderRadius: 3,
+    borderRadius: 2.5,
     minWidth: 64,
     padding: 8,
-    // backgroundColor: Colors.primary,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
+    shadowOffset: { width: 2, height: 2 },
     shadowRadius: 5,
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.2,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  buttonStyleText: {
-    flex: 1,
-    height: 28,
-    backgroundColor: 'transparent',
-    // width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   textStyle: {
     textAlign: 'center',

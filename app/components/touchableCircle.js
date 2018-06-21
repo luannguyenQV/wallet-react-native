@@ -40,7 +40,7 @@ class TouchableCircle extends Component {
 
 const styles = {
   circle: {
-    margin: 8,
+    // margin: 8,
     justifyContent: 'center',
     alignItems: 'center',
   },

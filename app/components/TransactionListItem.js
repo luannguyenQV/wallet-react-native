@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, Dimensions, TouchableHighlight } from 'react-native';
-import { Icon } from 'react-native-elements';
+// import { Icon } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import moment from 'moment';
 import { performDivisibility } from './../util/general';
 
@@ -13,15 +14,12 @@ class TransactionListItem extends Component {
     const { item, onPress } = this.props;
     const {
       viewStyleContainer,
-      iconStyle,
       textStyleHeader,
       textStyleDate,
       textStyleAmount,
-      viewStyleAmount,
     } = styles;
 
     let iconName = '';
-    let headerText = '';
     let color = '';
     let headerTextOne = '';
     let headerTextTwo = '';
@@ -54,15 +52,13 @@ class TransactionListItem extends Component {
     }
 
     return (
-      // <View style={viewStyleContainer}>
       <TouchableHighlight
-        // style={{ flexDirection: 'row' }}
         underlayColor={Colors.lightGray}
         style={{ flex: 1 }}
         // activeOpacity={0.2}
         onPress={() => onPress(item)}>
         <View style={viewStyleContainer}>
-          <Icon style={iconStyle} size={24} name={iconName} color={color} />
+          <Icon name={iconName} size={24} color={color ? color : 'black'} />
           <View style={{ paddingLeft: 8, paddingRight: 2 }}>
             {SCREEN_WIDTH < 350 ? (
               <View>

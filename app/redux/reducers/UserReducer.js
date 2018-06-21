@@ -93,11 +93,17 @@ export default (state = INITIAL_STATE, action) => {
           ...state['temp_' + action.payload.type],
           [action.payload.prop]: action.payload.value,
         },
+        tempItem: {
+          ...state.tempItem,
+          [action.payload.prop]: action.payload.value,
+        },
       };
     case EDIT_ITEM:
       return {
         ...state,
         [action.payload.type]: action.payload.data,
+        tempItem: action.payload.data,
+        tempType: action.payload.type,
         showDetail: true,
         editing: true,
         wallet: false,
@@ -111,24 +117,11 @@ export default (state = INITIAL_STATE, action) => {
         updateError: '',
         modalType: 'primary',
       };
-    case EDIT_PROFILE:
-      return {
-        ...state,
-        temp_profile: {
-          line_1: action.payload.data,
-          line_2: action.payload.data,
-          city: action.payload.data,
-          state_province: action.payload.data,
-          country: action.payload.data,
-          postal_code: action.payload.data,
-        },
-        showDetail: true,
-        // [action.payload.prop + 'Error']: action.payload.error,
-      };
     case NEW_ITEM:
       return {
         ...state,
         [action.payload.type]: {},
+        tempItem: {},
         showDetail: true,
         editing: false,
       };
@@ -176,16 +169,12 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         loading: true,
         updateError: '',
-        // ['loading_' + action.payload]: true,
-        // showDetail: false,
       };
     case UPDATE_ASYNC.success:
       return {
         ...state,
         loading: false,
         modalVisible: false,
-        // [action.payload.prop]: action.payload.data,
-        // ['loading_' + action.payload.prop]: false,
       };
     case UPDATE_ASYNC.error:
       return {
@@ -217,6 +206,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: true,
+        ['temp_' + action.payload.type]: action.payload.value,
         updateError: '',
       };
     case VERIFY_ASYNC.success:

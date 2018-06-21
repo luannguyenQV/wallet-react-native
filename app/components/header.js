@@ -1,15 +1,6 @@
 import React, { Component } from 'react';
-import Expo from 'expo';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  NetInfo,
-  Alert,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
-import HeaderButtons from 'react-navigation-header-buttons';
+import { Constants } from 'expo';
+import { View, Text, StyleSheet, NetInfo } from 'react-native';
 import Colors from './../config/colors';
 import { HeaderButton } from './common';
 
@@ -74,7 +65,7 @@ export default class Header extends Component {
     return (
       <View
         style={{
-          paddingTop: Expo.Constants.statusBarHeight,
+          paddingTop: Constants.statusBarHeight,
           backgroundColor: Colors.primary,
         }}>
         {noAccounts === true && (

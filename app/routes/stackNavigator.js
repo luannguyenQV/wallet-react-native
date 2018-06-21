@@ -22,9 +22,9 @@ import SettingsCryptoAddresses from './../screens/settings/cryptoAddressesScreen
 import SettingsGetVerified from './../screens/settings/getVerified/getVerifiedScreen';
 import Document from './../screens/settings/getVerified/documentScreen';
 
-import SettingsNotifications from './../screens/settings/notifications/notificationsScreen';
-import EmailNotifications from './../screens/settings/notifications/emailNotificationsScreen';
-import MobileNotifications from './../screens/settings/notifications/mobileNotificationsScreen';
+// import SettingsNotifications from './../screens/settings/notifications/notificationsScreen';
+// import EmailNotifications from './../screens/settings/notifications/emailNotificationsScreen';
+// import MobileNotifications from './../screens/settings/notifications/mobileNotificationsScreen';
 
 import ChangePassword from './../screens/settings/security/changePasswordScreen';
 import TwoFactor from '../screens/settings/security/twoFactor/twoFactorScreen';
@@ -111,15 +111,15 @@ const Stack = {
   Pin: {
     screen: Pin,
   },
-  SettingsNotifications: {
-    screen: SettingsNotifications,
-  },
-  EmailNotifications: {
-    screen: EmailNotifications,
-  },
-  MobileNotifications: {
-    screen: MobileNotifications,
-  },
+  // SettingsNotifications: {
+  //   screen: SettingsNotifications,
+  // },
+  // EmailNotifications: {
+  //   screen: EmailNotifications,
+  // },
+  // MobileNotifications: {
+  //   screen: MobileNotifications,
+  // },
 };
 
 export default StackNavigator(Stack, {

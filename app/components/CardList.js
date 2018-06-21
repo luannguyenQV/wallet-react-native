@@ -18,6 +18,7 @@ import {
   showModal,
   hideModal,
   setActiveCurrency,
+  updateInputField,
 } from './../redux/actions';
 import { standardizeString } from './../util/general';
 
@@ -135,7 +136,7 @@ class CardList extends Component {
             ? textActionOne
             : canPrimary ? (item.primary ? 'Primary' : 'MAKE PRIMARY') : ''
         }
-        // disableActionOne={canPrimary ? (!item.primary ? false : true) : false}
+        disableActionOne={canPrimary ? (!item.primary ? false : true) : false}
         onPressActionOne={() =>
           onPressActionOne
             ? onPressActionOne(item)
@@ -172,8 +173,10 @@ class CardList extends Component {
       deleteItem,
       profile,
       verifyItem,
+      temp_otp,
       otp,
       setActiveCurrency,
+      updateInputField,
     } = this.props;
     // console.log(this.props);
 
@@ -202,17 +205,14 @@ class CardList extends Component {
           onPressActionOne = () => setActiveCurrency(tempItem);
           break;
         case 'verify':
-          // textActionOne = 'RESEND';
+          textActionOne = 'VERIFY';
 
-          onPressActionOne = () =>
-            verifyItem(type, tempItem[identifier], profile.company);
+          // verifyItem(type, tempItem[identifier], profile.company);
           textActionTwo = 'CLOSE';
           if (type === 'email_address') {
-            contentText =
-              'Verification email has been sent to ' + tempItem[identifier];
+            contentText = 'Verification email has been sent to ' + tempItem;
           } else if (type === 'mobile_number') {
-            contentText =
-              'Verification sms has been sent to ' + tempItem[identifier];
+            contentText = 'Verification sms has been sent to ' + tempItem;
             content = (
               <Input
                 label="OTP"
@@ -220,14 +220,15 @@ class CardList extends Component {
                 autoCapitalize="none"
                 value={otp}
                 inputError={updateError}
-                onChangeText={input =>
-                  updateInputField('mobile_number', 'otp', input)
-                }
+                onChangeText={input => updateInputField('otp', 'otp', input)}
               />
             );
-            if (otp.length >= 4) {
-              verifyItem('mobile_number_otp', otp, '');
-            }
+            console.log(temp_otp);
+            onPressActionOne = () =>
+              verifyItem('mobile_number_otp', temp_otp.otp, '');
+            // if (temp_otp && temp_otp.otp && temp_otp.otp.length === 5) {
+            //   verifyItem('mobile_number_otp', temp_otp.otp, '');
+            // }
           }
 
           break;
@@ -326,7 +327,9 @@ const mapStateToProps = ({ user }) => {
     editing,
     wallet,
     modalType,
+    temp_otp,
     otp,
+    // tempItem,
   } = user;
   return {
     profile,
@@ -337,7 +340,9 @@ const mapStateToProps = ({ user }) => {
     editing,
     wallet,
     modalType,
+    temp_otp,
     otp,
+    // tempItem,
   };
 };
 
@@ -352,4 +357,5 @@ export default connect(mapStateToProps, {
   showModal,
   hideModal,
   setActiveCurrency,
+  updateInputField,
 })(CardList);

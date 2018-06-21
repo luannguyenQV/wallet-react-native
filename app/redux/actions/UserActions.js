@@ -34,7 +34,7 @@ export const refreshGetVerified = () => {
 export const editItem = (type, item) => {
   return {
     type: EDIT_ITEM,
-    payload: { type: 'temp_' + type, data: item },
+    payload: { type: type, data: item },
   };
 };
 
@@ -53,6 +53,19 @@ export const newItem = type => {
 };
 
 export const verifyItem = (type, value, company) => {
+  console.log(type, value);
+  return {
+    type: VERIFY_ASYNC.pending,
+    payload: {
+      type,
+      value,
+      company,
+    },
+  };
+};
+
+export const resendVerification = (type, value, company) => {
+  console.log(type, value);
   return {
     type: VERIFY_ASYNC.pending,
     payload: {

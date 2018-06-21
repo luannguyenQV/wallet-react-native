@@ -52,17 +52,6 @@ class AuthScreen extends Component {
     });
   };
 
-  // componentWillReceiveProps(newProps) {
-  //   //check for the mounted props
-  //   // this.onAuthComplete(newProps);
-  //   if (!newProps.mounted) return this.unMountStyle(); //call outro animation when mounted prop is false
-  //   this.setState({
-  //     //remount the node when the mounted prop is true
-  //     show: true,
-  //   });
-  //   setTimeout(this.mountStyle, 10); //call the into animiation
-  // }
-
   renderMainContainer() {
     const {
       loading,
@@ -160,24 +149,25 @@ class AuthScreen extends Component {
             <View style={buttonsContainer}>
               <Button
                 label="LOG IN"
-                type="contained"
-                color="secondary"
+                textColor={company_config.colors.secondaryContrast}
+                backgroundColor={company_config.colors.secondary}
                 size="large"
                 reference={input => {
                   this.login = input;
                 }}
                 onPress={() => nextAuthFormState(this.props, 'login')}
-                animate
+                animation="fadeInUpBig"
               />
               <Button
                 label="Register"
-                type="text"
-                color="primaryContrast"
+                textColor={company_config.colors.primaryContrast}
+                backgroundColor="transparent"
+                // size="large"
                 reference={input => {
                   this.login = input;
                 }}
                 onPress={() => nextAuthFormState(this.props, 'register')}
-                animate
+                animation="fadeInUpBig"
               />
             </View>
           </View>

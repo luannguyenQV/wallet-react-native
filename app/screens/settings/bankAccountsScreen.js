@@ -50,7 +50,7 @@ class BankAccountsScreen extends Component {
   };
 
   renderDetail = () => {
-    const { temp_bank_account, updateError, updateInputField } = this.props;
+    const { tempItem, updateError, updateInputField } = this.props;
     const {
       name,
       number,
@@ -61,7 +61,7 @@ class BankAccountsScreen extends Component {
       swift,
       iban,
       bic,
-    } = temp_bank_account;
+    } = tempItem;
 
     return (
       <View>
@@ -155,7 +155,7 @@ class BankAccountsScreen extends Component {
     const {
       bank_account,
       loading_bank_account,
-      temp_bank_account,
+      tempItem,
       newItem,
       updateItem,
       showDetail,
@@ -169,14 +169,14 @@ class BankAccountsScreen extends Component {
           headerRightIcon={showDetail ? 'done' : 'add'}
           headerRightOnPress={
             showDetail
-              ? () => updateItem('bank_account', temp_bank_account)
+              ? () => updateItem('bank_account', tempItem)
               : () => newItem('bank_account')
           }
         />
         <CardList
           type="bank_account"
           data={bank_account}
-          tempItem={temp_bank_account}
+          tempItem={tempItem}
           loadingData={loading_bank_account}
           identifier="bank_name"
           renderContent={this.renderContent}
@@ -202,16 +202,11 @@ const styles = {
 };
 
 const mapStateToProps = ({ user }) => {
-  const {
-    bank_account,
-    loading_bank_account,
-    temp_bank_account,
-    showDetail,
-  } = user;
+  const { bank_account, loading_bank_account, tempItem, showDetail } = user;
   return {
     bank_account,
     loading_bank_account,
-    temp_bank_account,
+    tempItem,
     showDetail,
   };
 };

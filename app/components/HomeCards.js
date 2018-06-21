@@ -103,14 +103,11 @@ class HomeCards extends Component {
         ListFooterComponent={this.renderFooter()}
       />
     );
-
-    // add verify card
-    // add custom cards
-    // render
   }
 
   renderCard(item) {
     const { textStyleContent } = styles;
+    const { company_config } = this.props;
     let imageString = './../../assets/icons/' + item.image + '.png';
     return (
       <Card
@@ -119,6 +116,8 @@ class HomeCards extends Component {
         renderHeader={this.renderImage(
           require('./../../assets/icons/card1.png'),
         )}
+        colorTitleBackground={company_config.colors.primary}
+        colorTitleText={company_config.colors.primaryContrast}
         onPressActionOne={() =>
           item.navigate
             ? this.props.navigation.navigate(item.navigate)
@@ -126,8 +125,7 @@ class HomeCards extends Component {
         }
         textActionOne={
           item.actionLabel ? item.actionLabel : item.dismiss ? 'DISMISS' : ''
-        }
-        style="secondary">
+        }>
         {item.description ? (
           <Text style={textStyleContent}>{item.description}</Text>
         ) : null}
@@ -155,20 +153,15 @@ class HomeCards extends Component {
 const styles = {
   containerStyle: {
     flex: 1,
-    // padding: 8,
   },
   imageStylePhoto: {
     width: SCREEN_WIDTH - 16,
     height: 150,
   },
-  viewStyleName: {
-    paddingVertical: 12,
-  },
   textStyleContent: {
     fontSize: 16,
     padding: 8,
     paddingHorizontal: 16,
-    // fontWeight: 'bold',
   },
   viewStyleFooter: {
     width: '100%',

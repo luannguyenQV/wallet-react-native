@@ -73,7 +73,7 @@ class PersonalDetailsScreen extends Component {
     const {
       loading_profile,
       fetchData,
-      temp_profile,
+      tempItem,
       profile,
       updateItem,
       updateInputField,
@@ -91,7 +91,7 @@ class PersonalDetailsScreen extends Component {
           title="Personal details"
           headerRightIcon={showDetail ? 'done' : 'edit'}
           headerRightOnPress={() =>
-            showDetail ? updateItem('profile', temp_profile) : this.toggleEdit()
+            showDetail ? updateItem('profile', tempItem) : this.toggleEdit()
           }
         />
         <HeaderProfile
@@ -107,14 +107,14 @@ class PersonalDetailsScreen extends Component {
             style={{ width: 100 }}
             // onPress={() => this.openModal()}
           >
-            {temp_profile.profile ? (
+            {tempItem.profile ? (
               <Image
                 style={imageStylePhoto}
                 source={{
-                  uri: temp_profile.profile,
+                  uri: tempItem.profile,
                   // cache: 'only-if-cached',
                 }}
-                key={temp_profile.profile}
+                key={tempItem.profile}
               />
             ) : (
               <Image
@@ -127,7 +127,7 @@ class PersonalDetailsScreen extends Component {
         <CardContainer>
           <Card
             textActionOne={showDetail ? 'SAVE' : ''}
-            onPressActionOne={() => updateItem('profile', temp_profile)}
+            onPressActionOne={() => updateItem('profile', tempItem)}
             textActionTwo={showDetail ? 'CANCEL' : ''}
             onPressActionTwo={() => fetchData('profile')}
             loading={loading_profile}
@@ -140,7 +140,7 @@ class PersonalDetailsScreen extends Component {
                     label="First name"
                     placeholder="eg. John"
                     autoCapitalize="none"
-                    value={temp_profile.first_name}
+                    value={tempItem.first_name}
                     onChangeText={input =>
                       updateInputField('profile', 'first_name', input)
                     }
@@ -150,7 +150,7 @@ class PersonalDetailsScreen extends Component {
                     label="Last name"
                     placeholder="eg. Smith"
                     autoCapitalize="none"
-                    value={temp_profile.last_name}
+                    value={tempItem.last_name}
                     onChangeText={input =>
                       updateInputField('profile', 'last_name', input)
                     }
@@ -160,7 +160,7 @@ class PersonalDetailsScreen extends Component {
                     label="ID number"
                     placeholder="eg. 0123456789012"
                     autoCapitalize="none"
-                    value={temp_profile.id_number}
+                    value={tempItem.id_number}
                     onChangeText={input =>
                       updateInputField('profile', 'id_number', input)
                     }
@@ -334,14 +334,8 @@ const styles = {
 };
 
 const mapStateToProps = ({ user }) => {
-  const {
-    profile,
-    loading_profile,
-    temp_profile,
-    showDetail,
-    updateError,
-  } = user;
-  return { profile, loading_profile, temp_profile, showDetail, updateError };
+  const { profile, loading_profile, tempItem, showDetail, updateError } = user;
+  return { profile, loading_profile, tempItem, showDetail, updateError };
 };
 
 export default connect(mapStateToProps, {

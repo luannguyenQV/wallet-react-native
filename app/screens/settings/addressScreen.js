@@ -30,7 +30,7 @@ class AddressScreen extends Component {
     const {
       loading_address,
       fetchData,
-      temp_address,
+      tempItem,
       address,
       showDetail,
       updateError,
@@ -46,14 +46,14 @@ class AddressScreen extends Component {
           title="Address"
           headerRightIcon={showDetail ? 'done' : 'edit'}
           headerRightOnPress={() =>
-            showDetail ? updateItem('address', temp_address) : this.toggleEdit()
+            showDetail ? updateItem('address', tempItem) : this.toggleEdit()
           }
         />
 
         <CardContainer>
           <Card
             textActionOne={showDetail ? 'SAVE' : ''}
-            onPressActionOne={() => updateItem('address', temp_address)}
+            onPressActionOne={() => updateItem('address', tempItem)}
             textActionTwo={showDetail ? 'CANCEL' : ''}
             onPressActionTwo={() => fetchData('address')}
             loading={loading_address}
@@ -66,7 +66,7 @@ class AddressScreen extends Component {
                     label="Address line 1"
                     placeholder="e.g. 158 Kloof Street"
                     autoCapitalize="none"
-                    value={temp_address.line_1}
+                    value={tempItem.line_1}
                     onChangeText={input =>
                       updateInputField('address', 'line_1', input)
                     }
@@ -76,7 +76,7 @@ class AddressScreen extends Component {
                     label="Address line 2"
                     placeholder="e.g. Gardens"
                     autoCapitalize="none"
-                    value={temp_address.line_2}
+                    value={tempItem.line_2}
                     onChangeText={input =>
                       updateInputField('address', 'line_2', input)
                     }
@@ -86,7 +86,7 @@ class AddressScreen extends Component {
                     label="City"
                     placeholder="e.g. Cape Town"
                     autoCapitalize="none"
-                    value={temp_address.city}
+                    value={tempItem.city}
                     onChangeText={input =>
                       updateInputField('address', 'city', input)
                     }
@@ -96,7 +96,7 @@ class AddressScreen extends Component {
                     label="State province"
                     placeholder="e.g. Western Cape"
                     autoCapitalize="none"
-                    value={temp_address.state_province}
+                    value={tempItem.state_province}
                     onChangeText={input =>
                       updateInputField('address', 'state_province', input)
                     }
@@ -106,7 +106,7 @@ class AddressScreen extends Component {
                     label="Postal code"
                     placeholder="e.g. 9001"
                     autoCapitalize="none"
-                    value={temp_address.postal_code}
+                    value={tempItem.postal_code}
                     onChangeText={input =>
                       updateInputField('address', 'postal_code', input)
                     }
@@ -203,14 +203,8 @@ const styles = {
 };
 
 const mapStateToProps = ({ user }) => {
-  const {
-    address,
-    loading_address,
-    temp_address,
-    showDetail,
-    updateError,
-  } = user;
-  return { address, loading_address, temp_address, showDetail, updateError };
+  const { address, loading_address, tempItem, showDetail, updateError } = user;
+  return { address, loading_address, tempItem, showDetail, updateError };
 };
 
 export default connect(mapStateToProps, {

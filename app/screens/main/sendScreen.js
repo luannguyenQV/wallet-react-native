@@ -20,7 +20,6 @@ import {
   send,
 } from '../../redux/actions';
 
-import Contact from './../../components/contact';
 import { Input, AuthForm, Output } from './../../components/common';
 import ContactService from './../../services/contactService';
 import Colors from './../../config/colors';
@@ -28,7 +27,7 @@ import Header from './../../components/header';
 import { performDivisibility } from './../../util/general';
 
 class SendScreen extends Component {
-  static navigationOptions = ({ navigation }) => ({
+  static navigationOptions = () => ({
     title: 'Send',
   });
 

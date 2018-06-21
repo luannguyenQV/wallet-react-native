@@ -108,11 +108,10 @@ function* updateItem(action) {
     // console.log(data);
     let response = null;
     switch (type) {
-      case 'mobile_numbers':
+      case 'mobile_number':
         if (data.id) {
           response = yield call(Rehive.updateMobile, data.id, data);
         } else {
-          console.log('hi');
           response = yield call(Rehive.createMobile, data);
         }
         break;
@@ -195,6 +194,7 @@ function* verifyItem(action) {
         response = yield call(Rehive.resendMobileVerification, value, company);
         break;
       case 'mobile_number_otp':
+        console.log('value', value);
         response = yield call(Rehive.submitOTP, value);
         break;
       case 'email_address':
@@ -203,7 +203,7 @@ function* verifyItem(action) {
     }
     yield all([
       put({ type: VERIFY_ASYNC.success }),
-      put({ type: FETCH_DATA_ASYNC.pending, payload: type }),
+      // put({ type: FETCH_DATA_ASYNC.pending, payload: type }),
     ]);
   } catch (error) {
     console.log(error);
