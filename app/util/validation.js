@@ -8,3 +8,33 @@ export const IsEmail = email => {
   }
   return false;
 };
+
+export const authValidation = props => {
+  let error = '';
+
+  switch (props.inputState) {
+    case 'email':
+      if (!IsEmail(props.email)) {
+        error = 'Please enter a valid email address';
+      }
+      break;
+    case 'password':
+      if (props.password.length < 8) {
+        error = 'Password must be at least 8 characters in length';
+      }
+      break;
+    case 'company':
+      if (!props.company) {
+        error = 'Please enter a company ID';
+      }
+      break;
+    // case 'mobile':
+    //   if (!value) {
+    //     error = 'Please enter a company ID';
+    //   }
+    //   break;
+    default:
+      error = '';
+  }
+  return error;
+};

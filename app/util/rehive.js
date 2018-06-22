@@ -1,6 +1,7 @@
 import Rehive from 'rehive';
 import { store } from './../redux/store';
 import * as companyConfig from './../config/company_config.json';
+import defaultCompanyConfig from './../config/default_company_config.json';
 
 // SDK initialization
 export let r;
@@ -159,8 +160,13 @@ export const getCompanyCurrencies = () => r.company.currencies.get();
 
 export const getCompanyBankAccounts = () => r.company.bankAccounts.get();
 
-export const getCompanyConfig = () =>
-  companyConfig.filter(item => item[company] !== store.getState().auth.company);
+export const getCompanyConfig = company => {
+  let configs = companyConfig.data.filter(item => item.company === company);
+  if (configs) {
+    return configs[0].config;
+  }
+  return defaultCompanyConfig;
+};
 // NEEDS TESTING TODO:
 
 /* GENERAL */

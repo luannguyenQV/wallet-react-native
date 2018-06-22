@@ -1,122 +1,100 @@
+import { LOGOUT_USER, HIDE_WALLET, VIEW_WALLET } from './../types';
+
 import {
   INPUT_FIELD_CHANGED,
-  EDIT_ITEM,
-  EDIT_PROFILE,
-  NEW_ITEM,
+  INPUT_FIELD_ERROR,
   FETCH_DATA_ASYNC,
+  NEW_ITEM,
+  EDIT_ITEM,
   UPDATE_ASYNC,
-  DELETE_ASYNC,
+  CONFIRM_DELETE_ASYNC,
+  DELETE_ITEM,
   VERIFY_ASYNC,
   PRIMARY_ITEM,
-  LOGOUT_USER,
-  SHOW_MODAL,
-  HIDE_MODAL,
-  HIDE_WALLET,
-  VIEW_WALLET,
   CARD_DISMISS,
   CARD_RESTORE_ALL,
   UPLOAD_DOCUMENT_ASYNC,
-} from './../types';
+  SHOW_MODAL,
+  HIDE_MODAL,
+} from './../actions/UserActions';
+
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
+
+const EMPTY_BANK_ACCOUNT = {
+  name: '',
+  number: '',
+  type: '',
+  bank_name: '',
+  bank_code: '',
+  branch_code: '',
+  swift: '',
+  iban: '',
+  bic: '',
+};
+
+const EMPTY_PROFILE = {
+  first_name: '',
+  last_name: '',
+  id_number: '',
+  nationality: '',
+  profile: '',
+};
+
+const EMPTY_MOBILE = { number: '', primary: false };
+
+const EMPTY_EMAIL = { email: '', primary: false };
+
+const EMPTY_CRYPTO = { address: '', crypto_type: '' };
+
+const EMPTY_ADDRESS = {
+  line_1: '',
+  line_2: '',
+  city: '',
+  state_province: '',
+  country: 'US',
+  postal_code: '',
+};
 
 const INITIAL_STATE = {
   refreshing_profile: false,
   profile: {},
-  loading_profile: false,
   email_address: [],
-  loading_email_address: false,
   mobile_number: [],
-  loading_mobile_number: false,
   address: null,
-  loading_address: false,
   document: {},
-  loading_document: false,
   bank_account: [],
-  loading_bank_account: false,
   crypto_account: [],
-  loading_crypto_account: false,
   company: [],
-  loading_company: false,
   company_bank_account: [],
-  loading_company_bank_account: false,
   company_currency: [],
-  loading_company_currency: false,
 
-  temp_profile: {
-    first_name: '',
-    last_name: '',
-    id_number: '',
-    nationality: '',
-    profile: '',
-  },
-  temp_mobile_number: { number: '', primary: false },
-  temp_email_address: { email: '', primary: false },
-  temp_crypto_address: { address: '', crypto_type: '' },
-  temp_bank_account: {
-    name: '',
-    number: '',
-    type: '',
-    bank_name: '',
-    bank_code: '',
-    branch_code: '',
-    swift: '',
-    iban: '',
-    bic: '',
-  },
-  temp_address: {
-    line_1: '',
-    line_2: '',
-    city: '',
-    state_province: '',
-    country: 'US',
-    postal_code: '',
-  },
+  tempItem: {},
+
   showDetail: false,
-  modalVisible: false,
-  // showDeleteModal: false,
-  loading: false,
-
-  updateError: '',
+  wallet: fasle,
+  // modalVisible: false,
   modalType: '',
+
+  loading: false,
+  updateError: '',
+  fetchError: '',
+
   dismissedCards: [],
 };
 
 export default (state = INITIAL_STATE, action) => {
-  // console.log(action);
   switch (action.type) {
     case PERSIST_REHYDRATE:
       return action.payload.auth || [];
     case INPUT_FIELD_CHANGED:
       return {
         ...state,
-        ['temp_' + action.payload.type]: {
-          ...state['temp_' + action.payload.type],
-          [action.payload.prop]: action.payload.value,
-        },
         tempItem: {
           ...state.tempItem,
           [action.payload.prop]: action.payload.value,
         },
       };
-    case EDIT_ITEM:
-      return {
-        ...state,
-        [action.payload.type]: action.payload.data,
-        tempItem: action.payload.data,
-        tempType: action.payload.type,
-        showDetail: true,
-        editing: true,
-        wallet: false,
-      };
-    case PRIMARY_ITEM:
-      return {
-        ...state,
-        [action.payload.type]: action.payload.data,
-        modalVisible: true,
-        loading: false,
-        updateError: '',
-        modalType: 'primary',
-      };
+
     case NEW_ITEM:
       return {
         ...state,
@@ -124,6 +102,92 @@ export default (state = INITIAL_STATE, action) => {
         tempItem: {},
         showDetail: true,
         editing: false,
+      };
+    case EDIT_ITEM:
+      return {
+        ...state,
+        tempItem: action.payload.data,
+        showDetail: true,
+        editing: true,
+        wallet: false,
+        modalType: '',
+        updateError: '',
+      };
+    case PRIMARY_ITEM:
+      return {
+        ...state,
+        tempItem: action.payload.data,
+        loading: false,
+        updateError: '',
+        modalType: 'primary',
+      };
+    case UPDATE_ASYNC.pending:
+      return {
+        ...state,
+        loading: true,
+      };
+    case UPDATE_ASYNC.success:
+      return {
+        ...state,
+        tempItem: {},
+        loading: false,
+        updateError: '',
+        modalType: '',
+      };
+    case UPDATE_ASYNC.error:
+      return {
+        ...state,
+        loading: false,
+        updateError: action.payload,
+      };
+
+    case DELETE_ITEM:
+      return {
+        ...state,
+        tempItem: action.payload.data,
+        loading: false,
+        updateError: '',
+        modalType: 'delete',
+      };
+    case CONFIRM_DELETE_ASYNC.pending:
+      return {
+        ...state,
+        loading: true,
+      };
+    case CONFIRM_DELETE_ASYNC.success:
+      return {
+        ...state,
+        loading: false,
+        modalVisible: false,
+      };
+    case CONFIRM_DELETE_ASYNC.error:
+      return {
+        ...state,
+        updateError: action.payload,
+        loading: false,
+      };
+
+    case VERIFY_ASYNC.pending:
+      return {
+        ...state,
+        tempItem: action.payload.data,
+        loading: true,
+        updateError: '',
+        modalType: 'verify',
+      };
+    case VERIFY_ASYNC.success:
+      return {
+        ...state,
+        tempItem: {},
+        loading: false,
+        updateError: '',
+        modalType: '',
+      };
+    case VERIFY_ASYNC.error:
+      return {
+        ...state,
+        loading: false,
+        updateError: action.payload,
       };
     case HIDE_MODAL:
       return {
@@ -134,73 +198,16 @@ export default (state = INITIAL_STATE, action) => {
         modalType: '',
       };
     case SHOW_MODAL:
-      return {
-        ...state,
-        [action.payload.type]: action.payload.data,
-        modalType: action.payload.modalType,
-        modalVisible: true,
-        loading: false,
-        updateError: '',
-      };
-
-    case FETCH_DATA_ASYNC.pending:
-      return {
-        ...state,
-        ['loading_' + action.payload]: true,
-        modalVisible: false,
-        modalType: '',
-        showDetail: false,
-        updateError: '',
-      };
-    case FETCH_DATA_ASYNC.success:
-      return {
-        ...state,
-        [action.payload.prop]: action.payload.data,
-        ['loading_' + action.payload.prop]: false,
-      };
-    case FETCH_DATA_ASYNC.error:
-      return {
-        ...state,
-        ['loading_' + action.payload]: false,
-      };
-
-    case UPDATE_ASYNC.pending:
-      return {
-        ...state,
-        loading: true,
-        updateError: '',
-      };
-    case UPDATE_ASYNC.success:
-      return {
-        ...state,
-        loading: false,
-        modalVisible: false,
-      };
-    case UPDATE_ASYNC.error:
-      return {
-        ...state,
-        updateError: action.payload,
-        loading: false,
-      };
-
-    case DELETE_ASYNC.pending:
-      return {
-        ...state,
-        loading: true,
-        updateError: '',
-      };
-    case DELETE_ASYNC.success:
-      return {
-        ...state,
-        loading: false,
-        modalVisible: false,
-      };
-    case DELETE_ASYNC.error:
-      return {
-        ...state,
-        updateError: action.payload,
-        loading: false,
-      };
+      console.log('Not handled: ' + SHOW_MODAL);
+      break;
+    // return {
+    //   ...state,
+    //   [action.payload.type]: action.payload.data,
+    //   modalType: action.payload.modalType,
+    //   modalVisible: true,
+    //   loading: false,
+    //   updateError: '',
+    // };
 
     case VERIFY_ASYNC.pending:
       return {
@@ -221,6 +228,24 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         updateError: action.payload,
         loading: false,
+      };
+
+    case FETCH_DATA_ASYNC.pending:
+      return {
+        ...state,
+        loading: true,
+      };
+    case FETCH_DATA_ASYNC.success:
+      return {
+        ...state,
+        [action.payload.prop]: action.payload.data,
+        loading: false,
+      };
+    case FETCH_DATA_ASYNC.error:
+      return {
+        ...state,
+        loading: false,
+        fetchError: error,
       };
 
     case UPLOAD_DOCUMENT_ASYNC.pending:
@@ -268,7 +293,6 @@ export default (state = INITIAL_STATE, action) => {
           ? [...state.dismissedCards, action.payload]
           : [action.payload],
       };
-
     case CARD_RESTORE_ALL:
       return {
         ...state,

@@ -1,24 +1,16 @@
-import {
-  AUTH_FIELD_CHANGED,
-  AUTH_FIELD_ERROR,
-  TERMS_CHANGED,
-  LOGIN_USER_ASYNC,
-  REGISTER_USER_ASYNC,
-  UPDATE_AUTH_FORM_STATE,
-  LOGOUT_USER_ASYNC,
-  LOADING,
-  APP_LOAD_START,
-  HIDE_MODAL,
-  CHANGE_PASSWORD_ASYNC,
-  VALIDATE_COMPANY_ASYNC,
-  RESET_PASSWORD_ASYNC,
-  RESET_AUTH,
-} from './../types';
+/* AUTH ACTIONS */
+
+/* 
+This file contains all the TYPE declarations and ACTION functions 
+that relate to the auth flows
+*/
 
 import clientConfig from './../../config/client';
+import { authValidation } from './../../util/validation';
+import { createAsyncTypes } from './store/Utilities';
 
-import { IsEmail } from './../../util/validation';
-
+export const APP_LOAD_START = 'APP_LOAD_START';
+export const APP_LOAD_FINISH = 'APP_LOAD_FINISH';
 export const initialLoad = props => async dispatch => {
   dispatch({ type: APP_LOAD_START });
 
@@ -34,7 +26,7 @@ export const initialLoad = props => async dispatch => {
         type: UPDATE_AUTH_FORM_STATE,
         payload: {
           iconHeaderLeft: 'arrow-back',
-          authState: 'landing',
+          mainState: 'landing',
         },
       });
     } else {
@@ -42,14 +34,15 @@ export const initialLoad = props => async dispatch => {
         type: UPDATE_AUTH_FORM_STATE,
         payload: {
           textFooterRight: 'Next',
-          authState: 'company',
-          inputState: 'company',
+          mainState: 'company',
+          detailState: 'company',
         },
       });
     }
   }
 };
 
+export const AUTH_FIELD_CHANGED = 'auth_field_changed';
 export const authFieldChange = ({ prop, value }) => {
   return {
     type: AUTH_FIELD_CHANGED,
@@ -57,38 +50,39 @@ export const authFieldChange = ({ prop, value }) => {
   };
 };
 
+export const AUTH_FIELD_ERROR = 'auth_field_error';
+export const LOGIN_USER_ASYNC = createAsyncTypes('login_user');
+export const REGISTER_USER_ASYNC = createAsyncTypes('register_user');
+export const VALIDATE_COMPANY_ASYNC = createAsyncTypes('validate_company');
+export const UPDATE_AUTH_FORM_STATE = 'update_auth_form_state';
 export const nextAuthFormState = (props, nextFormState) => {
-  const { authState, inputState, company, password, email } = props;
+  const { mainState, detailState, company, password, email } = props;
 
-  let nextAuthState = authState;
-  let nextInputState = '';
+  let nextMainState = mainState;
+  let nextDetailState = '';
   let data = {};
 
   if (nextFormState) {
-    nextAuthState = nextFormState;
-    nextInputState = 'email';
+    nextMainState = nextFormState;
+    nextDetailState = 'email';
   } else {
-    let error = validation(props);
+    let error = authValidation(props);
     if (error) {
       return {
         type: AUTH_FIELD_ERROR,
-        payload: { prop: inputState, error },
+        payload: { prop: detailState, error },
       };
     } else {
-      switch (authState) {
+      switch (mainState) {
         case 'company':
           return {
             type: VALIDATE_COMPANY_ASYNC.pending,
             payload: company,
           };
-        // case 'landing':
-        //   nextAuthState = nextFormState;
-        //   nextInputState = 'email';
-        //   break;
         case 'login':
-          switch (inputState) {
+          switch (detailState) {
             case 'email':
-              nextInputState = 'password';
+              nextDetailState = 'password';
               break;
             case 'password':
               data = { company, user: email, password };
@@ -96,13 +90,12 @@ export const nextAuthFormState = (props, nextFormState) => {
                 type: LOGIN_USER_ASYNC.pending,
                 payload: data,
               };
-              break;
           }
           break;
         case 'register':
-          switch (inputState) {
+          switch (detailState) {
             case 'email':
-              nextInputState = 'password';
+              nextDetailState = 'password';
               break;
             case 'password':
               data = {
@@ -115,100 +108,116 @@ export const nextAuthFormState = (props, nextFormState) => {
                 type: REGISTER_USER_ASYNC.pending,
                 payload: data,
               };
-              break;
           }
           break;
+        // case '2FA':
+        //   switch (detailState) {
+        //     case 'email':
+        //       nextDetailState = 'password';
+        //       break;
+        //     case 'password':
+        //       data = {
+        //         company,
+        //         email,
+        //         password1: password,
+        //         password2: password,
+        //       };
+        //       return {
+        //         // type: REGISTER_USER_ASYNC.pending,
+        //         payload: data,
+        //       };
+        //   }
+        //   break;
+        // case 'user':
+        //   switch (detailState) {
+        //     case 'email':
+        //       nextDetailState = 'password';
+        //       break;
+        //     case 'password':
+        //       data = {
+        //         company,
+        //         email,
+        //         password1: password,
+        //         password2: password,
+        //       };
+        //       return {
+        //         // type: REGISTER_USER_ASYNC.pending,
+        //         payload: data,
+        //       };
+        //   }
+        //   break;
+        // case 'onboard':
+        //   switch (detailState) {
+        //     case 'email':
+        //       nextDetailState = 'password';
+        //       break;
+        //     case 'password':
+        //       data = {
+        //         company,
+        //         email,
+        //         password1: password,
+        //         password2: password,
+        //       };
+        //       return {
+        //         // type: REGISTER_USER_ASYNC.pending,
+        //         payload: data,
+        //       };
+        //   }
+        //   break;
         default:
-          nextAuthState = 'company';
-          nextInputState = 'company';
+          nextMainState = 'company';
+          nextDetailState = 'company';
       }
     }
   }
   return {
     type: UPDATE_AUTH_FORM_STATE,
     payload: {
-      inputState: nextInputState,
-      authState: nextAuthState,
+      detailState: nextDetailState,
+      mainState: nextMainState,
     },
   };
 };
-
 export const previousAuthFormState = props => {
-  const { authState, inputState } = props;
+  const { mainState, detailState } = props;
 
-  let nextAuthState = authState;
-  let nextInputState = '';
+  let nextMainState = mainState;
+  let nextDetailState = '';
 
-  switch (authState) {
+  switch (mainState) {
     case 'landing':
-      nextAuthState = 'company';
-      nextInputState = 'company';
+      nextMainState = 'company';
+      nextDetailState = 'company';
       break;
     case 'forgot':
-      nextAuthState = 'login';
-      nextInputState = 'email';
+      nextMainState = 'login';
+      nextDetailState = 'email';
       break;
     case 'login':
     case 'register':
-      switch (inputState) {
+      switch (detailState) {
         case 'email':
-          nextAuthState = 'landing';
+          nextMainState = 'landing';
           break;
         case 'password':
-          nextInputState = 'email';
+          nextDetailState = 'email';
           break;
       }
       break;
     default:
-      nextAuthState = 'company';
-      nextInputState = 'company';
+      nextMainState = 'company';
+      nextDetailState = 'company';
   }
   return {
     type: UPDATE_AUTH_FORM_STATE,
     payload: {
-      inputState: nextInputState,
-      authState: nextAuthState,
+      detailState: nextDetailState,
+      mainState: nextMainState,
     },
   };
 };
 
-validation = props => {
-  let error = '';
-
-  switch (props.inputState) {
-    case 'email':
-      if (!IsEmail(props.email)) {
-        error = 'Please enter a valid email address';
-      }
-      break;
-    case 'password':
-      if (props.password.length < 8) {
-        error = 'Password must be at least 8 characters in length';
-      }
-      break;
-    case 'company':
-      if (!props.company) {
-        error = 'Please enter a company ID';
-      }
-      break;
-    // case 'mobile':
-    //   if (!value) {
-    //     error = 'Please enter a company ID';
-    //   }
-    //   break;
-    default:
-      error = '';
-  }
-  return error;
-};
-
-export const termsChanged = ({ prop, value }) => {
-  return {
-    type: TERMS_CHANGED,
-    payload: { prop, value: !value },
-  };
-};
-
+export const CHANGE_PASSWORD_ASYNC = createAsyncTypes('change_password');
 export const changePassword = (old_password, new_password) => {
   // console.log(old_password, new_password);
   if (!old_password || old_password.length < 8) {
@@ -243,18 +252,7 @@ export const changePassword = (old_password, new_password) => {
   // };
 };
 
-export const resetAuth = () => {
-  return {
-    type: RESET_AUTH,
-  };
-};
-
-// export const hideModal = () => {
-//   return {
-//     type: HIDE_MODAL,
-//   };
-// };
-
+export const RESET_PASSWORD_ASYNC = createAsyncTypes('reset_password');
 export const resetPassword = (company, email) => {
   return {
     type: RESET_PASSWORD_ASYNC.pending,
@@ -262,15 +260,16 @@ export const resetPassword = (company, email) => {
   };
 };
 
-performRegister = data => {
-  return {
-    type: REGISTER_USER_ASYNC.pending,
-    payload: data,
-  };
-};
-
+export const LOGOUT_USER_ASYNC = createAsyncTypes('logout_user');
 export const logoutUser = () => {
   return {
     type: LOGOUT_USER_ASYNC.pending,
+  };
+};
+
+export const RESET_AUTH = 'reset_auth';
+export const resetAuth = () => {
+  return {
+    type: RESET_AUTH,
   };
 };

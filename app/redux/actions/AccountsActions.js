@@ -1,30 +1,19 @@
-import {
-  FETCH_ACCOUNTS_ASYNC,
-  UPDATE_CURRENT_INDEX,
-  SET_ACTIVE_CURRENCY_ASYNC,
-  INPUT_FIELD_UPDATE,
-  SET_SEND_WALLET,
-  INPUT_FIELD_ERROR,
-  SET_WITHDRAW_WALLET,
-  SET_WITHDRAW_BANK_ACCOUNT,
-  SET_WITHDRAW_STATE,
-  RESET_WITHDRAW,
-  SET_SEND_STATE,
-  RESET_SEND,
-  SEND_ASYNC,
-  VIEW_WALLET,
-  HIDE_WALLET,
-  WITHDRAW_ASYNC,
-  WITHDRAW_FIELD_ERROR,
-} from './../types';
-import _ from 'lodash';
-import * as Rehive from './../../util/rehive';
 import Big from 'big.js';
 
+import * as Rehive from './../../util/rehive';
+import { createAsyncTypes } from './store/Utilities';
+import {
+  INPUT_FIELD_UPDATE,
+  INPUT_FIELD_ERROR,
+} from './../actions/UserActions';
+
+export const FETCH_ACCOUNTS_ASYNC = createAsyncTypes('fetch_accounts');
 export const fetchAccounts = () => {
   return { type: FETCH_ACCOUNTS_ASYNC.pending };
 };
 
+// TODO: REPLACE
+export const UPDATE_CURRENT_INDEX = 'update_current_index';
 export const setActiveWalletIndex = index => {
   return {
     type: UPDATE_CURRENT_INDEX,
@@ -32,6 +21,7 @@ export const setActiveWalletIndex = index => {
   };
 };
 
+export const SET_SEND_WALLET = 'set_send_wallet';
 export const setSendWallet = wallet => {
   if (wallet) {
     return {
@@ -74,6 +64,7 @@ export const validateSendNote = note => {
   return setSendState('confirm');
 };
 
+export const SET_SEND_STATE = 'set_send_state';
 export const setSendState = state => {
   if (state) {
     return {
@@ -92,12 +83,14 @@ export const inputFieldUpdate = ({ prop, value }) => {
   };
 };
 
+export const RESET_SEND = 'reset_send';
 export const resetSend = () => {
   return {
     type: RESET_SEND,
   };
 };
 
+export const SEND_ASYNC = createAsyncTypes('send');
 export const send = data => async dispatch => {
   // console.log(data);
   let amount = new Big(data.amount);
@@ -124,6 +117,7 @@ export const send = data => async dispatch => {
   }
 };
 
+export const SET_WITHDRAW_WALLET = 'set_withdraw_wallet';
 export const setWithdrawWallet = wallet => {
   return {
     type: SET_WITHDRAW_WALLET,
@@ -131,15 +125,12 @@ export const setWithdrawWallet = wallet => {
   };
 };
 
+export const SET_WITHDRAW_BANK_ACCOUNT = 'set_withdraw_bank_account';
 export const setWithdrawBankAccount = bankAccount => {
   return {
     type: SET_WITHDRAW_BANK_ACCOUNT,
     payload: bankAccount,
   };
-};
-
-export const validateWithdrawBankAccount = note => {
-  return setWithdrawState('note');
 };
 
 export const validateWithdrawNote = note => {
@@ -162,6 +153,7 @@ export const validateWithdrawAmount = (wallet, amount) => {
   }
 };
 
+export const SET_WITHDRAW_STATE = 'set_withdraw_state';
 export const setWithdrawState = state => {
   if (state) {
     return {
@@ -173,19 +165,14 @@ export const setWithdrawState = state => {
   }
 };
 
-// export const withdrawFieldUpdate = ({ prop, value }) => {
-//   return {
-//     type: WITHDRAW_FIELD_UPDATE,
-//     payload: { prop, value },
-//   };
-// };
-
+export const RESET_WITHDRAW = 'reset_withdraw';
 export const resetWithdraw = () => {
   return {
     type: RESET_WITHDRAW,
   };
 };
 
+export const WITHDRAW_ASYNC = createAsyncTypes('withdraw');
 export const withdraw = data => async dispatch => {
   let amount = new Big(data.amount);
   for (let i = 0; i < data.currency.divisibility; i++) {
@@ -212,6 +199,9 @@ export const withdraw = data => async dispatch => {
   }
 };
 
+export const SET_ACTIVE_CURRENCY_ASYNC = createAsyncTypes(
+  'set_active_currency',
+);
 export const setActiveCurrency = wallet => {
   return {
     type: SET_ACTIVE_CURRENCY_ASYNC.pending,
@@ -219,6 +209,7 @@ export const setActiveCurrency = wallet => {
   };
 };
 
+export const VIEW_WALLET = 'view_wallet';
 export const viewWallet = wallet => {
   return {
     type: VIEW_WALLET,
@@ -226,8 +217,17 @@ export const viewWallet = wallet => {
   };
 };
 
+export const HIDE_WALLET = 'hide_wallet';
 export const hideWallet = () => {
   return {
     type: HIDE_WALLET,
+  };
+};
+
+export const SET_PIN = 'set_pin';
+export const setPin = pin => {
+  return {
+    type: SET_PIN,
+    payload: pin,
   };
 };

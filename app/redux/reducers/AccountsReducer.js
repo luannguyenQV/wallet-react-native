@@ -1,10 +1,6 @@
 import {
-  FETCH_PROFILE_SUCCESS,
-  FETCH_PROFILE_FAIL,
-  FETCH_PROFILE,
   FETCH_ACCOUNTS_ASYNC,
   UPDATE_CURRENT_INDEX,
-  SET_ACTIVE_CURRENCY_ASYNC,
   INPUT_FIELD_UPDATE,
   INPUT_FIELD_ERROR,
   SET_SEND_STATE,
@@ -19,7 +15,7 @@ import {
   VIEW_WALLET,
   HIDE_WALLET,
   SHOW_MODAL,
-} from './../types';
+} from './../actions/AccountActions';
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 
 const INITIAL_STATE = {
@@ -27,10 +23,9 @@ const INITIAL_STATE = {
   // accounts: null,
   wallets: [],
   activeWalletIndex: 0,
-  loading_profile: false,
-  loading_accounts: false,
+  loading: false,
   loadingActiveCurrencyChange: false,
-  sendAmount: null,
+  sendAmount: 0,
   sendWallet: null,
   sendRecipient: '',
   sendNote: '',
@@ -38,6 +33,12 @@ const INITIAL_STATE = {
   sendState: '',
   tempWallet: null,
   showWallet: false,
+  withdrawAmount: 0,
+  withdrawWallet: null,
+  withdrawRecipient: '',
+  withdrawNote: '',
+  withdrawReference: null,
+  withdrawState: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -45,26 +46,11 @@ export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case PERSIST_REHYDRATE:
       return action.payload.auth || [];
-    case FETCH_PROFILE:
-      return {
-        ...state,
-        loading_profile: true,
-      };
-    case FETCH_PROFILE_SUCCESS:
-      return {
-        ...state,
-        profile: action.payload,
-        loading_profile: false,
-      };
-    case FETCH_PROFILE_FAIL:
-      return {
-        ...state,
-        loading_profile: false,
-      };
+
     case FETCH_ACCOUNTS_ASYNC.pending:
       return {
         ...state,
-        loading_accounts: true,
+        loading: true,
       };
     case FETCH_ACCOUNTS_ASYNC.success:
       return {
@@ -72,12 +58,12 @@ export default (state = INITIAL_STATE, action) => {
         wallets: action.payload.wallets,
         activeWalletIndex: action.payload.activeWalletIndex,
         showAccountLabel: action.payload.showAccountLabel,
-        loading_accounts: false,
+        loading: false,
       };
     case FETCH_ACCOUNTS_ASYNC.error:
       return {
         ...state,
-        loading_accounts: false,
+        loading: false,
       };
     case UPDATE_CURRENT_INDEX:
       return {
@@ -94,8 +80,8 @@ export default (state = INITIAL_STATE, action) => {
       }
       return { ...state };
 
-    case INPUT_FIELD_UPDATE:
-      return { ...state, [action.payload.prop]: action.payload.value };
+    // case INPUT_FIELD_UPDATE:
+    //   return { ...state, [action.payload.prop]: action.payload.value };
     case SET_SEND_WALLET:
       return {
         ...state,
@@ -103,12 +89,12 @@ export default (state = INITIAL_STATE, action) => {
         sendState: 'amount',
         sendError: '',
       };
-    case INPUT_FIELD_ERROR:
-      return {
-        ...state,
-        sendError: action.payload,
-        withdrawError: action.payload,
-      };
+    // case INPUT_FIELD_ERROR:
+    //   return {
+    //     ...state,
+    //     sendError: action.payload,
+    //     withdrawError: action.payload,
+    //   };
     case SET_SEND_STATE:
       return {
         ...state,

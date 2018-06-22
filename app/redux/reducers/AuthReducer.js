@@ -1,44 +1,43 @@
+import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 import {
   AUTH_FIELD_CHANGED,
   AUTH_FIELD_ERROR,
-  TERMS_CHANGED,
   LOGIN_USER_ASYNC,
   REGISTER_USER_ASYNC,
+  VALIDATE_COMPANY_ASYNC,
   UPDATE_AUTH_FORM_STATE,
-  LOADING,
+  CHANGE_PASSWORD_ASYNC,
+  RESET_PASSWORD_ASYNC,
+  LOGOUT_USER_ASYNC,
+  RESET_AUTH,
   APP_LOAD_START,
   APP_LOAD_FINISH,
-  CHANGE_PASSWORD_ASYNC,
   HIDE_MODAL,
-  LOGOUT_USER_ASYNC,
-  VALIDATE_COMPANY_ASYNC,
-  RESET_AUTH,
-  RESET_PASSWORD_ASYNC,
-} from './../types';
-import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
+} from './../actions/AuthActions';
 
 const INITIAL_STATE = {
-  input: '',
-  inputError: '',
   textFooterRight: '',
-  authState: '',
-  inputState: '',
+  mainState: '',
+  detailState: '',
   first_name: '',
   last_name: '',
   email: '',
-  mobileNumber: null,
-  countryName: 'US',
-  countryCode: '+1',
-  lineNumber: null,
+  emailError: '',
+  mobile: null,
+  mobileError: null,
+  // countryName: 'US',
+  // countryCode: '+1',
+  // lineNumber: null,
   company: '',
+  companyError: '',
   password: '',
+  passwordError: '',
+  new_password: '',
   terms_and_conditions: false,
+
   token: '',
   loading: false,
-  hasFetched: false,
   appLoading: false,
-  old_password: '',
-  new_password: '',
   modalVisible: false,
 };
 
@@ -51,57 +50,38 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         [action.payload.prop]: action.payload.value,
-        // inputError: '',
         [action.payload.prop + 'Error']: '',
       };
     case AUTH_FIELD_ERROR:
       return {
         ...state,
-        appLoading: false,
-        // inputError: action.payload.error,
         [action.payload.prop + 'Error']: action.payload.error,
-      };
-    case TERMS_CHANGED:
-      return {
-        ...state,
-        [action.payload.prop]: action.payload.value,
       };
 
     case UPDATE_AUTH_FORM_STATE:
-      const { authState, inputState } = action.payload;
+      const { mainState, detailState } = action.payload;
       return {
         ...state,
-        authState,
-        inputState,
+        mainState,
+        detailState,
         password: '',
         loading: false,
-      };
-
-    case LOADING:
-      return {
-        ...state,
-        loading: true,
       };
 
     case LOGIN_USER_ASYNC.pending:
       return {
         ...state,
         loading: true,
-        inputError: '',
         password: '',
       };
     case LOGIN_USER_ASYNC.success:
       return {
         ...state,
-        authState: '',
-        inputState: '',
+        mainState: '',
+        detailState: '',
         token: action.payload,
         loading: false,
         appLoading: true,
-        old_passwordError: '',
-        new_passwordError: '',
-        old_password: '',
-        new_password: '',
       };
     case LOGIN_USER_ASYNC.error:
       return {
@@ -111,15 +91,14 @@ export default (state = INITIAL_STATE, action) => {
         modalType: 'loginError',
         loading: false,
         appLoading: false,
-        inputState: 'email',
-        authState: 'login',
+        detailState: 'email',
+        mainState: 'login',
       };
 
     case REGISTER_USER_ASYNC.pending:
       return {
         ...state,
         loading: true,
-        inputError: '',
       };
     case REGISTER_USER_ASYNC.success:
       return {
@@ -141,28 +120,22 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: true,
-        inputError: '',
-        modalVisible: false,
+        passwordError: '',
       };
     case CHANGE_PASSWORD_ASYNC.success:
       return {
         ...state,
-        old_password: '',
-        new_password1: '',
-        new_password2: '',
-        modalVisible: true,
+        password: '',
+        new_password: '',
         loading: false,
       };
     case CHANGE_PASSWORD_ASYNC.error:
       return {
         ...state,
-        inputError: action.payload,
-        // [action.payload.prop + 'Error']: action.payload.error,
-        old_password: '',
-        new_password1: '',
-        new_password2: '',
+        passwordError: action.payload,
+        password: '',
+        new_password: '',
         loading: false,
-        modalVisible: true,
       };
 
     case VALIDATE_COMPANY_ASYNC.pending:
@@ -208,8 +181,8 @@ export default (state = INITIAL_STATE, action) => {
         passwordError: '',
         emailError: '',
         password: '',
-        authState: 'landing',
-        inputState: '',
+        mainState: 'landing',
+        detailState: '',
         modalVisible: false,
         loading: false,
         appLoading: false,

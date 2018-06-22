@@ -1,31 +1,33 @@
 import { all, call, put, takeEvery, take } from 'redux-saga/effects';
 
+import { SHOW_MODAL, LOGOUT_USER_ASYNC } from './../types';
+
 import {
   FETCH_DATA_ASYNC,
   REFRESH_PROFILE_ASYNC,
   UPDATE_ASYNC,
-  DELETE_ASYNC,
   VERIFY_ASYNC,
-  SHOW_MODAL,
+  CONFIRM_DELETE_ASYNC,
   UPLOAD_PROFILE_PHOTO,
   UPLOAD_DOCUMENT_ASYNC,
-  LOGOUT_USER_ASYNC,
-} from './../types';
+} from './../actions/UserActions';
+
 import NavigationService from './../../util/navigation';
 
 import * as Rehive from './../../util/rehive';
+import { VALIDATE_COMPANY_ASYNC } from '../actions';
 
 function* fetchData(action) {
   try {
     let response = null;
     switch (action.payload) {
-      case 'mobile_number':
+      case 'mobile':
         response = yield call(Rehive.getMobiles);
         break;
-      case 'email_address':
+      case 'email':
         response = yield call(Rehive.getEmails);
         break;
-      case 'crypto_address':
+      case 'crypto_account':
         response = yield call(Rehive.getCryptoAccounts);
         break;
       case 'bank_account':
@@ -56,10 +58,7 @@ function* fetchData(action) {
     }
 
     let data = response;
-    if (
-      data.length > 0 &&
-      action.payload === ('email_address' || 'mobile_number')
-    ) {
+    if (data.length > 0 && action.payload === ('email' || 'mobile')) {
       const primaryIndex = data.findIndex(item => item.primary === true);
       const primaryItem = data[primaryIndex];
       data[primaryIndex] = data[0];
@@ -83,12 +82,23 @@ function* fetchData(action) {
   }
 }
 
+// function* fetchCompanyConfig() {
+//   try {
+//     yield all([
+//       put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_config' }),
+//     ]);
+//   } catch (error) {
+//     console.log(error);
+//     yield put({ type: LOGIN_USER_ASYNC.error, error });
+//   }
+// }
+
 function* refreshProfile() {
   try {
     yield all([
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'profile' }),
-      put({ type: FETCH_DATA_ASYNC.pending, payload: 'mobile_number' }),
-      put({ type: FETCH_DATA_ASYNC.pending, payload: 'email_address' }),
+      put({ type: FETCH_DATA_ASYNC.pending, payload: 'mobile' }),
+      put({ type: FETCH_DATA_ASYNC.pending, payload: 'email' }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'address' }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'document' }),
     ]);
@@ -108,21 +118,21 @@ function* updateItem(action) {
     // console.log(data);
     let response = null;
     switch (type) {
-      case 'mobile_number':
+      case 'mobile':
         if (data.id) {
           response = yield call(Rehive.updateMobile, data.id, data);
         } else {
           response = yield call(Rehive.createMobile, data);
         }
         break;
-      case 'email_address':
+      case 'email':
         if (data.id) {
           response = yield call(Rehive.updateEmail, data.id, data);
         } else {
           response = yield call(Rehive.createEmail, data);
         }
         break;
-      case 'crypto_address':
+      case 'crypto_account':
         if (data.id) {
           response = yield call(Rehive.updateCryptoAccount, data.id, data);
         } else {
@@ -162,13 +172,13 @@ function* deleteItem(action) {
     const { data, type } = action.payload;
     let response = null;
     switch (type) {
-      case 'mobile_number':
+      case 'mobile':
         response = yield call(Rehive.deleteMobile, data.id);
         break;
-      case 'email_address':
+      case 'email':
         response = yield call(Rehive.deleteEmail, data.id);
         break;
-      case 'crypto_address':
+      case 'crypto_account':
         response = yield call(Rehive.deleteCryptoAccount, data.id);
         break;
       case 'bank_account':
@@ -190,14 +200,14 @@ function* verifyItem(action) {
     const { type, value, company } = action.payload;
     let response = null;
     switch (type) {
-      case 'mobile_number':
+      case 'mobile':
         response = yield call(Rehive.resendMobileVerification, value, company);
         break;
-      case 'mobile_number_otp':
+      case 'mobile_otp':
         console.log('value', value);
         response = yield call(Rehive.submitOTP, value);
         break;
-      case 'email_address':
+      case 'email':
         response = yield call(Rehive.resendEmailVerification, value, company);
         break;
     }
@@ -238,7 +248,7 @@ export const userSagas = all([
   takeEvery(FETCH_DATA_ASYNC.pending, fetchData),
   takeEvery(REFRESH_PROFILE_ASYNC.pending, refreshProfile),
   takeEvery(UPDATE_ASYNC.pending, updateItem),
-  takeEvery(DELETE_ASYNC.pending, deleteItem),
+  takeEvery(CONFIRM_DELETE_ASYNC.pending, deleteItem),
   takeEvery(VERIFY_ASYNC.pending, verifyItem),
   takeEvery(UPLOAD_PROFILE_PHOTO.pending, uploadProfilePhoto),
   takeEvery(UPLOAD_DOCUMENT_ASYNC.pending, uploadDocument),

@@ -19,6 +19,7 @@ import {
   hideModal,
   setActiveCurrency,
   updateInputField,
+  resendVerification,
 } from './../redux/actions';
 import { standardizeString } from './../util/general';
 
@@ -40,7 +41,7 @@ class CardList extends Component {
     }
   }
 
-  renderItem = (item, index) => {
+  renderItem = item => {
     const {
       type,
       headerComponent,
@@ -53,31 +54,23 @@ class CardList extends Component {
       subtitle,
       titleStyle,
       onPressTitle,
-      textTitleRight,
       identifier,
-      iconTitleRight,
-      onPressTitleRight,
       onPressContent,
       textActionOne,
-      textFunctionActionOne,
       onPressActionOne,
       textActionTwo,
-      textFunctionActionTwo,
       onPressActionTwo,
       renderContent,
-      renderDetail,
-      showModal,
       editItem,
       canEdit,
       canVerify,
-      verifyItem,
       canPrimary,
-      primaryItem,
       canDelete,
       canActive,
       profile,
       onPressFooter,
       iconFooter,
+      resendVerification,
     } = this.props;
     return (
       <Card
@@ -89,7 +82,7 @@ class CardList extends Component {
         onPressTitleLeft={() =>
           onPressTitleLeft
             ? onPressTitleLeft(item)
-            : canActive ? showModal(type, item, 'active') : null
+            : canActive ? editItem(item, 'active') : null
         }
         title={title ? title(item) : ''}
         subtitle={subtitle ? subtitle(item) : ''}
@@ -97,12 +90,12 @@ class CardList extends Component {
         onPressTitle={() =>
           onPressTitle
             ? onPressTitle(item)
-            : canEdit ? editItem(type, item) : null
+            : canEdit ? editItem(item, 'edit') : null
         }
         onPressContent={() =>
           onPressContent
             ? onPressContent(item)
-            : canEdit ? editItem(type, item) : null
+            : canEdit ? editItem(item, 'edit') : null
         }
         iconFooter={
           iconFooter
@@ -114,7 +107,7 @@ class CardList extends Component {
             ? onPressFooter
             : canDelete
               ? (itemActive ? !itemActive(item) : true)
-                ? () => showModal(type, item, 'delete')
+                ? () => editItem(item, 'delete')
                 : null
               : null
         }
@@ -128,7 +121,7 @@ class CardList extends Component {
           onPressActionTwo
             ? onPressActionTwo(item)
             : canVerify
-              ? verifyItem(type, item[identifier], profile.company)
+              ? resendVerification(type, item[identifier], profile.company)
               : null
         }
         textActionOne={
@@ -140,7 +133,7 @@ class CardList extends Component {
         onPressActionOne={() =>
           onPressActionOne
             ? onPressActionOne(item)
-            : canPrimary ? primaryItem(type, item) : null
+            : canPrimary ? editItem(item, 'primary') : null
         }
         // backgroundColor={canPrimary ? (item.primary ? 'focus' : '') : ''}
         // loading={loading}
@@ -171,14 +164,12 @@ class CardList extends Component {
       updateError,
       updateItem,
       deleteItem,
-      profile,
       verifyItem,
       temp_otp,
       otp,
       setActiveCurrency,
       updateInputField,
     } = this.props;
-    // console.log(this.props);
 
     let contentText = '';
     let textActionOne = '';
@@ -206,8 +197,6 @@ class CardList extends Component {
           break;
         case 'verify':
           textActionOne = 'VERIFY';
-
-          // verifyItem(type, tempItem[identifier], profile.company);
           textActionTwo = 'CLOSE';
           if (type === 'email_address') {
             contentText = 'Verification email has been sent to ' + tempItem;
@@ -226,9 +215,6 @@ class CardList extends Component {
             console.log(temp_otp);
             onPressActionOne = () =>
               verifyItem('mobile_number_otp', temp_otp.otp, '');
-            // if (temp_otp && temp_otp.otp && temp_otp.otp.length === 5) {
-            //   verifyItem('mobile_number_otp', temp_otp.otp, '');
-            // }
           }
 
           break;
@@ -358,4 +344,5 @@ export default connect(mapStateToProps, {
   hideModal,
   setActiveCurrency,
   updateInputField,
+  resendVerification,
 })(CardList);

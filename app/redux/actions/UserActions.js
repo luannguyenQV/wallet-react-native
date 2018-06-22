@@ -1,21 +1,14 @@
-import {
-  INPUT_FIELD_CHANGED,
-  REFRESH_PROFILE_ASYNC,
-  FETCH_DATA_ASYNC,
-  EDIT_ITEM,
-  NEW_ITEM,
-  PRIMARY_ITEM,
-  UPDATE_ASYNC,
-  VERIFY_ASYNC,
-  DELETE_ASYNC,
-  SHOW_MODAL,
-  HIDE_MODAL,
-  UPLOAD_PROFILE_PHOTO,
-  UPLOAD_DOCUMENT_ASYNC,
-  CARD_DISMISS,
-  CARD_RESTORE_ALL,
-} from './../types';
+/* USER ACTIONS */
 
+/* 
+This file contains all the TYPE declarations and ACTION functions 
+that relate to the user profile / information
+*/
+
+import { createAsyncTypes } from './store/Utilities';
+
+export const INPUT_FIELD_CHANGED = 'input_field_changed';
+export const INPUT_FIELD_ERROR = 'input_field_error';
 export const updateInputField = (type, prop, value) => {
   return {
     type: INPUT_FIELD_CHANGED,
@@ -23,59 +16,41 @@ export const updateInputField = (type, prop, value) => {
   };
 };
 
+export const FETCH_DATA_ASYNC = createAsyncTypes('fetch_data');
 export const fetchData = prop => {
   return { type: FETCH_DATA_ASYNC.pending, payload: prop };
 };
 
+export const REFRESH_PROFILE_ASYNC = createAsyncTypes('refresh_profile');
 export const refreshGetVerified = () => {
   return { type: REFRESH_PROFILE_ASYNC.pending };
 };
 
-export const editItem = (type, item) => {
-  return {
-    type: EDIT_ITEM,
-    payload: { type: type, data: item },
-  };
-};
-
-export const primaryItem = (type, item) => {
-  return {
-    type: PRIMARY_ITEM,
-    payload: { type: 'temp_' + type, data: { ...item, primary: true } },
-  };
-};
-
+export const NEW_ITEM = 'new_item';
 export const newItem = type => {
   return {
     type: NEW_ITEM,
-    payload: { type: 'temp_' + type },
+    payload: { type },
   };
 };
 
-export const verifyItem = (type, value, company) => {
-  console.log(type, value);
+export const EDIT_ITEM = 'edit_item';
+export const editItem = (type, item) => {
   return {
-    type: VERIFY_ASYNC.pending,
-    payload: {
-      type,
-      value,
-      company,
-    },
+    type: EDIT_ITEM,
+    payload: { type, data: item },
   };
 };
 
-export const resendVerification = (type, value, company) => {
-  console.log(type, value);
+export const PRIMARY_ITEM = 'primary_item';
+export const primaryItem = (type, item) => {
   return {
-    type: VERIFY_ASYNC.pending,
-    payload: {
-      type,
-      value,
-      company,
-    },
+    type: PRIMARY_ITEM,
+    payload: { type, data: { ...item, primary: true } },
   };
 };
 
+export const UPDATE_ASYNC = createAsyncTypes('update');
 export const updateItem = (type, data) => {
   return {
     type: UPDATE_ASYNC.pending,
@@ -83,13 +58,50 @@ export const updateItem = (type, data) => {
   };
 };
 
+export const DELETE_ITEM = 'delete_item';
 export const deleteItem = (type, item) => {
   return {
-    type: DELETE_ASYNC.pending,
+    type: DELETE_ITEM,
     payload: { type, data: item },
   };
 };
 
+export const CONFIRM_DELETE_ASYNC = createAsyncTypes('confirm_delete');
+export const confirmDeleteItem = (type, item) => {
+  return {
+    type: CONFIRM_DELETE_ASYNC.pending,
+    payload: { type, data: item },
+  };
+};
+
+export const RESEND_VERIFICATION_ASYNC = createAsyncTypes(
+  'resend_verification',
+);
+export const resendVerification = (type, value, company) => {
+  // console.log(type, value);
+  return {
+    type: RESEND_VERIFICATION_ASYNC.pending,
+    payload: {
+      type,
+      value,
+      company,
+    },
+  };
+};
+
+export const VERIFY_ASYNC = createAsyncTypes('verify');
+export const verifyItem = (type, otp) => {
+  // console.log(type, value);
+  return {
+    type: VERIFY_ASYNC.pending,
+    payload: {
+      type,
+      otp,
+    },
+  };
+};
+
+export const SHOW_MODAL = 'show_modal';
 export const showModal = (type, item, modalType) => {
   // console.log('item', item);
   return {
@@ -98,26 +110,14 @@ export const showModal = (type, item, modalType) => {
   };
 };
 
+export const HIDE_MODAL = 'hide_modal';
 export const hideModal = () => {
   return {
     type: HIDE_MODAL,
   };
 };
 
-export const cardDismiss = card_id => {
-  console.log(card_id);
-  return {
-    type: CARD_DISMISS,
-    payload: card_id,
-  };
-};
-
-export const cardRestoreAll = () => {
-  return {
-    type: CARD_RESTORE_ALL,
-  };
-};
-
+export const UPLOAD_PROFILE_PHOTO = createAsyncTypes('upload_profile_photo');
 export const uploadProfilePhoto = image => {
   const file = {
     uri: image,
@@ -130,6 +130,7 @@ export const uploadProfilePhoto = image => {
   };
 };
 
+export const UPLOAD_DOCUMENT_ASYNC = createAsyncTypes('upload_document');
 export const uploadDocument = (image, category, document_type) => {
   const parts = image.split('/');
   const name = parts[parts.length - 1];
@@ -148,9 +149,17 @@ export const uploadDocument = (image, category, document_type) => {
   };
 };
 
-// export const verifyItem = (type, item) => {
-//   return {
-//     type: VERIFY_ASYNC.pending,
-//     payload: { type, data: item },
-//   };
-// };
+export const CARD_DISMISS = 'card_dismiss';
+export const cardDismiss = card_id => {
+  return {
+    type: CARD_DISMISS,
+    payload: card_id,
+  };
+};
+
+export const CARD_RESTORE_ALL = 'card_restore_all';
+export const cardRestoreAll = () => {
+  return {
+    type: CARD_RESTORE_ALL,
+  };
+};

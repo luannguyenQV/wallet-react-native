@@ -1,18 +1,19 @@
 import { take, all, call, put, takeEvery } from 'redux-saga/effects';
 import {
-  FETCH_ACCOUNTS_ASYNC,
-  FETCH_DATA_ASYNC,
+  AUTH_FIELD_ERROR,
   LOGIN_USER_ASYNC,
   REGISTER_USER_ASYNC,
   UPDATE_AUTH_FORM_STATE,
   APP_LOAD_FINISH,
   CHANGE_PASSWORD_ASYNC,
-  LOGOUT_USER_ASYNC,
-  AUTH_FIELD_ERROR,
-  RESET_AUTH,
   VALIDATE_COMPANY_ASYNC,
   RESET_PASSWORD_ASYNC,
-} from './../types';
+  LOGOUT_USER_ASYNC,
+  RESET_AUTH,
+} from './../actions/AuthActions';
+
+import { FETCH_DATA_ASYNC } from './../actions/UserActions';
+import { FETCH_ACCOUNTS_ASYNC } from './../actions/AccountsActions';
 
 import * as Rehive from './../../util/rehive';
 import NavigationService from './../../util/navigation';
@@ -123,9 +124,9 @@ function* appLoad() {
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'company' }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_bank_account' }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_currency' }),
-      put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_config' }),
+      // put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_config' }),
     ]);
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 11; i++) {
       yield take([FETCH_ACCOUNTS_ASYNC.success, FETCH_DATA_ASYNC.success]);
     }
     yield put({ type: APP_LOAD_FINISH });
@@ -162,8 +163,7 @@ function* resetPassword(action) {
 
 function* validateCompany(action) {
   try {
-    let response = yield call(Rehive.register, { company: action.payload });
-    console.log(response);
+    yield call(Rehive.register, { company: action.payload });
   } catch (error) {
     console.log(error);
     if (error.data.company) {
@@ -172,10 +172,29 @@ function* validateCompany(action) {
         payload: 'Please enter a valid company ID',
       });
     } else {
-      yield put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_config' });
-      yield put({ type: VALIDATE_COMPANY_ASYNC.success });
+      yield put({
+        type: VALIDATE_COMPANY_ASYNC.success,
+        payload: action.payload,
+      });
       yield put({ type: RESET_AUTH });
     }
+  }
+}
+
+function* fetchCompanyConfig(action) {
+  try {
+    let data = yield call(Rehive.getCompanyConfig, action.payload);
+    yield put({
+      type: FETCH_DATA_ASYNC.success,
+      payload: { data, prop: 'company_config' },
+    });
+    yield put({ type: RESET_AUTH });
+  } catch (error) {
+    console.log(error);
+    yield put({
+      type: VALIDATE_COMPANY_ASYNC.error,
+      payload: 'Please enter a valid company ID',
+    });
   }
 }
 
@@ -188,6 +207,7 @@ export const authSagas = all([
   takeEvery(LOGOUT_USER_ASYNC.pending, logoutUser),
   takeEvery(LOGOUT_USER_ASYNC.success, resetAuth),
   takeEvery(VALIDATE_COMPANY_ASYNC.pending, validateCompany),
+  takeEvery(VALIDATE_COMPANY_ASYNC.success, fetchCompanyConfig),
   takeEvery(RESET_PASSWORD_ASYNC.pending, resetPassword),
   // takeEvery(APP_LOAD_FINISH, navigateHome),
 ]);

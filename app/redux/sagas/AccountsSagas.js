@@ -5,7 +5,7 @@ import {
   SEND_ASYNC,
   HIDE_MODAL,
   LOGOUT_USER_ASYNC,
-} from './../types';
+} from './../actions/AccountsActions';
 // import Big from 'big.js';
 import * as Rehive from './../../util/rehive';
 
