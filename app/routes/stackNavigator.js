@@ -32,6 +32,7 @@ import TwoFactorSmsAuth from '../screens/settings/security/twoFactor/twoFactorSm
 import TwoFactorToken from '../screens/settings/security/twoFactor/twoFactorTokenScreen';
 import AuthVerifySms from '../screens/settings/security/twoFactor/authVerifySmsScreen';
 import Pin from './../screens/settings/security/pinScreen';
+import Logout from './../screens/auth/logoutScreen';
 
 import SettingsCards from './../screens/settings/cardsScreen';
 import SettingsAddress from './../screens/settings/addressScreen';
@@ -110,6 +111,9 @@ const Stack = {
   },
   Pin: {
     screen: Pin,
+  },
+  Logout: {
+    screen: Logout,
   },
   // SettingsNotifications: {
   //   screen: SettingsNotifications,

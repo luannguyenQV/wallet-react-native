@@ -7,7 +7,7 @@ that relate to the auth flows
 
 import clientConfig from './../../config/client';
 import { authValidation } from './../../util/validation';
-import { createAsyncTypes } from './store/Utilities';
+import { createAsyncTypes } from './../store/Utilities';
 
 export const APP_LOAD_START = 'APP_LOAD_START';
 export const APP_LOAD_FINISH = 'APP_LOAD_FINISH';

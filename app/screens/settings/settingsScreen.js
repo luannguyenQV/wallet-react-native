@@ -39,17 +39,17 @@ class SettingsScreen extends Component {
   }
 
   renderEmailAddresses() {
-    const { email_address } = this.props;
+    const { email } = this.props;
 
     let value = 'Not yet provided';
 
-    if (email_address) {
-      for (let i = 0; i < email_address.length; i++) {
-        if (email_address[i].verified === true) {
-          value = email_address[i].email;
+    if (email) {
+      for (let i = 0; i < email.length; i++) {
+        if (email[i].verified === true) {
+          value = email[i].email;
         }
-        if (email_address[i].primary === true) {
-          value = email_address[i].email;
+        if (email[i].primary === true) {
+          value = email[i].email;
           break;
         }
       }
@@ -66,17 +66,17 @@ class SettingsScreen extends Component {
   }
 
   renderMobileNumbers() {
-    const { mobile_number } = this.props;
+    const { mobile } = this.props;
 
     let value = 'Not yet provided';
 
-    if (mobile_number) {
-      for (let i = 0; i < mobile_number.length; i++) {
-        if (mobile_number[i].verified) {
-          value = mobile_number[i].number;
+    if (mobile) {
+      for (let i = 0; i < mobile.length; i++) {
+        if (mobile[i].verified) {
+          value = mobile[i].number;
         }
-        if (mobile_number[i].primary) {
-          value = mobile_number[i].number;
+        if (mobile[i].primary) {
+          value = mobile[i].number;
           break;
         }
       }
@@ -189,12 +189,21 @@ class SettingsScreen extends Component {
           gotoAddress="ChangePassword"
           onPress={this.goTo}
         />
-        {/* <SettingsOption
+        <SettingsOption
           label="Two factor"
           gotoAddress="TwoFactor"
           onPress={this.goTo}
-        /> */}
-        {/* <SettingsOption label="Pin" gotoAddress="Pin" goTo={this.goTo} /> */}
+        />
+        <SettingsOption
+          label="Pin/Fingerprint"
+          gotoAddress="Pin"
+          onPress={this.goTo}
+        />
+        <SettingsOption
+          label="Logout"
+          gotoAddress="Logout"
+          onPress={this.goTo}
+        />
       </View>
     );
   }
@@ -247,12 +256,12 @@ const styles = {
 };
 
 const mapStateToProps = ({ user }) => {
-  const { profile, address, mobile_number, email_address } = user;
+  const { profile, address, mobile, email } = user;
   return {
     profile,
     address,
-    mobile_number,
-    email_address,
+    mobile,
+    email,
   };
 };
 

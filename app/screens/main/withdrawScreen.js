@@ -21,7 +21,7 @@ import {
   withdraw,
 } from '../../redux/actions';
 
-import { Input, AuthForm, Output } from './../../components/common';
+import { Input, FullScreenForm, Output } from './../../components/common';
 import Colors from './../../config/colors';
 import Header from './../../components/header';
 
@@ -112,7 +112,7 @@ class WithdrawScreen extends Component {
     }
 
     return (
-      <AuthForm
+      <FullScreenForm
         // textFooterLeft={textFooterLeft}
         // onPressFooterLeft={onPressFooterLeft}
         textFooterRight={textFooterRight}
@@ -120,7 +120,7 @@ class WithdrawScreen extends Component {
         loading={withdrawing}>
         {this.renderTop()}
         <View style={viewStyleBottomContainer}>{this.renderBottom()}</View>
-      </AuthForm>
+      </FullScreenForm>
     );
   }
 

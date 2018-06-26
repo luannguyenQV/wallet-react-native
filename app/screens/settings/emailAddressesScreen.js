@@ -39,22 +39,13 @@ class EmailAddressesScreen extends Component {
         autoCapitalize="none"
         value={email}
         inputError={updateError}
-        onChangeText={input =>
-          updateInputField('email_address', 'email', input)
-        }
+        onChangeText={input => updateInputField('email', 'email', input)}
       />
     );
   };
 
   render() {
-    const {
-      email_address,
-      loading_email_address,
-      tempItem,
-      newItem,
-      updateItem,
-      showDetail,
-    } = this.props;
+    const { email, tempItem, newItem, updateItem, showDetail } = this.props;
     return (
       <View style={styles.container}>
         <Header
@@ -64,14 +55,14 @@ class EmailAddressesScreen extends Component {
           headerRightIcon={showDetail ? 'done' : 'add'}
           headerRightOnPress={
             showDetail
-              ? () => updateItem('email_address', tempItem)
-              : () => newItem('email_address')
+              ? () => updateItem('email', tempItem)
+              : () => newItem('email')
           }
         />
         <CardList
-          type="email_address"
-          data={email_address}
-          loadingData={loading_email_address}
+          type="email"
+          data={email}
+          tempItem={tempItem}
           identifier="email"
           renderContent={this.renderContent}
           renderDetail={this.renderDetail}
@@ -97,16 +88,9 @@ const styles = {
 };
 
 const mapStateToProps = ({ user }) => {
-  const {
-    email_address,
-    loading_email_address,
-    tempItem,
-    updateError,
-    showDetail,
-  } = user;
+  const { email, tempItem, updateError, showDetail } = user;
   return {
-    email_address,
-    loading_email_address,
+    email,
     tempItem,
     updateError,
     showDetail,

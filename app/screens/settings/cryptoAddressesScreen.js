@@ -10,7 +10,6 @@ import {
   updateInputField,
 } from './../../redux/actions';
 
-import { standardizeString } from './../../util/general';
 import Header from './../../components/header';
 import { Input, Output } from './../../components/common';
 import CardList from './../../components/CardList';
@@ -31,8 +30,8 @@ class CryptoAddressesScreen extends Component {
   };
 
   renderDetail = () => {
-    const { temp_crypto_address, updateError, updateInputField } = this.props;
-    const { address } = temp_crypto_address;
+    const { tempItem, updateError, updateInputField } = this.props;
+    const { address } = tempItem;
 
     return (
       <Input
@@ -42,7 +41,7 @@ class CryptoAddressesScreen extends Component {
         value={address}
         inputError={updateError}
         onChangeText={input =>
-          updateInputField('crypto_address', 'address', input)
+          updateInputField('crypto_account', 'address', input)
         }
       />
     );
@@ -50,9 +49,8 @@ class CryptoAddressesScreen extends Component {
 
   render() {
     const {
-      crypto_address,
-      loading_crypto_address,
-      temp_crypto_address,
+      crypto_account,
+      tempItem,
       newItem,
       updateItem,
       showDetail,
@@ -66,15 +64,14 @@ class CryptoAddressesScreen extends Component {
           headerRightIcon={showDetail ? 'done' : 'add'}
           headerRightOnPress={
             showDetail
-              ? () => updateItem('crypto_address', temp_crypto_address)
-              : () => newItem('crypto_address')
+              ? () => updateItem('crypto_account', tempItem)
+              : () => newItem('crypto_account')
           }
         />
         <CardList
-          type="crypto_address"
-          data={crypto_address}
-          tempItem={temp_crypto_address}
-          loadingData={loading_crypto_address}
+          type="crypto_account"
+          data={crypto_account}
+          tempItem={tempItem}
           identifier="address"
           renderContent={this.renderContent}
           renderDetail={this.renderDetail}
@@ -100,16 +97,16 @@ const styles = {
 
 const mapStateToProps = ({ user }) => {
   const {
-    crypto_address,
-    loading_crypto_address,
-    temp_crypto_address,
+    crypto_account,
+    loading_crypto_account,
+    tempItem,
     showDetail,
     updateError,
   } = user;
   return {
-    crypto_address,
-    loading_crypto_address,
-    temp_crypto_address,
+    crypto_account,
+    loading_crypto_account,
+    tempItem,
     showDetail,
     updateError,
   };

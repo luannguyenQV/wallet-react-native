@@ -48,18 +48,18 @@ class GetVerifiedScreen extends Component {
   }
 
   renderEmailAddresses() {
-    const { email_address } = this.props;
+    const { email } = this.props;
 
     let value = 'Not yet provided';
     let status = 'INCOMPLETE';
 
-    for (let i = 0; i < email_address.length; i++) {
-      if (email_address[i].verified === true) {
+    for (let i = 0; i < email.length; i++) {
+      if (email[i].verified === true) {
         status = 'VERIFIED';
-        value = email_address[i].email;
+        value = email[i].email;
       }
-      if (email_address[i].primary === true) {
-        value = email_address[i].email;
+      if (email[i].primary === true) {
+        value = email[i].email;
       }
     }
 
@@ -75,18 +75,18 @@ class GetVerifiedScreen extends Component {
   }
 
   renderMobileNumbers() {
-    const { mobile_number } = this.props;
+    const { mobile } = this.props;
 
     let value = 'Not yet provided';
     let status = 'INCOMPLETE';
 
-    for (let i = 0; i < mobile_number.length; i++) {
-      if (mobile_number[i].verified) {
+    for (let i = 0; i < mobile.length; i++) {
+      if (mobile[i].verified) {
         status = 'VERIFIED';
-        value = mobile_number[i].number;
+        value = mobile[i].number;
       }
-      if (mobile_number[i].primary) {
-        value = mobile_number[i].number;
+      if (mobile[i].primary) {
+        value = mobile[i].number;
       }
     }
 
@@ -304,8 +304,8 @@ const mapStateToProps = ({ user }) => {
   const {
     profile,
     address,
-    mobile_number,
-    email_address,
+    mobile,
+    email,
     document,
     loading_profile,
     company_config,
@@ -313,8 +313,8 @@ const mapStateToProps = ({ user }) => {
   return {
     profile,
     address,
-    mobile_number,
-    email_address,
+    mobile,
+    email,
     document,
     loading_profile,
     company_config,

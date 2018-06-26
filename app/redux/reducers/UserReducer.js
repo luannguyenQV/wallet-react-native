@@ -1,5 +1,3 @@
-import { LOGOUT_USER, HIDE_WALLET, VIEW_WALLET } from './../types';
-
 import {
   INPUT_FIELD_CHANGED,
   INPUT_FIELD_ERROR,
@@ -9,6 +7,7 @@ import {
   UPDATE_ASYNC,
   CONFIRM_DELETE_ASYNC,
   DELETE_ITEM,
+  RESEND_VERIFICATION_ASYNC,
   VERIFY_ASYNC,
   PRIMARY_ITEM,
   CARD_DISMISS,
@@ -17,6 +16,7 @@ import {
   SHOW_MODAL,
   HIDE_MODAL,
 } from './../actions/UserActions';
+import { LOGOUT_USER } from './../actions/AuthActions';
 
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 
@@ -71,8 +71,8 @@ const INITIAL_STATE = {
   tempItem: {},
 
   showDetail: false,
-  wallet: fasle,
-  // modalVisible: false,
+  wallet: false,
+  modalVisible: false,
   modalType: '',
 
   loading: false,
@@ -98,7 +98,7 @@ export default (state = INITIAL_STATE, action) => {
     case NEW_ITEM:
       return {
         ...state,
-        [action.payload.type]: {},
+        // [action.payload.type]: {},
         tempItem: {},
         showDetail: true,
         editing: false,
@@ -120,6 +120,7 @@ export default (state = INITIAL_STATE, action) => {
         loading: false,
         updateError: '',
         modalType: 'primary',
+        modalVisible: true,
       };
     case UPDATE_ASYNC.pending:
       return {
@@ -133,6 +134,7 @@ export default (state = INITIAL_STATE, action) => {
         loading: false,
         updateError: '',
         modalType: '',
+        modalVisible: false,
       };
     case UPDATE_ASYNC.error:
       return {
@@ -148,6 +150,7 @@ export default (state = INITIAL_STATE, action) => {
         loading: false,
         updateError: '',
         modalType: 'delete',
+        modalVisible: true,
       };
     case CONFIRM_DELETE_ASYNC.pending:
       return {
@@ -167,26 +170,26 @@ export default (state = INITIAL_STATE, action) => {
         loading: false,
       };
 
-    case VERIFY_ASYNC.pending:
+    case RESEND_VERIFICATION_ASYNC.pending:
       return {
         ...state,
         tempItem: action.payload.data,
         loading: true,
         updateError: '',
+      };
+    case RESEND_VERIFICATION_ASYNC.success:
+      return {
+        ...state,
+        modalVisible: true,
         modalType: 'verify',
-      };
-    case VERIFY_ASYNC.success:
-      return {
-        ...state,
-        tempItem: {},
         loading: false,
-        updateError: '',
-        modalType: '',
       };
-    case VERIFY_ASYNC.error:
+    case RESEND_VERIFICATION_ASYNC.error:
       return {
         ...state,
         loading: false,
+        modalVisible: true,
+        modalType: 'verify',
         updateError: action.payload,
       };
     case HIDE_MODAL:
@@ -213,15 +216,14 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: true,
-        ['temp_' + action.payload.type]: action.payload.value,
         updateError: '',
       };
     case VERIFY_ASYNC.success:
       return {
         ...state,
         loading: false,
-        modalVisible: true,
-        modalType: 'verify',
+        modalVisible: false,
+        modalType: '',
       };
     case VERIFY_ASYNC.error:
       return {
@@ -234,6 +236,9 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: true,
+        showDetail: false,
+        modalVisible: false,
+        modalType: '',
       };
     case FETCH_DATA_ASYNC.success:
       return {
@@ -268,23 +273,23 @@ export default (state = INITIAL_STATE, action) => {
         loading: false,
       };
 
-    case VIEW_WALLET:
-      return {
-        ...state,
-        showDetail: true,
-        wallet: true,
-        // tempWallet: action.payload,
-        // sendWallet: action.payload,
-        // sendState: 'amount',
-        // sendError: '',
-      };
-    case HIDE_WALLET:
-      return {
-        ...state,
-        // tempWallet: null,
-        wallet: false,
-        showDetail: false,
-      };
+    // case VIEW_WALLET:
+    //   return {
+    //     ...state,
+    //     showDetail: true,
+    //     wallet: true,
+    //     // tempWallet: action.payload,
+    //     // sendWallet: action.payload,
+    //     // sendState: 'amount',
+    //     // sendError: '',
+    //   };
+    // case HIDE_WALLET:
+    //   return {
+    //     ...state,
+    //     // tempWallet: null,
+    //     wallet: false,
+    //     showDetail: false,
+    //   };
 
     case CARD_DISMISS:
       return {

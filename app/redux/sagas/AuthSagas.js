@@ -115,9 +115,9 @@ function* appLoad() {
     yield all([
       put({ type: FETCH_ACCOUNTS_ASYNC.pending }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'profile' }),
-      put({ type: FETCH_DATA_ASYNC.pending, payload: 'mobile_number' }),
-      put({ type: FETCH_DATA_ASYNC.pending, payload: 'email_address' }),
-      put({ type: FETCH_DATA_ASYNC.pending, payload: 'crypto_address' }),
+      put({ type: FETCH_DATA_ASYNC.pending, payload: 'mobile' }),
+      put({ type: FETCH_DATA_ASYNC.pending, payload: 'email' }),
+      put({ type: FETCH_DATA_ASYNC.pending, payload: 'crypto_account' }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'bank_account' }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'address' }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'document' }),

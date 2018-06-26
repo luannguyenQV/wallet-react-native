@@ -179,14 +179,14 @@
           ]
         },
         "colors": {
-          "primary": "#4d4d4d",
-          "secondary": "#a6a6a6",
-          "tertiary": "#c4c4c4",
-          "quaternary": "#e1e1e1",
+          "primary": "#018B66",
+          "secondary": "#8CC13F",
+          "tertiary": "#767676",
+          "quaternary": "#F3F3F3",
           "focus": "#9797F0",
 
           "primaryContrast": "#f3f3f3",
-          "secondaryContrast": "#2d2d2d",
+          "secondaryContrast": "#ffffff",
           "tertiaryContrast": "#000000",
           "quaternaryContrast": "#4d4d4d",
           "focusContrast": "#2d2d2d",

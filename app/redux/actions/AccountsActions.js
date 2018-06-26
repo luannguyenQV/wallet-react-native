@@ -1,7 +1,7 @@
 import Big from 'big.js';
 
 import * as Rehive from './../../util/rehive';
-import { createAsyncTypes } from './store/Utilities';
+import { createAsyncTypes } from './../store/Utilities';
 import {
   INPUT_FIELD_UPDATE,
   INPUT_FIELD_ERROR,

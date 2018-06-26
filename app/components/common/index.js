@@ -1,7 +1,7 @@
 export * from './Button';
 export * from './Card';
 // export * from './CardList';
-export * from './AuthForm';
+export * from './FullScreenForm';
 export * from './Input';
 export * from './Output';
 export * from './Spinner';

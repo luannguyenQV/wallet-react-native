@@ -5,7 +5,7 @@ This file contains all the TYPE declarations and ACTION functions
 that relate to the user profile / information
 */
 
-import { createAsyncTypes } from './store/Utilities';
+import { createAsyncTypes } from './../store/Utilities';
 
 export const INPUT_FIELD_CHANGED = 'input_field_changed';
 export const INPUT_FIELD_ERROR = 'input_field_error';
@@ -77,13 +77,13 @@ export const confirmDeleteItem = (type, item) => {
 export const RESEND_VERIFICATION_ASYNC = createAsyncTypes(
   'resend_verification',
 );
-export const resendVerification = (type, value, company) => {
+export const resendVerification = (type, data, company) => {
   // console.log(type, value);
   return {
     type: RESEND_VERIFICATION_ASYNC.pending,
     payload: {
       type,
-      value,
+      data,
       company,
     },
   };
@@ -117,7 +117,9 @@ export const hideModal = () => {
   };
 };
 
-export const UPLOAD_PROFILE_PHOTO = createAsyncTypes('upload_profile_photo');
+export const UPLOAD_PROFILE_PHOTO_ASYNC = createAsyncTypes(
+  'upload_profile_photo',
+);
 export const uploadProfilePhoto = image => {
   const file = {
     uri: image,
@@ -125,7 +127,7 @@ export const uploadProfilePhoto = image => {
     type: 'image/jpg',
   };
   return {
-    type: UPLOAD_PROFILE_PHOTO.pending,
+    type: UPLOAD_PROFILE_PHOTO_ASYNC.pending,
     payload: file,
   };
 };

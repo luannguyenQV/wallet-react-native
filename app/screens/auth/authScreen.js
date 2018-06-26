@@ -26,7 +26,7 @@ import { initializeSDK } from './../../util/rehive';
 import Colors from './../../config/colors';
 import {
   Button,
-  AuthForm,
+  FullScreenForm,
   Input,
   Spinner,
   PopUpGeneral,
@@ -55,8 +55,8 @@ class AuthScreen extends Component {
   renderMainContainer() {
     const {
       loading,
-      authState,
-      inputState,
+      mainState,
+      detailState,
       nextAuthFormState,
       company,
       email,
@@ -77,7 +77,7 @@ class AuthScreen extends Component {
     };
 
     // set text / icons
-    switch (authState) {
+    switch (mainState) {
       case 'company':
         iconHeaderLeft = '';
         break;
@@ -91,12 +91,12 @@ class AuthScreen extends Component {
       case 'login':
         textHeaderRight = 'Forgot?';
         onPressHeaderRight = () => nextAuthFormState(this.props, 'forgot');
-        if (inputState === 'password') {
+        if (detailState === 'password') {
           textFooterRight = 'Log in';
         }
         break;
       case 'register':
-        if (inputState === 'password') {
+        if (detailState === 'password') {
           textFooterRight = 'Register';
         }
         break;
@@ -104,7 +104,7 @@ class AuthScreen extends Component {
     }
 
     return (
-      <AuthForm
+      <FullScreenForm
         iconHeaderLeft={iconHeaderLeft}
         onPressHeaderLeft={onPressHeaderLeft}
         textHeaderRight={textHeaderRight}
@@ -113,7 +113,7 @@ class AuthScreen extends Component {
         onPressFooterRight={onPressFooterRight}
         loading={loading}>
         {this.renderContent()}
-      </AuthForm>
+      </FullScreenForm>
     );
   }
 
@@ -126,12 +126,12 @@ class AuthScreen extends Component {
       imageContainer,
       image,
     } = styles;
-    const { authState, nextAuthFormState, company_config } = this.props;
+    const { mainState, nextAuthFormState, company_config } = this.props;
     // console.log(company_config);
 
     const slides = company_config ? company_config.sliders.landing : null;
 
-    switch (authState) {
+    switch (mainState) {
       case 'landing':
         return (
           <View style={viewStyleLanding}>
@@ -179,7 +179,7 @@ class AuthScreen extends Component {
 
   renderInput() {
     const {
-      inputState,
+      detailState,
       inputError,
       countryCode,
       company,
@@ -190,7 +190,7 @@ class AuthScreen extends Component {
       passwordError,
     } = this.props;
 
-    switch (inputState) {
+    switch (detailState) {
       case 'company':
         return (
           <Input
@@ -335,11 +335,7 @@ class AuthScreen extends Component {
           // style={{ flex: 1 }}
           onPress={Keyboard.dismiss}
           accessible={false}>
-          {loading || appLoading ? (
-            <Spinner size="large" />
-          ) : (
-            this.renderMainContainer()
-          )}
+          {loading ? <Spinner size="large" /> : this.renderMainContainer()}
         </TouchableWithoutFeedback>
         {this.renderModal()}
       </KeyboardAvoidingView>
@@ -411,9 +407,9 @@ const styles = {
 
 const mapStateToProps = ({ auth, user }) => {
   const {
-    inputState,
+    detailState,
     countryCode,
-    authState,
+    mainState,
     company,
     companyError,
     email,
@@ -428,9 +424,9 @@ const mapStateToProps = ({ auth, user }) => {
   } = auth;
   const { company_config } = user;
   return {
-    inputState,
+    detailState,
     countryCode,
-    authState,
+    mainState,
     company,
     companyError,
     email,

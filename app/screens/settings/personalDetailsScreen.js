@@ -207,46 +207,6 @@ class PersonalDetailsScreen extends Component {
             </View>
           </Card>
         </CardContainer>
-
-        {/* <Modal
-          animationInTiming={500}
-          animationOutTiming={500}
-          backdropTransitionOutTiming={500}
-          backdropTransitionInTiming={500}
-          backdropColor="black"
-          onBackdropPress={() => this.setState({ modalVisible: false })}
-          isVisible={false}>
-          <View style={styles.modal}>
-            <View style={styles.bottomModal}>
-              <View
-                style={[
-                  styles.button,
-                  { borderBottomWidth: 1, borderBottomColor: Colors.black },
-                ]}>
-                <Text style={{ fontSize: 22, fontWeight: 'bold' }}>
-                  Change Image
-                </Text>
-              </View>
-              <TouchableHighlight
-                style={styles.button}
-                onPress={() => this.launchCamera()}>
-                <Text style={styles.buttonText}>Use Camera</Text>
-              </TouchableHighlight>
-              <TouchableHighlight
-                style={styles.button}
-                onPress={() => this.launchImageLibrary()}>
-                <Text style={styles.buttonText}>Choose From Gallery</Text>
-              </TouchableHighlight>
-              <TouchableHighlight
-                style={styles.button}
-                onPress={() => {
-                  this.setState({ modalVisible: false });
-                }}>
-                <Text style={styles.buttonText}>Cancel</Text>
-              </TouchableHighlight>
-            </View>
-          </View>
-        </Modal> */}
       </View>
     );
   }

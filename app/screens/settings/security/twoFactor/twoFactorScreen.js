@@ -27,12 +27,12 @@ class TwoFactorScreen extends Component {
         <SettingsOption
           label="SMS"
           gotoAddress="TwoFactorSmsAuth"
-          goTo={this.goTo}
+          onPress={this.goTo}
         />
         <SettingsOption
           label="Token"
           gotoAddress="TwoFactorToken"
-          goTo={this.goTo}
+          onPress={this.goTo}
         />
       </View>
     );

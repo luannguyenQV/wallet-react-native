@@ -8,28 +8,23 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import {
+  updateInputField,
   fetchData,
   newItem,
   editItem,
+  primaryItem,
   updateItem,
   deleteItem,
-  primaryItem,
+  confirmDeleteItem,
+  resendVerification,
   verifyItem,
   showModal,
   hideModal,
-  setActiveCurrency,
-  updateInputField,
-  resendVerification,
+  // setActiveCurrency,
 } from './../redux/actions';
 import { standardizeString } from './../util/general';
 
-import {
-  Card,
-  CardContainer,
-  PopUpGeneral,
-  EmptyListMessage,
-  Input,
-} from './common';
+import { Card, PopUpGeneral, EmptyListMessage, Input } from './common';
 
 // make component
 class CardList extends Component {
@@ -61,7 +56,6 @@ class CardList extends Component {
       textActionTwo,
       onPressActionTwo,
       renderContent,
-      editItem,
       canEdit,
       canVerify,
       canPrimary,
@@ -70,6 +64,11 @@ class CardList extends Component {
       profile,
       onPressFooter,
       iconFooter,
+      // redux actions
+      editItem,
+      deleteItem,
+      primaryItem,
+      activeItem,
       resendVerification,
     } = this.props;
     return (
@@ -82,7 +81,7 @@ class CardList extends Component {
         onPressTitleLeft={() =>
           onPressTitleLeft
             ? onPressTitleLeft(item)
-            : canActive ? editItem(item, 'active') : null
+            : canActive ? activeItem(type, item) : null
         }
         title={title ? title(item) : ''}
         subtitle={subtitle ? subtitle(item) : ''}
@@ -90,12 +89,12 @@ class CardList extends Component {
         onPressTitle={() =>
           onPressTitle
             ? onPressTitle(item)
-            : canEdit ? editItem(item, 'edit') : null
+            : canEdit ? editItem(type, item) : null
         }
         onPressContent={() =>
           onPressContent
             ? onPressContent(item)
-            : canEdit ? editItem(item, 'edit') : null
+            : canEdit ? editItem(type, item) : null
         }
         iconFooter={
           iconFooter
@@ -107,7 +106,7 @@ class CardList extends Component {
             ? onPressFooter
             : canDelete
               ? (itemActive ? !itemActive(item) : true)
-                ? () => editItem(item, 'delete')
+                ? () => deleteItem(type, item)
                 : null
               : null
         }
@@ -133,7 +132,7 @@ class CardList extends Component {
         onPressActionOne={() =>
           onPressActionOne
             ? onPressActionOne(item)
-            : canPrimary ? editItem(item, 'primary') : null
+            : canPrimary ? primaryItem(type, item) : null
         }
         // backgroundColor={canPrimary ? (item.primary ? 'focus' : '') : ''}
         // loading={loading}
@@ -162,13 +161,14 @@ class CardList extends Component {
       tempItem,
       identifier,
       updateError,
-      updateItem,
-      deleteItem,
-      verifyItem,
       temp_otp,
       otp,
+      // redux actions
       setActiveCurrency,
       updateInputField,
+      updateItem,
+      confirmDeleteItem,
+      verifyItem,
     } = this.props;
 
     let contentText = '';
@@ -177,12 +177,13 @@ class CardList extends Component {
     let textActionTwo = 'CANCEL';
     let onPressActionTwo = hideModal;
     let content = null;
+    console.log(identifier, tempItem);
     if (identifier && tempItem) {
       switch (modalType) {
         case 'delete':
           contentText = 'Delete ' + tempItem[identifier] + '?';
           textActionOne = 'DELETE';
-          onPressActionOne = () => deleteItem(type, tempItem);
+          onPressActionOne = () => confirmDeleteItem(type, tempItem);
           break;
         case 'primary':
           contentText = 'Make ' + tempItem[identifier] + ' primary?';
@@ -196,11 +197,11 @@ class CardList extends Component {
           onPressActionOne = () => setActiveCurrency(tempItem);
           break;
         case 'verify':
-          textActionOne = 'VERIFY';
           textActionTwo = 'CLOSE';
-          if (type === 'email_address') {
+          if (type === 'email') {
             contentText = 'Verification email has been sent to ' + tempItem;
-          } else if (type === 'mobile_number') {
+          } else if (type === 'mobile') {
+            textActionOne = 'VERIFY';
             contentText = 'Verification sms has been sent to ' + tempItem;
             content = (
               <Input
@@ -212,9 +213,8 @@ class CardList extends Component {
                 onChangeText={input => updateInputField('otp', 'otp', input)}
               />
             );
-            console.log(temp_otp);
-            onPressActionOne = () =>
-              verifyItem('mobile_number_otp', temp_otp.otp, '');
+            console.log('otp', otp);
+            onPressActionOne = () => verifyItem(type, otp.otp);
           }
 
           break;
@@ -248,9 +248,10 @@ class CardList extends Component {
       navigation,
       tempItem,
       showDetail,
-      fetchData,
       wallet,
+      // redux actions
       updateItem,
+      fetchData,
     } = this.props;
     return (
       <KeyboardAvoidingView
@@ -283,7 +284,7 @@ class CardList extends Component {
           <FlatList
             refreshControl={
               <RefreshControl
-                refreshing={loadingData}
+                refreshing={loading}
                 onRefresh={() => fetchData(type)}
               />
             }
@@ -303,7 +304,7 @@ class CardList extends Component {
   }
 }
 
-const mapStateToProps = ({ user }) => {
+const mapStateToProps = ({ user, auth }) => {
   const {
     profile,
     showDetail,
@@ -313,36 +314,32 @@ const mapStateToProps = ({ user }) => {
     editing,
     wallet,
     modalType,
-    temp_otp,
-    otp,
-    // tempItem,
   } = user;
+  const { otp } = auth;
   return {
     profile,
     showDetail,
     updateError,
     modalVisible,
+    modalType,
     loading,
     editing,
     wallet,
-    modalType,
-    temp_otp,
     otp,
-    // tempItem,
   };
 };
 
 export default connect(mapStateToProps, {
+  updateInputField,
   fetchData,
   newItem,
   editItem,
+  primaryItem,
   updateItem,
   deleteItem,
-  primaryItem,
+  confirmDeleteItem,
+  resendVerification,
   verifyItem,
   showModal,
   hideModal,
-  setActiveCurrency,
-  updateInputField,
-  resendVerification,
 })(CardList);

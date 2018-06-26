@@ -1,14 +1,15 @@
 import { all, call, put, takeEvery, take } from 'redux-saga/effects';
 
-import { SHOW_MODAL, LOGOUT_USER_ASYNC } from './../types';
+import { LOGOUT_USER_ASYNC } from './../actions/AuthActions';
 
 import {
   FETCH_DATA_ASYNC,
   REFRESH_PROFILE_ASYNC,
   UPDATE_ASYNC,
+  RESEND_VERIFICATION_ASYNC,
   VERIFY_ASYNC,
   CONFIRM_DELETE_ASYNC,
-  UPLOAD_PROFILE_PHOTO,
+  UPLOAD_PROFILE_PHOTO_ASYNC,
   UPLOAD_DOCUMENT_ASYNC,
 } from './../actions/UserActions';
 
@@ -16,6 +17,7 @@ import NavigationService from './../../util/navigation';
 
 import * as Rehive from './../../util/rehive';
 import { VALIDATE_COMPANY_ASYNC } from '../actions';
+import reducers from '../reducers';
 
 function* fetchData(action) {
   try {
@@ -56,9 +58,9 @@ function* fetchData(action) {
         // console.log('config', response);
         break;
     }
-
+    // console.log(action.payload);
     let data = response;
-    if (data.length > 0 && action.payload === ('email' || 'mobile')) {
+    if (data && data.length > 0 && action.payload === ('email' || 'mobile')) {
       const primaryIndex = data.findIndex(item => item.primary === true);
       const primaryItem = data[primaryIndex];
       data[primaryIndex] = data[0];
@@ -72,8 +74,8 @@ function* fetchData(action) {
       payload: { data, prop: action.payload },
     });
   } catch (error) {
-    console.log(error);
-    if (error.status === 401) {
+    console.log('type', action.payload);
+    if (error && error.status === 401) {
       yield put({
         type: LOGOUT_USER_ASYNC.success,
       });
@@ -186,12 +188,33 @@ function* deleteItem(action) {
         break;
     }
     yield all([
-      put({ type: DELETE_ASYNC.success }),
+      put({ type: CONFIRM_DELETE_ASYNC.success }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: type }),
     ]);
   } catch (error) {
     console.log(error);
-    yield put({ type: DELETE_ASYNC.error, payload: error });
+    yield put({ type: CONFIRM_DELETE_ASYNC.error, payload: error });
+  }
+}
+
+function* resendVerification(action) {
+  try {
+    const { type, data, company } = action.payload;
+    switch (type) {
+      case 'mobile':
+        yield call(Rehive.resendMobileVerification, data, company);
+        break;
+      case 'email':
+        yield call(Rehive.resendEmailVerification, data, company);
+        break;
+    }
+    yield all([
+      put({ type: RESEND_VERIFICATION_ASYNC.success }),
+      // put({ type: FETCH_DATA_ASYNC.pending, payload: type }),
+    ]);
+  } catch (error) {
+    console.log(error);
+    yield put({ type: RESEND_VERIFICATION_ASYNC.error, payload: error });
   }
 }
 
@@ -201,14 +224,8 @@ function* verifyItem(action) {
     let response = null;
     switch (type) {
       case 'mobile':
-        response = yield call(Rehive.resendMobileVerification, value, company);
-        break;
-      case 'mobile_otp':
         console.log('value', value);
         response = yield call(Rehive.submitOTP, value);
-        break;
-      case 'email':
-        response = yield call(Rehive.resendEmailVerification, value, company);
         break;
     }
     yield all([
@@ -249,8 +266,9 @@ export const userSagas = all([
   takeEvery(REFRESH_PROFILE_ASYNC.pending, refreshProfile),
   takeEvery(UPDATE_ASYNC.pending, updateItem),
   takeEvery(CONFIRM_DELETE_ASYNC.pending, deleteItem),
+  takeEvery(RESEND_VERIFICATION_ASYNC.pending, resendVerification),
   takeEvery(VERIFY_ASYNC.pending, verifyItem),
-  takeEvery(UPLOAD_PROFILE_PHOTO.pending, uploadProfilePhoto),
+  takeEvery(UPLOAD_PROFILE_PHOTO_ASYNC.pending, uploadProfilePhoto),
   takeEvery(UPLOAD_DOCUMENT_ASYNC.pending, uploadDocument),
 ]);
 

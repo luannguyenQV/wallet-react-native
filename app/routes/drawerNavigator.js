@@ -12,7 +12,6 @@ import Wallets from '../screens/main/walletsScreen';
 import GetVerified from './../screens/settings/getVerified/getVerifiedScreen';
 import Settings from './../screens/settings/settingsScreen';
 import About from './../screens/main/aboutScreen';
-import Logout from './../screens/auth/logoutScreen';
 
 const RouteConfigs = {
   Home: {
@@ -45,9 +44,6 @@ const RouteConfigs = {
   // About: {
   //   screen: About,
   // },
-  Logout: {
-    screen: Logout,
-  },
 };
 
 export default DrawerNavigator(RouteConfigs, {

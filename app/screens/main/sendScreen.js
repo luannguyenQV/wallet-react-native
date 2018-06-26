@@ -16,11 +16,11 @@ import {
   validateSendRecipient,
   validateSendNote,
   setSendState,
-  inputFieldUpdate,
+  updateInputField,
   send,
 } from '../../redux/actions';
 
-import { Input, AuthForm, Output } from './../../components/common';
+import { Input, FullScreenForm, Output } from './../../components/common';
 import ContactService from './../../services/contactService';
 import Colors from './../../config/colors';
 import Header from './../../components/header';
@@ -209,7 +209,7 @@ class SendScreen extends Component {
     }
 
     return (
-      <AuthForm
+      <FullScreenForm
         // textFooterLeft={textFooterLeft}
         // onPressFooterLeft={onPressFooterLeft}
         textFooterRight={textFooterRight}
@@ -217,7 +217,7 @@ class SendScreen extends Component {
         loading={sending}>
         {this.renderTop()}
         <View style={viewStyleBottomContainer}>{this.renderBottom()}</View>
-      </AuthForm>
+      </FullScreenForm>
     );
   }
 
@@ -298,7 +298,7 @@ class SendScreen extends Component {
       sendAmount,
       sendWallet,
       sendRecipient,
-      inputFieldUpdate,
+      updateInputField,
       sendNote,
       validateSendAmount,
       validateSendRecipient,
@@ -321,7 +321,7 @@ class SendScreen extends Component {
             keyboardType="numeric"
             value={sendAmount}
             onChangeText={value =>
-              inputFieldUpdate({ prop: 'sendAmount', value })
+              updateInputField({ prop: 'sendAmount', value })
             }
             returnKeyType="next"
             autoFocus
@@ -336,7 +336,7 @@ class SendScreen extends Component {
             label={'Please enter recipient'}
             value={sendRecipient}
             onChangeText={value =>
-              inputFieldUpdate({ prop: 'sendRecipient', value })
+              updateInputField({ prop: 'sendRecipient', value })
             }
             inputError={sendError}
             reference={input => {
@@ -356,7 +356,7 @@ class SendScreen extends Component {
             label="Note:"
             value={sendNote}
             onChangeText={value =>
-              inputFieldUpdate({ prop: 'sendNote', value })
+              updateInputField({ prop: 'sendNote', value })
             }
             inputError={sendError}
             reference={input => {
@@ -472,7 +472,7 @@ const mapStateToProps = ({ accounts }) => {
 };
 
 export default connect(mapStateToProps, {
-  inputFieldUpdate,
+  updateInputField,
   setSendWallet,
   validateSendAmount,
   validateSendRecipient,

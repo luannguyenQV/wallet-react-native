@@ -12,8 +12,8 @@ import {
   RESET_AUTH,
   APP_LOAD_START,
   APP_LOAD_FINISH,
-  HIDE_MODAL,
 } from './../actions/AuthActions';
+import { HIDE_MODAL } from './../actions/UserActions';
 
 const INITIAL_STATE = {
   textFooterRight: '',
@@ -192,6 +192,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         modalVisible: false,
+        modalType: '',
       };
 
     case APP_LOAD_START:

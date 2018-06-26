@@ -40,15 +40,25 @@ export const changePassword = (old_password, new_password) =>
 
 export const submitOTP = otp => r.auth.mobile.verify({ otp });
 
-// rehive.auth..change({
-//   old_password: "joe1234",
-//   new_password1: "joe1234",
-//   new_password2: "joe1234"
+/* MULTI FACTOR AUTHENTICATION */
+export const getMFA = () => r.auth.mfa.status.get();
+
+export const enableAuthSMS = mobile_number =>
+  r.auth.mfa.sms.enable({ mobile_number });
+
+export const disableAuthSMS = () => r.auth.mfa.sms.disable();
+
+export const sendAuthSMS = () => r.auth.mfa.sms.send();
+
+export const enableAuthToken = () => r.auth.mfa.token.enable();
+
+export const disableAuthToken = () => r.auth.mfa.token.disable();
+
 /* USERS */
 // Profile
 export const getProfile = () => r.user.get();
 
-export const updateProfile = () => r.user.update();
+export const updateProfile = data => r.user.update(data);
 
 export const updateProfileImage = file => {
   let formData = new FormData();

@@ -30,8 +30,8 @@ class MobileNumbersScreen extends Component {
   };
 
   renderDetail = () => {
-    const { temp_mobile_number, updateError, updateInputField } = this.props;
-    const { number } = temp_mobile_number;
+    const { tempItem, updateError, updateInputField } = this.props;
+    const { number } = tempItem;
 
     return (
       <Input
@@ -40,22 +40,13 @@ class MobileNumbersScreen extends Component {
         autoCapitalize="none"
         value={number}
         inputError={updateError}
-        onChangeText={input =>
-          updateInputField('mobile_number', 'number', input)
-        }
+        onChangeText={input => updateInputField('mobile', 'number', input)}
       />
     );
   };
 
   render() {
-    const {
-      mobile_number,
-      loading_mobile_number,
-      temp_mobile_number,
-      newItem,
-      updateItem,
-      showDetail,
-    } = this.props;
+    const { mobile, tempItem, newItem, updateItem, showDetail } = this.props;
     return (
       <View style={styles.container}>
         <Header
@@ -65,15 +56,14 @@ class MobileNumbersScreen extends Component {
           headerRightIcon={showDetail ? 'done' : 'add'}
           headerRightOnPress={
             showDetail
-              ? () => updateItem('mobile_number', temp_mobile_number)
-              : () => newItem('mobile_number')
+              ? () => updateItem('mobile', tempItem)
+              : () => newItem('mobile')
           }
         />
         <CardList
-          type="mobile_number"
-          data={mobile_number}
-          // tempItem={temp_mobile_number}
-          loadingData={loading_mobile_number}
+          type="mobile"
+          data={mobile}
+          tempItem={tempItem}
           identifier="number"
           renderContent={this.renderContent}
           renderDetail={this.renderDetail}
@@ -99,17 +89,11 @@ const styles = {
 };
 
 const mapStateToProps = ({ user }) => {
-  const {
-    mobile_number,
-    loading_mobile_number,
-    temp_mobile_number,
-    showDetail,
-  } = user;
+  const { mobile, tempItem, showDetail } = user;
   return {
-    mobile_number,
-    loading_mobile_number,
-    temp_mobile_number,
+    mobile,
     showDetail,
+    tempItem,
   };
 };
 

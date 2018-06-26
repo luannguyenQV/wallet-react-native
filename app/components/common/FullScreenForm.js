@@ -6,7 +6,7 @@ import Colors from './../../config/colors';
 import { Spinner } from './Spinner';
 import { HeaderButton } from './HeaderButton';
 
-const AuthForm = props => {
+const FullScreenForm = props => {
   const {
     viewStyleContainer,
     viewStyleHeader,
@@ -54,22 +54,24 @@ const AuthForm = props => {
       <View style={viewStyleContent}>
         {loading ? <Spinner size="small" /> : props.children}
       </View>
-      <View style={viewStyleFooter}>
-        {textFooterLeft ? (
-          <TouchableOpacity onPress={onPressFooterLeft}>
-            <Text style={textStyleAction}>{textFooterLeft}</Text>
-          </TouchableOpacity>
-        ) : (
-          <View />
-        )}
-        {textFooterRight ? (
-          <TouchableOpacity onPress={onPressFooterRight}>
-            <Text style={textStyleAction}>{textFooterRight}</Text>
-          </TouchableOpacity>
-        ) : (
-          <View />
-        )}
-      </View>
+      {textFooterRight || textFooterLeft ? (
+        <View style={viewStyleFooter}>
+          {textFooterLeft ? (
+            <TouchableOpacity onPress={onPressFooterLeft}>
+              <Text style={textStyleAction}>{textFooterLeft}</Text>
+            </TouchableOpacity>
+          ) : (
+            <View />
+          )}
+          {textFooterRight ? (
+            <TouchableOpacity onPress={onPressFooterRight}>
+              <Text style={textStyleAction}>{textFooterRight}</Text>
+            </TouchableOpacity>
+          ) : (
+            <View />
+          )}
+        </View>
+      ) : null}
     </View>
   );
 };
@@ -114,4 +116,4 @@ const styles = {
   },
 };
 
-export { AuthForm };
+export { FullScreenForm };
