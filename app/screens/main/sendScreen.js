@@ -16,7 +16,7 @@ import {
   validateSendRecipient,
   validateSendNote,
   setSendState,
-  updateInputField,
+  updateAccountField,
   send,
 } from '../../redux/actions';
 
@@ -24,6 +24,7 @@ import { Input, FullScreenForm, Output } from './../../components/common';
 import ContactService from './../../services/contactService';
 import Colors from './../../config/colors';
 import Header from './../../components/header';
+import PinModal from './../../components/PinModal';
 import { performDivisibility } from './../../util/general';
 
 class SendScreen extends Component {
@@ -45,6 +46,8 @@ class SendScreen extends Component {
 
     showContacts: false,
     contactButtonText: 'Show contacts',
+
+    pinVisible: false,
   };
 
   componentDidMount() {
@@ -194,7 +197,7 @@ class SendScreen extends Component {
         textFooterLeft = 'Edit';
         onPressFooterLeft = () => setSendState('amount');
         textFooterRight = 'Confirm';
-        onPressFooterRight = () => this.performSend();
+        onPressFooterRight = () => this.setState({ pinVisible: true });
         break;
       case 'success':
         // textFooterLeft = 'Close';
@@ -298,7 +301,7 @@ class SendScreen extends Component {
       sendAmount,
       sendWallet,
       sendRecipient,
-      updateInputField,
+      updateAccountField,
       sendNote,
       validateSendAmount,
       validateSendRecipient,
@@ -310,7 +313,7 @@ class SendScreen extends Component {
       case 'amount':
         return (
           <Input
-            key="amount"
+            key={sendState}
             placeholder="e.g. 10"
             label={'Amount [' + sendWallet.currency.currency.symbol + ']'}
             prefix={sendWallet.currency.currency.symbol}
@@ -321,7 +324,7 @@ class SendScreen extends Component {
             keyboardType="numeric"
             value={sendAmount}
             onChangeText={value =>
-              updateInputField({ prop: 'sendAmount', value })
+              updateAccountField({ prop: 'sendAmount', value })
             }
             returnKeyType="next"
             autoFocus
@@ -336,7 +339,7 @@ class SendScreen extends Component {
             label={'Please enter recipient'}
             value={sendRecipient}
             onChangeText={value =>
-              updateInputField({ prop: 'sendRecipient', value })
+              updateAccountField({ prop: 'sendRecipient', value })
             }
             inputError={sendError}
             reference={input => {
@@ -356,7 +359,7 @@ class SendScreen extends Component {
             label="Note:"
             value={sendNote}
             onChangeText={value =>
-              updateInputField({ prop: 'sendNote', value })
+              updateAccountField({ prop: 'sendNote', value })
             }
             inputError={sendError}
             reference={input => {
@@ -373,6 +376,7 @@ class SendScreen extends Component {
   }
 
   render() {
+    const { pin, fingerprint } = this.props;
     return (
       <View style={{ flex: 1 }}>
         <Header navigation={this.props.navigation} title="Send" back />
@@ -380,6 +384,16 @@ class SendScreen extends Component {
           keyboardShouldPersistTaps={'never'}
           style={styles.viewStyleContainer}
           behavior={'padding'}>
+          <PinModal
+            pin={pin}
+            fingerprint={fingerprint}
+            modalVisible={this.state.pinVisible}
+            onSuccess={() => {
+              this.setState({ pinVisible: false });
+              this.performSend();
+            }}
+            onDismiss={() => this.setState({ pinVisible: false })}
+          />
           <TouchableWithoutFeedback
             style={{ flex: 1 }}
             onPress={Keyboard.dismiss}
@@ -432,7 +446,6 @@ const styles = {
     paddingBottom: 0,
   },
   viewStyleError: {
-    flex: 1,
     width: '100%',
     flexDirection: 'column',
     alignItems: 'center',
@@ -444,7 +457,8 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ accounts }) => {
+const mapStateToProps = ({ accounts, auth }) => {
+  const { pin, fingerprint } = auth;
   const {
     wallets,
     sendAmount,
@@ -468,11 +482,13 @@ const mapStateToProps = ({ accounts }) => {
     sendState,
     sendError,
     sending,
+    pin,
+    fingerprint,
   };
 };
 
 export default connect(mapStateToProps, {
-  updateInputField,
+  updateAccountField,
   setSendWallet,
   validateSendAmount,
   validateSendRecipient,

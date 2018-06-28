@@ -2,10 +2,16 @@ import Big from 'big.js';
 
 import * as Rehive from './../../util/rehive';
 import { createAsyncTypes } from './../store/Utilities';
-import {
-  INPUT_FIELD_UPDATE,
-  INPUT_FIELD_ERROR,
-} from './../actions/UserActions';
+
+export const ACCOUNT_FIELD_CHANGED = 'account_field_changed';
+export const ACCOUNT_FIELD_ERROR = 'account_field_error';
+export const updateAccountField = ({ prop, value }) => {
+  console.log('action', prop, value);
+  return {
+    type: ACCOUNT_FIELD_CHANGED,
+    payload: { prop, value },
+  };
+};
 
 export const FETCH_ACCOUNTS_ASYNC = createAsyncTypes('fetch_accounts');
 export const fetchAccounts = () => {
@@ -34,7 +40,7 @@ export const setSendWallet = wallet => {
 };
 
 export const validateSendAmount = (wallet, amount) => {
-  // console.log(wallet, amount);
+  console.log(wallet, amount);
   // const currency = wallet.currency.currency;
   for (let i = 0; i < wallet.currency.currency.divisibility; i++) {
     amount = amount * 10;
@@ -43,7 +49,7 @@ export const validateSendAmount = (wallet, amount) => {
     return setSendState('recipient');
   } else {
     return {
-      type: INPUT_FIELD_ERROR,
+      type: ACCOUNT_FIELD_ERROR,
       payload: 'Invalid send amount',
     };
   }
@@ -54,7 +60,7 @@ export const validateSendRecipient = recipient => {
     return setSendState('note');
   } else {
     return {
-      type: INPUT_FIELD_ERROR,
+      type: ACCOUNT_FIELD_ERROR,
       payload: 'Recipient cannot be blank',
     };
   }
@@ -74,13 +80,6 @@ export const setSendState = state => {
   } else {
     // Return fail?
   }
-};
-
-export const inputFieldUpdate = ({ prop, value }) => {
-  return {
-    type: INPUT_FIELD_UPDATE,
-    payload: { prop, value },
-  };
 };
 
 export const RESET_SEND = 'reset_send';
@@ -147,7 +146,7 @@ export const validateWithdrawAmount = (wallet, amount) => {
     return setWithdrawState('account');
   } else {
     return {
-      type: INPUT_FIELD_ERROR,
+      type: ACCOUNT_FIELD_ERROR,
       payload: 'Invalid send amount',
     };
   }

@@ -1,8 +1,8 @@
 import {
   FETCH_ACCOUNTS_ASYNC,
   UPDATE_CURRENT_INDEX,
-  INPUT_FIELD_UPDATE,
-  INPUT_FIELD_ERROR,
+  ACCOUNT_FIELD_CHANGED,
+  ACCOUNT_FIELD_ERROR,
   SET_SEND_STATE,
   SET_SEND_WALLET,
   RESET_SEND,
@@ -42,7 +42,7 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action) => {
-  // console.log(action);
+  console.log(action);
   switch (action.type) {
     case PERSIST_REHYDRATE:
       return action.payload.auth || [];
@@ -80,8 +80,15 @@ export default (state = INITIAL_STATE, action) => {
       }
       return { ...state };
 
-    // case INPUT_FIELD_UPDATE:
-    //   return { ...state, [action.payload.prop]: action.payload.value };
+    case ACCOUNT_FIELD_CHANGED:
+      return { ...state, [action.payload.prop]: action.payload.value };
+    case ACCOUNT_FIELD_ERROR:
+      return {
+        ...state,
+        sendError: action.payload,
+        withdrawError: action.payload,
+      };
+
     case SET_SEND_WALLET:
       return {
         ...state,
@@ -89,12 +96,6 @@ export default (state = INITIAL_STATE, action) => {
         sendState: 'amount',
         sendError: '',
       };
-    // case INPUT_FIELD_ERROR:
-    //   return {
-    //     ...state,
-    //     sendError: action.payload,
-    //     withdrawError: action.payload,
-    //   };
     case SET_SEND_STATE:
       return {
         ...state,

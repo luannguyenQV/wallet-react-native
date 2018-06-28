@@ -18,18 +18,11 @@ import Colors from './../../../config/colors';
 import Header from './../../../components/header';
 import PinModal from './../../../components/PinModal';
 
-import {
-  InputContainer,
-  Input,
-  Button,
-  PopUpGeneral,
-  FullScreenForm,
-  CodeInput,
-} from './../../../components/common';
+import { Button, PopUpGeneral, CodeInput } from './../../../components/common';
 
 class PinScreen extends Component {
   static navigationOptions = {
-    title: 'Update pin',
+    title: 'Set pin/fingerprint',
   };
 
   state = {
@@ -148,9 +141,6 @@ class PinScreen extends Component {
     let showPin = false;
     let errorText = '';
     switch (modalType) {
-      case 'inputFingerprint':
-        contentText = 'Please scan your fingerprint to change these settings';
-        break;
       case 'setFingerprint':
         contentText = 'Please scan your fingerprint to activate this feature';
         action = () =>
@@ -162,11 +152,6 @@ class PinScreen extends Component {
         break;
       case 'inputPinError':
         errorText = 'Incorrect pin';
-      case 'inputPin':
-        contentText = 'Please input your pin to change these settings';
-        // this.pinInput.clear();
-        showPin = true;
-        break;
       // case 'setPin':
       //   contentText = 'Please input a pin to secure your account';
       //   // this.pinInput.clear();
@@ -217,33 +202,33 @@ class PinScreen extends Component {
             size={30}
             inputPosition="center"
             containerStyle={{ marginTop: 0, paddingBottom: 24 }}
-            onFulfill={code => this._onInputPinComplete(code)}
+            onFulfill={code => this.setPin(code)}
           />
         ) : null}
       </PopUpGeneral>
     );
   }
 
-  _onInputPinComplete(code) {
-    const { pin } = this.props;
-    const { modalType } = this.state;
-    switch (modalType) {
-      case 'inputPin':
-        if (pin === code) {
-          this.setState({
-            modalVisible: false,
-            modalType: 'none',
-            pinState: 'landing',
-          });
-        } else {
-          this.setState({ modalType: 'inputPinError' });
-        }
-        break;
-      case 'setPinConfirm':
-        this.setPin(code);
-        break;
-    }
-  }
+  // _onInputPinComplete(code) {
+  //   const { pin } = this.props;
+  //   const { modalType } = this.state;
+  //   switch (modalType) {
+  //     case 'inputPin':
+  //       if (pin === code) {
+  //         this.setState({
+  //           modalVisible: false,
+  //           modalType: 'none',
+  //           pinState: 'landing',
+  //         });
+  //       } else {
+  //         this.setState({ modalType: 'inputPinError' });
+  //       }
+  //       break;
+  //     case 'setPinConfirm':
+  //       this.setPin(code);
+  //       break;
+  //   }
+  // }
 
   render() {
     const { pin, fingerprint } = this.props;
@@ -251,7 +236,11 @@ class PinScreen extends Component {
 
     return (
       <View style={{ flex: 1 }}>
-        <Header navigation={this.props.navigation} title="Send" back />
+        <Header
+          navigation={this.props.navigation}
+          title="Set pin/fingerprint"
+          back
+        />
         <KeyboardAvoidingView
           keyboardShouldPersistTaps={'never'}
           style={styles.viewStyleContainer}
@@ -264,8 +253,8 @@ class PinScreen extends Component {
             onDismiss={() => this.props.navigation.goBack()}
           />
           {this.renderMainContainer()}
+          {this.renderModal()}
         </KeyboardAvoidingView>
-        {this.renderModal()}
       </View>
     );
   }
