@@ -5,7 +5,7 @@ import { AppLoading, Asset, Font } from 'expo';
 
 import { persistor, store } from './redux/store';
 import NavigationService from './util/navigation';
-import AppNavigator from './routes/stackNavigator';
+import MainNavigator from './routes/mainNavigator';
 
 // const _XHR = GLOBAL.originalXMLHttpRequest
 //   ? GLOBAL.originalXMLHttpRequest
@@ -56,7 +56,7 @@ class App extends Component {
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           {this.state.isReady ? (
-            <AppNavigator
+            <MainNavigator
               ref={navigatorRef => {
                 NavigationService.setTopLevelNavigator(navigatorRef);
               }}

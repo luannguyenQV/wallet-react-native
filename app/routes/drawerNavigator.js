@@ -5,48 +5,22 @@ import { createDrawerNavigator, DrawerItems } from 'react-navigation';
 import DrawerHeader from './../components/drawerHeader';
 import Colors from './../config/colors';
 
-import Home from './../screens/main/homeScreen';
+import HomeScreen from './../screens/main/homeScreen';
 
-import Wallets from '../screens/main/walletsScreen';
+import WalletsScreen from '../screens/main/walletsScreen';
 
-import GetVerified from './../screens/settings/getVerified/getVerifiedScreen';
-import Settings from './../screens/settings/settingsScreen';
+import GetVerifiedScreen from './../screens/settings/getVerified/getVerifiedScreen';
+import SettingsScreen from './../screens/settings/settingsScreen';
 import About from './../screens/main/aboutScreen';
 
-const RouteConfigs = {
-  Home: {
-    screen: Home,
-  },
-  Wallets: {
-    screen: Wallets,
-  },
-  // Transactions: {
-  //   screen: Transactions,
-  // },
-  // Deposit: {
-  //   screen: Deposit,
-  // },
-  // Withdraw: {
-  //   screen: Withdraw,
-  // },
-  // SendTo: {
-  //   screen: Send,
-  // },
-  // Receive: {
-  //   screen: Receive,
-  // },
-  GetVerified: {
-    screen: GetVerified,
-  },
-  Settings: {
-    screen: Settings,
-  },
-  // About: {
-  //   screen: About,
-  // },
+const Stack = {
+  Home: HomeScreen,
+  Wallets: WalletsScreen,
+  GetVerified: GetVerifiedScreen,
+  Settings: SettingsScreen,
 };
 
-export default createDrawerNavigator(RouteConfigs, {
+export default createDrawerNavigator(Stack, {
   drawerWidth: 200,
   drawerOpenRoute: 'DrawerOpen',
   drawerCloseRoute: 'DrawerClose',

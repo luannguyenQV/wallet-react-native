@@ -39,82 +39,30 @@ import SettingsAddress from './../screens/settings/addressScreen';
 import SettingsPersonalDetails from './../screens/settings/personalDetailsScreen';
 
 const Stack = {
-  AuthScreen: {
-    screen: AuthScreen,
-  },
-  Home: {
-    screen: Home,
-  },
-  Wallets: {
-    screen: Wallets,
-  },
-  QRcodeScanner: {
-    screen: QRcodeScanner,
-  },
-  Send: {
-    screen: Send,
-  },
-  Receive: {
-    screen: Receive,
-  },
-  Deposit: {
-    screen: Deposit,
-  },
-  Withdraw: {
-    screen: Withdraw,
-  },
-  Document: {
-    screen: Document,
-  },
-
-  SettingsPersonalDetails: {
-    screen: SettingsPersonalDetails,
-  },
-  SettingsMobileNumbers: {
-    screen: SettingsMobileNumbers,
-  },
-  VerifyMobileNumber: {
-    screen: VerifyMobileNumber,
-  },
-  SettingsEmailAddresses: {
-    screen: SettingsEmailAddresses,
-  },
-  SettingsGetVerified: {
-    screen: SettingsGetVerified,
-  },
-  SettingsAddress: {
-    screen: SettingsAddress,
-  },
-  SettingsBankAccounts: {
-    screen: SettingsBankAccounts,
-  },
-  SettingsCryptoAddresses: {
-    screen: SettingsCryptoAddresses,
-  },
-  SettingsCards: {
-    screen: SettingsCards,
-  },
-  ChangePassword: {
-    screen: ChangePassword,
-  },
-  TwoFactor: {
-    screen: TwoFactor,
-  },
-  TwoFactorSmsAuth: {
-    screen: TwoFactorSmsAuth,
-  },
-  TwoFactorToken: {
-    screen: TwoFactorToken,
-  },
-  AuthVerifySms: {
-    screen: AuthVerifySms,
-  },
-  Pin: {
-    screen: Pin,
-  },
-  Logout: {
-    screen: Logout,
-  },
+  Home: Home,
+  Wallets: Wallets,
+  QRcodeScanner: QRcodeScanner,
+  Send: Send,
+  Receive: Receive,
+  Deposit: Deposit,
+  Withdraw: Withdraw,
+  Document: Document,
+  SettingsPersonalDetails: SettingsPersonalDetails,
+  SettingsMobileNumbers: SettingsMobileNumbers,
+  VerifyMobileNumber: VerifyMobileNumber,
+  SettingsEmailAddresses: SettingsEmailAddresses,
+  SettingsGetVerified: SettingsGetVerified,
+  SettingsAddress: SettingsAddress,
+  SettingsBankAccounts: SettingsBankAccounts,
+  SettingsCryptoAddresses: SettingsCryptoAddresses,
+  SettingsCards: SettingsCards,
+  ChangePassword: ChangePassword,
+  TwoFactor: TwoFactor,
+  TwoFactorSmsAuth: TwoFactorSmsAuth,
+  TwoFactorToken: TwoFactorToken,
+  AuthVerifySms: AuthVerifySms,
+  Pin: Pin,
+  Logout: Logout,
   // SettingsNotifications: {
   //   screen: SettingsNotifications,
   // },
