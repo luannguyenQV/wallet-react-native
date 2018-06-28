@@ -58,6 +58,7 @@ class AuthScreen extends Component {
       mainState,
       detailState,
       nextAuthFormState,
+      temp_company,
       company,
       email,
       resetPassword,
@@ -183,6 +184,7 @@ class AuthScreen extends Component {
       inputError,
       countryCode,
       company,
+      tempCompany,
       email,
       password,
       companyError,
@@ -198,9 +200,9 @@ class AuthScreen extends Component {
             placeholder="e.g. Rehive"
             label="Company"
             inputError={companyError}
-            value={company}
+            value={tempCompany}
             onChangeText={value =>
-              this.props.authFieldChange({ prop: 'company', value })
+              this.props.authFieldChange({ prop: 'tempCompany', value })
             }
             returnKeyType="next"
             // autoFocus
@@ -410,6 +412,7 @@ const mapStateToProps = ({ auth, user }) => {
     detailState,
     countryCode,
     mainState,
+    tempCompany,
     company,
     companyError,
     email,
@@ -427,6 +430,7 @@ const mapStateToProps = ({ auth, user }) => {
     detailState,
     countryCode,
     mainState,
+    tempCompany,
     company,
     companyError,
     email,

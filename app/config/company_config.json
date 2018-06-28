@@ -62,7 +62,7 @@
         },
         "auth": {
           "email": "required",
-          "mobile": "required",
+          "mobile": "optional",
           "pin": "optional",
           "2FA": "optional",
           "firstName": true,

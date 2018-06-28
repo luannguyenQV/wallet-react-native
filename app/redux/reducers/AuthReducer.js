@@ -156,6 +156,7 @@ export default (state = INITIAL_STATE, action) => {
     case VALIDATE_COMPANY_ASYNC.success:
       return {
         ...state,
+        company: action.payload,
         loading: false,
       };
     case VALIDATE_COMPANY_ASYNC.error:

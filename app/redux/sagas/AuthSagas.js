@@ -10,6 +10,7 @@ import {
   RESET_PASSWORD_ASYNC,
   LOGOUT_USER_ASYNC,
   RESET_AUTH,
+  NEXT_AUTH_FORM_STATE,
 } from './../actions/AuthActions';
 
 import { FETCH_DATA_ASYNC } from './../actions/UserActions';
@@ -17,6 +18,7 @@ import { FETCH_ACCOUNTS_ASYNC } from './../actions/AccountsActions';
 
 import * as Rehive from './../../util/rehive';
 import NavigationService from './../../util/navigation';
+import { authValidation } from './../../util/validation';
 
 function* loginUser(action) {
   try {
@@ -92,9 +94,7 @@ function* logoutUser() {
 
 function* resetAuth() {
   try {
-    yield put({
-      type: RESET_AUTH,
-    });
+    yield put({ type: RESET_AUTH });
     NavigationService.navigate('AuthScreen');
   } catch (error) {
     console.log(error);
@@ -110,137 +110,175 @@ function* navigateHome() {
 }
 
 function* nextAuthFormState(action) {
-  const {
-    mainState,
-    detailState,
-    company,
-    password,
-    email,
-    company_config,
-  } = action.props;
+  try {
+    const {
+      mainState,
+      detailState,
+      company,
+      tempCompany,
+      password,
+      email,
+      company_config,
+    } = action.payload.props;
+    const nextFormState = action.payload.nextFormState;
 
-  let nextMainState = mainState;
-  let nextDetailState = '';
-  let data = {};
+    let nextMainState = mainState;
+    let nextDetailState = '';
+    let data = {};
 
-  switch (nextFormState) {
-    case 'login':
-    case 'register':
-      nextMainState = nextFormState;
-      nextDetailState = 'email';
-      break;
-    default:
-      let error = authValidation(props);
-      if (error) {
-        return {
-          type: AUTH_FIELD_ERROR,
-          payload: { prop: detailState, error },
-        };
-      } else {
-        switch (mainState) {
-          case 'company':
-            return {
-              type: VALIDATE_COMPANY_ASYNC.pending,
-              payload: company,
-            };
-          case 'login':
-            switch (detailState) {
-              case 'email':
-                nextDetailState = 'password';
-                break;
-              case 'password':
-                data = { company, user: email, password };
-                return {
-                  type: LOGIN_USER_ASYNC.pending,
-                  payload: data,
-                };
-            }
+    switch (mainState) {
+      case 'company':
+        yield put({
+          type: VALIDATE_COMPANY_ASYNC.pending,
+          payload: tempCompany,
+        });
+        break;
+      case 'landing':
+        nextMainState = nextFormState;
+        nextDetailState = 'email';
+        break;
+      case 'login':
+        switch (detailState) {
+          case 'email':
+            nextDetailState = 'password';
             break;
-          case 'register':
-            switch (detailState) {
-              case 'email':
-                nextDetailState = 'password';
-                break;
-              case 'password':
-                data = {
-                  company,
-                  email,
-                  password1: password,
-                  password2: password,
-                };
-                return {
-                  type: REGISTER_USER_ASYNC.pending,
-                  payload: data,
-                };
-            }
-            break;
-          // case '2FA':
-          //   switch (detailState) {
-          //     case 'email':
-          //       nextDetailState = 'password';
-          //       break;
-          //     case 'password':
-          //       data = {
-          //         company,
-          //         email,
-          //         password1: password,
-          //         password2: password,
-          //       };
-          //       return {
-          //         // type: REGISTER_USER_ASYNC.pending,
-          //         payload: data,
-          //       };
-          //   }
-          //   break;
-          // case 'user':
-          //   switch (detailState) {
-          //     case 'email':
-          //       nextDetailState = 'password';
-          //       break;
-          //     case 'password':
-          //       data = {
-          //         company,
-          //         email,
-          //         password1: password,
-          //         password2: password,
-          //       };
-          //       return {
-          //         // type: REGISTER_USER_ASYNC.pending,
-          //         payload: data,
-          //       };
-          //   }
-          //   break;
-          // case 'onboard':
-          //   switch (detailState) {
-          //     case 'email':
-          //       nextDetailState = 'password';
-          //       break;
-          //     case 'password':
-          //       data = {
-          //         company,
-          //         email,
-          //         password1: password,
-          //         password2: password,
-          //       };
-          //       return {
-          //         // type: REGISTER_USER_ASYNC.pending,
-          //         payload: data,
-          //       };
-          //   }
-          //   break;
-          default:
-            nextMainState = 'company';
-            nextDetailState = 'company';
+          case 'password':
+            data = { company, user: email, password };
+            yield put({
+              type: LOGIN_USER_ASYNC.pending,
+              payload: data,
+            });
         }
-      }
+    }
+    yield put({
+      type: UPDATE_AUTH_FORM_STATE,
+      payload: {
+        mainState: nextMainState,
+        detailState: nextDetailState,
+      },
+    });
+  } catch (error) {
+    console.log(error);
   }
-  return {
-    type: UPDATE_AUTH_FORM_STATE,
-    payload: {
-      detailState: nextDetailState,
-      mainState: nextMainState,
-    },
-  };
+
+  // switch (nextFormState) {
+  //   case 'login':
+  //   case 'register':
+  //     nextMainState = nextFormState;
+  //     nextDetailState = 'email';
+  //     break;
+  //   default:
+  //     let error = authValidation(props);
+  //     if (error) {
+  //       return {
+  //         type: AUTH_FIELD_ERROR,
+  //         payload: { prop: detailState, error },
+  //       };
+  //     } else {
+  //       switch (mainState) {
+  //         case 'company':
+  //           return {
+  //             type: VALIDATE_COMPANY_ASYNC.pending,
+  //             payload: company,
+  //           };
+  //         case 'login':
+  //           switch (detailState) {
+  //             case 'email':
+  //               nextDetailState = 'password';
+  //               break;
+  //             case 'password':
+  //               data = { company, user: email, password };
+  //               return {
+  //                 type: LOGIN_USER_ASYNC.pending,
+  //                 payload: data,
+  //               };
+  //           }
+  //           break;
+  //         case 'register':
+  //           switch (detailState) {
+  //             case 'email':
+  //               nextDetailState = 'password';
+  //               break;
+  //             case 'password':
+  //               data = {
+  //                 company,
+  //                 email,
+  //                 password1: password,
+  //                 password2: password,
+  //               };
+  //               return {
+  //                 type: REGISTER_USER_ASYNC.pending,
+  //                 payload: data,
+  //               };
+  //           }
+  //           break;
+  //         // case '2FA':
+  //         //   switch (detailState) {
+  //         //     case 'email':
+  //         //       nextDetailState = 'password';
+  //         //       break;
+  //         //     case 'password':
+  //         //       data = {
+  //         //         company,
+  //         //         email,
+  //         //         password1: password,
+  //         //         password2: password,
+  //         //       };
+  //         //       return {
+  //         //         // type: REGISTER_USER_ASYNC.pending,
+  //         //         payload: data,
+  //         //       };
+  //         //   }
+  //         //   break;
+  //         // case 'user':
+  //         //   switch (detailState) {
+  //         //     case 'email':
+  //         //       nextDetailState = 'password';
+  //         //       break;
+  //         //     case 'password':
+  //         //       data = {
+  //         //         company,
+  //         //         email,
+  //         //         password1: password,
+  //         //         password2: password,
+  //         //       };
+  //         //       return {
+  //         //         // type: REGISTER_USER_ASYNC.pending,
+  //         //         payload: data,
+  //         //       };
+  //         //   }
+  //         //   break;
+  //         // case 'onboard':
+  //         //   switch (detailState) {
+  //         //     case 'email':
+  //         //       nextDetailState = 'password';
+  //         //       break;
+  //         //     case 'password':
+  //         //       data = {
+  //         //         company,
+  //         //         email,
+  //         //         password1: password,
+  //         //         password2: password,
+  //         //       };
+  //         //       return {
+  //         //         // type: REGISTER_USER_ASYNC.pending,
+  //         //         payload: data,
+  //         //       };
+  //         //   }
+  //         //   break;
+  //         default:
+  //           nextMainState = 'company';
+  //           nextDetailState = 'company';
+  //       }
+  //     }
+  // }
+  // return {
+  //   type: UPDATE_AUTH_FORM_STATE,
+  //   payload: {
+  //     detailState: nextDetailState,
+  //     mainState: nextMainState,
+  //   },
+  // };
 }
 
 function* appLoad() {
@@ -343,5 +381,5 @@ export const authSagas = all([
   takeEvery(VALIDATE_COMPANY_ASYNC.pending, validateCompany),
   takeEvery(VALIDATE_COMPANY_ASYNC.success, fetchCompanyConfig),
   takeEvery(RESET_PASSWORD_ASYNC.pending, resetPassword),
-  // takeEvery(APP_LOAD_FINISH, navigateHome),
+  takeEvery(NEXT_AUTH_FORM_STATE, nextAuthFormState),
 ]);
