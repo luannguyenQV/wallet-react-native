@@ -223,11 +223,3 @@ export const hideWallet = () => {
     type: HIDE_WALLET,
   };
 };
-
-export const SET_PIN = 'set_pin';
-export const setPin = pin => {
-  return {
-    type: SET_PIN,
-    payload: pin,
-  };
-};

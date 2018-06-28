@@ -273,3 +273,32 @@ export const resetAuth = () => {
     type: RESET_AUTH,
   };
 };
+
+export const CHECK_PIN = 'check_pin';
+export const checkPin = () => {
+  return {
+    type: DEACTIVATE_FINGERPRINT,
+  };
+};
+
+export const SET_PIN = 'set_pin';
+export const setPin = pin => {
+  return {
+    type: SET_PIN,
+    payload: pin,
+  };
+};
+
+export const ACTIVATE_FINGERPRINT = 'activate_fingerprint';
+export const activateFingerprint = () => {
+  return {
+    type: ACTIVATE_FINGERPRINT,
+  };
+};
+
+export const RESET_PIN = 'reset_pin';
+export const resetPin = () => {
+  return {
+    type: RESET_PIN,
+  };
+};

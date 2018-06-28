@@ -12,6 +12,9 @@ import {
   RESET_AUTH,
   APP_LOAD_START,
   APP_LOAD_FINISH,
+  SET_PIN,
+  RESET_PIN,
+  ACTIVATE_FINGERPRINT,
 } from './../actions/AuthActions';
 import { HIDE_MODAL } from './../actions/UserActions';
 
@@ -39,6 +42,9 @@ const INITIAL_STATE = {
   loading: false,
   appLoading: false,
   modalVisible: false,
+
+  pin: '',
+  fingerprint: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -193,6 +199,26 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         modalVisible: false,
         modalType: '',
+      };
+
+    case SET_PIN:
+      return {
+        ...state,
+        pin: action.payload,
+        fingerprint: false,
+      };
+
+    case ACTIVATE_FINGERPRINT:
+      return {
+        ...state,
+        fingerprint: true,
+        pin: '',
+      };
+    case RESET_PIN:
+      return {
+        ...state,
+        pin: '',
+        fingerprint: false,
       };
 
     case APP_LOAD_START:

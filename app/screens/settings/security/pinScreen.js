@@ -4,9 +4,19 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   Text,
+  Platform,
 } from 'react-native';
+import { connect } from 'react-redux';
+import {
+  setPin,
+  resetPin,
+  activateFingerprint,
+  newItem,
+} from './../../../redux/actions';
+
 import Colors from './../../../config/colors';
 import Header from './../../../components/header';
+import PinModal from './../../../components/PinModal';
 
 import {
   InputContainer,
@@ -14,6 +24,7 @@ import {
   Button,
   PopUpGeneral,
   FullScreenForm,
+  CodeInput,
 } from './../../../components/common';
 
 class PinScreen extends Component {
@@ -22,59 +33,221 @@ class PinScreen extends Component {
   };
 
   state = {
-    old_pin: '',
-    new_pin1: '',
-    new_pin2: '',
+    new_pin: '',
     modalVisible: false,
-    modalText: '',
-    modalAction: null,
+    modalType: 'none',
+    pinState: 'none',
+    pinVisible: true,
+    hasFingerprintScanner: false,
+    hasSavedFingerprints: false,
   };
 
-  save() {
-    if (responseJson.status === 'success') {
-      modalText = 'Pin updated';
-      modalAction = () => this.props.navigation.goBack();
-    } else {
-      modalText = 'Error: ' + responseJson.message;
-      modalAction = () => this.setState({ modalVisible: false });
+  componentDidMount() {
+    if (Expo.Fingerprint.hasHardwareAsync()) {
+      this.setState({ hasFingerprintScanner: true });
+      if (Expo.Fingerprint.isEnrolledAsync()) {
+        this.setState({ hasSavedFingerprints: true });
+      }
     }
-    this.setState({ modalText, modalAction });
   }
 
-  renderMainContainer() {
-    const { buttonStyle } = styles;
-    let pinState = 'landing';
+  setPin = confirm_pin => {
+    const { new_pin } = this.state;
+    if (new_pin === confirm_pin) {
+      this.setState({ modalVisible: false });
+      this.props.setPin(new_pin);
+      this.props.navigation.goBack();
+    } else {
+      this.setState({ modalVisible: true, modalType: 'errorPin' });
+    }
+  };
 
-    switch (pinState) {
-      case 'landing':
-        console.log(pinState);
-        return (
-          <View style={{ flex: 1 }}>
-            <TouchableOpacity onPress={() => console.log('fingerprint')}>
-              <View style={buttonStyle}>
-                <Text>Fingerprint</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => console.log('pin')}>
-              <View style={buttonStyle}>
-                <Text>Pin</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        );
+  resetPin = () => {
+    this.props.resetPin();
+    this.setState({ modalVisible: true, modalType: 'resetPin' });
+  };
+
+  renderMainContainer() {
+    const { hasFingerprintScanner, hasSavedFingerprints, showPin } = this.state;
+    if (showPin) {
+      return (
+        <View>
+          <CodeInput
+            ref={component => (this._pinInput2 = component)}
+            secureTextEntry
+            activeColor="gray"
+            autoFocus
+            inactiveColor="lightgray"
+            className="border-b"
+            codeLength={4}
+            space={7}
+            size={30}
+            inputPosition="center"
+            containerStyle={{ marginTop: 0, paddingBottom: 16, minHeight: 40 }}
+            onFulfill={code =>
+              this.setState({
+                new_pin: code,
+                modalVisible: true,
+                modalType: 'setPinConfirm',
+              })
+            }
+          />
+
+          <Button
+            label="CANCEL"
+            onPress={() => this.setState({ showPin: false })}
+          />
+        </View>
+      );
+    } else {
+      return (
+        <View>
+          {!hasFingerprintScanner ? (
+            <Text>No fingerprint scanner</Text>
+          ) : !hasSavedFingerprints ? (
+            <Text>No fingerprints saved</Text>
+          ) : (
+            <Button
+              label="ACTIVATE FINGERPRINT"
+              onPress={this.activateFingerprint}
+            />
+          )}
+
+          <Button
+            label="SET PIN"
+            onPress={() => this.setState({ showPin: true })}
+          />
+
+          <Button label="RESET" onPress={this.resetPin} />
+        </View>
+      );
+    }
+  }
+
+  activateFingerprint = () => {
+    if (Platform.OS !== 'ios') {
+      this.setState({
+        modalVisible: true,
+        modalType: 'setFingerprint',
+      });
+    }
+    if (Expo.Fingerprint.authenticateAsync()) {
+      this.props.activateFingerprint();
+    }
+  };
+
+  renderModal() {
+    const { modalVisible, modalType } = this.state;
+
+    let contentText = '';
+    let actionText = 'CANCEL';
+    let action = () => {
+      this.setState({ modalVisible: false });
+      this.props.navigation.goBack();
+    };
+    let showPin = false;
+    let errorText = '';
+    switch (modalType) {
+      case 'inputFingerprint':
+        contentText = 'Please scan your fingerprint to change these settings';
+        break;
+      case 'setFingerprint':
+        contentText = 'Please scan your fingerprint to activate this feature';
+        action = () =>
+          this.setState({ modalVisible: false, modalType: 'none' });
+        break;
+      case 'confirmFingerprint':
+        contentText = 'Fingerprint has been set';
+        actionText = 'CLOSE';
+        break;
+      case 'inputPinError':
+        errorText = 'Incorrect pin';
+      case 'inputPin':
+        contentText = 'Please input your pin to change these settings';
+        // this.pinInput.clear();
+        showPin = true;
+        break;
+      // case 'setPin':
+      //   contentText = 'Please input a pin to secure your account';
+      //   // this.pinInput.clear();
+      //   showPin = true;
+      //   break;
+      case 'setPinConfirm':
+        contentText = 'Please confirm your pin';
+        // this._pinInput.clear();
+        showPin = true;
+        break;
+      case 'setPinSuccess':
+        contentText = 'Pin has been set';
+        break;
+      case 'errorPin':
+        contentText = 'Pin and confirm pin do not match';
+        actionText = 'CLOSE';
+        action = () =>
+          this.setState({ modalVisible: false, modalType: 'none' });
+        break;
+      case 'resetPin':
+        contentText = 'Pin and fingerprint reset';
+        actionText = 'CLOSE';
+        action = () =>
+          this.setState({ modalVisible: false, modalType: 'none' });
+        break;
+      default:
+        contentText = '';
+    }
+    return (
+      <PopUpGeneral
+        visible={modalVisible}
+        contentText={contentText}
+        textActionOne={actionText}
+        onPressActionOne={action}
+        errorText={errorText}
+        // onDismiss={actionFunction}
+      >
+        {showPin ? (
+          <CodeInput
+            ref={component => (this._pinInput = component)}
+            secureTextEntry
+            activeColor="gray"
+            autoFocus
+            inactiveColor="lightgray"
+            className="border-b"
+            codeLength={4}
+            space={7}
+            size={30}
+            inputPosition="center"
+            containerStyle={{ marginTop: 0, paddingBottom: 24 }}
+            onFulfill={code => this._onInputPinComplete(code)}
+          />
+        ) : null}
+      </PopUpGeneral>
+    );
+  }
+
+  _onInputPinComplete(code) {
+    const { pin } = this.props;
+    const { modalType } = this.state;
+    switch (modalType) {
+      case 'inputPin':
+        if (pin === code) {
+          this.setState({
+            modalVisible: false,
+            modalType: 'none',
+            pinState: 'landing',
+          });
+        } else {
+          this.setState({ modalType: 'inputPinError' });
+        }
+        break;
+      case 'setPinConfirm':
+        this.setPin(code);
+        break;
     }
   }
 
   render() {
-    const {
-      modalVisible,
-      modalAction,
-      modalText,
-      old_pin,
-      new_pin1,
-      new_pin2,
-      loading,
-    } = this.state;
+    const { pin, fingerprint } = this.props;
+    const { pinVisible } = this.state;
 
     return (
       <View style={{ flex: 1 }}>
@@ -83,60 +256,18 @@ class PinScreen extends Component {
           keyboardShouldPersistTaps={'never'}
           style={styles.viewStyleContainer}
           behavior={'padding'}>
-          <FullScreenForm loading={loading}>
-            {this.renderMainContainer()}
-          </FullScreenForm>
+          <PinModal
+            pin={pin}
+            fingerprint={fingerprint}
+            modalVisible={pinVisible}
+            onSuccess={() => this.setState({ pinVisible: false })}
+            onDismiss={() => this.props.navigation.goBack()}
+          />
+          {this.renderMainContainer()}
         </KeyboardAvoidingView>
+        {this.renderModal()}
       </View>
     );
-    // return (
-    //   <View style={styles.container}>
-    //     <Header navigation={this.props.navigation} back title="Pin" />
-    //     <InputContainer>
-    //       <Input
-    //         type="pin"
-    //         label="Old pin"
-    //         placeholder="e.g. 1234"
-    //         autoCapitalize="none"
-    //         value={old_pin}
-    //         underlineColorAndroid="white"
-    //         onChangeText={old_pin => this.setState({ old_pin })}
-    //       />
-    //       <Input
-    //         type="pin"
-    //         label="New pin"
-    //         autoCapitalize="none"
-    //         placeholder="e.g. 1234"
-    //         value={new_pin1}
-    //         onChangeText={new_pin1 => this.setState({ new_pin1 })}
-    //         underlineColorAndroid="white"
-    //       />
-
-    //       <Input
-    //         type="pin"
-    //         label="Confirm new pin"
-    //         autoCapitalize="none"
-    //         placeholder="e.g. 1234"
-    //         value={new_pin2}
-    //         underlineColorAndroid="white"
-    //         onChangeText={new_pin2 => this.setState({ new_pin2 })}
-    //       />
-
-    //       <Button
-    //         label="CONFIRM"
-    //         // type="contained"
-    //         onPress={() => this.save()}
-    //       />
-    //       <PopUpGeneral
-    //         visible={modalVisible}
-    //         contentText={modalText}
-    //         textActionOne={'Close'}
-    //         onPressActionOne={modalAction}
-    //         onDismiss={modalAction}
-    //       />
-    //     </InputContainer>
-    //   </View>
-    // );
   }
 }
 
@@ -162,6 +293,18 @@ const styles = {
     flexDirection: 'column',
     padding: 20,
   },
+  pinTextStyle: {
+    paddingTop: 16,
+    justifyContent: 'center',
+  },
+};
+const mapStateToProps = ({ auth }) => {
+  const { pin, fingerprint } = auth;
+  return { pin, fingerprint };
 };
 
-export default PinScreen;
+export default connect(mapStateToProps, {
+  setPin,
+  activateFingerprint,
+  resetPin,
+})(PinScreen);

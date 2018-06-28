@@ -219,12 +219,12 @@ class SettingsScreen extends Component {
           lastName={profile.last_name}
         /> */}
         <InputContainer>
-          <SettingsContainer label="Personal details">
+          {/* <SettingsContainer label="Personal details">
             {this.renderBasicInfo()}
             {this.renderEmailAddresses()}
             {this.renderMobileNumbers()}
             {this.renderAddresses()}
-          </SettingsContainer>
+          </SettingsContainer> */}
           {/* <SettingsContainer label="Identity">
             {this.renderDocuments()}
           </SettingsContainer> */}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView, View, StyleSheet } from 'react-native';
-import { DrawerNavigator, DrawerItems } from 'react-navigation';
+import { createDrawerNavigator, DrawerItems } from 'react-navigation';
 
 import DrawerHeader from './../components/drawerHeader';
 import Colors from './../config/colors';
@@ -46,7 +46,7 @@ const RouteConfigs = {
   // },
 };
 
-export default DrawerNavigator(RouteConfigs, {
+export default createDrawerNavigator(RouteConfigs, {
   drawerWidth: 200,
   drawerOpenRoute: 'DrawerOpen',
   drawerCloseRoute: 'DrawerClose',

@@ -1,4 +1,4 @@
-import { StackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation';
 
 import AuthScreen from './../screens/auth/authScreen';
 
@@ -126,6 +126,6 @@ const Stack = {
   // },
 };
 
-export default StackNavigator(Stack, {
+export default createStackNavigator(Stack, {
   headerMode: 'none',
 });

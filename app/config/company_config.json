@@ -61,10 +61,19 @@
           "requireDocumentAdvID": true
         },
         "auth": {
-          "require2FA": true,
-          "requireEmail": true,
-          "requireMobile": true,
-          "requirePin": true
+          "email": "required",
+          "mobile": "required",
+          "pin": "optional",
+          "2FA": "optional",
+          "firstName": true,
+          "lastName": true,
+          "country": true
+        },
+        "pin": {
+          "appLoad": true,
+          "security": false,
+          "send": true,
+          "updateDetails": false
         },
         "home": {
           "header": "wallet",
@@ -83,13 +92,11 @@
           "primary": "#4d4d4d",
           "secondary": "#a6a6a6",
           "tertiary": "#c4c4c4",
-          "quaternary": "#e1e1e1",
           "focus": "#9797F0",
 
           "primaryContrast": "#f3f3f3",
           "secondaryContrast": "#2d2d2d",
           "tertiaryContrast": "#000000",
-          "quaternaryContrast": "#4d4d4d",
           "focusContrast": "#2d2d2d",
 
           "warning": "#FC8755",

@@ -8,7 +8,7 @@ import {
   updateInputField,
 } from './../../redux/actions';
 
-import CountryPicker from 'react-native-country-picker-modal';
+// import CountryPicker from 'react-native-country-picker-modal';
 import { Input, Output, CardContainer, Card } from './../../components/common';
 import Colors from './../../config/colors';
 import Header from './../../components/header';

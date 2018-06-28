@@ -153,7 +153,7 @@ export default class Header extends Component {
           <View style={styles.left}>
             {drawer ? (
               <HeaderButton
-                onPress={() => navigation.navigate('DrawerOpen')}
+                onPress={() => this.props.navigation.openDrawer()}
                 icon="menu"
               />
             ) : null}

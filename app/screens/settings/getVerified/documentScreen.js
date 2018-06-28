@@ -1,18 +1,7 @@
 import React, { Component } from 'react';
-import {
-  Modal,
-  View,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  FlatList,
-  Alert,
-  Image,
-} from 'react-native';
+import { View, StyleSheet, Text, FlatList, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { uploadDocument } from './../../../redux/actions';
-import { ImagePicker, Permissions } from 'expo';
-import Colors from './../../../config/colors';
 import Header from './../../../components/header';
 
 import * as Rehive from './../../../util/rehive';
@@ -215,6 +204,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
 const mapStateToProps = user => {
   const { loading } = user;
   return { loading };
