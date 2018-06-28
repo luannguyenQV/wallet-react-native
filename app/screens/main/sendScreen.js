@@ -365,6 +365,7 @@ class SendScreen extends Component {
             reference={input => {
               this.input = input;
             }}
+            multiline
             returnKeyType="next"
             autoFocus
             onSubmitEditing={() => validateSendNote(sendNote)}
@@ -377,6 +378,7 @@ class SendScreen extends Component {
 
   render() {
     const { pin, fingerprint } = this.props;
+    // console.log(pin, fingerprint);
     return (
       <View style={{ flex: 1 }}>
         <Header navigation={this.props.navigation} title="Send" back />
@@ -384,16 +386,18 @@ class SendScreen extends Component {
           keyboardShouldPersistTaps={'never'}
           style={styles.viewStyleContainer}
           behavior={'padding'}>
-          <PinModal
-            pin={pin}
-            fingerprint={fingerprint}
-            modalVisible={this.state.pinVisible}
-            onSuccess={() => {
-              this.setState({ pinVisible: false });
-              this.performSend();
-            }}
-            onDismiss={() => this.setState({ pinVisible: false })}
-          />
+          {this.state.pinVisible ? (
+            <PinModal
+              pin={pin}
+              fingerprint={fingerprint}
+              modalVisible={this.state.pinVisible}
+              onSuccess={() => {
+                this.setState({ pinVisible: false });
+                this.performSend();
+              }}
+              onDismiss={() => this.setState({ pinVisible: false })}
+            />
+          ) : null}
           <TouchableWithoutFeedback
             style={{ flex: 1 }}
             onPress={Keyboard.dismiss}

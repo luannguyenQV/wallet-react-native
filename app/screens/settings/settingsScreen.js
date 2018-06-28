@@ -195,12 +195,12 @@ class SettingsScreen extends Component {
           onPress={this.goTo}
         />
         <SettingsOption
-          label="Pin/Fingerprint"
+          label="Pin/fingerprint"
           gotoAddress="Pin"
           onPress={this.goTo}
         />
         <SettingsOption
-          label="Logout"
+          label="Log out"
           gotoAddress="Logout"
           onPress={this.goTo}
         />

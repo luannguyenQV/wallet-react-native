@@ -109,6 +109,140 @@ function* navigateHome() {
   }
 }
 
+function* nextAuthFormState(action) {
+  const {
+    mainState,
+    detailState,
+    company,
+    password,
+    email,
+    company_config,
+  } = action.props;
+
+  let nextMainState = mainState;
+  let nextDetailState = '';
+  let data = {};
+
+  switch (nextFormState) {
+    case 'login':
+    case 'register':
+      nextMainState = nextFormState;
+      nextDetailState = 'email';
+      break;
+    default:
+      let error = authValidation(props);
+      if (error) {
+        return {
+          type: AUTH_FIELD_ERROR,
+          payload: { prop: detailState, error },
+        };
+      } else {
+        switch (mainState) {
+          case 'company':
+            return {
+              type: VALIDATE_COMPANY_ASYNC.pending,
+              payload: company,
+            };
+          case 'login':
+            switch (detailState) {
+              case 'email':
+                nextDetailState = 'password';
+                break;
+              case 'password':
+                data = { company, user: email, password };
+                return {
+                  type: LOGIN_USER_ASYNC.pending,
+                  payload: data,
+                };
+            }
+            break;
+          case 'register':
+            switch (detailState) {
+              case 'email':
+                nextDetailState = 'password';
+                break;
+              case 'password':
+                data = {
+                  company,
+                  email,
+                  password1: password,
+                  password2: password,
+                };
+                return {
+                  type: REGISTER_USER_ASYNC.pending,
+                  payload: data,
+                };
+            }
+            break;
+          // case '2FA':
+          //   switch (detailState) {
+          //     case 'email':
+          //       nextDetailState = 'password';
+          //       break;
+          //     case 'password':
+          //       data = {
+          //         company,
+          //         email,
+          //         password1: password,
+          //         password2: password,
+          //       };
+          //       return {
+          //         // type: REGISTER_USER_ASYNC.pending,
+          //         payload: data,
+          //       };
+          //   }
+          //   break;
+          // case 'user':
+          //   switch (detailState) {
+          //     case 'email':
+          //       nextDetailState = 'password';
+          //       break;
+          //     case 'password':
+          //       data = {
+          //         company,
+          //         email,
+          //         password1: password,
+          //         password2: password,
+          //       };
+          //       return {
+          //         // type: REGISTER_USER_ASYNC.pending,
+          //         payload: data,
+          //       };
+          //   }
+          //   break;
+          // case 'onboard':
+          //   switch (detailState) {
+          //     case 'email':
+          //       nextDetailState = 'password';
+          //       break;
+          //     case 'password':
+          //       data = {
+          //         company,
+          //         email,
+          //         password1: password,
+          //         password2: password,
+          //       };
+          //       return {
+          //         // type: REGISTER_USER_ASYNC.pending,
+          //         payload: data,
+          //       };
+          //   }
+          //   break;
+          default:
+            nextMainState = 'company';
+            nextDetailState = 'company';
+        }
+      }
+  }
+  return {
+    type: UPDATE_AUTH_FORM_STATE,
+    payload: {
+      detailState: nextDetailState,
+      mainState: nextMainState,
+    },
+  };
+}
+
 function* appLoad() {
   try {
     Rehive.initializeSDK();

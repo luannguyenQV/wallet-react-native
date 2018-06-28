@@ -88,6 +88,8 @@ export default (state = INITIAL_STATE, action) => {
         token: action.payload,
         loading: false,
         appLoading: true,
+        pin: '',
+        fingerprint: false,
       };
     case LOGIN_USER_ASYNC.error:
       return {
@@ -112,6 +114,8 @@ export default (state = INITIAL_STATE, action) => {
         token: action.payload,
         loading: false,
         appLoading: false,
+        pin: '',
+        fingerprint: false,
       };
     case REGISTER_USER_ASYNC.error:
       return {

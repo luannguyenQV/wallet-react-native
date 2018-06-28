@@ -4,8 +4,6 @@
 This file contains all the TYPE declarations and ACTION functions 
 that relate to the auth flows
 */
-
-import clientConfig from './../../config/client';
 import { authValidation } from './../../util/validation';
 import { createAsyncTypes } from './../store/Utilities';
 
@@ -55,7 +53,7 @@ export const LOGIN_USER_ASYNC = createAsyncTypes('login_user');
 export const REGISTER_USER_ASYNC = createAsyncTypes('register_user');
 export const VALIDATE_COMPANY_ASYNC = createAsyncTypes('validate_company');
 export const UPDATE_AUTH_FORM_STATE = 'update_auth_form_state';
-export const nextAuthFormState = (props, nextFormState) => {
+export const nextAuthFormState = (props, nextFormState, companyConfig) => {
   const { mainState, detailState, company, password, email } = props;
 
   let nextMainState = mainState;

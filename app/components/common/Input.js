@@ -57,6 +57,7 @@ class Input extends Component {
       changeCountryCode,
       inputError,
       autoCorrect,
+      multiline,
     } = this.props;
 
     const {
@@ -126,7 +127,7 @@ class Input extends Component {
           onSubmitEditing={onSubmitEditing}
           autoFocus={autoFocus}
           blurOnSubmit={false}
-          // multiline
+          multiline={multiline}
         />
         {type === 'password' ? (
           <View>

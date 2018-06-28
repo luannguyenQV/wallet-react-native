@@ -9,7 +9,7 @@ import { CodeInput, PopUpGeneral } from './common';
 
 class PinModal extends Component {
   state = { contentText: '', errorText: '' };
-  componentDidMount = () => {
+  componentDidMount() {
     const { pin, fingerprint, onSuccess } = this.props;
 
     // let compatible = await this.checkDeviceForHardware();
@@ -36,7 +36,7 @@ class PinModal extends Component {
     }
 
     this.setState({ errorText, contentText });
-  };
+  }
 
   checkDeviceForHardware = async () => {
     let compatible = await Expo.Fingerprint.hasHardwareAsync();
