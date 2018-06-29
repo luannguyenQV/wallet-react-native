@@ -1,4 +1,11 @@
-import { all, call, put, takeEvery, take } from 'redux-saga/effects';
+import {
+  all,
+  call,
+  put,
+  takeEvery,
+  take,
+  takeLatest,
+} from 'redux-saga/effects';
 
 import { LOGOUT_USER_ASYNC } from './../actions/AuthActions';
 

@@ -1,7 +1,5 @@
 import { createStackNavigator } from 'react-navigation';
 
-import AuthScreen from './../screens/auth/authScreen';
-
 import Home from './drawerNavigator';
 
 import Wallets from '../screens/main/walletsScreen';

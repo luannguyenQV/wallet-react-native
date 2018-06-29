@@ -15,11 +15,11 @@ import {
   SET_PIN,
   RESET_PIN,
   ACTIVATE_FINGERPRINT,
+  INIT,
 } from './../actions/AuthActions';
 import { HIDE_MODAL } from './../actions/UserActions';
 
 const INITIAL_STATE = {
-  textFooterRight: '',
   mainState: '',
   detailState: '',
   first_name: '',
@@ -52,6 +52,19 @@ export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case PERSIST_REHYDRATE:
       return action.payload.auth || [];
+
+    case INIT.pending:
+      return {
+        ...state,
+        appLoading: true,
+      };
+    case INIT.success:
+    case INIT.fail:
+      return {
+        ...state,
+        appLoading: false,
+      };
+
     case AUTH_FIELD_CHANGED:
       return {
         ...state,

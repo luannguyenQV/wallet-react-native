@@ -1,18 +1,16 @@
 import Rehive from 'rehive';
-import { store } from './../redux/store';
 import * as companyConfig from './../config/company_config.json';
 import defaultCompanyConfig from './../config/default_company_config.json';
 
 // SDK initialization
 export let r;
-export const initializeSDK = () => {
-  const token = store.getState().auth.token;
-  if (token) {
-    r = new Rehive({ apiVersion: 3, apiToken: token });
-  } else {
-    r = new Rehive({ apiVersion: 3 });
-  }
+export const initWithoutToken = () => {
+  r = new Rehive({ apiVersion: 3 });
 };
+export const initWithToken = token => {
+  r = new Rehive({ apiVersion: 3, apiToken: token });
+};
+export const verifyToken = token => r.auth.tokens.verify(token);
 
 /* AUTHENTICATION */
 export const login = data =>

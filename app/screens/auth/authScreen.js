@@ -13,7 +13,6 @@ import {
 import * as Animatable from 'react-native-animatable';
 import { connect } from 'react-redux';
 import {
-  initialLoad,
   authFieldChange,
   nextAuthFormState,
   previousAuthFormState,
@@ -39,12 +38,6 @@ UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
 
 class AuthScreen extends Component {
-  componentDidMount() {
-    initializeSDK();
-    this.props.initialLoad(this.props);
-    // this.onAuthComplete(this.props);
-  }
-
   changeCountryCode = (code, cca2) => {
     this.setState({
       countryCode: '+' + code,
@@ -448,7 +441,6 @@ const mapStateToProps = ({ auth, user }) => {
 
 export default connect(mapStateToProps, {
   authFieldChange,
-  initialLoad,
   nextAuthFormState,
   previousAuthFormState,
   resetPassword,

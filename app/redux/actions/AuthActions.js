@@ -7,6 +7,13 @@ that relate to the auth flows
 import { authValidation } from './../../util/validation';
 import { createAsyncTypes } from './../store/Utilities';
 
+export const INIT = createAsyncTypes('init');
+export const init = () => {
+  return {
+    type: INIT.pending,
+  };
+};
+
 export const APP_LOAD_START = 'APP_LOAD_START';
 export const APP_LOAD_FINISH = 'APP_LOAD_FINISH';
 export const initialLoad = props => async dispatch => {
