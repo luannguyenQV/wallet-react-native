@@ -8,6 +8,7 @@ import {
   Keyboard,
   UIManager,
   LayoutManager,
+  Text,
   Dimensions,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
@@ -19,8 +20,9 @@ import {
   resetPassword,
   resetAuth,
   hideModal,
+  pinSuccess,
+  pinFail,
 } from '../../redux/actions';
-import { initializeSDK } from './../../util/rehive';
 
 import Colors from './../../config/colors';
 import {
@@ -30,6 +32,7 @@ import {
   Spinner,
   PopUpGeneral,
   Slides,
+  CodeInput,
 } from './../../components/common';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -38,13 +41,6 @@ UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
 
 class AuthScreen extends Component {
-  changeCountryCode = (code, cca2) => {
-    this.setState({
-      countryCode: '+' + code,
-      // countryName: cca2,
-    });
-  };
-
   renderMainContainer() {
     const {
       loading,
@@ -94,6 +90,10 @@ class AuthScreen extends Component {
           textFooterRight = 'Register';
         }
         break;
+      case 'pin':
+        iconHeaderLeft = '';
+        textFooterRight = '';
+        break;
       default:
     }
 
@@ -120,7 +120,13 @@ class AuthScreen extends Component {
       imageContainer,
       image,
     } = styles;
-    const { mainState, nextAuthFormState, company_config } = this.props;
+    const {
+      mainState,
+      detailState,
+      nextAuthFormState,
+      company_config,
+      pinError,
+    } = this.props;
     // console.log(company_config);
 
     const slides = company_config ? company_config.sliders.landing : null;
@@ -166,10 +172,57 @@ class AuthScreen extends Component {
             </View>
           </View>
         );
-      default:
+      case 'register':
+      case 'login':
         return <View style={viewStyleInput}>{this.renderInput()}</View>;
+      case 'pin':
+        switch (detailState) {
+          case 'pin':
+            return (
+              <View>
+                <Text>Enter pin</Text>
+                <Text>{pinError}</Text>
+                <CodeInput
+                  ref={component => (this._pinInput = component)}
+                  secureTextEntry
+                  activeColor="gray"
+                  autoFocus
+                  inactiveColor="lightgray"
+                  className="border-b"
+                  codeLength={4}
+                  space={7}
+                  size={30}
+                  inputPosition="center"
+                  containerStyle={{ marginTop: 0, paddingBottom: 24 }}
+                  onFulfill={code => this._onInputPinComplete(code)}
+                />
+              </View>
+            );
+          case 'fingerprint':
+            this._scanFingerprint();
+            return <Text>Please scan fingerprint</Text>;
+        }
     }
   }
+
+  _onInputPinComplete(code) {
+    const { pin } = this.props;
+    if (pin === code) {
+      this.props.pinSuccess();
+    } else {
+      this._pinInput.clear();
+      this.props.pinFail('Incorrect pin, please try again');
+    }
+  }
+
+  _scanFingerprint = async () => {
+    let result = await Expo.Fingerprint.authenticateAsync('Scan your finger.');
+    if (result.success) {
+      this.props.pinSuccess();
+    } else {
+      this.props.pinFail('Unable to authenticate with fingerprint');
+    }
+  };
 
   renderInput() {
     const {
@@ -241,35 +294,20 @@ class AuthScreen extends Component {
         );
       case 'password':
         return (
-          <View>
-            <Input
-              key="password"
-              type="password"
-              placeholder="Password"
-              label="Password"
-              value={password}
-              inputError={passwordError}
-              // autoFocus
-              onChangeText={value =>
-                this.props.authFieldChange({ prop: 'password', value })
-              }
-              returnKeyType="done"
-              onSubmitEditing={() =>
-                this.props.nextAuthFormState(this.props, '')
-              }
-            />
-            {/* <Button
-              label="Forgot password?"
-              type="text"
-              color="primaryContrast"
-              // reference={f => {
-              //   this.login = input;
-              // }}
-              // onPress={() =>
-              //   this.props.nextAuthFormState(this.props, 'forgotPassword')
-              // }
-            /> */}
-          </View>
+          <Input
+            key="password"
+            type="password"
+            placeholder="Password"
+            label="Password"
+            value={password}
+            inputError={passwordError}
+            // autoFocus
+            onChangeText={value =>
+              this.props.authFieldChange({ prop: 'password', value })
+            }
+            returnKeyType="done"
+            onSubmitEditing={() => this.props.nextAuthFormState(this.props, '')}
+          />
         );
       default:
         return <View />;
@@ -326,10 +364,7 @@ class AuthScreen extends Component {
         keyboardShouldPersistTaps={'never'}
         style={viewStyleContainer}
         behavior={'padding'}>
-        <TouchableWithoutFeedback
-          // style={{ flex: 1 }}
-          onPress={Keyboard.dismiss}
-          accessible={false}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           {loading ? <Spinner size="large" /> : this.renderMainContainer()}
         </TouchableWithoutFeedback>
         {this.renderModal()}
@@ -344,37 +379,22 @@ const styles = {
     backgroundColor: Colors.primary,
     paddingTop: Expo.Constants.statusBarHeight,
     justifyContent: 'center',
-
-    // paddingHorizontal: 8,
   },
   buttonsContainer: {
     width: '100%',
-    // flex: 1,
-    // borderRadius: 2,
-    // paddingBottom: 10,
     padding: 16,
   },
   viewStyleLanding: {
-    // paddingTop: 80,
-    // flexDirection: 'column',
-    // alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     flex: 1,
-    // flex: 3,
-    // backgroundColor: 'white',
   },
   viewStyleInput: {
     width: '100%',
     justifyContent: 'center',
     flex: 1,
     padding: 16,
-    // flex: 1,
-    // backgroundColor: Colors.onPrimary,
-    // borderRadius: 2,
-    // paddingBottom: 16,
   },
   imageContainer: {
-    // paddingBottom: 50,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -388,7 +408,6 @@ const styles = {
   },
 
   textContainerTerms: {
-    // backgroundColor: Colors.lightgray,
     paddingHorizontal: 25,
     height: 80,
     justifyContent: 'center',
@@ -417,6 +436,9 @@ const mapStateToProps = ({ auth, user }) => {
     appLoading,
     modalVisible,
     modalType,
+    pin,
+    fingerprint,
+    pinError,
   } = auth;
   const { company_config } = user;
   return {
@@ -436,6 +458,9 @@ const mapStateToProps = ({ auth, user }) => {
     modalVisible,
     modalType,
     company_config,
+    pin,
+    fingerprint,
+    pinError,
   };
 };
 
@@ -446,4 +471,6 @@ export default connect(mapStateToProps, {
   resetPassword,
   resetAuth,
   hideModal,
+  pinSuccess,
+  pinFail,
 })(AuthScreen);

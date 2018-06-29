@@ -285,10 +285,18 @@ export const resetAuth = () => {
   };
 };
 
-export const CHECK_PIN = 'check_pin';
-export const checkPin = () => {
+export const PIN_SUCCESS = 'pin_success';
+export const pinSuccess = () => {
   return {
-    type: DEACTIVATE_FINGERPRINT,
+    type: PIN_SUCCESS,
+  };
+};
+
+export const PIN_FAIL = 'pin_fail';
+export const pinFail = error => {
+  return {
+    type: PIN_FAIL,
+    payload: error,
   };
 };
 

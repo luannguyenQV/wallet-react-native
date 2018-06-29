@@ -117,15 +117,19 @@ class PinScreen extends Component {
     }
   }
 
-  activateFingerprint = () => {
+  activateFingerprint = async () => {
     if (Platform.OS !== 'ios') {
       this.setState({
         modalVisible: true,
         modalType: 'setFingerprint',
       });
     }
-    if (Expo.Fingerprint.authenticateAsync()) {
+    if (await Expo.Fingerprint.authenticateAsync()) {
       this.props.activateFingerprint();
+      this.setState({
+        modalVisible: true,
+        modalType: 'confirmFingerprint',
+      });
     }
   };
 
@@ -143,8 +147,12 @@ class PinScreen extends Component {
     switch (modalType) {
       case 'setFingerprint':
         contentText = 'Please scan your fingerprint to activate this feature';
-        action = () =>
+        action = () => {
+          if (Platform.os !== 'ios') {
+            Expo.Fingerprint.cancelAuthenticate();
+          }
           this.setState({ modalVisible: false, modalType: 'none' });
+        };
         break;
       case 'confirmFingerprint':
         contentText = 'Fingerprint has been set';

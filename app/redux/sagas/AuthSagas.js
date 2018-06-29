@@ -12,6 +12,7 @@ import {
   RESET_AUTH,
   NEXT_AUTH_FORM_STATE,
   INIT,
+  PIN_SUCCESS,
 } from './../actions/AuthActions';
 
 import { FETCH_DATA_ASYNC } from './../actions/UserActions';
@@ -21,7 +22,7 @@ import * as Rehive from './../../util/rehive';
 import NavigationService from './../../util/navigation';
 import { authValidation } from './../../util/validation';
 
-import { getToken, getCompany } from './selectors';
+import { getToken, getCompany, getAuth } from './selectors';
 
 function* init() {
   let company_config;
@@ -36,23 +37,35 @@ function* init() {
           if (token) {
             Rehive.verifyToken(token);
             Rehive.initWithToken(token);
-            // go to auth for pin/2FA/announcements when done
+            const { pin, fingerprint } = yield select(getAuth);
+            console.log(pin, fingerprint);
+            if (pin || fingerprint) {
+              if (fingerprint) {
+                yield call(goToAuth, 'pin', 'fingerprint');
+              } else {
+                yield call(goToAuth, 'pin', 'pin');
+              }
+              yield take(PIN_SUCCESS);
+            }
             yield call(appLoad);
+
+            // go to auth for pin/2FA/announcements when done
           } else {
             yield call(goToAuth, 'landing', 'landing');
           }
         } catch (error) {
+          console.log('company error', error);
           yield call(goToAuth, 'landing', 'landing');
         }
       } else {
         yield call(goToAuth, 'company', 'company');
       }
     } catch (error) {
+      console.log('company error', error);
       yield call(goToAuth, 'company', 'company');
-      // console.log(error);
     }
   } catch (error) {
-    console.log(error);
+    console.log('init error:', error);
     yield put({ type: INIT.error, error });
   }
 }

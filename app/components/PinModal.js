@@ -50,8 +50,8 @@ class PinModal extends Component {
 
   scanFingerprint = async () => {
     let result = await Expo.Fingerprint.authenticateAsync('Scan your finger.');
-    console.log('Scan Result:', result);
     if (result.success) {
+      console.log('success');
       this.props.onSuccess();
     } else {
       this.setState({ errorText: 'Unable to authenticate with fingerprint' });

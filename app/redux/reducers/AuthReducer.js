@@ -16,6 +16,7 @@ import {
   RESET_PIN,
   ACTIVATE_FINGERPRINT,
   INIT,
+  PIN_FAIL,
 } from './../actions/AuthActions';
 import { HIDE_MODAL } from './../actions/UserActions';
 
@@ -57,6 +58,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         appLoading: true,
+        pinError: '',
       };
     case INIT.success:
     case INIT.fail:
@@ -99,8 +101,7 @@ export default (state = INITIAL_STATE, action) => {
         mainState: '',
         detailState: '',
         token: action.payload,
-        loading: false,
-        appLoading: true,
+        loading: true,
         pin: '',
         fingerprint: false,
       };
@@ -111,7 +112,6 @@ export default (state = INITIAL_STATE, action) => {
         modalVisible: true,
         modalType: 'loginError',
         loading: false,
-        appLoading: false,
         detailState: 'email',
         mainState: 'login',
       };
@@ -120,13 +120,13 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: true,
+        password: '',
       };
     case REGISTER_USER_ASYNC.success:
       return {
         ...state,
         token: action.payload,
-        loading: false,
-        appLoading: false,
+        loading: true,
         pin: '',
         fingerprint: false,
       };
@@ -237,6 +237,11 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         pin: '',
         fingerprint: false,
+      };
+    case PIN_FAIL:
+      return {
+        ...state,
+        pinError: action.payload,
       };
 
     case APP_LOAD_START:
