@@ -16,7 +16,7 @@ import {
   SHOW_MODAL,
   HIDE_MODAL,
 } from './../actions/UserActions';
-import { LOGOUT_USER } from './../actions/AuthActions';
+import { LOGOUT_USER, SET_COMPANY } from './../actions/AuthActions';
 
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 

@@ -17,8 +17,8 @@ import {
   ACTIVATE_FINGERPRINT,
   INIT,
   PIN_FAIL,
-  LOADING_TRUE,
-  LOADING_FALSE,
+  LOADING,
+  SET_COMPANY,
 } from './../actions/AuthActions';
 import { HIDE_MODAL } from './../actions/UserActions';
 
@@ -69,15 +69,10 @@ export default (state = INITIAL_STATE, action) => {
         appLoading: false,
       };
 
-    case LOADING_TRUE:
+    case LOADING:
       return {
         ...state,
         loading: true,
-      };
-    case LOADING_FALSE:
-      return {
-        ...state,
-        loading: false,
       };
 
     case AUTH_FIELD_CHANGED:
@@ -105,12 +100,6 @@ export default (state = INITIAL_STATE, action) => {
         loading: false,
       };
 
-    case LOGIN_USER_ASYNC.pending:
-      return {
-        ...state,
-        loading: true,
-        password: '',
-      };
     case LOGIN_USER_ASYNC.success:
       return {
         ...state,
@@ -120,39 +109,6 @@ export default (state = INITIAL_STATE, action) => {
         loading: true,
         pin: '',
         fingerprint: false,
-      };
-    case LOGIN_USER_ASYNC.error:
-      return {
-        ...state,
-        token: null,
-        modalVisible: true,
-        modalType: 'loginError',
-        loading: false,
-        detailState: 'email',
-        mainState: 'login',
-      };
-
-    case REGISTER_USER_ASYNC.pending:
-      return {
-        ...state,
-        loading: true,
-        password: '',
-      };
-    case REGISTER_USER_ASYNC.success:
-      return {
-        ...state,
-        token: action.payload,
-        loading: true,
-        pin: '',
-        fingerprint: false,
-      };
-    case REGISTER_USER_ASYNC.error:
-      return {
-        ...state,
-        token: null,
-        inputError: action.payload,
-        loading: false,
-        appLoading: false,
       };
 
     case CHANGE_PASSWORD_ASYNC.pending:
@@ -177,22 +133,11 @@ export default (state = INITIAL_STATE, action) => {
         loading: false,
       };
 
-    case VALIDATE_COMPANY_ASYNC.pending:
+    case SET_COMPANY:
       return {
         ...state,
-        loading: true,
-      };
-    case VALIDATE_COMPANY_ASYNC.success:
-      return {
-        ...state,
-        company: action.payload,
-        loading: false,
-      };
-    case VALIDATE_COMPANY_ASYNC.error:
-      return {
-        ...state,
-        authError: action.payload,
-        loading: false,
+        company: action.payload.tempCompany,
+        company_config: action.payload.temp_config,
       };
 
     case RESET_PASSWORD_ASYNC.pending:

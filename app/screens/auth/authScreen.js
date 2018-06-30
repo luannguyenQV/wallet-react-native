@@ -449,8 +449,8 @@ const mapStateToProps = ({ auth, user }) => {
     fingerprint,
     pinError,
     skip,
+    company_config,
   } = auth;
-  const { company_config } = user;
   return {
     detailState,
     countryCode,

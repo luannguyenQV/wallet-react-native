@@ -82,13 +82,28 @@
           "requireDocumentAddress": true,
           "requireDocumentAdvID": true
         },
+
         "auth": {
           "identifier": "email",
-          "email": "required",
-          "mobile": "optional",
-          "firstName": true,
-          "lastName": true,
-          "country": true,
+          "email": "optional",
+          "mobile": "",
+          "terms": [
+            {
+              "id": 0,
+              "title": "Privacy Policy",
+              "link": "",
+              "description": "Click here to read more on the privacy policy"
+            },
+            {
+              "id": 1,
+              "title": "User Agreement",
+              "link": "",
+              "description": "Click here to read more on the user agreement"
+            }
+          ],
+          "first_name": true,
+          "last_name": false,
+          "country": false,
           "pin": "optional",
           "mfa": "optional"
         },
