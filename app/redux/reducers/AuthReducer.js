@@ -17,6 +17,8 @@ import {
   ACTIVATE_FINGERPRINT,
   INIT,
   PIN_FAIL,
+  LOADING_TRUE,
+  LOADING_FALSE,
 } from './../actions/AuthActions';
 import { HIDE_MODAL } from './../actions/UserActions';
 
@@ -67,11 +69,23 @@ export default (state = INITIAL_STATE, action) => {
         appLoading: false,
       };
 
+    case LOADING_TRUE:
+      return {
+        ...state,
+        loading: true,
+      };
+    case LOADING_FALSE:
+      return {
+        ...state,
+        loading: false,
+      };
+
     case AUTH_FIELD_CHANGED:
       return {
         ...state,
         [action.payload.prop]: action.payload.value,
         [action.payload.prop + 'Error']: '',
+        authError: '',
       };
     case AUTH_FIELD_ERROR:
       return {
@@ -80,11 +94,13 @@ export default (state = INITIAL_STATE, action) => {
       };
 
     case UPDATE_AUTH_FORM_STATE:
-      const { mainState, detailState } = action.payload;
+      const { mainState, detailState, authError, skip } = action.payload;
       return {
         ...state,
         mainState,
         detailState,
+        authError,
+        skip,
         password: '',
         loading: false,
       };
@@ -175,7 +191,7 @@ export default (state = INITIAL_STATE, action) => {
     case VALIDATE_COMPANY_ASYNC.error:
       return {
         ...state,
-        companyError: action.payload,
+        authError: action.payload,
         loading: false,
       };
 
@@ -194,7 +210,7 @@ export default (state = INITIAL_STATE, action) => {
     case RESET_PASSWORD_ASYNC.error:
       return {
         ...state,
-        // companyError: action.payload,
+        authError: action.payload,
         loading: false,
       };
 

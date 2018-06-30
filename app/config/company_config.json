@@ -51,6 +51,28 @@
             }
           ]
         },
+        "screens": {
+          "login": [
+            {
+              "id": "0",
+              "title": "Login 1",
+              "description": "This is your custom text for login screen 1",
+              "image": "card1"
+            },
+            {
+              "id": "1",
+              "title": "Slide 2",
+              "description": "This is your custom text for login screen 2",
+              "image": "card2"
+            },
+            {
+              "id": "2",
+              "title": "Slide 3",
+              "description": "This is your custom text for login screen 3",
+              "image": "card3"
+            }
+          ]
+        },
         "verification": {
           "requirePersonal": true,
           "requireAddress": false,
@@ -61,13 +83,14 @@
           "requireDocumentAdvID": true
         },
         "auth": {
+          "identifier": "email",
           "email": "required",
           "mobile": "optional",
-          "pin": "optional",
-          "2FA": "optional",
           "firstName": true,
           "lastName": true,
-          "country": true
+          "country": true,
+          "pin": "optional",
+          "mfa": "optional"
         },
         "pin": {
           "appLoad": true,

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TextInput, FlatList } from 'react-native';
 import Colors from './../../config/colors';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-// import CountryPicker from 'react-native-country-picker-modal';
+import CountryPicker from 'react-native-country-picker-modal';
 import { ListItem } from './ListItem';
 
 class Input extends Component {
@@ -81,7 +81,7 @@ class Input extends Component {
         style={[viewStyleInput, { paddingBottom: focused || value ? 8 : 0 }]}>
         {type === 'mobile' ? (
           <View style={viewStyleCountry}>
-            {/* <CountryPicker
+            <CountryPicker
               onChange={value => {
                 this.setState({ cca2: value.cca2 });
                 changeCountryCode(value.callingCode);
@@ -91,21 +91,6 @@ class Input extends Component {
               cca2={cca2}
               translation="eng"
               styles={{ width: 24 }}
-            /> */}
-            <TextInput
-              value={countryCode}
-              editable={false}
-              style={[
-                textStyleCode,
-                countryCode.length < 4
-                  ? {
-                      width: 35,
-                    }
-                  : {
-                      width: 50,
-                    },
-              ]}
-              underlineColorAndroid="transparent"
             />
           </View>
         ) : null}

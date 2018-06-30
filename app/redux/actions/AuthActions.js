@@ -61,133 +61,14 @@ export const REGISTER_USER_ASYNC = createAsyncTypes('register_user');
 export const VALIDATE_COMPANY_ASYNC = createAsyncTypes('validate_company');
 export const UPDATE_AUTH_FORM_STATE = 'update_auth_form_state';
 export const NEXT_AUTH_FORM_STATE = 'next_auth_form_state';
-export const nextAuthFormState = (props, nextFormState) => {
-  // const { mainState, detailState, company, password, email } = props;
-
+export const AUTH_COMPLETE = 'auth_complete';
+export const LOADING_TRUE = 'loading_true';
+export const LOADING_FALSE = 'loading_false';
+export const nextAuthFormState = nextFormState => {
   return {
     type: NEXT_AUTH_FORM_STATE,
-    payload: { props, nextFormState },
+    payload: { nextFormState },
   };
-
-  // let nextMainState = mainState;
-  // let nextDetailState = '';
-  // let data = {};
-
-  // if (nextFormState) {
-  //   nextMainState = nextFormState;
-  //   nextDetailState = 'email';
-  // } else {
-  //   let error = authValidation(props);
-  //   if (error) {
-  //     return {
-  //       type: AUTH_FIELD_ERROR,
-  //       payload: { prop: detailState, error },
-  //     };
-  //   } else {
-  //     switch (mainState) {
-  //       case 'company':
-  //         return {
-  //           type: VALIDATE_COMPANY_ASYNC.pending,
-  //           payload: company,
-  //         };
-  //       case 'login':
-  //         switch (detailState) {
-  //           case 'email':
-  //             nextDetailState = 'password';
-  //             break;
-  //           case 'password':
-  //             data = { company, user: email, password };
-  //             return {
-  //               type: LOGIN_USER_ASYNC.pending,
-  //               payload: data,
-  //             };
-  //         }
-  //         break;
-  //       case 'register':
-  //         switch (detailState) {
-  //           case 'email':
-  //             nextDetailState = 'password';
-  //             break;
-  //           case 'password':
-  //             data = {
-  //               company,
-  //               email,
-  //               password1: password,
-  //               password2: password,
-  //             };
-  //             return {
-  //               type: REGISTER_USER_ASYNC.pending,
-  //               payload: data,
-  //             };
-  //         }
-  //         break;
-  //       // case '2FA':
-  //       //   switch (detailState) {
-  //       //     case 'email':
-  //       //       nextDetailState = 'password';
-  //       //       break;
-  //       //     case 'password':
-  //       //       data = {
-  //       //         company,
-  //       //         email,
-  //       //         password1: password,
-  //       //         password2: password,
-  //       //       };
-  //       //       return {
-  //       //         // type: REGISTER_USER_ASYNC.pending,
-  //       //         payload: data,
-  //       //       };
-  //       //   }
-  //       //   break;
-  //       // case 'user':
-  //       //   switch (detailState) {
-  //       //     case 'email':
-  //       //       nextDetailState = 'password';
-  //       //       break;
-  //       //     case 'password':
-  //       //       data = {
-  //       //         company,
-  //       //         email,
-  //       //         password1: password,
-  //       //         password2: password,
-  //       //       };
-  //       //       return {
-  //       //         // type: REGISTER_USER_ASYNC.pending,
-  //       //         payload: data,
-  //       //       };
-  //       //   }
-  //       //   break;
-  //       // case 'onboard':
-  //       //   switch (detailState) {
-  //       //     case 'email':
-  //       //       nextDetailState = 'password';
-  //       //       break;
-  //       //     case 'password':
-  //       //       data = {
-  //       //         company,
-  //       //         email,
-  //       //         password1: password,
-  //       //         password2: password,
-  //       //       };
-  //       //       return {
-  //       //         // type: REGISTER_USER_ASYNC.pending,
-  //       //         payload: data,
-  //       //       };
-  //       //   }
-  //       //   break;
-  //       default:
-  //         nextMainState = 'company';
-  //         nextDetailState = 'company';
-  //     }
-  //   }
-  // }
-  // return {
-  //   type: UPDATE_AUTH_FORM_STATE,
-  //   payload: {
-  //     detailState: nextDetailState,
-  //     mainState: nextMainState,
-  //   },
-  // };
 };
 export const previousAuthFormState = props => {
   const { mainState, detailState } = props;

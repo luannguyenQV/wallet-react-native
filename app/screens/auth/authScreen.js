@@ -51,6 +51,7 @@ class AuthScreen extends Component {
       company,
       email,
       resetPassword,
+      skip,
     } = this.props;
 
     let iconHeaderLeft = 'arrow-back';
@@ -63,7 +64,7 @@ class AuthScreen extends Component {
 
     let textFooterRight = 'Next';
     let onPressFooterRight = () => {
-      nextAuthFormState(this.props, '');
+      nextAuthFormState('');
     };
 
     // set text / icons
@@ -80,7 +81,7 @@ class AuthScreen extends Component {
         break;
       case 'login':
         textHeaderRight = 'Forgot?';
-        onPressHeaderRight = () => nextAuthFormState(this.props, 'forgot');
+        onPressHeaderRight = () => nextAuthFormState('forgot');
         if (detailState === 'password') {
           textFooterRight = 'Log in';
         }
@@ -95,6 +96,10 @@ class AuthScreen extends Component {
         textFooterRight = '';
         break;
       default:
+        if (skip) {
+          textHeaderRight = 'Skip';
+          onPressHeaderRight = () => nextAuthFormState();
+        }
     }
 
     return (
@@ -155,7 +160,7 @@ class AuthScreen extends Component {
                 reference={input => {
                   this.login = input;
                 }}
-                onPress={() => nextAuthFormState(this.props, 'login')}
+                onPress={() => nextAuthFormState('login')}
                 animation="fadeInUpBig"
               />
               <Button
@@ -166,7 +171,7 @@ class AuthScreen extends Component {
                 reference={input => {
                   this.login = input;
                 }}
-                onPress={() => nextAuthFormState(this.props, 'register')}
+                onPress={() => nextAuthFormState('register')}
                 animation="fadeInUpBig"
               />
             </View>
@@ -174,6 +179,9 @@ class AuthScreen extends Component {
         );
       case 'register':
       case 'login':
+      case 'company':
+      case 'forgot':
+      case 'mfa':
         return <View style={viewStyleInput}>{this.renderInput()}</View>;
       case 'pin':
         switch (detailState) {
@@ -227,15 +235,14 @@ class AuthScreen extends Component {
   renderInput() {
     const {
       detailState,
-      inputError,
       countryCode,
+      authError,
       company,
       tempCompany,
       email,
+      mobile,
       password,
-      companyError,
       emailError,
-      passwordError,
     } = this.props;
 
     switch (detailState) {
@@ -245,14 +252,14 @@ class AuthScreen extends Component {
             key="company"
             placeholder="e.g. Rehive"
             label="Company"
-            inputError={companyError}
+            inputError={authError}
             value={tempCompany}
             onChangeText={value =>
               this.props.authFieldChange({ prop: 'tempCompany', value })
             }
             returnKeyType="next"
             // autoFocus
-            onSubmitEditing={() => this.props.nextAuthFormState(this.props, '')}
+            onSubmitEditing={() => this.props.nextAuthFormState('')}
           />
         );
       case 'email':
@@ -262,14 +269,14 @@ class AuthScreen extends Component {
             placeholder="e.g. user@gmail.com"
             label="Email"
             value={email}
-            inputError={emailError}
+            inputError={authError}
             keyboardType="email-address"
             onChangeText={value =>
               this.props.authFieldChange({ prop: 'email', value })
             }
             returnKeyType="next"
             // autoFocus
-            onSubmitEditing={() => this.props.nextAuthFormState(this.props, '')}
+            onSubmitEditing={() => this.props.nextAuthFormState('')}
           />
         );
       case 'mobile':
@@ -281,7 +288,7 @@ class AuthScreen extends Component {
             placeholder="12345678"
             label="Mobile"
             value={mobile}
-            inputError={mobileError}
+            inputError={authError}
             keyboardType="numeric"
             onChangeText={value =>
               this.props.authFieldChange({ prop: 'mobile', value })
@@ -289,7 +296,7 @@ class AuthScreen extends Component {
             returnKeyType="next"
             changeCountryCode={this.changeCountryCode}
             countryCode={countryCode}
-            onSubmitEditing={() => this.props.nextAuthFormState(this.props, '')}
+            onSubmitEditing={() => this.props.nextAuthFormState('')}
           />
         );
       case 'password':
@@ -300,13 +307,13 @@ class AuthScreen extends Component {
             placeholder="Password"
             label="Password"
             value={password}
-            inputError={passwordError}
+            inputError={authError}
             // autoFocus
             onChangeText={value =>
               this.props.authFieldChange({ prop: 'password', value })
             }
             returnKeyType="done"
-            onSubmitEditing={() => this.props.nextAuthFormState(this.props, '')}
+            onSubmitEditing={() => this.props.nextAuthFormState('')}
           />
         );
       default:
@@ -426,9 +433,11 @@ const mapStateToProps = ({ auth, user }) => {
     mainState,
     tempCompany,
     company,
-    companyError,
+    authError,
     email,
     emailError,
+    mobile,
+    mobileError,
     password,
     passwordError,
     loading,
@@ -439,6 +448,7 @@ const mapStateToProps = ({ auth, user }) => {
     pin,
     fingerprint,
     pinError,
+    skip,
   } = auth;
   const { company_config } = user;
   return {
@@ -447,9 +457,11 @@ const mapStateToProps = ({ auth, user }) => {
     mainState,
     tempCompany,
     company,
-    companyError,
+    authError,
     email,
     emailError,
+    mobile,
+    mobileError,
     password,
     passwordError,
     loading,
@@ -461,6 +473,7 @@ const mapStateToProps = ({ auth, user }) => {
     pin,
     fingerprint,
     pinError,
+    skip,
   };
 };
 
