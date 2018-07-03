@@ -13,7 +13,7 @@ import Header from './../../components/header';
 // import Wallet from './../../components/wallet';
 import { Output, PopUpGeneral } from '../../components/common';
 import { standardizeString, performDivisibility } from './../../util/general';
-import HeaderWallet from './../../components/headerWallet';
+import HeaderWallet from './../../components/HeaderWallet';
 import TransactionList from './../../components/TransactionList';
 import CardList from './../../components/CardList';
 
