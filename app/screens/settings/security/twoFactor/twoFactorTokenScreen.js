@@ -35,37 +35,37 @@ class TwoFactorTokenScreen extends Component {
     };
   }
 
-  async componentWillMount() {
-    let responseJson = await AuthService.tokenAuthGet();
-    if (responseJson.status === 'success') {
-      const tokenResponse = responseJson.data;
-      this.setState({
-        otpauth_url: tokenResponse.otpauth_url,
-        issuer: tokenResponse.issuer,
-        account: tokenResponse.account,
-        key: tokenResponse.key,
-        imageURI:
-          'https://chart.googleapis.com/chart?cht=qr&chs=200x200&chld=L|0&chl=' +
-          tokenResponse.otpauth_url,
-      });
-    } else {
-      let responseJson = await AuthService.tokenAuthPost({});
-      if (responseJson.status === 'success') {
-        const tokenResponse = responseJson.data;
-        this.setState({
-          otpauth_url: tokenResponse.otpauth_url,
-          issuer: tokenResponse.issuer,
-          account: tokenResponse.account,
-          key: tokenResponse.key,
-          imageURI:
-            'https://chart.googleapis.com/chart?cht=qr&chs=200x200&chld=L|0&chl=' +
-            tokenResponse.otpauth_url,
-        });
-      } else {
-        Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
-      }
-    }
-  }
+  // async componentDidMount() {
+  //   let responseJson = await AuthService.tokenAuthGet();
+  //   if (responseJson.status === 'success') {
+  //     const tokenResponse = responseJson.data;
+  //     this.setState({
+  //       otpauth_url: tokenResponse.otpauth_url,
+  //       issuer: tokenResponse.issuer,
+  //       account: tokenResponse.account,
+  //       key: tokenResponse.key,
+  //       imageURI:
+  //         'https://chart.googleapis.com/chart?cht=qr&chs=200x200&chld=L|0&chl=' +
+  //         tokenResponse.otpauth_url,
+  //     });
+  //   } else {
+  //     let responseJson = await AuthService.tokenAuthPost({});
+  //     if (responseJson.status === 'success') {
+  //       const tokenResponse = responseJson.data;
+  //       this.setState({
+  //         otpauth_url: tokenResponse.otpauth_url,
+  //         issuer: tokenResponse.issuer,
+  //         account: tokenResponse.account,
+  //         key: tokenResponse.key,
+  //         imageURI:
+  //           'https://chart.googleapis.com/chart?cht=qr&chs=200x200&chld=L|0&chl=' +
+  //           tokenResponse.otpauth_url,
+  //       });
+  //     } else {
+  //       Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
+  //     }
+  //   }
+  // }
 
   saveToken = async () => {
     let responseJson = await AuthService.authVerify({

@@ -1,5 +1,5 @@
 import Rehive from 'rehive';
-import * as companyConfig from './../config/company_config.json';
+import * as companyConfig from './../config/company_configs.json';
 import defaultCompanyConfig from './../config/default_company_config.json';
 
 // SDK initialization
@@ -10,7 +10,7 @@ export const initWithoutToken = () => {
 export const initWithToken = token => {
   r = new Rehive({ apiVersion: 3, apiToken: token });
 };
-export const verifyToken = token => r.auth.tokens.verify(token);
+export const verifyToken = token => r.auth.tokens.verify({ token });
 
 /* AUTHENTICATION */
 export const login = data =>
@@ -40,6 +40,8 @@ export const submitOTP = otp => r.auth.mobile.verify({ otp });
 
 /* MULTI FACTOR AUTHENTICATION */
 export const getMFA = () => r.auth.mfa.status.get();
+
+export const getMFA_SMS = () => r.auth.mfa.sms.get();
 
 export const enableAuthSMS = mobile_number =>
   r.auth.mfa.sms.enable({ mobile_number });

@@ -111,6 +111,7 @@ class WalletsScreen extends Component {
           buttons={buttons}
           navigation={navigation}
           showClose
+          colors={this.props.company_config.colors}
         />
         <TransactionList
           // updateBalance={this.getBalanceInfo}
@@ -172,7 +173,7 @@ class WalletsScreen extends Component {
 
 const styles = {
   viewStyleContainer: {
-    paddingLeft: 16,
+    paddingLeft: 8,
   },
   viewStyleDetailCard: {
     flex: 1,
@@ -195,15 +196,17 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ accounts, user }) => {
+const mapStateToProps = ({ accounts, user, auth }) => {
   const { wallets, loading_accounts, tempWallet, showWallet } = accounts;
   const { company_bank_account } = user;
+  const { company_config } = auth;
   return {
     wallets,
     loading_accounts,
     tempWallet,
     showWallet,
     company_bank_account,
+    company_config,
   };
 };
 

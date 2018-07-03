@@ -10,7 +10,13 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class HeaderCurrency extends Component {
   render() {
-    const { detail, showAccountLabel, showClose, closeWallet } = this.props;
+    const {
+      detail,
+      showAccountLabel,
+      showClose,
+      closeWallet,
+      colors,
+    } = this.props;
     const { currency, account_name } = this.props.wallet;
     const {
       viewStyleContainer,
@@ -42,9 +48,13 @@ class HeaderCurrency extends Component {
             />
           </View>
         ) : null}
-        <Text style={textStyleCode}>{currency.currency.code}</Text>
+        <Text style={[textStyleCode, { color: colors.primaryContrast }]}>
+          {currency.currency.code}
+        </Text>
         {showAccountLabel ? (
-          <Text style={textStyleAccount}>{account_name}</Text>
+          <Text style={[textStyleAccount, { color: colors.primaryContrast }]}>
+            {account_name}
+          </Text>
         ) : null}
         {/* {showClose ? (
           <HeaderButton
@@ -59,7 +69,9 @@ class HeaderCurrency extends Component {
         ) : null} */}
         <View
           style={[viewStyleCurrency, detail ? null : { paddingBottom: 16 }]}>
-          <Text style={textStyleSymbol}>{currency.currency.symbol}</Text>
+          <Text style={[textStyleSymbol, { color: colors.focus }]}>
+            {currency.currency.symbol}
+          </Text>
           <Text style={this.getAmountTextStyle(currency)}>
             {' '}
             {performDivisibility(
@@ -73,6 +85,7 @@ class HeaderCurrency extends Component {
   }
 
   getAmountTextStyle(currency) {
+    const { colors } = this.props;
     let fontSize = 42;
     let length =
       currency.available_balance.toString().length +
@@ -84,7 +97,7 @@ class HeaderCurrency extends Component {
     } else if (length > 8) {
       fontSize = 38;
     }
-    return [styles.textStyleAmount, { fontSize }];
+    return [styles.textStyleAmount, { fontSize, color: colors.focus }];
   }
 }
 
@@ -114,12 +127,10 @@ const styles = {
     paddingBottom: 8,
   },
   textStyleSymbol: {
-    color: Colors.focus,
     fontSize: 42,
     fontWeight: 'bold',
   },
   textStyleAmount: {
-    color: Colors.focus,
     fontSize: 42,
     // paddingHorizontal: 2,
     // flexWrap: 'no-wrap',

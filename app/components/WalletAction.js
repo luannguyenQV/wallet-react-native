@@ -5,7 +5,7 @@ import { CustomIcon } from './../components/common';
 
 class WalletAction extends Component {
   renderButton() {
-    const { type } = this.props;
+    const { type, color } = this.props;
     const { viewStyleContainer, iconStyle, textStyleLabel } = styles;
     let source = '';
     let label = '';
@@ -36,14 +36,14 @@ class WalletAction extends Component {
     }
     return (
       <View style={viewStyleContainer}>
-        <CustomIcon name={type} size={48} color="tertiary" />
+        <CustomIcon name={type} size={48} color={color} />
         {/* <Image
           source={source}
           resizeMode="contain"
           color={Colors.onPrimary}
           style={iconStyle}
         /> */}
-        <Text style={textStyleLabel}>{label}</Text>
+        <Text style={[textStyleLabel, { color }]}>{label}</Text>
       </View>
     );
   }

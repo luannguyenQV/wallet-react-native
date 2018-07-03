@@ -63,6 +63,8 @@ export const UPDATE_AUTH_FORM_STATE = 'update_auth_form_state';
 export const NEXT_AUTH_FORM_STATE = 'next_auth_form_state';
 export const AUTH_COMPLETE = 'auth_complete';
 export const LOADING = 'loading';
+export const POST_LOADING = 'post_loading';
+export const POST_NOT_LOADING = 'post_not_loading';
 export const SET_COMPANY = 'set_company';
 export const nextAuthFormState = nextFormState => {
   return {

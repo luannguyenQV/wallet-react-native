@@ -16,6 +16,10 @@ import {
   AUTH_COMPLETE,
   LOADING,
   SET_COMPANY,
+  ACTIVATE_FINGERPRINT,
+  SET_PIN,
+  POST_LOADING,
+  POST_NOT_LOADING,
 } from './../actions/AuthActions';
 
 import { FETCH_DATA_ASYNC } from './../actions/UserActions';
@@ -32,6 +36,7 @@ import default_config from './../../config/default_company_config';
 import { getToken, getCompany, getAuth, getUser } from './selectors';
 
 function* init() {
+  console.log('init');
   let company_config;
   try {
     Rehive.initWithoutToken();
@@ -55,13 +60,12 @@ function* init() {
               yield take(PIN_SUCCESS);
             }
             yield call(appLoad);
-
             // go to auth for pin/2FA/announcements when done
           } else {
             yield call(goToAuth, 'landing', 'landing');
           }
         } catch (error) {
-          console.log('company error', error);
+          console.log('token error', error);
           yield call(goToAuth, 'landing', 'landing');
         }
       } else {
@@ -85,7 +89,9 @@ function* goToAuth(mainState, detailState) {
       payload: { mainState, detailState },
     });
     yield put({ type: INIT.success });
-    yield call(authFlow);
+    if (mainState !== 'pin') {
+      yield call(authFlow);
+    }
   } catch (error) {
     console.log(error);
   }
@@ -94,6 +100,7 @@ function* goToAuth(mainState, detailState) {
 function* appLoad() {
   try {
     yield all([
+      put({ type: POST_LOADING }),
       put({ type: FETCH_ACCOUNTS_ASYNC.pending }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'profile' }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'mobile' }),
@@ -196,8 +203,10 @@ function* authFlow() {
                     yield put({ type: LOADING });
                     ({ user, token } = yield call(Rehive.login, data));
                     yield call(Rehive.initWithToken, token);
-                    yield call(postAuthFlow);
-
+                    if (yield call(postAuthFlow)) {
+                      yield put({ type: AUTH_COMPLETE, payload: token });
+                      return;
+                    }
                     break;
                   } catch (error) {
                     authError = error.message;
@@ -237,9 +246,10 @@ function* authFlow() {
                   yield put({ type: LOADING });
                   ({ user, token } = yield call(Rehive.register, data));
                   yield call(Rehive.initWithToken, token);
-                  yield call(postAuthFlow);
-
-                  break;
+                  if (yield call(postAuthFlow)) {
+                    yield put({ type: AUTH_COMPLETE, payload: token });
+                    return;
+                  }
                 } catch (error) {
                   authError = error.message;
                   nextDetailState = company_config.auth.identifier;
@@ -288,6 +298,7 @@ function* postAuthFlow() {
       let nextDetailState = detailState;
       let authError = '';
       let skip = false;
+      yield put({ type: POST_LOADING });
 
       // Decide which state to transition to next
       switch (mainState) {
@@ -305,6 +316,7 @@ function* postAuthFlow() {
           }
           break;
         case 'mfa':
+          yield put({ type: POST_NOT_LOADING });
           switch (detailState) {
             case 'token':
               // TODO: wait for next auth state action here
@@ -332,9 +344,8 @@ function* postAuthFlow() {
                   item => item.verified === true,
                 ).length === 0
               ) {
+                yield put({ type: POST_NOT_LOADING });
                 yield take(NEXT_AUTH_FORM_STATE);
-                // validate mobile
-                // take otp etc etc
               } else {
                 nextDetailState = 'email';
                 if (company_config.auth.email === 'optional') {
@@ -349,6 +360,7 @@ function* postAuthFlow() {
                   item => item.verified === true,
                 ).length === 0
               ) {
+                yield put({ type: POST_NOT_LOADING });
                 yield take(NEXT_AUTH_FORM_STATE);
               } else {
                 nextDetailState = 'first_name';
@@ -357,56 +369,100 @@ function* postAuthFlow() {
             case 'first_name':
               if (
                 company_config.auth.first_name &&
-                (yield call(Rehive.getProfile)).first_name
+                !(yield call(Rehive.getProfile)).first_name
               ) {
+                yield put({ type: POST_NOT_LOADING });
                 yield take(NEXT_AUTH_FORM_STATE);
                 const { first_name } = yield select(getAuth);
                 if (first_name) {
-                  Rehive.updateProfile({ first_name });
+                  yield call(Rehive.updateProfile, { first_name });
                 }
               } else {
                 nextDetailState = 'last_name';
               }
               break;
             case 'last_name':
-              if (company_config.auth.last_name) {
+              if (
+                company_config.auth.last_name &&
+                !(yield call(Rehive.getProfile)).last_name
+              ) {
+                yield put({ type: POST_NOT_LOADING });
                 yield take(NEXT_AUTH_FORM_STATE);
                 const { last_name } = yield select(getAuth);
                 if (last_name) {
-                  Rehive.updateProfile({ last_name });
+                  yield call(Rehive.updateProfile, { last_name });
                 }
               } else {
                 nextDetailState = 'country';
               }
               break;
             case 'country':
-              if (company_config.auth.country) {
+              if (
+                company_config.auth.country &&
+                !(yield call(Rehive.getProfile)).country
+              ) {
+                yield put({ type: POST_NOT_LOADING });
                 yield take(NEXT_AUTH_FORM_STATE);
                 const { country } = yield select(getAuth);
                 if (country) {
-                  Rehive.updateProfile({ country });
+                  yield call(Rehive.updateProfile, { country });
                 }
               } else {
                 nextMainState = 'pin';
-                nextDetailState = 'fingerprint';
+                nextDetailState = 'set_pin';
+                if (Expo.Fingerprint.hasHardwareAsync()) {
+                  if (Expo.Fingerprint.isEnrolledAsync()) {
+                    nextDetailState = 'set_fingerprint';
+                  }
+                }
                 if (company_config.auth.pin === 'optional') {
                   skip = true;
                 }
               }
               break;
           }
+          break;
         case 'pin':
-          switch (detailState) {
-            case 'fingerprint':
-              break;
-            case 'pin':
-              break;
+          if (company_config.auth.pin) {
+            console.log('pin');
+            let response;
+            yield put({ type: POST_NOT_LOADING });
+            switch (detailState) {
+              case 'set_fingerprint':
+                response = yield take([
+                  NEXT_AUTH_FORM_STATE,
+                  ACTIVATE_FINGERPRINT,
+                ]);
+                if (response.type === ACTIVATE_FINGERPRINT) {
+                  return true;
+                } else {
+                  if (response.payload.nextFormState === 'skip') {
+                    return true;
+                  }
+                  nextDetailState = 'set_pin';
+                }
+                break;
+              case 'set_pin':
+                response = yield take(NEXT_AUTH_FORM_STATE);
+                nextDetailState = 'confirm_pin';
+                break;
+              case 'confirm_pin':
+                response = yield take([SET_PIN, NEXT_AUTH_FORM_STATE]);
+                if (response.type === SET_PIN) {
+                  return true;
+                } else {
+                  nextDetailState = 'set_pin';
+                  authError = 'Pin and confirm do not match, please try again';
+                }
+            }
+          } else {
+            return true;
           }
           break;
-        case 'default':
-          yield put({ type: AUTH_COMPLETE, payload: token });
-          break;
+        // case 'default':
+        //   return true;
       }
+      yield put({ type: POST_LOADING });
 
       // execute transition
       yield put({
@@ -430,31 +486,13 @@ function* logoutUser() {
     yield put({
       type: LOGOUT_USER_ASYNC.success,
     });
-    goToAuth('landing', 'landing');
+    yield call(NavigationService.navigate, 'AuthScreen');
+    yield call(init);
   } catch (error) {
     console.log(error);
     yield put({ type: LOGOUT_USER_ASYNC.error, payload: error });
   }
 }
-
-/* POST LOGIN */
-/* 
-  2FA
-*/
-
-/* POST LOGIN/REGISTER */
-/* NOTE IT SHOULD RE-ENTER THIS FLOW IF APP CLOSES AND RESTARTS -> check in login flow (abstract - companies could update their settings at a later stage)
-  require email to be verified (manual / auto recheck) (link to input from external app?)
-  require number to be verified (OTP)
-  set pin
-  enabling 2FA (token / sms - default to inputted number)
-  onboarding cards (use component from startup) (individual screens have login/register flags)
-  personal info (first name etc)
-  (get verified - document uploading before even getting into app)
-  welcome screen
-*/
-
-// POST ALL FLOWS (onboarding and such)
 
 function* changePassword(action) {
   try {
@@ -480,23 +518,6 @@ function* resetPassword(action) {
   }
 }
 
-function* fetchCompanyConfig(action) {
-  try {
-    let data = yield call(Rehive.getCompanyConfig, action.payload);
-    yield put({
-      type: FETCH_DATA_ASYNC.success,
-      payload: { data, prop: 'company_config' },
-    });
-    yield put({ type: RESET_AUTH });
-  } catch (error) {
-    console.log(error);
-    yield put({
-      type: VALIDATE_COMPANY_ASYNC.error,
-      payload: 'Please enter a valid company ID',
-    });
-  }
-}
-
 export const authSagas = all([
   takeEvery(INIT.pending, init),
   takeEvery(LOGIN_USER_ASYNC.success, postAuthFlow),
@@ -504,6 +525,5 @@ export const authSagas = all([
   takeEvery(AUTH_COMPLETE, appLoad),
   takeEvery(CHANGE_PASSWORD_ASYNC.pending, changePassword),
   takeEvery(LOGOUT_USER_ASYNC.pending, logoutUser),
-  takeEvery(VALIDATE_COMPANY_ASYNC.success, fetchCompanyConfig),
   takeEvery(RESET_PASSWORD_ASYNC.pending, resetPassword),
 ]);

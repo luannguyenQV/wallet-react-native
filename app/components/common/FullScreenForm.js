@@ -27,6 +27,7 @@ const FullScreenForm = props => {
     textFooterRight,
     onPressFooterRight,
     loading,
+    color,
   } = props;
 
   return (
@@ -37,14 +38,16 @@ const FullScreenForm = props => {
             <HeaderButton
               icon={iconHeaderLeft}
               onPress={onPressHeaderLeft}
-              color={Colors.primaryContrast}
+              color={color}
             />
           ) : (
             <View />
           )}
           {textHeaderRight ? (
             <TouchableOpacity onPress={onPressHeaderRight}>
-              <Text style={textStyleAction}>{textHeaderRight}</Text>
+              <Text style={[textStyleAction, { color: color }]}>
+                {textHeaderRight}
+              </Text>
             </TouchableOpacity>
           ) : (
             <View />
@@ -58,14 +61,18 @@ const FullScreenForm = props => {
         <View style={viewStyleFooter}>
           {textFooterLeft ? (
             <TouchableOpacity onPress={onPressFooterLeft}>
-              <Text style={textStyleAction}>{textFooterLeft}</Text>
+              <Text style={[textStyleAction, { color: color }]}>
+                {textFooterLeft}
+              </Text>
             </TouchableOpacity>
           ) : (
             <View />
           )}
           {textFooterRight ? (
             <TouchableOpacity onPress={onPressFooterRight}>
-              <Text style={textStyleAction}>{textFooterRight}</Text>
+              <Text style={[textStyleAction, { color: color }]}>
+                {textFooterRight}
+              </Text>
             </TouchableOpacity>
           ) : (
             <View />
@@ -105,11 +112,9 @@ const styles = {
   },
   iconStyleHeaderLeft: {
     margin: 16,
-    color: Colors.onPrimary,
     // opacity: 0.87,
   },
   textStyleAction: {
-    color: Colors.onPrimary,
     fontSize: 18,
     padding: 16,
     // alignSelf: 'flex-end',

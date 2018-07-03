@@ -36,7 +36,7 @@ class HeaderWallet extends Component {
   });
 
   renderWallets() {
-    const { wallets, showClose, hideWallet } = this.props;
+    const { wallets, showClose, hideWallet, colors } = this.props;
     if (wallets.length === 1) {
       return (
         <HeaderCurrency
@@ -44,6 +44,7 @@ class HeaderWallet extends Component {
           wallet={wallets[0]}
           showClose={showClose}
           closeWallet={hideWallet}
+          colors={colors}
         />
       );
     } else {
@@ -58,7 +59,9 @@ class HeaderWallet extends Component {
           horizontal
           pagingEnabled
           getItemLayout={this.getItemLayout}
-          renderItem={({ item }) => <HeaderCurrency wallet={item} />}
+          renderItem={({ item }) => (
+            <HeaderCurrency wallet={item} colors={colors} />
+          )}
           keyExtractor={item => item.account_name + item.currency.currency.code}
           showsHorizontalScrollIndicator={false}
         />
@@ -115,6 +118,7 @@ class HeaderWallet extends Component {
             <WalletAction
               type={item.type}
               onPress={() => this.onButtonPress(item.type)}
+              color={this.props.colors.primaryContrast}
             />
           )}
           keyExtractor={item => item.id.toString()}
@@ -170,9 +174,10 @@ class HeaderWallet extends Component {
   }
 
   render() {
+    const { colors } = this.props;
     const { viewStyleContainer } = styles;
     return (
-      <View style={viewStyleContainer}>
+      <View style={[viewStyleContainer, { backgroundColor: colors.primary }]}>
         {this.renderWallets()}
         {this.renderButtons()}
       </View>
@@ -182,21 +187,12 @@ class HeaderWallet extends Component {
 
 const styles = {
   viewStyleContainer: {
-    // flex: 1,
     flexDirection: 'column',
-    backgroundColor: Colors.primary,
-    // minHeight: 86,
-    // height: '100%',
   },
-  // viewStyleHeader: {
-  //   paddingTop: 16,
-  //   // backgroundColor: Colors.secondary,
-  // },
   viewStyleButtons: {
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'space-around',
-    backgroundColor: Colors.primary,
     padding: 8,
   },
 };

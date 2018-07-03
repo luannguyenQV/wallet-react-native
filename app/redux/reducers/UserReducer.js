@@ -17,6 +17,7 @@ import {
   HIDE_MODAL,
 } from './../actions/UserActions';
 import { LOGOUT_USER, SET_COMPANY } from './../actions/AuthActions';
+import { VIEW_WALLET, HIDE_WALLET } from './../actions/AccountsActions';
 
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 
@@ -273,23 +274,18 @@ export default (state = INITIAL_STATE, action) => {
         loading: false,
       };
 
-    // case VIEW_WALLET:
-    //   return {
-    //     ...state,
-    //     showDetail: true,
-    //     wallet: true,
-    //     // tempWallet: action.payload,
-    //     // sendWallet: action.payload,
-    //     // sendState: 'amount',
-    //     // sendError: '',
-    //   };
-    // case HIDE_WALLET:
-    //   return {
-    //     ...state,
-    //     // tempWallet: null,
-    //     wallet: false,
-    //     showDetail: false,
-    //   };
+    case VIEW_WALLET:
+      return {
+        ...state,
+        showDetail: true,
+        wallet: true,
+      };
+    case HIDE_WALLET:
+      return {
+        ...state,
+        wallet: false,
+        showDetail: false,
+      };
 
     case CARD_DISMISS:
       return {

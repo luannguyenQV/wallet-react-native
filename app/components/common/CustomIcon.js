@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Font } from 'expo';
 import { createIconSet } from '@expo/vector-icons';
-import Colors from './../../config/colors';
 const glyphMap = {
   send: 'B',
   receive: 'A',
@@ -30,11 +29,7 @@ class CustomIcon extends Component {
     }
 
     return (
-      <CustomIconSet
-        name={name}
-        size={size}
-        color={color ? Colors[color] : 'black'}
-      />
+      <CustomIconSet name={name} size={size} color={color ? color : 'black'} />
     );
   }
 }

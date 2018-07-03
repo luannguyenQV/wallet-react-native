@@ -116,6 +116,9 @@ class SettingsScreen extends Component {
         value = value + address.postal_code;
       }
     }
+    if (!value) {
+      value = 'Not yet provided';
+    }
 
     return (
       <SettingsOption
@@ -224,9 +227,6 @@ class SettingsScreen extends Component {
             {this.renderEmailAddresses()}
             {this.renderMobileNumbers()}
             {this.renderAddresses()}
-          </SettingsContainer> */}
-          {/* <SettingsContainer label="Identity">
-            {this.renderDocuments()}
           </SettingsContainer> */}
           <SettingsContainer label="External accounts">
             {this.renderBankAccounts()}

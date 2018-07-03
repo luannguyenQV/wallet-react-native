@@ -12,7 +12,6 @@ class LogoutScreen extends Component {
 
   componentDidMount() {
     this.props.logoutUser();
-    // this.props.navigation.navigate('AuthScreen');
   }
 
   render() {

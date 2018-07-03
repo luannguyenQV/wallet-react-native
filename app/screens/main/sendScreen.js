@@ -307,8 +307,9 @@ class SendScreen extends Component {
       validateSendRecipient,
       validateSendNote,
       sendError,
+      company_config,
     } = this.props;
-
+    const { colors } = company_config;
     switch (sendState) {
       case 'amount':
         return (
@@ -329,6 +330,7 @@ class SendScreen extends Component {
             returnKeyType="next"
             autoFocus
             onSubmitEditing={() => validateSendAmount(sendWallet, sendAmount)}
+            colors={colors}
           />
         );
       case 'recipient':
@@ -349,6 +351,7 @@ class SendScreen extends Component {
             returnKeyType="next"
             autoFocus
             onSubmitEditing={() => validateSendRecipient(sendRecipient)}
+            colors={colors}
           />
         );
       case 'note':
@@ -369,6 +372,7 @@ class SendScreen extends Component {
             returnKeyType="next"
             autoFocus
             onSubmitEditing={() => validateSendNote(sendNote)}
+            colors={colors}
           />
         );
       default:
@@ -462,7 +466,7 @@ const styles = {
 };
 
 const mapStateToProps = ({ accounts, auth }) => {
-  const { pin, fingerprint } = auth;
+  const { pin, fingerprint, company_config } = auth;
   const {
     wallets,
     sendAmount,
@@ -488,6 +492,7 @@ const mapStateToProps = ({ accounts, auth }) => {
     sending,
     pin,
     fingerprint,
+    company_config,
   };
 };
 

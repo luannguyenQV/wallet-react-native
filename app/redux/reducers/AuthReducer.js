@@ -19,6 +19,9 @@ import {
   PIN_FAIL,
   LOADING,
   SET_COMPANY,
+  AUTH_COMPLETE,
+  POST_LOADING,
+  POST_NOT_LOADING,
 } from './../actions/AuthActions';
 import { HIDE_MODAL } from './../actions/UserActions';
 
@@ -60,7 +63,9 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         appLoading: true,
+        postLoading: false,
         pinError: '',
+        code: '',
       };
     case INIT.success:
     case INIT.fail:
@@ -172,6 +177,11 @@ export default (state = INITIAL_STATE, action) => {
         loading: false,
         appLoading: false,
       };
+    case AUTH_COMPLETE:
+      return {
+        ...state,
+        token: action.payload,
+      };
 
     case HIDE_MODAL:
       return {
@@ -214,15 +224,31 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         appLoading: false,
+        postLoading: false,
+      };
+
+    case POST_LOADING:
+      return {
+        ...state,
+        postLoading: true,
+      };
+    case POST_NOT_LOADING:
+      return {
+        ...state,
+        postLoading: false,
       };
 
     case LOGOUT_USER_ASYNC.success:
       return {
         token: null,
-        appLoading: true,
+        mainState: 'landing',
+        detailState: 'landing',
         company: state.company,
+        company_config: state.company_config,
         email: state.email,
+        modalVisible: false,
       };
+
     default:
       return state;
   }

@@ -171,8 +171,9 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user }) => {
-  const { company_config, profile, dismissedCards } = user;
+const mapStateToProps = ({ auth, user }) => {
+  const { company_config } = auth;
+  const { profile, dismissedCards } = user;
   return { company_config, profile, dismissedCards };
 };
 

@@ -79,7 +79,7 @@ class Input extends Component {
     return (
       <View
         style={[viewStyleInput, { paddingBottom: focused || value ? 8 : 0 }]}>
-        {type === 'mobile' ? (
+        {/* {type === 'mobile' ? (
           <View style={viewStyleCountry}>
             <CountryPicker
               onChange={value => {
@@ -93,7 +93,7 @@ class Input extends Component {
               styles={{ width: 24 }}
             />
           </View>
-        ) : null}
+        ) : null} */}
         <TextInput
           style={textStyleInput}
           onFocus={() => this._OnFocus()}
@@ -149,7 +149,9 @@ class Input extends Component {
       subtitle,
       type,
       onPressListItem,
+      colors,
     } = this.props;
+    console.log(this.props);
 
     const {
       viewStyleContainer,
@@ -165,14 +167,20 @@ class Input extends Component {
 
     return (
       <View>
-        <View style={viewStyleContainer}>
+        <View
+          style={[
+            viewStyleContainer,
+            {
+              backgroundColor: colors.primaryContrast,
+            },
+          ]}>
           <View
             style={[
               viewStyleContent,
               {
                 borderColor: inputError
-                  ? Colors.error
-                  : focused ? Colors.focus : Colors.lightGray,
+                  ? colors.error
+                  : focused ? colors.focus : colors.lightGray,
                 borderBottomWidth: inputError || focused ? 2 : 1,
               },
             ]}>
@@ -183,8 +191,8 @@ class Input extends Component {
                     textStyleLabel,
                     {
                       color: inputError
-                        ? Colors.error
-                        : focused ? Colors.focus : 'rgba(0,0,0,0.6)',
+                        ? colors.error
+                        : focused ? colors.focus : 'rgba(0,0,0,0.6)',
                     },
                   ]}>
                   {label}
@@ -204,7 +212,7 @@ class Input extends Component {
               //   />string.indexOf(substring) !== -1
               // }
               keyboardShouldPersistTaps="handled"
-              style={{ backgroundColor: Colors.onPrimary }}
+              style={{ backgroundColor: colors.primaryContrast }}
               // data={data.filter(item => item[title] === value)}
               data={
                 value
@@ -228,7 +236,7 @@ class Input extends Component {
               <Text
                 style={[
                   textStyleFooter,
-                  { color: inputError ? Colors.error : Colors.onPrimary },
+                  { color: inputError ? colors.error : colors.primaryContrast },
                 ]}>
                 {inputError ? 'Error: ' + inputError : helperText}
               </Text>
@@ -242,18 +250,15 @@ class Input extends Component {
 
 const styles = {
   viewStyleContainer: {
-    minHeight: 60,
+    minHeight: 56,
     borderTopRightRadius: 5,
     borderTopLeftRadius: 5,
     overflow: 'hidden',
     margin: 8,
     // borderRadius: 3,
-    // borderWidth: 2,
     // borderColor: Colors.primary,
   },
   viewStyleContent: {
-    // borderTopRightRadius: 3,
-    backgroundColor: Colors.onPrimary,
     paddingHorizontal: 12,
     minHeight: 56,
     justifyContent: 'center',

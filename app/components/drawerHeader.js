@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { View, TouchableHighlight, Image, Text } from 'react-native';
 import { connect } from 'react-redux';
-import Colors from './../config/colors';
 import ResetNavigation from './../util/resetNavigation';
 
 class DrawerHeader extends Component {
   render() {
-    const { profile } = this.props;
+    const { profile, colors } = this.props;
     const {
       viewStyleContainer,
       imageStylePhoto,
@@ -23,9 +22,9 @@ class DrawerHeader extends Component {
             'SettingsPersonalDetails',
           )
         }>
-        <View style={viewStyleContainer}>
+        <View style={[viewStyleContainer, { backgroundColor: colors.primary }]}>
           <Image
-            style={imageStylePhoto}
+            style={[imageStylePhoto, { borderColor: colors.secondary }]}
             source={
               profile.profile
                 ? {
@@ -36,12 +35,14 @@ class DrawerHeader extends Component {
             }
           />
           <View style={viewStyleName}>
-            <Text style={textStyleName}>
+            <Text style={[textStyleName, { color: colors.primaryContrast }]}>
               {profile.first_name
                 ? profile.first_name + ' ' + profile.last_name
                 : profile.username}
             </Text>
-            <Text style={textStyleEmail}>{profile.email || ''}</Text>
+            <Text style={[textStyleEmail, { color: colors.primaryContrast }]}>
+              {profile.email || ''}
+            </Text>
           </View>
         </View>
       </TouchableHighlight>
@@ -51,8 +52,6 @@ class DrawerHeader extends Component {
 
 const styles = {
   viewStyleContainer: {
-    backgroundColor: Colors.primary,
-    // height: 240,
     paddingTop: 48,
     padding: 16,
     paddingBottom: 8,
@@ -61,20 +60,17 @@ const styles = {
     width: 100,
     height: 100,
     borderRadius: 50,
-    borderColor: Colors.secondary,
     borderWidth: 5,
   },
   viewStyleName: {
     paddingVertical: 12,
   },
   textStyleName: {
-    color: Colors.onPrimary,
     fontSize: 14,
     paddingBottom: 4,
     fontWeight: 'bold',
   },
   textStyleEmail: {
-    color: Colors.onPrimary,
     fontSize: 14,
   },
 };

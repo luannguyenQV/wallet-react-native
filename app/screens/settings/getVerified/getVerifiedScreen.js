@@ -300,16 +300,9 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user }) => {
-  const {
-    profile,
-    address,
-    mobile,
-    email,
-    document,
-    loading_profile,
-    company_config,
-  } = user;
+const mapStateToProps = ({ user, auth }) => {
+  const { profile, address, mobile, email, document, loading_profile } = user;
+  const { company_config } = auth;
   return {
     profile,
     address,

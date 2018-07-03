@@ -2,8 +2,11 @@ import React from 'react';
 import { ScrollView, View, StyleSheet } from 'react-native';
 import { createDrawerNavigator, DrawerItems } from 'react-navigation';
 
+// import { store } from './../redux/store';
+// const colors = store.getState().auth.company_config.colors;
+
 import DrawerHeader from './../components/drawerHeader';
-import Colors from './../config/colors';
+import colors from './../config/colors';
 
 import HomeScreen from './../screens/main/homeScreen';
 
@@ -28,15 +31,15 @@ export default createDrawerNavigator(Stack, {
   contentComponent: props => (
     <View style={styles.container}>
       <View>
-        <DrawerHeader navigation={props.navigation} />
+        <DrawerHeader navigation={props.navigation} colors={colors} />
       </View>
 
       <ScrollView>
         <DrawerItems
           {...props}
-          activeTintColor={Colors.onSecondary}
-          activeBackgroundColor={Colors.secondary}
-          inactiveTintColor={Colors.primary}
+          activeTintColor={colors.secondaryContrast}
+          activeBackgroundColor={colors.secondary}
+          inactiveTintColor={colors.primary}
           inactiveBackgroundColor="transparent"
           labelStyle={{
             margin: 15,
@@ -53,6 +56,6 @@ export default createDrawerNavigator(Stack, {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.onPrimary,
+    backgroundColor: colors.primaryContrast,
   },
 });

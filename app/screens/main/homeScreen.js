@@ -33,7 +33,12 @@ class HomeScreen extends Component {
   };
 
   render() {
-    const { wallets, activeWalletIndex, fetchAccounts } = this.props;
+    const {
+      wallets,
+      activeWalletIndex,
+      fetchAccounts,
+      company_config,
+    } = this.props;
 
     return (
       <View style={styles.container}>
@@ -50,6 +55,7 @@ class HomeScreen extends Component {
             { id: 2, type: 'more' },
           ]}
           navigation={this.props.navigation}
+          colors={company_config.colors}
         />
         {/* currency={item} accountLabel={account.name} /> */}
         {/* {this.renderAccounts()} */}
@@ -84,9 +90,9 @@ const styles = {
 };
 
 const mapStateToProps = ({ auth, accounts }) => {
-  const { token } = auth;
+  const { token, company_config } = auth;
   const { wallets, activeWalletIndex, loadingAccounts } = accounts;
-  return { token, wallets, activeWalletIndex, loadingAccounts };
+  return { token, company_config, wallets, activeWalletIndex, loadingAccounts };
 };
 
 export default connect(mapStateToProps, { logoutUser, fetchAccounts })(

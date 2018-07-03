@@ -85,7 +85,7 @@ class CardList extends Component {
         }
         title={title ? title(item) : ''}
         subtitle={subtitle ? subtitle(item) : ''}
-        titleStyle={titleStyle}
+        colorTitleBackground="white"
         onPressTitle={() =>
           onPressTitle
             ? onPressTitle(item)
