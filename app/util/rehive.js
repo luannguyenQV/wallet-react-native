@@ -172,7 +172,7 @@ export const getCompanyBankAccounts = () => r.company.bankAccounts.get();
 
 export const getCompanyConfig = company => {
   let configs = companyConfig.data.filter(item => item.company === company);
-  if (configs) {
+  if (configs.length > 0) {
     return configs[0].config;
   }
   return defaultCompanyConfig;
