@@ -11,7 +11,6 @@ import {
   hideWallet,
 } from './../redux/actions';
 
-import Colors from './../config/colors';
 import WalletAction from './WalletAction';
 import HeaderCurrency from './HeaderCurrency';
 
