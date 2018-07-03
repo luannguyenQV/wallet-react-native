@@ -1,93 +1,121 @@
-// import lib for making component
+/* BUTTON */
+/* Component | Stateless | Styled */
+/* This is the main button component. Takes props to adjust it's size, type, color etc */
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
+import PropTypes from 'prop-types';
+import * as Animatable from 'react-native-animatable';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import Colors from './../../config/colors';
 
 class Button extends Component {
   buttonStyle() {
-    const { buttonStyle, buttonStyleText } = styles;
-    const { type } = this.props;
-    switch (type) {
-      case 'primary':
-        return [buttonStyle, { backgroundColor: Colors.primary }];
-      case 'secondary':
-        return [buttonStyle, { backgroundColor: Colors.secondary }];
-      case 'text':
-        return [buttonStyleText];
-      default:
-        return [buttonStyle, { backgroundColor: Colors.primary }];
-    }
+    const { buttonStyle } = styles;
+    const { backgroundColor, size } = this.props;
+    return [
+      buttonStyle,
+      {
+        backgroundColor,
+        height: size === 'large' ? 40 : size === 'small' ? 30 : 36,
+      },
+    ];
   }
 
   textStyle() {
-    const { textStyle, textStyleText } = styles;
-    const { type } = this.props;
-    switch (type) {
-      // case 'primary':
-      //   return [textStyle, { color: 'white' }];
-      // case 'secondary':
-      //   return [textStyle, { color: 'black' }];
-      case 'text':
-        return [textStyleText];
-      default:
-        return [textStyle, { color: 'white' }];
-    }
+    const { textStyle } = styles;
+    const { size, textColor } = this.props;
+    return [
+      textStyle,
+      {
+        color: textColor,
+        fontSize: size === 'large' ? 18 : size === 'small' ? 10 : 14,
+      },
+    ];
   }
 
   render() {
-    const { onPress, label, reference } = this.props;
-    const { buttonStyleText, textStyle, containerStyle } = styles;
+    const {
+      onPress,
+      label,
+      reference,
+      animation,
+      disabled,
+      size,
+      icon,
+    } = this.props;
+    const { containerStyle } = styles;
     return (
-      <View style={containerStyle}>
+      <Animatable.View
+        ref={reference}
+        style={containerStyle}
+        animation={animation}>
         <TouchableOpacity
           onPress={onPress}
           style={this.buttonStyle()}
-          ref={reference}>
-          <Text style={this.textStyle()}>{label}</Text>
+          disabled={disabled}>
+          <View style={{ flexDirection: 'row' }}>
+            {icon ? (
+              <Icon
+                name={icon}
+                size={size === 'large' ? 26 : size === 'small' ? 18 : 22}
+                color={textColor}
+              />
+            ) : null}
+            <Text style={this.textStyle()}>{label}</Text>
+          </View>
         </TouchableOpacity>
-      </View>
+      </Animatable.View>
     );
   }
 }
 
+Button.propTypes = {
+  label: PropTypes.string, // Text displayed on button
+  reference: PropTypes.func, // For animations
+  animation: PropTypes.string, // Animation type
+  disabled: PropTypes.bool, // Disable touchable component
+  onPress: PropTypes.func, // Function to execute on press
+  icon: PropTypes.string, // Icon displayed on left of button
+  size: PropTypes.string, // Size of button (small / default or '' / large)
+  type: PropTypes.string, // Type of button (text, contained, TODO: outlined)
+  backgroundColor: PropTypes.string, // Button color
+  textColor: PropTypes.string, // Text color
+};
+
+Button.defaultProps = {
+  label: '',
+  reference: () => {},
+  animation: '',
+  disabled: false,
+  onPress: () => {},
+  icon: '',
+  size: '',
+  type: 'contained',
+  backgroundColor: Colors.primary,
+  textColor: Colors.primaryContrast,
+};
+
 const styles = {
   containerStyle: {
-    height: 50,
     flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 50,
-    paddingVertical: 7,
-    backgroundColor: '#00000000',
+    margin: 8,
   },
   buttonStyle: {
     flex: 1,
-    height: 38,
-    borderRadius: 2,
-    // backgroundColor: Colors.primary,
+    flexDirection: 'row',
+    borderRadius: 2.5,
+    minWidth: 64,
+    padding: 8,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
+    shadowOffset: { width: 2, height: 2 },
     shadowRadius: 5,
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.2,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  buttonStyleText: {
-    flex: 1,
-    height: 28,
-    backgroundColor: 'white',
-    // width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   textStyle: {
-    // color: 'white',
-    fontSize: 18,
+    textAlign: 'center',
     fontWeight: 'bold',
-  },
-  textStyleText: {
-    color: Colors.primary,
-    fontSize: 15,
-    // fontWeight: 'bold',
   },
 };
 

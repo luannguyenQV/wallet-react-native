@@ -1,30 +1,28 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput } from 'react-native';
+import { View, Text, TextInput, FlatList } from 'react-native';
 import Colors from './../../config/colors';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import CountryPicker from 'react-native-country-picker-modal';
+import { ListItem } from './ListItem';
 
 class Input extends Component {
   state = {
-    textColor: Colors.black,
-    borderColor: Colors.lightgray,
-    iconNameVisibility: 'visibility-off',
-    secureTextEntry: this.props.password,
+    focused: false,
+    iconNameVisibility: 'visibility',
+    secureTextEntry: this.props.type === 'password' ? true : false,
     cca2: 'US',
     countryCode: '+1',
   };
 
-  updateColorOnBlur() {
+  _OnBlur() {
     this.setState({
-      textColor: Colors.black,
-      borderColor: Colors.lightgray,
+      focused: false,
     });
   }
 
-  updateColorOnFocus() {
+  _OnFocus() {
     this.setState({
-      textColor: Colors.lightblue,
-      borderColor: Colors.lightblue,
+      focused: true,
     });
   }
 
@@ -57,61 +55,32 @@ class Input extends Component {
       type,
       countryCode,
       changeCountryCode,
+      inputError,
+      autoCorrect,
+      multiline,
     } = this.props;
 
     const {
       viewStyleInput,
       textStyleInput,
       iconStyleVisibility,
-      countryPicker,
-      code,
+      viewStyleCountry,
+      textStyleCode,
     } = styles;
 
     const {
       borderColor,
-      textColor,
+      focused,
       secureTextEntry,
       iconNameVisibility,
       cca2,
     } = this.state;
 
-    switch (type) {
-      case 'password':
-        return (
-          <View style={viewStyleInput}>
-            <TextInput
-              style={textStyleInput}
-              onFocus={() => this.updateColorOnFocus()}
-              onBlur={() => this.updateColorOnBlur()}
-              underlineColorAndroid="white"
-              autoCapitalize={autoCapitalize ? autoCapitalize : 'none'}
-              placeholder={placeholder}
-              value={value}
-              onChangeText={onChangeText}
-              ref={reference}
-              selectTextOnFocus
-              secureTextEntry={secureTextEntry}
-              keyboardType={keyboardType}
-              returnKeyType={returnKeyType}
-              onSubmitEditing={onSubmitEditing}
-              autoFocus={autoFocus}
-              blurOnSubmit={false}
-            />
-            <View style={{ width: 30 }}>
-              <Icon
-                style={iconStyleVisibility}
-                name={iconNameVisibility}
-                size={25}
-                color={borderColor}
-                onPress={this.togglePasswordVisibility}
-              />
-            </View>
-          </View>
-        );
-
-      case 'mobile':
-        return (
-          <View style={countryPicker}>
+    return (
+      <View
+        style={[viewStyleInput, { paddingBottom: focused || value ? 8 : 0 }]}>
+        {/* {type === 'mobile' ? (
+          <View style={viewStyleCountry}>
             <CountryPicker
               onChange={value => {
                 this.setState({ cca2: value.cca2 });
@@ -121,79 +90,159 @@ class Input extends Component {
               filterable
               cca2={cca2}
               translation="eng"
-              styles={{ width: 60, justifyContent: 'center' }}
-            />
-            <TextInput value={countryCode} editable={false} style={code} />
-            <TextInput
-              style={textStyleInput}
-              onFocus={() => this.updateColorOnFocus()}
-              onBlur={() => this.updateColorOnBlur()}
-              underlineColorAndroid="white"
-              autoCapitalize={autoCapitalize ? autoCapitalize : 'none'}
-              placeholder={placeholder}
-              value={value}
-              onChangeText={onChangeText}
-              ref={reference}
-              selectTextOnFocus
-              secureTextEntry={secureTextEntry}
-              keyboardType={keyboardType}
-              returnKeyType={returnKeyType}
-              onSubmitEditing={onSubmitEditing}
-              autoFocus={autoFocus}
-              blurOnSubmit={false}
+              styles={{ width: 24 }}
             />
           </View>
-        );
-
-      default:
-        return (
-          <View style={viewStyleInput}>
-            <TextInput
-              style={textStyleInput}
-              onFocus={() => this.updateColorOnFocus()}
-              onBlur={() => this.updateColorOnBlur()}
-              underlineColorAndroid="white"
-              autoCapitalize={autoCapitalize ? autoCapitalize : 'none'}
-              placeholder={placeholder}
-              value={value}
-              onChangeText={onChangeText}
-              ref={reference}
-              selectTextOnFocus
-              secureTextEntry={secureTextEntry}
-              keyboardType={keyboardType}
-              returnKeyType={returnKeyType}
-              onSubmitEditing={onSubmitEditing}
-              autoFocus={autoFocus}
-              blurOnSubmit={false}
+        ) : null} */}
+        <TextInput
+          style={textStyleInput}
+          onFocus={() => this._OnFocus()}
+          onBlur={() => this._OnBlur()}
+          underlineColorAndroid="transparent"
+          autoCapitalize={autoCapitalize ? autoCapitalize : 'none'}
+          autoCorrect={autoCorrect ? autoCorrect : false}
+          placeholder={focused ? placeholder : label}
+          value={value}
+          onChangeText={onChangeText}
+          ref={reference}
+          selectTextOnFocus
+          secureTextEntry={secureTextEntry}
+          keyboardType={keyboardType}
+          returnKeyType={returnKeyType}
+          onSubmitEditing={onSubmitEditing}
+          autoFocus={autoFocus}
+          blurOnSubmit={false}
+          multiline={multiline}
+        />
+        {type === 'password' ? (
+          <View>
+            <Icon
+              style={[
+                iconStyleVisibility,
+                {
+                  color: inputError
+                    ? Colors.error
+                    : focused ? Colors.focus : 'rgba(0,0,0,0.6)',
+                },
+              ]}
+              name={iconNameVisibility}
+              size={24}
+              color={borderColor}
+              onPress={this.togglePasswordVisibility}
             />
           </View>
-        );
-    }
+        ) : null}
+      </View>
+    );
   }
 
   render() {
-    const { label, required, requiredError } = this.props;
+    const {
+      label,
+      value,
+      required,
+      inputError,
+      helperText,
+      data,
+      loadingData,
+      title,
+      subtitle,
+      type,
+      onPressListItem,
+      colors,
+    } = this.props;
+    console.log(this.props);
 
     const {
       viewStyleContainer,
       viewStyleLabel,
+      viewStyleHelper,
       textStyleLabel,
-      textStyleRequired,
+      textStyleFooter,
+      viewStyleContent,
+      viewStylePopUp,
     } = styles;
 
-    const { borderColor, textColor, secureTextEntry } = this.state;
+    const { focused } = this.state;
 
     return (
-      <View style={[viewStyleContainer, { borderBottomColor: borderColor }]}>
-        <View style={viewStyleLabel}>
-          <Text style={[textStyleLabel, { color: textColor }]}>{label}</Text>
-          {required ? <Text style={textStyleRequired}>*</Text> : null}
+      <View>
+        <View
+          style={[
+            viewStyleContainer,
+            {
+              backgroundColor: colors.primaryContrast,
+            },
+          ]}>
+          <View
+            style={[
+              viewStyleContent,
+              {
+                borderColor: inputError
+                  ? colors.error
+                  : focused ? colors.focus : colors.lightGray,
+                borderBottomWidth: inputError || focused ? 2 : 1,
+              },
+            ]}>
+            {focused || value ? (
+              <View style={viewStyleLabel}>
+                <Text
+                  style={[
+                    textStyleLabel,
+                    {
+                      color: inputError
+                        ? colors.error
+                        : focused ? colors.focus : 'rgba(0,0,0,0.6)',
+                    },
+                  ]}>
+                  {label}
+                  {required ? ' *' : ''}
+                </Text>
+              </View>
+            ) : null}
+            {this.renderInput()}
+          </View>
 
-          {requiredError ? (
-            <Text style={textStyleRequired}>{requiredError}</Text>
+          {data ? (
+            <FlatList
+              // refreshControl={
+              //   <RefreshControl
+              //     refreshing={loadingData}
+              //     onRefresh={() => fetchData(type)}
+              //   />string.indexOf(substring) !== -1
+              // }
+              keyboardShouldPersistTaps="handled"
+              style={{ backgroundColor: colors.primaryContrast }}
+              // data={data.filter(item => item[title] === value)}
+              data={
+                value
+                  ? data.filter(item => item[title].indexOf(value) !== -1)
+                  : data
+              }
+              renderItem={({ item }) => (
+                <ListItem
+                  onPress={() => onPressListItem(item)}
+                  title={item[title]}
+                  subtitle={item[subtitle]}
+                />
+              )}
+              keyExtractor={item => (item.id ? item.id.toString() : '')}
+              // ListEmptyComponent={<ListItem title="No data" />}
+            />
+          ) : null}
+
+          {inputError || helperText ? (
+            <View style={viewStyleHelper}>
+              <Text
+                style={[
+                  textStyleFooter,
+                  { color: inputError ? colors.error : colors.primaryContrast },
+                ]}>
+                {inputError ? 'Error: ' + inputError : helperText}
+              </Text>
+            </View>
           ) : null}
         </View>
-        {this.renderInput()}
       </View>
     );
   }
@@ -201,61 +250,72 @@ class Input extends Component {
 
 const styles = {
   viewStyleContainer: {
-    flexDirection: 'column',
-    marginLeft: 20,
-    marginRight: 20,
-    paddingTop: 15,
-    borderBottomWidth: 1,
-    flexWrap: 'wrap',
+    minHeight: 56,
+    borderTopRightRadius: 5,
+    borderTopLeftRadius: 5,
+    overflow: 'hidden',
+    margin: 8,
+    // borderRadius: 3,
+    // borderColor: Colors.primary,
+  },
+  viewStyleContent: {
+    paddingHorizontal: 12,
+    minHeight: 56,
+    justifyContent: 'center',
+  },
+  viewStylePopUp: {
+    // position: 'absolute',
+    // top: 8,
+    // flex: 1,
+    elevation: 20,
+    backgroundColor: 'orange',
+    height: 200,
+    // width: 100,
   },
   viewStyleLabel: {
+    height: 20,
+  },
+  viewStyleCountry: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   viewStyleInput: {
     flexDirection: 'row',
+    // height: 32,
+  },
+  viewStyleHelper: {
+    minHeight: 28,
   },
   textStyleLabel: {
-    fontSize: 16,
-  },
-  textStyleRequired: {
-    color: Colors.red,
-    paddingRight: 5,
-    flexWrap: 'wrap',
+    fontSize: 12,
+    paddingTop: 6,
   },
   textStyleInput: {
-    height: 40,
-    paddingLeft: 0,
-    paddingBottom: 5,
-    paddingTop: 5,
-    color: Colors.black,
     fontWeight: 'normal',
-    borderColor: 'white',
-    borderWidth: 1,
     flex: 1,
-    // alignItems: 'center',
-    fontSize: 18,
+    fontSize: 16,
+    // height: 24,
+    color: 'rgba(0,0,0,0.87)',
   },
-  iconStyleVisibility: {
-    top: 15,
-    right: 0,
-    position: 'absolute',
-  },
-  countryPicker: {
-    flexDirection: 'row',
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  code: {
-    width: 60,
-    height: 50,
-    fontSize: 18,
-    color: Colors.black,
+  textStyleCode: {
+    fontSize: 16,
+    color: 'rgba(0,0,0,0.87)',
     textAlign: 'right',
     fontWeight: 'normal',
-    borderColor: 'white',
-    borderWidth: 1,
     alignItems: 'center',
+  },
+  textStyleFooter: {
+    paddingTop: 4,
+    paddingBottom: 8,
+    paddingHorizontal: 12,
+    fontSize: 12,
+  },
+  iconStyleVisibility: {
+    width: 24,
+    height: 24,
+    right: 0,
+    bottom: 4,
+    position: 'absolute',
   },
 };
 

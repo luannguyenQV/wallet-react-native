@@ -13,10 +13,7 @@ class ButtonList extends Component {
 
 const styles = {
   containerStyle: {
-    flex: 1,
-    // flexDirection: 1,
-    justifyContent: 'flex-start',
-    // paddingVertical: 10,
+    // justifyContent: 'flex-start',
   },
 };
 

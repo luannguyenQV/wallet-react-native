@@ -1,85 +1,83 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, AsyncStorage, TouchableHighlight, Image, Text } from 'react-native';
-import Colors from './../config/colors'
-import ResetNavigation from './../util/resetNavigation'
-import Auth from './../util/auth'
+import { View, TouchableHighlight, Image, Text } from 'react-native';
+import { connect } from 'react-redux';
+import ResetNavigation from './../util/resetNavigation';
 
-export default class DrawerHeader extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      userInfo: {},
-    }
-    //this.getUserInfo()
-  }
-
-  async componentWillMount() {
-    const value = await AsyncStorage.getItem('user');
-    if (value === null) {
-      Auth.logout(this.props.navigation)
-    }
-    else {
-      this.setState({ 'userInfo': JSON.parse(value) || {} })
-    }
-  }
-
+class DrawerHeader extends Component {
   render() {
-    //this.getUserInfo()
+    const { profile, colors } = this.props;
+    const {
+      viewStyleContainer,
+      imageStylePhoto,
+      viewStyleName,
+      textStyleName,
+      textStyleEmail,
+    } = styles;
     return (
-      <View style={styles.row}>
-        <TouchableHighlight
-          underlayColor={Colors.darkblue}
-          style={styles.button}
-          onPress={() => ResetNavigation.dispatchUnderDrawer(this.props.navigation, "Settings", 'SettingsPersonalDetails')}>
-          {this.state.userInfo.profile ?
-            <Image
-              style={styles.stretch}
-              source={{ uri: this.state.userInfo.profile, cache: 'only-if-cached' }}
-            /> :
-            <Image
-              source={require('./../../assets/icons/profile_1.png')}
-              style={styles.stretch}
-            />
-          }
-        </TouchableHighlight>
-        <View style={styles.col}>
-          <Text style={styles.nameText}>
-            {(this.state.userInfo.first_name || '') + ' ' + (this.state.userInfo.last_name || '')}
-          </Text>
-          <Text style={styles.emailText}>
-            {this.state.userInfo.email || ''}
-          </Text>
+      <TouchableHighlight
+        onPress={() =>
+          ResetNavigation.dispatchUnderDrawer(
+            this.props.navigation,
+            'Settings',
+            'SettingsPersonalDetails',
+          )
+        }>
+        <View style={[viewStyleContainer, { backgroundColor: colors.primary }]}>
+          <Image
+            style={[imageStylePhoto, { borderColor: colors.secondary }]}
+            source={
+              profile.profile
+                ? {
+                    uri: profile.profile,
+                    // cache: 'only-if-cached',
+                  }
+                : require('./../../assets/icons/profile.png')
+            }
+          />
+          <View style={viewStyleName}>
+            <Text style={[textStyleName, { color: colors.primaryContrast }]}>
+              {profile.first_name
+                ? profile.first_name + ' ' + profile.last_name
+                : profile.username}
+            </Text>
+            <Text style={[textStyleEmail, { color: colors.primaryContrast }]}>
+              {profile.email || ''}
+            </Text>
+          </View>
         </View>
-      </View>
-    )
+      </TouchableHighlight>
+    );
   }
 }
 
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: "row",
-    marginTop: 55,
-    marginLeft: 15,
-    marginBottom: 15,
+const styles = {
+  viewStyleContainer: {
+    paddingTop: 48,
+    padding: 16,
+    paddingBottom: 8,
   },
-  col: {
-    flexDirection: "column",
-    marginLeft: 15,
+  imageStylePhoto: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    borderWidth: 5,
   },
-  stretch: {
-    height: 60,
-    width: 60,
-    borderRadius: 30,
+  viewStyleName: {
+    paddingVertical: 12,
   },
-  nameText: {
-    color: Colors.drawerHeaderText,
-    fontSize: 16,
-    marginTop: 10,
-    fontWeight: "500",
+  textStyleName: {
+    fontSize: 14,
+    paddingBottom: 4,
+    fontWeight: 'bold',
   },
-  emailText: {
-    color: Colors.drawerHeaderText,
-    fontSize: 11,
-    marginTop: 10,
+  textStyleEmail: {
+    fontSize: 14,
   },
-});
+};
+
+const mapStateToProps = ({ user }) => {
+  const { profile } = user;
+  return { profile };
+};
+
+export default connect(mapStateToProps, {})(DrawerHeader);

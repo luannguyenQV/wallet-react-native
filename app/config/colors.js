@@ -1,7 +1,7 @@
 export default {
   red: '#ED675A',
-  green: '#03DBBB',
-  black: '#4D4D4D',
+  green: '#4CAF50',
+  black: '#000000',
   darkblue: '#2470A0',
   lightblue: '#3D95CE',
   lightgray: '#EBEBEB',
@@ -12,10 +12,29 @@ export default {
   drawerHeaderText: '#C0C9CF',
   transactionBackground: '#F7F7F7',
   whitesmoke: '#F6F6F6',
-  drawerColor: '#333B42',
   gold: '#F8CF51',
+  drawerColor: '#ffffff',
 
-  primary: '#3D95CE',
-  secondary: '#F8CF51',
-  tertiary: '#2470A0',
+  gray: '#a6a6a6',
+  lightGray: '#e1e1e1',
+  white: '#ffffff',
+  black: '#000000',
+
+  primary: '#4d4d4d',
+  secondary: '#a6a6a6',
+  tertiary: '#c4c4c4',
+  quaternary: '#e1e1e1',
+  focus: '#9797F0',
+
+  primaryContrast: '#f3f3f3',
+  secondaryContrast: '#2d2d2d',
+  tertiaryContrast: '#000000',
+  quaternaryContrast: '#4d4d4d',
+  focusContrast: '#2d2d2d',
+
+  warning: '#FC8755',
+  error: '#f44336',
+  success: '#4CAF50',
+  positive: '#4CAF50',
+  negative: '#f44336',
 };
