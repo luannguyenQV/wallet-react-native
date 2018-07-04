@@ -272,6 +272,7 @@ class GetVerifiedScreen extends Component {
               ? profile.first_name + ' ' + profile.last_name
               : profile.username
           }
+          colors={company_config.colors}
         />
         <View style={mainContainer}>
           {loading_profile ? <Spinner /> : null}

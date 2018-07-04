@@ -20,6 +20,7 @@ import {
   verifyItem,
   showModal,
   hideModal,
+  // activeItem,
   // setActiveCurrency,
 } from './../redux/actions';
 import { standardizeString } from './../util/general';
@@ -78,11 +79,11 @@ class CardList extends Component {
         textTitleLeft={textTitleLeft ? textTitleLeft(item) : ''}
         iconTitleLeft={iconTitleLeft}
         itemActive={itemActive ? itemActive(item) : false}
-        onPressTitleLeft={() =>
-          onPressTitleLeft
-            ? onPressTitleLeft(item)
-            : canActive ? activeItem(type, item) : null
-        }
+        // onPressTitleLeft={() =>
+        //   onPressTitleLeft
+        //     ? onPressTitleLeft(item)
+        //     : canActive ? activeItem(type, item) : null
+        // }
         title={title ? title(item) : ''}
         subtitle={subtitle ? subtitle(item) : ''}
         colorTitleBackground="white"
@@ -342,4 +343,5 @@ export default connect(mapStateToProps, {
   verifyItem,
   showModal,
   hideModal,
+  // activeItem,
 })(CardList);

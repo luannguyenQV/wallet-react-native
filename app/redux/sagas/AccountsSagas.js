@@ -76,6 +76,7 @@ function* fetchAccounts() {
 
 function* setActiveCurrency(action) {
   try {
+    console.log(action);
     yield call(
       Rehive.setActiveCurrency,
       action.payload.account_reference,

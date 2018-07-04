@@ -103,6 +103,7 @@ class PersonalDetailsScreen extends Component {
               ? profile.first_name + ' ' + profile.last_name
               : profile.username
           }
+          colors={colors}
         />
         {/* <View style={viewStyleContainer}>
           <TouchableHighlight

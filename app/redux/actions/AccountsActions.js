@@ -6,7 +6,6 @@ import { createAsyncTypes } from './../store/Utilities';
 export const ACCOUNT_FIELD_CHANGED = 'account_field_changed';
 export const ACCOUNT_FIELD_ERROR = 'account_field_error';
 export const updateAccountField = ({ prop, value }) => {
-  console.log('action', prop, value);
   return {
     type: ACCOUNT_FIELD_CHANGED,
     payload: { prop, value },
@@ -40,8 +39,6 @@ export const setSendWallet = wallet => {
 };
 
 export const validateSendAmount = (wallet, amount) => {
-  console.log(wallet, amount);
-  // const currency = wallet.currency.currency;
   for (let i = 0; i < wallet.currency.currency.divisibility; i++) {
     amount = amount * 10;
   }

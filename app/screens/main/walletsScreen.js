@@ -7,6 +7,8 @@ import {
   setSendWallet,
   viewWallet,
   hideWallet,
+  showModal,
+  setActiveCurrency,
 } from './../../redux/actions';
 
 import Header from './../../components/header';
@@ -130,7 +132,8 @@ class WalletsScreen extends Component {
       wallets,
       hideWallet,
       viewWallet,
-      showWallet,
+      showModal,
+      setActiveCurrency,
       tempWallet,
     } = this.props;
     return (
@@ -144,7 +147,7 @@ class WalletsScreen extends Component {
           loadingData={loading_accounts}
           identifier="reference"
           onRefresh={fetchAccounts}
-          // primaryItem={showModal('wallet', item, 'active')}
+          // activeItem={showModal('wallet', item, 'active')}
           // showDetail={showWallet}
           renderContent={this.renderContent}
           renderDetail={(item, navigation) =>
@@ -216,4 +219,6 @@ export default connect(mapStateToProps, {
   setSendWallet,
   viewWallet,
   hideWallet,
+  showModal,
+  setActiveCurrency,
 })(WalletsScreen);

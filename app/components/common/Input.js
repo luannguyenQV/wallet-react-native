@@ -151,7 +151,6 @@ class Input extends Component {
       onPressListItem,
       colors,
     } = this.props;
-    console.log(this.props);
 
     const {
       viewStyleContainer,
