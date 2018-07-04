@@ -170,6 +170,7 @@ class SendScreen extends Component {
       sendNote,
       sendError,
       setSendState,
+      company_config,
     } = this.props;
 
     const { viewStyleBottomContainer } = styles;
@@ -197,7 +198,13 @@ class SendScreen extends Component {
         textFooterLeft = 'Edit';
         onPressFooterLeft = () => setSendState('amount');
         textFooterRight = 'Confirm';
-        onPressFooterRight = () => this.setState({ pinVisible: true });
+        onPressFooterRight = () => {
+          if (company_config.pin.send) {
+            this.setState({ pinVisible: true });
+          } else {
+            this.performSend();
+          }
+        };
         break;
       case 'success':
         // textFooterLeft = 'Close';

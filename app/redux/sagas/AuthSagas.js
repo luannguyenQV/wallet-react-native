@@ -49,18 +49,19 @@ function* init() {
           if (token) {
             yield call(Rehive.verifyToken, token);
             yield call(Rehive.initWithToken, token);
-            const { pin, fingerprint } = yield select(getAuth);
-            console.log(pin, fingerprint);
-            if (pin || fingerprint) {
-              if (fingerprint) {
-                yield call(goToAuth, 'pin', 'fingerprint');
-              } else {
-                yield call(goToAuth, 'pin', 'pin');
+            if (company_config.pin.appLoad) {
+              const { pin, fingerprint } = yield select(getAuth);
+              console.log(pin, fingerprint);
+              if (pin || fingerprint) {
+                if (fingerprint) {
+                  yield call(goToAuth, 'pin', 'fingerprint');
+                } else {
+                  yield call(goToAuth, 'pin', 'pin');
+                }
+                yield take(PIN_SUCCESS);
               }
-              yield take(PIN_SUCCESS);
             }
             yield call(appLoad);
-            // go to auth for pin/2FA/announcements when done
           } else {
             yield call(goToAuth, 'landing', 'landing');
           }

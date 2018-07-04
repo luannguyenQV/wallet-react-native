@@ -24,11 +24,16 @@ import {
 import { Input, FullScreenForm, Output } from './../../components/common';
 import Colors from './../../config/colors';
 import Header from './../../components/header';
+import PinModal from './../../components/PinModal';
 
 class WithdrawScreen extends Component {
   static navigationOptions = () => ({
     title: 'Withdraw Amount',
   });
+
+  state = {
+    pinVisible: false,
+  };
 
   componentDidMount() {
     if (this.props.withdrawWallet === null) {
@@ -69,6 +74,7 @@ class WithdrawScreen extends Component {
       withdrawNote,
       withdrawError,
       setWithdrawState,
+      company_config,
     } = this.props;
 
     const { viewStyleBottomContainer } = styles;
@@ -97,7 +103,13 @@ class WithdrawScreen extends Component {
         textFooterLeft = 'Edit';
         onPressFooterLeft = () => setWithdrawState('amount');
         textFooterRight = 'Confirm';
-        onPressFooterRight = () => this.performWithdraw();
+        onPressFooterRight = () => {
+          if (company_config.pin.withdraw) {
+            this.setState({ pinVisible: true });
+          } else {
+            this.performWithdraw();
+          }
+        };
         break;
       case 'success':
         // textFooterLeft = 'Close';
@@ -295,6 +307,7 @@ class WithdrawScreen extends Component {
   }
 
   render() {
+    const { pin, fingerprint } = this.props;
     return (
       <View style={{ flex: 1 }}>
         <Header
@@ -307,6 +320,18 @@ class WithdrawScreen extends Component {
           keyboardShouldPersistTaps={'never'}
           style={styles.viewStyleContainer}
           behavior={'padding'}>
+          {this.state.pinVisible ? (
+            <PinModal
+              pin={pin}
+              fingerprint={fingerprint}
+              modalVisible={this.state.pinVisible}
+              onSuccess={() => {
+                this.setState({ pinVisible: false });
+                this.performSend();
+              }}
+              onDismiss={() => this.setState({ pinVisible: false })}
+            />
+          ) : null}
           <TouchableWithoutFeedback
             style={{ flex: 1 }}
             onPress={Keyboard.dismiss}
