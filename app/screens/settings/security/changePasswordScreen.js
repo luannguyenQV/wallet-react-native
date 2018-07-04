@@ -51,7 +51,9 @@ class ChangePasswordScreen extends Component {
       changePassword,
       old_passwordError,
       new_passwordError,
+      company_config,
     } = this.props;
+    const { colors } = company_config;
     return (
       <View style={styles.container}>
         <Header
@@ -70,6 +72,7 @@ class ChangePasswordScreen extends Component {
             onChangeText={value =>
               authFieldChange({ prop: 'old_password', value })
             }
+            colors={colors}
           />
           <Input
             type="password"
@@ -81,6 +84,7 @@ class ChangePasswordScreen extends Component {
             onChangeText={value =>
               authFieldChange({ prop: 'new_password', value })
             }
+            colors={colors}
           />
 
           <Button
@@ -111,6 +115,7 @@ const mapStateToProps = ({ auth }) => {
     old_passwordError,
     new_passwordError,
     loading,
+    company_config,
   } = auth;
   return {
     input,
@@ -120,6 +125,7 @@ const mapStateToProps = ({ auth }) => {
     old_passwordError,
     new_passwordError,
     loading,
+    company_config,
   };
 };
 

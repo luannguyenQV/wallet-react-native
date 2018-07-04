@@ -29,12 +29,7 @@ export const resendMobileVerification = (mobile, company) =>
 
 export const resetPassword = data => r.auth.password.reset(data);
 
-export const changePassword = (old_password, new_password) =>
-  r.auth.password.change({
-    old_password,
-    new_password1: new_password,
-    new_password2: new_password,
-  });
+export const changePassword = data => r.auth.password.change(data);
 
 export const submitOTP = otp => r.auth.mobile.verify({ otp });
 

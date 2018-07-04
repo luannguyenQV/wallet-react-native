@@ -17,7 +17,7 @@ import {
   validateWithdrawRecipient,
   validateWithdrawNote,
   setWithdrawState,
-  inputFieldUpdate,
+  updateAccountField,
   withdraw,
 } from '../../redux/actions';
 
@@ -202,7 +202,7 @@ class WithdrawScreen extends Component {
       withdrawAmount,
       withdrawWallet,
       withdrawAccountName,
-      inputFieldUpdate,
+      updateAccountField,
       withdrawNote,
       validateWithdrawAmount,
       setWithdrawBankAccount,
@@ -211,7 +211,9 @@ class WithdrawScreen extends Component {
       bank_account,
       loading_bank_account,
       setWithdrawState,
+      company_config,
     } = this.props;
+    const { colors } = company_config;
 
     switch (withdrawState) {
       case 'amount':
@@ -228,13 +230,14 @@ class WithdrawScreen extends Component {
             keyboardType="numeric"
             value={withdrawAmount}
             onChangeText={value =>
-              inputFieldUpdate({ prop: 'withdrawAmount', value })
+              updateAccountField({ prop: 'withdrawAmount', value })
             }
             returnKeyType="next"
             autoFocus
             onSubmitEditing={() =>
               validateWithdrawAmount(withdrawWallet, withdrawAmount)
             }
+            colors={colors}
           />
         );
       case 'account':
@@ -246,7 +249,7 @@ class WithdrawScreen extends Component {
             label={'Please select account'}
             value={withdrawAccountName}
             onChangeText={value =>
-              inputFieldUpdate({ prop: 'withdrawAccountName', value })
+              updateAccountField({ prop: 'withdrawAccountName', value })
             }
             inputError={withdrawError}
             reference={input => {
@@ -263,6 +266,7 @@ class WithdrawScreen extends Component {
               setWithdrawBankAccount(item);
               setWithdrawState('note');
             }}
+            colors={colors}
           />
         );
       case 'note':
@@ -273,7 +277,7 @@ class WithdrawScreen extends Component {
             label="Note:"
             value={withdrawNote}
             onChangeText={value =>
-              inputFieldUpdate({ prop: 'withdrawNote', value })
+              updateAccountField({ prop: 'withdrawNote', value })
             }
             inputError={withdrawError}
             reference={input => {
@@ -282,6 +286,7 @@ class WithdrawScreen extends Component {
             returnKeyType="next"
             autoFocus
             onSubmitEditing={() => validateWithdrawNote(withdrawNote)}
+            colors={colors}
           />
         );
       default:
@@ -354,7 +359,6 @@ const styles = {
     paddingBottom: 0,
   },
   viewStyleError: {
-    flex: 1,
     width: '100%',
     flexDirection: 'column',
     alignItems: 'center',
@@ -366,7 +370,8 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ accounts, user }) => {
+const mapStateToProps = ({ accounts, user, auth }) => {
+  const { pin, fingerprint, company_config } = auth;
   const {
     wallets,
     withdrawAmount,
@@ -395,11 +400,14 @@ const mapStateToProps = ({ accounts, user }) => {
     withdrawing,
     bank_account,
     loading_bank_account,
+    pin,
+    fingerprint,
+    company_config,
   };
 };
 
 export default connect(mapStateToProps, {
-  inputFieldUpdate,
+  updateAccountField,
   setWithdrawWallet,
   validateWithdrawAmount,
   setWithdrawBankAccount,
