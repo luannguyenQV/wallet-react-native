@@ -3,8 +3,6 @@ import {
   AUTH_FIELD_CHANGED,
   AUTH_FIELD_ERROR,
   LOGIN_USER_ASYNC,
-  REGISTER_USER_ASYNC,
-  VALIDATE_COMPANY_ASYNC,
   UPDATE_AUTH_FORM_STATE,
   CHANGE_PASSWORD_ASYNC,
   RESET_PASSWORD_ASYNC,
@@ -22,6 +20,7 @@ import {
   AUTH_COMPLETE,
   POST_LOADING,
   POST_NOT_LOADING,
+  SHOW_FINGERPRINT_MODAL,
 } from './../actions/AuthActions';
 import { HIDE_MODAL } from './../actions/UserActions';
 
@@ -140,6 +139,13 @@ export default (state = INITIAL_STATE, action) => {
         loading: false,
       };
 
+    case SHOW_FINGERPRINT_MODAL:
+      return {
+        ...state,
+        modalType: 'fingerprint',
+        modalVisible: true,
+      };
+
     case SET_COMPANY:
       return {
         ...state,
@@ -204,6 +210,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         fingerprint: true,
         pin: '',
+        modalVisible: false,
       };
     case RESET_PIN:
       return {

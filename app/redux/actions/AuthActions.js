@@ -191,6 +191,13 @@ export const setPin = pin => {
   };
 };
 
+export const SHOW_FINGERPRINT_MODAL = 'show_fingerprint_modal';
+export const showFingerprintModal = () => {
+  return {
+    type: SHOW_FINGERPRINT_MODAL,
+  };
+};
+
 export const ACTIVATE_FINGERPRINT = 'activate_fingerprint';
 export const activateFingerprint = () => {
   return {

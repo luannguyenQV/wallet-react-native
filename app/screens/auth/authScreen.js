@@ -24,6 +24,8 @@ import {
   pinFail,
   activateFingerprint,
   setPin,
+  showModal,
+  showFingerprintModal,
 } from '../../redux/actions';
 
 import Colors from './../../config/colors';
@@ -403,12 +405,10 @@ class AuthScreen extends Component {
   };
 
   _activateFingerprint = async () => {
-    // if (Platform.OS !== 'ios') {
-    //   this.setState({
-    //     modalVisible: true,
-    //     modalType: 'setFingerprint',
-    //   });
-    // }
+    if (Platform.OS !== 'ios') {
+      await Expo.Fingerprint.cancelAuthenticate();
+      this.props.showFingerprintModal();
+    }
     if (await Expo.Fingerprint.authenticateAsync()) {
       this.props.activateFingerprint();
     }
@@ -520,7 +520,7 @@ class AuthScreen extends Component {
           email;
         onPressActionOne = resetAuth;
         break;
-      case 'scanFingerprint':
+      case 'fingerprint':
         contentText = 'Please scan your fingerprint';
         onPressActionOne = () => {
           if (Platform.os !== 'ios') {
@@ -681,9 +681,11 @@ export default connect(mapStateToProps, {
   previousAuthFormState,
   resetPassword,
   resetAuth,
+  showModal,
   hideModal,
   pinSuccess,
   pinFail,
   activateFingerprint,
+  showFingerprintModal,
   setPin,
 })(AuthScreen);

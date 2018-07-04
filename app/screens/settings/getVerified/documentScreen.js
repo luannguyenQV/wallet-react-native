@@ -46,27 +46,10 @@ class DocumentScreen extends Component {
     });
   };
 
-  uploadDocument = () => {
+  uploadDocument() {
     const { image, category, document_type } = this.state;
     this.props.uploadDocument(image, category, document_type);
-    // try {
-    //   // await Rehive.createDocument(file, category, document_type);
-    //   this.setState({ loading: false });
-    //   Alert.alert(
-    //     'Upload successful',
-    //     'Your information will shortly be reviewed by our team.',
-    //     [
-    //       {
-    //         text: 'OK',
-    //         onPress: () => this.props.navigation.goBack(),
-    //       },
-    //     ],
-    //   );
-    // } catch (error) {
-    //   this.setState({ loading: false });
-    //   Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
-    // }
-  };
+  }
 
   renderContent() {
     const { category, state } = this.state;
@@ -117,14 +100,8 @@ class DocumentScreen extends Component {
               <Spinner size="large" />
             ) : (
               <View style={{ paddingHorizontal: 24 }}>
-                <Button
-                  label="Upload"
-                  onPress={this.uploadDocument} //this.openModal(item.document_type)}
-                />
-                <Button
-                  label="Cancel"
-                  onPress={() => this.resetState()} //this.openModal(item.document_type)}
-                />
+                <Button label="Upload" onPress={() => this.uploadDocument()} />
+                <Button label="Cancel" onPress={() => this.resetState()} />
               </View>
             )}
           </View>
