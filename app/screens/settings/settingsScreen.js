@@ -188,15 +188,15 @@ class SettingsScreen extends Component {
     return (
       <View>
         <SettingsOption
-          label="Reset password"
+          label="Change password"
           gotoAddress="ChangePassword"
           onPress={this.goTo}
         />
-        <SettingsOption
+        {/* <SettingsOption
           label="Two factor"
           gotoAddress="TwoFactor"
           onPress={this.goTo}
-        />
+        /> */}
         <SettingsOption
           label="Pin/fingerprint"
           gotoAddress="Pin"
@@ -215,19 +215,13 @@ class SettingsScreen extends Component {
     return (
       <View style={styles.container}>
         <Header navigation={this.props.navigation} drawer title="Settings" />
-        {/* <HeaderVerified
-          photoLink={profile.profile}
-          username={profile.username}
-          firstName={profile.first_name}
-          lastName={profile.last_name}
-        /> */}
         <InputContainer>
-          {/* <SettingsContainer label="Personal details">
+          <SettingsContainer label="Personal details">
             {this.renderBasicInfo()}
             {this.renderEmailAddresses()}
             {this.renderMobileNumbers()}
             {this.renderAddresses()}
-          </SettingsContainer> */}
+          </SettingsContainer>
           <SettingsContainer label="External accounts">
             {this.renderBankAccounts()}
             {/* {this.renderCards()} */}
@@ -236,9 +230,6 @@ class SettingsScreen extends Component {
           <SettingsContainer label="Security">
             {this.renderSecurity()}
           </SettingsContainer>
-          {/* <Text style={{ position: 'absolute', bottom: 4 }}>
-            Version: {AppConfig.version}
-          </Text> */}
         </InputContainer>
       </View>
     );

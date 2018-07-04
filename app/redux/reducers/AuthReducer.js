@@ -126,6 +126,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         password: '',
+        old_password: '',
         new_password: '',
         loading: false,
       };
@@ -134,6 +135,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         passwordError: action.payload,
         password: '',
+        old_password: '',
         new_password: '',
         loading: false,
       };

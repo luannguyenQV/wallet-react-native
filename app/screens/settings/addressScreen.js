@@ -36,7 +36,9 @@ class AddressScreen extends Component {
       updateError,
       updateItem,
       updateInputField,
+      company_config,
     } = this.props;
+    const { colors } = company_config;
     const { line_1, line_2, city, state_province, postal_code } = address;
     return (
       <View style={styles.container}>
@@ -70,6 +72,7 @@ class AddressScreen extends Component {
                     onChangeText={input =>
                       updateInputField('address', 'line_1', input)
                     }
+                    colors={colors}
                   />
 
                   <Input
@@ -80,6 +83,7 @@ class AddressScreen extends Component {
                     onChangeText={input =>
                       updateInputField('address', 'line_2', input)
                     }
+                    colors={colors}
                   />
 
                   <Input
@@ -90,6 +94,7 @@ class AddressScreen extends Component {
                     onChangeText={input =>
                       updateInputField('address', 'city', input)
                     }
+                    colors={colors}
                   />
 
                   <Input
@@ -100,6 +105,7 @@ class AddressScreen extends Component {
                     onChangeText={input =>
                       updateInputField('address', 'state_province', input)
                     }
+                    colors={colors}
                   />
 
                   <Input
@@ -110,6 +116,7 @@ class AddressScreen extends Component {
                     onChangeText={input =>
                       updateInputField('address', 'postal_code', input)
                     }
+                    colors={colors}
                   />
                 </View>
               ) : line_1 || line_2 || city || state_province || postal_code ? (
@@ -202,9 +209,17 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user }) => {
+const mapStateToProps = ({ user, auth }) => {
+  const { company_config } = auth;
   const { address, loading_address, tempItem, showDetail, updateError } = user;
-  return { address, loading_address, tempItem, showDetail, updateError };
+  return {
+    address,
+    loading_address,
+    tempItem,
+    showDetail,
+    updateError,
+    company_config,
+  };
 };
 
 export default connect(mapStateToProps, {

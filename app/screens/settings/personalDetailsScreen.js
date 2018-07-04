@@ -79,7 +79,9 @@ class PersonalDetailsScreen extends Component {
       updateInputField,
       updateError,
       showDetail,
+      company_config,
     } = this.props;
+    const { colors } = company_config;
     const { first_name, last_name, id_number } = profile;
     const { viewStyleContainer, imageStylePhoto } = styles;
     const { modalVisible } = this.state;
@@ -144,6 +146,7 @@ class PersonalDetailsScreen extends Component {
                     onChangeText={input =>
                       updateInputField('profile', 'first_name', input)
                     }
+                    colors={colors}
                   />
 
                   <Input
@@ -154,6 +157,7 @@ class PersonalDetailsScreen extends Component {
                     onChangeText={input =>
                       updateInputField('profile', 'last_name', input)
                     }
+                    colors={colors}
                   />
 
                   <Input
@@ -164,6 +168,7 @@ class PersonalDetailsScreen extends Component {
                     onChangeText={input =>
                       updateInputField('profile', 'id_number', input)
                     }
+                    colors={colors}
                   />
                 </View>
               ) : first_name || last_name || id_number ? (
@@ -293,9 +298,17 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user }) => {
+const mapStateToProps = ({ user, auth }) => {
+  const { company_config } = auth;
   const { profile, loading_profile, tempItem, showDetail, updateError } = user;
-  return { profile, loading_profile, tempItem, showDetail, updateError };
+  return {
+    profile,
+    loading_profile,
+    tempItem,
+    showDetail,
+    updateError,
+    company_config,
+  };
 };
 
 export default connect(mapStateToProps, {

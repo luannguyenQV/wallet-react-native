@@ -30,7 +30,13 @@ class MobileNumbersScreen extends Component {
   };
 
   renderDetail = () => {
-    const { tempItem, updateError, updateInputField } = this.props;
+    const {
+      tempItem,
+      updateError,
+      updateInputField,
+      company_config,
+    } = this.props;
+    const { colors } = company_config;
     const { number } = tempItem;
 
     return (
@@ -41,6 +47,7 @@ class MobileNumbersScreen extends Component {
         value={number}
         inputError={updateError}
         onChangeText={input => updateInputField('mobile', 'number', input)}
+        colors={colors}
       />
     );
   };
@@ -88,12 +95,14 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user }) => {
+const mapStateToProps = ({ user, auth }) => {
+  const { company_config } = auth;
   const { mobile, tempItem, showDetail } = user;
   return {
     mobile,
     showDetail,
     tempItem,
+    company_config,
   };
 };
 

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { View, TouchableHighlight, Image, Text } from 'react-native';
 import { connect } from 'react-redux';
-import ResetNavigation from './../util/resetNavigation';
 
 class DrawerHeader extends Component {
   render() {
@@ -16,11 +15,7 @@ class DrawerHeader extends Component {
     return (
       <TouchableHighlight
         onPress={() =>
-          ResetNavigation.dispatchUnderDrawer(
-            this.props.navigation,
-            'Settings',
-            'SettingsPersonalDetails',
-          )
+          this.props.navigation.navigate('SettingsPersonalDetails')
         }>
         <View style={[viewStyleContainer, { backgroundColor: colors.primary }]}>
           <Image

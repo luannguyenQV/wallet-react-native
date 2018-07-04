@@ -30,7 +30,13 @@ class CryptoAddressesScreen extends Component {
   };
 
   renderDetail = () => {
-    const { tempItem, updateError, updateInputField } = this.props;
+    const {
+      tempItem,
+      updateError,
+      updateInputField,
+      company_config,
+    } = this.props;
+    const { colors } = company_config;
     const { address } = tempItem;
 
     return (
@@ -43,6 +49,7 @@ class CryptoAddressesScreen extends Component {
         onChangeText={input =>
           updateInputField('crypto_account', 'address', input)
         }
+        colors={colors}
       />
     );
   };
@@ -95,7 +102,8 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user }) => {
+const mapStateToProps = ({ user, auth }) => {
+  const { company_config } = auth;
   const {
     crypto_account,
     loading_crypto_account,
@@ -109,6 +117,7 @@ const mapStateToProps = ({ user }) => {
     tempItem,
     showDetail,
     updateError,
+    company_config,
   };
 };
 

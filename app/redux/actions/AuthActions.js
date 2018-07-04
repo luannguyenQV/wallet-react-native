@@ -125,25 +125,25 @@ export const changePassword = (old_password, new_password) => {
     };
   }
 
-  // if (!new_password || new_password.length < 8) {
-  //   error = 'Password must be at least 8 characters in length';
-  //   return {
-  //     type: AUTH_FIELD_ERROR,
-  //     payload: {
-  //       prop: 'new_password',
-  //       error,
-  //     },
-  //   };
-  // }
+  if (!new_password || new_password.length < 8) {
+    error = 'Password must be at least 8 characters in length';
+    return {
+      type: AUTH_FIELD_ERROR,
+      payload: {
+        prop: 'new_password',
+        error,
+      },
+    };
+  }
 
-  // return {
-  //   type: CHANGE_PASSWORD_ASYNC,
-  //   payload: {
-  //     old_password,
-  //     new_password1: new_password,
-  //     new_password2: new_password,
-  //   },
-  // };
+  return {
+    type: CHANGE_PASSWORD_ASYNC.pending,
+    payload: {
+      old_password,
+      new_password1: new_password,
+      new_password2: new_password,
+    },
+  };
 };
 
 export const RESET_PASSWORD_ASYNC = createAsyncTypes('reset_password');
