@@ -538,6 +538,10 @@ function* changePassword(action) {
     yield put({
       type: CHANGE_PASSWORD_ASYNC.success,
     });
+    Toast.show({
+      text: 'Password changed',
+    });
+    yield call(NavigationService.goBack);
   } catch (error) {
     console.log(error);
     yield put({ type: CHANGE_PASSWORD_ASYNC.error, payload: error.message });
@@ -656,9 +660,8 @@ function* verifyMFA() {
     }
     Toast.show({
       text: 'MFA enabled!',
-      buttonText: 'Okay',
     });
-    yield call(NavigationService.navigate.goBack);
+    yield call(NavigationService.goBack);
   } catch (error) {
     console.log('mfa verify', error);
     // yield put({ type: LOGOUT_USER_ASYNC.error, payload: error.message });

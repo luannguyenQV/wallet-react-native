@@ -424,7 +424,7 @@ class SendScreen extends Component {
     // console.log(pin, fingerprint);
     return (
       <View style={{ flex: 1 }}>
-        <Header navigation={this.props.navigation} title="Send" back />
+        <Header navigation={this.props.navigation} title="Send" back right />
         <KeyboardAvoidingView
           keyboardShouldPersistTaps={'never'}
           style={styles.viewStyleContainer}

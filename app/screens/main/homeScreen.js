@@ -29,9 +29,9 @@ class HomeScreen extends Component {
     label: 'Home',
   };
 
-  // componentDidMount() {
-  //   ContactService.getAllContacts();
-  // }
+  componentDidMount() {
+    // ContactService.getAllContacts();
+  }
 
   showDialog = item => {
     this.setState({ dataToShow: item });
@@ -51,6 +51,7 @@ class HomeScreen extends Component {
         <Header
           navigation={this.props.navigation}
           drawer
+          // right
           // noAccounts={this.state.noAccounts}
         />
         <HeaderWallet
