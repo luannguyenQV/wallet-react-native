@@ -9,6 +9,7 @@ import DrawerHeader from './../components/drawerHeader';
 import colors from './../config/colors';
 
 import HomeScreen from './../screens/main/homeScreen';
+import LogoutScreen from './../screens/auth/logoutScreen';
 
 import WalletsScreen from '../screens/main/walletsScreen';
 
@@ -21,6 +22,7 @@ const Stack = {
   Wallets: WalletsScreen,
   GetVerified: GetVerifiedScreen,
   Settings: SettingsScreen,
+  Logout: LogoutScreen,
 };
 
 export default createDrawerNavigator(Stack, {

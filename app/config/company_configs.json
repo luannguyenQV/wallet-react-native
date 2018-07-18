@@ -5,6 +5,11 @@
       "id": 0,
       "company": "test_company_1",
       "config": {
+        "crypto": {
+          "bitcoin": false,
+          "stellar": true,
+          "ethereum": false
+        },
         "cards": [
           {
             "id": "0",
