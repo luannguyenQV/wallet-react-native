@@ -108,6 +108,11 @@ class TwoFactorScreen extends Component {
   renderToken() {
     const { colors } = this.props.company_config;
     const { mfaToken } = this.props;
+    console.log(mfaToken);
+    let decComp = decodeURIComponent(mfaToken.otpauth_url);
+    console.log('decComp', decComp);
+    let dec = decodeURI(mfaToken.otpauth_url);
+    console.log('dec', dec);
     return (
       <InputContainer>
         <Image
@@ -115,7 +120,7 @@ class TwoFactorScreen extends Component {
           source={{
             uri:
               'https://chart.googleapis.com/chart?cht=qr&chs=200x200&chld=L|0&chl=' +
-              mfaToken.imageURI,
+              decodeURIComponent(mfaToken.otpauth_url),
           }}
         />
         <Output label="Issuer" value={mfaToken.issuer} copy />

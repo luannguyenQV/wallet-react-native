@@ -36,9 +36,9 @@ function* fetchData(action) {
       case 'email':
         response = yield call(Rehive.getEmails);
         break;
-      case 'crypto_account':
-        response = yield call(Rehive.getCryptoAccounts);
-        break;
+      // case 'crypto_account':
+      //   response = yield call(Rehive.getCryptoAccounts);
+      //   break;
       case 'bank_account':
         response = yield call(Rehive.getBankAccounts);
         break;
@@ -82,16 +82,17 @@ function* fetchData(action) {
     });
   } catch (error) {
     if (!error) {
+      console.log('failed fetch of type', action.payload);
       yield put({ type: FETCH_DATA_ASYNC.pending, payload: action.payload });
       return;
     }
-    console.log('type', action.payload);
+    console.log('type', action.payload, error);
     if (error && error.status === 401) {
       yield put({
         type: LOGOUT_USER_ASYNC.success,
       });
     }
-    yield put({ type: FETCH_DATA_ASYNC.error, payload: error });
+    yield put({ type: FETCH_DATA_ASYNC.error, payload: error.message });
   }
 }
 

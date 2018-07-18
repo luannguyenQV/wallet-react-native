@@ -45,9 +45,11 @@ import {
   VERIFY_MFA,
 } from './../actions/AuthActions';
 import { Toast } from 'native-base';
-
-import { FETCH_DATA_ASYNC } from './../actions/UserActions';
-import { FETCH_ACCOUNTS_ASYNC } from './../actions/AccountsActions';
+import {
+  FETCH_DATA_ASYNC,
+  FETCH_ACCOUNTS_ASYNC,
+  FETCH_PHONE_CONTACTS_ASYNC,
+} from './../actions';
 
 import * as Rehive from './../../util/rehive';
 import NavigationService from './../../util/navigation';
@@ -498,17 +500,22 @@ function* appLoad() {
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'profile' }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'mobile' }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'email' }),
-      put({ type: FETCH_DATA_ASYNC.pending, payload: 'crypto_account' }),
+      // put({ type: FETCH_DATA_ASYNC.pending, payload: 'crypto_account' }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'bank_account' }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'address' }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'document' }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'company' }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_bank_account' }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_currency' }),
+      put({ type: FETCH_PHONE_CONTACTS_ASYNC.pending }),
     ]);
     // TODO: add timeout and re=fetch any failed api calls
     for (let i = 0; i < 11; i++) {
-      yield take([FETCH_ACCOUNTS_ASYNC.success, FETCH_DATA_ASYNC.success]);
+      yield take([
+        FETCH_ACCOUNTS_ASYNC.success,
+        FETCH_DATA_ASYNC.success,
+        FETCH_PHONE_CONTACTS_ASYNC.success,
+      ]);
     }
     yield put({ type: APP_LOAD_FINISH });
     yield call(NavigationService.navigate, 'App');

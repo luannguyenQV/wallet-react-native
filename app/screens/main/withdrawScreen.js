@@ -255,7 +255,6 @@ class WithdrawScreen extends Component {
       case 'account':
         return (
           <Input
-            popUp
             key="account"
             placeholder="e.g. FNB"
             label={'Please select account'}
@@ -270,6 +269,7 @@ class WithdrawScreen extends Component {
             returnKeyType="next"
             autoFocus
             type="account"
+            popUp
             data={bank_account}
             loadingData={loading_bank_account}
             title="name"

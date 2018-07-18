@@ -2,6 +2,7 @@ import Big from 'big.js';
 
 import * as Rehive from './../../util/rehive';
 import { createAsyncTypes } from './../store/Utilities';
+import { validateEmail, validateMobile } from './../../util/validation';
 
 export const ACCOUNT_FIELD_CHANGED = 'account_field_changed';
 export const ACCOUNT_FIELD_ERROR = 'account_field_error';
@@ -52,15 +53,28 @@ export const validateSendAmount = (wallet, amount) => {
   }
 };
 
-export const validateSendRecipient = recipient => {
+export const validateSendRecipient = (type, recipient) => {
+  console.log(recipient);
+  let error = '';
   if (recipient) {
-    return setSendState('note');
+    if (type == 'email') {
+      error = validateEmail(recipient);
+      if (!error) {
+        return setSendState('note');
+      }
+    } else if (type == 'mobile') {
+      error = validateMobile(recipient);
+      if (!error) {
+        return setSendState('note');
+      }
+    }
   } else {
-    return {
-      type: ACCOUNT_FIELD_ERROR,
-      payload: 'Recipient cannot be blank',
-    };
+    error = 'Recipient cannot be blank';
   }
+  return {
+    type: ACCOUNT_FIELD_ERROR,
+    payload: error,
+  };
 };
 
 export const validateSendNote = note => {

@@ -203,6 +203,18 @@ class Input extends Component {
             {this.renderInput()}
           </View>
 
+          {inputError || helperText ? (
+            <View style={viewStyleHelper}>
+              <Text
+                style={[
+                  textStyleFooter,
+                  { color: inputError ? colors.error : colors.primaryContrast },
+                ]}>
+                {inputError ? 'Error: ' + inputError : helperText}
+              </Text>
+            </View>
+          ) : null}
+
           {data ? (
             <FlatList
               // refreshControl={
@@ -215,32 +227,22 @@ class Input extends Component {
               style={{ backgroundColor: colors.primaryContrast }}
               // data={data.filter(item => item[title] === value)}
               data={
-                value
-                  ? data.filter(item => item[title].indexOf(value) !== -1)
-                  : data
+                data
+                // value
+                //   ? data.filter(item => item[title].indexOf(value) !== -1)
+                //   : data
               }
               renderItem={({ item }) => (
                 <ListItem
                   onPress={() => onPressListItem(item)}
                   title={item[title]}
                   subtitle={item[subtitle]}
+                  // image={item.image ? item.image : null}
                 />
               )}
               keyExtractor={item => (item.id ? item.id.toString() : '')}
               // ListEmptyComponent={<ListItem title="No data" />}
             />
-          ) : null}
-
-          {inputError || helperText ? (
-            <View style={viewStyleHelper}>
-              <Text
-                style={[
-                  textStyleFooter,
-                  { color: inputError ? colors.error : colors.primaryContrast },
-                ]}>
-                {inputError ? 'Error: ' + inputError : helperText}
-              </Text>
-            </View>
           ) : null}
         </View>
       </View>

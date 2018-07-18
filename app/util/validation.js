@@ -23,9 +23,9 @@ export const validatePassword = password => {
   return '';
 };
 
-export const validateMobile = email => {
-  if (!IsEmail(props.email)) {
-    return 'Please enter a valid email address';
+export const validateMobile = mobile => {
+  if (!mobile) {
+    return 'Please enter a valid mobile number';
   }
   return '';
 };

@@ -18,8 +18,11 @@ import {
   setSendState,
   updateAccountField,
   send,
+  setContactType,
+  updateContactField,
 } from '../../redux/actions';
 import TimerCountdown from 'react-native-timer-countdown';
+import { getContacts } from './../../redux/reducers/ContactsReducer';
 
 import {
   Input,
@@ -171,6 +174,8 @@ class SendScreen extends Component {
       validateSendRecipient,
       validateSendNote,
       sendAmount,
+      contactsSearch,
+      contactsType,
       sendRecipient,
       sendNote,
       sendError,
@@ -192,7 +197,13 @@ class SendScreen extends Component {
       case 'recipient':
         textFooterLeft = 'Edit';
         onPressFooterLeft = () => setSendState('amount');
-        onPressFooterRight = () => validateSendRecipient(sendRecipient);
+        onPressFooterRight = () => {
+          updateAccountField({
+            prop: 'sendRecipient',
+            value: contactsSearch,
+          });
+          validateSendRecipient(contactsType, contactsSearch);
+        };
         break;
       case 'note':
         textFooterLeft = 'Edit';
@@ -320,6 +331,13 @@ class SendScreen extends Component {
       validateSendNote,
       sendError,
       company_config,
+      contacts,
+      contactsError,
+      contactsLoading,
+      contactsType,
+      contactsSearch,
+      updateContactField,
+      setContactType,
     } = this.props;
     const { colors } = company_config;
     switch (sendState) {
@@ -356,30 +374,55 @@ class SendScreen extends Component {
               }}>
               <View style={{ flex: 1 }}>
                 <Button
-                  backgroundColor={colors.focusContrast}
-                  textColor={colors.focus}
+                  backgroundColor={
+                    contactsType === 'email'
+                      ? colors.focusContrast
+                      : colors.secondary
+                  }
+                  textColor={
+                    contactsType === 'email'
+                      ? colors.focus
+                      : colors.secondaryContrast
+                  }
+                  onPress={() => setContactType('email')}
                   label="EMAIL"
                 />
               </View>
               <View style={{ flex: 1 }}>
-                <Button backgroundColor={colors.secondary} label="MOBILE" />
+                <Button
+                  backgroundColor={
+                    contactsType === 'mobile'
+                      ? colors.focusContrast
+                      : colors.secondary
+                  }
+                  textColor={
+                    contactsType === 'mobile'
+                      ? colors.focus
+                      : colors.secondaryContrast
+                  }
+                  onPress={() => setContactType('mobile')}
+                  label="MOBILE"
+                />
               </View>
             </View>
-            <TimerCountdown
+            {/* <TimerCountdown
               initialSecondsRemaining={1000 * 60}
               onTick={secondsRemaining => console.log('tick', secondsRemaining)}
               onTimeElapsed={() => console.log('complete')}
               allowFontScaling={true}
               style={{ fontSize: 20 }}
-            />
+            /> */}
 
             <Input
-              key="mobile"
+              key="contactsSearch"
               placeholder="e.g. user@rehive.com"
-              label={'Please enter recipient'}
-              value={sendRecipient}
+              label={
+                'Please enter recipient name or ' +
+                (contactsType === 'email' ? 'email address' : 'mobile number')
+              }
+              value={contactsSearch}
               onChangeText={value =>
-                updateAccountField({ prop: 'sendRecipient', value })
+                updateContactField({ prop: 'contactsSearch', value })
               }
               inputError={sendError}
               reference={input => {
@@ -388,8 +431,26 @@ class SendScreen extends Component {
               // keyboardType="numeric"
               returnKeyType="next"
               autoFocus
-              onSubmitEditing={() => validateSendRecipient(sendRecipient)}
+              onSubmitEditing={() => {
+                updateAccountField({
+                  prop: 'sendRecipient',
+                  value: contactsSearch,
+                });
+                validateSendRecipient(contactsType, contactsSearch);
+              }}
               colors={colors}
+              popUp
+              data={contacts}
+              loadingData={contactsLoading}
+              title="name"
+              subtitle="contact"
+              onPressListItem={item => {
+                updateAccountField({
+                  prop: 'sendRecipient',
+                  value: item.contact,
+                });
+                validateSendRecipient(contactsType, item.contact);
+              }}
             />
           </View>
         );
@@ -426,7 +487,7 @@ class SendScreen extends Component {
       <View style={{ flex: 1 }}>
         <Header navigation={this.props.navigation} title="Send" back right />
         <KeyboardAvoidingView
-          keyboardShouldPersistTaps={'never'}
+          keyboardShouldPersistTaps={'always'}
           style={styles.viewStyleContainer}
           behavior={'padding'}>
           {this.state.pinVisible ? (
@@ -503,8 +564,14 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ accounts, auth }) => {
+const mapStateToProps = ({ accounts, auth, contacts }) => {
   const { pin, fingerprint, company_config } = auth;
+  const {
+    contactsError,
+    contactsLoading,
+    contactsType,
+    contactsSearch,
+  } = contacts;
   const {
     wallets,
     sendAmount,
@@ -531,6 +598,11 @@ const mapStateToProps = ({ accounts, auth }) => {
     pin,
     fingerprint,
     company_config,
+    contactsError,
+    contactsLoading,
+    contactsType,
+    contactsSearch,
+    contacts: getContacts(contacts),
   };
 };
 
@@ -542,4 +614,6 @@ export default connect(mapStateToProps, {
   validateSendNote,
   setSendState,
   send,
+  setContactType,
+  updateContactField,
 })(SendScreen);
