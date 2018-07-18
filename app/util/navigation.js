@@ -7,6 +7,7 @@ function setTopLevelNavigator(navigatorRef) {
 }
 
 function navigate(routeName, params) {
+  console.log(_navigator, routeName);
   _navigator.dispatch(
     NavigationActions.navigate({
       type: NavigationActions.NAVIGATE,
@@ -15,8 +16,6 @@ function navigate(routeName, params) {
     }),
   );
 }
-
-// add other navigation functions that you need and export them
 
 export default {
   navigate,

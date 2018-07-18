@@ -7,7 +7,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   UIManager,
-  LayoutManager,
+  Platform,
   Text,
   Dimensions,
 } from 'react-native';
@@ -26,6 +26,7 @@ import {
   setPin,
   showModal,
   showFingerprintModal,
+  verifyMFA,
 } from '../../redux/actions';
 
 import Colors from './../../config/colors';
@@ -225,7 +226,7 @@ class AuthScreen extends Component {
               size={30}
               inputPosition="center"
               containerStyle={{ marginTop: 0, paddingBottom: 24 }}
-              onFulfill={code => this._onInputPinComplete(code)}
+              onFulfill={code => this.props.verifyMFA(code)}
             />
             {/* <Button
               label="Resend SMS"
@@ -688,4 +689,5 @@ export default connect(mapStateToProps, {
   activateFingerprint,
   showFingerprintModal,
   setPin,
+  verifyMFA,
 })(AuthScreen);

@@ -81,6 +81,10 @@ function* fetchData(action) {
       payload: { data, prop: action.payload },
     });
   } catch (error) {
+    if (!error) {
+      yield put({ type: FETCH_DATA_ASYNC.pending, payload: action.payload });
+      return;
+    }
     console.log('type', action.payload);
     if (error && error.status === 401) {
       yield put({

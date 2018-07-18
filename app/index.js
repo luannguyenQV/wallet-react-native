@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
+// import Instabug from 'instabug-reactnative';
+
 import { persistor, store } from './redux/store';
 import Main from './main';
 
@@ -11,7 +13,13 @@ import Main from './main';
 
 // XMLHttpRequest = _XHR;
 
+// Instabug.startWithToken('IOS_APP_TOKEN', Instabug.invocationEvent.shake);
+
 class App extends Component {
+  // constructor() {
+  //   Instabug.startWithToken('IOS_APP_TOKEN', Instabug.invocationEvent.shake);
+  // }
+
   render() {
     console.disableYellowBox = true;
 

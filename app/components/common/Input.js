@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput, FlatList } from 'react-native';
+import PropTypes from 'prop-types';
 import Colors from './../../config/colors';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import CountryPicker from 'react-native-country-picker-modal';
@@ -180,7 +181,7 @@ class Input extends Component {
                 borderColor: inputError
                   ? colors.error
                   : focused ? colors.focus : colors.lightGray,
-                borderBottomWidth: inputError || focused ? 2 : 1,
+                borderBottomWidth: inputError || focused ? 2 : 2,
               },
             ]}>
             {focused || value ? (
@@ -246,6 +247,33 @@ class Input extends Component {
     );
   }
 }
+
+Input.propTypes = {
+  label: PropTypes.string, // Text displayed on button
+  reference: PropTypes.func, // For animations
+  animation: PropTypes.string, // Animation type
+  disabled: PropTypes.bool, // Disable touchable component
+  onPress: PropTypes.func, // Function to execute on press
+  icon: PropTypes.string, // Icon displayed on left of button
+  size: PropTypes.string, // Size of button (small / default or '' / large)
+  type: PropTypes.string, // Type of button (text, contained, TODO: outlined)
+  backgroundColor: PropTypes.string, // Button color
+  textColor: PropTypes.string, // Text color
+};
+
+Input.defaultProps = {
+  label: '',
+  reference: () => {},
+  animation: '',
+  disabled: false,
+  onPress: () => {},
+  icon: '',
+  size: '',
+  type: 'contained',
+  colors: Colors,
+  // backgroundColor: Colors.primary,
+  // textColor: Colors.primaryContrast,
+};
 
 const styles = {
   viewStyleContainer: {
@@ -319,3 +347,13 @@ const styles = {
 };
 
 export { Input };
+
+/* PHONE */
+/* 
+while active store country code in state - this can be fed back to country selector
+if country text input = disabled and the value = country name
+splice / replace country code when changing country
+does reverse searching working? If type +27 = ZA / +31 =
+google lib for text mask
+
+*/

@@ -211,3 +211,75 @@ export const resetPin = () => {
     type: RESET_PIN,
   };
 };
+
+/* Actions related to setting up multi-factor authentication */
+// Initialise mfa flow
+export const INIT_MFA = 'init_mfa';
+export const initMFA = () => {
+  return {
+    type: INIT_MFA,
+  };
+};
+
+// export const GET_MFA = 'get_mfa';
+// export const getMFA = () => {
+//   return {
+//     type: GET_MFA,
+//   };
+// };
+
+export const VIEW_MFA = 'view_mfa';
+export const viewMFA = type => {
+  return {
+    type: VIEW_MFA,
+    payload: type,
+  };
+};
+
+export const ENABLE_MFA = 'enable_mfa';
+export const enableMFA = mobile_number => {
+  return {
+    type: ENABLE_MFA,
+    payload: mobile_number,
+  };
+};
+
+// export const GET_MFA_SMS = 'get_mfa_sms';
+// export const getMFA_SMS = () => {
+//   return {
+//     type: GET_MFA_SMS,
+//   };
+// };
+
+// export const ENABLE_MFA_SMS = 'enable_mfa_sms';
+// export const enableMFA_SMS = () => {
+//   return {
+//     type: ENABLE_MFA_SMS,
+//   };
+// };
+
+export const VERIFY_MFA = 'verify_mfa';
+export const verifyMFA = token => {
+  return {
+    type: VERIFY_MFA,
+    payload: token,
+  };
+};
+
+export const RESET_MFA = 'reset_mfa';
+export const resetMFA = () => {
+  return {
+    type: RESET_MFA,
+  };
+};
+
+export const NEXT_STATE_MFA = 'next_state_mfa';
+export const UPDATE_MFA_ERROR = 'update_mfa_error';
+export const UPDATE_MFA_STATE = 'update_mfa_state';
+export const UPDATE_MFA_TOKEN = 'update_mfa_token';
+export const nextStateMFA = nextState => {
+  return {
+    type: NEXT_STATE_MFA,
+    payload: nextState,
+  };
+};

@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableHighlight } from 'react-native';
+import { View, Text, TouchableHighlight, Clipboard } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 class Output extends Component {
   renderOutput() {
-    const { label, value } = this.props;
+    const { label, value, copy } = this.props;
 
     const {
+      viewStyleContent,
       viewStyleLabel,
       textStyleLabel,
       viewStyleValue,
@@ -13,20 +15,24 @@ class Output extends Component {
     } = styles;
 
     return (
-      <View>
-        {value && label ? (
-          <View style={viewStyleLabel}>
-            <Text style={[textStyleLabel]}>{label}</Text>
+      <View style={viewStyleContent}>
+        <View style={{ flex: 1 }}>
+          {value && label ? (
+            <View style={viewStyleLabel}>
+              <Text style={[textStyleLabel]}>{label}</Text>
+            </View>
+          ) : null}
+          <View style={viewStyleValue}>
+            <Text style={textStyleValue}>{value ? value : label}</Text>
           </View>
-        ) : null}
-        <View style={viewStyleValue}>
-          <Text style={textStyleValue}>{value ? value : label}</Text>
         </View>
+        {copy ? <Icon name="content-copy" size={24} color={'black'} /> : null}
       </View>
     );
   }
+
   render() {
-    const { goTo, gotoAddress, label } = this.props;
+    const { goTo, gotoAddress, label, value, copy } = this.props;
 
     const { viewStyleContainer } = styles;
 
@@ -37,6 +43,16 @@ class Output extends Component {
             underlayColor={'white'}
             activeOpacity={0.2}
             onPress={() => goTo(gotoAddress, label)}>
+            {this.renderOutput()}
+          </TouchableHighlight>
+        ) : copy ? (
+          <TouchableHighlight
+            underlayColor={'white'}
+            activeOpacity={0.2}
+            onPress={() => {
+              Clipboard.setString(value);
+              Alert.alert(null, 'Copied');
+            }}>
             {this.renderOutput()}
           </TouchableHighlight>
         ) : (
@@ -51,41 +67,33 @@ const styles = {
   viewStyleContainer: {
     flexDirection: 'column',
     borderBottomWidth: 0,
-    flexWrap: 'wrap',
+    // flexWrap: 'wrap',
     margin: 8,
+  },
+  viewStyleContent: {
+    flexDirection: 'row',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   viewStyleLabel: {
     flexDirection: 'row',
   },
   viewStyleValue: {
     flexDirection: 'row',
+    paddingRight: 8,
   },
-  // touchable: {
-  //   paddingVertical: 10,
-  //   paddingHorizontal: 20,
-  //   height: 60,
-  //   borderBottomWidth: 1,
-  //   borderBottomColor: Colors.lightgray,
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  // },
   textStyleLabel: {
     fontSize: 12,
-    // paddingTop: 8,
     color: 'black',
     opacity: 0.6,
   },
   textStyleValue: {
-    // height: 28,
     paddingLeft: 0,
-    // paddingBottom: 8,
     paddingTop: 2,
     color: 'black',
     fontWeight: 'normal',
-    // borderColor: 'white',
-    // borderWidth: 1,
     flex: 1,
-    // alignItems: 'center',
     fontSize: 16,
   },
 };

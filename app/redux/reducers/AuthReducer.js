@@ -21,6 +21,12 @@ import {
   POST_LOADING,
   POST_NOT_LOADING,
   SHOW_FINGERPRINT_MODAL,
+  INIT_MFA,
+  RESET_MFA,
+  NEXT_STATE_MFA,
+  UPDATE_MFA_ERROR,
+  UPDATE_MFA_STATE,
+  UPDATE_MFA_TOKEN,
 } from './../actions/AuthActions';
 import { HIDE_MODAL } from './../actions/UserActions';
 
@@ -50,6 +56,7 @@ const INITIAL_STATE = {
 
   pin: '',
   fingerprint: false,
+  mfaState: 'loading',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -61,6 +68,8 @@ export default (state = INITIAL_STATE, action) => {
     case INIT.pending:
       return {
         ...state,
+        mainState: 'company',
+        detailState: 'company',
         appLoading: true,
         postLoading: false,
         pinError: '',
@@ -245,6 +254,41 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         postLoading: false,
+      };
+
+    case INIT_MFA:
+      return {
+        ...state,
+        mfaState: 'loading',
+      };
+    case RESET_MFA:
+      return {
+        ...state,
+        mfaState: 'landing',
+        mfaError: '',
+        mfaLoading: false,
+      };
+
+    case NEXT_STATE_MFA:
+      return {
+        ...state,
+        mfaLoading: true,
+      };
+    case UPDATE_MFA_STATE:
+      return {
+        ...state,
+        mfaState: action.payload,
+        mfaLoading: false,
+      };
+    case UPDATE_MFA_ERROR:
+      return {
+        ...state,
+        mfaError: action.payload,
+      };
+    case UPDATE_MFA_TOKEN:
+      return {
+        ...state,
+        mfaToken: action.payload,
       };
 
     case LOGOUT_USER_ASYNC.success:

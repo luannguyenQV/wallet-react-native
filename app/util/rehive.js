@@ -45,9 +45,13 @@ export const disableAuthSMS = () => r.auth.mfa.sms.disable();
 
 export const sendAuthSMS = () => r.auth.mfa.sms.send();
 
+export const getMFA_Token = () => r.auth.mfa.token.get();
+
 export const enableAuthToken = () => r.auth.mfa.token.enable();
 
 export const disableAuthToken = () => r.auth.mfa.token.disable();
+
+export const verifyMFA = token => r.auth.mfa.verify({ token });
 
 /* USERS */
 // Profile

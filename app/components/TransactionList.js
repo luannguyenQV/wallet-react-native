@@ -22,8 +22,10 @@ class TransactionList extends Component {
     await this.getTransactions(this.props.currencyCode);
   }
 
-  async componentWillReceiveProps(nextProps) {
-    await this.getTransactions(nextProps.currencyCode);
+  async UNSAFE_componentWillReceiveProps(nextProps) {
+    if (this.state.previousCurrencyCode !== nextProps.currencyCode) {
+      await this.getTransactions(nextProps.currencyCode);
+    }
   }
 
   async getTransactions(currencyCode) {

@@ -310,12 +310,7 @@ class WithdrawScreen extends Component {
     const { pin, fingerprint } = this.props;
     return (
       <View style={{ flex: 1 }}>
-        <Header
-          navigation={this.props.navigation}
-          title="Withdraw"
-          right
-          back
-        />
+        <Header navigation={this.props.navigation} title="Withdraw" back />
         <KeyboardAvoidingView
           keyboardShouldPersistTaps={'never'}
           style={styles.viewStyleContainer}

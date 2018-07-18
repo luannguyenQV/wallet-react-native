@@ -192,11 +192,11 @@ class SettingsScreen extends Component {
           gotoAddress="ChangePassword"
           onPress={this.goTo}
         />
-        {/* <SettingsOption
+        <SettingsOption
           label="Two factor"
           gotoAddress="TwoFactor"
           onPress={this.goTo}
-        /> */}
+        />
         <SettingsOption
           label="Pin/fingerprint"
           gotoAddress="Pin"
@@ -216,12 +216,12 @@ class SettingsScreen extends Component {
       <View style={styles.container}>
         <Header navigation={this.props.navigation} drawer title="Settings" />
         <InputContainer>
-          <SettingsContainer label="Personal details">
+          {/* <SettingsContainer label="Personal details">
             {this.renderBasicInfo()}
             {this.renderEmailAddresses()}
             {this.renderMobileNumbers()}
             {this.renderAddresses()}
-          </SettingsContainer>
+          </SettingsContainer> */}
           <SettingsContainer label="External accounts">
             {this.renderBankAccounts()}
             {/* {this.renderCards()} */}

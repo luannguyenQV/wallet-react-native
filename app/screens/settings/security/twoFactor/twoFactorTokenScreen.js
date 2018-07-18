@@ -13,7 +13,12 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Colors from './../../../../config/colors';
 import AuthService from './../../../../services/authService';
 import resetNavigation from './../../../../util/resetNavigation';
-import { Input, InputContainer, Button } from './../../../../components/common';
+import {
+  Input,
+  InputContainer,
+  Button,
+  Output,
+} from './../../../../components/common';
 
 class TwoFactorTokenScreen extends Component {
   static navigationOptions = {
@@ -31,41 +36,41 @@ class TwoFactorTokenScreen extends Component {
       issuer: '',
       account: '',
       key: '',
-      delete: params.authInfo.token,
+      // delete: params.authInfo.token,
     };
   }
 
-  // async componentDidMount() {
-  //   let responseJson = await AuthService.tokenAuthGet();
-  //   if (responseJson.status === 'success') {
-  //     const tokenResponse = responseJson.data;
-  //     this.setState({
-  //       otpauth_url: tokenResponse.otpauth_url,
-  //       issuer: tokenResponse.issuer,
-  //       account: tokenResponse.account,
-  //       key: tokenResponse.key,
-  //       imageURI:
-  //         'https://chart.googleapis.com/chart?cht=qr&chs=200x200&chld=L|0&chl=' +
-  //         tokenResponse.otpauth_url,
-  //     });
-  //   } else {
-  //     let responseJson = await AuthService.tokenAuthPost({});
-  //     if (responseJson.status === 'success') {
-  //       const tokenResponse = responseJson.data;
-  //       this.setState({
-  //         otpauth_url: tokenResponse.otpauth_url,
-  //         issuer: tokenResponse.issuer,
-  //         account: tokenResponse.account,
-  //         key: tokenResponse.key,
-  //         imageURI:
-  //           'https://chart.googleapis.com/chart?cht=qr&chs=200x200&chld=L|0&chl=' +
-  //           tokenResponse.otpauth_url,
-  //       });
-  //     } else {
-  //       Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
-  //     }
-  //   }
-  // }
+  async componentDidMount() {
+    let responseJson = await AuthService.tokenAuthGet();
+    if (responseJson.status === 'success') {
+      const tokenResponse = responseJson.data;
+      this.setState({
+        otpauth_url: tokenResponse.otpauth_url,
+        issuer: tokenResponse.issuer,
+        account: tokenResponse.account,
+        key: tokenResponse.key,
+        imageURI:
+          'https://chart.googleapis.com/chart?cht=qr&chs=200x200&chld=L|0&chl=' +
+          tokenResponse.otpauth_url,
+      });
+    } else {
+      let responseJson = await AuthService.tokenAuthPost({});
+      if (responseJson.status === 'success') {
+        const tokenResponse = responseJson.data;
+        this.setState({
+          otpauth_url: tokenResponse.otpauth_url,
+          issuer: tokenResponse.issuer,
+          account: tokenResponse.account,
+          key: tokenResponse.key,
+          imageURI:
+            'https://chart.googleapis.com/chart?cht=qr&chs=200x200&chld=L|0&chl=' +
+            tokenResponse.otpauth_url,
+        });
+      } else {
+        Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
+      }
+    }
+  }
 
   saveToken = async () => {
     let responseJson = await AuthService.authVerify({
@@ -104,42 +109,9 @@ class TwoFactorTokenScreen extends Component {
             style={{ width: 250, height: 250, alignSelf: 'center' }}
             source={{ uri: this.state.imageURI }}
           />
-          <View style={styles.infoContainer}>
-            <Text style={styles.infoTitleText}>Issuer</Text>
-            <Text style={styles.infoDetailsText}>{this.state.issuer}</Text>
-            <TouchableHighlight
-              underlayColor={'white'}
-              onPress={() => {
-                Clipboard.setString(this.state.issuer);
-                Alert.alert(null, 'Copied');
-              }}>
-              <Icon name="content-copy" size={30} color={Colors.black} />
-            </TouchableHighlight>
-          </View>
-          <View style={[styles.infoContainer, { backgroundColor: 'white' }]}>
-            <Text style={styles.infoTitleText}>Account</Text>
-            <Text style={styles.infoDetailsText}>{this.state.account}</Text>
-            <TouchableHighlight
-              underlayColor={'white'}
-              onPress={() => {
-                Clipboard.setString(this.state.account);
-                Alert.alert(null, 'Copied');
-              }}>
-              <Icon name="content-copy" size={30} color={Colors.black} />
-            </TouchableHighlight>
-          </View>
-          <View style={styles.infoContainer}>
-            <Text style={styles.infoTitleText}>Key</Text>
-            <Text style={styles.infoDetailsText}>{this.state.key}</Text>
-            <TouchableHighlight
-              underlayColor={'white'}
-              onPress={() => {
-                Clipboard.setString(this.state.key);
-                Alert.alert(null, 'Copied');
-              }}>
-              <Icon name="content-copy" size={30} color={Colors.black} />
-            </TouchableHighlight>
-          </View>
+          <Output label="Issuer" value={this.state.issuer} copy />
+          <Output label="Account" value={this.state.account} copy />
+          <Output label="Key" value={this.state.key} copy />
           <Input
             label="Enter your token"
             placeholder="e.g. 123456"

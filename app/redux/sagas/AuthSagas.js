@@ -1,26 +1,50 @@
-import { select, take, all, call, put, takeEvery } from 'redux-saga/effects';
+/* AUTH SAGAS */
+/* This file contains all the flows related to user auth 
+These flows are broken down into:
+1. init - contains the logic to decide which state the app should start in when first opening
+2. auth - contains the logic for switching between the screens up until a server request is made to rehive and a token returned. 
+3. postAuth - once a token has been returned from Rehive, it is only stored after a set of conditions are met. 
+              These conditions are obtained from the company config and include require contact details being verified, extra user information, 
+              multi-factor authentication and setting of a local pin for securing actions in the app
+4. other - there are also small helper sagas for handling other auth actions like logging out a user, changing a user's password/pin etc.
+*/
+
 import {
-  AUTH_FIELD_ERROR,
+  select,
+  take,
+  all,
+  call,
+  put,
+  takeEvery,
+  takeLatest,
+} from 'redux-saga/effects';
+import {
+  INIT,
   LOGIN_USER_ASYNC,
   REGISTER_USER_ASYNC,
+  NEXT_AUTH_FORM_STATE,
   UPDATE_AUTH_FORM_STATE,
   APP_LOAD_FINISH,
   CHANGE_PASSWORD_ASYNC,
-  VALIDATE_COMPANY_ASYNC,
   RESET_PASSWORD_ASYNC,
   LOGOUT_USER_ASYNC,
-  RESET_AUTH,
-  NEXT_AUTH_FORM_STATE,
-  INIT,
-  PIN_SUCCESS,
   AUTH_COMPLETE,
   LOADING,
   SET_COMPANY,
+  PIN_SUCCESS,
   ACTIVATE_FINGERPRINT,
   SET_PIN,
   POST_LOADING,
   POST_NOT_LOADING,
+  INIT_MFA,
+  RESET_MFA,
+  NEXT_STATE_MFA,
+  UPDATE_MFA_STATE,
+  UPDATE_MFA_TOKEN,
+  UPDATE_MFA_ERROR,
+  VERIFY_MFA,
 } from './../actions/AuthActions';
+import { Toast } from 'native-base';
 
 import { FETCH_DATA_ASYNC } from './../actions/UserActions';
 import { FETCH_ACCOUNTS_ASYNC } from './../actions/AccountsActions';
@@ -33,10 +57,12 @@ import {
   validatePassword,
 } from './../../util/validation';
 import default_config from './../../config/default_company_config';
-import { getToken, getCompany, getAuth, getUser } from './selectors';
+import { getToken, getCompany, getAuth } from './selectors';
 
+/* 
+Init function called when app starts up to see what state the app should be in
+*/
 function* init() {
-  console.log('init');
   let company_config;
   try {
     Rehive.initWithoutToken();
@@ -47,43 +73,43 @@ function* init() {
         try {
           const token = yield select(getToken);
           if (token) {
-            yield call(Rehive.verifyToken, token);
+            // yield call(Rehive.verifyToken, token);
             yield call(Rehive.initWithToken, token);
             if (company_config.pin.appLoad) {
               const { pin, fingerprint } = yield select(getAuth);
-              console.log(pin, fingerprint);
               if (pin || fingerprint) {
                 if (fingerprint) {
-                  yield call(goToAuth, 'pin', 'fingerprint');
+                  yield call(initialAuthState, 'pin', 'fingerprint');
                 } else {
-                  yield call(goToAuth, 'pin', 'pin');
+                  yield call(initialAuthState, 'pin', 'pin');
                 }
-                yield take(PIN_SUCCESS);
+                yield take(PIN_SUCCESS); // waits for pin success
               }
             }
+            // successful app start while logged in
             yield call(appLoad);
           } else {
-            yield call(goToAuth, 'landing', 'landing');
+            yield call(initialAuthState, 'landing', 'landing');
           }
         } catch (error) {
           console.log('token error', error);
-          yield call(goToAuth, 'landing', 'landing');
+          yield call(initialAuthState, 'landing', 'landing');
         }
       } else {
-        yield call(goToAuth, 'company', 'company');
+        yield call(initialAuthState, 'company', 'company');
       }
     } catch (error) {
       console.log('company error', error);
-      yield call(goToAuth, 'company', 'company');
+      yield call(initialAuthState, 'company', 'company');
     }
   } catch (error) {
-    console.log('init error:', error);
+    console.log('sdk init error:', error);
     yield put({ type: INIT.error, error });
   }
 }
 
-function* goToAuth(mainState, detailState) {
-  console.log('go to: ', mainState);
+/* sets initial auth state */
+function* initialAuthState(mainState, detailState) {
   try {
     yield put({
       type: UPDATE_AUTH_FORM_STATE,
@@ -91,6 +117,7 @@ function* goToAuth(mainState, detailState) {
     });
     yield put({ type: INIT.success });
     if (mainState !== 'pin') {
+      // starts auth flow saga
       yield call(authFlow);
     }
   } catch (error) {
@@ -98,41 +125,20 @@ function* goToAuth(mainState, detailState) {
   }
 }
 
-function* appLoad() {
-  try {
-    yield all([
-      put({ type: POST_LOADING }),
-      put({ type: FETCH_ACCOUNTS_ASYNC.pending }),
-      put({ type: FETCH_DATA_ASYNC.pending, payload: 'profile' }),
-      put({ type: FETCH_DATA_ASYNC.pending, payload: 'mobile' }),
-      put({ type: FETCH_DATA_ASYNC.pending, payload: 'email' }),
-      put({ type: FETCH_DATA_ASYNC.pending, payload: 'crypto_account' }),
-      put({ type: FETCH_DATA_ASYNC.pending, payload: 'bank_account' }),
-      put({ type: FETCH_DATA_ASYNC.pending, payload: 'address' }),
-      put({ type: FETCH_DATA_ASYNC.pending, payload: 'document' }),
-      put({ type: FETCH_DATA_ASYNC.pending, payload: 'company' }),
-      put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_bank_account' }),
-      put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_currency' }),
-    ]);
-    for (let i = 0; i < 11; i++) {
-      yield take([FETCH_ACCOUNTS_ASYNC.success, FETCH_DATA_ASYNC.success]);
-    }
-    yield put({ type: APP_LOAD_FINISH });
-    NavigationService.navigate('App');
-  } catch (error) {
-    console.log('appLoad', error);
-    yield put({ type: LOGIN_USER_ASYNC.error, payload: error });
-  }
-}
-
+/* MAIN AUTH FLOW */
+/* 
+  This code runs in a loop, evaluating what state to transition to next depending on provided inputs
+  If external calls are made (login / register / server validation) the saga pauses and waits for response, then updates accordingly
+*/
 function* authFlow() {
+  console.log('authFlow');
   try {
     let token = '';
     let user = {};
     while (true) {
+      // permanent loop that waits for a state transition action from the auth screen
       const action = yield take(NEXT_AUTH_FORM_STATE);
       const { nextFormState } = action.payload;
-      console.log(nextFormState);
       const {
         mainState,
         detailState,
@@ -141,11 +147,9 @@ function* authFlow() {
         email,
         mobile,
         password,
-        first_name,
-        last_name,
-        country,
         company_config,
       } = yield select(getAuth);
+      // if no state changes are made stay in current state
       let nextMainState = mainState;
       let nextDetailState = detailState;
       let authError = '';
@@ -155,35 +159,42 @@ function* authFlow() {
       switch (mainState) {
         case 'company':
           try {
+            // Tries to dummy register a user for company which validates if company exists
+            // TODO: this should be revised, but requires platform improvements
             yield put({ type: LOADING });
             yield call(Rehive.register, { company: tempCompany });
           } catch (error) {
             if (error.data.company) {
+              // This error is returned if no company by this ID exists in rehive
               authError = 'Please enter a valid company ID';
             } else {
+              // fetches company config for company, if none exists use default
               temp_config = yield call(Rehive.getCompanyConfig, tempCompany);
               temp_config = temp_config ? temp_config : default_config;
+              // stores company ID and config in redux state
               yield put({
                 type: SET_COMPANY,
                 payload: { tempCompany, temp_config },
               });
+              // sets next state to landing
               nextMainState = 'landing';
               nextDetailState = 'landing';
             }
           }
           break;
         case 'landing':
-          nextMainState = nextFormState;
-          nextDetailState = company_config.auth.identifier;
+          nextMainState = nextFormState; // either register / login depending on button pressed
+          nextDetailState = company_config.auth.identifier; // ensures user is prompted for the correct info
           break;
         case 'login':
           if (nextFormState === 'forgot') {
             nextMainState = 'forgot';
+            // TODO: update this to handle forgot password to other identifiers (mobile?)
             nextDetailState = 'email';
           } else {
             switch (detailState) {
               case 'email':
-                authError = validateEmail(email);
+                authError = validateEmail(email); // validation function returns empty if successful
                 if (!authError) {
                   nextDetailState = 'password';
                   user = email;
@@ -203,8 +214,9 @@ function* authFlow() {
                   try {
                     yield put({ type: LOADING });
                     ({ user, token } = yield call(Rehive.login, data));
-                    yield call(Rehive.initWithToken, token);
+                    yield call(Rehive.initWithToken, token); // initialises sdk with new token
                     if (yield call(postAuthFlow)) {
+                      // waits for postAuthFlow to complete, when complete stores token and exists auth flow
                       yield put({ type: AUTH_COMPLETE, payload: token });
                       return;
                     }
@@ -276,25 +288,15 @@ function* authFlow() {
   }
 }
 
+/* POST AUTH FLOW */
+/* 
+  This This code runs from top down, pausing for user input or server responses where
+  If external calls are made (login / register / server validation) the saga pauses and waits for response, then updates accordingly
+*/
 function* postAuthFlow() {
   try {
     while (true) {
-      // const action = yield take(NEXT_AUTH_FORM_STATE);
-      // const { nextFormState } = action.payload;
-      console.log('postAuthFlow');
-      const {
-        mainState,
-        detailState,
-        tempCompany,
-        company,
-        email,
-        mobile,
-        password,
-        first_name,
-        last_name,
-        country,
-        company_config,
-      } = yield select(getAuth);
+      const { mainState, detailState, company_config } = yield select(getAuth);
       let nextMainState = mainState;
       let nextDetailState = detailState;
       let authError = '';
@@ -320,14 +322,21 @@ function* postAuthFlow() {
           yield put({ type: POST_NOT_LOADING });
           switch (detailState) {
             case 'token':
-              // TODO: wait for next auth state action here
-              // test token
-              // if token pass put next state else stay here and reset
-              break;
             case 'sms':
-              // test sms
-              // if sms pass put next state else stay here and reset
-              break;
+              while (true) {
+                try {
+                  const action = yield take(VERIFY_MFA);
+                  yield call(Rehive.verifyMFA, action.payload);
+                  break;
+                } catch (error) {
+                  yield put({
+                    type: UPDATE_AUTH_FORM_STATE,
+                    payload: {
+                      authError: error.message,
+                    },
+                  });
+                }
+              }
             default:
               nextMainState = 'verification';
               nextDetailState = 'mobile';
@@ -460,8 +469,6 @@ function* postAuthFlow() {
             return true;
           }
           break;
-        // case 'default':
-        //   return true;
       }
       yield put({ type: POST_LOADING });
 
@@ -481,6 +488,36 @@ function* postAuthFlow() {
   }
 }
 
+/* fetches data to ensure redux state contains latest version of information */
+function* appLoad() {
+  console.log('appLoad');
+  try {
+    yield all([
+      put({ type: POST_LOADING }),
+      put({ type: FETCH_ACCOUNTS_ASYNC.pending }),
+      put({ type: FETCH_DATA_ASYNC.pending, payload: 'profile' }),
+      put({ type: FETCH_DATA_ASYNC.pending, payload: 'mobile' }),
+      put({ type: FETCH_DATA_ASYNC.pending, payload: 'email' }),
+      put({ type: FETCH_DATA_ASYNC.pending, payload: 'crypto_account' }),
+      put({ type: FETCH_DATA_ASYNC.pending, payload: 'bank_account' }),
+      put({ type: FETCH_DATA_ASYNC.pending, payload: 'address' }),
+      put({ type: FETCH_DATA_ASYNC.pending, payload: 'document' }),
+      put({ type: FETCH_DATA_ASYNC.pending, payload: 'company' }),
+      put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_bank_account' }),
+      put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_currency' }),
+    ]);
+    // TODO: add timeout and re=fetch any failed api calls
+    for (let i = 0; i < 11; i++) {
+      yield take([FETCH_ACCOUNTS_ASYNC.success, FETCH_DATA_ASYNC.success]);
+    }
+    yield put({ type: APP_LOAD_FINISH });
+    yield call(NavigationService.navigate, 'App');
+  } catch (error) {
+    console.log(error);
+    yield put({ type: LOGIN_USER_ASYNC.error, payload: error.message });
+  }
+}
+
 function* logoutUser() {
   try {
     yield call(Rehive.logout);
@@ -491,7 +528,7 @@ function* logoutUser() {
     yield call(init);
   } catch (error) {
     console.log(error);
-    yield put({ type: LOGOUT_USER_ASYNC.error, payload: error });
+    yield put({ type: LOGOUT_USER_ASYNC.error, payload: error.message });
   }
 }
 
@@ -503,7 +540,7 @@ function* changePassword(action) {
     });
   } catch (error) {
     console.log(error);
-    yield put({ type: CHANGE_PASSWORD_ASYNC.error, error });
+    yield put({ type: CHANGE_PASSWORD_ASYNC.error, payload: error.message });
   }
 }
 
@@ -519,11 +556,121 @@ function* resetPassword(action) {
   }
 }
 
+/* 
+Init function called when app starts up to see what state the app should be in
+*/
+function* mfaFlow() {
+  try {
+    const mfa = yield call(Rehive.getMFA);
+    console.log(mfa);
+    let nextState = '';
+    if (mfa.token || mfa.sms) {
+      yield put({ type: UPDATE_MFA_STATE, payload: 'enabled' });
+      yield take(NEXT_STATE_MFA);
+      if (mfa.token) {
+        nextState = 'verifyToken';
+      } else if (mfa.sms) {
+        nextState = 'verifySMS';
+      }
+      yield put({ type: UPDATE_MFA_STATE, payload: nextState });
+      let flag = true;
+      while (flag) {
+        const action = yield take(VERIFY_MFA);
+        try {
+          yield call(Rehive.verifyMFA, action.payload);
+          break;
+        } catch (error) {
+          console.log('mfa verification', error);
+          yield put({ type: UPDATE_MFA_ERROR, payload: error.message });
+        }
+      }
+      if (mfa.token) {
+        yield call(Rehive.disableAuthToken);
+      } else if (mfa.sms) {
+        yield call(Rehive.disableAuthSMS);
+      }
+    }
+    yield put({ type: RESET_MFA });
+    while (true) {
+      let action = yield take(NEXT_STATE_MFA);
+      if (action.payload === 'token') {
+        yield call(Rehive.enableAuthToken);
+        const response = yield call(Rehive.getMFA_Token);
+        console.log(response);
+        yield put({ type: UPDATE_MFA_TOKEN, payload: response });
+        yield put({ type: UPDATE_MFA_STATE, payload: 'token' });
+        action = yield take(NEXT_STATE_MFA);
+        if (action.payload === 'back') {
+          yield call(Rehive.disableAuthToken);
+          yield put({ type: UPDATE_MFA_STATE, payload: 'landing' });
+        } else {
+          yield put({ type: UPDATE_MFA_STATE, payload: 'verifyToken' });
+          yield call(verifyMFA);
+          break;
+        }
+      } else if (action.payload === 'sms') {
+        try {
+          const response = yield call(Rehive.getMFA_SMS);
+          console.log(response);
+          yield put({
+            type: AUTH_FIELD_CHANGED,
+            payload: { prop: mfaMobile, value: response.mobile_number },
+          });
+        } catch (error) {
+          console.log(error);
+        }
+        yield put({ type: UPDATE_MFA_STATE, payload: 'sms' });
+        action = yield take(NEXT_STATE_MFA);
+        console.log(action);
+        if (action.payload === 'back') {
+          yield put({ type: UPDATE_MFA_STATE, payload: 'landing' });
+        } else {
+          const { mfaMobile } = yield select(getAuth);
+          console.log(mfaMobile);
+          yield call(Rehive.enableAuthSMS, mfaMobile);
+          yield put({ type: UPDATE_MFA_STATE, payload: 'verifySMS' });
+          yield call(verifyMFA);
+          break;
+        }
+      }
+      // yield take([FETCH_ACCOUNTS_ASYNC.success, FETCH_DATA_ASYNC.success]);
+      // take next action
+    }
+  } catch (error) {
+    console.log('mfa flow', error);
+    // yield put({ type: LOGOUT_USER_ASYNC.error, payload: error.message });
+  }
+}
+
+function* verifyMFA() {
+  try {
+    while (true) {
+      const action = yield take(VERIFY_MFA);
+      try {
+        yield call(Rehive.verifyMFA, action.payload);
+        break;
+      } catch (error) {
+        console.log('mfa verification', error);
+        yield put({ type: UPDATE_MFA_ERROR, payload: error.message });
+      }
+    }
+    Toast.show({
+      text: 'MFA enabled!',
+      buttonText: 'Okay',
+    });
+    yield call(NavigationService.navigate.goBack);
+  } catch (error) {
+    console.log('mfa verify', error);
+    // yield put({ type: LOGOUT_USER_ASYNC.error, payload: error.message });
+  }
+}
+
 export const authSagas = all([
   takeEvery(INIT.pending, init),
+  takeLatest(INIT_MFA, mfaFlow),
   takeEvery(LOGIN_USER_ASYNC.success, postAuthFlow),
   takeEvery(REGISTER_USER_ASYNC.success, postAuthFlow),
-  takeEvery(AUTH_COMPLETE, appLoad),
+  takeLatest(AUTH_COMPLETE, appLoad),
   takeEvery(CHANGE_PASSWORD_ASYNC.pending, changePassword),
   takeEvery(LOGOUT_USER_ASYNC.pending, logoutUser),
   takeEvery(RESET_PASSWORD_ASYNC.pending, resetPassword),

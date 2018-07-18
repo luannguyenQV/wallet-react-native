@@ -272,6 +272,7 @@ const styles = {
   viewStyleContainer: {
     flex: 1,
     backgroundColor: 'white',
+    padding: 16,
   },
   buttonStyle: {
     flex: 1,

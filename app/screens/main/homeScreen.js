@@ -6,13 +6,15 @@ import {
   setActiveWalletIndex,
   fetchAccounts,
 } from './../../redux/actions';
-import _ from 'lodash';
+
 import Swiper from 'react-native-swiper';
 
 import Header from './../../components/header';
 import HeaderWallet from '../../components/HeaderWallet';
 import TransactionList from './../../components/TransactionList';
 import HomeCards from './../../components/HomeCards';
+
+import ContactService from './../../services/contactService';
 
 const renderPagination = (index, total, context) => {
   return (
@@ -26,6 +28,10 @@ class HomeScreen extends Component {
   static navigationOptions = {
     label: 'Home',
   };
+
+  // componentDidMount() {
+  //   ContactService.getAllContacts();
+  // }
 
   showDialog = item => {
     this.setState({ dataToShow: item });

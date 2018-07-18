@@ -19,13 +19,18 @@ import {
   updateAccountField,
   send,
 } from '../../redux/actions';
+import TimerCountdown from 'react-native-timer-countdown';
 
-import { Input, FullScreenForm, Output } from './../../components/common';
+import {
+  Input,
+  FullScreenForm,
+  Output,
+  Button,
+} from './../../components/common';
 import ContactService from './../../services/contactService';
 import Colors from './../../config/colors';
 import Header from './../../components/header';
 import PinModal from './../../components/PinModal';
-import { performDivisibility } from './../../util/general';
 
 class SendScreen extends Component {
   static navigationOptions = () => ({
@@ -342,24 +347,51 @@ class SendScreen extends Component {
         );
       case 'recipient':
         return (
-          <Input
-            key="recipient"
-            placeholder="e.g. user@rehive.com"
-            label={'Please enter recipient'}
-            value={sendRecipient}
-            onChangeText={value =>
-              updateAccountField({ prop: 'sendRecipient', value })
-            }
-            inputError={sendError}
-            reference={input => {
-              this.input = input;
-            }}
-            // keyboardType="numeric"
-            returnKeyType="next"
-            autoFocus
-            onSubmitEditing={() => validateSendRecipient(sendRecipient)}
-            colors={colors}
-          />
+          <View>
+            <View
+              style={{
+                flexDirection: 'row',
+                // alignItems: 'center',
+                // justifyContent: 'center',
+              }}>
+              <View style={{ flex: 1 }}>
+                <Button
+                  backgroundColor={colors.focusContrast}
+                  textColor={colors.focus}
+                  label="EMAIL"
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Button backgroundColor={colors.secondary} label="MOBILE" />
+              </View>
+            </View>
+            <TimerCountdown
+              initialSecondsRemaining={1000 * 60}
+              onTick={secondsRemaining => console.log('tick', secondsRemaining)}
+              onTimeElapsed={() => console.log('complete')}
+              allowFontScaling={true}
+              style={{ fontSize: 20 }}
+            />
+
+            <Input
+              key="mobile"
+              placeholder="e.g. user@rehive.com"
+              label={'Please enter recipient'}
+              value={sendRecipient}
+              onChangeText={value =>
+                updateAccountField({ prop: 'sendRecipient', value })
+              }
+              inputError={sendError}
+              reference={input => {
+                this.input = input;
+              }}
+              // keyboardType="numeric"
+              returnKeyType="next"
+              autoFocus
+              onSubmitEditing={() => validateSendRecipient(sendRecipient)}
+              colors={colors}
+            />
+          </View>
         );
       case 'note':
         return (
@@ -409,12 +441,12 @@ class SendScreen extends Component {
               onDismiss={() => this.setState({ pinVisible: false })}
             />
           ) : null}
-          <TouchableWithoutFeedback
+          {/* <TouchableWithoutFeedback
             style={{ flex: 1 }}
             onPress={Keyboard.dismiss}
-            accessible={false}>
-            {this.renderMainContainer()}
-          </TouchableWithoutFeedback>
+            accessible={false}> */}
+          {this.renderMainContainer()}
+          {/* </TouchableWithoutFeedback> */}
         </KeyboardAvoidingView>
       </View>
     );
@@ -439,10 +471,9 @@ const styles = {
   },
   buttonStyleOutput: { width: '100%', borderRadius: 3, marginHorizontal: 8 },
   viewStyleBottomContainer: {
-    // width: '100%',
     // justifyContent: 'center',
     // alignSelf: 'flex-end',
-    // flex: 1,
+    flex: 1,
     // minHeight: 100,
     borderRadius: 2,
     // position: 'absolute',
