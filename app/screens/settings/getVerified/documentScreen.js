@@ -4,15 +4,7 @@ import { connect } from 'react-redux';
 import { uploadDocument } from './../../../redux/actions';
 import Header from './../../../components/header';
 
-import * as Rehive from './../../../util/rehive';
-
-import SettingsService from './../../../services/settingsService';
-import {
-  ImageUpload,
-  Button,
-  Spinner,
-  ButtonList,
-} from '../../../components/common';
+import { ImageUpload, Button, Spinner } from '../../../components/common';
 import document_categories from './../../../config/document_types.json';
 
 class DocumentScreen extends Component {

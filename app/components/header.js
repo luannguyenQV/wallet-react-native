@@ -14,7 +14,7 @@ export default class Header extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     NetInfo.isConnected.fetch().then(isConnected => {
       this.setState({
         offline: !isConnected,
@@ -176,7 +176,7 @@ export default class Header extends Component {
           <View style={styles.rightIcon}>
             {right ? (
               <HeaderButton
-                onPress={() => navigation.navigate('QRcodeScanner')}
+                onPress={() => navigation.navigate('QRCodeScanner')}
                 icon="camera"
               />
             ) : null}

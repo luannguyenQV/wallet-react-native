@@ -5,7 +5,7 @@ This file contains all the TYPE declarations and ACTION functions
 that relate to the user profile / information
 */
 
-import { createAsyncTypes } from './../store/Utilities';
+import { createAsyncTypes } from '../store/Utilities';
 
 export const INPUT_FIELD_CHANGED = 'input_field_changed';
 export const INPUT_FIELD_ERROR = 'input_field_error';

@@ -27,8 +27,8 @@ import {
   UPDATE_MFA_ERROR,
   UPDATE_MFA_STATE,
   UPDATE_MFA_TOKEN,
-} from './../actions/AuthActions';
-import { HIDE_MODAL } from './../actions/UserActions';
+} from '../actions/AuthActions';
+import { HIDE_MODAL } from '../actions/UserActions';
 
 const INITIAL_STATE = {
   mainState: '',

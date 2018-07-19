@@ -43,21 +43,22 @@ import {
   UPDATE_MFA_TOKEN,
   UPDATE_MFA_ERROR,
   VERIFY_MFA,
-} from './../actions/AuthActions';
+} from '../actions/AuthActions';
 import { Toast } from 'native-base';
 import {
   FETCH_DATA_ASYNC,
   FETCH_ACCOUNTS_ASYNC,
   FETCH_PHONE_CONTACTS_ASYNC,
-} from './../actions';
+  FETCH_REWARDS_ASYNC,
+} from '../actions';
 
-import * as Rehive from './../../util/rehive';
-import NavigationService from './../../util/navigation';
+import * as Rehive from '../../util/rehive';
+import NavigationService from '../../util/navigation';
 import {
   validateEmail,
   validateMobile,
   validatePassword,
-} from './../../util/validation';
+} from '../../util/validation';
 import default_config from './../../config/default_company_config';
 import { getToken, getCompany, getAuth } from './selectors';
 
@@ -508,13 +509,16 @@ function* appLoad() {
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_bank_account' }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_currency' }),
       put({ type: FETCH_PHONE_CONTACTS_ASYNC.pending }),
+      put({ type: FETCH_REWARDS_ASYNC.pending }),
     ]);
     // TODO: add timeout and re=fetch any failed api calls
-    for (let i = 0; i < 11; i++) {
+    for (let i = 0; i < 12; i++) {
       yield take([
         FETCH_ACCOUNTS_ASYNC.success,
         FETCH_DATA_ASYNC.success,
         FETCH_PHONE_CONTACTS_ASYNC.success,
+        FETCH_REWARDS_ASYNC.success,
+        FETCH_REWARDS_ASYNC.error,
       ]);
     }
     yield put({ type: APP_LOAD_FINISH });

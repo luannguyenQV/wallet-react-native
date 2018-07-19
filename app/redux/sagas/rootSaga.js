@@ -3,8 +3,15 @@ import { userSagas } from './UserSagas';
 import { authSagas } from './AuthSagas';
 import { accountsSagas } from './AccountsSagas';
 import { contactsSagas } from './ContactsSagas';
+import { rewardsSagas } from './RewardsSagas';
 
-const sagas = [authSagas, userSagas, accountsSagas, contactsSagas];
+const sagas = [
+  authSagas,
+  userSagas,
+  accountsSagas,
+  contactsSagas,
+  rewardsSagas,
+];
 
 export default function* rootSaga() {
   try {

@@ -15,7 +15,7 @@ import {
   VIEW_WALLET,
   HIDE_WALLET,
   SHOW_MODAL,
-} from './../actions/AccountsActions';
+} from '../actions/AccountsActions';
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 
 const INITIAL_STATE = {

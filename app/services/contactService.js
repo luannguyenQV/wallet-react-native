@@ -39,8 +39,6 @@ var contactService = {
       contacts = contacts.concat(response.data);
     }
 
-    console.log(contacts);
-
     var data = [];
     var alreadyAdded = [];
     let count = 0;

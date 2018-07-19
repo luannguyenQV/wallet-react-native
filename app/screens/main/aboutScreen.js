@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, Image, Alert, Linking } from 'react-native';
-import UserInfoService from './../../services/userInfoService';
+// import UserInfoService from './../../services/userInfoService';
 import Colors from './../../config/colors';
 import Header from './../../components/header';
 import AppConfig from './../../../app.json';
@@ -23,14 +23,14 @@ class AboutScreen extends Component {
   }
 
   getData = async () => {
-    let responseJson = await UserInfoService.getCompany();
-    if (responseJson.status === 'success') {
-      this.setState({
-        company: responseJson.data,
-      });
-    } else {
-      Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
-    }
+    // let responseJson = await UserInfoService.getCompany();
+    // if (responseJson.status === 'success') {
+    //   this.setState({
+    //     company: responseJson.data,
+    //   });
+    // } else {
+    //   Alert.alert('Error', responseJson.message, [{ text: 'OK' }]);
+    // }
   };
 
   openLink = () => {

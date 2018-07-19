@@ -4,8 +4,8 @@
 This file contains all the TYPE declarations and ACTION functions 
 that relate to the auth flows
 */
-import { authValidation } from './../../util/validation';
-import { createAsyncTypes } from './../store/Utilities';
+import { authValidation } from '../../util/validation';
+import { createAsyncTypes } from '../store/Utilities';
 
 export const INIT = createAsyncTypes('init');
 export const init = () => {

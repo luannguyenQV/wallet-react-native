@@ -64,93 +64,9 @@ class SendScreen extends Component {
     }
   }
 
-  showContactsAsync = async () => {
-    //await AsyncStorage.removeItem('contacts')
-    if (this.state.ready === false) {
-      let contacts = await AsyncStorage.getItem('contacts');
-      if (contacts) {
-        let data = JSON.parse(contacts);
-        this.setState({
-          ready: true,
-          data,
-          contacts: this.state.contacts.cloneWithRows(data),
-        });
-      } else {
-        this.refreshContactsAsync();
-      }
-    } else {
-      this.setState({ refreshing: true });
-      this.refreshContactsAsync();
-    }
-  };
-
-  refreshContactsAsync = async () => {
-    let data = await ContactService.getAllContacts();
-    this.setState({
-      refreshing: false,
-      ready: true,
-      data,
-      contacts: this.state.contacts.cloneWithRows(data),
-    });
-
-    await AsyncStorage.removeItem('contacts');
-    await AsyncStorage.setItem('contacts', JSON.stringify(data));
-  };
-
-  selectAContact = contact => {
-    this.setState({ searchText: contact });
-  };
-
-  searchTextChanged = event => {
-    let searchText = event.nativeEvent.text;
-    this.setState({ searchText });
-
-    if (searchText === '') {
-      this.setState({
-        contacts: this.state.contacts.cloneWithRows(this.state.data),
-      });
-      return;
-    }
-
-    let contacts = this.state.data.filter(node => {
-      if (typeof node.name == 'undefined') {
-        return false;
-      }
-      let name = node.name.toLowerCase();
-      if (typeof node.contact == 'undefined') {
-        return false;
-      }
-      if (name.indexOf(searchText) !== -1) {
-        return true;
-      } else if (node.contact.indexOf(searchText) !== -1) {
-        return true;
-      }
-
-      return false;
-    });
-
-    this.setState({
-      contacts: this.state.contacts.cloneWithRows(contacts),
-    });
-  };
-
   goToBarcodeScanner = () => {
-    this.props.navigation.navigate('QRcodeScanner');
+    this.props.navigation.navigate('QRCodeScanner');
   };
-
-  toggleContacts() {
-    if (this.state.showContacts) {
-      this.setState({
-        showContacts: false,
-        contactButtonText: 'Show contacts',
-      });
-    } else {
-      this.setState({
-        showContacts: true,
-        contactButtonText: 'Hide contacts',
-      });
-    }
-  }
 
   performSend() {
     const { sendWallet, sendAmount, sendRecipient, sendNote } = this.props;
@@ -386,6 +302,9 @@ class SendScreen extends Component {
                   }
                   onPress={() => setContactType('email')}
                   label="EMAIL"
+                  size="small"
+                  round
+                  buttonStyle={{ paddingBottom: 0 }}
                 />
               </View>
               <View style={{ flex: 1 }}>
@@ -402,6 +321,9 @@ class SendScreen extends Component {
                   }
                   onPress={() => setContactType('mobile')}
                   label="MOBILE"
+                  size="small"
+                  round
+                  buttonStyle={{ paddingBottom: 0 }}
                 />
               </View>
             </View>
@@ -529,6 +451,7 @@ const styles = {
     justifyContent: 'flex-start',
     // backgroundColor: 'orange',
     // flex: 2,
+    paddingBottom: 0,
   },
   buttonStyleOutput: { width: '100%', borderRadius: 3, marginHorizontal: 8 },
   viewStyleBottomContainer: {

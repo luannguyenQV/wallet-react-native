@@ -7,7 +7,7 @@ import {
   takeLatest,
 } from 'redux-saga/effects';
 
-import { LOGOUT_USER_ASYNC } from './../actions/AuthActions';
+import { LOGOUT_USER_ASYNC } from '../actions/AuthActions';
 
 import {
   FETCH_DATA_ASYNC,
@@ -18,13 +18,11 @@ import {
   CONFIRM_DELETE_ASYNC,
   UPLOAD_PROFILE_PHOTO_ASYNC,
   UPLOAD_DOCUMENT_ASYNC,
-} from './../actions/UserActions';
+} from '../actions/UserActions';
 
-import NavigationService from './../../util/navigation';
+import NavigationService from '../../util/navigation';
 
-import * as Rehive from './../../util/rehive';
-import { VALIDATE_COMPANY_ASYNC } from '../actions';
-import reducers from '../reducers';
+import * as Rehive from '../../util/rehive';
 
 function* fetchData(action) {
   try {
@@ -87,7 +85,7 @@ function* fetchData(action) {
       return;
     }
     console.log('type', action.payload, error);
-    if (error && error.status === 401) {
+    if (error && error.status && error.status === 401) {
       yield put({
         type: LOGOUT_USER_ASYNC.success,
       });

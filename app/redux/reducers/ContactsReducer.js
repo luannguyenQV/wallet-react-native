@@ -4,7 +4,7 @@ import {
   CONTACT_FIELD_CHANGED,
   CONTACT_FIELD_ERROR,
   RESET_SEND,
-} from './../actions';
+} from '../actions';
 
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 

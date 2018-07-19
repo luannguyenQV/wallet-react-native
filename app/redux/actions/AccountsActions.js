@@ -1,8 +1,8 @@
 import Big from 'big.js';
 
-import * as Rehive from './../../util/rehive';
-import { createAsyncTypes } from './../store/Utilities';
-import { validateEmail, validateMobile } from './../../util/validation';
+import * as Rehive from '../../util/rehive';
+import { createAsyncTypes } from '../store/Utilities';
+import { validateEmail, validateMobile } from '../../util/validation';
 
 export const ACCOUNT_FIELD_CHANGED = 'account_field_changed';
 export const ACCOUNT_FIELD_ERROR = 'account_field_error';

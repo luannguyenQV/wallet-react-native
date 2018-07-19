@@ -13,9 +13,9 @@ import {
   nextStateMFA,
   verifyMFA,
   authFieldChange,
-} from './../../../../redux/actions';
+} from './../../../redux/actions';
 
-import Header from '../../../../components/header';
+import Header from '../../../components/header';
 import {
   Button,
   Spinner,
@@ -23,9 +23,7 @@ import {
   InputContainer,
   Output,
   CodeInput,
-} from '../../../../components/common';
-// import {} from '../../../../util/Rehive';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+} from '../../../components/common';
 
 class TwoFactorScreen extends Component {
   static navigationOptions = {

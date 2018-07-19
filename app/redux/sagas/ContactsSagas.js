@@ -7,18 +7,16 @@ import {
   takeLatest,
 } from 'redux-saga/effects';
 
-import { FETCH_PHONE_CONTACTS_ASYNC } from './../actions';
+import { FETCH_PHONE_CONTACTS_ASYNC } from '../actions';
 
-import NavigationService from './../../util/navigation';
+import NavigationService from '../../util/navigation';
 import reducers from '../reducers';
 import ContactService from '../../services/contactService';
 
 function* fetchPhoneContacts() {
-  console.log('hi');
   try {
     let response = null;
     response = yield call(ContactService.getAllContacts);
-    console.log('in saga', response);
 
     // let data = response;
     // if (data && data.length > 0 && action.payload === ('email' || 'mobile')) {
@@ -36,7 +34,10 @@ function* fetchPhoneContacts() {
     });
   } catch (error) {
     console.log('fetchPhoneContacts', error);
-    yield put({ type: FETCH_PHONE_CONTACTS_ASYNC.error, payload: error });
+    yield put({
+      type: FETCH_PHONE_CONTACTS_ASYNC.error,
+      payload: error.message,
+    });
   }
 }
 

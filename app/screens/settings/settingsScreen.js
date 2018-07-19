@@ -216,12 +216,12 @@ class SettingsScreen extends Component {
       <View style={styles.container}>
         <Header navigation={this.props.navigation} drawer title="Settings" />
         <InputContainer>
-          {/* <SettingsContainer label="Personal details">
+          <SettingsContainer label="Personal details">
             {this.renderBasicInfo()}
             {this.renderEmailAddresses()}
             {this.renderMobileNumbers()}
             {this.renderAddresses()}
-          </SettingsContainer> */}
+          </SettingsContainer>
           <SettingsContainer label="External accounts">
             {this.renderBankAccounts()}
             {/* {this.renderCards()} */}

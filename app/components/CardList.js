@@ -61,7 +61,7 @@ class CardList extends Component {
       canVerify,
       canPrimary,
       canDelete,
-      canActive,
+      loadingDetail,
       profile,
       onPressFooter,
       iconFooter,
@@ -136,7 +136,7 @@ class CardList extends Component {
             : canPrimary ? primaryItem(type, item) : null
         }
         // backgroundColor={canPrimary ? (item.primary ? 'focus' : '') : ''}
-        // loading={loading}
+        loading={loadingDetail}
         // swipeableContent={<Text>Pull to activate</Text>}
       >
         {renderContent ? renderContent(item) : null}
@@ -178,7 +178,7 @@ class CardList extends Component {
     let textActionTwo = 'CANCEL';
     let onPressActionTwo = hideModal;
     let content = null;
-    console.log(identifier, tempItem);
+    // console.log(identifier, tempItem);
     if (identifier && tempItem) {
       switch (modalType) {
         case 'delete':
@@ -214,7 +214,6 @@ class CardList extends Component {
                 onChangeText={input => updateInputField('otp', 'otp', input)}
               />
             );
-            console.log('otp', otp);
             onPressActionOne = () => verifyItem(type, otp.otp);
           }
 
@@ -242,6 +241,8 @@ class CardList extends Component {
     const {
       loading,
       loadingData,
+      title,
+      subtitle,
       type,
       data,
       keyExtractor,
@@ -250,6 +251,11 @@ class CardList extends Component {
       tempItem,
       showDetail,
       wallet,
+      showReward,
+      textActionOne,
+      onPressActionOne,
+      loadingDetail,
+      onPressActionTwo,
       // redux actions
       updateItem,
       fetchData,
@@ -262,17 +268,26 @@ class CardList extends Component {
         }}
         behavior={'padding'}
         enabled>
-        {showDetail ? (
+        {showDetail || showReward ? (
           <ScrollView
             keyboardDismissMode={'interactive'}
             keyboardShouldPersistTaps="always">
             <Card
               key={type}
-              textActionOne={wallet ? '' : 'SAVE'}
-              onPressActionOne={() => updateItem(type, tempItem)}
+              title={title ? title(tempItem) : ''}
+              colorTitleBackground="white"
+              subtitle={subtitle ? subtitle(tempItem) : ''}
+              textActionOne={wallet ? '' : showReward ? textActionOne : 'SAVE'}
+              onPressActionOne={() =>
+                showReward
+                  ? onPressActionOne(tempItem)
+                  : updateItem(type, tempItem)
+              }
               textActionTwo={wallet ? '' : 'CANCEL'}
-              onPressActionTwo={() => fetchData(type)}
-              loading={loading}>
+              onPressActionTwo={() =>
+                showReward ? onPressActionTwo() : fetchData(type)
+              }
+              loading={loadingDetail}>
               {renderDetail
                 ? renderDetail(
                     tempItem ? tempItem : null,

@@ -4,11 +4,14 @@ import defaultCompanyConfig from './../config/default_company_config.json';
 
 // SDK initialization
 export let r;
+let token = '';
 export const initWithoutToken = () => {
-  r = new Rehive({ apiVersion: 3 });
+  r = new Rehive({ apiVersion: 3, network: 'staging' });
+  token = '';
 };
-export const initWithToken = token => {
-  r = new Rehive({ apiVersion: 3, apiToken: token });
+export const initWithToken = apiToken => {
+  r = new Rehive({ apiVersion: 3, apiToken, network: 'staging' });
+  token = apiToken;
 };
 export const verifyToken = token => r.auth.tokens.verify({ token });
 
@@ -179,12 +182,11 @@ export const getCompanyConfig = company => {
 // NEEDS TESTING TODO:
 
 /* GENERAL */
-export const callApi = (method, route, token, data) => {
+export const callApi = (method, route, data) => {
   let headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
   };
-
   if (token) {
     headers['Authorization'] = `Token ${token}`;
   }

@@ -5,8 +5,6 @@ import { uploadProfilePhoto } from './../redux/actions';
 
 import { ImageUpload } from './common';
 
-import * as Rehive from './../util/rehive';
-
 import Colors from './../config/colors';
 
 class HeaderProfile extends Component {

@@ -5,72 +5,76 @@ import {
   SEND_ASYNC,
   HIDE_MODAL,
   LOGOUT_USER_ASYNC,
-} from './../actions';
+} from '../actions';
 // import Big from 'big.js';
-import * as Rehive from './../../util/rehive';
+import * as Rehive from '../../util/rehive';
 
 function* fetchAccounts() {
   try {
     response = yield call(Rehive.getAccounts);
     const accounts = response.results;
+    let wallets;
     let activeWalletIndex = 0;
     let currencies;
     let account;
-
     let showAccountLabel = false;
+    if (accounts.length > 0) {
+      // var wallets = _.flatten(_.flatten(accounts, 'users'));
 
-    // var wallets = _.flatten(_.flatten(accounts, 'users'));
+      // console.log('1', _.flatten(accounts.results));
 
-    // console.log('1', _.flatten(accounts.results));
+      // let wallets = _.map(accounts.results, function(account) {
+      //   return _.flatten(account.currencies);
+      // });
 
-    // let wallets = _.map(accounts.results, function(account) {
-    //   return _.flatten(account.currencies);
-    // });
+      // wallets.log('1', _.flatten(accounts));
 
-    // wallets.log('1', _.flatten(accounts));
+      // _.map(currencies, 'user');
 
-    // _.map(currencies, 'user');
+      // console.log(accounts);
 
-    // console.log(accounts);
-    let wallets;
-    let index = 0;
-    for (var i = 0; i < accounts.length; i++) {
-      account = accounts[i];
-      currencies = account.currencies;
-      for (var j = 0; j < currencies.length; j++) {
-        if (!wallets) {
-          wallets = [];
+      let index = 0;
+      for (var i = 0; i < accounts.length; i++) {
+        account = accounts[i];
+        currencies = account.currencies;
+        for (var j = 0; j < currencies.length; j++) {
+          if (!wallets) {
+            wallets = [];
+          }
+          wallets[index] = {
+            index,
+            account_reference: account.reference,
+            account_name: account.name,
+            currency: currencies[j],
+          };
+          if (currencies[j].active === true) {
+            activeWalletIndex = index;
+          }
+          index++;
         }
-        wallets[index] = {
-          index,
-          account_reference: account.reference,
-          account_name: account.name,
-          currency: currencies[j],
-        };
-        if (currencies[j].active === true) {
-          activeWalletIndex = index;
-        }
-        index++;
       }
+      if (accounts.length > 1) {
+        showAccountLabel = true;
+      }
+      const activeItem = wallets[activeWalletIndex];
+      wallets[activeWalletIndex] = wallets[0];
+      wallets[0] = activeItem;
+    } else {
+      wallets = [];
     }
-    if (accounts.length > 1) {
-      showAccountLabel = true;
-    }
-    const activeItem = wallets[activeWalletIndex];
-    wallets[activeWalletIndex] = wallets[0];
-    wallets[0] = activeItem;
 
     yield put({
       type: FETCH_ACCOUNTS_ASYNC.success,
       payload: { wallets, activeWalletIndex, showAccountLabel },
     });
   } catch (error) {
+    console.log('accountsFetch', error);
     if (error.status === 401) {
       yield put({
         type: LOGOUT_USER_ASYNC.success,
       });
     }
-    yield put({ type: FETCH_ACCOUNTS_ASYNC.error, error });
+    yield put({ type: FETCH_ACCOUNTS_ASYNC.error, payload: error.message });
   }
 }
 
