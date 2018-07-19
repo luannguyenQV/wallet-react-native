@@ -63,7 +63,7 @@ export default (state = INITIAL_STATE, action) => {
   // console.log('action', action);
   switch (action.type) {
     case PERSIST_REHYDRATE:
-      return action.payload.auth || [];
+      return action.payload.auth || INITIAL_STATE;
 
     case INIT.pending:
       return {

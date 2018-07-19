@@ -23,8 +23,6 @@ class HeaderCurrency extends Component {
       viewStyleCurrency,
       textStyleCode,
       textStyleAccount,
-      textStyleSymbol,
-      textStyleAmount,
       iconStyleTitleRight,
     } = styles;
     console.log();
@@ -69,7 +67,7 @@ class HeaderCurrency extends Component {
         ) : null} */}
         <View
           style={[viewStyleCurrency, detail ? null : { paddingBottom: 16 }]}>
-          <Text style={[textStyleSymbol, { color: colors.focus }]}>
+          <Text style={this.getAmountTextStyle(currency)}>
             {currency.currency.symbol}
           </Text>
           <Text style={this.getAmountTextStyle(currency)}>
@@ -125,10 +123,6 @@ const styles = {
     fontSize: 16,
     // fontWeight: 'bold',
     paddingBottom: 8,
-  },
-  textStyleSymbol: {
-    fontSize: 42,
-    fontWeight: 'bold',
   },
   textStyleAmount: {
     fontSize: 42,

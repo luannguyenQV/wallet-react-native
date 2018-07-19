@@ -86,7 +86,7 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case PERSIST_REHYDRATE:
-      return action.payload.auth || [];
+      return action.payload.auth || INITIAL_STATE;
     case INPUT_FIELD_CHANGED:
       return {
         ...state,

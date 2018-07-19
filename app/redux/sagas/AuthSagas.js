@@ -50,6 +50,7 @@ import {
   FETCH_ACCOUNTS_ASYNC,
   FETCH_PHONE_CONTACTS_ASYNC,
   FETCH_REWARDS_ASYNC,
+  FETCH_CRYPTO_ASYNC,
 } from '../actions';
 
 import * as Rehive from '../../util/rehive';
@@ -60,7 +61,7 @@ import {
   validatePassword,
 } from '../../util/validation';
 import default_config from './../../config/default_company_config';
-import { getToken, getCompany, getAuth } from './selectors';
+import { getToken, getCompany, getAuth, getCompanyConfig } from './selectors';
 
 /* 
 Init function called when app starts up to see what state the app should be in
@@ -495,6 +496,7 @@ function* postAuthFlow() {
 function* appLoad() {
   console.log('appLoad');
   try {
+    let count = 11;
     yield all([
       put({ type: POST_LOADING }),
       put({ type: FETCH_ACCOUNTS_ASYNC.pending }),
@@ -511,14 +513,31 @@ function* appLoad() {
       put({ type: FETCH_PHONE_CONTACTS_ASYNC.pending }),
       put({ type: FETCH_REWARDS_ASYNC.pending }),
     ]);
+    const { services } = yield select(getCompanyConfig);
+    if (services.rewards) {
+      yield put({ type: FETCH_REWARDS_ASYNC.pending });
+      count++;
+    }
+    if (services.stellar) {
+      yield put({ type: FETCH_CRYPTO_ASYNC.pending, payload: 'stellar' });
+      count++;
+    }
+    if (services.bitcoin) {
+      yield put({ type: FETCH_CRYPTO_ASYNC.pending, payload: 'bitcoin' });
+      count++;
+    }
+    if (services.ethereum) {
+      yield put({ type: FETCH_CRYPTO_ASYNC.pending, payload: 'ethereum' });
+      count++;
+    }
     // TODO: add timeout and re=fetch any failed api calls
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < count; i++) {
       yield take([
         FETCH_ACCOUNTS_ASYNC.success,
         FETCH_DATA_ASYNC.success,
         FETCH_PHONE_CONTACTS_ASYNC.success,
         FETCH_REWARDS_ASYNC.success,
-        FETCH_REWARDS_ASYNC.error,
+        FETCH_CRYPTO_ASYNC.success,
       ]);
     }
     yield put({ type: APP_LOAD_FINISH });

@@ -1,13 +1,15 @@
-import { all, call, put, takeEvery } from 'redux-saga/effects';
+import { all, call, put, takeEvery, select } from 'redux-saga/effects';
 import {
   FETCH_ACCOUNTS_ASYNC,
   SET_ACTIVE_CURRENCY_ASYNC,
   SEND_ASYNC,
   HIDE_MODAL,
   LOGOUT_USER_ASYNC,
+  FETCH_CRYPTO_ASYNC,
 } from '../actions';
 // import Big from 'big.js';
 import * as Rehive from '../../util/rehive';
+import { getWallets } from './selectors';
 
 function* fetchAccounts() {
   try {
@@ -97,10 +99,56 @@ function* setActiveCurrency(action) {
   }
 }
 
+let currency = '';
+function findCurrency(element) {
+  console.log(element);
+  console.log(currency);
+  return element.c;
+}
+
+function* setCrypto(action) {
+  try {
+    console.log(action);
+    const wallets = yield select(getWallets);
+
+    console.log(wallets);
+    let index = 0;
+    switch (action.payload.type) {
+      case 'stellar':
+        currency = 'XLM';
+        index = wallets.findIndex(findCurrency);
+
+        // route = stellar_service_url + '/company/assets/';
+        break;
+      case 'bitcoin':
+        break;
+      case 'ethereum':
+        break;
+    }
+
+    // find matching assets
+
+    // yield call(
+    //   Rehive.setActiveCurrency,
+    //   action.payload.account_reference,
+    //   action.payload.currency.currency.code,
+    // );
+    // yield all([
+    //   put({ type: SET_ACTIVE_CURRENCY_ASYNC.success }),
+    //   put({ type: HIDE_MODAL }),
+    //   put({ type: FETCH_ACCOUNTS_ASYNC.pending }),
+    // ]);
+  } catch (error) {
+    console.log(error);
+    yield put({ type: SET_ACTIVE_CURRENCY_ASYNC.error, error });
+  }
+}
+
 // function*
 
 export const accountsSagas = all([
   takeEvery(FETCH_ACCOUNTS_ASYNC.pending, fetchAccounts),
   takeEvery(SEND_ASYNC.success, fetchAccounts),
   takeEvery(SET_ACTIVE_CURRENCY_ASYNC.pending, setActiveCurrency),
+  // takeEvery(FETCH_CRYPTO_ASYNC.success, setCrypto),
 ]);

@@ -6,11 +6,13 @@ import defaultCompanyConfig from './../config/default_company_config.json';
 export let r;
 let token = '';
 export const initWithoutToken = () => {
-  r = new Rehive({ apiVersion: 3, network: 'staging' });
+  r = new Rehive({ apiVersion: 3 });
+  // r = new Rehive({ apiVersion: 3, network: 'staging' });
   token = '';
 };
 export const initWithToken = apiToken => {
-  r = new Rehive({ apiVersion: 3, apiToken, network: 'staging' });
+  r = new Rehive({ apiVersion: 3, apiToken });
+  // r = new Rehive({ apiVersion: 3, apiToken, network: 'staging' });
   token = apiToken;
 };
 export const verifyToken = token => r.auth.tokens.verify({ token });

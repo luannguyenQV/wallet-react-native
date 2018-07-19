@@ -14,8 +14,6 @@ import HeaderWallet from '../../components/HeaderWallet';
 import TransactionList from './../../components/TransactionList';
 import HomeCards from './../../components/HomeCards';
 
-import ContactService from './../../services/contactService';
-
 const renderPagination = (index, total, context) => {
   return (
     <View style={styles.paginationStyle}>

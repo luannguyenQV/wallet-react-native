@@ -4,6 +4,7 @@ import { authSagas } from './AuthSagas';
 import { accountsSagas } from './AccountsSagas';
 import { contactsSagas } from './ContactsSagas';
 import { rewardsSagas } from './RewardsSagas';
+import { cryptoSagas } from './CryptoSagas';
 
 const sagas = [
   authSagas,
@@ -11,6 +12,7 @@ const sagas = [
   accountsSagas,
   contactsSagas,
   rewardsSagas,
+  cryptoSagas,
 ];
 
 export default function* rootSaga() {

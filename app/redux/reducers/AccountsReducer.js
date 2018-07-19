@@ -45,7 +45,7 @@ export default (state = INITIAL_STATE, action) => {
   // console.log(action);
   switch (action.type) {
     case PERSIST_REHYDRATE:
-      return action.payload.auth || [];
+      return action.payload.auth || INITIAL_STATE;
 
     case FETCH_ACCOUNTS_ASYNC.pending:
       return {
