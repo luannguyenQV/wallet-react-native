@@ -29,3 +29,31 @@ export const validateMobile = mobile => {
   }
   return '';
 };
+
+export const validateCrypto = (address, type) => {
+  if (address) {
+    console.log(address);
+    console.log(address.length);
+    switch (type) {
+      case 'stellar':
+        if (address.length === 56) {
+          // TODO: add proper validation here
+          return '';
+        }
+        break;
+      case 'bitcoin':
+        if (address.length === 58) {
+          // TODO: add proper validation here
+          return '';
+        }
+        break;
+      case 'ethereum':
+        if (address.length === 58) {
+          // TODO: add proper validation here
+          return '';
+        }
+        break;
+    }
+  }
+  return 'Please enter a valid ' + type + ' address';
+};

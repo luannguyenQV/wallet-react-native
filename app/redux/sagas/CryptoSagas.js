@@ -5,17 +5,14 @@ import { Toast } from 'native-base';
 
 import * as Rehive from '../../util/rehive';
 
-const stellar_service_url = 'https://stellar.services.rehive.io/api/1';
-const bitcoin_service_url = 'https://reward.s.services.rehive.io/api';
-const ethereum_service_url = 'https://reward.s.services.rehive.io/api';
-
 function* fetchCrypto(action) {
   try {
     let route = '';
     const type = action.payload;
+    let response;
     switch (type) {
       case 'stellar':
-        route = stellar_service_url + '/company/assets/';
+        response = yield call(Rehive.getStellarAssets, 'GET', route);
         break;
       // case 'bitcoin':
       //   route = bitcoin_service_url + '/company/assets/';
@@ -24,7 +21,6 @@ function* fetchCrypto(action) {
       //   route = ethereum_service_url + '/company/assets/';
       //   break;
     }
-    const response = yield call(Rehive.callApi, 'GET', route);
     const assets = response.data.map(a => a.currency_code);
     yield put({
       type: FETCH_CRYPTO_ASYNC.success,

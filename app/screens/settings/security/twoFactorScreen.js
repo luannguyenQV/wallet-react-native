@@ -183,7 +183,7 @@ class TwoFactorScreen extends Component {
           autoFocus
           inactiveColor="lightgray"
           className="border-b"
-          codeLength={mfaState === 'verifyToken' ? 6 : 4}
+          codeLength={6}
           space={7}
           size={30}
           inputPosition="center"

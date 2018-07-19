@@ -4,6 +4,7 @@ import {
   ACCOUNT_FIELD_CHANGED,
   ACCOUNT_FIELD_ERROR,
   SET_SEND_STATE,
+  SET_SEND_TYPE,
   SET_SEND_WALLET,
   RESET_SEND,
   SEND_ASYNC,
@@ -29,6 +30,7 @@ const INITIAL_STATE = {
   sendWallet: null,
   sendRecipient: '',
   sendNote: '',
+  sendMemo: '',
   sendReference: null,
   sendState: '',
   tempWallet: null,
@@ -96,6 +98,11 @@ export default (state = INITIAL_STATE, action) => {
         sendState: 'amount',
         sendError: '',
       };
+    case SET_SEND_TYPE:
+      return {
+        ...state,
+        sendType: action.payload,
+      };
     case SET_SEND_STATE:
       return {
         ...state,
@@ -105,13 +112,14 @@ export default (state = INITIAL_STATE, action) => {
     case RESET_SEND:
       return {
         ...state,
-        sendAmount: null,
-        sendCurrency: null,
-        sendRecipient: null,
-        sendNote: null,
-        sendReference: null,
+        sendAmount: '',
+        sendCurrency: '',
+        sendRecipient: '',
+        sendNote: '',
+        sendReference: '',
         sendState: 'amount',
         sendError: '',
+        sendMemo: '',
       };
     case SEND_ASYNC.pending:
       return {

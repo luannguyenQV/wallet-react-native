@@ -5,11 +5,12 @@ import {
   SEND_ASYNC,
   HIDE_MODAL,
   LOGOUT_USER_ASYNC,
-  FETCH_CRYPTO_ASYNC,
+  SET_SEND_WALLET,
+  SET_SEND_TYPE,
 } from '../actions';
 // import Big from 'big.js';
 import * as Rehive from '../../util/rehive';
-import { getWallets } from './selectors';
+import { getCrypto } from './selectors';
 
 function* fetchAccounts() {
   try {
@@ -99,56 +100,35 @@ function* setActiveCurrency(action) {
   }
 }
 
-let currency = '';
-function findCurrency(element) {
-  console.log(element);
-  console.log(currency);
-  return element.c;
-}
-
-function* setCrypto(action) {
+function* checkSendServices(action) {
   try {
-    console.log(action);
-    const wallets = yield select(getWallets);
-
-    console.log(wallets);
-    let index = 0;
-    switch (action.payload.type) {
-      case 'stellar':
-        currency = 'XLM';
-        index = wallets.findIndex(findCurrency);
-
-        // route = stellar_service_url + '/company/assets/';
-        break;
-      case 'bitcoin':
-        break;
-      case 'ethereum':
-        break;
+    let service = 'rehive';
+    const services = yield select(getCrypto);
+    if (services.stellar.includes(action.payload.currency.currency.code)) {
+      service = 'stellar';
+    } else if (
+      services.bitcoin.includes(action.payload.currency.currency.code)
+    ) {
+      service = 'bitcoin';
+    } else if (
+      services.ethereum.includes(action.payload.currency.currency.code)
+    ) {
+      service = 'ethereum';
     }
 
-    // find matching assets
-
-    // yield call(
-    //   Rehive.setActiveCurrency,
-    //   action.payload.account_reference,
-    //   action.payload.currency.currency.code,
-    // );
-    // yield all([
-    //   put({ type: SET_ACTIVE_CURRENCY_ASYNC.success }),
-    //   put({ type: HIDE_MODAL }),
-    //   put({ type: FETCH_ACCOUNTS_ASYNC.pending }),
-    // ]);
+    yield put({
+      type: SET_SEND_TYPE,
+      payload: service,
+    });
   } catch (error) {
-    console.log(error);
-    yield put({ type: SET_ACTIVE_CURRENCY_ASYNC.error, error });
+    console.log('checkSendServices', error);
+    // yield put({ type: FETCH_ACCOUNTS_ASYNC.error, payload: error.message });
   }
 }
-
-// function*
 
 export const accountsSagas = all([
   takeEvery(FETCH_ACCOUNTS_ASYNC.pending, fetchAccounts),
   takeEvery(SEND_ASYNC.success, fetchAccounts),
   takeEvery(SET_ACTIVE_CURRENCY_ASYNC.pending, setActiveCurrency),
-  // takeEvery(FETCH_CRYPTO_ASYNC.success, setCrypto),
+  takeEvery(SET_SEND_WALLET, checkSendServices),
 ]);

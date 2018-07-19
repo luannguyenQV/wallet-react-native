@@ -2,6 +2,10 @@ import Rehive from 'rehive';
 import * as companyConfig from './../config/company_configs.json';
 import defaultCompanyConfig from './../config/default_company_config.json';
 
+const stellar_service_url = 'https://stellar.services.rehive.io/api/1';
+const bitcoin_service_url = 'https://reward.s.services.rehive.io/api';
+const ethereum_service_url = 'https://reward.s.services.rehive.io/api';
+
 // SDK initialization
 export let r;
 let token = '';
@@ -181,7 +185,17 @@ export const getCompanyConfig = company => {
   }
   return defaultCompanyConfig;
 };
-// NEEDS TESTING TODO:
+
+/* CRYPTO */
+export const getStellarAssets = () =>
+  callApi('GET', stellar_service_url + '/company/assets/');
+
+export const createTransferStellar = data =>
+  Promise.resolve(
+    callApi('POST', stellar_service_url + '/transactions/send/', data)
+      .then(response => response)
+      .catch(err => err),
+  );
 
 /* GENERAL */
 export const callApi = (method, route, data) => {
@@ -190,7 +204,7 @@ export const callApi = (method, route, data) => {
     'Content-Type': 'application/json',
   };
   if (token) {
-    headers['Authorization'] = `Token ${token}`;
+    headers['Authorization'] = 'Token ' + token;
   }
 
   let config = {
@@ -199,11 +213,11 @@ export const callApi = (method, route, data) => {
     mode: 'cors',
     headers,
   };
-
+  console.log(data);
   if (data) {
     config['body'] = JSON.stringify(data);
   }
-
+  console.log(config);
   return Promise.resolve(
     fetch(route, config)
       .then(response => response.json())

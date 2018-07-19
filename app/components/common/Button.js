@@ -46,12 +46,13 @@ class Button extends Component {
       disabled,
       size,
       icon,
+      containerStyle,
     } = this.props;
-    const { containerStyle } = styles;
+    const { _containerStyle } = styles;
     return (
       <Animatable.View
         ref={reference}
-        style={containerStyle}
+        style={[_containerStyle, containerStyle]}
         animation={animation}>
         <TouchableOpacity
           onPress={onPress}
@@ -86,6 +87,7 @@ Button.propTypes = {
   textColor: PropTypes.string, // Text color
   round: PropTypes.bool, // Rounded corners
   buttonStyle: PropTypes.object, // override button style
+  containerStyle: PropTypes.object, // override container style
 };
 
 Button.defaultProps = {
@@ -101,10 +103,11 @@ Button.defaultProps = {
   textColor: Colors.primaryContrast,
   round: false,
   buttonStyle: {},
+  containerStyle: {},
 };
 
 const styles = {
-  containerStyle: {
+  _containerStyle: {
     flexDirection: 'row',
     margin: 8,
   },
