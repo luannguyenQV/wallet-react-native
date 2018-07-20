@@ -15,9 +15,11 @@ import {
   UPLOAD_DOCUMENT_ASYNC,
   SHOW_MODAL,
   HIDE_MODAL,
-} from '../actions/UserActions';
-import { LOGOUT_USER, SET_COMPANY } from '../actions/AuthActions';
-import { VIEW_WALLET, HIDE_WALLET } from '../actions/AccountsActions';
+  SET_ACTIVE_CURRENCY_ASYNC,
+  LOGOUT_USER,
+  VIEW_WALLET,
+  HIDE_WALLET,
+} from '../actions';
 
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 
@@ -209,6 +211,16 @@ export default (state = INITIAL_STATE, action) => {
         modalVisible: true,
         loading: false,
         updateError: '',
+      };
+
+    case SET_ACTIVE_CURRENCY_ASYNC.pending:
+      return {
+        loading: true,
+      };
+    case SET_ACTIVE_CURRENCY_ASYNC.success:
+    case SET_ACTIVE_CURRENCY_ASYNC.fail:
+      return {
+        loading: false,
       };
 
     case VERIFY_ASYNC.pending:

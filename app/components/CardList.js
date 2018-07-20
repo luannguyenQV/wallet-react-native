@@ -21,7 +21,7 @@ import {
   showModal,
   hideModal,
   // activeItem,
-  // setActiveCurrency,
+  setActiveCurrency,
 } from './../redux/actions';
 import { standardizeString } from './../util/general';
 
@@ -359,5 +359,5 @@ export default connect(mapStateToProps, {
   verifyItem,
   showModal,
   hideModal,
-  // activeItem,
+  setActiveCurrency,
 })(CardList);

@@ -16,7 +16,7 @@ import {
   VIEW_WALLET,
   HIDE_WALLET,
   SHOW_MODAL,
-} from '../actions/AccountsActions';
+} from '../actions';
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 
 const INITIAL_STATE = {
@@ -73,14 +73,14 @@ export default (state = INITIAL_STATE, action) => {
         activeWalletIndex: action.payload,
       };
 
-    // case SHOW_MODAL:
-    //   if (action.payload.type === 'wallet') {
-    //     return {
-    //       ...state,
-    //       tempWallet: action.payload.data,
-    //     };
-    //   }
-    //   return { ...state };
+    case SHOW_MODAL:
+      if (action.payload.type === 'wallet') {
+        return {
+          ...state,
+          tempWallet: action.payload.item,
+        };
+      }
+      return { ...state };
 
     case ACCOUNT_FIELD_CHANGED:
       return { ...state, [action.payload.prop]: action.payload.value };

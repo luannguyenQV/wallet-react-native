@@ -29,9 +29,11 @@ export default class DrawerOption extends Component {
   }
 
   render() {
-    const { name, address, navigation } = this.props;
+    const { name, address, navigation, colors } = this.props;
     return (
       <TouchableHighlight
+        // activeOpacity={0.4}
+        underlayColor={colors.secondary}
         style={this._containerStyle()}
         onPress={() => navigation.navigate(address)}>
         <Text style={this._textStyle()}>{name}</Text>

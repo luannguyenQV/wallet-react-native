@@ -8,6 +8,7 @@ import {
   SET_SEND_WALLET,
   SET_SEND_TYPE,
 } from '../actions';
+import { Toast } from 'native-base';
 // import Big from 'big.js';
 import * as Rehive from '../../util/rehive';
 import { getCrypto } from './selectors';
@@ -89,6 +90,9 @@ function* setActiveCurrency(action) {
       action.payload.account_reference,
       action.payload.currency.currency.code,
     );
+    Toast.show({
+      text: action.payload.currency.currency.code + ' set as active currency',
+    });
     yield all([
       put({ type: SET_ACTIVE_CURRENCY_ASYNC.success }),
       put({ type: HIDE_MODAL }),
