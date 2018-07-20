@@ -126,7 +126,8 @@ class AuthScreen extends Component {
         textFooterRight={textFooterRight}
         onPressFooterRight={onPressFooterRight}
         loading={loading}
-        color={colors.primaryContrast}>
+        color={'primary'}
+        colors={colors}>
         {this.renderContent()}
       </FullScreenForm>
     );
@@ -208,12 +209,15 @@ class AuthScreen extends Component {
       case 'mfa':
         return (
           <View>
-            {detailState === 'token' ? (
-              <Text>Please enter token provided by your MFA app</Text>
-            ) : (
-              <Text>Please enter the OTP sent to your mobile number</Text>
-            )}
-            <Text>{pinError}</Text>
+            <Text style={[textStyle, { color: colors.primaryContrast }]}>
+              Please enter{' '}
+              {detailState === 'token'
+                ? 'token provided by your MFA app'
+                : 'the OTP sent to your mobile number'}
+            </Text>
+            <Text style={[textStyle, { color: colors.error }]}>
+              {authError}
+            </Text>
             <CodeInput
               ref={component => (this._pinInput = component)}
               secureTextEntry
@@ -546,13 +550,16 @@ class AuthScreen extends Component {
   }
 
   render() {
-    const { loading, appLoading, postLoading } = this.props;
+    const { loading, appLoading, postLoading, company_config } = this.props;
     const { viewStyleContainer } = styles;
 
     return (
       <KeyboardAvoidingView
         keyboardShouldPersistTaps={'never'}
-        style={viewStyleContainer}
+        style={[
+          viewStyleContainer,
+          { backgroundColor: company_config.colors.primary },
+        ]}
         behavior={'padding'}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           {loading || postLoading ? (
@@ -570,7 +577,6 @@ class AuthScreen extends Component {
 const styles = {
   viewStyleContainer: {
     flex: 1,
-    backgroundColor: Colors.primary,
     paddingTop: Expo.Constants.statusBarHeight,
     justifyContent: 'center',
   },

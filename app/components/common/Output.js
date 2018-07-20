@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableHighlight, Clipboard } from 'react-native';
+import { Toast } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 class Output extends Component {
@@ -51,7 +52,7 @@ class Output extends Component {
             activeOpacity={0.2}
             onPress={() => {
               Clipboard.setString(value);
-              Alert.alert(null, 'Copied');
+              Toast.show({ text: 'Copied' });
             }}>
             {this.renderOutput()}
           </TouchableHighlight>

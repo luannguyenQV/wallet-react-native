@@ -337,6 +337,8 @@ function* postAuthFlow() {
                     type: UPDATE_AUTH_FORM_STATE,
                     payload: {
                       authError: error.message,
+                      mainState,
+                      detailState,
                     },
                   });
                 }
@@ -605,10 +607,10 @@ function* mfaFlow() {
         nextState = 'verifyToken';
       } else if (mfa.sms) {
         nextState = 'verifySMS';
+        Rehive.sendAuthSMS();
       }
       yield put({ type: UPDATE_MFA_STATE, payload: nextState });
-      let flag = true;
-      while (flag) {
+      while (true) {
         const action = yield take(VERIFY_MFA);
         try {
           yield call(Rehive.verifyMFA, action.payload);
@@ -689,7 +691,7 @@ function* verifyMFA() {
       }
     }
     Toast.show({
-      text: 'MFA enabled!',
+      text: 'Two-factor authentication enabled',
     });
     yield call(NavigationService.goBack);
   } catch (error) {

@@ -53,7 +53,14 @@ class MobileNumbersScreen extends Component {
   };
 
   render() {
-    const { mobile, tempItem, newItem, updateItem, showDetail } = this.props;
+    const {
+      mobile,
+      tempItem,
+      newItem,
+      updateItem,
+      showDetail,
+      company_config,
+    } = this.props;
     return (
       <View style={styles.container}>
         <Header
@@ -66,6 +73,7 @@ class MobileNumbersScreen extends Component {
               ? () => updateItem('mobile', tempItem)
               : () => newItem('mobile')
           }
+          colors={company_config.colors}
         />
         <CardList
           type="mobile"

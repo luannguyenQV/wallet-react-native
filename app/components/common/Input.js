@@ -59,23 +59,17 @@ class Input extends Component {
       inputError,
       autoCorrect,
       multiline,
+      colors,
     } = this.props;
 
     const {
       viewStyleInput,
       textStyleInput,
-      iconStyleVisibility,
       viewStyleCountry,
       textStyleCode,
     } = styles;
 
-    const {
-      borderColor,
-      focused,
-      secureTextEntry,
-      iconNameVisibility,
-      cca2,
-    } = this.state;
+    const { focused, secureTextEntry, cca2 } = this.state;
 
     return (
       <View
@@ -115,24 +109,6 @@ class Input extends Component {
           blurOnSubmit={false}
           multiline={multiline}
         />
-        {type === 'password' ? (
-          <View>
-            <Icon
-              style={[
-                iconStyleVisibility,
-                {
-                  color: inputError
-                    ? Colors.error
-                    : focused ? Colors.focus : 'rgba(0,0,0,0.6)',
-                },
-              ]}
-              name={iconNameVisibility}
-              size={24}
-              color={borderColor}
-              onPress={this.togglePasswordVisibility}
-            />
-          </View>
-        ) : null}
       </View>
     );
   }
@@ -161,9 +137,10 @@ class Input extends Component {
       textStyleFooter,
       viewStyleContent,
       viewStylePopUp,
+      iconStyleVisibility,
     } = styles;
 
-    const { focused } = this.state;
+    const { borderColor, focused, iconNameVisibility } = this.state;
 
     return (
       <View>
@@ -174,33 +151,55 @@ class Input extends Component {
               backgroundColor: colors.primaryContrast,
             },
           ]}>
-          <View
-            style={[
-              viewStyleContent,
-              {
-                borderColor: inputError
-                  ? colors.error
-                  : focused ? colors.focus : colors.lightGray,
-                borderBottomWidth: inputError || focused ? 2 : 2,
-              },
-            ]}>
-            {focused || value ? (
-              <View style={viewStyleLabel}>
-                <Text
+          <View style={{ flexDirection: 'row' }}>
+            <View
+              style={[
+                viewStyleContent,
+                {
+                  borderColor: inputError
+                    ? colors.error
+                    : focused ? colors.focus : colors.lightGray,
+                  borderBottomWidth: inputError || focused ? 2 : 2,
+                  width: '100%',
+                },
+              ]}>
+              {focused || value ? (
+                <View style={viewStyleLabel}>
+                  <Text
+                    style={[
+                      textStyleLabel,
+                      {
+                        color: inputError
+                          ? colors.error
+                          : focused ? colors.focus : 'rgba(0,0,0,0.6)',
+                      },
+                    ]}>
+                    {label}
+                    {required ? ' *' : ''}
+                  </Text>
+                </View>
+              ) : null}
+              {this.renderInput()}
+            </View>
+
+            {type === 'password' ? (
+              <View style={{ justifyContent: 'center' }}>
+                <Icon
                   style={[
-                    textStyleLabel,
+                    iconStyleVisibility,
                     {
                       color: inputError
                         ? colors.error
                         : focused ? colors.focus : 'rgba(0,0,0,0.6)',
                     },
-                  ]}>
-                  {label}
-                  {required ? ' *' : ''}
-                </Text>
+                  ]}
+                  name={iconNameVisibility}
+                  size={24}
+                  color={borderColor}
+                  onPress={this.togglePasswordVisibility}
+                />
               </View>
             ) : null}
-            {this.renderInput()}
           </View>
 
           {inputError || helperText ? (
@@ -259,8 +258,7 @@ Input.propTypes = {
   icon: PropTypes.string, // Icon displayed on left of button
   size: PropTypes.string, // Size of button (small / default or '' / large)
   type: PropTypes.string, // Type of button (text, contained, TODO: outlined)
-  backgroundColor: PropTypes.string, // Button color
-  textColor: PropTypes.string, // Text color
+  colors: PropTypes.object, // Button color
 };
 
 Input.defaultProps = {
@@ -273,8 +271,8 @@ Input.defaultProps = {
   size: '',
   type: 'contained',
   colors: Colors,
-  // backgroundColor: Colors.primary,
-  // textColor: Colors.primaryContrast,
+  // backgroundColor: colors.primary,
+  // textColor: colors.primaryContrast,
 };
 
 const styles = {
@@ -284,8 +282,6 @@ const styles = {
     borderTopLeftRadius: 5,
     overflow: 'hidden',
     margin: 8,
-    // borderRadius: 3,
-    // borderColor: Colors.primary,
   },
   viewStyleContent: {
     paddingHorizontal: 12,
@@ -293,13 +289,9 @@ const styles = {
     justifyContent: 'center',
   },
   viewStylePopUp: {
-    // position: 'absolute',
-    // top: 8,
-    // flex: 1,
     elevation: 20,
     backgroundColor: 'orange',
     height: 200,
-    // width: 100,
   },
   viewStyleLabel: {
     height: 20,
@@ -310,7 +302,6 @@ const styles = {
   },
   viewStyleInput: {
     flexDirection: 'row',
-    // height: 32,
   },
   viewStyleHelper: {
     minHeight: 28,
@@ -323,7 +314,6 @@ const styles = {
     fontWeight: 'normal',
     flex: 1,
     fontSize: 16,
-    // height: 24,
     color: 'rgba(0,0,0,0.87)',
   },
   textStyleCode: {
@@ -342,8 +332,7 @@ const styles = {
   iconStyleVisibility: {
     width: 24,
     height: 24,
-    right: 0,
-    bottom: 4,
+    right: 12,
     position: 'absolute',
   },
 };

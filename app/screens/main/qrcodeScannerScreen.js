@@ -73,6 +73,7 @@ class QRCodeScannerScreen extends Component {
           navigation={this.props.navigation}
           back
           title="QR code scanner"
+          colors={this.props.company_config.colors}
         />
         {hasCameraPermission ? (
           this.state.camera ? (
@@ -122,8 +123,9 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({}) => {
-  return {};
+const mapStateToProps = ({ auth }) => {
+  const { company_config } = auth;
+  return { company_config };
 };
 
 export default connect(mapStateToProps, {

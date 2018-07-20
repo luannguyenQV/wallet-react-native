@@ -60,6 +60,7 @@ class ChangePasswordScreen extends Component {
           navigation={this.props.navigation}
           back
           title="Change password"
+          colors={company_config.colors}
         />
         <InputContainer>
           <Input
@@ -89,7 +90,8 @@ class ChangePasswordScreen extends Component {
 
           <Button
             label="CONFIRM"
-            // type="contained"
+            textColor={colors.primaryContrast}
+            backgroundColor={colors.primary}
             onPress={() => changePassword(old_password, new_password)}
           />
           {this.renderModal()}

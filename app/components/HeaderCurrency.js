@@ -9,6 +9,24 @@ import { performDivisibility } from './../util/general';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class HeaderCurrency extends Component {
+  getAmountTextStyle(currency) {
+    const { colors } = this.props;
+    const diff =
+      currency.currency.divisibility -
+      currency.available_balance.toString().length;
+    const length = Math.min(
+      currency.currency.divisibility + (diff > 0 ? diff : 0),
+      20,
+    );
+    console.log('code', currency.currency.code);
+    console.log('diff', diff);
+    console.log('length', length);
+    console.log(Math.floor(SCREEN_WIDTH / length));
+    let fontSize = Math.min(Math.floor(SCREEN_WIDTH / length), 42);
+    console.log('fontSize', fontSize);
+    return [styles.textStyleAmount, { fontSize, color: colors.focus }];
+  }
+
   render() {
     const {
       detail,
@@ -36,6 +54,7 @@ class HeaderCurrency extends Component {
                 width: SCREEN_WIDTH - 16,
               }
             : { width: SCREEN_WIDTH },
+          { backgroundColor: colors.primary },
         ]}>
         {showClose ? (
           <View style={iconStyleTitleRight}>
@@ -80,22 +99,6 @@ class HeaderCurrency extends Component {
         </View>
       </View>
     );
-  }
-
-  getAmountTextStyle(currency) {
-    const { colors } = this.props;
-    let fontSize = 42;
-    let length =
-      currency.available_balance.toString().length +
-      currency.currency.divisibility;
-    if (length > 16) {
-      fontSize = 20;
-    } else if (length > 12) {
-      fontSize = 30;
-    } else if (length > 8) {
-      fontSize = 38;
-    }
-    return [styles.textStyleAmount, { fontSize, color: colors.focus }];
   }
 }
 

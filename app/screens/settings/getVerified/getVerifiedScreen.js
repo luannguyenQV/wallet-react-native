@@ -264,6 +264,7 @@ class GetVerifiedScreen extends Component {
           navigation={this.props.navigation}
           drawer
           title="Get verified"
+          colors={company_config.colors}
         />
         <HeaderProfile
           photoLink={profile.profile}

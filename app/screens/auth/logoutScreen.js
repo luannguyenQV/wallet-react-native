@@ -4,7 +4,6 @@ import { View, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import { logoutUser } from './../../redux/actions';
 
-import Auth from './../../util/auth';
 import Header from './../../components/header';
 
 class LogoutScreen extends Component {
@@ -17,7 +16,11 @@ class LogoutScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <Header navigation={this.props.navigation} title="Log out" />
+        <Header
+          navigation={this.props.navigation}
+          colors={this.props.company_config.colors}
+          title="Log out"
+        />
         <View style={styles.container}>
           <Text style={{ fontSize: 30 }}>Logging Out</Text>
         </View>
@@ -36,7 +39,8 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = ({ auth }) => {
-  return auth;
+  const { company_config } = auth;
+  return { company_config };
 };
 
 export default connect(mapStateToProps, { logoutUser })(LogoutScreen);

@@ -52,7 +52,14 @@ class EmailAddressesScreen extends Component {
   };
 
   render() {
-    const { email, tempItem, newItem, updateItem, showDetail } = this.props;
+    const {
+      email,
+      tempItem,
+      newItem,
+      updateItem,
+      showDetail,
+      company_config,
+    } = this.props;
     return (
       <View style={styles.container}>
         <Header
@@ -65,6 +72,7 @@ class EmailAddressesScreen extends Component {
               ? () => updateItem('email', tempItem)
               : () => newItem('email')
           }
+          colors={company_config.colors}
         />
         <CardList
           type="email"

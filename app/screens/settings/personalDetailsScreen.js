@@ -12,7 +12,13 @@ import {
 // import CountryPicker from 'react-native-country-picker-modal';
 import Colors from './../../config/colors';
 import Header from './../../components/header';
-import { Input, Output, Card, CardContainer } from './../../components/common';
+import {
+  Input,
+  Output,
+  Card,
+  CardContainer,
+  EmptyListMessage,
+} from './../../components/common';
 import HeaderProfile from './../../components/HeaderProfile';
 
 class PersonalDetailsScreen extends Component {
@@ -95,6 +101,7 @@ class PersonalDetailsScreen extends Component {
           headerRightOnPress={() =>
             showDetail ? updateItem('profile', tempItem) : this.toggleEdit()
           }
+          colors={company_config.colors}
         />
         <HeaderProfile
           photoLink={profile.profile}
@@ -105,28 +112,6 @@ class PersonalDetailsScreen extends Component {
           }
           colors={colors}
         />
-        {/* <View style={viewStyleContainer}>
-          <TouchableHighlight
-            style={{ width: 100 }}
-            // onPress={() => this.openModal()}
-          >
-            {tempItem.profile ? (
-              <Image
-                style={imageStylePhoto}
-                source={{
-                  uri: tempItem.profile,
-                  // cache: 'only-if-cached',
-                }}
-                key={tempItem.profile}
-              />
-            ) : (
-              <Image
-                source={require('./../../../assets/icons/profile.png')}
-                style={styles.photo}
-              />
-            )}
-          </TouchableHighlight>
-        </View> */}
         <CardContainer>
           <Card
             textActionOne={showDetail ? 'SAVE' : ''}
@@ -185,9 +170,7 @@ class PersonalDetailsScreen extends Component {
                   ) : null}
                 </View>
               ) : (
-                <View style={{ padding: 8 }}>
-                  <Output label="No profile info saved" />
-                </View>
+                <EmptyListMessage text="No profile info saved" />
               )}
 
               {/* <View style={[styles.pickerContainer, { paddingVertical: 20 }]}>
@@ -222,7 +205,6 @@ const styles = {
   container: {
     flex: 1,
     flexDirection: 'column',
-    // backgroundColor: 'white',
   },
   input: {
     flex: 5,

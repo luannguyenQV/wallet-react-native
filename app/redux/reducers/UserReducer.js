@@ -202,16 +202,14 @@ export default (state = INITIAL_STATE, action) => {
         modalType: '',
       };
     case SHOW_MODAL:
-      console.log('Not handled: ' + SHOW_MODAL);
-      break;
-    // return {
-    //   ...state,
-    //   [action.payload.type]: action.payload.data,
-    //   modalType: action.payload.modalType,
-    //   modalVisible: true,
-    //   loading: false,
-    //   updateError: '',
-    // };
+      return {
+        ...state,
+        tempItem: action.payload.item,
+        modalType: action.payload.modalType,
+        modalVisible: true,
+        loading: false,
+        updateError: '',
+      };
 
     case VERIFY_ASYNC.pending:
       return {

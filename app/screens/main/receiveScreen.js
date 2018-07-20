@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Colors from './../../config/colors';
 import Header from './../../components/header';
+import { Output } from './../../components/common';
 
 class ReceiveScreen extends Component {
   static navigationOptions = {
@@ -30,11 +31,11 @@ class ReceiveScreen extends Component {
     };
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     const user = this.props.profile;
     const imageURI =
       'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=' +
-      encodeURIComponent(user.email) +
+      encodeURIComponent('rehive:' + user.email) +
       '&choe=UTF-8';
     this.setState({ imageURI, email: user.email });
   }
@@ -42,7 +43,12 @@ class ReceiveScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Header navigation={this.props.navigation} back title="Receive" />
+        <Header
+          navigation={this.props.navigation}
+          colors={this.props.company_config.colors}
+          back
+          title="Receive"
+        />
         <Text style={styles.text}>
           The QR code is your public address for accepting payments.
         </Text>
@@ -50,26 +56,7 @@ class ReceiveScreen extends Component {
           style={{ width: 300, height: 300 }}
           source={{ uri: this.state.imageURI }}
         />
-        <View style={styles.boxed}>
-          <View style={styles.memoIcon}>
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text style={styles.memoText}>{this.state.email}</Text>
-            </View>
-            <TouchableHighlight
-              underlayColor={'white'}
-              onPress={() => {
-                Clipboard.setString(this.state.email);
-                Alert.alert(null, 'Copied');
-              }}>
-              <Icon name="content-copy" size={30} color={Colors.black} />
-            </TouchableHighlight>
-          </View>
-        </View>
+        <Output label="Email" value={this.state.email} copy />
       </View>
     );
   }
@@ -110,9 +97,10 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({ user }) => {
+const mapStateToProps = ({ user, auth }) => {
+  const { company_config } = auth;
   const { profile } = user;
-  return { profile };
+  return { profile, company_config };
 };
 
 export default connect(mapStateToProps, {})(ReceiveScreen);

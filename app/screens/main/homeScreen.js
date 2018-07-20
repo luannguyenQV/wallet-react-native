@@ -49,6 +49,7 @@ class HomeScreen extends Component {
         <Header
           navigation={this.props.navigation}
           drawer
+          colors={company_config.colors}
           // right
           // noAccounts={this.state.noAccounts}
         />

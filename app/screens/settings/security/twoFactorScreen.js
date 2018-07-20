@@ -90,6 +90,7 @@ class TwoFactorScreen extends Component {
   }
 
   renderEnabled() {
+    const { colors } = this.props.company_config;
     return (
       <View style={styles.contentStyle}>
         <Text style={styles.textStyle}>
@@ -98,7 +99,12 @@ class TwoFactorScreen extends Component {
           normal password for authentication. {'\n'}
           {'\n'}Multi-factor authentication is enabled on this account.
         </Text>
-        <Button label="Disable" onPress={() => this.props.nextStateMFA('')} />
+        <Button
+          label="DISABLE"
+          textColor={colors.primaryContrast}
+          backgroundColor={colors.primary}
+          onPress={() => this.props.nextStateMFA('')}
+        />
       </View>
     );
   }
@@ -126,10 +132,14 @@ class TwoFactorScreen extends Component {
         <Output label="Key" value={mfaToken.key} copy />
         <Button
           label="ENABLE"
+          textColor={colors.primaryContrast}
+          backgroundColor={colors.primary}
           onPress={() => this.props.nextStateMFA('verifyToken')}
         />
         <Button
           label="CANCEL"
+          textColor={colors.primary}
+          backgroundColor="transparent"
           onPress={() => this.props.nextStateMFA('back')}
         />
       </InputContainer>
@@ -157,10 +167,14 @@ class TwoFactorScreen extends Component {
         />
         <Button
           label="ENABLE"
+          textColor={colors.primaryContrast}
+          backgroundColor={colors.primary}
           onPress={() => this.props.nextStateMFA('verifySMS')}
         />
         <Button
           label="CANCEL"
+          textColor={colors.primary}
+          backgroundColor="transparent"
           onPress={() => this.props.nextStateMFA('back')}
         />
       </View>
@@ -205,7 +219,12 @@ class TwoFactorScreen extends Component {
   render() {
     return (
       <View style={styles.containerStyle}>
-        <Header navigation={this.props.navigation} back title="Two factor" />
+        <Header
+          navigation={this.props.navigation}
+          colors={this.props.company_config.colors}
+          back
+          title="Two factor"
+        />
         {this.renderContent()}
       </View>
     );

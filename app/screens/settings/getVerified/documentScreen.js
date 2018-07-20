@@ -116,7 +116,12 @@ class DocumentScreen extends Component {
     const { textStyleHeader, viewStyleContent } = styles;
     return (
       <View style={styles.container}>
-        <Header navigation={this.props.navigation} back title="Documents" />
+        <Header
+          navigation={this.props.navigation}
+          colors={this.props.company_config.colors}
+          back
+          title="Documents"
+        />
         <View style={viewStyleContent}>
           <Text style={textStyleHeader}>{category}</Text>
           {this.renderContent()}
@@ -174,9 +179,10 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = user => {
+const mapStateToProps = ({ user, auth }) => {
+  const { company_config } = auth;
   const { loading } = user;
-  return { loading };
+  return { loading, company_config };
 };
 
 export default connect(mapStateToProps, {

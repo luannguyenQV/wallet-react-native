@@ -307,10 +307,15 @@ class WithdrawScreen extends Component {
   }
 
   render() {
-    const { pin, fingerprint } = this.props;
+    const { pin, fingerprint, company_config } = this.props;
     return (
       <View style={{ flex: 1 }}>
-        <Header navigation={this.props.navigation} title="Withdraw" back />
+        <Header
+          navigation={this.props.navigation}
+          colors={company_config.colors}
+          title="Withdraw"
+          back
+        />
         <KeyboardAvoidingView
           keyboardShouldPersistTaps={'never'}
           style={styles.viewStyleContainer}
@@ -352,26 +357,11 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
-    // backgroundColor: 'orange',
-    // flex: 2,
   },
   buttonStyleOutput: { width: '100%', borderRadius: 3, marginHorizontal: 8 },
   viewStyleBottomContainer: {
-    // width: '100%',
-    // justifyContent: 'center',
-    // alignSelf: 'flex-end',
-    // flex: 1,
-    // minHeight: 100,
     borderRadius: 2,
-    // position: 'absolute',
-    // bottom: 0,
   },
-  // contact: {
-  //   height: 40,
-  //   flexDirection: 'column',
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  // },
   textStyleOutput: {
     fontSize: 16,
     // alignSelf: 'center',

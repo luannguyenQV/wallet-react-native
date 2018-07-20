@@ -9,7 +9,13 @@ import {
 } from './../../redux/actions';
 
 // import CountryPicker from 'react-native-country-picker-modal';
-import { Input, Output, CardContainer, Card } from './../../components/common';
+import {
+  Input,
+  Output,
+  CardContainer,
+  Card,
+  EmptyListMessage,
+} from './../../components/common';
 import Colors from './../../config/colors';
 import Header from './../../components/header';
 
@@ -41,7 +47,7 @@ class AddressScreen extends Component {
     const { colors } = company_config;
     const { line_1, line_2, city, state_province, postal_code } = address;
     return (
-      <View style={styles.container}>
+      <View style={styles.containerStyle}>
         <Header
           navigation={this.props.navigation}
           back
@@ -50,6 +56,7 @@ class AddressScreen extends Component {
           headerRightOnPress={() =>
             showDetail ? updateItem('address', tempItem) : this.toggleEdit()
           }
+          colors={company_config.colors}
         />
 
         <CardContainer>
@@ -136,9 +143,7 @@ class AddressScreen extends Component {
                   ) : null}
                 </View>
               ) : (
-                <View style={{ padding: 8 }}>
-                  <Output label="No address info saved" />
-                </View>
+                <EmptyListMessage text="No address info saved" />
               )}
 
               {/* <View style={[styles.pickerContainer, { paddingVertical: 20 }]}>
@@ -190,13 +195,8 @@ class AddressScreen extends Component {
 }
 
 const styles = {
-  container: {
+  containerStyle: {
     flex: 1,
-    // backgroundColor: 'white',
-  },
-  text: {
-    fontSize: 14,
-    color: Colors.black,
   },
   pickerContainer: {
     flexDirection: 'row',

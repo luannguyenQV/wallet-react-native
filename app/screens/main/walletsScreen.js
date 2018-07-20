@@ -135,10 +135,16 @@ class WalletsScreen extends Component {
       showModal,
       setActiveCurrency,
       tempWallet,
+      company_config,
     } = this.props;
     return (
       <View style={styles.container}>
-        <Header navigation={this.props.navigation} drawer title="Wallets" />
+        <Header
+          navigation={this.props.navigation}
+          colors={company_config.colors}
+          drawer
+          title="Wallets"
+        />
         <CardList
           type="wallet"
           navigation={this.props.navigation}
@@ -147,7 +153,7 @@ class WalletsScreen extends Component {
           loadingData={loading_accounts}
           identifier="reference"
           onRefresh={fetchAccounts}
-          // activeItem={showModal('wallet', item, 'active')}
+          activeItem={item => showModal('wallet', item, 'active')}
           // showDetail={showWallet}
           renderContent={this.renderContent}
           renderDetail={(item, navigation) =>

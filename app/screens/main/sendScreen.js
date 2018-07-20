@@ -157,7 +157,9 @@ class SendScreen extends Component {
       <FullScreenForm
         textFooterRight={textFooterRight}
         onPressFooterRight={onPressFooterRight}
-        loading={sending}>
+        loading={sending}
+        color={'focus'}
+        colors={company_config.colors}>
         {this.renderTop()}
         <View style={viewStyleBottomContainer}>{this.renderBottom()}</View>
       </FullScreenForm>
@@ -476,11 +478,17 @@ class SendScreen extends Component {
   }
 
   render() {
-    const { pin, fingerprint } = this.props;
+    const { pin, fingerprint, company_config } = this.props;
     // console.log(pin, fingerprint);
     return (
       <View style={{ flex: 1 }}>
-        <Header navigation={this.props.navigation} title="Send" back right />
+        <Header
+          navigation={this.props.navigation}
+          colors={company_config.colors}
+          title="Send"
+          back
+          right
+        />
         <KeyboardAvoidingView
           keyboardShouldPersistTaps={'always'}
           style={styles.viewStyleContainer}

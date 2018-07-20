@@ -65,6 +65,7 @@ class CardList extends Component {
       profile,
       onPressFooter,
       iconFooter,
+      canActive,
       // redux actions
       editItem,
       deleteItem,
@@ -79,11 +80,11 @@ class CardList extends Component {
         textTitleLeft={textTitleLeft ? textTitleLeft(item) : ''}
         iconTitleLeft={iconTitleLeft}
         itemActive={itemActive ? itemActive(item) : false}
-        // onPressTitleLeft={() =>
-        //   onPressTitleLeft
-        //     ? onPressTitleLeft(item)
-        //     : canActive ? activeItem(type, item) : null
-        // }
+        onPressTitleLeft={() =>
+          onPressTitleLeft
+            ? onPressTitleLeft(item)
+            : canActive ? activeItem(item) : null
+        }
         title={title ? title(item) : ''}
         subtitle={subtitle ? subtitle(item) : ''}
         colorTitleBackground="white"
@@ -178,7 +179,7 @@ class CardList extends Component {
     let textActionTwo = 'CANCEL';
     let onPressActionTwo = hideModal;
     let content = null;
-    // console.log(identifier, tempItem);
+    console.log(identifier, tempItem, modalType);
     if (identifier && tempItem) {
       switch (modalType) {
         case 'delete':
@@ -274,9 +275,9 @@ class CardList extends Component {
             keyboardShouldPersistTaps="always">
             <Card
               key={type}
-              title={title ? title(tempItem) : ''}
+              title={wallet ? '' : title ? title(tempItem) : ''}
               colorTitleBackground="white"
-              subtitle={subtitle ? subtitle(tempItem) : ''}
+              subtitle={wallet ? '' : subtitle ? subtitle(tempItem) : ''}
               textActionOne={wallet ? '' : showReward ? textActionOne : 'SAVE'}
               onPressActionOne={() =>
                 showReward

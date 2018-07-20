@@ -21,7 +21,9 @@ function* fetchCrypto(action) {
       //   route = ethereum_service_url + '/company/assets/';
       //   break;
     }
-    const assets = response.data.map(a => a.currency_code);
+    const assets = response.data
+      ? response.data.map(a => a.currency_code)
+      : null;
     yield put({
       type: FETCH_CRYPTO_ASYNC.success,
       payload: { assets, type },

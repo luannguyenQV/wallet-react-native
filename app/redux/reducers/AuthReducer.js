@@ -27,6 +27,7 @@ import {
   UPDATE_MFA_ERROR,
   UPDATE_MFA_STATE,
   UPDATE_MFA_TOKEN,
+  VERIFY_MFA,
 } from '../actions/AuthActions';
 import { HIDE_MODAL } from '../actions/UserActions';
 
@@ -82,6 +83,7 @@ export default (state = INITIAL_STATE, action) => {
         appLoading: false,
       };
 
+    case VERIFY_MFA:
     case LOADING:
       return {
         ...state,

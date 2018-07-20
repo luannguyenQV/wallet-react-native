@@ -77,6 +77,7 @@ class DepositScreen extends Component {
       company_bank_account,
       loading_company_bank_account,
       tempWallet,
+      company_config,
     } = this.props;
     const {
       containerStyle,
@@ -87,7 +88,12 @@ class DepositScreen extends Component {
     } = styles;
     return (
       <View style={containerStyle}>
-        <Header navigation={this.props.navigation} back title="Deposit" />
+        <Header
+          navigation={this.props.navigation}
+          colors={company_config.colors}
+          back
+          title="Deposit"
+        />
         <View style={containerStyleComment}>
           <Text style={textStyleComment}>
             Fund your account by transferring one of the listed currencies with
@@ -156,10 +162,16 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user, accounts }) => {
+const mapStateToProps = ({ auth, user, accounts }) => {
+  const { company_config } = auth;
   const { company_bank_account, loading_company_bank_account } = user;
   const { tempWallet } = accounts;
-  return { company_bank_account, loading_company_bank_account, tempWallet };
+  return {
+    company_bank_account,
+    loading_company_bank_account,
+    tempWallet,
+    company_config,
+  };
 };
 
 export default connect(mapStateToProps, { fetchData })(DepositScreen);

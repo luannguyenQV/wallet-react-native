@@ -193,12 +193,12 @@ class SettingsScreen extends Component {
           onPress={this.goTo}
         />
         <SettingsOption
-          label="Two factor"
+          label="Two-factor authentication"
           gotoAddress="TwoFactor"
           onPress={this.goTo}
         />
         <SettingsOption
-          label="Pin/fingerprint"
+          label="Pin/fingerprint authentication"
           gotoAddress="Pin"
           onPress={this.goTo}
         />
@@ -214,7 +214,12 @@ class SettingsScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Header navigation={this.props.navigation} drawer title="Settings" />
+        <Header
+          navigation={this.props.navigation}
+          colors={this.props.company_config.colors}
+          drawer
+          title="Settings"
+        />
         <InputContainer>
           <SettingsContainer label="Personal details">
             {this.renderBasicInfo()}
@@ -246,13 +251,15 @@ const styles = {
   // },
 };
 
-const mapStateToProps = ({ user }) => {
+const mapStateToProps = ({ user, auth }) => {
+  const { company_config } = auth;
   const { profile, address, mobile, email } = user;
   return {
     profile,
     address,
     mobile,
     email,
+    company_config,
   };
 };
 

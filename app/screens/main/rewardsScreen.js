@@ -77,7 +77,12 @@ class RewardsScreen extends Component {
     console.log(rewards);
     return (
       <View style={styles.container}>
-        <Header navigation={this.props.navigation} drawer title="Rewards" />
+        <Header
+          navigation={this.props.navigation}
+          colors={company_config.colors}
+          drawer
+          title="Rewards"
+        />
         {/* <Container>
           <Tabs
             tabBarUnderlineStyle={{

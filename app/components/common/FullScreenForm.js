@@ -28,24 +28,29 @@ const FullScreenForm = props => {
     onPressFooterRight,
     loading,
     color,
+    colors,
   } = props;
 
   return (
-    <View style={viewStyleContainer}>
+    <View style={[viewStyleContainer, { backgroundColor: colors[color] }]}>
       {iconHeaderLeft || textHeaderRight ? (
         <View style={viewStyleHeader}>
           {iconHeaderLeft ? (
             <HeaderButton
               icon={iconHeaderLeft}
               onPress={onPressHeaderLeft}
-              color={color}
+              color={colors[color + 'Contrast']}
             />
           ) : (
             <View />
           )}
           {textHeaderRight ? (
             <TouchableOpacity onPress={onPressHeaderRight}>
-              <Text style={[textStyleAction, { color: color }]}>
+              <Text
+                style={[
+                  textStyleAction,
+                  { color: colors[color + 'Contrast'] },
+                ]}>
                 {textHeaderRight}
               </Text>
             </TouchableOpacity>
@@ -61,7 +66,11 @@ const FullScreenForm = props => {
         <View style={viewStyleFooter}>
           {textFooterLeft ? (
             <TouchableOpacity onPress={onPressFooterLeft}>
-              <Text style={[textStyleAction, { color: color }]}>
+              <Text
+                style={[
+                  textStyleAction,
+                  { color: colors[color + 'Contrast'] },
+                ]}>
                 {textFooterLeft}
               </Text>
             </TouchableOpacity>
@@ -70,7 +79,11 @@ const FullScreenForm = props => {
           )}
           {textFooterRight ? (
             <TouchableOpacity onPress={onPressFooterRight}>
-              <Text style={[textStyleAction, { color: color }]}>
+              <Text
+                style={[
+                  textStyleAction,
+                  { color: colors[color + 'Contrast'] },
+                ]}>
                 {textFooterRight}
               </Text>
             </TouchableOpacity>
