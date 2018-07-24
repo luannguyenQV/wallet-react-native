@@ -36,7 +36,12 @@ class WithdrawScreen extends Component {
   };
 
   componentDidMount() {
-    if (this.props.withdrawWallet === null) {
+    const { withdrawWallet, wallets, activeWalletIndex } = this.props;
+    console.log('1', withdrawWallet);
+    console.log('2', wallets);
+    console.log('3', activeWalletIndex);
+    if (withdrawWallet === null) {
+      console.log('lol');
       this.props.setWithdrawWallet(wallets[activeWalletIndex]);
     }
   }
@@ -80,9 +85,7 @@ class WithdrawScreen extends Component {
     const { viewStyleBottomContainer } = styles;
 
     let textFooterRight = 'Next';
-    let textFooterLeft = '';
     let onPressFooterRight = () => {};
-    let onPressFooterLeft = () => {};
 
     switch (withdrawState) {
       case 'amount':
@@ -90,18 +93,12 @@ class WithdrawScreen extends Component {
           validateWithdrawAmount(withdrawWallet, withdrawAmount);
         break;
       case 'account':
-        textFooterLeft = 'Edit';
-        onPressFooterLeft = () => setWithdrawState('amount');
         onPressFooterRight = () => validateWithdrawAccount(withdrawAccount);
         break;
       case 'note':
-        textFooterLeft = 'Edit';
-        onPressFooterLeft = () => setWithdrawState('amount');
         onPressFooterRight = () => validateWithdrawNote(withdrawNote);
         break;
       case 'confirm':
-        textFooterLeft = 'Edit';
-        onPressFooterLeft = () => setWithdrawState('amount');
         textFooterRight = 'Confirm';
         onPressFooterRight = () => {
           if (company_config.pin.withdraw) {
@@ -112,12 +109,10 @@ class WithdrawScreen extends Component {
         };
         break;
       case 'success':
-        // textFooterLeft = 'Close';
         textFooterRight = 'Close';
         onPressFooterRight = () => this.props.navigation.goBack();
         break;
       case 'fail':
-        // textFooterLeft = 'Close';
         textFooterRight = 'Close';
         onPressFooterRight = () => this.props.navigation.goBack();
         break;
@@ -125,11 +120,10 @@ class WithdrawScreen extends Component {
 
     return (
       <FullScreenForm
-        // textFooterLeft={textFooterLeft}
-        // onPressFooterLeft={onPressFooterLeft}
         textFooterRight={textFooterRight}
         onPressFooterRight={onPressFooterRight}
-        loading={withdrawing}>
+        loading={withdrawing}
+        colors={company_config.colors}>
         {this.renderTop()}
         <View style={viewStyleBottomContainer}>{this.renderBottom()}</View>
       </FullScreenForm>
@@ -146,7 +140,7 @@ class WithdrawScreen extends Component {
       withdrawError,
       setWithdrawState,
     } = this.props;
-    const currency = withdrawWallet.currency.currency;
+    const currency = withdrawWallet ? withdrawWallet.currency.currency : null;
 
     const {
       viewStyleTopContainer,
@@ -161,10 +155,7 @@ class WithdrawScreen extends Component {
             <Text style={textStyleError}>Withdraw successful!</Text>
           </View>
         ) : null}
-        {withdrawState === 'note' ||
-        withdrawState === 'account' ||
-        withdrawState === 'confirm' ||
-        withdrawState === 'success' ? (
+        {withdrawState === ('note' || 'account' || 'confirm' || 'success') ? (
           <TouchableHighlight
             onPress={() => setWithdrawState('amount')}
             underlayColor={Colors.lightGray}
@@ -179,9 +170,7 @@ class WithdrawScreen extends Component {
             />
           </TouchableHighlight>
         ) : null}
-        {withdrawState === 'note' ||
-        withdrawState === 'confirm' ||
-        withdrawState === 'success' ? (
+        {withdrawState === ('note' || 'confirm' || 'success') ? (
           <TouchableHighlight
             onPress={() => setWithdrawState('account')}
             underlayColor={Colors.lightGray}
@@ -189,8 +178,7 @@ class WithdrawScreen extends Component {
             <Output label="Account" value={withdrawBankAccount.name} />
           </TouchableHighlight>
         ) : null}
-        {(withdrawState === 'confirm' || withdrawState === 'success') &&
-        withdrawNote ? (
+        {withdrawState === ('confirm' || 'success') && withdrawNote ? (
           <TouchableHighlight
             onPress={() => setWithdrawState('note')}
             underlayColor={Colors.lightGray}
@@ -336,6 +324,7 @@ class WithdrawScreen extends Component {
             style={{ flex: 1 }}
             onPress={Keyboard.dismiss}
             accessible={false}>
+            {/* <View /> */}
             {this.renderMainContainer()}
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>

@@ -5,7 +5,9 @@ import {
   TextInput,
   StyleSheet,
   Dimensions,
+  AppState,
   ViewPropTypes,
+  Clipboard,
 } from 'react-native';
 import _ from 'lodash';
 
@@ -50,6 +52,7 @@ class CodeInput extends Component {
     this.state = {
       codeArr: new Array(this.props.codeLength).fill(''),
       currentIndex: 0,
+      appState: AppState.currentState,
     };
 
     this.codeInputRefs = [];
@@ -70,7 +73,33 @@ class CodeInput extends Component {
         'Invalid input position. Must be in: center, left, right, full',
       );
     }
+
+    AppState.addEventListener('change', this._handleAppStateChange);
   }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this._handleAppStateChange);
+  }
+
+  _handleAppStateChange = nextAppState => {
+    if (
+      this.state.appState.match(/inactive|background/) &&
+      nextAppState === 'active'
+    ) {
+      console.log('App has come to the foreground!');
+      this._getClipboard();
+    }
+    this.setState({ appState: nextAppState });
+  };
+
+  _getClipboard = async () => {
+    var content = await Clipboard.getString();
+
+    console.log(content);
+    if (content.length === this.props.codeLength) {
+      this.props.onFulfill(content);
+    }
+  };
 
   clear() {
     this.setState({

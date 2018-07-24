@@ -103,7 +103,7 @@ class WalletsScreen extends Component {
     if (this.props.company_bank_account.length > 0) {
       buttons[i] = { id: i++, type: 'deposit' };
     }
-    buttons[i] = { id: i++, type: 'withdraw' };
+    // buttons[i] = { id: i++, type: 'withdraw' };
     buttons[i] = { id: i++, type: 'receive' };
     buttons[i] = { id: i++, type: 'send' };
     return (

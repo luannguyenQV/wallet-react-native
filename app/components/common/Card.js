@@ -68,10 +68,7 @@ const Card = props => {
       {title || subtitle || iconTitleLeft || iconTitleRight ? (
         <View
           resizeMode="cover"
-          style={[
-            viewStyleTitleContainer,
-            { backgroundColor: colorTitleBackground },
-          ]}>
+          style={[viewStyleTitleContainer, { backgroundColor: 'white' }]}>
           {textTitleLeft ? (
             <TouchableCircle
               text={textTitleLeft}
@@ -94,7 +91,7 @@ const Card = props => {
                   textStyleTitle,
                   {
                     fontSize: title ? (title.length < 18 ? 24 : 18) : 24,
-                    color: colorTitleText,
+                    // color: colorTitleText,
                   },
                 ]}>
                 {title}

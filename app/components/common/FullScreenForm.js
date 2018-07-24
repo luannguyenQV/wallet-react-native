@@ -107,6 +107,7 @@ const styles = {
     height: 64,
     // paddingTop: 32,
     // padding: 12,
+    zIndex: 0,
   },
   viewStyleContent: {
     flex: 1,
@@ -114,6 +115,7 @@ const styles = {
     // paddingBottom: 12,
     // backgroundColor: Colors.onPrimary,
     flexDirection: 'column',
+    zIndex: 1,
     // alignItems: 'center',
     // justifyContent: 'center',
   },
@@ -122,6 +124,7 @@ const styles = {
     flexDirection: 'row',
     height: 64,
     padding: 8,
+    zIndex: 0,
   },
   iconStyleHeaderLeft: {
     margin: 16,

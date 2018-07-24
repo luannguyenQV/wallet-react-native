@@ -20,7 +20,7 @@ import {
   verifyItem,
   showModal,
   hideModal,
-  // activeItem,
+  fetchAccounts,
   setActiveCurrency,
 } from './../redux/actions';
 import { standardizeString } from './../util/general';
@@ -31,6 +31,7 @@ import { Card, PopUpGeneral, EmptyListMessage, Input } from './common';
 class CardList extends Component {
   componentDidMount() {
     if (this.props.onRefresh) {
+      console.log('onRefresh');
       this.props.onRefresh();
     } else {
       this.props.fetchData(this.props.type);
@@ -257,9 +258,11 @@ class CardList extends Component {
       onPressActionOne,
       loadingDetail,
       onPressActionTwo,
+      onRefresh,
       // redux actions
       updateItem,
       fetchData,
+      fetchAccounts,
     } = this.props;
     return (
       <KeyboardAvoidingView
@@ -302,7 +305,7 @@ class CardList extends Component {
             refreshControl={
               <RefreshControl
                 refreshing={loading}
-                onRefresh={() => fetchData(type)}
+                onRefresh={() => (onRefresh ? onRefresh() : fetchData(type))}
               />
             }
             data={data}
@@ -360,4 +363,5 @@ export default connect(mapStateToProps, {
   showModal,
   hideModal,
   setActiveCurrency,
+  fetchAccounts,
 })(CardList);

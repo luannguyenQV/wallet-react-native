@@ -10,6 +10,8 @@ import {
   Platform,
   Text,
   Dimensions,
+  AppState,
+  Linking,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { connect } from 'react-redux';
@@ -232,17 +234,45 @@ class AuthScreen extends Component {
               containerStyle={{ marginTop: 0, paddingBottom: 24 }}
               onFulfill={code => this.props.verifyMFA(code)}
             />
-            {/* <Button
-              label="Resend SMS"
-              textColor={company_config.colors.secondaryContrast}
-              backgroundColor={company_config.colors.secondary}
-              size="large"
-              reference={input => {
-                this.login = input;
-              }}
-              onPress={() => nextAuthFormState('login')}
-              animation="fadeInUpBig"
-            /> */}
+            {/* {detailState === 'token' ? (
+              <View>
+                <Button
+                  label="OPEN GOOGLE AUTHENTICATOR"
+                  textColor={company_config.colors.secondaryContrast}
+                  backgroundColor={company_config.colors.secondary}
+                  size="large"
+                  reference={input => {
+                    this.login = input;
+                  }}
+                  onPress={() => Linking.openURL('otpauth://')}
+                  animation="fadeInUpBig"
+                />
+                <Button
+                  label="OPEN AUTHY"
+                  textColor={company_config.colors.secondaryContrast}
+                  backgroundColor={company_config.colors.secondary}
+                  size="large"
+                  reference={input => {
+                    this.login = input;
+                  }}
+                  onPress={() => Linking.openURL('authy://')}
+                  // onPress={() => nextAuthFormState('login')}
+                  animation="fadeInUpBig"
+                />
+              </View>
+            ) : (
+              <Button
+                label="Resend SMS"
+                textColor={company_config.colors.secondaryContrast}
+                backgroundColor={company_config.colors.secondary}
+                size="large"
+                reference={input => {
+                  this.login = input;
+                }}
+                // onPress={() => nextAuthFormState('login')}
+                animation="fadeInUpBig"
+              />
+            )} */}
           </View>
         );
       case 'pin':
@@ -316,8 +346,8 @@ class AuthScreen extends Component {
                 <View style={buttonsContainer}>
                   <Button
                     label="SCAN FINGERPRINT"
-                    textColor={company_config.colors.secondaryContrast}
-                    backgroundColor={company_config.colors.secondary}
+                    textColor={colors.secondaryContrast}
+                    backgroundColor={colors.secondary}
                     reference={input => {
                       this.login = input;
                     }}
@@ -326,7 +356,7 @@ class AuthScreen extends Component {
                   />
                   <Button
                     label="USE PIN"
-                    textColor={company_config.colors.primaryContrast}
+                    textColor={colors.primaryContrast}
                     backgroundColor="transparent"
                     reference={input => {
                       this.login = input;
@@ -553,13 +583,12 @@ class AuthScreen extends Component {
     const { loading, appLoading, postLoading, company_config } = this.props;
     const { viewStyleContainer } = styles;
 
+    const colors = company_config ? company_config.colors : Colors;
+
     return (
       <KeyboardAvoidingView
         keyboardShouldPersistTaps={'never'}
-        style={[
-          viewStyleContainer,
-          { backgroundColor: company_config.colors.primary },
-        ]}
+        style={[viewStyleContainer, { backgroundColor: colors.primary }]}
         behavior={'padding'}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           {loading || postLoading ? (

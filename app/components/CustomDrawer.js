@@ -45,15 +45,15 @@ class CustomDrawer extends Component {
                   colors={colors}
                 />
               ) : null}
-              {!profile.verified ? (
-                <DrawerOption
-                  navigation={navigation}
-                  activeItemKey={activeItemKey}
-                  name="Get verified"
-                  address="GetVerified"
-                  colors={colors}
-                />
-              ) : null}
+              {/* {!profile.verified ? ( */}
+              <DrawerOption
+                navigation={navigation}
+                activeItemKey={activeItemKey}
+                name="Get verified"
+                address="GetVerified"
+                colors={colors}
+              />
+              {/* ) : null} */}
               <DrawerOption
                 navigation={navigation}
                 activeItemKey={activeItemKey}

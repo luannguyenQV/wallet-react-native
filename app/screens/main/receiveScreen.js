@@ -1,46 +1,52 @@
 import React, { Component } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Clipboard,
-  TouchableHighlight,
-  Alert,
-  AsyncStorage,
-} from 'react-native';
+import { View, Text, Image } from 'react-native';
 import { connect } from 'react-redux';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Colors from './../../config/colors';
 import Header from './../../components/header';
-import { Output } from './../../components/common';
+import { Output, Button } from './../../components/common';
 
 class ReceiveScreen extends Component {
   static navigationOptions = {
     title: 'Receive',
   };
 
-  constructor() {
-    super();
+  state = {
+    imageURI:
+      'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=undefined&choe=UTF-8',
+    email: '',
+    type: 'email',
+  };
 
-    this.state = {
-      imageURI:
-        'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=undefined&choe=UTF-8',
-      email: '',
-    };
+  componentDidMount() {
+    this.switchToEmail();
   }
 
-  async componentDidMount() {
+  switchToEmail() {
     const user = this.props.profile;
     const imageURI =
       'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=' +
       encodeURIComponent('rehive:' + user.email) +
       '&choe=UTF-8';
-    this.setState({ imageURI, email: user.email });
+    this.setState({ imageURI, email: user.email, type: 'email' });
+  }
+
+  switchToCrypto() {
+    const user = this.props.profile;
+    const imageURI =
+      'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=' +
+      encodeURIComponent(
+        'stellar:GANOZF7TIDYZ7MGRVVMAJHBQ7JCWRNRDHPY6N4W5OWU2JWNMQ2D67NVQ?memo=' +
+          user.username,
+      ) +
+      '&choe=UTF-8';
+    this.setState({ imageURI, type: 'crypto' });
   }
 
   render() {
+    const { type } = this.state;
+    const { colors } = this.props.company_config;
     return (
       <View style={styles.container}>
         <Header
@@ -49,53 +55,79 @@ class ReceiveScreen extends Component {
           back
           title="Receive"
         />
-        <Text style={styles.text}>
-          The QR code is your public address for accepting payments.
-        </Text>
-        <Image
-          style={{ width: 300, height: 300 }}
-          source={{ uri: this.state.imageURI }}
-        />
-        <Output label="Email" value={this.state.email} copy />
+        <View>
+          <View
+            style={{
+              flexDirection: 'row',
+              // alignItems: 'center',
+              // justifyContent: 'center',
+            }}>
+            <View style={{ flex: 1 }}>
+              <Button
+                backgroundColor={
+                  type === 'email' ? colors.focusContrast : colors.secondary
+                }
+                textColor={
+                  type === 'email' ? colors.focus : colors.secondaryContrast
+                }
+                onPress={() => this.switchToEmail()}
+                label="EMAIL"
+                size="small"
+                round
+                containerStyle={{ margin: 16 }}
+              />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Button
+                backgroundColor={
+                  type === 'crypto' ? colors.focusContrast : colors.secondary
+                }
+                textColor={
+                  type === 'crypto' ? colors.focus : colors.secondaryContrast
+                }
+                onPress={() => this.switchToCrypto()}
+                label="CRYPTO"
+                size="small"
+                round
+                containerStyle={{ margin: 16 }}
+              />
+            </View>
+          </View>
+          <Text style={styles.text}>
+            {type === 'crypto'
+              ? 'This QR code is your public address for accepting payments.'
+              : 'This QR code is your Rehive account for use with another Rehive app'}
+          </Text>
+          <Image
+            style={{ width: 300, height: 300 }}
+            source={{ uri: this.state.imageURI }}
+          />
+        </View>
+        {type === 'email' ? (
+          <View style={{ padding: 8, width: '100%' }}>
+            <Output label="Email" value={this.state.email} copy />
+          </View>
+        ) : null}
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flex: 1,
     flexDirection: 'column',
     backgroundColor: 'white',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
   },
   text: {
     fontSize: 16,
     textAlign: 'center',
     color: Colors.black,
-    padding: 20,
+    paddingHorizontal: 8,
   },
-  boxed: {
-    flexDirection: 'column',
-    padding: 5,
-    paddingHorizontal: 15,
-    backgroundColor: Colors.lightgray,
-  },
-  memoText: {
-    flex: 1,
-    padding: 2,
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: Colors.black,
-  },
-  memoIcon: {
-    padding: 5,
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
+};
 
 const mapStateToProps = ({ user, auth }) => {
   const { company_config } = auth;

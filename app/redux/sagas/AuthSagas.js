@@ -168,6 +168,7 @@ function* authFlow() {
             yield put({ type: LOADING });
             yield call(Rehive.register, { company: tempCompany });
           } catch (error) {
+            console.log(error);
             if (error.data && error.data.company) {
               // This error is returned if no company by this ID exists in rehive
               authError = 'Please enter a valid company ID';
@@ -361,7 +362,13 @@ function* postAuthFlow() {
                 ).length === 0
               ) {
                 yield put({ type: POST_NOT_LOADING });
-                yield take(NEXT_AUTH_FORM_STATE);
+                const action = yield take(NEXT_AUTH_FORM_STATE);
+                if (action.payload.nextFormState === 'skip') {
+                  nextDetailState = 'email';
+                  if (company_config.auth.email === 'optional') {
+                    skip = true;
+                  }
+                }
               } else {
                 nextDetailState = 'email';
                 if (company_config.auth.email === 'optional') {
@@ -377,7 +384,10 @@ function* postAuthFlow() {
                 ).length === 0
               ) {
                 yield put({ type: POST_NOT_LOADING });
-                yield take(NEXT_AUTH_FORM_STATE);
+                const action = yield take(NEXT_AUTH_FORM_STATE);
+                if (action.payload.nextFormState === 'skip') {
+                  nextDetailState = 'first_name';
+                }
               } else {
                 nextDetailState = 'first_name';
               }
@@ -412,6 +422,23 @@ function* postAuthFlow() {
                 nextDetailState = 'country';
               }
               break;
+            // case 'username':
+            //   if (
+            //     company_config.auth.username &&
+            //     !(yield call(Rehive.getProfile)).username
+            //   ) {
+            //     yield put({ type: POST_NOT_LOADING });
+            //     yield take(NEXT_AUTH_FORM_STATE);
+            //     const { username } = yield select(getAuth);
+            //     console.log(username);
+            //     if (username) {
+            //       let resp = yield call(Rehive.updateProfile, { username });
+            //       console.log(resp);
+            //     }
+            //   } else {
+            //     nextDetailState = 'country';
+            //   }
+            //   break;
             case 'country':
               if (
                 company_config.auth.country &&

@@ -223,7 +223,18 @@ class Input extends Component {
               //   />string.indexOf(substring) !== -1
               // }
               keyboardShouldPersistTaps="handled"
-              style={{ backgroundColor: colors.primaryContrast }}
+              style={{
+                backgroundColor: colors.primaryContrast,
+                maxHeight: 150,
+                borderBottomLeftRadius: 5,
+                borderBottomRightRadius: 5,
+                overflow: 'hidden',
+              }}
+              contentContainerStyle={{
+                borderBottomLeftRadius: 5,
+                borderBottomRightRadius: 5,
+                overflow: 'hidden',
+              }}
               // data={data.filter(item => item[title] === value)}
               data={
                 data

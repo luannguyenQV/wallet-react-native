@@ -11,14 +11,20 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 class HeaderCurrency extends Component {
   getAmountTextStyle(currency) {
     const { colors } = this.props;
-    const diff =
+    const diff = Math.abs(
       currency.currency.divisibility -
-      currency.available_balance.toString().length;
+        currency.available_balance.toString().length,
+    );
     const length = Math.min(
-      currency.currency.divisibility + (diff > 0 ? diff : 0),
+      currency.currency.divisibility +
+        (diff > 0 ? diff : 0) +
+        currency.currency.code.length,
       20,
     );
-    let fontSize = Math.min(Math.floor(SCREEN_WIDTH / length), 42);
+    console.log('diff', diff);
+    console.log('length', length);
+    console.log('divisibility', currency.currency.divisibility);
+    let fontSize = Math.min(Math.floor(SCREEN_WIDTH / (0.8 * length)), 42);
     return [styles.textStyleAmount, { fontSize, color: colors.focus }];
   }
 

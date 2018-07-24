@@ -106,6 +106,7 @@ class SendScreen extends Component {
       sendNote,
       sendError,
       setSendState,
+      updateAccountField,
       company_config,
     } = this.props;
 
@@ -190,6 +191,11 @@ class SendScreen extends Component {
         {sendState === 'success' ? (
           <View style={viewStyleError}>
             <Text style={textStyleError}>Send successful!</Text>
+          </View>
+        ) : null}
+        {sendState === 'confirm' ? (
+          <View style={viewStyleError}>
+            <Text style={textStyleError}>Please confirm details</Text>
           </View>
         ) : null}
         {sendState === 'note' ||
@@ -289,7 +295,7 @@ class SendScreen extends Component {
             reference={input => {
               this.input = input;
             }}
-            // keyboardType="numeric"
+            keyboardType="decimal-pad"
             value={sendAmount}
             onChangeText={value =>
               updateAccountField({ prop: 'sendAmount', value })
@@ -405,7 +411,6 @@ class SendScreen extends Component {
               reference={input => {
                 this.input = input;
               }}
-              // keyboardType="numeric"
               returnKeyType="next"
               autoFocus
               onSubmitEditing={() => {
@@ -417,6 +422,7 @@ class SendScreen extends Component {
               }}
               colors={colors}
               popUp
+              multiline={contactsType === 'crypto' ? true : false}
               data={contacts}
               loadingData={contactsLoading}
               title="name"

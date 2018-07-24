@@ -60,8 +60,12 @@ function* fetchData(action) {
         break;
       case 'company_config':
         response = yield call(Rehive.getCompanyConfig);
-        // console.log('config', response);
         break;
+      case 'wallet':
+        return;
+      default:
+        console.log('Unhandled fetchData type: ', action.payload);
+        return;
     }
     // console.log(action.payload);
     let data = response;
