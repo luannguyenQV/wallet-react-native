@@ -275,6 +275,7 @@ class SendScreen extends Component {
       setContactType,
       sendType,
     } = this.props;
+    console.log(sendType);
     const { colors } = company_config;
     switch (sendState) {
       case 'amount':
@@ -288,7 +289,7 @@ class SendScreen extends Component {
             reference={input => {
               this.input = input;
             }}
-            keyboardType="numeric"
+            // keyboardType="numeric"
             value={sendAmount}
             onChangeText={value =>
               updateAccountField({ prop: 'sendAmount', value })
@@ -362,7 +363,7 @@ class SendScreen extends Component {
                   containerStyle={{ marginBottom: 0 }}
                 />
               </View>
-              {sendType === 'stellar' || 'ethereum' || 'bitcoin' ? (
+              {sendType === ('stellar' || 'ethereum' || 'bitcoin') ? (
                 <View style={{ flex: 1 }}>
                   <Button
                     backgroundColor={

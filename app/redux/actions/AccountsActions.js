@@ -70,7 +70,7 @@ export const validateSendRecipient = (sendType, contactsType, recipient) => {
     }
     console.log(sendType);
     if (!error) {
-      if (sendType === 'stellar') {
+      if (sendType === 'stellar' && contactsType === 'crypto') {
         return setSendState('memo');
       }
       return setSendState('note');
@@ -132,7 +132,6 @@ export const send = sendData => async dispatch => {
         response = await Rehive.createTransfer(data);
         break;
       case 'stellar':
-        data['reference'] = data.debit_account;
         data['to_reference'] = data.recipient;
         delete data.debit_account;
         delete data.recipient;

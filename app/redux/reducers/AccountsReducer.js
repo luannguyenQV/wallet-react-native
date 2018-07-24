@@ -97,6 +97,7 @@ export default (state = INITIAL_STATE, action) => {
         sendWallet: action.payload,
         sendState: 'amount',
         sendError: '',
+        sendType: '',
       };
     case SET_SEND_TYPE:
       return {
@@ -120,6 +121,7 @@ export default (state = INITIAL_STATE, action) => {
         sendState: 'amount',
         sendError: '',
         sendMemo: '',
+        sendType: '',
       };
     case SEND_ASYNC.pending:
       return {

@@ -11,7 +11,7 @@ function* fetchRewards() {
   try {
     const route = rewards_service_url + '/user/rewards/';
     const response = yield call(Rehive.callApi, 'GET', route);
-    if (response.status === 'error') {
+    if (response.status === 'error' || !response.ok) {
       yield put({
         type: FETCH_REWARDS_ASYNC.success,
         payload: null,

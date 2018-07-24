@@ -1,3 +1,7 @@
+import { StrKey } from './strkey';
+// import WAValidator from 'wallet-address-validator';
+global.Buffer = require('buffer').Buffer;
+
 export const IsEmail = email => {
   // let reg = /^[a-zA-Z0-9._+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
 
@@ -32,24 +36,15 @@ export const validateMobile = mobile => {
 
 export const validateCrypto = (address, type) => {
   if (address) {
-    console.log(address);
-    console.log(address.length);
     switch (type) {
       case 'stellar':
-        if (address.length === 56) {
-          // TODO: add proper validation here
+        if (StrKey.isValidEd25519PublicKey(address) || address.includes('*')) {
           return '';
         }
         break;
       case 'bitcoin':
-        if (address.length === 58) {
-          // TODO: add proper validation here
-          return '';
-        }
-        break;
       case 'ethereum':
-        if (address.length === 58) {
-          // TODO: add proper validation here
+        if (WAValidator.validate(address, type, 'both')) {
           return '';
         }
         break;

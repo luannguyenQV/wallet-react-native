@@ -46,6 +46,7 @@ const styles = {
   containerStyle: {
     padding: 8,
     paddingLeft: 16,
+    paddingVertical: 12,
     marginVertical: 2,
     width: '100%',
   },
@@ -54,14 +55,3 @@ const styles = {
     fontWeight: 'normal',
   },
 };
-
-// ctiveTintColor={colors.secondaryContrast}
-//           activeBackgroundColor={colors.secondary}
-//           inactiveTintColor={colors.primary}
-//           inactiveBackgroundColor="transparent"
-//           labelStyle={{
-//             margin: 15,
-//             alignItems: 'center',
-//             fontSize: 16,
-//             fontWeight: 'normal',
-//           }}

@@ -190,11 +190,18 @@ export const getCompanyConfig = company => {
 export const getStellarAssets = () =>
   callApi('GET', stellar_service_url + '/company/assets/');
 
+// export const createTransferStellar = data =>
+//   Promise.resolve(
+//     callApi('POST', stellar_service_url + '/transactions/send/', data)
+//       .then(response => response)
+//       .catch(err => err),
+//   );
+
 export const createTransferStellar = data =>
-  Promise.resolve(
+  new Promise((resolve, reject) =>
     callApi('POST', stellar_service_url + '/transactions/send/', data)
-      .then(response => response)
-      .catch(err => err),
+      .then(response => resolve(response))
+      .catch(err => reject(err)),
   );
 
 /* GENERAL */
@@ -213,14 +220,21 @@ export const callApi = (method, route, data) => {
     mode: 'cors',
     headers,
   };
-  // console.log(data);
+  console.log(data);
   if (data) {
     config['body'] = JSON.stringify(data);
   }
   // console.log(config);
   return Promise.resolve(
     fetch(route, config)
-      .then(response => response.json())
+      .then(response => {
+        console.log('RESPONSE', response);
+        // if (response.ok) {
+        return response.json();
+        // } else {
+        //   return response;
+        // }
+      })
       .catch(err => err),
   );
 };

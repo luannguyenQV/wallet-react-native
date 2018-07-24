@@ -168,7 +168,7 @@ function* authFlow() {
             yield put({ type: LOADING });
             yield call(Rehive.register, { company: tempCompany });
           } catch (error) {
-            if (error.data.company) {
+            if (error.data && error.data.company) {
               // This error is returned if no company by this ID exists in rehive
               authError = 'Please enter a valid company ID';
             } else {
@@ -513,7 +513,6 @@ function* appLoad() {
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_bank_account' }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_currency' }),
       put({ type: FETCH_PHONE_CONTACTS_ASYNC.pending }),
-      put({ type: FETCH_REWARDS_ASYNC.pending }),
     ]);
     const { services } = yield select(getCompanyConfig);
     if (services.rewards) {
