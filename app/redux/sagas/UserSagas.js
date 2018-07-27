@@ -83,13 +83,8 @@ function* fetchData(action) {
       payload: { data, prop: action.payload },
     });
   } catch (error) {
-    if (!error) {
-      console.log('failed fetch of type', action.payload);
-      yield put({ type: FETCH_DATA_ASYNC.pending, payload: action.payload });
-      return;
-    }
     console.log('type', action.payload, error);
-    if (error && error.status && error.status === 401) {
+    if (error && error.status && error.status === 403) {
       yield put({
         type: LOGOUT_USER_ASYNC.success,
       });

@@ -28,6 +28,7 @@ import {
   UPDATE_MFA_STATE,
   UPDATE_MFA_TOKEN,
   VERIFY_MFA,
+  AUTH_STORE_USER,
 } from '../actions/AuthActions';
 import { HIDE_MODAL } from '../actions/UserActions';
 
@@ -199,7 +200,13 @@ export default (state = INITIAL_STATE, action) => {
     case AUTH_COMPLETE:
       return {
         ...state,
-        token: action.payload,
+        user: action.payload.user,
+        token: action.payload.token,
+      };
+    case AUTH_STORE_USER:
+      return {
+        ...state,
+        user: action.payload,
       };
 
     case HIDE_MODAL:

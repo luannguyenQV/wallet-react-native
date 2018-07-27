@@ -66,6 +66,7 @@ export const LOADING = 'loading';
 export const POST_LOADING = 'post_loading';
 export const POST_NOT_LOADING = 'post_not_loading';
 export const SET_COMPANY = 'set_company';
+export const AUTH_STORE_USER = 'auth_store_user';
 export const nextAuthFormState = nextFormState => {
   return {
     type: NEXT_AUTH_FORM_STATE,

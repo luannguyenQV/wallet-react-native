@@ -59,7 +59,7 @@
 
         "auth": {
           "identifier": "email",
-          "email": "",
+          "email": "required",
           "mobile": "",
           "terms": [
             {
@@ -75,10 +75,10 @@
               "description": "Click here to read more on the user agreement"
             }
           ],
-          "first_name": false,
-          "last_name": false,
+          "first_name": true,
+          "last_name": true,
           "username": true,
-          "country": false,
+          "country": true,
           "pin": "",
           "mfa": ""
         },

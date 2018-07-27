@@ -261,7 +261,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
-        fetchError: error,
+        fetchError: action.payload,
       };
 
     case UPLOAD_DOCUMENT_ASYNC.pending:

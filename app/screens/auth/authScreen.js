@@ -210,7 +210,7 @@ class AuthScreen extends Component {
         );
       case 'mfa':
         return (
-          <View>
+          <View style={viewStyleLanding}>
             <Text style={[textStyle, { color: colors.primaryContrast }]}>
               Please enter{' '}
               {detailState === 'token'
@@ -234,13 +234,12 @@ class AuthScreen extends Component {
               containerStyle={{ marginTop: 0, paddingBottom: 24 }}
               onFulfill={code => this.props.verifyMFA(code)}
             />
-            {/* {detailState === 'token' ? (
+            {detailState === 'token' ? (
               <View>
                 <Button
                   label="OPEN GOOGLE AUTHENTICATOR"
                   textColor={company_config.colors.secondaryContrast}
                   backgroundColor={company_config.colors.secondary}
-                  size="large"
                   reference={input => {
                     this.login = input;
                   }}
@@ -251,11 +250,10 @@ class AuthScreen extends Component {
                   label="OPEN AUTHY"
                   textColor={company_config.colors.secondaryContrast}
                   backgroundColor={company_config.colors.secondary}
-                  size="large"
                   reference={input => {
                     this.login = input;
                   }}
-                  onPress={() => Linking.openURL('authy://')}
+                  onPress={() => Linking.openURL('authy://open/rehive2')}
                   // onPress={() => nextAuthFormState('login')}
                   animation="fadeInUpBig"
                 />
@@ -272,7 +270,7 @@ class AuthScreen extends Component {
                 // onPress={() => nextAuthFormState('login')}
                 animation="fadeInUpBig"
               />
-            )} */}
+            )}
           </View>
         );
       case 'pin':

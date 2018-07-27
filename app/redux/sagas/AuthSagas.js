@@ -43,6 +43,7 @@ import {
   UPDATE_MFA_TOKEN,
   UPDATE_MFA_ERROR,
   VERIFY_MFA,
+  AUTH_STORE_USER,
 } from '../actions/AuthActions';
 import { Toast } from 'native-base';
 import {
@@ -61,7 +62,13 @@ import {
   validatePassword,
 } from '../../util/validation';
 import default_config from './../../config/default_company_config';
-import { getToken, getCompany, getAuth, getCompanyConfig } from './selectors';
+import {
+  getToken,
+  getCompany,
+  getAuth,
+  getCompanyConfig,
+  getAuthUser,
+} from './selectors';
 
 /* 
 Init function called when app starts up to see what state the app should be in
@@ -219,10 +226,14 @@ function* authFlow() {
                   try {
                     yield put({ type: LOADING });
                     ({ user, token } = yield call(Rehive.login, data));
+                    yield put({ type: AUTH_STORE_USER, payload: user });
                     yield call(Rehive.initWithToken, token); // initialises sdk with new token
                     if (yield call(postAuthFlow)) {
                       // waits for postAuthFlow to complete, when complete stores token and exists auth flow
-                      yield put({ type: AUTH_COMPLETE, payload: token });
+                      yield put({
+                        type: AUTH_COMPLETE,
+                        payload: { user, token },
+                      });
                       return;
                     }
                     break;
@@ -263,9 +274,13 @@ function* authFlow() {
                 try {
                   yield put({ type: LOADING });
                   ({ user, token } = yield call(Rehive.register, data));
+                  yield put({ type: AUTH_STORE_USER, payload: user });
                   yield call(Rehive.initWithToken, token);
                   if (yield call(postAuthFlow)) {
-                    yield put({ type: AUTH_COMPLETE, payload: token });
+                    yield put({
+                      type: AUTH_COMPLETE,
+                      payload: { user, token },
+                    });
                     return;
                   }
                 } catch (error) {
@@ -306,6 +321,8 @@ function* postAuthFlow() {
       let nextDetailState = detailState;
       let authError = '';
       let skip = false;
+      let user = yield select(getAuthUser);
+      console.log(user);
       yield put({ type: POST_LOADING });
 
       // Decide which state to transition to next
@@ -355,12 +372,7 @@ function* postAuthFlow() {
         case 'verification':
           switch (detailState) {
             case 'mobile':
-              if (
-                company_config.auth.mobile &&
-                (yield call(Rehive.getMobiles)).filter(
-                  item => item.verified === true,
-                ).length === 0
-              ) {
+              if (company_config.auth.mobile && !user.verification.mobile) {
                 yield put({ type: POST_NOT_LOADING });
                 const action = yield take(NEXT_AUTH_FORM_STATE);
                 if (action.payload.nextFormState === 'skip') {
@@ -369,6 +381,9 @@ function* postAuthFlow() {
                     skip = true;
                   }
                 }
+                let resp = yield call(Rehive.getProfile);
+                console.log('mobile', resp);
+                yield put({ type: AUTH_STORE_USER, payload: resp.data });
               } else {
                 nextDetailState = 'email';
                 if (company_config.auth.email === 'optional') {
@@ -377,73 +392,65 @@ function* postAuthFlow() {
               }
               break;
             case 'email':
-              if (
-                company_config.auth.email &&
-                (yield call(Rehive.getEmails)).filter(
-                  item => item.verified === true,
-                ).length === 0
-              ) {
+              if (company_config.auth.email && !user.verification.email) {
                 yield put({ type: POST_NOT_LOADING });
                 const action = yield take(NEXT_AUTH_FORM_STATE);
                 if (action.payload.nextFormState === 'skip') {
                   nextDetailState = 'first_name';
                 }
+                let resp = yield call(Rehive.getProfile);
+                console.log('mobile', resp);
+                // ({ user } = yield call(Rehive.getProfile).data);
+                yield put({ type: AUTH_STORE_USER, payload: resp.data });
               } else {
                 nextDetailState = 'first_name';
               }
               break;
             case 'first_name':
-              if (
-                company_config.auth.first_name &&
-                !(yield call(Rehive.getProfile)).first_name
-              ) {
+              console.log('first_name');
+              if (company_config.auth.first_name && !user.first_name) {
                 yield put({ type: POST_NOT_LOADING });
                 yield take(NEXT_AUTH_FORM_STATE);
                 const { first_name } = yield select(getAuth);
                 if (first_name) {
-                  yield call(Rehive.updateProfile, { first_name });
+                  user = yield call(Rehive.updateProfile, { first_name });
+                  yield put({ type: AUTH_STORE_USER, payload: user });
                 }
               } else {
                 nextDetailState = 'last_name';
               }
               break;
             case 'last_name':
-              if (
-                company_config.auth.last_name &&
-                !(yield call(Rehive.getProfile)).last_name
-              ) {
+              console.log('last_name');
+              if (company_config.auth.last_name && !user.last_name) {
                 yield put({ type: POST_NOT_LOADING });
                 yield take(NEXT_AUTH_FORM_STATE);
                 const { last_name } = yield select(getAuth);
                 if (last_name) {
-                  yield call(Rehive.updateProfile, { last_name });
+                  user = yield call(Rehive.updateProfile, { last_name });
+                  console.log(user);
+                  yield put({ type: AUTH_STORE_USER, payload: user });
+                }
+              } else {
+                nextDetailState = 'username';
+              }
+              break;
+            case 'username':
+              if (company_config.auth.username && !user.username) {
+                yield put({ type: POST_NOT_LOADING });
+                yield take(NEXT_AUTH_FORM_STATE);
+                const { username } = yield select(getAuth);
+                if (username) {
+                  user = yield call(Rehive.updateProfile, { username });
+                  console.log(user);
+                  yield put({ type: AUTH_STORE_USER, payload: user });
                 }
               } else {
                 nextDetailState = 'country';
               }
               break;
-            // case 'username':
-            //   if (
-            //     company_config.auth.username &&
-            //     !(yield call(Rehive.getProfile)).username
-            //   ) {
-            //     yield put({ type: POST_NOT_LOADING });
-            //     yield take(NEXT_AUTH_FORM_STATE);
-            //     const { username } = yield select(getAuth);
-            //     console.log(username);
-            //     if (username) {
-            //       let resp = yield call(Rehive.updateProfile, { username });
-            //       console.log(resp);
-            //     }
-            //   } else {
-            //     nextDetailState = 'country';
-            //   }
-            //   break;
             case 'country':
-              if (
-                company_config.auth.country &&
-                !(yield call(Rehive.getProfile)).country
-              ) {
+              if (company_config.auth.country && !user.country) {
                 yield put({ type: POST_NOT_LOADING });
                 yield take(NEXT_AUTH_FORM_STATE);
                 const { country } = yield select(getAuth);
@@ -467,7 +474,6 @@ function* postAuthFlow() {
           break;
         case 'pin':
           if (company_config.auth.pin) {
-            console.log('pin');
             let response;
             yield put({ type: POST_NOT_LOADING });
             switch (detailState) {

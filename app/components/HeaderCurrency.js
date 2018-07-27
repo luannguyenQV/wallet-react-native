@@ -21,9 +21,9 @@ class HeaderCurrency extends Component {
         currency.currency.code.length,
       20,
     );
-    console.log('diff', diff);
-    console.log('length', length);
-    console.log('divisibility', currency.currency.divisibility);
+    // console.log('diff', diff);
+    // console.log('length', length);
+    // console.log('divisibility', currency.currency.divisibility);
     let fontSize = Math.min(Math.floor(SCREEN_WIDTH / (0.8 * length)), 42);
     return [styles.textStyleAmount, { fontSize, color: colors.focus }];
   }
