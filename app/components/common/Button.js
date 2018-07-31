@@ -9,15 +9,19 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Colors from './../../config/colors';
 
 class Button extends Component {
-  buttonStyle() {
-    const { buttonStyle } = styles;
-    const { backgroundColor, size } = this.props;
+  _buttonStyle() {
+    const { _buttonStyle } = styles;
+    const { backgroundColor, size, round, buttonStyle } = this.props;
     return [
-      buttonStyle,
+      _buttonStyle,
       {
         backgroundColor,
         height: size === 'large' ? 40 : size === 'small' ? 30 : 36,
+        borderRadius: round
+          ? size === 'large' ? 20 : size === 'small' ? 15 : 18
+          : 2.5,
       },
+      buttonStyle,
     ];
   }
 
@@ -28,7 +32,7 @@ class Button extends Component {
       textStyle,
       {
         color: textColor,
-        fontSize: size === 'large' ? 18 : size === 'small' ? 10 : 14,
+        fontSize: size === 'large' ? 18 : size === 'small' ? 12 : 14,
       },
     ];
   }
@@ -42,16 +46,17 @@ class Button extends Component {
       disabled,
       size,
       icon,
+      containerStyle,
     } = this.props;
-    const { containerStyle } = styles;
+    const { _containerStyle } = styles;
     return (
       <Animatable.View
         ref={reference}
-        style={containerStyle}
+        style={[_containerStyle, containerStyle]}
         animation={animation}>
         <TouchableOpacity
           onPress={onPress}
-          style={this.buttonStyle()}
+          style={this._buttonStyle()}
           disabled={disabled}>
           <View style={{ flexDirection: 'row' }}>
             {icon ? (
@@ -80,6 +85,9 @@ Button.propTypes = {
   type: PropTypes.string, // Type of button (text, contained, TODO: outlined)
   backgroundColor: PropTypes.string, // Button color
   textColor: PropTypes.string, // Text color
+  round: PropTypes.bool, // Rounded corners
+  buttonStyle: PropTypes.object, // override button style
+  containerStyle: PropTypes.object, // override container style
 };
 
 Button.defaultProps = {
@@ -93,14 +101,17 @@ Button.defaultProps = {
   type: 'contained',
   backgroundColor: Colors.primary,
   textColor: Colors.primaryContrast,
+  round: false,
+  buttonStyle: {},
+  containerStyle: {},
 };
 
 const styles = {
-  containerStyle: {
+  _containerStyle: {
     flexDirection: 'row',
     margin: 8,
   },
-  buttonStyle: {
+  _buttonStyle: {
     flex: 1,
     flexDirection: 'row',
     borderRadius: 2.5,

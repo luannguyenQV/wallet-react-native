@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Constants } from 'expo';
 import { View, Text, StyleSheet, NetInfo } from 'react-native';
-import Colors from './../config/colors';
+// import colors from './../config/colors';
 import { HeaderButton } from './common';
 
 export default class Header extends Component {
@@ -14,7 +14,7 @@ export default class Header extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     NetInfo.isConnected.fetch().then(isConnected => {
       this.setState({
         offline: !isConnected,
@@ -61,19 +61,26 @@ export default class Header extends Component {
       headerRightText,
       headerRightOnPress,
       headerRightIcon,
+      colors,
     } = this.props;
     return (
       <View
         style={{
+          elevation: 10,
+          shadowColor: '#000',
+          shadowOffset: { width: 2, height: 2 },
+          shadowRadius: 5,
+          shadowOpacity: 0.3,
+          zIndex: 10,
           paddingTop: Constants.statusBarHeight,
-          backgroundColor: Colors.primary,
+          backgroundColor: colors.primary,
         }}>
-        {noAccounts === true && (
+        {/* {noAccounts === true && (
           <View
             style={{
               paddingVertical: 4,
               paddingHorizontal: 20,
-              backgroundColor: Colors.gold,
+              backgroundColor: colors.gold,
               justifyContent: 'center',
               alignItems: 'center',
             }}>
@@ -81,14 +88,14 @@ export default class Header extends Component {
               No accounts added yet.
             </Text>
           </View>
-        )}
+        )} */}
         {creditSwitch === false &&
           debitSwitch === true && (
             <View
               style={{
                 paddingVertical: 4,
                 paddingHorizontal: 20,
-                backgroundColor: Colors.red,
+                backgroundColor: colors.red,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
@@ -103,7 +110,7 @@ export default class Header extends Component {
               style={{
                 paddingVertical: 4,
                 paddingHorizontal: 20,
-                backgroundColor: Colors.red,
+                backgroundColor: colors.red,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
@@ -118,7 +125,7 @@ export default class Header extends Component {
               style={{
                 paddingVertical: 4,
                 paddingHorizontal: 20,
-                backgroundColor: Colors.red,
+                backgroundColor: colors.red,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
@@ -131,7 +138,7 @@ export default class Header extends Component {
           <View
             style={{
               paddingVertical: 4,
-              backgroundColor: Colors.red,
+              backgroundColor: colors.red,
               justifyContent: 'center',
               alignItems: 'center',
             }}>
@@ -142,7 +149,7 @@ export default class Header extends Component {
           <View
             style={{
               paddingVertical: 4,
-              backgroundColor: Colors.green,
+              backgroundColor: colors.green,
               justifyContent: 'center',
               alignItems: 'center',
             }}>
@@ -176,7 +183,7 @@ export default class Header extends Component {
           <View style={styles.rightIcon}>
             {right ? (
               <HeaderButton
-                onPress={() => navigation.navigate('QRcodeScanner')}
+                onPress={() => navigation.navigate('QRCodeScanner')}
                 icon="camera"
               />
             ) : null}
@@ -194,11 +201,10 @@ export default class Header extends Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = {
   options: {
     width: '100%',
     flexDirection: 'row',
-    backgroundColor: Colors.primary,
     height: 64,
   },
   left: {
@@ -221,4 +227,4 @@ const styles = StyleSheet.create({
     fontSize: 20,
     paddingLeft: 0,
   },
-});
+};

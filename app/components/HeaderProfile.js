@@ -5,8 +5,6 @@ import { uploadProfilePhoto } from './../redux/actions';
 
 import { ImageUpload } from './common';
 
-import * as Rehive from './../util/rehive';
-
 import Colors from './../config/colors';
 
 class HeaderProfile extends Component {
@@ -19,7 +17,7 @@ class HeaderProfile extends Component {
   // }
 
   render() {
-    const { photoLink, name } = this.props;
+    const { photoLink, username, name, colors } = this.props;
 
     const {
       viewStyleContainer,
@@ -28,12 +26,17 @@ class HeaderProfile extends Component {
       textStyleName,
     } = styles;
     return (
-      <View style={viewStyleContainer}>
+      <View style={[viewStyleContainer, { backgroundColor: colors.primary }]}>
         <TouchableHighlight
           onPress={() => this.setState({ imageUpload: true })}>
           {photoLink ? (
             <Image
-              style={imageStylePhoto}
+              style={[
+                imageStylePhoto,
+                {
+                  borderColor: Colors.secondary,
+                },
+              ]}
               source={{
                 uri: photoLink,
                 // cache: 'only-if-cached',
@@ -43,13 +46,20 @@ class HeaderProfile extends Component {
           ) : (
             <Image
               source={require('./../../assets/icons/profile.png')}
-              style={imageStylePhoto}
+              style={[
+                imageStylePhoto,
+                {
+                  borderColor: Colors.secondary,
+                },
+              ]}
             />
           )}
         </TouchableHighlight>
 
         <View style={viewStyleName}>
-          <Text style={textStyleName}>{name}</Text>
+          <Text style={[textStyleName, { color: colors.primaryContrast }]}>
+            {username ? username : name}
+          </Text>
         </View>
 
         <ImageUpload
@@ -64,16 +74,20 @@ class HeaderProfile extends Component {
 
 const styles = {
   viewStyleContainer: {
-    backgroundColor: Colors.primary,
     alignItems: 'center',
     paddingTop: 16,
     paddingBottom: 8,
+    elevation: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 2, height: 2 },
+    shadowRadius: 5,
+    shadowOpacity: 0.3,
+    zIndex: 10,
   },
   imageStylePhoto: {
     width: 100,
     height: 100,
     borderRadius: 50,
-    borderColor: Colors.secondary,
     borderWidth: 5,
   },
   viewStyleName: {
@@ -82,9 +96,11 @@ const styles = {
     padding: 8,
   },
   textStyleName: {
-    color: Colors.onPrimary,
     fontSize: 16,
     fontWeight: 'bold',
+    textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 };
 

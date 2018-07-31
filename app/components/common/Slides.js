@@ -29,11 +29,16 @@ class Slides extends Component {
         outputRange: [0.05, 1, 0.05],
         extrapolate: 'clamp',
       });
+      let image = ``;
       return (
         <Animated.View key={slide.id} style={{ opacity, width }}>
           <Image
             style={[imageStylePhoto, { width, height }]}
-            source={require('./../../../assets/icons/card1.png')}
+            source={
+              slide.image === 'pxpay'
+                ? require('./../../../assets/icons/pxpay1.png')
+                : require('./../../../assets/icons/card1.png')
+            }
           />
           <Text style={textStyleTitle}>{slide.title}</Text>
           <Text style={textStyleDescription}>{slide.description}</Text>

@@ -16,19 +16,17 @@ const EmptyListMessage = ({ text }) => {
 const styles = {
   viewStyleContainer: {
     flex: 1,
-    backgroundColor: 'white',
     padding: 8,
   },
   viewStyleBox: {
     flexDirection: 'column',
-    backgroundColor: Colors.quaternary,
+    backgroundColor: 'white',
     padding: 16,
     alignItems: 'center',
   },
   textStyle: {
     fontSize: 18,
     fontWeight: 'normal',
-    color: Colors.onQuaternary,
   },
 };
 

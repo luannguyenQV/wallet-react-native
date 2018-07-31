@@ -1,4 +1,10 @@
 {
+  "services": {
+    "bitcoin": false,
+    "stellar": true,
+    "ethereum": false,
+    "rewards": true
+  },
   "cards": [
     {
       "id": "0",
@@ -79,7 +85,7 @@
 
   "auth": {
     "identifier": "email",
-    "email": "required",
+    "email": "",
     "mobile": "",
     "terms": [
       {
@@ -95,11 +101,11 @@
         "description": "Click here to read more on the user agreement"
       }
     ],
-    "first_name": true,
-    "last_name": true,
+    "first_name": false,
+    "last_name": false,
     "country": false,
-    "pin": "optional",
-    "mfa": "optional"
+    "pin": "",
+    "mfa": ""
   },
   "pin": {
     "appLoad": true,

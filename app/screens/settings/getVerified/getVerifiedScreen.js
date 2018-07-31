@@ -7,11 +7,7 @@ import Header from './../../../components/header';
 import GetVerifiedOption from './../../../components/getVerifiedOption';
 import HeaderProfile from '../../../components/HeaderProfile';
 
-import {
-  Spinner,
-  InputContainer,
-  ImageUpload,
-} from './../../../components/common';
+import { Spinner, InputContainer } from './../../../components/common';
 
 class GetVerifiedScreen extends Component {
   static navigationOptions = {
@@ -264,6 +260,7 @@ class GetVerifiedScreen extends Component {
           navigation={this.props.navigation}
           drawer
           title="Get verified"
+          colors={company_config.colors}
         />
         <HeaderProfile
           photoLink={profile.profile}
@@ -272,6 +269,7 @@ class GetVerifiedScreen extends Component {
               ? profile.first_name + ' ' + profile.last_name
               : profile.username
           }
+          colors={company_config.colors}
         />
         <View style={mainContainer}>
           {loading_profile ? <Spinner /> : null}

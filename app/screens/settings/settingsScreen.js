@@ -98,22 +98,22 @@ class SettingsScreen extends Component {
     let value = '';
     if (address) {
       if (address.line_1) {
-        value = value + address.line_1 + ', ';
+        value = value + address.line_1;
       }
       if (address.line_2) {
-        value = value + address.line_2 + ', ';
+        value = value + (value ? ', ' : '') + address.line_2;
       }
       if (address.city) {
-        value = value + address.city + ', ';
+        value = value + (value ? ', ' : '') + address.city;
       }
       if (address.state_province) {
-        value = value + address.state_province + ', ';
+        value = value + (value ? ', ' : '') + address.state_province;
       }
       if (address.country) {
-        value = value + address.country + ', ';
+        value = value + (value ? ', ' : '') + address.country;
       }
       if (address.postal_code) {
-        value = value + address.postal_code;
+        value = value + (value ? ', ' : '') + address.postal_code;
       }
     }
     if (!value) {
@@ -192,13 +192,13 @@ class SettingsScreen extends Component {
           gotoAddress="ChangePassword"
           onPress={this.goTo}
         />
-        {/* <SettingsOption
-          label="Two factor"
+        <SettingsOption
+          label="Two-factor authentication"
           gotoAddress="TwoFactor"
           onPress={this.goTo}
-        /> */}
+        />
         <SettingsOption
-          label="Pin/fingerprint"
+          label="Pin/fingerprint authentication"
           gotoAddress="Pin"
           onPress={this.goTo}
         />
@@ -214,7 +214,12 @@ class SettingsScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Header navigation={this.props.navigation} drawer title="Settings" />
+        <Header
+          navigation={this.props.navigation}
+          colors={this.props.company_config.colors}
+          drawer
+          title="Settings"
+        />
         <InputContainer>
           <SettingsContainer label="Personal details">
             {this.renderBasicInfo()}
@@ -246,13 +251,15 @@ const styles = {
   // },
 };
 
-const mapStateToProps = ({ user }) => {
+const mapStateToProps = ({ user, auth }) => {
+  const { company_config } = auth;
   const { profile, address, mobile, email } = user;
   return {
     profile,
     address,
     mobile,
     email,
+    company_config,
   };
 };
 

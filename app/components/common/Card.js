@@ -68,10 +68,7 @@ const Card = props => {
       {title || subtitle || iconTitleLeft || iconTitleRight ? (
         <View
           resizeMode="cover"
-          style={[
-            viewStyleTitleContainer,
-            { backgroundColor: colorTitleBackground },
-          ]}>
+          style={[viewStyleTitleContainer, { backgroundColor: 'white' }]}>
           {textTitleLeft ? (
             <TouchableCircle
               text={textTitleLeft}
@@ -94,7 +91,7 @@ const Card = props => {
                   textStyleTitle,
                   {
                     fontSize: title ? (title.length < 18 ? 24 : 18) : 24,
-                    color: colorTitleText,
+                    // color: colorTitleText,
                   },
                 ]}>
                 {title}
@@ -263,7 +260,7 @@ const styles = {
   },
   viewStyleFooter: {
     flexDirection: 'row',
-    // height: 52,
+    height: 52,
     width: '100%',
     alignItems: 'center',
   },
@@ -271,7 +268,6 @@ const styles = {
     flexDirection: 'row',
     justifyContent: 'flex-end',
     width: '100%',
-    height: 52,
     padding: 8,
   },
   textStyleAction: {

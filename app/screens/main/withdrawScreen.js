@@ -24,14 +24,24 @@ import {
 import { Input, FullScreenForm, Output } from './../../components/common';
 import Colors from './../../config/colors';
 import Header from './../../components/header';
+import PinModal from './../../components/PinModal';
 
 class WithdrawScreen extends Component {
   static navigationOptions = () => ({
     title: 'Withdraw Amount',
   });
 
+  state = {
+    pinVisible: false,
+  };
+
   componentDidMount() {
-    if (this.props.withdrawWallet === null) {
+    const { withdrawWallet, wallets, activeWalletIndex } = this.props;
+    console.log('1', withdrawWallet);
+    console.log('2', wallets);
+    console.log('3', activeWalletIndex);
+    if (withdrawWallet === null) {
+      console.log('lol');
       this.props.setWithdrawWallet(wallets[activeWalletIndex]);
     }
   }
@@ -69,14 +79,13 @@ class WithdrawScreen extends Component {
       withdrawNote,
       withdrawError,
       setWithdrawState,
+      company_config,
     } = this.props;
 
     const { viewStyleBottomContainer } = styles;
 
     let textFooterRight = 'Next';
-    let textFooterLeft = '';
     let onPressFooterRight = () => {};
-    let onPressFooterLeft = () => {};
 
     switch (withdrawState) {
       case 'amount':
@@ -84,28 +93,26 @@ class WithdrawScreen extends Component {
           validateWithdrawAmount(withdrawWallet, withdrawAmount);
         break;
       case 'account':
-        textFooterLeft = 'Edit';
-        onPressFooterLeft = () => setWithdrawState('amount');
         onPressFooterRight = () => validateWithdrawAccount(withdrawAccount);
         break;
       case 'note':
-        textFooterLeft = 'Edit';
-        onPressFooterLeft = () => setWithdrawState('amount');
         onPressFooterRight = () => validateWithdrawNote(withdrawNote);
         break;
       case 'confirm':
-        textFooterLeft = 'Edit';
-        onPressFooterLeft = () => setWithdrawState('amount');
         textFooterRight = 'Confirm';
-        onPressFooterRight = () => this.performWithdraw();
+        onPressFooterRight = () => {
+          if (company_config.pin.withdraw) {
+            this.setState({ pinVisible: true });
+          } else {
+            this.performWithdraw();
+          }
+        };
         break;
       case 'success':
-        // textFooterLeft = 'Close';
         textFooterRight = 'Close';
         onPressFooterRight = () => this.props.navigation.goBack();
         break;
       case 'fail':
-        // textFooterLeft = 'Close';
         textFooterRight = 'Close';
         onPressFooterRight = () => this.props.navigation.goBack();
         break;
@@ -113,11 +120,10 @@ class WithdrawScreen extends Component {
 
     return (
       <FullScreenForm
-        // textFooterLeft={textFooterLeft}
-        // onPressFooterLeft={onPressFooterLeft}
         textFooterRight={textFooterRight}
         onPressFooterRight={onPressFooterRight}
-        loading={withdrawing}>
+        loading={withdrawing}
+        colors={company_config.colors}>
         {this.renderTop()}
         <View style={viewStyleBottomContainer}>{this.renderBottom()}</View>
       </FullScreenForm>
@@ -134,7 +140,7 @@ class WithdrawScreen extends Component {
       withdrawError,
       setWithdrawState,
     } = this.props;
-    const currency = withdrawWallet.currency.currency;
+    const currency = withdrawWallet ? withdrawWallet.currency.currency : null;
 
     const {
       viewStyleTopContainer,
@@ -149,10 +155,7 @@ class WithdrawScreen extends Component {
             <Text style={textStyleError}>Withdraw successful!</Text>
           </View>
         ) : null}
-        {withdrawState === 'note' ||
-        withdrawState === 'account' ||
-        withdrawState === 'confirm' ||
-        withdrawState === 'success' ? (
+        {withdrawState === ('note' || 'account' || 'confirm' || 'success') ? (
           <TouchableHighlight
             onPress={() => setWithdrawState('amount')}
             underlayColor={Colors.lightGray}
@@ -167,9 +170,7 @@ class WithdrawScreen extends Component {
             />
           </TouchableHighlight>
         ) : null}
-        {withdrawState === 'note' ||
-        withdrawState === 'confirm' ||
-        withdrawState === 'success' ? (
+        {withdrawState === ('note' || 'confirm' || 'success') ? (
           <TouchableHighlight
             onPress={() => setWithdrawState('account')}
             underlayColor={Colors.lightGray}
@@ -177,8 +178,7 @@ class WithdrawScreen extends Component {
             <Output label="Account" value={withdrawBankAccount.name} />
           </TouchableHighlight>
         ) : null}
-        {(withdrawState === 'confirm' || withdrawState === 'success') &&
-        withdrawNote ? (
+        {withdrawState === ('confirm' || 'success') && withdrawNote ? (
           <TouchableHighlight
             onPress={() => setWithdrawState('note')}
             underlayColor={Colors.lightGray}
@@ -243,7 +243,6 @@ class WithdrawScreen extends Component {
       case 'account':
         return (
           <Input
-            popUp
             key="account"
             placeholder="e.g. FNB"
             label={'Please select account'}
@@ -258,6 +257,7 @@ class WithdrawScreen extends Component {
             returnKeyType="next"
             autoFocus
             type="account"
+            popUp
             data={bank_account}
             loadingData={loading_bank_account}
             title="name"
@@ -295,22 +295,36 @@ class WithdrawScreen extends Component {
   }
 
   render() {
+    const { pin, fingerprint, company_config } = this.props;
     return (
       <View style={{ flex: 1 }}>
         <Header
           navigation={this.props.navigation}
+          colors={company_config.colors}
           title="Withdraw"
-          right
           back
         />
         <KeyboardAvoidingView
           keyboardShouldPersistTaps={'never'}
           style={styles.viewStyleContainer}
           behavior={'padding'}>
+          {this.state.pinVisible ? (
+            <PinModal
+              pin={pin}
+              fingerprint={fingerprint}
+              modalVisible={this.state.pinVisible}
+              onSuccess={() => {
+                this.setState({ pinVisible: false });
+                this.performSend();
+              }}
+              onDismiss={() => this.setState({ pinVisible: false })}
+            />
+          ) : null}
           <TouchableWithoutFeedback
             style={{ flex: 1 }}
             onPress={Keyboard.dismiss}
             accessible={false}>
+            {/* <View /> */}
             {this.renderMainContainer()}
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
@@ -332,26 +346,11 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
-    // backgroundColor: 'orange',
-    // flex: 2,
   },
   buttonStyleOutput: { width: '100%', borderRadius: 3, marginHorizontal: 8 },
   viewStyleBottomContainer: {
-    // width: '100%',
-    // justifyContent: 'center',
-    // alignSelf: 'flex-end',
-    // flex: 1,
-    // minHeight: 100,
     borderRadius: 2,
-    // position: 'absolute',
-    // bottom: 0,
   },
-  // contact: {
-  //   height: 40,
-  //   flexDirection: 'column',
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  // },
   textStyleOutput: {
     fontSize: 16,
     // alignSelf: 'center',

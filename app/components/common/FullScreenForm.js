@@ -28,57 +28,74 @@ const FullScreenForm = props => {
     onPressFooterRight,
     loading,
     color,
+    colors,
   } = props;
 
   return (
-    <View style={viewStyleContainer}>
-      {iconHeaderLeft || textHeaderRight ? (
-        <View style={viewStyleHeader}>
-          {iconHeaderLeft ? (
-            <HeaderButton
-              icon={iconHeaderLeft}
-              onPress={onPressHeaderLeft}
-              color={color}
-            />
-          ) : (
-            <View />
-          )}
-          {textHeaderRight ? (
-            <TouchableOpacity onPress={onPressHeaderRight}>
-              <Text style={[textStyleAction, { color: color }]}>
-                {textHeaderRight}
-              </Text>
-            </TouchableOpacity>
-          ) : (
-            <View />
-          )}
+    <View style={[viewStyleContainer, { backgroundColor: colors[color] }]}>
+      {loading ? (
+        <Spinner size="large" />
+      ) : (
+        <View style={{ flex: 1 }}>
+          {iconHeaderLeft || textHeaderRight ? (
+            <View style={viewStyleHeader}>
+              {iconHeaderLeft ? (
+                <HeaderButton
+                  icon={iconHeaderLeft}
+                  onPress={onPressHeaderLeft}
+                  color={colors[color + 'Contrast']}
+                />
+              ) : (
+                <View />
+              )}
+              {textHeaderRight ? (
+                <TouchableOpacity onPress={onPressHeaderRight}>
+                  <Text
+                    style={[
+                      textStyleAction,
+                      { color: colors[color + 'Contrast'] },
+                    ]}>
+                    {textHeaderRight}
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <View />
+              )}
+            </View>
+          ) : null}
+          <View style={viewStyleContent}>{props.children}</View>
+          {textFooterRight || textFooterLeft ? (
+            <View style={viewStyleFooter}>
+              {textFooterLeft ? (
+                <TouchableOpacity onPress={onPressFooterLeft}>
+                  <Text
+                    style={[
+                      textStyleAction,
+                      { color: colors[color + 'Contrast'] },
+                    ]}>
+                    {textFooterLeft}
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <View />
+              )}
+              {textFooterRight ? (
+                <TouchableOpacity onPress={onPressFooterRight}>
+                  <Text
+                    style={[
+                      textStyleAction,
+                      { color: colors[color + 'Contrast'] },
+                    ]}>
+                    {textFooterRight}
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <View />
+              )}
+            </View>
+          ) : null}
         </View>
-      ) : null}
-      <View style={viewStyleContent}>
-        {loading ? <Spinner size="small" /> : props.children}
-      </View>
-      {textFooterRight || textFooterLeft ? (
-        <View style={viewStyleFooter}>
-          {textFooterLeft ? (
-            <TouchableOpacity onPress={onPressFooterLeft}>
-              <Text style={[textStyleAction, { color: color }]}>
-                {textFooterLeft}
-              </Text>
-            </TouchableOpacity>
-          ) : (
-            <View />
-          )}
-          {textFooterRight ? (
-            <TouchableOpacity onPress={onPressFooterRight}>
-              <Text style={[textStyleAction, { color: color }]}>
-                {textFooterRight}
-              </Text>
-            </TouchableOpacity>
-          ) : (
-            <View />
-          )}
-        </View>
-      ) : null}
+      )}
     </View>
   );
 };
@@ -91,9 +108,11 @@ const styles = {
   viewStyleHeader: {
     justifyContent: 'space-between',
     flexDirection: 'row',
-    height: 64,
+    // height: 64,
     // paddingTop: 32,
     // padding: 12,
+    zIndex: 0,
+    alignItems: 'center',
   },
   viewStyleContent: {
     flex: 1,
@@ -101,6 +120,7 @@ const styles = {
     // paddingBottom: 12,
     // backgroundColor: Colors.onPrimary,
     flexDirection: 'column',
+    zIndex: 1,
     // alignItems: 'center',
     // justifyContent: 'center',
   },
@@ -109,6 +129,10 @@ const styles = {
     flexDirection: 'row',
     height: 64,
     padding: 8,
+    paddingBottom: 16,
+    zIndex: 0,
+    // backgroundColor: 'white',
+    alignItems: 'center',
   },
   iconStyleHeaderLeft: {
     margin: 16,
@@ -117,6 +141,8 @@ const styles = {
   textStyleAction: {
     fontSize: 18,
     padding: 16,
+    // margin: 8,
+    minHeight: 56,
     // alignSelf: 'flex-end',
   },
 };

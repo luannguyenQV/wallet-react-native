@@ -2,13 +2,22 @@ import Rehive from 'rehive';
 import * as companyConfig from './../config/company_configs.json';
 import defaultCompanyConfig from './../config/default_company_config.json';
 
+const stellar_service_url = 'https://stellar.services.rehive.io/api/1';
+const bitcoin_service_url = 'https://reward.s.services.rehive.io/api';
+const ethereum_service_url = 'https://reward.s.services.rehive.io/api';
+
 // SDK initialization
 export let r;
+let token = '';
 export const initWithoutToken = () => {
   r = new Rehive({ apiVersion: 3 });
+  // r = new Rehive({ apiVersion: 3, network: 'staging' });
+  token = '';
 };
-export const initWithToken = token => {
-  r = new Rehive({ apiVersion: 3, apiToken: token });
+export const initWithToken = apiToken => {
+  r = new Rehive({ apiVersion: 3, apiToken });
+  // r = new Rehive({ apiVersion: 3, apiToken, network: 'staging' });
+  token = apiToken;
 };
 export const verifyToken = token => r.auth.tokens.verify({ token });
 
@@ -45,9 +54,13 @@ export const disableAuthSMS = () => r.auth.mfa.sms.disable();
 
 export const sendAuthSMS = () => r.auth.mfa.sms.send();
 
+export const getMFA_Token = () => r.auth.mfa.token.get();
+
 export const enableAuthToken = () => r.auth.mfa.token.enable();
 
 export const disableAuthToken = () => r.auth.mfa.token.disable();
+
+export const verifyMFA = token => r.auth.mfa.verify({ token });
 
 /* USERS */
 // Profile
@@ -172,17 +185,33 @@ export const getCompanyConfig = company => {
   }
   return defaultCompanyConfig;
 };
-// NEEDS TESTING TODO:
+
+/* CRYPTO */
+export const getStellarAssets = () =>
+  callApi('GET', stellar_service_url + '/company/assets/');
+
+// export const createTransferStellar = data =>
+//   Promise.resolve(
+//     callApi('POST', stellar_service_url + '/transactions/send/', data)
+//       .then(response => response)
+//       .catch(err => err),
+//   );
+
+export const createTransferStellar = data =>
+  new Promise((resolve, reject) =>
+    callApi('POST', stellar_service_url + '/transactions/send/', data)
+      .then(response => resolve(response))
+      .catch(err => reject(err)),
+  );
 
 /* GENERAL */
-export const callApi = (method, route, token, data) => {
+export const callApi = (method, route, data) => {
   let headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
   };
-
   if (token) {
-    headers['Authorization'] = `Token ${token}`;
+    headers['Authorization'] = 'Token ' + token;
   }
 
   let config = {
@@ -191,14 +220,20 @@ export const callApi = (method, route, token, data) => {
     mode: 'cors',
     headers,
   };
-
+  console.log(data);
   if (data) {
     config['body'] = JSON.stringify(data);
   }
-
+  // console.log(config);
   return Promise.resolve(
     fetch(route, config)
-      .then(response => response.json())
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          return response;
+        }
+      })
       .catch(err => err),
   );
 };

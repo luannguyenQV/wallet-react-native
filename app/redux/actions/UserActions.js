@@ -5,7 +5,7 @@ This file contains all the TYPE declarations and ACTION functions
 that relate to the user profile / information
 */
 
-import { createAsyncTypes } from './../store/Utilities';
+import { createAsyncTypes } from '../store/Utilities';
 
 export const INPUT_FIELD_CHANGED = 'input_field_changed';
 export const INPUT_FIELD_ERROR = 'input_field_error';
@@ -91,7 +91,7 @@ export const resendVerification = (type, data, company) => {
 
 export const VERIFY_ASYNC = createAsyncTypes('verify');
 export const verifyItem = (type, otp) => {
-  // console.log(type, value);
+  console.log(type, otp);
   return {
     type: VERIFY_ASYNC.pending,
     payload: {
@@ -103,10 +103,10 @@ export const verifyItem = (type, otp) => {
 
 export const SHOW_MODAL = 'show_modal';
 export const showModal = (type, item, modalType) => {
-  // console.log('item', item);
+  console.log('item', item);
   return {
     type: SHOW_MODAL,
-    payload: { type: 'temp_' + type, data: item, modalType },
+    payload: { type, item, modalType },
   };
 };
 

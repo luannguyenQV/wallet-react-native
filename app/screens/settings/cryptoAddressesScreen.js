@@ -61,6 +61,7 @@ class CryptoAddressesScreen extends Component {
       newItem,
       updateItem,
       showDetail,
+      company_config,
     } = this.props;
     return (
       <View style={styles.container}>
@@ -74,6 +75,7 @@ class CryptoAddressesScreen extends Component {
               ? () => updateItem('crypto_account', tempItem)
               : () => newItem('crypto_account')
           }
+          colors={company_config.colors}
         />
         <CardList
           type="crypto_account"

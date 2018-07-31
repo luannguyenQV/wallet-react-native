@@ -1,5 +1,4 @@
 import { AsyncStorage, Alert } from 'react-native';
-import Auth from './../util/auth';
 
 const baseUrl = 'https://api.rehive.com/3/';
 

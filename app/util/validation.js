@@ -1,3 +1,8 @@
+import { StrKey } from './strkey';
+// import { PhoneNumberUtil } from 'google-libphonenumber';
+// import WAValidator from 'wallet-address-validator';
+global.Buffer = require('buffer').Buffer;
+
 export const IsEmail = email => {
   // let reg = /^[a-zA-Z0-9._+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
 
@@ -23,9 +28,33 @@ export const validatePassword = password => {
   return '';
 };
 
-export const validateMobile = email => {
-  if (!IsEmail(props.email)) {
-    return 'Please enter a valid email address';
+// export const validateMobile = mobile =>
+//   new Promise((resolve, reject) => {
+//     console.log('mobile', mobile);
+//     let resp = PhoneNumberUtil.isPossibleNumber(mobile);
+//     console.log('resp', resp);
+//     if (!mobile && !PhoneNumberUtil.isPossibleNumber(mobile)) {
+//       console.log('rejected');
+//       reject('Please enter a valid mobile number');
+//     }
+//     resolve('');
+//   });
+
+export const validateCrypto = (address, type) => {
+  if (address) {
+    switch (type) {
+      case 'stellar':
+        if (StrKey.isValidEd25519PublicKey(address) || address.includes('*')) {
+          return '';
+        }
+        break;
+      case 'bitcoin':
+      case 'ethereum':
+        if (WAValidator.validate(address, type, 'both')) {
+          return '';
+        }
+        break;
+    }
   }
-  return '';
+  return 'Please enter a valid ' + type + ' address';
 };

@@ -7,9 +7,11 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   UIManager,
-  LayoutManager,
+  Platform,
   Text,
   Dimensions,
+  AppState,
+  Linking,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { connect } from 'react-redux';
@@ -26,6 +28,7 @@ import {
   setPin,
   showModal,
   showFingerprintModal,
+  verifyMFA,
 } from '../../redux/actions';
 
 import Colors from './../../config/colors';
@@ -37,6 +40,7 @@ import {
   PopUpGeneral,
   Slides,
   CodeInput,
+  MultiFactorAuthentication,
 } from './../../components/common';
 import { standardizeString } from './../../util/general';
 
@@ -52,7 +56,6 @@ class AuthScreen extends Component {
       mainState,
       detailState,
       nextAuthFormState,
-      temp_company,
       company,
       email,
       resetPassword,
@@ -107,8 +110,10 @@ class AuthScreen extends Component {
           iconHeaderLeft = '';
         }
         break;
+      case 'mfa':
       case 'verification':
-        iconHeaderLeft = '';
+      case 'pin':
+        onPressHeaderLeft = () => this.props.navigation.navigate('Logout');
       default:
     }
     if (skip) {
@@ -125,7 +130,8 @@ class AuthScreen extends Component {
         textFooterRight={textFooterRight}
         onPressFooterRight={onPressFooterRight}
         loading={loading}
-        color={colors.primaryContrast}>
+        color={'primary'}
+        colors={colors}>
         {this.renderContent()}
       </FullScreenForm>
     );
@@ -148,6 +154,7 @@ class AuthScreen extends Component {
       pinError,
       authError,
       email,
+      user,
     } = this.props;
 
     const colors = company_config ? company_config.colors : Colors;
@@ -206,38 +213,15 @@ class AuthScreen extends Component {
         );
       case 'mfa':
         return (
-          <View>
-            {detailState === 'token' ? (
-              <Text>Please enter token provided by your MFA app</Text>
-            ) : (
-              <Text>Please enter the OTP sent to your mobile number</Text>
-            )}
-            <Text>{pinError}</Text>
-            <CodeInput
-              ref={component => (this._pinInput = component)}
-              secureTextEntry
-              activeColor="gray"
-              autoFocus
-              inactiveColor="lightgray"
-              className="border-b"
-              codeLength={detailState === 'token' ? 6 : 4}
-              space={7}
-              size={30}
-              inputPosition="center"
-              containerStyle={{ marginTop: 0, paddingBottom: 24 }}
-              onFulfill={code => this._onInputPinComplete(code)}
+          <View style={viewStyleLanding}>
+            <MultiFactorAuthentication
+              colors={colors}
+              authScreen
+              verifyMFA={this.props.verifyMFA}
+              // issuer={user.company}
+              // account={user.email}
+              type={detailState}
             />
-            {/* <Button
-              label="Resend SMS"
-              textColor={company_config.colors.secondaryContrast}
-              backgroundColor={company_config.colors.secondary}
-              size="large"
-              reference={input => {
-                this.login = input;
-              }}
-              onPress={() => nextAuthFormState('login')}
-              animation="fadeInUpBig"
-            /> */}
           </View>
         );
       case 'pin':
@@ -311,8 +295,8 @@ class AuthScreen extends Component {
                 <View style={buttonsContainer}>
                   <Button
                     label="SCAN FINGERPRINT"
-                    textColor={company_config.colors.secondaryContrast}
-                    backgroundColor={company_config.colors.secondary}
+                    textColor={colors.secondaryContrast}
+                    backgroundColor={colors.secondary}
                     reference={input => {
                       this.login = input;
                     }}
@@ -321,7 +305,7 @@ class AuthScreen extends Component {
                   />
                   <Button
                     label="USE PIN"
-                    textColor={company_config.colors.primaryContrast}
+                    textColor={colors.primaryContrast}
                     backgroundColor="transparent"
                     reference={input => {
                       this.login = input;
@@ -427,6 +411,7 @@ class AuthScreen extends Component {
       last_name,
       country,
       company_config,
+      username,
     } = this.props;
 
     const colors = company_config ? company_config.colors : Colors;
@@ -456,20 +441,24 @@ class AuthScreen extends Component {
         break;
       case 'mobile':
         value = mobile;
-        placeholder = '12345678';
+        placeholder = 'e.g. +12345678';
         keyboardType = 'numeric';
         break;
       case 'password':
         value = password;
-        placeholder = 'Password';
+        placeholder = 'e.g. Password';
         break;
       case 'first_name':
         value = first_name;
-        placeholder = 'John';
+        placeholder = 'e.g. John';
         break;
       case 'last_name':
         value = last_name;
-        placeholder = 'Snow';
+        placeholder = 'e.g. Snow';
+        break;
+      case 'username':
+        value = username;
+        placeholder = 'e.g. jon_snow';
         break;
       case 'country':
         value = country;
@@ -545,21 +534,25 @@ class AuthScreen extends Component {
   }
 
   render() {
-    const { loading, appLoading, postLoading } = this.props;
+    const { loading, appLoading, postLoading, company_config } = this.props;
     const { viewStyleContainer } = styles;
+
+    const colors = company_config ? company_config.colors : Colors;
 
     return (
       <KeyboardAvoidingView
         keyboardShouldPersistTaps={'never'}
-        style={viewStyleContainer}
-        behavior={'padding'}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-          {loading || postLoading ? (
-            <Spinner size="large" />
-          ) : (
-            this.renderMainContainer()
-          )}
-        </TouchableWithoutFeedback>
+        style={[viewStyleContainer, { backgroundColor: colors.primary }]}
+        behavior={'padding'}
+        // keyboardVerticalOffset={10}
+      >
+        {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}> */}
+        {loading || postLoading ? (
+          <Spinner size="large" />
+        ) : (
+          this.renderMainContainer()
+        )}
+        {/* </TouchableWithoutFeedback> */}
         {this.renderModal()}
       </KeyboardAvoidingView>
     );
@@ -569,7 +562,6 @@ class AuthScreen extends Component {
 const styles = {
   viewStyleContainer: {
     flex: 1,
-    backgroundColor: Colors.primary,
     paddingTop: Expo.Constants.statusBarHeight,
     justifyContent: 'center',
   },
@@ -620,7 +612,7 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ auth, user }) => {
+const mapStateToProps = ({ auth }) => {
   const {
     detailState,
     countryCode,
@@ -646,6 +638,7 @@ const mapStateToProps = ({ auth, user }) => {
     company_config,
     postLoading,
     code,
+    user,
   } = auth;
   return {
     detailState,
@@ -672,6 +665,7 @@ const mapStateToProps = ({ auth, user }) => {
     skip,
     postLoading,
     code,
+    user,
   };
 };
 
@@ -688,4 +682,5 @@ export default connect(mapStateToProps, {
   activateFingerprint,
   showFingerprintModal,
   setPin,
+  verifyMFA,
 })(AuthScreen);

@@ -7,6 +7,8 @@ import {
   setSendWallet,
   viewWallet,
   hideWallet,
+  showModal,
+  setActiveCurrency,
 } from './../../redux/actions';
 
 import Header from './../../components/header';
@@ -101,7 +103,7 @@ class WalletsScreen extends Component {
     if (this.props.company_bank_account.length > 0) {
       buttons[i] = { id: i++, type: 'deposit' };
     }
-    buttons[i] = { id: i++, type: 'withdraw' };
+    // buttons[i] = { id: i++, type: 'withdraw' };
     buttons[i] = { id: i++, type: 'receive' };
     buttons[i] = { id: i++, type: 'send' };
     return (
@@ -130,12 +132,19 @@ class WalletsScreen extends Component {
       wallets,
       hideWallet,
       viewWallet,
-      showWallet,
+      showModal,
+      setActiveCurrency,
       tempWallet,
+      company_config,
     } = this.props;
     return (
       <View style={styles.container}>
-        <Header navigation={this.props.navigation} drawer title="Wallets" />
+        <Header
+          navigation={this.props.navigation}
+          colors={company_config.colors}
+          drawer
+          title="Wallets"
+        />
         <CardList
           type="wallet"
           navigation={this.props.navigation}
@@ -144,7 +153,7 @@ class WalletsScreen extends Component {
           loadingData={loading_accounts}
           identifier="reference"
           onRefresh={fetchAccounts}
-          // primaryItem={showModal('wallet', item, 'active')}
+          activeItem={item => showModal('wallet', item, 'active')}
           // showDetail={showWallet}
           renderContent={this.renderContent}
           renderDetail={(item, navigation) =>
@@ -163,7 +172,11 @@ class WalletsScreen extends Component {
           textActionOne="SEND"
           onPressActionOne={item => this.send(item)}
           textActionTwo="RECEIVE"
-          onPressActionTwo={() => this.props.navigation.navigate('Receive')}
+          onPressActionTwo={item =>
+            this.props.navigation.navigate('Receive', {
+              currencyCode: item.currency.code,
+            })
+          }
           canActive
         />
       </View>
@@ -216,4 +229,6 @@ export default connect(mapStateToProps, {
   setSendWallet,
   viewWallet,
   hideWallet,
+  showModal,
+  setActiveCurrency,
 })(WalletsScreen);

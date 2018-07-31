@@ -6,7 +6,7 @@ import {
   setActiveWalletIndex,
   fetchAccounts,
 } from './../../redux/actions';
-import _ from 'lodash';
+
 import Swiper from 'react-native-swiper';
 
 import Header from './../../components/header';
@@ -27,6 +27,10 @@ class HomeScreen extends Component {
     label: 'Home',
   };
 
+  componentDidMount() {
+    // ContactService.getAllContacts();
+  }
+
   showDialog = item => {
     this.setState({ dataToShow: item });
     this.popupDialog.show();
@@ -45,6 +49,8 @@ class HomeScreen extends Component {
         <Header
           navigation={this.props.navigation}
           drawer
+          colors={company_config.colors}
+          right
           // noAccounts={this.state.noAccounts}
         />
         <HeaderWallet

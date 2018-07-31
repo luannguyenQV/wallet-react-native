@@ -15,9 +15,11 @@ import {
   UPLOAD_DOCUMENT_ASYNC,
   SHOW_MODAL,
   HIDE_MODAL,
-} from './../actions/UserActions';
-import { LOGOUT_USER, SET_COMPANY } from './../actions/AuthActions';
-import { VIEW_WALLET, HIDE_WALLET } from './../actions/AccountsActions';
+  SET_ACTIVE_CURRENCY_ASYNC,
+  LOGOUT_USER,
+  VIEW_WALLET,
+  HIDE_WALLET,
+} from '../actions';
 
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 
@@ -86,10 +88,11 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case PERSIST_REHYDRATE:
-      return action.payload.auth || [];
+      return action.payload.auth || INITIAL_STATE;
     case INPUT_FIELD_CHANGED:
       return {
         ...state,
+        updateError: '',
         tempItem: {
           ...state.tempItem,
           [action.payload.prop]: action.payload.value,
@@ -100,6 +103,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         // [action.payload.type]: {},
+        updateError: '',
         tempItem: {},
         showDetail: true,
         editing: false,
@@ -183,6 +187,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         modalVisible: true,
         modalType: 'verify',
+        tempItem: action.payload ? action.payload : null,
         loading: false,
       };
     case RESEND_VERIFICATION_ASYNC.error:
@@ -202,16 +207,24 @@ export default (state = INITIAL_STATE, action) => {
         modalType: '',
       };
     case SHOW_MODAL:
-      console.log('Not handled: ' + SHOW_MODAL);
-      break;
-    // return {
-    //   ...state,
-    //   [action.payload.type]: action.payload.data,
-    //   modalType: action.payload.modalType,
-    //   modalVisible: true,
-    //   loading: false,
-    //   updateError: '',
-    // };
+      return {
+        ...state,
+        tempItem: action.payload.item,
+        modalType: action.payload.modalType,
+        modalVisible: true,
+        loading: false,
+        updateError: '',
+      };
+
+    case SET_ACTIVE_CURRENCY_ASYNC.pending:
+      return {
+        loading: true,
+      };
+    case SET_ACTIVE_CURRENCY_ASYNC.success:
+    case SET_ACTIVE_CURRENCY_ASYNC.fail:
+      return {
+        loading: false,
+      };
 
     case VERIFY_ASYNC.pending:
       return {
@@ -251,7 +264,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
-        fetchError: error,
+        fetchError: action.payload,
       };
 
     case UPLOAD_DOCUMENT_ASYNC.pending:

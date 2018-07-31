@@ -61,6 +61,7 @@ class PinScreen extends Component {
   };
 
   renderMainContainer() {
+    const { pin, fingerprint, company_config } = this.props;
     const { hasFingerprintScanner, hasSavedFingerprints, showPin } = this.state;
     if (showPin) {
       return (
@@ -88,13 +89,15 @@ class PinScreen extends Component {
 
           <Button
             label="CANCEL"
+            textColor={company_config.colors.primaryContrast}
+            backgroundColor={company_config.colors.primary}
             onPress={() => this.setState({ showPin: false })}
           />
         </View>
       );
     } else {
       return (
-        <View>
+        <View style={{ alignContent: 'center' }}>
           {!hasFingerprintScanner ? (
             <Text>No fingerprint scanner</Text>
           ) : !hasSavedFingerprints ? (
@@ -102,16 +105,27 @@ class PinScreen extends Component {
           ) : (
             <Button
               label="ACTIVATE FINGERPRINT"
+              textColor={company_config.colors.primaryContrast}
+              backgroundColor={company_config.colors.primary}
               onPress={this.activateFingerprint}
             />
           )}
 
           <Button
             label="SET PIN"
+            textColor={company_config.colors.secondaryContrast}
+            backgroundColor={company_config.colors.secondary}
             onPress={() => this.setState({ showPin: true })}
           />
 
-          <Button label="RESET" onPress={this.resetPin} />
+          {pin || fingerprint ? (
+            <Button
+              label="RESET"
+              textColor={company_config.colors.primary}
+              backgroundColor="transparent"
+              onPress={this.resetPin}
+            />
+          ) : null}
         </View>
       );
     }
@@ -239,7 +253,7 @@ class PinScreen extends Component {
   // }
 
   render() {
-    const { pin, fingerprint } = this.props;
+    const { pin, fingerprint, company_config } = this.props;
     const { pinVisible } = this.state;
 
     return (
@@ -248,6 +262,7 @@ class PinScreen extends Component {
           navigation={this.props.navigation}
           title="Set pin/fingerprint"
           back
+          colors={company_config.colors}
         />
         <KeyboardAvoidingView
           keyboardShouldPersistTaps={'never'}
@@ -272,6 +287,7 @@ const styles = {
   viewStyleContainer: {
     flex: 1,
     backgroundColor: 'white',
+    padding: 16,
   },
   buttonStyle: {
     flex: 1,
@@ -296,8 +312,8 @@ const styles = {
   },
 };
 const mapStateToProps = ({ auth }) => {
-  const { pin, fingerprint } = auth;
-  return { pin, fingerprint };
+  const { pin, fingerprint, company_config } = auth;
+  return { pin, fingerprint, company_config };
 };
 
 export default connect(mapStateToProps, {

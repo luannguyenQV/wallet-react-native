@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { AppLoading, Asset, Font } from 'expo';
 import { init } from './redux/actions';
+import { Root } from 'native-base';
 
 import NavigationService from './util/navigation';
 import MainNavigator from './routes/mainNavigator';
@@ -33,8 +34,7 @@ class Main extends Component {
   };
 
   componentDidMount() {
-    const { init } = this.props;
-    init();
+    this.props.init();
     this.setState({ initStarted: true });
   }
 
@@ -57,11 +57,13 @@ class Main extends Component {
 
     if (isReady && initStarted && !appLoading) {
       return (
-        <MainNavigator
-          ref={navigatorRef => {
-            NavigationService.setTopLevelNavigator(navigatorRef);
-          }}
-        />
+        <Root>
+          <MainNavigator
+            ref={navigatorRef => {
+              NavigationService.setTopLevelNavigator(navigatorRef);
+            }}
+          />
+        </Root>
       );
     } else {
       return (

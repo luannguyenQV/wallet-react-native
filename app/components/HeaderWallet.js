@@ -187,6 +187,12 @@ class HeaderWallet extends Component {
 const styles = {
   viewStyleContainer: {
     flexDirection: 'column',
+    elevation: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 2, height: 2 },
+    shadowRadius: 5,
+    shadowOpacity: 0.3,
+    zIndex: 10,
   },
   viewStyleButtons: {
     flexDirection: 'row',

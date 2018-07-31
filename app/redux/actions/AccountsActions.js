@@ -1,12 +1,16 @@
 import Big from 'big.js';
 
-import * as Rehive from './../../util/rehive';
-import { createAsyncTypes } from './../store/Utilities';
+import * as Rehive from '../../util/rehive';
+import { createAsyncTypes } from '../store/Utilities';
+import {
+  validateEmail,
+  validateMobile,
+  validateCrypto,
+} from '../../util/validation';
 
 export const ACCOUNT_FIELD_CHANGED = 'account_field_changed';
 export const ACCOUNT_FIELD_ERROR = 'account_field_error';
 export const updateAccountField = ({ prop, value }) => {
-  console.log('action', prop, value);
   return {
     type: ACCOUNT_FIELD_CHANGED,
     payload: { prop, value },
@@ -27,6 +31,7 @@ export const setActiveWalletIndex = index => {
   };
 };
 
+export const SET_SEND_TYPE = 'set_send_type';
 export const SET_SEND_WALLET = 'set_send_wallet';
 export const setSendWallet = wallet => {
   if (wallet) {
@@ -40,8 +45,6 @@ export const setSendWallet = wallet => {
 };
 
 export const validateSendAmount = (wallet, amount) => {
-  console.log(wallet, amount);
-  // const currency = wallet.currency.currency;
   for (let i = 0; i < wallet.currency.currency.divisibility; i++) {
     amount = amount * 10;
   }
@@ -55,15 +58,34 @@ export const validateSendAmount = (wallet, amount) => {
   }
 };
 
-export const validateSendRecipient = recipient => {
+export const validateSendRecipient = (sendType, contactsType, recipient) => {
+  let error = '';
   if (recipient) {
-    return setSendState('note');
+    if (contactsType == 'email') {
+      error = validateEmail(recipient);
+    } else if (contactsType == 'mobile') {
+      error = validateMobile(recipient);
+    } else if (contactsType == 'crypto') {
+      error = validateCrypto(recipient, sendType);
+    }
+    console.log(sendType);
+    if (!error) {
+      if (sendType === 'stellar' && contactsType === 'crypto') {
+        return setSendState('memo');
+      }
+      return setSendState('note');
+    }
   } else {
-    return {
-      type: ACCOUNT_FIELD_ERROR,
-      payload: 'Recipient cannot be blank',
-    };
+    error = 'Recipient cannot be blank';
   }
+  return {
+    type: ACCOUNT_FIELD_ERROR,
+    payload: error,
+  };
+};
+
+export const validateSendMemo = memo => {
+  return setSendState('note');
 };
 
 export const validateSendNote = note => {
@@ -90,21 +112,34 @@ export const resetSend = () => {
 };
 
 export const SEND_ASYNC = createAsyncTypes('send');
-export const send = data => async dispatch => {
-  // console.log(data);
-  let amount = new Big(data.amount);
-  for (let i = 0; i < data.currency.divisibility; i++) {
+export const send = sendData => async dispatch => {
+  let amount = new Big(sendData.amount);
+  for (let i = 0; i < sendData.currency.divisibility; i++) {
     amount = amount.times(10);
   }
+  let data = {
+    amount: parseInt(amount, 0),
+    recipient: sendData.recipient,
+    note: sendData.note,
+    currency: sendData.currency.code,
+    debit_account: sendData.reference,
+  };
   dispatch({ type: SEND_ASYNC.pending });
+  let response = '';
   try {
-    await Rehive.createTransfer(
-      amount,
-      data.recipient,
-      data.note,
-      data.currency.code,
-      data.reference,
-    );
+    switch (sendData.type) {
+      case 'rehive':
+        response = await Rehive.createTransfer(data);
+        break;
+      case 'stellar':
+        data['to_reference'] = data.recipient;
+        delete data.debit_account;
+        delete data.recipient;
+        console.log(data);
+        response = await Rehive.createTransferStellar(data);
+        break;
+    }
+    console.log('response', response);
     dispatch({
       type: SEND_ASYNC.success,
     });

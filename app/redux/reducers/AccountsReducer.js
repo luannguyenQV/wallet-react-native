@@ -4,6 +4,7 @@ import {
   ACCOUNT_FIELD_CHANGED,
   ACCOUNT_FIELD_ERROR,
   SET_SEND_STATE,
+  SET_SEND_TYPE,
   SET_SEND_WALLET,
   RESET_SEND,
   SEND_ASYNC,
@@ -15,7 +16,7 @@ import {
   VIEW_WALLET,
   HIDE_WALLET,
   SHOW_MODAL,
-} from './../actions/AccountsActions';
+} from '../actions';
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 
 const INITIAL_STATE = {
@@ -29,6 +30,7 @@ const INITIAL_STATE = {
   sendWallet: null,
   sendRecipient: '',
   sendNote: '',
+  sendMemo: '',
   sendReference: null,
   sendState: '',
   tempWallet: null,
@@ -45,7 +47,7 @@ export default (state = INITIAL_STATE, action) => {
   // console.log(action);
   switch (action.type) {
     case PERSIST_REHYDRATE:
-      return action.payload.auth || [];
+      return action.payload.auth || INITIAL_STATE;
 
     case FETCH_ACCOUNTS_ASYNC.pending:
       return {
@@ -72,10 +74,10 @@ export default (state = INITIAL_STATE, action) => {
       };
 
     case SHOW_MODAL:
-      if (action.payload.type === 'temp_wallet') {
+      if (action.payload.type === 'wallet') {
         return {
           ...state,
-          tempWallet: action.payload.data,
+          tempWallet: action.payload.item,
         };
       }
       return { ...state };
@@ -95,6 +97,12 @@ export default (state = INITIAL_STATE, action) => {
         sendWallet: action.payload,
         sendState: 'amount',
         sendError: '',
+        sendType: '',
+      };
+    case SET_SEND_TYPE:
+      return {
+        ...state,
+        sendType: action.payload,
       };
     case SET_SEND_STATE:
       return {
@@ -105,13 +113,15 @@ export default (state = INITIAL_STATE, action) => {
     case RESET_SEND:
       return {
         ...state,
-        sendAmount: null,
-        sendCurrency: null,
-        sendRecipient: null,
-        sendNote: null,
-        sendReference: null,
+        sendAmount: '',
+        sendCurrency: '',
+        sendRecipient: '',
+        sendNote: '',
+        sendReference: '',
         sendState: 'amount',
         sendError: '',
+        sendMemo: '',
+        sendType: '',
       };
     case SEND_ASYNC.pending:
       return {

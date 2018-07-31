@@ -174,6 +174,7 @@ class BankAccountsScreen extends Component {
       newItem,
       updateItem,
       showDetail,
+      company_config,
     } = this.props;
     return (
       <View style={styles.container}>
@@ -187,6 +188,7 @@ class BankAccountsScreen extends Component {
               ? () => updateItem('bank_account', tempItem)
               : () => newItem('bank_account')
           }
+          colors={company_config.colors}
         />
         <CardList
           type="bank_account"

@@ -97,8 +97,6 @@ const styles = {
   viewStyleContainer: {
     flex: 1,
     flexDirection: 'row',
-    borderBottomColor: 'lightgrey',
-    borderBottomWidth: 1,
     paddingVertical: 8,
     paddingRight: 8,
     paddingLeft: 4,

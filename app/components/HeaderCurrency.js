@@ -9,6 +9,25 @@ import { performDivisibility } from './../util/general';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class HeaderCurrency extends Component {
+  getAmountTextStyle(currency) {
+    const { colors } = this.props;
+    const diff = Math.abs(
+      currency.currency.divisibility -
+        currency.available_balance.toString().length,
+    );
+    const length = Math.min(
+      currency.currency.divisibility +
+        (diff > 0 ? diff : 0) +
+        currency.currency.code.length,
+      20,
+    );
+    // console.log('diff', diff);
+    // console.log('length', length);
+    // console.log('divisibility', currency.currency.divisibility);
+    let fontSize = Math.min(Math.floor(SCREEN_WIDTH / (0.8 * length)), 42);
+    return [styles.textStyleAmount, { fontSize, color: colors.focus }];
+  }
+
   render() {
     const {
       detail,
@@ -23,8 +42,6 @@ class HeaderCurrency extends Component {
       viewStyleCurrency,
       textStyleCode,
       textStyleAccount,
-      textStyleSymbol,
-      textStyleAmount,
       iconStyleTitleRight,
     } = styles;
     console.log();
@@ -38,6 +55,7 @@ class HeaderCurrency extends Component {
                 width: SCREEN_WIDTH - 16,
               }
             : { width: SCREEN_WIDTH },
+          { backgroundColor: colors.primary },
         ]}>
         {showClose ? (
           <View style={iconStyleTitleRight}>
@@ -69,7 +87,7 @@ class HeaderCurrency extends Component {
         ) : null} */}
         <View
           style={[viewStyleCurrency, detail ? null : { paddingBottom: 16 }]}>
-          <Text style={[textStyleSymbol, { color: colors.focus }]}>
+          <Text style={this.getAmountTextStyle(currency)}>
             {currency.currency.symbol}
           </Text>
           <Text style={this.getAmountTextStyle(currency)}>
@@ -82,22 +100,6 @@ class HeaderCurrency extends Component {
         </View>
       </View>
     );
-  }
-
-  getAmountTextStyle(currency) {
-    const { colors } = this.props;
-    let fontSize = 42;
-    let length =
-      currency.available_balance.toString().length +
-      currency.currency.divisibility;
-    if (length > 16) {
-      fontSize = 20;
-    } else if (length > 12) {
-      fontSize = 30;
-    } else if (length > 8) {
-      fontSize = 38;
-    }
-    return [styles.textStyleAmount, { fontSize, color: colors.focus }];
   }
 }
 
@@ -125,10 +127,6 @@ const styles = {
     fontSize: 16,
     // fontWeight: 'bold',
     paddingBottom: 8,
-  },
-  textStyleSymbol: {
-    fontSize: 42,
-    fontWeight: 'bold',
   },
   textStyleAmount: {
     fontSize: 42,
