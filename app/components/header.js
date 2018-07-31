@@ -66,6 +66,12 @@ export default class Header extends Component {
     return (
       <View
         style={{
+          elevation: 10,
+          shadowColor: '#000',
+          shadowOffset: { width: 2, height: 2 },
+          shadowRadius: 5,
+          shadowOpacity: 0.3,
+          zIndex: 10,
           paddingTop: Constants.statusBarHeight,
           backgroundColor: colors.primary,
         }}>

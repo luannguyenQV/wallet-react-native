@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
 import { View, FlatList, Text, RefreshControl } from 'react-native';
+import { WebBrowser } from 'expo';
 
 import * as Rehive from './../util/rehive';
 
 import TransactionListItem from './TransactionListItem';
-import { Card, EmptyListMessage, PopUpGeneral, Output } from './common';
+import {
+  ListSeparator,
+  EmptyListMessage,
+  PopUpGeneral,
+  Output,
+} from './common';
 import Colors from './../config/colors';
 import { performDivisibility } from './../util/general';
 
@@ -58,6 +64,7 @@ class TransactionList extends Component {
         renderItem={({ item }) => this.renderItem(item)}
         keyExtractor={item => item.id}
         ListEmptyComponent={this.renderEmptyList()}
+        ItemSeparatorComponent={ListSeparator}
       />
     );
   }
@@ -84,6 +91,17 @@ class TransactionList extends Component {
     );
   };
 
+  async openBrowser(transaction) {
+    const metadata = transaction.metadata;
+    if (metadata && metadata.type === 'stellar') {
+      this.hideModal();
+      await WebBrowser.openBrowserAsync(
+        'http://stellarchain.io/tx/' + metadata.hash,
+      );
+      this.showModal(transaction);
+    }
+  }
+
   renderDetail() {
     const {
       textStyleLeft,
@@ -99,7 +117,7 @@ class TransactionList extends Component {
     let userLabel = '';
 
     if (transaction) {
-      const { amount, label, currency, fee, balance } = transaction;
+      const { amount, label, currency, fee, balance, metadata } = transaction;
       switch (transaction.tx_type) {
         case 'debit':
           // console.log('Debit');
@@ -132,7 +150,6 @@ class TransactionList extends Component {
           headerText = 'Unknown transaction type';
           color = Colors.warning;
       }
-
       return (
         <PopUpGeneral
           visible={showDetail}
@@ -177,29 +194,14 @@ class TransactionList extends Component {
               )
             }
           />
+          {metadata && metadata.type === 'stellar' ? (
+            <Output
+              label="Stellar chain hash"
+              value={metadata.hash}
+              onPress={() => this.openBrowser(transaction)}
+            />
+          ) : null}
 
-          {/* <PopUpInfo
-            textSize={19}
-            label={'Total amount:'}
-            sign={total_amount < 0 ? '-' : ''}
-            currency={currency}
-            value={total_amount}
-          />
-          <PopUpInfo
-            textSize={17}
-            label={'Fees:'}
-            sign={fee < 0 ? '-' : ''}
-            currency={currency}
-            value={fee}
-          />
-          <PopUpInfoLine />
-          <PopUpInfo
-            textSize={19}
-            label={'Balance:'}
-            sign={balance < 0 ? '-' : ''}
-            currency={currency}
-            value={balance}
-          /> */}
           <View style={viewStyleFooter}>
             <View>
               <Text style={textStyleLeft}>
@@ -228,7 +230,8 @@ class TransactionList extends Component {
 const styles = {
   containerStyle: {
     flex: 1,
-    padding: 8,
+    paddingHorizontal: 8,
+    zIndex: 2,
   },
   textStyleHeader: {
     fontSize: 20,

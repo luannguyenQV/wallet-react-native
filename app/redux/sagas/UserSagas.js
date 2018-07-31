@@ -23,6 +23,7 @@ import {
 import NavigationService from '../../util/navigation';
 
 import * as Rehive from '../../util/rehive';
+import { validateMobile } from '../../util/validation';
 
 function* fetchData(action) {
   try {
@@ -83,7 +84,6 @@ function* fetchData(action) {
       payload: { data, prop: action.payload },
     });
   } catch (error) {
-    console.log('type', action.payload, error);
     if (error && error.status && error.status === 403) {
       yield put({
         type: LOGOUT_USER_ASYNC.success,
@@ -119,7 +119,7 @@ function* refreshProfile() {
     yield put({ type: REFRESH_PROFILE_ASYNC.success });
   } catch (error) {
     console.log(error);
-    yield put({ type: REFRESH_PROFILE_ASYNC.error, payload: error });
+    yield put({ type: REFRESH_PROFILE_ASYNC.error, payload: error.message });
   }
 }
 
@@ -133,6 +133,7 @@ function* updateItem(action) {
         if (data.id) {
           response = yield call(Rehive.updateMobile, data.id, data);
         } else {
+          // yield call(validateMobile, data.number);
           response = yield call(Rehive.createMobile, data);
         }
         break;
@@ -168,13 +169,18 @@ function* updateItem(action) {
       //   break;
     }
     // console.log(response);
-    yield all([
-      put({ type: UPDATE_ASYNC.success }),
-      put({ type: FETCH_DATA_ASYNC.pending, payload: type }),
-    ]);
+    yield put({ type: UPDATE_ASYNC.success });
+    if (type === 'mobile') {
+      yield put({
+        type: RESEND_VERIFICATION_ASYNC.success,
+        payload: data.number,
+      });
+    } else {
+      yield put({ type: FETCH_DATA_ASYNC.pending, payload: type });
+    }
   } catch (error) {
     console.log(error);
-    yield put({ type: UPDATE_ASYNC.error, payload: error });
+    yield put({ type: UPDATE_ASYNC.error, payload: error.message });
   }
 }
 
@@ -202,7 +208,7 @@ function* deleteItem(action) {
     ]);
   } catch (error) {
     console.log(error);
-    yield put({ type: CONFIRM_DELETE_ASYNC.error, payload: error });
+    yield put({ type: CONFIRM_DELETE_ASYNC.error, payload: error.message });
   }
 }
 
@@ -223,27 +229,30 @@ function* resendVerification(action) {
     ]);
   } catch (error) {
     console.log(error);
-    yield put({ type: RESEND_VERIFICATION_ASYNC.error, payload: error });
+    yield put({
+      type: RESEND_VERIFICATION_ASYNC.error,
+      payload: error.message,
+    });
   }
 }
 
 function* verifyItem(action) {
   try {
-    const { type, value, company } = action.payload;
+    const { type, otp } = action.payload;
     let response = null;
+    // console.log()
     switch (type) {
       case 'mobile':
-        console.log('value', value);
-        response = yield call(Rehive.submitOTP, value);
+        response = yield call(Rehive.submitOTP, otp);
         break;
     }
     yield all([
       put({ type: VERIFY_ASYNC.success }),
-      // put({ type: FETCH_DATA_ASYNC.pending, payload: type }),
+      put({ type: FETCH_DATA_ASYNC.pending, payload: type }),
     ]);
   } catch (error) {
     console.log(error);
-    yield put({ type: VERIFY_ASYNC.error, payload: error });
+    yield put({ type: VERIFY_ASYNC.error, payload: error.message });
   }
 }
 
@@ -254,7 +263,10 @@ function* uploadProfilePhoto(action) {
     yield put({ type: FETCH_DATA_ASYNC.pending, payload: 'profile' });
   } catch (error) {
     console.log(error);
-    yield put({ type: UPLOAD_PROFILE_PHOTO_ASYNC.error, payload: error });
+    yield put({
+      type: UPLOAD_PROFILE_PHOTO_ASYNC.error,
+      payload: error.message,
+    });
   }
 }
 
@@ -266,7 +278,7 @@ function* uploadDocument(action) {
     NavigationService.navigate('GetVerified');
   } catch (error) {
     console.log(error);
-    yield put({ type: UPLOAD_DOCUMENT_ASYNC.error, payload: error });
+    yield put({ type: UPLOAD_DOCUMENT_ASYNC.error, payload: error.message });
   }
 }
 

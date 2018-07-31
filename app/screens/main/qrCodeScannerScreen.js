@@ -7,10 +7,12 @@ import {
   resetSend,
   setSendWallet,
   updateAccountField,
+  updateContactField,
+  setContactType,
 } from './../../redux/actions';
 import { decodeQR } from './../../util/general';
 
-import { Output, Button } from './../../components/common';
+import { Output, Button, EmptyListMessage } from './../../components/common';
 
 class QRCodeScannerScreen extends Component {
   static navigationOptions = {
@@ -34,12 +36,16 @@ class QRCodeScannerScreen extends Component {
   }
 
   accept = () => {
+    const { wallets } = this.props;
     const { account, currency, amount, recipient, note } = this.state.data;
     this.props.resetSend();
     if (account) {
       // set account?
     }
     if (currency) {
+      this.props.setSendWallet(wallets[0]);
+      this.props.setContactType('crypto');
+      // wallets.filter
       // set account?
       // search for currency,
     } else {
@@ -50,13 +56,14 @@ class QRCodeScannerScreen extends Component {
     }
 
     this.props.updateAccountField({ prop: 'sendAmount', value: amount });
-    this.props.updateAccountField({ prop: 'sendRecipient', value: recipient });
+    this.props.updateContactField({ prop: 'contactsSearch', value: recipient });
     this.props.updateAccountField({ prop: 'sendNote', value: note });
     this.props.navigation.goBack();
-    // this.props.navigation.navigate('Send');
+    this.props.navigation.navigate('Send');
   };
 
   _handleBarCodeRead = raw => {
+    console.log(raw);
     const data = decodeQR(raw.data);
     console.log(data);
     this.setState({ camera: false, data });
@@ -100,7 +107,7 @@ class QRCodeScannerScreen extends Component {
             </View>
           )
         ) : (
-          <Text>No access to camera</Text>
+          <EmptyListMessage>No access to camera</EmptyListMessage>
         )}
       </View>
     );
@@ -123,13 +130,16 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ auth }) => {
+const mapStateToProps = ({ auth, accounts }) => {
   const { company_config } = auth;
-  return { company_config };
+  const { wallets } = accounts;
+  return { company_config, wallets };
 };
 
 export default connect(mapStateToProps, {
   resetSend,
   setSendWallet,
   updateAccountField,
+  updateContactField,
+  setContactType,
 })(QRCodeScannerScreen);

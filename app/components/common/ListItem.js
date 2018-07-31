@@ -50,15 +50,26 @@ class ListItem extends Component {
   }
 }
 
+const ListSeparator = () => (
+  <View
+    style={{
+      backgroundColor: 'lightgrey',
+      height: 0.5,
+    }}
+  />
+);
+
 const styles = {
   viewStyleContainer: {
     // flex: 1,
     flexDirection: 'row',
-    height: 40,
+    height: 48,
+    // borderBottomWidth: 0.5,
+    // borderBottomColor: 'lightgrey',
   },
   viewStyleImage: {
     width: 56,
-    paddingVertical: 4,
+    paddingVertical: 8,
     paddingHorizontal: 12,
     justifyContent: 'center',
   },
@@ -75,4 +86,4 @@ const styles = {
   },
 };
 
-export { ListItem };
+export { ListItem, ListSeparator };

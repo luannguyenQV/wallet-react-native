@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import {
   View,
-  AsyncStorage,
+  Platform,
   Text,
   ListView,
   TouchableHighlight,
   KeyboardAvoidingView,
-  TouchableWithoutFeedback,
-  Keyboard,
 } from 'react-native';
 import { connect } from 'react-redux';
 import {
@@ -22,7 +20,6 @@ import {
   setContactType,
   updateContactField,
 } from '../../redux/actions';
-import TimerCountdown from 'react-native-timer-countdown';
 import { getContacts } from './../../redux/reducers/ContactsReducer';
 
 import {
@@ -31,7 +28,6 @@ import {
   Output,
   Button,
 } from './../../components/common';
-import ContactService from './../../services/contactService';
 import Colors from './../../config/colors';
 import Header from './../../components/header';
 import PinModal from './../../components/PinModal';
@@ -287,7 +283,7 @@ class SendScreen extends Component {
       case 'amount':
         return (
           <Input
-            key={sendState}
+            key="amount"
             placeholder="e.g. 10"
             label={'Amount [' + sendWallet.currency.currency.symbol + ']'}
             prefix={sendWallet.currency.currency.symbol}
@@ -295,7 +291,7 @@ class SendScreen extends Component {
             reference={input => {
               this.input = input;
             }}
-            keyboardType="decimal-pad"
+            keyboardType={Platform.OS === 'ios' ? 'decimal-pad' : 'phone-pad'}
             value={sendAmount}
             onChangeText={value =>
               updateAccountField({ prop: 'sendAmount', value })
@@ -323,6 +319,7 @@ class SendScreen extends Component {
             placeholder = 'GAQGVZYIZ2DX56EB6TZYGBD...';
             break;
         }
+        console.log('contactsSearch', contactsSearch);
         return (
           <View>
             <View

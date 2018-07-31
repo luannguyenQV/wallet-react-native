@@ -105,11 +105,12 @@ const styles = {
 
 const mapStateToProps = ({ user, auth }) => {
   const { company_config } = auth;
-  const { mobile, tempItem, showDetail } = user;
+  const { mobile, tempItem, updateError, showDetail } = user;
   return {
     mobile,
     showDetail,
     tempItem,
+    updateError,
     company_config,
   };
 };

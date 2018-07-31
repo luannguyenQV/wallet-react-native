@@ -23,6 +23,7 @@ import {
   InputContainer,
   Output,
   CodeInput,
+  MultiFactorAuthentication,
 } from '../../../components/common';
 
 class TwoFactorScreen extends Component {
@@ -182,10 +183,25 @@ class TwoFactorScreen extends Component {
   }
 
   renderVerify() {
-    const { mfaError, mfaState } = this.props;
+    const {
+      mfaError,
+      mfaState,
+      mfaToken,
+      company_config,
+      profile,
+    } = this.props;
     return (
       <View>
-        <Text style={styles.textStyle}>
+        <MultiFactorAuthentication
+          colors={company_config.colors}
+          verifyMFA={this.props.verifyMFA}
+          issuer={profile.company}
+          account={profile.email}
+          secret={mfaToken ? mfaToken.key : ''}
+          error={mfaError}
+          type={mfaState === 'verifyToken' ? 'token' : 'sms'}
+        />
+        {/* <Text style={styles.textStyle}>
           {mfaState === 'verifyToken'
             ? 'Please input the token from your 2FA app'
             : 'Please input the OTP sent to your mobile number'}
@@ -206,7 +222,7 @@ class TwoFactorScreen extends Component {
         />
         {mfaError ? (
           <Text style={[styles.textStyle, { color: 'red' }]}>{mfaError}</Text>
-        ) : null}
+        ) : null} */}
 
         {/* <Button
           label="CANCEL"
@@ -252,7 +268,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({ auth }) => {
+const mapStateToProps = ({ auth, user }) => {
   const {
     company_config,
     mfaState,
@@ -261,6 +277,7 @@ const mapStateToProps = ({ auth }) => {
     mfaLoading,
     mfaMobile,
   } = auth;
+  const { profile } = user;
   return {
     company_config,
     mfaState,
@@ -268,6 +285,7 @@ const mapStateToProps = ({ auth }) => {
     mfaError,
     mfaLoading,
     mfaMobile,
+    profile,
   };
 };
 

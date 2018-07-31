@@ -108,8 +108,9 @@ class PersonalDetailsScreen extends Component {
           name={
             profile.first_name
               ? profile.first_name + ' ' + profile.last_name
-              : profile.username
+              : ''
           }
+          username={profile.username}
           colors={colors}
         />
         <CardContainer>

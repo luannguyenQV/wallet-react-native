@@ -17,7 +17,7 @@ class HeaderProfile extends Component {
   // }
 
   render() {
-    const { photoLink, name, colors } = this.props;
+    const { photoLink, username, name, colors } = this.props;
 
     const {
       viewStyleContainer,
@@ -58,7 +58,7 @@ class HeaderProfile extends Component {
 
         <View style={viewStyleName}>
           <Text style={[textStyleName, { color: colors.primaryContrast }]}>
-            {name}
+            {username ? username : name}
           </Text>
         </View>
 
@@ -77,6 +77,12 @@ const styles = {
     alignItems: 'center',
     paddingTop: 16,
     paddingBottom: 8,
+    elevation: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 2, height: 2 },
+    shadowRadius: 5,
+    shadowOpacity: 0.3,
+    zIndex: 10,
   },
   imageStylePhoto: {
     width: 100,
@@ -92,6 +98,9 @@ const styles = {
   textStyleName: {
     fontSize: 16,
     fontWeight: 'bold',
+    textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 };
 

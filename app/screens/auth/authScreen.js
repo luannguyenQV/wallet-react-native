@@ -40,6 +40,7 @@ import {
   PopUpGeneral,
   Slides,
   CodeInput,
+  MultiFactorAuthentication,
 } from './../../components/common';
 import { standardizeString } from './../../util/general';
 
@@ -55,7 +56,6 @@ class AuthScreen extends Component {
       mainState,
       detailState,
       nextAuthFormState,
-      temp_company,
       company,
       email,
       resetPassword,
@@ -110,8 +110,10 @@ class AuthScreen extends Component {
           iconHeaderLeft = '';
         }
         break;
+      case 'mfa':
       case 'verification':
-        iconHeaderLeft = '';
+      case 'pin':
+        onPressHeaderLeft = () => this.props.navigation.navigate('Logout');
       default:
     }
     if (skip) {
@@ -152,6 +154,7 @@ class AuthScreen extends Component {
       pinError,
       authError,
       email,
+      user,
     } = this.props;
 
     const colors = company_config ? company_config.colors : Colors;
@@ -211,66 +214,14 @@ class AuthScreen extends Component {
       case 'mfa':
         return (
           <View style={viewStyleLanding}>
-            <Text style={[textStyle, { color: colors.primaryContrast }]}>
-              Please enter{' '}
-              {detailState === 'token'
-                ? 'token provided by your MFA app'
-                : 'the OTP sent to your mobile number'}
-            </Text>
-            <Text style={[textStyle, { color: colors.error }]}>
-              {authError}
-            </Text>
-            <CodeInput
-              ref={component => (this._pinInput = component)}
-              secureTextEntry
-              activeColor="gray"
-              autoFocus
-              inactiveColor="lightgray"
-              className="border-b"
-              codeLength={6}
-              space={7}
-              size={30}
-              inputPosition="center"
-              containerStyle={{ marginTop: 0, paddingBottom: 24 }}
-              onFulfill={code => this.props.verifyMFA(code)}
+            <MultiFactorAuthentication
+              colors={colors}
+              authScreen
+              verifyMFA={this.props.verifyMFA}
+              // issuer={user.company}
+              // account={user.email}
+              type={detailState}
             />
-            {detailState === 'token' ? (
-              <View>
-                <Button
-                  label="OPEN GOOGLE AUTHENTICATOR"
-                  textColor={company_config.colors.secondaryContrast}
-                  backgroundColor={company_config.colors.secondary}
-                  reference={input => {
-                    this.login = input;
-                  }}
-                  onPress={() => Linking.openURL('otpauth://')}
-                  animation="fadeInUpBig"
-                />
-                <Button
-                  label="OPEN AUTHY"
-                  textColor={company_config.colors.secondaryContrast}
-                  backgroundColor={company_config.colors.secondary}
-                  reference={input => {
-                    this.login = input;
-                  }}
-                  onPress={() => Linking.openURL('authy://open/rehive2')}
-                  // onPress={() => nextAuthFormState('login')}
-                  animation="fadeInUpBig"
-                />
-              </View>
-            ) : (
-              <Button
-                label="Resend SMS"
-                textColor={company_config.colors.secondaryContrast}
-                backgroundColor={company_config.colors.secondary}
-                size="large"
-                reference={input => {
-                  this.login = input;
-                }}
-                // onPress={() => nextAuthFormState('login')}
-                animation="fadeInUpBig"
-              />
-            )}
           </View>
         );
       case 'pin':
@@ -460,6 +411,7 @@ class AuthScreen extends Component {
       last_name,
       country,
       company_config,
+      username,
     } = this.props;
 
     const colors = company_config ? company_config.colors : Colors;
@@ -489,20 +441,24 @@ class AuthScreen extends Component {
         break;
       case 'mobile':
         value = mobile;
-        placeholder = '12345678';
+        placeholder = 'e.g. +12345678';
         keyboardType = 'numeric';
         break;
       case 'password':
         value = password;
-        placeholder = 'Password';
+        placeholder = 'e.g. Password';
         break;
       case 'first_name':
         value = first_name;
-        placeholder = 'John';
+        placeholder = 'e.g. John';
         break;
       case 'last_name':
         value = last_name;
-        placeholder = 'Snow';
+        placeholder = 'e.g. Snow';
+        break;
+      case 'username':
+        value = username;
+        placeholder = 'e.g. jon_snow';
         break;
       case 'country':
         value = country;
@@ -587,14 +543,16 @@ class AuthScreen extends Component {
       <KeyboardAvoidingView
         keyboardShouldPersistTaps={'never'}
         style={[viewStyleContainer, { backgroundColor: colors.primary }]}
-        behavior={'padding'}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-          {loading || postLoading ? (
-            <Spinner size="large" />
-          ) : (
-            this.renderMainContainer()
-          )}
-        </TouchableWithoutFeedback>
+        behavior={'padding'}
+        // keyboardVerticalOffset={10}
+      >
+        {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}> */}
+        {loading || postLoading ? (
+          <Spinner size="large" />
+        ) : (
+          this.renderMainContainer()
+        )}
+        {/* </TouchableWithoutFeedback> */}
         {this.renderModal()}
       </KeyboardAvoidingView>
     );
@@ -654,7 +612,7 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ auth, user }) => {
+const mapStateToProps = ({ auth }) => {
   const {
     detailState,
     countryCode,
@@ -680,6 +638,7 @@ const mapStateToProps = ({ auth, user }) => {
     company_config,
     postLoading,
     code,
+    user,
   } = auth;
   return {
     detailState,
@@ -706,6 +665,7 @@ const mapStateToProps = ({ auth, user }) => {
     skip,
     postLoading,
     code,
+    user,
   };
 };
 

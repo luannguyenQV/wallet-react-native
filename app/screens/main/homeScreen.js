@@ -50,7 +50,7 @@ class HomeScreen extends Component {
           navigation={this.props.navigation}
           drawer
           colors={company_config.colors}
-          // right
+          right
           // noAccounts={this.state.noAccounts}
         />
         <HeaderWallet

@@ -25,13 +25,12 @@ import {
 } from './../redux/actions';
 import { standardizeString } from './../util/general';
 
-import { Card, PopUpGeneral, EmptyListMessage, Input } from './common';
+import { Card, PopUpGeneral, EmptyListMessage, CodeInput } from './common';
 
 // make component
 class CardList extends Component {
   componentDidMount() {
     if (this.props.onRefresh) {
-      console.log('onRefresh');
       this.props.onRefresh();
     } else {
       this.props.fetchData(this.props.type);
@@ -180,7 +179,6 @@ class CardList extends Component {
     let textActionTwo = 'CANCEL';
     let onPressActionTwo = hideModal;
     let content = null;
-    console.log(identifier, tempItem, modalType);
     if (identifier && tempItem) {
       switch (modalType) {
         case 'delete':
@@ -204,19 +202,24 @@ class CardList extends Component {
           if (type === 'email') {
             contentText = 'Verification email has been sent to ' + tempItem;
           } else if (type === 'mobile') {
-            textActionOne = 'VERIFY';
+            // textActionOne = 'VERIFY';
             contentText = 'Verification sms has been sent to ' + tempItem;
             content = (
-              <Input
-                label="OTP"
-                placeholder="e.g. 1234"
-                autoCapitalize="none"
-                value={otp}
-                inputError={updateError}
-                onChangeText={input => updateInputField('otp', 'otp', input)}
+              <CodeInput
+                ref={component => (this._pinInput = component)}
+                secureTextEntry={false}
+                activeColor="gray"
+                autoFocus
+                inactiveColor="lightgray"
+                className="border-b"
+                codeLength={5}
+                space={7}
+                size={30}
+                inputPosition="center"
+                containerStyle={{ marginTop: 0, paddingBottom: 24 }}
+                onFulfill={code => verifyItem('mobile', code)}
               />
             );
-            onPressActionOne = () => verifyItem(type, otp.otp);
           }
 
           break;

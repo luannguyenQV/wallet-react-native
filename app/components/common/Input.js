@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Colors from './../../config/colors';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import CountryPicker from 'react-native-country-picker-modal';
-import { ListItem } from './ListItem';
+import { ListItem, ListSeparator } from './ListItem';
 
 class Input extends Component {
   state = {
@@ -251,6 +251,7 @@ class Input extends Component {
                 />
               )}
               keyExtractor={item => (item.id ? item.id.toString() : '')}
+              ItemSeparatorComponent={ListSeparator}
               // ListEmptyComponent={<ListItem title="No data" />}
             />
           ) : null}
@@ -258,6 +259,10 @@ class Input extends Component {
       </View>
     );
   }
+
+  // _renderSeparator = () => (
+
+  // );
 }
 
 Input.propTypes = {
@@ -288,7 +293,7 @@ Input.defaultProps = {
 
 const styles = {
   viewStyleContainer: {
-    minHeight: 56,
+    minHeight: 57,
     borderTopRightRadius: 5,
     borderTopLeftRadius: 5,
     overflow: 'hidden',
@@ -296,7 +301,7 @@ const styles = {
   },
   viewStyleContent: {
     paddingHorizontal: 12,
-    minHeight: 56,
+    minHeight: 57,
     justifyContent: 'center',
   },
   viewStylePopUp: {
@@ -322,6 +327,7 @@ const styles = {
     paddingTop: 6,
   },
   textStyleInput: {
+    paddingTop: 4,
     fontWeight: 'normal',
     flex: 1,
     fontSize: 16,

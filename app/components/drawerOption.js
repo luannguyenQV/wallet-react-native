@@ -10,7 +10,7 @@ export default class DrawerOption extends Component {
       containerStyle,
       {
         backgroundColor:
-          address === activeItemKey ? colors.primary : 'transparent',
+          address === activeItemKey ? colors.secondary : 'transparent',
       },
     ];
   }
@@ -22,8 +22,7 @@ export default class DrawerOption extends Component {
     return [
       textStyle,
       {
-        color:
-          address === activeItemKey ? colors.primaryContrast : colors.primary,
+        color: address === activeItemKey ? colors.secondaryContrast : 'black',
       },
     ];
   }
@@ -47,7 +46,7 @@ const styles = {
     padding: 8,
     paddingLeft: 16,
     paddingVertical: 12,
-    marginVertical: 2,
+    // marginVertical: 2,
     width: '100%',
   },
   textStyle: {

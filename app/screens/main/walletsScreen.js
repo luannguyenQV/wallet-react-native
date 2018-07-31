@@ -172,7 +172,11 @@ class WalletsScreen extends Component {
           textActionOne="SEND"
           onPressActionOne={item => this.send(item)}
           textActionTwo="RECEIVE"
-          onPressActionTwo={() => this.props.navigation.navigate('Receive')}
+          onPressActionTwo={item =>
+            this.props.navigation.navigate('Receive', {
+              currencyCode: item.currency.code,
+            })
+          }
           canActive
         />
       </View>

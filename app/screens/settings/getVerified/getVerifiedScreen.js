@@ -7,11 +7,7 @@ import Header from './../../../components/header';
 import GetVerifiedOption from './../../../components/getVerifiedOption';
 import HeaderProfile from '../../../components/HeaderProfile';
 
-import {
-  Spinner,
-  InputContainer,
-  ImageUpload,
-} from './../../../components/common';
+import { Spinner, InputContainer } from './../../../components/common';
 
 class GetVerifiedScreen extends Component {
   static navigationOptions = {

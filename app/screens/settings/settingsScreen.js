@@ -98,22 +98,22 @@ class SettingsScreen extends Component {
     let value = '';
     if (address) {
       if (address.line_1) {
-        value = value + address.line_1 + ', ';
+        value = value + address.line_1;
       }
       if (address.line_2) {
-        value = value + address.line_2 + ', ';
+        value = value + (value ? ', ' : '') + address.line_2;
       }
       if (address.city) {
-        value = value + address.city + ', ';
+        value = value + (value ? ', ' : '') + address.city;
       }
       if (address.state_province) {
-        value = value + address.state_province + ', ';
+        value = value + (value ? ', ' : '') + address.state_province;
       }
       if (address.country) {
-        value = value + address.country + ', ';
+        value = value + (value ? ', ' : '') + address.country;
       }
       if (address.postal_code) {
-        value = value + address.postal_code;
+        value = value + (value ? ', ' : '') + address.postal_code;
       }
     }
     if (!value) {

@@ -29,6 +29,7 @@ import {
   UPDATE_MFA_TOKEN,
   VERIFY_MFA,
   AUTH_STORE_USER,
+  POST_AUTH_FLOW_FINISH,
 } from '../actions/AuthActions';
 import { HIDE_MODAL } from '../actions/UserActions';
 
@@ -62,7 +63,7 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action) => {
-  // console.log('action', action);
+  console.log('action', action);
   switch (action.type) {
     case PERSIST_REHYDRATE:
       return action.payload.auth || INITIAL_STATE;
@@ -78,6 +79,14 @@ export default (state = INITIAL_STATE, action) => {
         code: '',
       };
     case INIT.success:
+      return {
+        ...state,
+        appLoading: false,
+        mainState: action.payload.mainState,
+        detailState: action.payload.detailState,
+        password: '',
+        loading: false,
+      };
     case INIT.fail:
       return {
         ...state,
@@ -119,12 +128,7 @@ export default (state = INITIAL_STATE, action) => {
     case LOGIN_USER_ASYNC.success:
       return {
         ...state,
-        mainState: '',
-        detailState: '',
-        token: action.payload,
-        loading: true,
-        pin: '',
-        fingerprint: false,
+        user: action.payload,
       };
 
     case CHANGE_PASSWORD_ASYNC.pending:
@@ -187,9 +191,7 @@ export default (state = INITIAL_STATE, action) => {
     case RESET_AUTH:
       return {
         ...state,
-        companyError: '',
-        passwordError: '',
-        emailError: '',
+        authError: '',
         password: '',
         mainState: 'landing',
         detailState: '',
@@ -202,12 +204,18 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         user: action.payload.user,
         token: action.payload.token,
+        authError: '',
       };
     case AUTH_STORE_USER:
       return {
         ...state,
         user: action.payload,
       };
+    // case POST_AUTH_FLOW_FINISH:
+    //   return {
+    //     ...state,
+    //     // user: action.payload,
+    //   };
 
     case HIDE_MODAL:
       return {
@@ -302,9 +310,11 @@ export default (state = INITIAL_STATE, action) => {
 
     case LOGOUT_USER_ASYNC.success:
       return {
-        token: null,
+        token: '',
+        authError: '',
         mainState: 'landing',
         detailState: 'landing',
+        appLoading: false,
         company: state.company,
         company_config: state.company_config,
         email: state.email,

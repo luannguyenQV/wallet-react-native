@@ -91,7 +91,7 @@ export const resendVerification = (type, data, company) => {
 
 export const VERIFY_ASYNC = createAsyncTypes('verify');
 export const verifyItem = (type, otp) => {
-  // console.log(type, value);
+  console.log(type, otp);
   return {
     type: VERIFY_ASYNC.pending,
     payload: {

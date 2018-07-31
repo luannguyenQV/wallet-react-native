@@ -228,12 +228,11 @@ export const callApi = (method, route, data) => {
   return Promise.resolve(
     fetch(route, config)
       .then(response => {
-        console.log('RESPONSE', response);
-        // if (response.ok) {
-        return response.json();
-        // } else {
-        //   return response;
-        // }
+        if (response.ok) {
+          return response.json();
+        } else {
+          return response;
+        }
       })
       .catch(err => err),
   );

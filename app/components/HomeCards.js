@@ -61,8 +61,8 @@ class HomeCards extends Component {
     if (!dismissedCards || !dismissedCards.includes('welcome')) {
       cards[i++] = {
         id: 'welcome',
-        title: 'Welcome to Rehive',
-        description: 'A multi-currency wallet built on the Rehive platform.',
+        title: 'Welcome to PXPay',
+        // description: 'A multi-currency wallet built on the Rehive platform.',
         image: 'card1',
         dismiss: true,
       };
@@ -114,9 +114,9 @@ class HomeCards extends Component {
         key={item.id}
         title={item.title}
         renderHeader={this.renderImage(
-          item.image === 'pxpay'
-            ? require('./../../assets/icons/pxpay1.png')
-            : require('./../../assets/icons/card1.png'),
+          // item.image === 'pxpay' ?
+          require('./../../assets/icons/pxpay1.png'),
+          // : require('./../../assets/icons/card1.png'),
         )}
         colorTitleBackground={company_config.colors.primary}
         colorTitleText={company_config.colors.primaryContrast}
@@ -143,8 +143,8 @@ class HomeCards extends Component {
         <View style={viewStyleFooter}>
           <Button
             label="RESTORE ALL"
-            textColor={colors.primaryContrast}
-            backgroundColor={colors.primary}
+            textColor={company_config.colors.primaryContrast}
+            backgroundColor={company_config.colors.primary}
             type="text"
             onPress={cardRestoreAll}
           />
@@ -161,6 +161,7 @@ class HomeCards extends Component {
 const styles = {
   containerStyle: {
     flex: 1,
+    zIndex: 2,
   },
   imageStylePhoto: {
     width: SCREEN_WIDTH - 16,

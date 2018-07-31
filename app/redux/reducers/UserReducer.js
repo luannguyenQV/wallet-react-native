@@ -92,6 +92,7 @@ export default (state = INITIAL_STATE, action) => {
     case INPUT_FIELD_CHANGED:
       return {
         ...state,
+        updateError: '',
         tempItem: {
           ...state.tempItem,
           [action.payload.prop]: action.payload.value,
@@ -102,6 +103,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         // [action.payload.type]: {},
+        updateError: '',
         tempItem: {},
         showDetail: true,
         editing: false,
@@ -185,6 +187,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         modalVisible: true,
         modalType: 'verify',
+        tempItem: action.payload ? action.payload : null,
         loading: false,
       };
     case RESEND_VERIFICATION_ASYNC.error:

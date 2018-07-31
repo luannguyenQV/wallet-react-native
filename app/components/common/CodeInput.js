@@ -312,7 +312,7 @@ class CodeInput extends Component {
           ]}
           underlineColorAndroid="transparent"
           selectionColor={activeColor}
-          keyboardType={'name-phone-pad'}
+          keyboardType={'numeric'}
           returnKeyType={'done'}
           {...this.props}
           autoFocus={autoFocus && id == 0}

@@ -20,25 +20,34 @@ class ReceiveScreen extends Component {
   };
 
   componentDidMount() {
+    const currencyCode = this.props.navigation.getParam(currencyCode, '');
+    this.setState({ currencyCode });
     this.switchToEmail();
   }
 
   switchToEmail() {
     const user = this.props.profile;
+    const currencyCode = this.state.currencyCode;
     const imageURI =
       'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=' +
-      encodeURIComponent('rehive:' + user.email) +
+      encodeURIComponent(
+        'rehive:' +
+          user.email +
+          (currencyCode ? '?currency=' + currencyCode : ''),
+      ) +
       '&choe=UTF-8';
     this.setState({ imageURI, email: user.email, type: 'email' });
   }
 
   switchToCrypto() {
     const user = this.props.profile;
+    const currencyCode = this.state.currencyCode;
     const imageURI =
       'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=' +
       encodeURIComponent(
-        'stellar:GANOZF7TIDYZ7MGRVVMAJHBQ7JCWRNRDHPY6N4W5OWU2JWNMQ2D67NVQ?memo=' +
-          user.username,
+        'stellar:GANOZF7TIDYZ7MGRVVMAJHBQ7JCWRNRDHPY6N4W5OWU2JWNMQ2D67NVQ?' +
+          (user.username ? '?memo=' + user.username + '&' : '') +
+          (currencyCode ? '?currency=' + currencyCode : ''),
       ) +
       '&choe=UTF-8';
     this.setState({ imageURI, type: 'crypto' });
@@ -99,12 +108,12 @@ class ReceiveScreen extends Component {
               : 'This QR code is your Rehive account for use with another Rehive app'}
           </Text>
           <Image
-            style={{ width: 300, height: 300 }}
+            style={{ width: 300, height: 300, alignSelf: 'center' }}
             source={{ uri: this.state.imageURI }}
           />
         </View>
         {type === 'email' ? (
-          <View style={{ padding: 8, width: '100%' }}>
+          <View style={{ padding: 16, width: '100%' }}>
             <Output label="Email" value={this.state.email} copy />
           </View>
         ) : null}
@@ -118,7 +127,7 @@ const styles = {
     flex: 1,
     flexDirection: 'column',
     backgroundColor: 'white',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'flex-start',
   },
   text: {
