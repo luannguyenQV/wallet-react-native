@@ -71,7 +71,11 @@ class HomeScreen extends Component {
           <TransactionList
             // updateBalance={this.getBalanceInfo}
             // fetchAccounts={fetchAccounts}
-            currencyCode={wallets[activeWalletIndex].currency.currency.code}
+            currencyCode={
+              wallets && wallets.length
+                ? wallets[activeWalletIndex].currency.currency.code
+                : ''
+            }
             // showDialog={this.showDialog}
             // logout={this.logout}
           />

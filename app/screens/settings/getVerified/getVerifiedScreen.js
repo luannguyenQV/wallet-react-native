@@ -35,7 +35,7 @@ class GetVerifiedScreen extends Component {
     return (
       <GetVerifiedOption
         label="Basic Info"
-        value={value}
+        value={value ? value : 'Not yet provided'}
         status={status}
         gotoAddress="SettingsPersonalDetails"
         goTo={this.goTo}
@@ -101,30 +101,35 @@ class GetVerifiedScreen extends Component {
     const { address } = this.props;
 
     let value = '';
-    if (address.line_1) {
-      value = value + address.line_1 + ', ';
+    if (address) {
+      if (address.line_1) {
+        value = value + address.line_1;
+      }
+      if (address.line_2) {
+        value = value + (value ? ', ' : '') + address.line_2;
+      }
+      if (address.city) {
+        value = value + (value ? ', ' : '') + address.city;
+      }
+      if (address.state_province) {
+        value = value + (value ? ', ' : '') + address.state_province;
+      }
+      if (address.country) {
+        value = value + (value ? ', ' : '') + address.country;
+      }
+      if (address.postal_code) {
+        value = value + (value ? ', ' : '') + address.postal_code;
+      }
     }
-    if (address.line_2) {
-      value = value + address.line_2 + ', ';
-    }
-    if (address.city) {
-      value = value + address.city + ', ';
-    }
-    if (address.state_province) {
-      value = value + address.state_province + ', ';
-    }
-    if (address.country) {
-      value = value + address.country + ', ';
-    }
-    if (address.postal_code) {
-      value = value + address.postal_code;
+    if (!value) {
+      value = 'Not yet provided';
     }
     let status = address.status.toUpperCase();
 
     return (
       <GetVerifiedOption
         label="Address"
-        value={value}
+        value={value ? value : 'Not yet provided'}
         status={status}
         gotoAddress="SettingsAddress"
         goTo={this.goTo}

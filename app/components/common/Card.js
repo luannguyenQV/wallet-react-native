@@ -7,12 +7,12 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 
-import Colors from './../../config/colors';
 import { Spinner } from './Spinner';
 import { HeaderButton } from './HeaderButton';
 import TouchableCircle from './../touchableCircle';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Swipeable from 'react-native-swipeable';
+import Colors from './../../config/colors';
 
 const Card = props => {
   const {
@@ -59,6 +59,7 @@ const Card = props => {
     disableActionTwo,
     loading,
     swipeableContent,
+    colors,
   } = props;
 
   return (
@@ -71,6 +72,7 @@ const Card = props => {
           style={[viewStyleTitleContainer, { backgroundColor: 'white' }]}>
           {textTitleLeft ? (
             <TouchableCircle
+              colors={colors}
               text={textTitleLeft}
               active={itemActive}
               onPress={onPressTitleLeft}
@@ -81,7 +83,7 @@ const Card = props => {
             <HeaderButton
               name={iconTitleLeft}
               onPress={onPressTitleLeft}
-              color={colorTitle ? colorTitle : Colors.primaryContrast}
+              color={colorTitle ? colorTitle : colors.primaryContrast}
             />
           ) : null}
           <TouchableWithoutFeedback onPress={onPressTitle}>
@@ -108,7 +110,7 @@ const Card = props => {
               <HeaderButton
                 icon={iconTitleRight}
                 onPress={onPressTitleRight}
-                color={colorTitle ? colorTitle : Colors.primaryContrast}
+                color={colorTitle ? colorTitle : colors.primaryContrast}
               />
             </View>
           ) : null}
@@ -132,13 +134,13 @@ const Card = props => {
                   name={iconFooter}
                   size={22}
                   onPress={onPressFooter}
-                  color={colorIcon ? colorIcon : Colors.gray}
+                  color={colorIcon ? colorIcon : colors.gray}
                 />
               ) : null}
               {textActionTwo ? (
                 <TouchableHighlight
                   disabled={disableActionTwo}
-                  underlayColor={Colors.lightGray}
+                  underlayColor={colors.lightGray}
                   style={buttonStyleAction}
                   onPress={onPressActionTwo}>
                   <Text style={textStyleAction}>{textActionTwo}</Text>
@@ -147,7 +149,7 @@ const Card = props => {
               {textActionOne ? (
                 <TouchableHighlight
                   disabled={disableActionOne}
-                  underlayColor={Colors.lightGray}
+                  underlayColor={colors.lightGray}
                   style={buttonStyleAction}
                   onPress={onPressActionOne}>
                   <Text style={textStyleAction}>{textActionOne}</Text>
@@ -271,7 +273,6 @@ const styles = {
     padding: 8,
   },
   textStyleAction: {
-    color: Colors.primary,
     fontSize: 14,
     fontWeight: 'bold',
   },

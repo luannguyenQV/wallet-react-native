@@ -14,6 +14,7 @@ import {
   Linking,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
+import { Checkbox } from 'react-native-material-ui'
 import { connect } from 'react-redux';
 import {
   authFieldChange,

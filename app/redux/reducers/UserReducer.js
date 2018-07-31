@@ -259,6 +259,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         [action.payload.prop]: action.payload.data,
         loading: false,
+        updateError: '',
       };
     case FETCH_DATA_ASYNC.error:
       return {

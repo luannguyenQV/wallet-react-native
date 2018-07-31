@@ -146,6 +146,7 @@ class WalletsScreen extends Component {
           title="Wallets"
         />
         <CardList
+          colors={company_config.colors}
           type="wallet"
           navigation={this.props.navigation}
           data={wallets}

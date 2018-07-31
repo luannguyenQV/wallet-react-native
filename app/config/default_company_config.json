@@ -1,9 +1,9 @@
 {
   "services": {
     "bitcoin": false,
-    "stellar": true,
+    "stellar": false,
     "ethereum": false,
-    "rewards": true
+    "rewards": false
   },
   "cards": [
     {
@@ -75,7 +75,7 @@
   },
   "verification": {
     "requirePersonal": true,
-    "requireAddress": false,
+    "requireAddress": true,
     "requireMobile": true,
     "requireEmail": true,
     "requireDocumentID": true,

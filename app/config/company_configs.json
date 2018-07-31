@@ -5,6 +5,7 @@
       "id": 0,
       "company": "test_company_1",
       "config": {
+        "company": "test_company_1",
         "services": {
           "bitcoin": false,
           "stellar": true,
@@ -125,6 +126,7 @@
       "id": 1,
       "company": "luuun",
       "config": {
+        "company": "luuun",
         "services": {
           "bitcoin": false,
           "stellar": true,
@@ -1285,6 +1287,7 @@
       "id": 11,
       "company": "pxpay_demo",
       "config": {
+        "company": "pxpay_demo",
         "services": {
           "bitcoin": false,
           "stellar": true,

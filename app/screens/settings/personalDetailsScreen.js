@@ -115,6 +115,7 @@ class PersonalDetailsScreen extends Component {
         />
         <CardContainer>
           <Card
+            colors={colors}
             textActionOne={showDetail ? 'SAVE' : ''}
             onPressActionOne={() => updateItem('profile', tempItem)}
             textActionTwo={showDetail ? 'CANCEL' : ''}

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, FlatList, Dimensions, Animated } from 'react-native';
+import { View, FlatList, Dimensions, Animated, Text } from 'react-native';
 import { connect } from 'react-redux';
 import {
   setActiveWalletIndex,
@@ -13,6 +13,7 @@ import {
 
 import WalletAction from './WalletAction';
 import HeaderCurrency from './HeaderCurrency';
+import { EmptyListMessage } from './common';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -173,12 +174,22 @@ class HeaderWallet extends Component {
   }
 
   render() {
-    const { colors } = this.props;
-    const { viewStyleContainer } = styles;
+    const { colors, wallets } = this.props;
+    const { viewStyleContainer, viewStyleBox, textStyle } = styles;
     return (
       <View style={[viewStyleContainer, { backgroundColor: colors.primary }]}>
-        {this.renderWallets()}
-        {this.renderButtons()}
+        {wallets && wallets.length > 0 ? (
+          <View>
+            {this.renderWallets()}
+            {this.renderButtons()}
+          </View>
+        ) : (
+          <View style={viewStyleBox}>
+            <Text style={[textStyle, { color: colors.primaryContrast }]}>
+              No company currencies available
+            </Text>
+          </View>
+        )}
       </View>
     );
   }
@@ -199,6 +210,15 @@ const styles = {
     width: '100%',
     justifyContent: 'space-around',
     padding: 8,
+  },
+  viewStyleBox: {
+    flexDirection: 'column',
+    padding: 16,
+    alignItems: 'center',
+  },
+  textStyle: {
+    fontSize: 18,
+    fontWeight: 'normal',
   },
 };
 

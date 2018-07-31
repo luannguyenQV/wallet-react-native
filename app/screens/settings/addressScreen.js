@@ -56,11 +56,12 @@ class AddressScreen extends Component {
           headerRightOnPress={() =>
             showDetail ? updateItem('address', tempItem) : this.toggleEdit()
           }
-          colors={company_config.colors}
+          colors={colors}
         />
 
         <CardContainer>
           <Card
+            colors={colors}
             textActionOne={showDetail ? 'SAVE' : ''}
             onPressActionOne={() => updateItem('address', tempItem)}
             textActionTwo={showDetail ? 'CANCEL' : ''}

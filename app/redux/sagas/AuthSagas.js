@@ -529,6 +529,7 @@ function* postAuthFlow() {
                 }
             }
           } else {
+            yield put({ type: POST_AUTH_FLOW_FINISH });
             return;
           }
           break;
@@ -555,7 +556,20 @@ function* appLoad() {
   console.log('appLoad');
   try {
     let count = 11;
-    yield all([
+    const { services } = yield select(getCompanyConfig);
+    if (services.rewards) {
+      count++;
+    }
+    if (services.stellar) {
+      count++;
+    }
+    if (services.bitcoin) {
+      count++;
+    }
+    if (services.ethereum) {
+      count++;
+    }
+    let actions = [
       put({ type: POST_LOADING }),
       put({ type: FETCH_ACCOUNTS_ASYNC.pending }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'profile' }),
@@ -569,24 +583,21 @@ function* appLoad() {
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_bank_account' }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_currency' }),
       put({ type: FETCH_PHONE_CONTACTS_ASYNC.pending }),
-    ]);
-    const { services } = yield select(getCompanyConfig);
-    if (services.rewards) {
-      yield put({ type: FETCH_REWARDS_ASYNC.pending });
-      count++;
-    }
-    if (services.stellar) {
-      yield put({ type: FETCH_CRYPTO_ASYNC.pending, payload: 'stellar' });
-      count++;
-    }
-    if (services.bitcoin) {
-      yield put({ type: FETCH_CRYPTO_ASYNC.pending, payload: 'bitcoin' });
-      count++;
-    }
-    if (services.ethereum) {
-      yield put({ type: FETCH_CRYPTO_ASYNC.pending, payload: 'ethereum' });
-      count++;
-    }
+      services.rewards ? put({ type: FETCH_REWARDS_ASYNC.pending }) : null,
+      services.stellar
+        ? put({ type: FETCH_CRYPTO_ASYNC.pending, payload: 'stellar' })
+        : null,
+      services.bitcoin
+        ? put({ type: FETCH_REWARDS_ASYNC.pending, payload: 'bitcoin' })
+        : null,
+      services.ethereum
+        ? put({ type: FETCH_REWARDS_ASYNC.pending, payload: 'ethereum' })
+        : null,
+    ];
+    // console.log(actions);
+
+    yield all(actions);
+
     // TODO: add timeout and re=fetch any failed api calls
     for (let i = 0; i < count; i++) {
       yield take([
@@ -604,6 +615,13 @@ function* appLoad() {
     yield put({ type: LOGIN_USER_ASYNC.error, payload: error.message });
   }
 }
+// function* handleSucesses() {
+//   try {
+//   } catch (error) {
+//     console.log(error);
+//     yield put({ type: LOGIN_USER_ASYNC.error, payload: error.message });
+//   }
+// }
 
 function* logoutUser() {
   try {

@@ -17,11 +17,12 @@ function* fetchAccounts() {
   try {
     response = yield call(Rehive.getAccounts);
     const accounts = response.results;
-    let wallets;
+    let wallets = [];
     let activeWalletIndex = 0;
     let currencies;
     let account;
     let showAccountLabel = false;
+    // console.log(accounts);
     if (accounts.length > 0) {
       // var wallets = _.flatten(_.flatten(accounts, 'users'));
 
@@ -42,9 +43,6 @@ function* fetchAccounts() {
         account = accounts[i];
         currencies = account.currencies;
         for (var j = 0; j < currencies.length; j++) {
-          if (!wallets) {
-            wallets = [];
-          }
           wallets[index] = {
             index,
             account_reference: account.reference,
@@ -60,9 +58,11 @@ function* fetchAccounts() {
       if (accounts.length > 1) {
         showAccountLabel = true;
       }
-      const activeItem = wallets[activeWalletIndex];
-      wallets[activeWalletIndex] = wallets[0];
-      wallets[0] = activeItem;
+      if (wallets.length > 0) {
+        const activeItem = wallets[activeWalletIndex];
+        wallets[activeWalletIndex] = wallets[0];
+        wallets[0] = activeItem;
+      }
     } else {
       wallets = [];
     }
@@ -84,7 +84,7 @@ function* fetchAccounts() {
 
 function* setActiveCurrency(action) {
   try {
-    console.log(action);
+    // console.log(action);
     yield call(
       Rehive.setActiveCurrency,
       action.payload.account_reference,
