@@ -1360,13 +1360,13 @@
             {
               "id": 0,
               "title": "Privacy Policy",
-              "link": "",
+              "link": "https://www.google.co.za/",
               "description": "Click here to read more on the privacy policy"
             },
             {
               "id": 1,
               "title": "User Agreement",
-              "link": "",
+              "link": "https://www.rehive.com/",
               "description": "Click here to read more on the user agreement"
             }
           ],

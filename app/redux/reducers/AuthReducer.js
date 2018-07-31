@@ -30,6 +30,7 @@ import {
   VERIFY_MFA,
   AUTH_STORE_USER,
   POST_AUTH_FLOW_FINISH,
+  TOGGLE_TERMS,
 } from '../actions/AuthActions';
 import { HIDE_MODAL } from '../actions/UserActions';
 
@@ -63,7 +64,7 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action) => {
-  // console.log('action', action);
+  console.log('action', action);
   switch (action.type) {
     case PERSIST_REHYDRATE:
       return action.payload.auth || INITIAL_STATE;
@@ -114,13 +115,16 @@ export default (state = INITIAL_STATE, action) => {
       };
 
     case UPDATE_AUTH_FORM_STATE:
-      const { mainState, detailState, authError, skip } = action.payload;
+      const { mainState, detailState, authError, skip, terms } = action.payload;
+      console.log(terms);
       return {
         ...state,
         mainState,
         detailState,
         authError,
         skip,
+        terms,
+        termsChecked: false,
         password: '',
         loading: false,
       };
@@ -160,6 +164,13 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         modalType: 'fingerprint',
         modalVisible: true,
+      };
+
+    case TOGGLE_TERMS:
+      return {
+        ...state,
+        termsChecked: !state.termsChecked,
+        authError: '',
       };
 
     case SET_COMPANY:

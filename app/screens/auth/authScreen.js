@@ -4,17 +4,12 @@ import {
   View,
   Image,
   KeyboardAvoidingView,
-  TouchableWithoutFeedback,
-  Keyboard,
   UIManager,
   Platform,
   Text,
   Dimensions,
-  AppState,
-  Linking,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import { Checkbox } from 'react-native-material-ui'
 import { connect } from 'react-redux';
 import {
   authFieldChange,
@@ -30,6 +25,7 @@ import {
   showModal,
   showFingerprintModal,
   verifyMFA,
+  toggleTerms,
 } from '../../redux/actions';
 
 import Colors from './../../config/colors';
@@ -42,6 +38,7 @@ import {
   Slides,
   CodeInput,
   MultiFactorAuthentication,
+  Checkbox,
 } from './../../components/common';
 import { standardizeString } from './../../util/general';
 
@@ -413,6 +410,8 @@ class AuthScreen extends Component {
       country,
       company_config,
       username,
+      terms,
+      termsChecked,
     } = this.props;
 
     const colors = company_config ? company_config.colors : Colors;
@@ -465,6 +464,18 @@ class AuthScreen extends Component {
         value = country;
         placeholder = 'Password';
         break;
+      case 'terms':
+        return (
+          <Checkbox
+            colors={colors}
+            link={terms.link}
+            description={terms.description}
+            title={terms.title}
+            toggleCheck={() => this.props.toggleTerms()}
+            value={termsChecked}
+            error={authError}
+          />
+        );
     }
     return (
       <Input
@@ -640,6 +651,8 @@ const mapStateToProps = ({ auth }) => {
     postLoading,
     code,
     user,
+    terms,
+    termsChecked,
   } = auth;
   return {
     detailState,
@@ -667,6 +680,8 @@ const mapStateToProps = ({ auth }) => {
     postLoading,
     code,
     user,
+    terms,
+    termsChecked,
   };
 };
 
@@ -684,4 +699,5 @@ export default connect(mapStateToProps, {
   showFingerprintModal,
   setPin,
   verifyMFA,
+  toggleTerms,
 })(AuthScreen);

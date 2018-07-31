@@ -143,6 +143,7 @@ function* authFlow() {
   try {
     let token = '';
     let user = {};
+    let terms_and_conditions = false;
     while (true) {
       // permanent loop that waits for a state transition action from the auth screen
       const action = yield take(NEXT_AUTH_FORM_STATE);
@@ -157,6 +158,7 @@ function* authFlow() {
         password,
         company_config,
       } = yield select(getAuth);
+      const terms = company_config.auth.terms;
       // if no state changes are made stay in current state
       let nextMainState = mainState;
       let nextDetailState = detailState;
@@ -251,15 +253,29 @@ function* authFlow() {
             case 'email':
               authError = validateEmail(email);
               if (!authError) {
-                nextDetailState = 'password';
                 user = email;
+                if (terms && terms.length > 0) {
+                  if (yield call(termsFlow)) {
+                    terms_and_conditions = true;
+                    nextDetailState = 'password';
+                  }
+                } else {
+                  nextDetailState = 'password';
+                }
               }
               break;
             case 'mobile':
               authError = validateMobile(mobile);
               if (!authError) {
-                nextDetailState = 'password';
                 user = mobile;
+                if (terms && terms.length > 0) {
+                  if (yield call(termsFlow)) {
+                    terms_and_conditions = true;
+                    nextDetailState = 'password';
+                  }
+                } else {
+                  nextDetailState = 'password';
+                }
               }
               break;
             case 'password':
@@ -270,9 +286,11 @@ function* authFlow() {
                   email,
                   password1: password,
                   password2: password,
+                  terms_and_conditions,
                 };
                 try {
                   yield put({ type: LOADING });
+                  console.log(data);
                   ({ user, token } = yield call(Rehive.register, data));
                   yield call(Rehive.initWithToken, token); // initialises sdk with new token
                   yield put({
@@ -309,6 +327,41 @@ function* authFlow() {
   } catch (error) {
     console.log(error);
   }
+}
+
+function* termsFlow() {
+  console.log('termsFlow');
+  let authError = '';
+  try {
+    const { company_config } = yield select(getAuth);
+    const length = company_config.auth.terms.length;
+    for (let i = 0; i < length; i) {
+      yield put({
+        type: UPDATE_AUTH_FORM_STATE,
+        payload: {
+          mainState: 'register',
+          detailState: 'terms',
+          terms: company_config.auth.terms[i],
+          authError,
+        },
+      });
+      const resp = yield take([NEXT_AUTH_FORM_STATE, UPDATE_AUTH_FORM_STATE]);
+      console.log('resp', resp);
+      if (resp.type === NEXT_AUTH_FORM_STATE) {
+        const { termsChecked } = yield select(getAuth);
+        if (termsChecked) {
+          i++;
+        } else {
+          authError = 'Please accept the ' + company_config.auth.terms[i].title;
+        }
+      } else {
+        return false;
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+  return true;
 }
 
 /* POST AUTH FLOW */
