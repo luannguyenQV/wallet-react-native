@@ -16,11 +16,13 @@
   },
   "main": "main.js",
   "dependencies": {
+    "base32.js": "^0.1.0",
     "big.js": "^5.0.3",
     "buffer": "^5.1.0",
     "expo": "^28.0.0",
     "google-libphonenumber": "^3.1.0",
     "instabug-reactnative": "^2.13.3",
+    "js-crc": "^0.2.0",
     "lodash": "^4.17.10",
     "moment": "^2.20.0",
     "native-base": "^2.7.1",
