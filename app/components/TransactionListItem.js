@@ -53,7 +53,7 @@ class TransactionListItem extends Component {
 
     return (
       <TouchableHighlight
-        underlayColor={Colors.lightGray}
+        underlayColor="lightgrey"
         style={{ flex: 1 }}
         // activeOpacity={0.2}
         onPress={() => onPress(item)}>

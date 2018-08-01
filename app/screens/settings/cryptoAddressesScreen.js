@@ -78,6 +78,7 @@ class CryptoAddressesScreen extends Component {
           colors={company_config.colors}
         />
         <CardList
+          colors={company_config.colors}
           type="crypto_account"
           data={crypto_account}
           tempItem={tempItem}

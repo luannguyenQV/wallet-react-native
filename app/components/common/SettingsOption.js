@@ -16,7 +16,7 @@ class SettingsOption extends Component {
 
     return (
       <TouchableHighlight
-        underlayColor={Colors.lightGray}
+        underlayColor="lightgrey"
         style={viewStyleContainer}
         // activeOpacity={0.2}
         onPress={() => onPress(gotoAddress, label)}>

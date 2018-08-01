@@ -201,7 +201,7 @@ class SendScreen extends Component {
         sendState === 'success' ? (
           <TouchableHighlight
             onPress={() => setSendState('amount')}
-            underlayColor={Colors.lightGray}
+            underlayColor="lightgrey"
             style={buttonStyleOutput}>
             <Output
               label="Amount"
@@ -219,7 +219,7 @@ class SendScreen extends Component {
         sendState === 'success' ? (
           <TouchableHighlight
             onPress={() => setSendState('recipient')}
-            underlayColor={Colors.lightGray}
+            underlayColor="lightgrey"
             style={buttonStyleOutput}>
             <Output label="Recipient" value={sendRecipient} />
           </TouchableHighlight>
@@ -230,7 +230,7 @@ class SendScreen extends Component {
         sendMemo ? (
           <TouchableHighlight
             onPress={() => setSendState('memo')}
-            underlayColor={Colors.lightGray}
+            underlayColor="lightgrey"
             style={buttonStyleOutput}>
             <Output label="Memo" value={sendMemo} />
           </TouchableHighlight>
@@ -238,7 +238,7 @@ class SendScreen extends Component {
         {(sendState === 'confirm' || sendState === 'success') && sendNote ? (
           <TouchableHighlight
             onPress={() => setSendState('note')}
-            underlayColor={Colors.lightGray}
+            underlayColor="lightgrey"
             style={buttonStyleOutput}>
             <Output label="Note" value={sendNote} />
           </TouchableHighlight>
@@ -495,7 +495,10 @@ class SendScreen extends Component {
         />
         <KeyboardAvoidingView
           keyboardShouldPersistTaps={'always'}
-          style={styles.viewStyleContainer}
+          style={[
+            styles.viewStyleContainer,
+            { backgroundColor: company_config.colors.focus },
+          ]}
           behavior={'padding'}>
           {this.state.pinVisible ? (
             <PinModal
@@ -525,8 +528,6 @@ const styles = {
   viewStyleContainer: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: Colors.focus,
-    // paddingTop: 10,
   },
   viewStyleTopContainer: {
     // justifyContent: 'center',

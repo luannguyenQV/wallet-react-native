@@ -57,20 +57,20 @@ class AboutScreen extends Component {
           title="About"
         />
         <View style={styles.details}>
-          <Text style={{ fontSize: 30, color: Colors.black }}>
+          <Text style={{ fontSize: 30, color: 'black' }}>
             {this.state.company.name}
           </Text>
           <View style={styles.description}>
-            <Text style={{ fontSize: 20, color: Colors.black }}>
+            <Text style={{ fontSize: 20, color: 'black' }}>
               {this.state.company.description}
             </Text>
             <Text
-              style={{ fontSize: 20, color: Colors.darkblue }}
+              style={{ fontSize: 20, color: 'darkblue' }}
               onPress={this.openLink}>
               (link)
             </Text>
           </View>
-          <Text style={{ fontSize: 20, color: Colors.black }}>
+          <Text style={{ fontSize: 20, color: 'black' }}>
             Version: {AppConfig.version}
           </Text>
         </View>
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: 'flex-start',
     justifyContent: 'center',
-    backgroundColor: Colors.lightgray,
+    backgroundColor: 'lightgrey',
   },
   logo: {
     padding: 10,

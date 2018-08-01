@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { cardDismiss, cardRestoreAll } from './../redux/actions';
+import { standardizeString } from './../util/general';
 
 // import { AreaChart, Grid } from 'react-native-svg-charts';
 // import * as shape from 'd3-shape';
@@ -61,9 +62,16 @@ class HomeCards extends Component {
     if (!dismissedCards || !dismissedCards.includes('welcome')) {
       cards[i++] = {
         id: 'welcome',
-        title: 'Welcome to PXPay',
+        title:
+          'Welcome to ' +
+          (company_config.company && company_config.company.name
+            ? company_config.company.name
+            : 'Rehive'),
         // description: 'A multi-currency wallet built on the Rehive platform.',
-        image: 'card1',
+        image:
+          company_config.company && company_config.company === 'pxpay_demo'
+            ? 'pxpay'
+            : 'card1',
         dismiss: true,
       };
     }
@@ -72,7 +80,10 @@ class HomeCards extends Component {
       cards[i++] = {
         id: 'verify',
         description: 'Please verify your account',
-        image: 'card2',
+        image:
+          company_config.company && company_config.company === 'pxpay_demo'
+            ? 'pxpay'
+            : 'card2',
         actionLabel: 'GET VERIFIED',
         navigate: 'GetVerified',
       };
@@ -111,12 +122,13 @@ class HomeCards extends Component {
     let imageString = './../../assets/icons/' + item.image + '.png';
     return (
       <Card
+        colors={company_config.colors}
         key={item.id}
         title={item.title}
         renderHeader={this.renderImage(
-          // item.image === 'pxpay' ?
-          require('./../../assets/icons/pxpay1.png'),
-          // : require('./../../assets/icons/card1.png'),
+          item.image === 'pxpay' || company_config.company.id.includes('pxpay')
+            ? require('./../../assets/icons/pxpay1.png')
+            : require('./../../assets/icons/card1.png'),
         )}
         colorTitleBackground={company_config.colors.primary}
         colorTitleText={company_config.colors.primaryContrast}

@@ -75,20 +75,6 @@ export default class Header extends Component {
           paddingTop: Constants.statusBarHeight,
           backgroundColor: colors.primary,
         }}>
-        {/* {noAccounts === true && (
-          <View
-            style={{
-              paddingVertical: 4,
-              paddingHorizontal: 20,
-              backgroundColor: colors.gold,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Text style={{ color: 'white', textAlign: 'center' }}>
-              No accounts added yet.
-            </Text>
-          </View>
-        )} */}
         {creditSwitch === false &&
           debitSwitch === true && (
             <View

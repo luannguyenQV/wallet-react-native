@@ -1,17 +1,19 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, Linking } from 'react-native';
 import Colors from './../../config/colors';
-import Icon from 'react-native-vector-icons/Ionicons';
+import { MaterialIcons } from '@expo/vector-icons';
+import { WebBrowser } from 'expo';
 
 class Checkbox extends Component {
   render() {
     const {
-      onPress,
+      toggleCheck,
       value,
-      label,
+      title,
       link,
-      linkLabel,
-      requiredError,
+      description,
+      error,
+      colors,
     } = this.props;
     const {
       textStyle,
@@ -19,22 +21,36 @@ class Checkbox extends Component {
       viewStyleContainerCheckbox,
       textStyleLink,
       textStyleRequired,
+      viewStyleText,
+      viewStyleCheckbox,
     } = styles;
     return (
-      <View style={viewStyleContainer}>
+      <View
+        style={[
+          viewStyleContainer,
+          { backgroundColor: colors.primaryContrast },
+        ]}>
         <View style={viewStyleContainerCheckbox}>
-          <Icon
-            onPress={onPress} //value ? {this.setState({ value })} : 'square-outline'}
-            name={value ? 'checkbox' : 'square-outline'}
-            size={30}
-            color={value ? Colors.primary : Colors.lightgray}
-          />
-          <Text style={textStyle}>{label}</Text>
-          <TouchableOpacity onPress={() => Linking.openURL({ link })}>
-            <Text style={textStyleLink}>{linkLabel}</Text>
-          </TouchableOpacity>
-          <Text style={textStyleRequired}>{requiredError}</Text>
+          <View style={viewStyleCheckbox}>
+            <MaterialIcons
+              onPress={toggleCheck} //value ? {this.setState({ value })} : 'square-outline'}
+              name={value ? 'check-box' : 'check-box-outline-blank'}
+              size={32}
+              color={value ? colors.primary : 'lightgrey'}
+            />
+          </View>
+          <View style={viewStyleText}>
+            <Text style={textStyle}>{title}</Text>
+            <TouchableOpacity onPress={() => WebBrowser.openBrowserAsync(link)}>
+              <Text style={textStyleLink}>{description}</Text>
+            </TouchableOpacity>
+          </View>
         </View>
+        {error ? (
+          <View>
+            <Text style={textStyleRequired}>{error}</Text>
+          </View>
+        ) : null}
       </View>
     );
   }
@@ -42,29 +58,44 @@ class Checkbox extends Component {
 
 const styles = {
   viewStyleContainer: {
-    flex: 1,
     alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    minHeight: 72,
+    margin: 8,
+    padding: 8,
+    borderRadius: 5,
+    // overflow: 'hidden',
   },
   viewStyleContainerCheckbox: {
+    flex: 1,
     flexDirection: 'row',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    alignItems: 'center',
+    minHeight: 72,
+  },
+  viewStyleCheckbox: {
+    margin: 4,
+    marginVertical: 12,
+  },
+  viewStyleText: {
+    flexDirection: 'column',
+    paddingLeft: 8,
+    paddingRight: 16,
+    flexWrap: 'wrap',
   },
   textStyle: {
-    color: Colors.black,
-    paddingLeft: 8,
-    paddingRight: 4,
+    color: 'black',
     fontSize: 16,
+    paddingBottom: 2,
   },
   textStyleLink: {
-    color: Colors.lightblue,
-    fontSize: 16,
+    color: 'lightblue',
+    fontSize: 12,
+    // flex: 1,
+    marginRight: 16,
   },
   textStyleRequired: {
-    color: Colors.red,
+    color: 'red',
     paddingRight: 5,
-    flexWrap: 'wrap',
+    // minHeight: 72,
   },
 };
 

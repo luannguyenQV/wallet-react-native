@@ -158,7 +158,7 @@ class Input extends Component {
                 {
                   borderColor: inputError
                     ? colors.error
-                    : focused ? colors.focus : colors.lightGray,
+                    : focused ? colors.focus : 'lightgrey',
                   borderBottomWidth: inputError || focused ? 2 : 2,
                   width: '100%',
                 },

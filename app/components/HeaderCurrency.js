@@ -62,7 +62,7 @@ class HeaderCurrency extends Component {
             <HeaderButton
               icon="close"
               onPress={closeWallet}
-              color={Colors.lightGray}
+              color="lightgrey"
             />
           </View>
         ) : null}
@@ -117,13 +117,13 @@ const styles = {
     alignItems: 'center',
   },
   textStyleCode: {
-    color: Colors.onPrimary,
+    color: Colors.primaryContrast,
     fontSize: 20,
     fontWeight: 'bold',
     paddingBottom: 0,
   },
   textStyleAccount: {
-    color: Colors.onPrimary,
+    color: Colors.primaryContrast,
     fontSize: 16,
     // fontWeight: 'bold',
     paddingBottom: 8,

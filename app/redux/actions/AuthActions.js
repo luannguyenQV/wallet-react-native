@@ -96,6 +96,9 @@ export const previousAuthFormState = props => {
         case 'email':
           nextMainState = 'landing';
           break;
+        case 'terms':
+          nextDetailState = 'email';
+          break;
         case 'password':
           nextDetailState = 'email';
           break;
@@ -284,5 +287,12 @@ export const nextStateMFA = nextState => {
   return {
     type: NEXT_STATE_MFA,
     payload: nextState,
+  };
+};
+
+export const TOGGLE_TERMS = 'toggle_terms';
+export const toggleTerms = () => {
+  return {
+    type: TOGGLE_TERMS,
   };
 };

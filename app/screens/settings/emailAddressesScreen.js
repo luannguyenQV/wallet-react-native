@@ -75,6 +75,7 @@ class EmailAddressesScreen extends Component {
           colors={company_config.colors}
         />
         <CardList
+          colors={company_config.colors}
           type="email"
           data={email}
           tempItem={tempItem}

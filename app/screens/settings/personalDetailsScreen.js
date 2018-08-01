@@ -115,6 +115,7 @@ class PersonalDetailsScreen extends Component {
         />
         <CardContainer>
           <Card
+            colors={colors}
             textActionOne={showDetail ? 'SAVE' : ''}
             onPressActionOne={() => updateItem('profile', tempItem)}
             textActionTwo={showDetail ? 'CANCEL' : ''}
@@ -216,7 +217,7 @@ const styles = {
     flex: 4,
     fontSize: 14,
     borderRightColor: 'lightgray',
-    color: Colors.black,
+    color: 'black',
   },
   submit: {
     marginTop: 10,
@@ -260,7 +261,7 @@ const styles = {
     borderWidth: 1,
     borderRadius: 10,
     backgroundColor: 'white',
-    borderColor: Colors.black,
+    borderColor: 'black',
     alignItems: 'center',
     justifyContent: 'center',
   },

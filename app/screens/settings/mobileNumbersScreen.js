@@ -76,6 +76,7 @@ class MobileNumbersScreen extends Component {
           colors={company_config.colors}
         />
         <CardList
+          colors={company_config.colors}
           type="mobile"
           data={mobile}
           tempItem={tempItem}

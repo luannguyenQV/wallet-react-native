@@ -30,6 +30,7 @@ import {
   VERIFY_MFA,
   AUTH_STORE_USER,
   POST_AUTH_FLOW_FINISH,
+  TOGGLE_TERMS,
 } from '../actions/AuthActions';
 import { HIDE_MODAL } from '../actions/UserActions';
 
@@ -114,13 +115,16 @@ export default (state = INITIAL_STATE, action) => {
       };
 
     case UPDATE_AUTH_FORM_STATE:
-      const { mainState, detailState, authError, skip } = action.payload;
+      const { mainState, detailState, authError, skip, terms } = action.payload;
+      console.log(terms);
       return {
         ...state,
         mainState,
         detailState,
         authError,
         skip,
+        terms,
+        termsChecked: false,
         password: '',
         loading: false,
       };
@@ -162,11 +166,18 @@ export default (state = INITIAL_STATE, action) => {
         modalVisible: true,
       };
 
+    case TOGGLE_TERMS:
+      return {
+        ...state,
+        termsChecked: !state.termsChecked,
+        authError: '',
+      };
+
     case SET_COMPANY:
       return {
         ...state,
-        company: action.payload.tempCompany,
-        company_config: action.payload.temp_config,
+        company: action.payload.company,
+        company_config: action.payload.company_config,
       };
 
     case RESET_PASSWORD_ASYNC.pending:

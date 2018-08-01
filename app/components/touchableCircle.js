@@ -1,16 +1,9 @@
 import React, { Component } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableHighlight,
-  Image,
-} from 'react-native';
-import Colors from './../config/colors';
+import { Text, TouchableHighlight } from 'react-native';
 
 class TouchableCircle extends Component {
   render() {
-    const { text, active, onPress, radius } = this.props;
+    const { text, active, onPress, radius, colors } = this.props;
     const { circle, textStyle } = styles;
     return (
       <TouchableHighlight
@@ -21,7 +14,7 @@ class TouchableCircle extends Component {
             height: radius * 2,
             width: radius * 2,
             borderRadius: radius,
-            backgroundColor: active ? Colors.focus : Colors.lightGray,
+            backgroundColor: active ? colors.focus : 'lightgrey',
           },
         ]}>
         <Text

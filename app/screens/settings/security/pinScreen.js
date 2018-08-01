@@ -291,7 +291,7 @@ const styles = {
   },
   buttonStyle: {
     flex: 1,
-    backgroundColor: Colors.lightgray,
+    backgroundColor: 'lightgrey',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 16,
@@ -299,7 +299,7 @@ const styles = {
   commentText: {
     fontSize: 16,
     textAlign: 'center',
-    color: Colors.black,
+    color: 'black',
   },
   pinInfo: {
     flex: 2,

@@ -7,13 +7,12 @@ import {
   viewReward,
   hideReward,
 } from './../../redux/actions';
-import { Container, Content, Tab, Tabs } from 'native-base';
+// import { Container, Content, Tab, Tabs } from 'native-base';
 import { getRewards } from './../../redux/reducers/RewardsReducer';
 
 import Header from './../../components/header';
 // import Wallet from './../../components/wallet';
 import { Output, PopUpGeneral } from '../../components/common';
-import { standardizeString, performDivisibility } from './../../util/general';
 import CardList from './../../components/CardList';
 
 class RewardsScreen extends Component {
@@ -92,6 +91,7 @@ class RewardsScreen extends Component {
               heading="Rewards"
               activeTextStyle={{ color: company_config.colors.focus }}> */}
         <CardList
+          colors={company_config.colors}
           type="rewards"
           navigation={this.props.navigation}
           data={rewards.data}

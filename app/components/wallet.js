@@ -31,7 +31,7 @@ class Wallet extends Component {
   };
 
   render() {
-    const { wallet, showDetails } = this.props;
+    const { wallet, showDetails, colors } = this.props;
     const {
       textStyleLabel,
       textStyleBalance,
@@ -54,6 +54,7 @@ class Wallet extends Component {
       ).toFixed(wallet.currency.currency.divisibility);
     return (
       <Card
+        colors={colors}
         onPressTitle={showDetails}
         title={wallet.currency.currency.description}
         subtitle={wallet.account_name}
@@ -103,8 +104,10 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({}) => {
-  return {};
+const mapStateToProps = ({ auth }) => {
+  return {
+    colors: auth.company_config.colors,
+  };
 };
 
 export default connect(mapStateToProps, {

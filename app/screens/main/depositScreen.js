@@ -110,10 +110,11 @@ class DepositScreen extends Component {
               Clipboard.setString(tempWallet.account_reference);
               Alert.alert(null, 'Copied');
             }}>
-            <Icon name="content-copy" size={24} color={Colors.black} />
+            <Icon name="content-copy" size={24} color={'black'} />
           </TouchableHighlight>
         </View>
         <CardList
+          colors={company_config.colors}
           type="company_bank_account"
           data={company_bank_account}
           loadingData={loading_company_bank_account}
@@ -135,7 +136,7 @@ const styles = {
   },
   containerStyleComment: {
     // flex: 2,
-    backgroundColor: Colors.lightgray,
+    backgroundColor: 'lightgrey',
     alignItems: 'center',
     justifyContent: 'center',
     // paddingHorizontal: 16,
@@ -144,10 +145,10 @@ const styles = {
   textStyleComment: {
     fontSize: 16,
     textAlign: 'center',
-    color: Colors.black,
+    color: 'black',
   },
   containerStyleReference: {
-    backgroundColor: Colors.green,
+    backgroundColor: 'green',
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',

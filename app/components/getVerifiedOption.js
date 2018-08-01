@@ -11,17 +11,17 @@ class GetVerifiedOption extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     let color;
     if (this.props.status === 'PENDING') {
-      color = Colors.black;
+      color = 'black';
     } else if (this.props.status === 'VERIFIED') {
-      color = Colors.green;
+      color = Colors.positive;
     } else if (
       this.props.status === 'INCOMPLETE' ||
       this.props.status === 'DENIED'
     ) {
-      color = Colors.red;
+      color = Colors.negative;
     }
 
     this.setState({

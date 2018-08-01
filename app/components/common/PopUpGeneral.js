@@ -104,12 +104,7 @@ const PopUpGeneral = props => {
                       <HeaderButton
                         icon={iconTitleRight}
                         onPress={onPressTitleRight}
-                        color={
-                          Colors.lightGray
-                          // titleStyle
-                          //   ? Colors[titleStyle + 'Contrast']
-                          //   : Colors.primaryContrast
-                        }
+                        color="lightgrey"
                       />
                     </View>
                   ) : null}
@@ -134,7 +129,7 @@ const PopUpGeneral = props => {
                       {textActionTwo ? (
                         <TouchableHighlight
                           onPress={onPressActionTwo}
-                          underlayColor={Colors.lightGray}
+                          underlayColor="lightgrey"
                           style={buttonStyleAction}>
                           <Text style={textStyleAction}>{textActionTwo}</Text>
                         </TouchableHighlight>
@@ -142,7 +137,7 @@ const PopUpGeneral = props => {
                       {textActionOne ? (
                         <TouchableHighlight
                           onPress={onPressActionOne}
-                          underlayColor={Colors.lightGray}
+                          underlayColor="lightgrey"
                           style={buttonStyleAction}>
                           <Text style={textStyleAction}>{textActionOne}</Text>
                         </TouchableHighlight>
