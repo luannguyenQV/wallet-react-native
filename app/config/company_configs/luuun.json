@@ -81,30 +81,38 @@
     "positive": "#4CAF50",
     "negative": "#f44336"
   },
-  "cards": [
-    {
-      "id": "0",
-      "title": "Card 1",
-      "description": "This is your custom text for card 1",
-      "image": "card1",
-      "dismiss": true
-    },
-    {
-      "id": "1",
-      "title": "Card 2",
-      "description": "This is your custom text for card 2",
-      "image": "card2",
-      "dismiss": false
-    },
-    {
-      "id": "2",
-      "title": "Card 3",
-      "description": "This is your custom text for card 3",
-      "image": "card3",
-      "dismiss": true,
-      "actionLabel": "CUSTOM DISMISS"
+  "cards": {
+    "home": {
+      "general": {
+        "welcome": true,
+        "verify": true
+      },
+      "custom": [
+        {
+          "id": "0",
+          "title": "Card 1",
+          "description": "This is your custom text for card 1",
+          "image": "card1",
+          "dismiss": true
+        },
+        {
+          "id": "1",
+          "title": "Card 2",
+          "description": "This is your custom text for card 2",
+          "image": "card2",
+          "dismiss": false
+        },
+        {
+          "id": "2",
+          "title": "Card 3",
+          "description": "This is your custom text for card 3",
+          "image": "card3",
+          "dismiss": true,
+          "actionLabel": "CUSTOM DISMISS"
+        }
+      ]
     }
-  ],
+  },
   "sliders": {
     "landing": [
       {
