@@ -10,30 +10,30 @@ class WalletAction extends Component {
     let source = '';
     let label = '';
 
-    // switch (type) {
-    //   case 'send':
-    //     label = 'Send';
-    //     source = require('./../../assets/icons/send.png');
-    //     break;
-    //   case 'receive':
-    //     source = require('./../../assets/icons/receive.png');
-    //     label = 'Receive';
-    //     break;
-    //   case 'deposit':
-    //     source = require('./../../assets/icons/deposit.png');
-    //     label = 'Deposit';
-    //     break;
-    //   case 'withdraw':
-    //     source = require('./../../assets/icons/withdraw.png');
-    //     label = 'Withdraw';
-    //     break;
-    //   case 'more':
-    //     source = require('./../../assets/icons/more.png');
-    //     label = 'More';
-    //     break;
-    //   default:
-    //     label = 'unknown';
-    // }
+    switch (type) {
+      case 'send':
+        label = 'Send';
+        // source = require('./../../assets/icons/send.png');
+        break;
+      case 'receive':
+        // source = require('./../../assets/icons/receive.png');
+        label = 'Receive';
+        break;
+      case 'deposit':
+        // source = require('./../../assets/icons/deposit.png');
+        label = 'Deposit';
+        break;
+      case 'withdraw':
+        // source = require('./../../assets/icons/withdraw.png');
+        label = 'Withdraw';
+        break;
+      case 'more':
+        // source = require('./../../assets/icons/more.png');
+        label = 'More';
+        break;
+      default:
+        label = 'unknown';
+    }
     return (
       <View style={viewStyleContainer}>
         <CustomIcon name={type} size={48} color={color} />

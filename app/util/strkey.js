@@ -36,7 +36,7 @@ Object.defineProperty(exports, '__esModule', {
 
 var base32 = _interopRequire(require('base32.js'));
 
-var crc = _interopRequire(require('crc'));
+var crc = _interopRequire(require('js-crc'));
 
 var isUndefined = _interopRequire(require('lodash/isUndefined'));
 

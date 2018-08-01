@@ -217,7 +217,7 @@ const styles = {
   },
   viewStyleFooter: {
     flexDirection: 'row',
-    // height: 52,
+    height: 52,
     width: '100%',
     alignItems: 'center',
   },
@@ -225,7 +225,7 @@ const styles = {
     flexDirection: 'row',
     justifyContent: 'flex-end',
     width: '100%',
-    height: 52,
+    // height: 52,
     padding: 8,
   },
   textStyleAction: {
