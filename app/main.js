@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import { Image } from 'react-native';
 import { connect } from 'react-redux';
-import { AppLoading, Asset, Font } from 'expo';
+import { AppLoading, Asset } from 'expo';
 import { init } from './redux/actions';
 import { Root } from 'native-base';
 
@@ -34,6 +35,7 @@ class Main extends Component {
   };
 
   componentDidMount() {
+    // SplashScreen.preventAutoHide();
     this.props.init();
     this.setState({ initStarted: true });
   }
@@ -48,14 +50,14 @@ class Main extends Component {
     // const fontAssets = cacheFonts([FontAwesome.font]);
 
     await Promise.all([...imageAssets]); //, ...fontAssets
+    // this.setState({ isReady: true });
   }
 
   render() {
     console.disableYellowBox = true;
     const { isReady, initStarted } = this.state;
-    const { appLoading } = this.props;
 
-    if (isReady && initStarted && !appLoading) {
+    if (isReady && initStarted) {
       return (
         <Root>
           <MainNavigator
@@ -66,20 +68,32 @@ class Main extends Component {
         </Root>
       );
     } else {
+      // return (
+      //   <View style={{ flex: 1, justifyContent: 'center' }}>
+      //     <Image
+      //       source={require('./../assets/icons/icon.png')}
+      //       onLoad={this._loadAssetsAsync}
+      //       style={{
+      //         width: SCREEN_WIDTH,
+      //         height: SCREEN_WIDTH,
+      //       }}
+      //     />
+      //   </View>
+      // );
       return (
         <AppLoading
           startAsync={this._loadAssetsAsync}
           onFinish={() => this.setState({ isReady: true })}
           onError={console.warn}
+          autoHideSplash={false}
         />
       );
     }
   }
 }
 
-const mapStateToProps = ({ auth }) => {
-  const { appLoading } = auth;
-  return { appLoading };
+const mapStateToProps = () => {
+  return {};
 };
 
 export default connect(mapStateToProps, { init })(Main);

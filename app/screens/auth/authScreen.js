@@ -563,7 +563,7 @@ class AuthScreen extends Component {
         // keyboardVerticalOffset={10}
       >
         {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}> */}
-        {loading || postLoading ? (
+        {loading || postLoading || appLoading ? (
           <Spinner size="large" />
         ) : (
           this.renderMainContainer()

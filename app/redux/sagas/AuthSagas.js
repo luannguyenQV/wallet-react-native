@@ -94,6 +94,7 @@ function* init() {
           if (token) {
             // yield call(Rehive.verifyToken, token);
             yield call(Rehive.initWithToken, token);
+            yield call(Rehive.getProfile);
             if (company_config.pin.appLoad) {
               const { pin, fingerprint } = yield select(getAuth);
               if (pin || fingerprint) {
