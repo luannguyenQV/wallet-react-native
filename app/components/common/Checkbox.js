@@ -82,18 +82,18 @@ const styles = {
     flexWrap: 'wrap',
   },
   textStyle: {
-    color: Colors.black,
+    color: 'black',
     fontSize: 16,
     paddingBottom: 2,
   },
   textStyleLink: {
-    color: Colors.lightblue,
+    color: 'lightblue',
     fontSize: 12,
     // flex: 1,
     marginRight: 16,
   },
   textStyleRequired: {
-    color: Colors.red,
+    color: 'red',
     paddingRight: 5,
     // minHeight: 72,
   },

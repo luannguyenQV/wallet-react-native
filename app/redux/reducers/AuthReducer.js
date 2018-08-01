@@ -176,8 +176,8 @@ export default (state = INITIAL_STATE, action) => {
     case SET_COMPANY:
       return {
         ...state,
-        company: action.payload.tempCompany,
-        company_config: action.payload.temp_config,
+        company: action.payload.company,
+        company_config: action.payload.company_config,
       };
 
     case RESET_PASSWORD_ASYNC.pending:

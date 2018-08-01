@@ -158,7 +158,7 @@ class WithdrawScreen extends Component {
         {withdrawState === ('note' || 'account' || 'confirm' || 'success') ? (
           <TouchableHighlight
             onPress={() => setWithdrawState('amount')}
-            underlayColor={Colors.lightGray}
+            underlayColor="lightgrey"
             style={buttonStyleOutput}>
             <Output
               label="Amount"
@@ -173,7 +173,7 @@ class WithdrawScreen extends Component {
         {withdrawState === ('note' || 'confirm' || 'success') ? (
           <TouchableHighlight
             onPress={() => setWithdrawState('account')}
-            underlayColor={Colors.lightGray}
+            underlayColor="lightgrey"
             style={buttonStyleOutput}>
             <Output label="Account" value={withdrawBankAccount.name} />
           </TouchableHighlight>
@@ -181,7 +181,7 @@ class WithdrawScreen extends Component {
         {withdrawState === ('confirm' || 'success') && withdrawNote ? (
           <TouchableHighlight
             onPress={() => setWithdrawState('note')}
-            underlayColor={Colors.lightGray}
+            underlayColor="lightgrey"
             style={buttonStyleOutput}>
             <Output label="Note" value={withdrawNote} />
           </TouchableHighlight>

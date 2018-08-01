@@ -64,8 +64,8 @@ class HomeCards extends Component {
         id: 'welcome',
         title:
           'Welcome to ' +
-          (company_config.company
-            ? standardizeString(company_config.company)
+          (company_config.company && company_config.company.name
+            ? company_config.company.name
             : 'Rehive'),
         // description: 'A multi-currency wallet built on the Rehive platform.',
         image:
@@ -126,7 +126,7 @@ class HomeCards extends Component {
         key={item.id}
         title={item.title}
         renderHeader={this.renderImage(
-          item.image === 'pxpay'
+          item.image === 'pxpay' || company_config.company.id.includes('pxpay')
             ? require('./../../assets/icons/pxpay1.png')
             : require('./../../assets/icons/card1.png'),
         )}

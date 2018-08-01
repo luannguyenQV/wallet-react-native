@@ -63,7 +63,7 @@ import {
   validateMobile,
   validatePassword,
 } from '../../util/validation';
-import default_config from './../../config/default_company_config';
+import client from './../../config/client';
 import {
   getToken,
   getCompany,
@@ -80,9 +80,15 @@ function* init() {
   try {
     Rehive.initWithoutToken();
     try {
-      const company = yield select(getCompany);
+      const company = client.company
+        ? client.company
+        : yield select(getCompany);
       if (company) {
         company_config = yield call(Rehive.getCompanyConfig, company);
+        yield put({
+          type: SET_COMPANY,
+          payload: { company, company_config },
+        });
         try {
           const token = yield select(getToken);
           if (token) {
@@ -180,12 +186,14 @@ function* authFlow() {
               authError = 'Please enter a valid company ID';
             } else {
               // fetches company config for company, if none exists use default
-              temp_config = yield call(Rehive.getCompanyConfig, tempCompany);
-              temp_config = temp_config ? temp_config : default_config;
+              const temp_config = yield call(
+                Rehive.getCompanyConfig,
+                tempCompany,
+              );
               // stores company ID and config in redux state
               yield put({
                 type: SET_COMPANY,
-                payload: { tempCompany, temp_config },
+                payload: { company: tempCompany, company_config: temp_config },
               });
               // sets next state to landing
               nextMainState = 'landing';

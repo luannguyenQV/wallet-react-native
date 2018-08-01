@@ -41,6 +41,7 @@ import {
   Checkbox,
 } from './../../components/common';
 import { standardizeString } from './../../util/general';
+import client from './../../config/client';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -83,6 +84,9 @@ class AuthScreen extends Component {
         break;
       case 'landing':
         textFooterRight = '';
+        if (client.company) {
+          iconHeaderLeft = '';
+        }
         break;
       case 'forgot':
         textFooterRight = 'Send';
@@ -168,7 +172,7 @@ class AuthScreen extends Component {
                 <Slides data={slides} height={200} width={SCREEN_WIDTH} />
               ) : (
                 <Image
-                  source={require('./../../../assets/icons/Rehive_icon_white.png')}
+                  source={require('./../../../assets/icons/icon.png')}
                   resizeMode="contain"
                   style={image}
                 />

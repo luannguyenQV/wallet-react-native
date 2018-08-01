@@ -108,21 +108,13 @@ const styles = {
   viewStyleHeader: {
     justifyContent: 'space-between',
     flexDirection: 'row',
-    // height: 64,
-    // paddingTop: 32,
-    // padding: 12,
     zIndex: 0,
     alignItems: 'center',
   },
   viewStyleContent: {
     flex: 1,
-    // paddingHorizontal: 16,
-    // paddingBottom: 12,
-    // backgroundColor: Colors.onPrimary,
     flexDirection: 'column',
     zIndex: 1,
-    // alignItems: 'center',
-    // justifyContent: 'center',
   },
   viewStyleFooter: {
     justifyContent: 'space-between',

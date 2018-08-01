@@ -1,5 +1,5 @@
 import Rehive from 'rehive';
-import * as companyConfig from './../config/company_configs.json';
+import company_configs from './../config/company_configs';
 import defaultCompanyConfig from './../config/default_company_config.json';
 
 const stellar_service_url = 'https://stellar.services.rehive.io/api/1';
@@ -179,9 +179,8 @@ export const getCompanyCurrencies = () => r.company.currencies.get();
 export const getCompanyBankAccounts = () => r.company.bankAccounts.get();
 
 export const getCompanyConfig = company => {
-  let configs = companyConfig.data.filter(item => item.company === company);
-  if (configs.length > 0) {
-    return configs[0].config;
+  if (company_configs[company]) {
+    return company_configs[company];
   }
   return defaultCompanyConfig;
 };

@@ -133,7 +133,7 @@ const styles = {
   text: {
     fontSize: 16,
     textAlign: 'center',
-    color: Colors.black,
+    color: 'black',
     paddingHorizontal: 8,
   },
 };

@@ -169,7 +169,7 @@ class WalletsScreen extends Component {
           onPressContent={item => viewWallet(item)}
           emptyListMessage="No wallets added yet"
           titleStyle="secondary"
-          keyExtractor={item => item.index + item.currency.currency.code}
+          keyExtractor={item => item.index.toString()}
           textActionOne="SEND"
           onPressActionOne={item => this.send(item)}
           textActionTwo="RECEIVE"

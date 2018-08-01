@@ -78,11 +78,11 @@ const styles = {
   },
   textStyleTitle: {
     fontSize: 18,
-    color: Colors.black,
+    color: 'black',
   },
   textStyleSubtitle: {
     fontSize: 12,
-    color: Colors.black,
+    color: 'black',
   },
 };
 

@@ -254,16 +254,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   contentStyle: {
-    // flex: 1,
     padding: 16,
   },
   textStyle: {
-    // flex: 1,
     fontSize: 16,
     textAlign: 'center',
-    // backgroundColor: Colors.lightgray,
-    // alignItems: 'center',
-    // justifyContent: 'center',
     paddingBottom: 16,
   },
 });

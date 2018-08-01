@@ -140,7 +140,7 @@ const Card = props => {
               {textActionTwo ? (
                 <TouchableHighlight
                   disabled={disableActionTwo}
-                  underlayColor={colors.lightGray}
+                  underlayColor="lightgrey"
                   style={buttonStyleAction}
                   onPress={onPressActionTwo}>
                   <Text style={textStyleAction}>{textActionTwo}</Text>
@@ -149,7 +149,7 @@ const Card = props => {
               {textActionOne ? (
                 <TouchableHighlight
                   disabled={disableActionOne}
-                  underlayColor={colors.lightGray}
+                  underlayColor="lightgrey"
                   style={buttonStyleAction}
                   onPress={onPressActionOne}>
                   <Text style={textStyleAction}>{textActionOne}</Text>

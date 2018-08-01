@@ -1,8 +1,8 @@
 {
   "company": {
-    "id": "default",
-    "name": "Default",
-    "description": ""
+    "id": "test_company_1",
+    "name": "Test Company 1",
+    "description": "A demo company on the Rehive platform"
   },
   "services": {
     "bitcoin": false,
@@ -55,6 +55,15 @@
       }
     ]
   },
+  "verification": {
+    "requirePersonal": true,
+    "requireAddress": false,
+    "requireMobile": true,
+    "requireEmail": true,
+    "requireDocumentID": true,
+    "requireDocumentAddress": true,
+    "requireDocumentAdvID": true
+  },
   "colors": {
     "primary": "#4d4d4d",
     "secondary": "#a6a6a6",
@@ -71,15 +80,6 @@
     "success": "#4CAF50",
     "positive": "#4CAF50",
     "negative": "#f44336"
-  },
-  "verification": {
-    "requirePersonal": true,
-    "requireAddress": false,
-    "requireMobile": true,
-    "requireEmail": true,
-    "requireDocumentID": true,
-    "requireDocumentAddress": true,
-    "requireDocumentAdvID": true
   },
   "cards": [
     {

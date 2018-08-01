@@ -36,7 +36,7 @@ const styles = {
     borderBottomWidth: 2,
     marginBottom: 4,
     paddingBottom: 4,
-    borderColor: Colors.lightGray,
+    borderColor: 'lightgrey',
   },
   viewStyleChildren: {
     flexDirection: 'column',
@@ -47,7 +47,6 @@ const styles = {
     color: 'black',
     paddingLeft: 8,
     opacity: 0.86,
-    // color: Colors.lightGray,
   },
 };
 
