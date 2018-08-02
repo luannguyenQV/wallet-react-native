@@ -100,6 +100,18 @@
         "title": "Slide 1",
         "description": "This is your custom text for slide 1",
         "image": "card1"
+      },
+      {
+        "id": 1,
+        "title": "Slide 2",
+        "description": "This is your custom text for slide 2",
+        "image": "card1"
+      },
+      {
+        "id": 2,
+        "title": "Slide 3",
+        "description": "This is your custom text for slide 3",
+        "image": "card1"
       }
     ]
   },

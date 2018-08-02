@@ -97,7 +97,7 @@ export const previousAuthFormState = props => {
           nextMainState = 'landing';
           break;
         case 'terms':
-          nextDetailState = 'email';
+          nextDetailState = 'password';
           break;
         case 'password':
           nextDetailState = 'email';

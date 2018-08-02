@@ -262,59 +262,45 @@ function* authFlow() {
               authError = validateEmail(email);
               if (!authError) {
                 user = email;
-                const terms = company_config.auth.terms;
-                if (terms && terms.length > 0) {
-                  if (yield call(termsFlow)) {
-                    terms_and_conditions = true;
-                    nextDetailState = 'password';
-                  }
-                } else {
-                  nextDetailState = 'password';
-                }
+                nextDetailState = 'password';
               }
               break;
             case 'mobile':
               authError = validateMobile(mobile);
               if (!authError) {
                 user = mobile;
-                if (terms && terms.length > 0) {
-                  if (yield call(termsFlow)) {
-                    terms_and_conditions = true;
-                    nextDetailState = 'password';
-                  }
-                } else {
-                  nextDetailState = 'password';
-                }
+                nextDetailState = 'password';
               }
               break;
             case 'password':
               authError = validatePassword(password);
               if (!authError) {
-                data = {
-                  company,
-                  email,
-                  password1: password,
-                  password2: password,
-                  terms_and_conditions,
-                };
-                try {
-                  yield put({ type: LOADING });
-                  ({ user, token } = yield call(Rehive.register, data));
-                  yield call(Rehive.initWithToken, token); // initialises sdk with new token
-                  yield put({
-                    type: LOGIN_USER_ASYNC.success,
-                    payload: user,
-                  });
-                  yield take(POST_AUTH_FLOW_FINISH);
-                  // waits for postAuthFlow to complete, when complete stores token and exists auth flow
-                  yield put({
-                    type: AUTH_COMPLETE,
-                    payload: { user, token },
-                  });
-                  return;
-                } catch (error) {
-                  authError = error.message;
-                  nextDetailState = company_config.auth.identifier;
+                const terms = company_config.auth.terms;
+                if (terms && terms.length > 0) {
+                  if (yield call(termsFlow)) {
+                    terms_and_conditions = true;
+                    data = {
+                      company,
+                      email,
+                      password1: password,
+                      password2: password,
+                      terms_and_conditions,
+                    };
+                    ({ authError, nextDetailState } = registerFlow(data));
+                  } else {
+                    ({ nextMainState, nextDetailState } = yield select(
+                      getAuth,
+                    ));
+                  }
+                } else {
+                  data = {
+                    company,
+                    email,
+                    password1: password,
+                    password2: password,
+                    terms_and_conditions,
+                  };
+                  ({ authError, nextDetailState } = registerFlow(data));
                 }
               }
               break;
@@ -370,6 +356,28 @@ function* termsFlow() {
     console.log(error);
   }
   return true;
+}
+
+function* registerFlow() {
+  try {
+    yield put({ type: LOADING });
+    ({ user, token } = yield call(Rehive.register, data));
+    yield call(Rehive.initWithToken, token); // initialises sdk with new token
+    yield put({
+      type: LOGIN_USER_ASYNC.success,
+      payload: user,
+    });
+    yield take(POST_AUTH_FLOW_FINISH);
+    // waits for postAuthFlow to complete, when complete stores token and exists auth flow
+    yield put({
+      type: AUTH_COMPLETE,
+      payload: { user, token },
+    });
+    return;
+  } catch (error) {
+    authError = error.message;
+    nextDetailState = company_config.auth.identifier;
+  }
 }
 
 /* POST AUTH FLOW */

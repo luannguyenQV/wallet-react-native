@@ -8,7 +8,7 @@
     "bitcoin": true,
     "stellar": true,
     "ethereum": true,
-    "rewards": false
+    "rewards": true
   },
   "auth": {
     "identifier": "email",
@@ -111,7 +111,19 @@
         "id": 0,
         "title": "Slide 1",
         "description": "This is your custom text for slide 1",
-        "image": "card1"
+        "image": "plue"
+      },
+      {
+        "id": 1,
+        "title": "Slide 2",
+        "description": "This is your custom text for slide 2",
+        "image": "plue"
+      },
+      {
+        "id": 2,
+        "title": "Slide 3",
+        "description": "This is your custom text for slide 3",
+        "image": "plue"
       }
     ]
   },
