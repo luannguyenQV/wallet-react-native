@@ -11,6 +11,7 @@ import rewards01 from './test_company_1.json';
 import cryptos01 from './cryptos01.json';
 import tokens01 from './tokens01.json';
 import plue_demo from './plue_demo.json';
+import bcx_token from './bcx_token.json';
 
 export default {
   luuun,
@@ -26,4 +27,5 @@ export default {
   cryptos01,
   tokens01,
   plue_demo,
+  bcx_token,
 };

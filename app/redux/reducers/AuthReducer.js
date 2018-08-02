@@ -124,7 +124,7 @@ export default (state = INITIAL_STATE, action) => {
         skip,
         terms,
         termsChecked: false,
-        password: '',
+        password: detailState === 'terms' ? state.password : '',
         loading: false,
       };
 

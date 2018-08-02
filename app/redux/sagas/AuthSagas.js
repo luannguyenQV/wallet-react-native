@@ -151,6 +151,7 @@ function* authFlow() {
     let token = '';
     let user = {};
     let terms_and_conditions = false;
+    let data = {};
     while (true) {
       // permanent loop that waits for a state transition action from the auth screen
       const action = yield take(NEXT_AUTH_FORM_STATE);
@@ -286,11 +287,14 @@ function* authFlow() {
                       password2: password,
                       terms_and_conditions,
                     };
-                    ({ authError, nextDetailState } = registerFlow(data));
-                  } else {
-                    ({ nextMainState, nextDetailState } = yield select(
-                      getAuth,
+                    ({ authError, nextDetailState } = yield call(
+                      registerFlow,
+                      data,
                     ));
+                  } else {
+                    const tempAuth = yield select(getAuth);
+                    nextMainState = tempAuth.mainState;
+                    nextDetailState = tempAuth.detailState;
                   }
                 } else {
                   data = {
@@ -300,7 +304,10 @@ function* authFlow() {
                     password2: password,
                     terms_and_conditions,
                   };
-                  ({ authError, nextDetailState } = registerFlow(data));
+                  ({ authError, nextDetailState } = yield call(
+                    registerFlow,
+                    data,
+                  ));
                 }
               }
               break;
@@ -358,7 +365,12 @@ function* termsFlow() {
   return true;
 }
 
-function* registerFlow() {
+function* registerFlow(data) {
+  console.log('registerFlow');
+  let authError = '';
+  let nextDetailState = '';
+  let user = {};
+  let token = '';
   try {
     yield put({ type: LOADING });
     ({ user, token } = yield call(Rehive.register, data));
@@ -373,11 +385,14 @@ function* registerFlow() {
       type: AUTH_COMPLETE,
       payload: { user, token },
     });
-    return;
+    // return { success: true };
   } catch (error) {
+    console.log('registerFlow', error);
+    const { company_config } = yield select(getAuth);
     authError = error.message;
     nextDetailState = company_config.auth.identifier;
   }
+  return { authError, nextDetailState };
 }
 
 /* POST AUTH FLOW */
@@ -388,7 +403,8 @@ function* registerFlow() {
 function* postAuthFlow() {
   console.log('postAuthFlow');
   try {
-    while (true) {
+    let run = true;
+    while (run) {
       const { mainState, detailState, company_config } = yield select(getAuth);
       let nextMainState = mainState;
       let nextDetailState = detailState;
@@ -454,11 +470,16 @@ function* postAuthFlow() {
                 yield put({ type: POST_NOT_LOADING });
                 const action = yield take(NEXT_AUTH_FORM_STATE);
                 yield put({ type: POST_LOADING });
+                console.log('action', action.payload.nextFormState);
                 if (action.payload.nextFormState === 'skip') {
                   nextDetailState = 'email';
                   if (company_config.auth.email === 'optional') {
                     skip = true;
                   }
+                } else if (action.payload.nextFormState) {
+                  console.log('hi');
+                  run = false;
+                  break;
                 }
                 let resp = yield call(Rehive.getProfile);
                 yield put({ type: AUTH_STORE_USER, payload: resp });
@@ -477,9 +498,14 @@ function* postAuthFlow() {
                 yield put({ type: POST_NOT_LOADING });
                 const action = yield take(NEXT_AUTH_FORM_STATE);
                 yield put({ type: POST_LOADING });
+                console.log('action', action.payload.nextFormState);
                 if (action.payload.nextFormState === 'skip') {
                   nextDetailState = 'first_name';
                 }
+                // else if (action.payload.nextFormState) {
+                //   run = false;
+                //   break;
+                // }
                 let resp = yield call(Rehive.getProfile);
                 yield put({ type: AUTH_STORE_USER, payload: resp });
               } else {
@@ -521,15 +547,14 @@ function* postAuthFlow() {
                 yield put({ type: POST_LOADING });
                 const { username } = yield select(getAuth);
                 if (username) {
-                  let resp = yield call(Rehive.updateProfile, { username });
-                  console.log('WHY ARENT YOU RUNNING');
-                  console.log('resp', resp);
-                  if (resp.message) {
-                    console.log('yo');
-                    authError = resp.message;
-                  } else {
-                    console.log(resp);
+                  try {
+                    let resp = yield call(Rehive.updateProfile, { username });
+                    yield call(Rehive.setStellarUsername, {
+                      username,
+                    });
                     yield put({ type: AUTH_STORE_USER, payload: resp });
+                  } catch (error) {
+                    authError = resp.message;
                   }
                 }
               } else {
@@ -638,6 +663,13 @@ function* appLoad() {
       count++;
     }
     if (services.stellar) {
+      let resp = yield call(Rehive.getStellarUser);
+      if (resp.data && !resp.data.username) {
+        const { user } = yield select(getAuth);
+        yield call(Rehive.setStellarUsername, {
+          username: user.username,
+        });
+      }
       count++;
     }
     if (services.bitcoin) {
@@ -646,6 +678,7 @@ function* appLoad() {
     if (services.ethereum) {
       count++;
     }
+
     let actions = [
       put({ type: POST_LOADING }),
       put({ type: FETCH_ACCOUNTS_ASYNC.pending }),
