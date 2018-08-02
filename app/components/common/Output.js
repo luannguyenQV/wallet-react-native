@@ -27,8 +27,8 @@ class Output extends Component {
             <Text style={textStyleValue}>{value ? value : label}</Text>
           </View>
         </View>
-        {copy ? <Icon name="content-copy" size={24} color={'black'} /> : null}
-        {onPress ? <Icon name="open-in-new" size={24} color={'black'} /> : null}
+        {copy ? <Icon name="content-copy" size={20} color={'black'} /> : null}
+        {onPress ? <Icon name="open-in-new" size={20} color={'black'} /> : null}
       </View>
     );
   }

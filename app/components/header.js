@@ -62,19 +62,26 @@ export default class Header extends Component {
       headerRightOnPress,
       headerRightIcon,
       colors,
+      home,
     } = this.props;
     return (
       <View
-        style={{
-          elevation: 10,
-          shadowColor: '#000',
-          shadowOffset: { width: 2, height: 2 },
-          shadowRadius: 5,
-          shadowOpacity: 0.3,
-          zIndex: 10,
-          paddingTop: Constants.statusBarHeight,
-          backgroundColor: colors.primary,
-        }}>
+        style={[
+          {
+            elevation: 10,
+            zIndex: 11,
+            paddingTop: Constants.statusBarHeight,
+            backgroundColor: colors.primary,
+          },
+          !home
+            ? {
+                shadowColor: '#000',
+                shadowOffset: { width: 2, height: 2 },
+                shadowRadius: 5,
+                shadowOpacity: 0.3,
+              }
+            : null,
+        ]}>
         {creditSwitch === false &&
           debitSwitch === true && (
             <View

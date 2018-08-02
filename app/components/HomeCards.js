@@ -56,45 +56,49 @@ class HomeCards extends Component {
 
   renderCards() {
     const { profile, company_config, dismissedCards } = this.props;
+    const cardConfig = company_config.cards ? company_config.cards.home : null;
     // add welcome card
     let cards = [];
     let i = 0;
-    if (!dismissedCards || !dismissedCards.includes('welcome')) {
-      cards[i++] = {
-        id: 'welcome',
-        title:
-          'Welcome to ' +
-          (company_config.company && company_config.company.name
-            ? company_config.company.name
-            : 'Rehive'),
-        // description: 'A multi-currency wallet built on the Rehive platform.',
-        image:
-          company_config.company && company_config.company === 'pxpay_demo'
-            ? 'pxpay'
-            : 'card1',
-        dismiss: true,
-      };
-    }
+    if (cardConfig) {
+      if (
+        cardConfig.general.welcome &&
+        (!dismissedCards || !dismissedCards.includes('welcome'))
+      ) {
+        cards[i++] = {
+          id: 'welcome',
+          title:
+            'Welcome to ' +
+            (company_config.company && company_config.company.name
+              ? company_config.company.name
+              : 'Rehive'),
+          // description: 'A multi-currency wallet built on the Rehive platform.',
+          image:
+            company_config.company && company_config.company === 'pxpay_demo'
+              ? 'pxpay'
+              : 'card1',
+          dismiss: true,
+        };
+      }
 
-    if (profile.verified) {
-      cards[i++] = {
-        id: 'verify',
-        description: 'Please verify your account',
-        image:
-          company_config.company && company_config.company === 'pxpay_demo'
-            ? 'pxpay'
-            : 'card2',
-        actionLabel: 'GET VERIFIED',
-        navigate: 'GetVerified',
-      };
-    }
-    if (company_config && company_config.cards) {
-      for (let j = 0; j < company_config.cards.length; j++) {
-        if (
-          !dismissedCards ||
-          !dismissedCards.includes(company_config.cards[j].id)
-        ) {
-          cards[i++] = company_config.cards[j];
+      if (cardConfig.general.verified && profile.verified) {
+        cards[i++] = {
+          id: 'verify',
+          description: 'Please verify your account',
+          image:
+            company_config.company && company_config.company === 'pxpay_demo'
+              ? 'pxpay'
+              : 'card2',
+          actionLabel: 'GET VERIFIED',
+          navigate: 'GetVerified',
+        };
+      }
+      const customCards = cardConfig.custom;
+      if (customCards) {
+        for (let j = 0; j < customCards.length; j++) {
+          if (!dismissedCards || !dismissedCards.includes(customCards[j].id)) {
+            cards[i++] = customCards[j];
+          }
         }
       }
     }

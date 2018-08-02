@@ -120,8 +120,13 @@ class TwoFactorScreen extends Component {
     console.log('dec', dec);
     return (
       <InputContainer>
+        <View style={{ height: 8 }} />
         <Image
-          style={{ width: 250, height: 250, alignSelf: 'center' }}
+          style={{
+            width: 250,
+            height: 250,
+            alignSelf: 'center',
+          }}
           source={{
             uri:
               'https://chart.googleapis.com/chart?cht=qr&chs=200x200&chld=L|0&chl=' +

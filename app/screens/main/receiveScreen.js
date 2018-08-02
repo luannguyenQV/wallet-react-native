@@ -1,11 +1,19 @@
 import React, { Component } from 'react';
-import { View, Text, Image } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  Dimensions,
+  TouchableHighlight,
+  Clipboard,
+} from 'react-native';
 import { connect } from 'react-redux';
 
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Colors from './../../config/colors';
+import { Toast } from 'native-base';
 import Header from './../../components/header';
 import { Output, Button } from './../../components/common';
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class ReceiveScreen extends Component {
   static navigationOptions = {
@@ -14,7 +22,7 @@ class ReceiveScreen extends Component {
 
   state = {
     imageURI:
-      'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=undefined&choe=UTF-8',
+      'https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=undefined&choe=UTF-8',
     email: '',
     type: 'email',
   };
@@ -29,7 +37,7 @@ class ReceiveScreen extends Component {
     const user = this.props.profile;
     const currencyCode = this.state.currencyCode;
     const imageURI =
-      'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=' +
+      'https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=' +
       encodeURIComponent(
         'rehive:' +
           user.email +
@@ -43,19 +51,39 @@ class ReceiveScreen extends Component {
     const user = this.props.profile;
     const currencyCode = this.state.currencyCode;
     const imageURI =
-      'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=' +
+      'https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=' +
       encodeURIComponent(
         'stellar:GANOZF7TIDYZ7MGRVVMAJHBQ7JCWRNRDHPY6N4W5OWU2JWNMQ2D67NVQ?' +
-          (user.username ? '?memo=' + user.username + '&' : '') +
-          (currencyCode ? '?currency=' + currencyCode : ''),
+          (user.username ? 'memo=' + user.username + '&' : '') +
+          (currencyCode ? 'currency=' + currencyCode : ''),
       ) +
       '&choe=UTF-8';
     this.setState({ imageURI, type: 'crypto' });
   }
 
+  _copyQR() {
+    const { type } = this.state;
+    const user = this.props.profile;
+    const value =
+      type === 'email'
+        ? user.email
+        : 'GANOZF7TIDYZ7MGRVVMAJHBQ7JCWRNRDHPY6N4W5OWU2JWNMQ2D67NVQ';
+    Clipboard.setString();
+    Toast.show({
+      text:
+        value +
+        ' copied.' +
+        (type === 'email'
+          ? ''
+          : ' Please remember to include your memo when sending to this address.'),
+      duration: 3000,
+    });
+  }
+
   render() {
     const { type } = this.state;
     const { colors } = this.props.company_config;
+    const user = this.props.profile;
     return (
       <View style={styles.container}>
         <Header
@@ -68,10 +96,9 @@ class ReceiveScreen extends Component {
           <View
             style={{
               flexDirection: 'row',
-              // alignItems: 'center',
               // justifyContent: 'center',
             }}>
-            <View style={{ flex: 1 }}>
+            <View style={{ width: SCREEN_WIDTH / 2 }}>
               <Button
                 backgroundColor={
                   type === 'email' ? colors.focusContrast : colors.secondary
@@ -86,7 +113,7 @@ class ReceiveScreen extends Component {
                 containerStyle={{ margin: 16 }}
               />
             </View>
-            <View style={{ flex: 1 }}>
+            <View style={{ width: SCREEN_WIDTH / 2 }}>
               <Button
                 backgroundColor={
                   type === 'crypto' ? colors.focusContrast : colors.secondary
@@ -107,16 +134,24 @@ class ReceiveScreen extends Component {
               ? 'This QR code is your public address for accepting payments.'
               : 'This QR code is your Rehive account for use with another Rehive app'}
           </Text>
-          <Image
-            style={{ width: 300, height: 300, alignSelf: 'center' }}
-            source={{ uri: this.state.imageURI }}
+
+          <TouchableHighlight
+            underlayColor={'white'}
+            activeOpacity={0.2}
+            onPress={() => this._copyQR()}>
+            <Image
+              style={{ width: 300, height: 250, alignSelf: 'center' }}
+              source={{ uri: this.state.imageURI }}
+            />
+          </TouchableHighlight>
+        </View>
+        <View style={{ padding: 16, width: '100%' }}>
+          <Output
+            label={type === 'email' ? 'Email' : 'Memo'}
+            value={type === 'email' ? this.state.email : user.username}
+            copy
           />
         </View>
-        {type === 'email' ? (
-          <View style={{ padding: 16, width: '100%' }}>
-            <Output label="Email" value={this.state.email} copy />
-          </View>
-        ) : null}
       </View>
     );
   }
@@ -127,7 +162,8 @@ const styles = {
     flex: 1,
     flexDirection: 'column',
     backgroundColor: 'white',
-    alignItems: 'center',
+    // alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'flex-start',
   },
   text: {
