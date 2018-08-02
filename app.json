@@ -10,7 +10,7 @@
     "primaryColor": "#4d4d4d",
     "icon": "./assets/icons/icon.png",
     "splash": {
-      "image": "./assets/icons/splash.gif",
+      "image": "./assets/icons/icon.png",
       "primaryColor": "#ffffff"
     },
     "assetBundlePatterns": ["./assets/icons/*"],
