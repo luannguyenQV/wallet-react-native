@@ -165,7 +165,6 @@ function* authFlow() {
         password,
         company_config,
       } = yield select(getAuth);
-      const terms = company_config.auth.terms;
       // if no state changes are made stay in current state
       let nextMainState = mainState;
       let nextDetailState = detailState;
@@ -179,7 +178,7 @@ function* authFlow() {
             // Tries to dummy register a user for company which validates if company exists
             // TODO: this should be revised, but requires platform improvements
             yield put({ type: LOADING });
-            yield call(Rehive.register, { company: tempCompany });
+            yield call(Rehive.register, { company: tempCompany.toLowerCase() });
           } catch (error) {
             console.log(error);
             if (error.data && error.data.company) {
@@ -263,6 +262,7 @@ function* authFlow() {
               authError = validateEmail(email);
               if (!authError) {
                 user = email;
+                const terms = company_config.auth.terms;
                 if (terms && terms.length > 0) {
                   if (yield call(termsFlow)) {
                     terms_and_conditions = true;
@@ -299,7 +299,6 @@ function* authFlow() {
                 };
                 try {
                   yield put({ type: LOADING });
-                  console.log(data);
                   ({ user, token } = yield call(Rehive.register, data));
                   yield call(Rehive.initWithToken, token); // initialises sdk with new token
                   yield put({
@@ -514,8 +513,16 @@ function* postAuthFlow() {
                 yield put({ type: POST_LOADING });
                 const { username } = yield select(getAuth);
                 if (username) {
-                  user = yield call(Rehive.updateProfile, { username });
-                  yield put({ type: AUTH_STORE_USER, payload: user });
+                  let resp = yield call(Rehive.updateProfile, { username });
+                  console.log('WHY ARENT YOU RUNNING');
+                  console.log('resp', resp);
+                  if (resp.message) {
+                    console.log('yo');
+                    authError = resp.message;
+                  } else {
+                    console.log(resp);
+                    yield put({ type: AUTH_STORE_USER, payload: resp });
+                  }
                 }
               } else {
                 // nextDetailState = 'country';

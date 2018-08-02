@@ -12,28 +12,15 @@
   },
   "auth": {
     "identifier": "email",
-    "email": "required",
+    "email": "optional",
     "mobile": "",
-    "terms": [
-      {
-        "id": 0,
-        "title": "Privacy Policy",
-        "description": "Click here to read more on the privacy policy",
-        "link": ""
-      },
-      {
-        "id": 1,
-        "title": "User Agreement",
-        "description": "Click here to read more on the user agreement",
-        "link": ""
-      }
-    ],
-    "first_name": true,
-    "last_name": true,
+    "terms": [],
+    "first_name": false,
+    "last_name": false,
     "username": true,
     "country": false,
-    "pin": "",
-    "mfa": ""
+    "pin": "optional",
+    "mfa": "optional"
   },
   "pin": {
     "appLoad": true,

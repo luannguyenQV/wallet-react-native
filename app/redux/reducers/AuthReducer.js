@@ -116,7 +116,6 @@ export default (state = INITIAL_STATE, action) => {
 
     case UPDATE_AUTH_FORM_STATE:
       const { mainState, detailState, authError, skip, terms } = action.payload;
-      console.log(terms);
       return {
         ...state,
         mainState,

@@ -1,14 +1,14 @@
 {
   "company": {
-    "id": "test_company_1",
-    "name": "Test Company 1",
-    "description": "A demo company on the Rehive platform"
+    "id": "plue_demo",
+    "name": "Demo Plue Company",
+    "description": "A demo Plue company on the Rehive platform"
   },
   "services": {
-    "bitcoin": false,
+    "bitcoin": true,
     "stellar": true,
-    "ethereum": false,
-    "rewards": true
+    "ethereum": true,
+    "rewards": false
   },
   "auth": {
     "identifier": "email",
@@ -32,8 +32,8 @@
     "last_name": true,
     "username": true,
     "country": false,
-    "pin": "",
-    "mfa": ""
+    "pin": "required",
+    "mfa": "required"
   },
   "pin": {
     "appLoad": true,
@@ -65,12 +65,12 @@
     "requireDocumentAdvID": true
   },
   "colors": {
-    "primary": "#4d4d4d",
-    "secondary": "#a6a6a6",
+    "primary": "#002D6D",
+    "secondary": "#6180BE",
     "tertiary": "#c4c4c4",
-    "focus": "#9797F0",
+    "focus": "#EC4257",
 
-    "primaryContrast": "#f3f3f3",
+    "primaryContrast": "#f6f6f6",
     "secondaryContrast": "#2d2d2d",
     "tertiaryContrast": "#000000",
     "focusContrast": "#2d2d2d",

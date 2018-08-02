@@ -1,13 +1,14 @@
 {
   "company": {
-    "id": "test_company_1",
-    "name": "Test Company 1",
-    "description": "A demo company on the Rehive platform"
+    "id": "advanced01",
+    "name": "Advanced Demo Company 1",
+    "description":
+      "A demo company on the Rehive platform showcasing all the Rehive platform features"
   },
   "services": {
-    "bitcoin": false,
+    "bitcoin": true,
     "stellar": true,
-    "ethereum": false,
+    "ethereum": true,
     "rewards": true
   },
   "auth": {
@@ -32,8 +33,8 @@
     "last_name": true,
     "username": true,
     "country": false,
-    "pin": "",
-    "mfa": ""
+    "pin": "required",
+    "mfa": "required"
   },
   "pin": {
     "appLoad": true,
