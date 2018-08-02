@@ -68,9 +68,12 @@ export const validateSendRecipient = (sendType, contactsType, recipient) => {
     } else if (contactsType == 'crypto') {
       error = validateCrypto(recipient, sendType);
     }
-    console.log(sendType);
     if (!error) {
-      if (sendType === 'stellar' && contactsType === 'crypto') {
+      if (
+        sendType === 'stellar' &&
+        contactsType === 'crypto' &&
+        !recipient.includes('*')
+      ) {
         return setSendState('memo');
       }
       return setSendState('note');

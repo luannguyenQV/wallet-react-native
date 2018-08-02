@@ -277,7 +277,6 @@ class SendScreen extends Component {
       setContactType,
       sendType,
     } = this.props;
-    console.log(sendType);
     const { colors } = company_config;
     switch (sendState) {
       case 'amount':
@@ -319,7 +318,6 @@ class SendScreen extends Component {
             placeholder = 'GAQGVZYIZ2DX56EB6TZYGBD...';
             break;
         }
-        console.log('contactsSearch', contactsSearch);
         return (
           <View>
             <View

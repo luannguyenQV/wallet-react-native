@@ -25,6 +25,7 @@ const Card = props => {
     buttonStyleAction,
     textStyleAction,
     textStyleError,
+    iconStyleTitleLeft,
     iconStyleTitleRight,
     viewStyleFooter,
     viewStyleContent,
@@ -71,13 +72,15 @@ const Card = props => {
           resizeMode="cover"
           style={[viewStyleTitleContainer, { backgroundColor: 'white' }]}>
           {textTitleLeft ? (
-            <TouchableCircle
-              colors={colors}
-              text={textTitleLeft}
-              active={itemActive}
-              onPress={onPressTitleLeft}
-              radius={24}
-            />
+            <View style={iconStyleTitleLeft}>
+              <TouchableCircle
+                colors={colors}
+                text={textTitleLeft}
+                active={itemActive}
+                onPress={onPressTitleLeft}
+                radius={24}
+              />
+            </View>
           ) : null}
           {iconTitleLeft ? (
             <HeaderButton
@@ -213,13 +216,12 @@ const styles = {
     flex: 1,
     flexDirection: 'row',
     // height: 72,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    padding: 8,
     alignItems: 'center',
   },
   viewStyleTitle: {
     flexDirection: 'column',
-    paddingHorizontal: 16,
+    paddingHorizontal: 8,
     flexGrow: 1,
     flex: 1,
     width: 0,
@@ -239,9 +241,7 @@ const styles = {
   },
   iconStyleTitleLeft: {
     paddingHorizontal: 8,
-    alignSelf: 'flex-start',
-    color: 'black',
-    opacity: 0.87,
+    paddingTop: 8,
   },
   iconStyleTitleRight: {
     right: 0,

@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
-import { View, Text, Image, Dimensions } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  Dimensions,
+  TouchableHighlight,
+  Clipboard,
+} from 'react-native';
 import { connect } from 'react-redux';
 
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Colors from './../../config/colors';
+import { Toast } from 'native-base';
 import Header from './../../components/header';
 import { Output, Button } from './../../components/common';
 
@@ -55,9 +61,29 @@ class ReceiveScreen extends Component {
     this.setState({ imageURI, type: 'crypto' });
   }
 
+  _copyQR() {
+    const { type } = this.state;
+    const user = this.props.profile;
+    const value =
+      type === 'email'
+        ? user.email
+        : 'GANOZF7TIDYZ7MGRVVMAJHBQ7JCWRNRDHPY6N4W5OWU2JWNMQ2D67NVQ';
+    Clipboard.setString();
+    Toast.show({
+      text:
+        value +
+        ' copied.' +
+        (type === 'email'
+          ? ''
+          : ' Please remember to include your memo when sending to this address.'),
+      duration: 3000,
+    });
+  }
+
   render() {
     const { type } = this.state;
     const { colors } = this.props.company_config;
+    const user = this.props.profile;
     return (
       <View style={styles.container}>
         <Header
@@ -108,20 +134,24 @@ class ReceiveScreen extends Component {
               ? 'This QR code is your public address for accepting payments.'
               : 'This QR code is your Rehive account for use with another Rehive app'}
           </Text>
-          <Image
-            style={{ width: 300, height: 250, alignSelf: 'center' }}
-            source={{ uri: this.state.imageURI }}
+
+          <TouchableHighlight
+            underlayColor={'white'}
+            activeOpacity={0.2}
+            onPress={() => this._copyQR()}>
+            <Image
+              style={{ width: 300, height: 250, alignSelf: 'center' }}
+              source={{ uri: this.state.imageURI }}
+            />
+          </TouchableHighlight>
+        </View>
+        <View style={{ padding: 16, width: '100%' }}>
+          <Output
+            label={type === 'email' ? 'Email' : 'Memo'}
+            value={type === 'email' ? this.state.email : user.username}
+            copy
           />
         </View>
-        {type === 'email' ? (
-          <View style={{ padding: 16, width: '100%' }}>
-            <Output
-              label="Email"
-              value={this.state.email + 'skjdbhgkasdghsdkjghsdjkghksdhgsd'}
-              copy
-            />
-          </View>
-        ) : null}
       </View>
     );
   }

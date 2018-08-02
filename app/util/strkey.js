@@ -36,7 +36,7 @@ Object.defineProperty(exports, '__esModule', {
 
 var base32 = _interopRequire(require('base32.js'));
 
-var crc = _interopRequire(require('js-crc'));
+var crc = _interopRequire(require('crc'));
 
 var isUndefined = _interopRequire(require('lodash/isUndefined'));
 
@@ -198,7 +198,6 @@ function isValid(versionByteName, encoded) {
   if (encoded && encoded.length != 56) {
     return false;
   }
-
   try {
     var decoded = decodeCheck(versionByteName, encoded);
     if (decoded.length !== 32) {
