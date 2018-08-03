@@ -28,8 +28,6 @@ class GetVerifiedScreen extends Component {
 
   renderBasicInfo() {
     const { profile } = this.props;
-    console.log('profile', profile);
-    debugger;
 
     let value = profile.first_name + ' ' + profile.last_name;
     let status = profile.status ? profile.status.toUpperCase() : 'INCOMPLETE';
