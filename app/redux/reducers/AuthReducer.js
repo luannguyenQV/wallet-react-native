@@ -209,6 +209,7 @@ export default (state = INITIAL_STATE, action) => {
         modalVisible: false,
         loading: false,
         appLoading: false,
+        skip: false,
       };
     case AUTH_COMPLETE:
       return {

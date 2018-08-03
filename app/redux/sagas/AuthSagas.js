@@ -45,6 +45,7 @@ import {
   VERIFY_MFA,
   AUTH_STORE_USER,
   POST_AUTH_FLOW_START,
+  RESET_AUTH,
   POST_AUTH_FLOW_FINISH,
 } from '../actions/AuthActions';
 import { Toast } from 'native-base';
@@ -112,7 +113,6 @@ function* init() {
             yield call(initialAuthState, 'landing', 'landing');
           }
         } catch (error) {
-          console.log('token error', error);
           yield call(initialAuthState, 'landing', 'landing');
         }
       } else {
@@ -131,6 +131,9 @@ function* init() {
 /* sets initial auth state */
 function* initialAuthState(mainState, detailState) {
   try {
+    if ((mainState = 'landing')) {
+      yield put({ type: RESET_AUTH });
+    }
     yield put({
       type: INIT.success,
       payload: { mainState, detailState },

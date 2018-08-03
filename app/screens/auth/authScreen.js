@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Expo from 'expo';
+import { Fingerprint, statusBarHeight } from 'expo';
 import {
   View,
   Image,
@@ -108,9 +108,6 @@ class AuthScreen extends Component {
         break;
       case 'pin':
         textFooterRight = '';
-        if (detailState !== ('pin' || 'fingerprint')) {
-          break;
-        }
       case 'mfa':
       case 'verification':
         iconHeaderLeft = '';
@@ -383,7 +380,7 @@ class AuthScreen extends Component {
   }
 
   _scanFingerprint = async () => {
-    let result = await Expo.Fingerprint.authenticateAsync('Scan your finger');
+    let result = await Fingerprint.authenticateAsync('Scan your finger');
     if (result.success) {
       this.props.pinSuccess();
     } else {
@@ -392,13 +389,21 @@ class AuthScreen extends Component {
   };
 
   _activateFingerprint = async () => {
-    if (Platform.OS !== 'ios') {
-      await Expo.Fingerprint.cancelAuthenticate();
+    if (Platform.OS === 'android') {
       this.props.showFingerprintModal();
+    } else {
+      // this.scanBiometrics();
+      Expo.Fingerprint.authenticateAsync('Biometric Scan.');
     }
-    if (await Expo.Fingerprint.authenticateAsync()) {
-      this.props.activateFingerprint();
-    }
+
+    // if (Platform.OS !== 'ios') {
+
+    //   await Fingerprint.cancelAuthenticate();
+    //   this.props.showFingerprintModal();
+    // }
+    // if (await Fingerprint.authenticateAsync()) {
+    //   this.props.activateFingerprint();
+    // }
   };
 
   renderInput() {
@@ -534,7 +539,7 @@ class AuthScreen extends Component {
         contentText = 'Please scan your fingerprint';
         onPressActionOne = () => {
           if (Platform.os !== 'ios') {
-            Expo.Fingerprint.cancelAuthenticate();
+            Fingerprint.cancelAuthenticate();
           }
           hideModal;
         };
@@ -583,7 +588,7 @@ class AuthScreen extends Component {
 const styles = {
   viewStyleContainer: {
     flex: 1,
-    paddingTop: Expo.Constants.statusBarHeight,
+    paddingTop: statusBarHeight,
     justifyContent: 'center',
   },
   buttonsContainer: {
