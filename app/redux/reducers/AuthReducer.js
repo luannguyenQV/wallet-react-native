@@ -87,6 +87,7 @@ export default (state = INITIAL_STATE, action) => {
         detailState: action.payload.detailState,
         password: '',
         loading: false,
+        token: action.payload.mainState === 'landing' ? '' : state.token,
       };
     case INIT.fail:
       return {

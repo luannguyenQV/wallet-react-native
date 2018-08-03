@@ -92,9 +92,9 @@ function* init() {
         try {
           const token = yield select(getToken);
           if (token) {
-            // yield call(Rehive.verifyToken, token);
+            yield call(Rehive.verifyToken, token);
             yield call(Rehive.initWithToken, token);
-            yield call(Rehive.getProfile);
+            // yield call(Rehive.getProfile);
             if (company_config.pin.appLoad) {
               const { pin, fingerprint } = yield select(getAuth);
               if (pin || fingerprint) {
@@ -235,7 +235,11 @@ function* authFlow() {
                   data = { company, user, password };
                   try {
                     yield put({ type: LOADING });
-                    ({ user, token } = yield call(Rehive.login, data));
+                    console.log('data', data);
+                    const tempResp = yield call(Rehive.login, data);
+                    console.log('tempResp', tempResp);
+                    ({ user, token } = tempResp);
+                    console.log(token);
                     yield call(Rehive.initWithToken, token); // initialises sdk with new token
                     yield put({
                       type: LOGIN_USER_ASYNC.success,
@@ -249,6 +253,7 @@ function* authFlow() {
                     });
                     return;
                   } catch (error) {
+                    console.log('initWithToken', error);
                     authError = error.message;
                     nextDetailState = company_config.auth.identifier;
                   }
@@ -326,7 +331,7 @@ function* authFlow() {
       });
     }
   } catch (error) {
-    console.log(error);
+    console.log('authFlow', error);
   }
 }
 
@@ -360,7 +365,7 @@ function* termsFlow() {
       }
     }
   } catch (error) {
-    console.log(error);
+    console.log('termsFlow', error);
   }
   return true;
 }

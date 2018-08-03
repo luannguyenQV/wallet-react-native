@@ -1,14 +1,15 @@
 {
   "company": {
-    "id": "test_company_1",
-    "name": "Test Company 1",
-    "description": "A demo company on the Rehive platform"
+    "id": "xlm01",
+    "name": "Stellar Demo Company 1",
+    "description":
+      "A demo company on the Rehive platform with the Stellar service"
   },
   "services": {
     "bitcoin": false,
     "stellar": true,
     "ethereum": false,
-    "rewards": true
+    "rewards": false
   },
   "auth": {
     "identifier": "email",

@@ -81,6 +81,7 @@ class SendScreen extends Component {
       note: sendNote,
       currency: sendWallet.currency.currency,
       reference: sendWallet.account_reference,
+      memo: sendWallet.sendMemo,
     };
     this.props.send(data);
   }
