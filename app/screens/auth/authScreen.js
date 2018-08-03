@@ -231,7 +231,7 @@ class AuthScreen extends Component {
         switch (detailState) {
           case 'pin':
             return (
-              <View style={viewStyleLanding}>
+              <View style={viewStyleInput}>
                 <Text style={[textStyle, { color: colors.primaryContrast }]}>
                   Please enter pin
                 </Text>
@@ -431,6 +431,7 @@ class AuthScreen extends Component {
     let returnKeyType = 'done';
     let onSubmitEditing = () => this.props.nextAuthFormState('');
     let keyboardType = 'default';
+    let autoCapitalize = 'none';
 
     switch (detailState) {
       case 'company':
@@ -454,10 +455,12 @@ class AuthScreen extends Component {
         placeholder = 'e.g. Password';
         break;
       case 'first_name':
+        autoCapitalize = 'words';
         value = first_name;
         placeholder = 'e.g. John';
         break;
       case 'last_name':
+        autoCapitalize = 'words';
         value = last_name;
         placeholder = 'e.g. Snow';
         break;
@@ -491,6 +494,7 @@ class AuthScreen extends Component {
         value={value}
         inputError={authError}
         // autoFocus
+        autoCapitalize={autoCapitalize}
         keyboardType={keyboardType}
         onChangeText={onChangeText}
         returnKeyType={returnKeyType}
@@ -588,9 +592,16 @@ const styles = {
   },
   viewStyleLanding: {
     justifyContent: 'center',
+    alignItems: 'center',
     flex: 1,
     flexDirection: 'column',
     // alignItems: 'center',
+  },
+  viewStylePin: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+    flexDirection: 'column',
   },
   viewStyleInput: {
     width: '100%',

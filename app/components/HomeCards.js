@@ -51,7 +51,15 @@ class HomeCards extends Component {
   // }
 
   renderImage(image) {
-    return <Image style={styles.imageStylePhoto} source={image} />;
+    // return <Image style={styles.imageStylePhoto} source={image} />;
+    return (
+      <View
+        style={[
+          styles.imageStylePhoto,
+          { backgroundColor: this.props.company_config.colors.secondary },
+        ]}
+      />
+    );
   }
 
   renderCards() {
@@ -163,6 +171,7 @@ class HomeCards extends Component {
             backgroundColor={company_config.colors.primary}
             type="text"
             onPress={cardRestoreAll}
+            transparent
           />
         </View>
       );
@@ -181,7 +190,7 @@ const styles = {
   },
   imageStylePhoto: {
     width: SCREEN_WIDTH - 16,
-    height: 150,
+    height: 120,
   },
   textStyleContent: {
     fontSize: 16,
