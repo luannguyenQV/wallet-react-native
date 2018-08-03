@@ -266,6 +266,7 @@ class GetVerifiedScreen extends Component {
           drawer
           title="Get verified"
           colors={company_config.colors}
+          noShadow
         />
         <HeaderProfile
           photoLink={profile.profile}

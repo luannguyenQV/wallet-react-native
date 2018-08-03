@@ -3,6 +3,7 @@ import { Constants } from 'expo';
 import { View, Text, StyleSheet, NetInfo } from 'react-native';
 // import colors from './../config/colors';
 import { HeaderButton } from './common';
+import getVerifiedScreen from '../screens/settings/getVerified/getVerifiedScreen';
 
 export default class Header extends Component {
   constructor(props) {
@@ -62,8 +63,9 @@ export default class Header extends Component {
       headerRightOnPress,
       headerRightIcon,
       colors,
-      home,
+      noShadow,
     } = this.props;
+    console.log(noShadow);
     return (
       <View
         style={[
@@ -73,14 +75,14 @@ export default class Header extends Component {
             paddingTop: Constants.statusBarHeight,
             backgroundColor: colors.primary,
           },
-          !home
-            ? {
+          noShadow
+            ? null
+            : {
                 shadowColor: '#000',
                 shadowOffset: { width: 2, height: 2 },
                 shadowRadius: 5,
                 shadowOpacity: 0.3,
-              }
-            : null,
+              },
         ]}>
         {creditSwitch === false &&
           debitSwitch === true && (
