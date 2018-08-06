@@ -8,6 +8,8 @@ import { Root } from 'native-base';
 import NavigationService from './util/navigation';
 import MainNavigator from './routes/mainNavigator';
 
+import { ThemeContext, ColorsContext } from './util/config';
+
 // const _XHR = GLOBAL.originalXMLHttpRequest
 //   ? GLOBAL.originalXMLHttpRequest
 //   : GLOBAL.XMLHttpRequest;
@@ -60,11 +62,13 @@ class Main extends Component {
     if (isReady && initStarted) {
       return (
         <Root>
-          <MainNavigator
-            ref={navigatorRef => {
-              NavigationService.setTopLevelNavigator(navigatorRef);
-            }}
-          />
+          <ThemeContext.Provider value={company_config.colors}>
+            <MainNavigator
+              ref={navigatorRef => {
+                NavigationService.setTopLevelNavigator(navigatorRef);
+              }}
+            />
+          </ThemeContext.Provider>
         </Root>
       );
     } else {
@@ -92,8 +96,8 @@ class Main extends Component {
   }
 }
 
-const mapStateToProps = () => {
-  return {};
+const mapStateToProps = ({ auth }) => {
+  return { company_config: auth.company_config };
 };
 
 export default connect(mapStateToProps, { init })(Main);

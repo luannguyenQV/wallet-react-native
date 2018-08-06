@@ -8,6 +8,8 @@ import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Colors from './../../config/colors';
 
+// import { ThemeContext, ColorContext } from './util/config';
+
 class Button extends Component {
   _buttonStyle() {
     const { _buttonStyle } = styles;
@@ -28,6 +30,7 @@ class Button extends Component {
   textStyle() {
     const { textStyle } = styles;
     const { size, textColor } = this.props;
+    console.log('colors', this.context.colors);
     return [
       textStyle,
       {
@@ -50,6 +53,8 @@ class Button extends Component {
     } = this.props;
     const { _containerStyle } = styles;
     return (
+      // <ColorContext.Consumer>
+      //   {colors => (
       <Animatable.View
         ref={reference}
         style={[_containerStyle, containerStyle]}
@@ -70,6 +75,8 @@ class Button extends Component {
           </View>
         </TouchableOpacity>
       </Animatable.View>
+      // )}
+      // </ColorContext.Consumer>
     );
   }
 }

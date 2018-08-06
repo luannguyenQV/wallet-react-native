@@ -1,7 +1,11 @@
-import Colors from './../config/colors';
+import React from 'react';
+import company_config from './../config/default_company_config.json';
 
-const colors = () => {
-  return Colors;
+export const Colors = () => {
+  return company_config.colors;
 };
 
-export { colors };
+export const ThemeContext = React.createContext({
+  theme: 'dark',
+  colors: company_config.colors,
+});
