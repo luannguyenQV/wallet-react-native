@@ -261,12 +261,21 @@ class AuthScreen extends Component {
               </View>
             );
           case 'fingerprint':
-            this._scanFingerprint();
+            // this._scanFingerprint();
             return (
               <View style={viewStyleLanding}>
-                <Text style={[textStyle, { color: colors.primaryContrast }]}>
-                  Please scan fingerprint
-                </Text>
+                <View style={buttonsContainer}>
+                  <Button
+                    label="USE FINGERPRINT"
+                    textColor={colors.secondaryContrast}
+                    backgroundColor={colors.secondary}
+                    reference={input => {
+                      this.login = input;
+                    }}
+                    onPress={() => this._scanFingerprint()}
+                    animation="slideInRight"
+                  />
+                </View>
               </View>
             );
           case 'set_pin':
@@ -303,7 +312,7 @@ class AuthScreen extends Component {
               <View style={viewStyleLanding}>
                 <View style={buttonsContainer}>
                   <Button
-                    label="SCAN FINGERPRINT"
+                    label="USE FINGERPRINT"
                     textColor={colors.secondaryContrast}
                     backgroundColor={colors.secondary}
                     reference={input => {
@@ -340,9 +349,7 @@ class AuthScreen extends Component {
                 textColor={company_config.colors.secondaryContrast}
                 backgroundColor={company_config.colors.secondary}
                 size="large"
-                reference={input => {
-                  this.login = input;
-                }}
+                reference={input => { this.login = input; }}
                 onPress={() => nextAuthFormState('login')}
                 animation="fadeInUpBig"
               /> */}
@@ -351,9 +358,7 @@ class AuthScreen extends Component {
                   textColor={company_config.colors.primaryContrast}
                   backgroundColor="transparent"
                   // size="large"
-                  reference={input => {
-                    this.login = input;
-                  }}
+                  reference={input => { this.login = input; }}
                   onPress={() => nextAuthFormState('register')}
                   animation="fadeInUpBig"
                 /> */}
@@ -389,30 +394,31 @@ class AuthScreen extends Component {
   }
 
   _scanFingerprint = async () => {
-    let result = await Fingerprint.authenticateAsync('Scan your finger');
+    if (Platform.OS === 'android') {
+      this.props.showFingerprintModal();
+    }
+    let result = await Expo.Fingerprint.authenticateAsync('Biometric scan');
+    this.props.hideModal();
+
     if (result.success) {
       this.props.pinSuccess();
     } else {
-      this.props.pinFail('Unable to authenticate with fingerprint');
+      this.props.pinFail('Unable to authenticate with biometrics');
     }
   };
 
   _activateFingerprint = async () => {
     if (Platform.OS === 'android') {
       this.props.showFingerprintModal();
-    } else {
-      // this.scanBiometrics();
-      Expo.Fingerprint.authenticateAsync('Biometric Scan.');
     }
+    let result = await Expo.Fingerprint.authenticateAsync('Biometric scan');
+    this.props.hideModal();
 
-    // if (Platform.OS !== 'ios') {
-
-    //   await Fingerprint.cancelAuthenticate();
-    //   this.props.showFingerprintModal();
-    // }
-    // if (await Fingerprint.authenticateAsync()) {
-    //   this.props.activateFingerprint();
-    // }
+    if (result.success) {
+      this.props.activateFingerprint();
+    } else {
+      this.props.pinFail('Unable to authenticate with biometrics');
+    }
   };
 
   renderInput() {
@@ -546,11 +552,12 @@ class AuthScreen extends Component {
         break;
       case 'fingerprint':
         contentText = 'Please scan your fingerprint';
+        textActionOne = 'CANCEL';
         onPressActionOne = () => {
           if (Platform.os !== 'ios') {
             Fingerprint.cancelAuthenticate();
           }
-          hideModal;
+          hideModal();
         };
         break;
     }
@@ -583,7 +590,7 @@ class AuthScreen extends Component {
       >
         {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}> */}
         {loading || postLoading || appLoading ? (
-          <Spinner size="large" />
+          <Spinner size="large" type="rehive" />
         ) : (
           this.renderMainContainer()
         )}

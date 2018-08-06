@@ -9,6 +9,7 @@ import {
   updateAccountField,
   updateContactField,
   setContactType,
+  setSendType,
 } from './../../redux/actions';
 import { decodeQR } from './../../util/general';
 
@@ -37,7 +38,14 @@ class QRCodeScannerScreen extends Component {
 
   accept = () => {
     const { wallets } = this.props;
-    const { account, currency, amount, recipient, note } = this.state.data;
+    const {
+      account,
+      currency,
+      amount,
+      recipient,
+      note,
+      type,
+    } = this.state.data;
     this.props.resetSend();
     if (account) {
       // set account?
@@ -54,7 +62,11 @@ class QRCodeScannerScreen extends Component {
       //   this.props.wallets[this.props.activeWalletIndex],
       // );
     }
+    if (type != 'rehive') {
+      this.props.setContactType('crypto');
+    }
 
+    this.props.setSendType(type);
     this.props.updateAccountField({ prop: 'sendAmount', value: amount });
     this.props.updateContactField({ prop: 'contactsSearch', value: recipient });
     this.props.updateAccountField({ prop: 'sendNote', value: note });
@@ -63,9 +75,7 @@ class QRCodeScannerScreen extends Component {
   };
 
   _handleBarCodeRead = raw => {
-    console.log(raw);
     const data = decodeQR(raw.data);
-    console.log(data);
     this.setState({ camera: false, data });
   };
 
@@ -152,4 +162,5 @@ export default connect(mapStateToProps, {
   updateAccountField,
   updateContactField,
   setContactType,
+  setSendType,
 })(QRCodeScannerScreen);
