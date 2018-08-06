@@ -51,7 +51,7 @@ class HomeScreen extends Component {
           drawer
           colors={company_config.colors}
           right
-          home
+          noShadow
           // noAccounts={this.state.noAccounts}
         />
         <HeaderWallet
