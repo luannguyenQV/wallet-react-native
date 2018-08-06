@@ -58,6 +58,8 @@ class DocumentScreen extends Component {
     if (category) {
       options = document_category[0].document_types;
     }
+    const { company_config } = this.props;
+    const { colors } = company_config;
 
     switch (state) {
       case 'document_type':
@@ -92,8 +94,18 @@ class DocumentScreen extends Component {
               <Spinner size="large" />
             ) : (
               <View style={{ paddingHorizontal: 24 }}>
-                <Button label="Upload" onPress={() => this.uploadDocument()} />
-                <Button label="Cancel" onPress={() => this.resetState()} />
+                <Button
+                  label="Upload"
+                  textColor={colors.secondaryContrast}
+                  backgroundColor={colors.secondary}
+                  onPress={() => this.uploadDocument()}
+                />
+                <Button
+                  label="Cancel"
+                  textColor={colors.secondaryContrast}
+                  backgroundColor={colors.secondary}
+                  onPress={() => this.resetState()}
+                />
               </View>
             )}
           </View>
@@ -102,10 +114,14 @@ class DocumentScreen extends Component {
   }
 
   renderTypeButton = item => {
+    const { company_config } = this.props;
+    const { colors } = company_config;
     return (
       <Button
         label={item.description}
         // size="small"
+        textColor={colors.secondaryContrast}
+        backgroundColor={colors.secondary}
         onPress={() => this.selectType(item.document_type)}
       />
     );
@@ -145,8 +161,6 @@ class DocumentScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: 'flex-start',
-    // backgroundColor: 'white',
   },
   viewStyleContent: {
     alignItems: 'center',
@@ -154,7 +168,6 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   viewStyleButtonContainer: {
-    // width: '100%',
     paddingVertical: 8,
   },
   viewStyleImageContainer: {
@@ -165,16 +178,11 @@ const styles = StyleSheet.create({
   textStyleHeader: {
     fontSize: 20,
     padding: 8,
-    // paddingTop: 12,
-    // padding: 16,
-    // marginBottom: 16,
     textAlign: 'center',
   },
   textStyleDescription: {
     fontSize: 14,
     padding: 8,
-    // flexWrap: 'wrap',
-    // paddingBottom: 8,
     textAlign: 'center',
   },
 });

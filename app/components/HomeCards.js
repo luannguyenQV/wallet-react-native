@@ -167,11 +167,10 @@ class HomeCards extends Component {
         <View style={viewStyleFooter}>
           <Button
             label="RESTORE ALL"
-            textColor={company_config.colors.primaryContrast}
-            backgroundColor={company_config.colors.primary}
+            textColor={company_config.colors.secondary}
             type="text"
             onPress={cardRestoreAll}
-            transparent
+            backgroundColor="transparent"
           />
         </View>
       );

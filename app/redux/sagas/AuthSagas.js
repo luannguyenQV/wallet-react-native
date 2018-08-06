@@ -184,7 +184,6 @@ function* authFlow() {
             yield put({ type: LOADING });
             yield call(Rehive.register, { company: tempCompany.toLowerCase() });
           } catch (error) {
-            console.log(error);
             if (error.data && error.data.company) {
               // This error is returned if no company by this ID exists in rehive
               authError = 'Please enter a valid company ID';
@@ -238,11 +237,8 @@ function* authFlow() {
                   data = { company, user, password };
                   try {
                     yield put({ type: LOADING });
-                    console.log('data', data);
                     const tempResp = yield call(Rehive.login, data);
-                    console.log('tempResp', tempResp);
                     ({ user, token } = tempResp);
-                    console.log(token);
                     yield call(Rehive.initWithToken, token); // initialises sdk with new token
                     yield put({
                       type: LOGIN_USER_ASYNC.success,
@@ -478,14 +474,12 @@ function* postAuthFlow() {
                 yield put({ type: POST_NOT_LOADING });
                 const action = yield take(NEXT_AUTH_FORM_STATE);
                 yield put({ type: POST_LOADING });
-                console.log('action', action.payload.nextFormState);
                 if (action.payload.nextFormState === 'skip') {
                   nextDetailState = 'email';
                   if (company_config.auth.email === 'optional') {
                     skip = true;
                   }
                 } else if (action.payload.nextFormState) {
-                  console.log('hi');
                   run = false;
                   break;
                 }
@@ -510,10 +504,7 @@ function* postAuthFlow() {
                 if (action.payload.nextFormState === 'skip') {
                   nextDetailState = 'first_name';
                 }
-                // else if (action.payload.nextFormState) {
-                //   run = false;
-                //   break;
-                // }
+                //TODO: Check here
                 let resp = yield call(Rehive.getProfile);
                 yield put({ type: AUTH_STORE_USER, payload: resp });
               } else {

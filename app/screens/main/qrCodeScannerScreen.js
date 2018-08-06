@@ -74,6 +74,9 @@ class QRCodeScannerScreen extends Component {
     const { type, currency, account, amount, recipient, note } = data;
     const { viewStyleConfirm } = styles;
 
+    const { company_config } = this.props;
+    const { colors } = company_config;
+
     return (
       <View style={{ flex: 1 }}>
         <Header
@@ -99,15 +102,22 @@ class QRCodeScannerScreen extends Component {
               ) : null}
               {note ? <Output label="Note" value={note} /> : null}
 
-              <Button label="Accept" onPress={this.accept} />
+              <Button
+                label="Accept"
+                onPress={this.accept}
+                textColor={colors.secondaryContrast}
+                backgroundColor={colors.secondary}
+              />
               <Button
                 label="Scan again"
                 onPress={() => this.setState({ camera: true })}
+                textColor={colors.secondaryContrast}
+                backgroundColor={colors.secondary}
               />
             </View>
           )
         ) : (
-          <EmptyListMessage>No access to camera</EmptyListMessage>
+          <EmptyListMessage text="No access to camera" />
         )}
       </View>
     );

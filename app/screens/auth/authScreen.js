@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Fingerprint, statusBarHeight } from 'expo';
+import { Fingerprint, Constants } from 'expo';
 import {
   View,
   Image,
@@ -61,6 +61,7 @@ class AuthScreen extends Component {
       resetPassword,
       skip,
       company_config,
+      terms,
     } = this.props;
 
     const colors = company_config ? company_config.colors : Colors;
@@ -102,7 +103,15 @@ class AuthScreen extends Component {
         }
         break;
       case 'register':
-        if (detailState === 'password') {
+        if (
+          (detailState === 'password' &&
+            !company_config.auth.terms &&
+            company_config.auth.terms.length === 0) ||
+          (company_config.auth.terms &&
+            terms &&
+            terms.id &&
+            company_config.auth.terms.length - 1 === terms.id)
+        ) {
           textFooterRight = 'Register';
         }
         break;
@@ -588,7 +597,7 @@ class AuthScreen extends Component {
 const styles = {
   viewStyleContainer: {
     flex: 1,
-    paddingTop: statusBarHeight,
+    paddingTop: Constants.statusBarHeight,
     justifyContent: 'center',
   },
   buttonsContainer: {
