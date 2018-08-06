@@ -56,7 +56,7 @@ class HomeCards extends Component {
       <View
         style={[
           styles.imageStylePhoto,
-          { backgroundColor: this.props.company_config.colors.secondary },
+          { backgroundColor: this.props.company_config.colors.primary },
         ]}
       />
     );

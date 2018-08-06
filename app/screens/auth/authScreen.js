@@ -590,7 +590,7 @@ class AuthScreen extends Component {
       >
         {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}> */}
         {loading || postLoading || appLoading ? (
-          <Spinner size="large" type="rehive" />
+          <Spinner size="large" />
         ) : (
           this.renderMainContainer()
         )}

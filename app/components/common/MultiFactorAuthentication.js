@@ -169,6 +169,7 @@ const styles = {
     justifyContent: 'center',
     textAlign: 'center',
     padding: 16,
+    paddingVertical: 24,
     fontSize: 18,
     color: 'black',
   },
