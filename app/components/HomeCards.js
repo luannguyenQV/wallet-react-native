@@ -51,7 +51,23 @@ class HomeCards extends Component {
   // }
 
   renderImage(image) {
-    // return <Image style={styles.imageStylePhoto} source={image} />;
+    const { company_config } = this.props;
+    if (image === 'pxpay' || company_config.company.id.includes('pxpay')) {
+      return (
+        <Image
+          style={styles.imageStylePhoto}
+          source={require('./../../assets/icons/pxpay.png')}
+        />
+      );
+    } else if (image === 'card1') {
+      return (
+        <Image
+          style={styles.imageStylePhoto}
+          source={require('./../../assets/icons/card1.png')}
+        />
+      );
+    }
+
     return (
       <View
         style={[
@@ -137,11 +153,7 @@ class HomeCards extends Component {
         colors={company_config.colors}
         key={item.id}
         title={item.title}
-        renderHeader={this.renderImage(
-          item.image === 'pxpay' || company_config.company.id.includes('pxpay')
-            ? require('./../../assets/icons/pxpay1.png')
-            : require('./../../assets/icons/card1.png'),
-        )}
+        renderHeader={this.renderImage(item.image)}
         colorTitleBackground={company_config.colors.primary}
         colorTitleText={company_config.colors.primaryContrast}
         onPressActionOne={() =>
