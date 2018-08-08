@@ -222,16 +222,14 @@ class AuthScreen extends Component {
         );
       case 'mfa':
         return (
-          <View style={viewStyleLanding}>
-            <MultiFactorAuthentication
-              colors={colors}
-              authScreen
-              verifyMFA={this.props.verifyMFA}
-              // issuer={user.company}
-              // account={user.email}
-              type={detailState}
-            />
-          </View>
+          <MultiFactorAuthentication
+            colors={colors}
+            authScreen
+            verifyMFA={this.props.verifyMFA}
+            // issuer={user.company}
+            // account={user.email}
+            type={detailState}
+          />
         );
       case 'pin':
         switch (detailState) {

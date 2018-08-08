@@ -10,6 +10,7 @@ import { maybeOpenURL } from 'react-native-app-link';
 
 import { CodeInput } from './CodeInput';
 import { Button } from './Button';
+import { Screen, Paragraph, Typography } from './styles';
 
 class MultiFactorAuthentication extends Component {
   state = { hasGAuth: false, hasAuthy: false };
@@ -68,7 +69,7 @@ class MultiFactorAuthentication extends Component {
     } = this.props;
     const { viewStyleContainer, textStyle } = styles;
     return (
-      <View>
+      <Screen>
         <Text
           style={[
             textStyle,
@@ -132,7 +133,7 @@ class MultiFactorAuthentication extends Component {
             />
           </View>
         )}
-      </View>
+      </Screen>
     );
   }
 }
