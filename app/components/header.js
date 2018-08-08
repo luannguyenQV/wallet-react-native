@@ -65,7 +65,7 @@ export default class Header extends Component {
       colors,
       noShadow,
     } = this.props;
-    console.log(noShadow);
+    // console.log(noShadow);
     return (
       <View
         style={[

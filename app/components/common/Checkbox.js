@@ -98,6 +98,7 @@ const styles = {
   textStyleLink: {
     color: 'blue',
     fontSize: 12,
+    paddingTop: 2,
     // flex: 1,
     marginRight: 8,
   },

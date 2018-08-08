@@ -95,7 +95,6 @@ function* init() {
           if (token) {
             yield call(Rehive.verifyToken, token);
             yield call(Rehive.initWithToken, token);
-            // yield call(Rehive.getProfile);
             if (company_config.pin.appLoad) {
               const { pin, fingerprint } = yield select(getAuth);
               if (pin || fingerprint) {
@@ -113,6 +112,7 @@ function* init() {
             yield call(initialAuthState, 'landing', 'landing');
           }
         } catch (error) {
+          console.log('token error', error);
           yield call(initialAuthState, 'landing', 'landing');
         }
       } else {
@@ -131,7 +131,8 @@ function* init() {
 /* sets initial auth state */
 function* initialAuthState(mainState, detailState) {
   try {
-    if ((mainState = 'landing')) {
+    console.log(mainState, detailState);
+    if (mainState === 'landing') {
       yield put({ type: RESET_AUTH });
     }
     yield put({
@@ -656,7 +657,8 @@ function* postAuthFlow() {
 function* appLoad() {
   console.log('appLoad');
   try {
-    let count = 11;
+    yield put({ type: POST_LOADING });
+    let count = 10;
     const { services } = yield select(getCompanyConfig);
     if (services.rewards) {
       count++;
@@ -679,7 +681,7 @@ function* appLoad() {
     }
 
     let actions = [
-      put({ type: POST_LOADING }),
+      // put({ type: POST_LOADING }),
       put({ type: FETCH_ACCOUNTS_ASYNC.pending }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'profile' }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'mobile' }),
@@ -883,7 +885,7 @@ function* verifyMFA() {
 }
 
 export const authSagas = all([
-  takeEvery(INIT.pending, init),
+  takeLatest(INIT.pending, init),
   takeLatest(INIT.success, authFlow),
   // takeLatest(INIT.success, authFlow),
   takeLatest(LOGOUT_USER_ASYNC.success, init),
@@ -893,5 +895,5 @@ export const authSagas = all([
   takeLatest(AUTH_COMPLETE, appLoad),
   takeEvery(CHANGE_PASSWORD_ASYNC.pending, changePassword),
   takeEvery(LOGOUT_USER_ASYNC.pending, logoutUser),
-  takeEvery(RESET_PASSWORD_ASYNC.pending, resetPassword),
+  takeLatest(RESET_PASSWORD_ASYNC.pending, resetPassword),
 ]);

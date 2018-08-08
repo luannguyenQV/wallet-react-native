@@ -32,6 +32,17 @@ export const setActiveWalletIndex = index => {
 };
 
 export const SET_SEND_TYPE = 'set_send_type';
+export const setSendType = type => {
+  if (type) {
+    return {
+      type: SET_SEND_TYPE,
+      payload: type,
+    };
+  } else {
+    // Return fail?
+  }
+};
+
 export const SET_SEND_WALLET = 'set_send_wallet';
 export const setSendWallet = wallet => {
   if (wallet) {
@@ -129,6 +140,7 @@ export const send = sendData => async dispatch => {
   };
   dispatch({ type: SEND_ASYNC.pending });
   let response = '';
+  console.log('data', data);
   try {
     switch (sendData.type) {
       case 'rehive':
@@ -148,9 +160,10 @@ export const send = sendData => async dispatch => {
       type: SEND_ASYNC.success,
     });
   } catch (error) {
+    console.log(error);
     dispatch({
       type: SEND_ASYNC.error,
-      payload: error,
+      payload: error.message,
     });
   }
 };
@@ -232,7 +245,7 @@ export const withdraw = data => async dispatch => {
     console.log(error);
     dispatch({
       type: WITHDRAW_ASYNC.error,
-      payload: error,
+      payload: error.message,
     });
   }
 };
