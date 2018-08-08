@@ -6,6 +6,5 @@ export const Colors = () => {
 };
 
 export const ThemeContext = React.createContext({
-  theme: 'dark',
-  colors: company_config.colors,
+  theme: company_config.colors,
 });

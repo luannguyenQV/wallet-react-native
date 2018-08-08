@@ -8,9 +8,9 @@ import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Colors from './../../config/colors';
 
-// import { ThemeContext, ColorContext } from './util/config';
+import themable from './themable';
 
-class Button extends Component {
+class _Button extends Component {
   _buttonStyle() {
     const { _buttonStyle } = styles;
     const { backgroundColor, size, round, buttonStyle } = this.props;
@@ -52,6 +52,7 @@ class Button extends Component {
       containerStyle,
     } = this.props;
     const { _containerStyle } = styles;
+    console.log(this.context.theme);
     return (
       // <ColorContext.Consumer>
       //   {colors => (
@@ -81,7 +82,7 @@ class Button extends Component {
   }
 }
 
-Button.propTypes = {
+_Button.propTypes = {
   label: PropTypes.string, // Text displayed on button
   reference: PropTypes.func, // For animations
   animation: PropTypes.string, // Animation type
@@ -97,7 +98,7 @@ Button.propTypes = {
   containerStyle: PropTypes.object, // override container style
 };
 
-Button.defaultProps = {
+_Button.defaultProps = {
   label: '',
   reference: () => {},
   animation: '',
@@ -136,5 +137,7 @@ const styles = {
     fontWeight: 'bold',
   },
 };
+
+const Button = themable(_Button);
 
 export { Button };

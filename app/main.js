@@ -8,7 +8,7 @@ import { Root } from 'native-base';
 import NavigationService from './util/navigation';
 import MainNavigator from './routes/mainNavigator';
 
-import { ThemeContext, ColorsContext } from './util/config';
+import { ThemeContext } from './util/config';
 
 // const _XHR = GLOBAL.originalXMLHttpRequest
 //   ? GLOBAL.originalXMLHttpRequest
@@ -62,7 +62,8 @@ class Main extends Component {
     if (isReady && initStarted) {
       return (
         <Root>
-          <ThemeContext.Provider value={company_config.colors}>
+          <ThemeContext.Provider
+            value={{ colors: this.props.company_config.colors }}>
             <MainNavigator
               ref={navigatorRef => {
                 NavigationService.setTopLevelNavigator(navigatorRef);
