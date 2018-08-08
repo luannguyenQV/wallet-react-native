@@ -96,30 +96,40 @@ class MultiFactorAuthentication extends Component {
           onFulfill={code => verifyMFA(code)}
         />
         {type === 'token' ? (
-          <View style={{ padding: 16 }}>
-            <Button
-              label="OPEN GOOGLE AUTHENTICATOR"
-              textColor={colors.secondaryContrast}
-              backgroundColor={colors.secondary}
-              reference={input => {
-                this.login = input;
-              }}
-              onPress={() => this._openAuthenticator('GAuth')}
-              // animation="fadeInUpBig"
-            />
-            <Button
-              label="OPEN AUTHY"
-              textColor={colors.secondaryContrast}
-              backgroundColor={colors.secondary}
-              reference={input => {
-                this.login = input;
-              }}
-              onPress={() => this._openAuthenticator('Authy')}
-              // animation="fadeInUpBig"
-            />
+          <View
+            style={{
+              padding: 8,
+              flex: 1,
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
+            }}>
+            <View>
+              <Button
+                label="OPEN GOOGLE AUTHENTICATOR"
+                textColor={colors.secondaryContrast}
+                backgroundColor={colors.secondary}
+                reference={input => {
+                  this.login = input;
+                }}
+                onPress={() => this._openAuthenticator('GAuth')}
+                // animation="fadeInUpBig"
+              />
+            </View>
+            {/* <View>
+              <Button
+                label="OPEN AUTHY"
+                textColor={colors.secondaryContrast}
+                backgroundColor={colors.secondary}
+                reference={input => {
+                  this.login = input;
+                }}
+                onPress={() => this._openAuthenticator('Authy')}
+                // animation="fadeInUpBig"
+              />
+            </View> */}
           </View>
         ) : (
-          <View style={{ padding: 16 }}>
+          <View style={{ padding: 8 }}>
             <Button
               label="Resend SMS"
               textColor={colors.secondaryContrast}
