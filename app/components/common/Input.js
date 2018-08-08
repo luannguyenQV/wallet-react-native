@@ -5,8 +5,9 @@ import Colors from './../../config/colors';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import CountryPicker from 'react-native-country-picker-modal';
 import { ListItem, ListSeparator } from './ListItem';
+import context from './context';
 
-class Input extends Component {
+class _Input extends Component {
   state = {
     focused: false,
     iconNameVisibility: 'visibility',
@@ -265,7 +266,7 @@ class Input extends Component {
   // );
 }
 
-Input.propTypes = {
+_Input.propTypes = {
   label: PropTypes.string, // Text displayed on button
   reference: PropTypes.func, // For animations
   animation: PropTypes.string, // Animation type
@@ -277,7 +278,7 @@ Input.propTypes = {
   colors: PropTypes.object, // Button color
 };
 
-Input.defaultProps = {
+_Input.defaultProps = {
   label: '',
   reference: () => {},
   animation: '',
@@ -353,6 +354,8 @@ const styles = {
     position: 'absolute',
   },
 };
+
+const Input = context(_Input);
 
 export { Input };
 

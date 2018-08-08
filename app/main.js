@@ -9,6 +9,7 @@ import NavigationService from './util/navigation';
 import MainNavigator from './routes/mainNavigator';
 
 import { ThemeContext } from './util/config';
+import { getColors } from './redux/reducers/AuthReducer';
 
 // const _XHR = GLOBAL.originalXMLHttpRequest
 //   ? GLOBAL.originalXMLHttpRequest
@@ -62,8 +63,7 @@ class Main extends Component {
     if (isReady && initStarted) {
       return (
         <Root>
-          <ThemeContext.Provider
-            value={{ colors: this.props.company_config.colors }}>
+          <ThemeContext.Provider value={{ colors: this.props.colors }}>
             <MainNavigator
               ref={navigatorRef => {
                 NavigationService.setTopLevelNavigator(navigatorRef);
@@ -98,7 +98,7 @@ class Main extends Component {
 }
 
 const mapStateToProps = ({ auth }) => {
-  return { company_config: auth.company_config };
+  return { colors: getColors(auth) };
 };
 
 export default connect(mapStateToProps, { init })(Main);

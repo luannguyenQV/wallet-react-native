@@ -51,7 +51,7 @@ class _Button extends Component {
       containerStyle,
     } = this.props;
     const { _containerStyle } = styles;
-    console.log('theme', this.props.theme);
+    console.log('theme', this.props.colors);
     return (
       // <ColorContext.Consumer>
       //   {colors => (

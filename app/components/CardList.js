@@ -76,7 +76,6 @@ class CardList extends Component {
     } = this.props;
     return (
       <Card
-        colors={colors}
         headerComponent={headerComponent}
         onPressHeader={onPressHeader}
         textTitleLeft={textTitleLeft ? textTitleLeft(item) : ''}
@@ -283,7 +282,6 @@ class CardList extends Component {
             keyboardDismissMode={'interactive'}
             keyboardShouldPersistTaps="always">
             <Card
-              colors={colors}
               key={type}
               title={wallet ? '' : title ? title(tempItem) : ''}
               colorTitleBackground="white"

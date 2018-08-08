@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { NavigationActions, DrawerItems } from 'react-navigation';
 import { ScrollView, Text, View } from 'react-native';
 
 import DrawerHeader from './../components/drawerHeader';
 import DrawerOption from './../components/DrawerOption';
+import context from './common/context';
 
-class CustomDrawer extends Component {
+class _CustomDrawer extends Component {
   render() {
     const { navigation, company_config, profile, activeItemKey } = this.props;
     const { services, colors } = company_config;
@@ -90,7 +90,7 @@ class CustomDrawer extends Component {
   }
 }
 
-CustomDrawer.propTypes = {
+_CustomDrawer.propTypes = {
   navigation: PropTypes.object,
   profile: PropTypes.object,
   company_config: PropTypes.object,
@@ -109,4 +109,6 @@ const mapStateToProps = ({ auth, user }) => {
   return { company_config, profile };
 };
 
-export default connect(mapStateToProps, {})(CustomDrawer);
+const CustomDrawer = context(_CustomDrawer);
+
+export default connect(mapStateToProps, {})(_CustomDrawer);

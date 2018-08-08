@@ -191,7 +191,6 @@ class BankAccountsScreen extends Component {
           colors={company_config.colors}
         />
         <CardList
-          colors={company_config.colors}
           type="bank_account"
           data={bank_account}
           tempItem={tempItem}

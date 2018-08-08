@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableHighlight } from 'react-native';
-import Colors from './../../config/colors';
 
 class SettingsOption extends Component {
   render() {

@@ -114,7 +114,6 @@ class DepositScreen extends Component {
           </TouchableHighlight>
         </View>
         <CardList
-          colors={company_config.colors}
           type="company_bank_account"
           data={company_bank_account}
           loadingData={loading_company_bank_account}

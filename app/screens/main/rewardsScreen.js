@@ -91,7 +91,6 @@ class RewardsScreen extends Component {
               heading="Rewards"
               activeTextStyle={{ color: company_config.colors.focus }}> */}
         <CardList
-          colors={company_config.colors}
           type="rewards"
           navigation={this.props.navigation}
           data={rewards.data}

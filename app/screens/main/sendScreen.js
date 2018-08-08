@@ -28,7 +28,6 @@ import {
   Output,
   Button,
 } from './../../components/common';
-import Colors from './../../config/colors';
 import Header from './../../components/header';
 import PinModal from './../../components/PinModal';
 
@@ -550,12 +549,6 @@ const styles = {
     // position: 'absolute',
     // bottom: 0,
   },
-  // contact: {
-  //   height: 40,
-  //   flexDirection: 'column',
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  // },
   textStyleOutput: {
     fontSize: 16,
     // alignSelf: 'center',

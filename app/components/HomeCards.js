@@ -150,7 +150,6 @@ class HomeCards extends Component {
     let imageString = './../../assets/icons/' + item.image + '.png';
     return (
       <Card
-        colors={company_config.colors}
         key={item.id}
         title={item.title}
         renderHeader={this.renderImage(item.image)}

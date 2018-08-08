@@ -139,8 +139,8 @@ class AuthScreen extends Component {
         textFooterRight={textFooterRight}
         onPressFooterRight={onPressFooterRight}
         loading={loading}
-        color={'primary'}
-        colors={colors}>
+        color="primary"
+        type="auth">
         {this.renderContent()}
       </FullScreenForm>
     );

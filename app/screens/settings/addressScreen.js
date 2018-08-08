@@ -61,7 +61,6 @@ class AddressScreen extends Component {
 
         <CardContainer>
           <Card
-            colors={colors}
             textActionOne={showDetail ? 'SAVE' : ''}
             onPressActionOne={() => updateItem('address', tempItem)}
             textActionTwo={showDetail ? 'CANCEL' : ''}
