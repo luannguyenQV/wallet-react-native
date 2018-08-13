@@ -14,6 +14,7 @@ import Header from './../../components/header';
 // import Wallet from './../../components/wallet';
 import { Output, PopUpGeneral } from '../../components/common';
 import CardList from './../../components/CardList';
+import { performDivisibility } from './../../util/general';
 
 class RewardsScreen extends Component {
   static navigationOptions = {
@@ -31,15 +32,16 @@ class RewardsScreen extends Component {
   }
 
   renderContent(item) {
+    console.log(item);
     return (
       <View style={styles.viewStyleContainer}>
-        <Output label="" value={item.description} />
+        <Output label="" value={item.campaign.description} />
         <Output
           label=""
           value={
-            item.currency +
+            item.currency.symbol +
             ' ' +
-            item.reward_total * (item.reward_percentage / 100)
+            performDivisibility(item.amount, item.currency.divisibility)
           }
         />
       </View>
@@ -49,17 +51,16 @@ class RewardsScreen extends Component {
   renderDetail(item) {
     return (
       <View style={styles.viewStyleContainer}>
-        <Output label="" value={item.description} />
+        <Output label="" value={item.campaign.description} />
         <Output
           label=""
           value={
-            item.currency +
+            item.currency.symbol +
             ' ' +
-            item.reward_total * (item.reward_percentage / 100)
+            performDivisibility(item.amount, item.currency.divisibility)
           }
         />
-        <Output label="Start Date" value={item.start_date} />
-        <Output label="End Date" value={item.end_date} />
+        <Output label="Rewards type" value={item.reward_type} />
       </View>
     );
   }
@@ -102,7 +103,7 @@ class RewardsScreen extends Component {
           renderContent={this.renderContent}
           showReward={rewards.detail}
           renderDetail={this.renderDetail}
-          title={item => (item ? item.name : '')}
+          title={item => (item ? item.campaign.name : '')}
           // subtitle={item =>
           //   item ? standardizeString(item.account_name) : ''
           // }

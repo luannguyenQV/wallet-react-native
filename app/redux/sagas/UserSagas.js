@@ -46,7 +46,6 @@ function* fetchData(action) {
         break;
       case 'address':
         response = yield call(Rehive.getAddresses);
-        console.log('address', response);
         break;
       case 'document':
         response = yield call(Rehive.getDocuments);
@@ -175,7 +174,6 @@ function* updateItem(action) {
       //   response = yield call(Rehive.getAllDocuments, data);
       //   break;
     }
-    // console.log(response);
     yield put({ type: UPDATE_ASYNC.success });
     if (type === 'mobile') {
       yield put({

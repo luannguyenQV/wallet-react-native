@@ -41,8 +41,6 @@ export const validatePassword = password => {
 //   });
 
 export const validateCrypto = (address, type) => {
-  console.log('type', type);
-  console.log('address', address);
   if (address) {
     switch (type) {
       case 'stellar':
