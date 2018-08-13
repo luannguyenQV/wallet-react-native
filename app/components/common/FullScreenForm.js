@@ -34,7 +34,7 @@ const _FullScreenForm = props => {
     <View
       style={[
         viewStyleContainer,
-        { backgroundColor: _backgroundColor(colors) },
+        { backgroundColor: _backgroundColor(colors, color) },
       ]}>
       {loading ? (
         <Spinner size="large" />
@@ -152,7 +152,7 @@ const FullScreenForm = context(_FullScreenForm);
 
 export { FullScreenForm };
 
-const _backgroundColor = colors => {
-  console.log(colors);
-  return colors.authScreen;
+const _backgroundColor = (colors, color) => {
+  // console.log(colors);
+  return colors[color];
 };

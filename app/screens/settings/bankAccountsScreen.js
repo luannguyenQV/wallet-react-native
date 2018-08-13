@@ -50,13 +50,7 @@ class BankAccountsScreen extends Component {
   };
 
   renderDetail = () => {
-    const {
-      tempItem,
-      updateError,
-      updateInputField,
-      company_config,
-    } = this.props;
-    const { colors } = company_config;
+    const { tempItem, updateError, updateInputField } = this.props;
     const {
       name,
       number,
@@ -80,7 +74,6 @@ class BankAccountsScreen extends Component {
           onChangeText={input =>
             updateInputField('bank_account', 'name', input)
           }
-          colors={colors}
         />
         <Input
           label="Account number"
@@ -90,7 +83,6 @@ class BankAccountsScreen extends Component {
           onChangeText={input =>
             updateInputField('bank_account', 'number', input)
           }
-          colors={colors}
         />
         <Input
           label="Account type"
@@ -100,7 +92,6 @@ class BankAccountsScreen extends Component {
           onChangeText={input =>
             updateInputField('bank_account', 'type', input)
           }
-          colors={colors}
         />
         <Input
           label="Bank name"
@@ -110,7 +101,6 @@ class BankAccountsScreen extends Component {
           onChangeText={input =>
             updateInputField('bank_account', 'bank_name', input)
           }
-          colors={colors}
         />
         <Input
           label="Bank code"
@@ -120,7 +110,6 @@ class BankAccountsScreen extends Component {
           onChangeText={input =>
             updateInputField('bank_account', 'bank_code', input)
           }
-          colors={colors}
         />
         <Input
           label="Branch code"
@@ -130,7 +119,6 @@ class BankAccountsScreen extends Component {
           onChangeText={input =>
             updateInputField('bank_account', 'branch_code', input)
           }
-          colors={colors}
         />
         <Input
           label="Swift code"
@@ -140,7 +128,6 @@ class BankAccountsScreen extends Component {
           onChangeText={input =>
             updateInputField('bank_account', 'swift', input)
           }
-          colors={colors}
         />
         <Input
           label="IBAN number"
@@ -150,7 +137,6 @@ class BankAccountsScreen extends Component {
           onChangeText={input =>
             updateInputField('bank_account', 'iban', input)
           }
-          colors={colors}
         />
         <Input
           label="BIC number"
@@ -158,7 +144,6 @@ class BankAccountsScreen extends Component {
           autoCapitalize="none"
           value={bic}
           onChangeText={input => updateInputField('bank_account', 'bic', input)}
-          colors={colors}
         />
       </View>
     );
@@ -174,7 +159,6 @@ class BankAccountsScreen extends Component {
       newItem,
       updateItem,
       showDetail,
-      company_config,
     } = this.props;
     return (
       <View style={styles.container}>
@@ -188,7 +172,6 @@ class BankAccountsScreen extends Component {
               ? () => updateItem('bank_account', tempItem)
               : () => newItem('bank_account')
           }
-          colors={company_config.colors}
         />
         <CardList
           type="bank_account"
@@ -218,15 +201,13 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user, auth }) => {
-  const { company_config } = auth;
+const mapStateToProps = ({ user }) => {
   const { bank_account, loading_bank_account, tempItem, showDetail } = user;
   return {
     bank_account,
     loading_bank_account,
     tempItem,
     showDetail,
-    company_config,
   };
 };
 

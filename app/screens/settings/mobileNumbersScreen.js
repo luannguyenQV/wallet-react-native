@@ -30,13 +30,7 @@ class MobileNumbersScreen extends Component {
   };
 
   renderDetail = () => {
-    const {
-      tempItem,
-      updateError,
-      updateInputField,
-      company_config,
-    } = this.props;
-    const { colors } = company_config;
+    const { tempItem, updateError, updateInputField } = this.props;
     const { number } = tempItem;
 
     return (
@@ -47,20 +41,12 @@ class MobileNumbersScreen extends Component {
         value={number}
         inputError={updateError}
         onChangeText={input => updateInputField('mobile', 'number', input)}
-        colors={colors}
       />
     );
   };
 
   render() {
-    const {
-      mobile,
-      tempItem,
-      newItem,
-      updateItem,
-      showDetail,
-      company_config,
-    } = this.props;
+    const { mobile, tempItem, newItem, updateItem, showDetail } = this.props;
     return (
       <View style={styles.container}>
         <Header
@@ -73,7 +59,6 @@ class MobileNumbersScreen extends Component {
               ? () => updateItem('mobile', tempItem)
               : () => newItem('mobile')
           }
-          colors={company_config.colors}
         />
         <CardList
           type="mobile"
@@ -103,15 +88,13 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user, auth }) => {
-  const { company_config } = auth;
+const mapStateToProps = ({ user }) => {
   const { mobile, tempItem, updateError, showDetail } = user;
   return {
     mobile,
     showDetail,
     tempItem,
     updateError,
-    company_config,
   };
 };
 

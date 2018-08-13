@@ -3,7 +3,6 @@ import { View, Text } from 'react-native';
 import { connect } from 'react-redux';
 import {} from './../../redux/actions';
 import Header from './../../components/header';
-import AppConfig from './../../../app.json';
 // import HeaderVerified from './../../../components/HeaderVerified';
 
 import {
@@ -214,12 +213,7 @@ class SettingsScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Header
-          navigation={this.props.navigation}
-          colors={this.props.company_config.colors}
-          drawer
-          title="Settings"
-        />
+        <Header navigation={this.props.navigation} drawer title="Settings" />
         <InputContainer>
           <SettingsContainer label="Personal details">
             {this.renderBasicInfo()}
@@ -251,15 +245,13 @@ const styles = {
   // },
 };
 
-const mapStateToProps = ({ user, auth }) => {
-  const { company_config } = auth;
+const mapStateToProps = ({ user }) => {
   const { profile, address, mobile, email } = user;
   return {
     profile,
     address,
     mobile,
     email,
-    company_config,
   };
 };
 

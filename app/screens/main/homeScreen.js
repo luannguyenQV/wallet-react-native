@@ -37,23 +37,11 @@ class HomeScreen extends Component {
   };
 
   render() {
-    const {
-      wallets,
-      activeWalletIndex,
-      fetchAccounts,
-      company_config,
-    } = this.props;
+    const { wallets, activeWalletIndex, company_config } = this.props;
 
     return (
       <View style={styles.container}>
-        <Header
-          navigation={this.props.navigation}
-          drawer
-          colors={company_config.colors}
-          right
-          noShadow
-          // noAccounts={this.state.noAccounts}
-        />
+        <Header navigation={this.props.navigation} drawer right noShadow />
         <HeaderWallet
           wallets={wallets}
           buttons={[
@@ -64,29 +52,16 @@ class HomeScreen extends Component {
           navigation={this.props.navigation}
           colors={company_config.colors}
         />
-        {/* currency={item} accountLabel={account.name} /> */}
-        {/* {this.renderAccounts()} */}
         <Swiper renderPagination={renderPagination} loop={false}>
-          {/* <View style={{ flex: 1 }} /> */}
           <HomeCards navigation={this.props.navigation} />
           <TransactionList
-            // updateBalance={this.getBalanceInfo}
-            // fetchAccounts={fetchAccounts}
             currencyCode={
               wallets && wallets.length
                 ? wallets[activeWalletIndex].currency.currency.code
                 : ''
             }
-            // showDialog={this.showDialog}
-            // logout={this.logout}
           />
         </Swiper>
-        {/* <TransactionPopUp
-          popupDialog={popupDialog => {
-            this.popupDialog = popupDialog;
-          }}
-          transactionDetails={this.state.dataToShow}
-        /> */}
       </View>
     );
   }

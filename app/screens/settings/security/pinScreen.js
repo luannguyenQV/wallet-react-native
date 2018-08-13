@@ -14,7 +14,6 @@ import {
   newItem,
 } from './../../../redux/actions';
 
-import Colors from './../../../config/colors';
 import Header from './../../../components/header';
 import PinModal from './../../../components/PinModal';
 
@@ -212,9 +211,7 @@ class PinScreen extends Component {
         contentText={contentText}
         textActionOne={actionText}
         onPressActionOne={action}
-        errorText={errorText}
-        // onDismiss={actionFunction}
-      >
+        errorText={errorText}>
         {showPin ? (
           <CodeInput
             ref={component => (this._pinInput = component)}
@@ -235,29 +232,8 @@ class PinScreen extends Component {
     );
   }
 
-  // _onInputPinComplete(code) {
-  //   const { pin } = this.props;
-  //   const { modalType } = this.state;
-  //   switch (modalType) {
-  //     case 'inputPin':
-  //       if (pin === code) {
-  //         this.setState({
-  //           modalVisible: false,
-  //           modalType: 'none',
-  //           pinState: 'landing',
-  //         });
-  //       } else {
-  //         this.setState({ modalType: 'inputPinError' });
-  //       }
-  //       break;
-  //     case 'setPinConfirm':
-  //       this.setPin(code);
-  //       break;
-  //   }
-  // }
-
   render() {
-    const { pin, fingerprint, company_config } = this.props;
+    const { pin, fingerprint } = this.props;
     const { pinVisible } = this.state;
 
     return (
@@ -266,7 +242,6 @@ class PinScreen extends Component {
           navigation={this.props.navigation}
           title="Set pin/fingerprint"
           back
-          colors={company_config.colors}
         />
         <KeyboardAvoidingView
           keyboardShouldPersistTaps={'never'}

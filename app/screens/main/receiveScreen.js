@@ -86,12 +86,7 @@ class ReceiveScreen extends Component {
     const user = this.props.profile;
     return (
       <View style={styles.container}>
-        <Header
-          navigation={this.props.navigation}
-          colors={this.props.company_config.colors}
-          back
-          title="Receive"
-        />
+        <Header navigation={this.props.navigation} back title="Receive" />
         <View>
           <View
             style={{

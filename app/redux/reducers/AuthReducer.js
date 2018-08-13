@@ -1,4 +1,5 @@
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
+import { createSelector } from 'reselect';
 import {
   AUTH_FIELD_CHANGED,
   AUTH_FIELD_ERROR,
@@ -428,7 +429,7 @@ export function getColors(auth) {
 }
 
 const selectColor = (component, theme, _colors, _default) => {
-  console.log('in deep select', theme[component]);
+  // console.log('in deep select', theme[component]);
   return theme[component]
     ? theme[component]
     : theme[_default]

@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { Constants } from 'expo';
-import { View, Text, StyleSheet, NetInfo } from 'react-native';
-// import colors from './../config/colors';
+import { View, Text, NetInfo } from 'react-native';
 import { HeaderButton } from './common';
-import getVerifiedScreen from '../screens/settings/getVerified/getVerifiedScreen';
+import context from './common/context';
 
-export default class Header extends Component {
+class _Header extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -223,3 +222,7 @@ const styles = {
     paddingLeft: 0,
   },
 };
+
+const Header = context(_Header);
+
+export default Header;

@@ -13,7 +13,7 @@ import {
 
 import WalletAction from './WalletAction';
 import HeaderCurrency from './HeaderCurrency';
-import { EmptyListMessage } from './common';
+import context from './context';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -230,6 +230,8 @@ const mapStateToProps = ({ accounts }) => {
     tempWallet,
   };
 };
+
+// const HeaderWallet = context(_HeaderWallet);
 
 export default connect(mapStateToProps, {
   setActiveWalletIndex,

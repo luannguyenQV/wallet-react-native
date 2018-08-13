@@ -132,12 +132,7 @@ class DocumentScreen extends Component {
     const { textStyleHeader, viewStyleContent } = styles;
     return (
       <View style={styles.container}>
-        <Header
-          navigation={this.props.navigation}
-          colors={this.props.company_config.colors}
-          back
-          title="Documents"
-        />
+        <Header navigation={this.props.navigation} back title="Documents" />
         <View style={viewStyleContent}>
           <Text style={textStyleHeader}>{category}</Text>
           {this.renderContent()}
@@ -158,7 +153,7 @@ class DocumentScreen extends Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flex: 1,
   },
@@ -185,7 +180,7 @@ const styles = StyleSheet.create({
     padding: 8,
     textAlign: 'center',
   },
-});
+};
 
 const mapStateToProps = ({ user, auth }) => {
   const { company_config } = auth;

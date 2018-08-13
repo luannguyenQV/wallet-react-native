@@ -223,11 +223,8 @@ class AuthScreen extends Component {
       case 'mfa':
         return (
           <MultiFactorAuthentication
-            colors={colors}
             authScreen
             verifyMFA={this.props.verifyMFA}
-            // issuer={user.company}
-            // account={user.email}
             type={detailState}
           />
         );
@@ -437,8 +434,6 @@ class AuthScreen extends Component {
       termsChecked,
     } = this.props;
 
-    const colors = company_config ? company_config.colors : Colors;
-
     let key = detailState;
     let type = detailState;
     let placeholder = '';
@@ -493,7 +488,6 @@ class AuthScreen extends Component {
       case 'terms':
         return (
           <Checkbox
-            colors={colors}
             link={terms.link}
             description={terms.description}
             title={terms.title}
@@ -517,7 +511,6 @@ class AuthScreen extends Component {
         onChangeText={onChangeText}
         returnKeyType={returnKeyType}
         onSubmitEditing={onSubmitEditing}
-        colors={colors}
       />
     );
   }

@@ -67,21 +67,14 @@ class RewardsScreen extends Component {
   render() {
     const {
       rewards,
-      company_config,
       fetchRewards,
       viewReward,
       hideReward,
       claimReward,
     } = this.props;
-    console.log(rewards);
     return (
       <View style={styles.container}>
-        <Header
-          navigation={this.props.navigation}
-          colors={company_config.colors}
-          drawer
-          title="Rewards"
-        />
+        <Header navigation={this.props.navigation} drawer title="Rewards" />
         {/* <Container>
           <Tabs
             tabBarUnderlineStyle={{
@@ -154,9 +147,7 @@ const styles = {
 };
 
 const mapStateToProps = store => {
-  const { company_config } = store.auth;
   return {
-    company_config,
     rewards: getRewards(store),
   };
 };

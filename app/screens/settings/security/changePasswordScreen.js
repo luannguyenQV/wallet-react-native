@@ -60,7 +60,6 @@ class ChangePasswordScreen extends Component {
           navigation={this.props.navigation}
           back
           title="Change password"
-          colors={company_config.colors}
         />
         <InputContainer>
           <Input
@@ -73,7 +72,6 @@ class ChangePasswordScreen extends Component {
             onChangeText={value =>
               authFieldChange({ prop: 'old_password', value })
             }
-            colors={colors}
           />
           <Input
             type="password"
@@ -85,7 +83,6 @@ class ChangePasswordScreen extends Component {
             onChangeText={value =>
               authFieldChange({ prop: 'new_password', value })
             }
-            colors={colors}
           />
 
           <Button

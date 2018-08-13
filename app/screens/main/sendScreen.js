@@ -300,7 +300,6 @@ class SendScreen extends Component {
             returnKeyType="next"
             autoFocus
             onSubmitEditing={() => validateSendAmount(sendWallet, sendAmount)}
-            colors={colors}
           />
         );
       case 'recipient':
@@ -388,13 +387,6 @@ class SendScreen extends Component {
                 </View>
               ) : null}
             </View>
-            {/* <TimerCountdown
-              initialSecondsRemaining={1000 * 60}
-              onTick={secondsRemaining => console.log('tick', secondsRemaining)}
-              onTimeElapsed={() => console.log('complete')}
-              allowFontScaling={true}
-              style={{ fontSize: 20 }}
-            /> */}
 
             <Input
               key="contactsSearch"
@@ -417,7 +409,6 @@ class SendScreen extends Component {
                 });
                 validateSendRecipient(sendType, contactsType, contactsSearch);
               }}
-              colors={colors}
               popUp
               multiline={contactsType === 'crypto' ? true : false}
               data={contacts}
@@ -452,7 +443,6 @@ class SendScreen extends Component {
             returnKeyType="next"
             autoFocus
             onSubmitEditing={() => validateSendMemo(sendMemo)}
-            colors={colors}
           />
         );
       case 'note':
@@ -473,7 +463,6 @@ class SendScreen extends Component {
             returnKeyType="next"
             autoFocus
             onSubmitEditing={() => validateSendNote(sendNote)}
-            colors={colors}
           />
         );
       default:
@@ -486,19 +475,10 @@ class SendScreen extends Component {
     // console.log(pin, fingerprint);
     return (
       <View style={{ flex: 1 }}>
-        <Header
-          navigation={this.props.navigation}
-          colors={company_config.colors}
-          title="Send"
-          back
-          right
-        />
+        <Header navigation={this.props.navigation} title="Send" back right />
         <KeyboardAvoidingView
           keyboardShouldPersistTaps={'always'}
-          style={[
-            styles.viewStyleContainer,
-            { backgroundColor: company_config.colors.focus },
-          ]}
+          style={styles.viewStyleContainer}
           behavior={'padding'}>
           {this.state.pinVisible ? (
             <PinModal

@@ -50,22 +50,6 @@ class WalletsScreen extends Component {
     this.setState({ showModal: false, wallet: null });
   };
 
-  // showDetails(wallet) {
-  //   this.setState({
-  //     showDetails: true,
-  //     wallet: wallet,
-  //   });
-  // }
-
-  // hideDetails = () => {
-  //   this.setState({
-  //     showDetails: false,
-  //     wallet: null,
-  //     headerRightIcon: '',
-  //     headerRightOnPress: () => {},
-  //   });
-  // };
-
   send = item => {
     this.props.resetSend();
     this.props.setSendWallet(item);
@@ -115,12 +99,7 @@ class WalletsScreen extends Component {
           showClose
           colors={this.props.company_config.colors}
         />
-        <TransactionList
-          // updateBalance={this.getBalanceInfo}
-          currencyCode={item.currency.currency.code}
-          // showDialog={this.showDialog}
-          // logout={this.logout}
-        />
+        <TransactionList currencyCode={item.currency.currency.code} />
       </View>
     );
   }
@@ -130,21 +109,13 @@ class WalletsScreen extends Component {
       fetchAccounts,
       loading_accounts,
       wallets,
-      hideWallet,
       viewWallet,
       showModal,
-      setActiveCurrency,
       tempWallet,
-      company_config,
     } = this.props;
     return (
       <View style={styles.container}>
-        <Header
-          navigation={this.props.navigation}
-          colors={company_config.colors}
-          drawer
-          title="Wallets"
-        />
+        <Header navigation={this.props.navigation} drawer title="Wallets" />
         <CardList
           type="wallet"
           navigation={this.props.navigation}

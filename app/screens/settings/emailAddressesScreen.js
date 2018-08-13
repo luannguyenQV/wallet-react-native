@@ -29,13 +29,7 @@ class EmailAddressesScreen extends Component {
   };
 
   renderDetail = () => {
-    const {
-      tempItem,
-      updateError,
-      updateInputField,
-      company_config,
-    } = this.props;
-    const { colors } = company_config;
+    const { tempItem, updateError, updateInputField } = this.props;
     const { email } = tempItem;
 
     return (
@@ -46,20 +40,12 @@ class EmailAddressesScreen extends Component {
         value={email}
         inputError={updateError}
         onChangeText={input => updateInputField('email', 'email', input)}
-        colors={colors}
       />
     );
   };
 
   render() {
-    const {
-      email,
-      tempItem,
-      newItem,
-      updateItem,
-      showDetail,
-      company_config,
-    } = this.props;
+    const { email, tempItem, newItem, updateItem, showDetail } = this.props;
     return (
       <View style={styles.container}>
         <Header
@@ -72,7 +58,6 @@ class EmailAddressesScreen extends Component {
               ? () => updateItem('email', tempItem)
               : () => newItem('email')
           }
-          colors={company_config.colors}
         />
         <CardList
           type="email"
@@ -102,15 +87,13 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user, auth }) => {
-  const { company_config } = auth;
+const mapStateToProps = ({ user }) => {
   const { email, tempItem, updateError, showDetail } = user;
   return {
     email,
     tempItem,
     updateError,
     showDetail,
-    company_config,
   };
 };
 

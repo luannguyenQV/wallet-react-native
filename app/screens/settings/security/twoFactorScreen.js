@@ -188,17 +188,10 @@ class TwoFactorScreen extends Component {
   }
 
   renderVerify() {
-    const {
-      mfaError,
-      mfaState,
-      mfaToken,
-      company_config,
-      profile,
-    } = this.props;
+    const { mfaError, mfaState, mfaToken, profile } = this.props;
     return (
       <View>
         <MultiFactorAuthentication
-          colors={company_config.colors}
           verifyMFA={this.props.verifyMFA}
           issuer={profile.company}
           account={profile.email}
@@ -206,33 +199,6 @@ class TwoFactorScreen extends Component {
           error={mfaError}
           type={mfaState === 'verifyToken' ? 'token' : 'sms'}
         />
-        {/* <Text style={styles.textStyle}>
-          {mfaState === 'verifyToken'
-            ? 'Please input the token from your 2FA app'
-            : 'Please input the OTP sent to your mobile number'}
-        </Text>
-        <CodeInput
-          ref={component => (this._pinInput2 = component)}
-          secureTextEntry
-          activeColor="gray"
-          autoFocus
-          inactiveColor="lightgray"
-          className="border-b"
-          codeLength={6}
-          space={7}
-          size={30}
-          inputPosition="center"
-          containerStyle={{ marginTop: 0, paddingBottom: 16, minHeight: 40 }}
-          onFulfill={code => this.props.verifyMFA(code)}
-        />
-        {mfaError ? (
-          <Text style={[styles.textStyle, { color: 'red' }]}>{mfaError}</Text>
-        ) : null} */}
-
-        {/* <Button
-          label="CANCEL"
-          onPress={() => this.setState({ showPin: false })}
-        /> */}
       </View>
     );
   }
@@ -240,12 +206,7 @@ class TwoFactorScreen extends Component {
   render() {
     return (
       <View style={styles.containerStyle}>
-        <Header
-          navigation={this.props.navigation}
-          colors={this.props.company_config.colors}
-          back
-          title="Two factor"
-        />
+        <Header navigation={this.props.navigation} back title="Two factor" />
         {this.renderContent()}
       </View>
     );

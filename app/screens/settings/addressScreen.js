@@ -42,9 +42,7 @@ class AddressScreen extends Component {
       updateError,
       updateItem,
       updateInputField,
-      company_config,
     } = this.props;
-    const { colors } = company_config;
     const { line_1, line_2, city, state_province, postal_code } = address;
     return (
       <View style={styles.containerStyle}>
@@ -56,7 +54,6 @@ class AddressScreen extends Component {
           headerRightOnPress={() =>
             showDetail ? updateItem('address', tempItem) : this.toggleEdit()
           }
-          colors={colors}
         />
 
         <CardContainer>
@@ -79,7 +76,6 @@ class AddressScreen extends Component {
                     onChangeText={input =>
                       updateInputField('address', 'line_1', input)
                     }
-                    colors={colors}
                   />
 
                   <Input
@@ -90,7 +86,6 @@ class AddressScreen extends Component {
                     onChangeText={input =>
                       updateInputField('address', 'line_2', input)
                     }
-                    colors={colors}
                   />
 
                   <Input
@@ -101,7 +96,6 @@ class AddressScreen extends Component {
                     onChangeText={input =>
                       updateInputField('address', 'city', input)
                     }
-                    colors={colors}
                   />
 
                   <Input
@@ -112,7 +106,6 @@ class AddressScreen extends Component {
                     onChangeText={input =>
                       updateInputField('address', 'state_province', input)
                     }
-                    colors={colors}
                   />
 
                   <Input
@@ -123,7 +116,6 @@ class AddressScreen extends Component {
                     onChangeText={input =>
                       updateInputField('address', 'postal_code', input)
                     }
-                    colors={colors}
                   />
                 </View>
               ) : line_1 || line_2 || city || state_province || postal_code ? (
@@ -209,8 +201,7 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user, auth }) => {
-  const { company_config } = auth;
+const mapStateToProps = ({ user }) => {
   const { address, loading_address, tempItem, showDetail, updateError } = user;
   return {
     address,
@@ -218,7 +209,6 @@ const mapStateToProps = ({ user, auth }) => {
     tempItem,
     showDetail,
     updateError,
-    company_config,
   };
 };
 
