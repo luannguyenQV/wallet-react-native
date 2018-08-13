@@ -7,7 +7,6 @@ export const fetchRewards = () => {
 
 export const VIEW_REWARD = 'view_reward';
 export const viewReward = reward => {
-  console.log(reward);
   return {
     type: VIEW_REWARD,
     payload: reward,
@@ -26,5 +25,27 @@ export const claimReward = reward => {
   return {
     type: CLAIM_REWARD_ASYNC.pending,
     payload: reward,
+  };
+};
+
+export const FETCH_CLAIMED_REWARDS_ASYNC = createAsyncTypes(
+  'fetch_claimed_rewards',
+);
+export const fetchClaimedRewards = () => {
+  return { type: FETCH_CLAIMED_REWARDS_ASYNC.pending };
+};
+
+export const VIEW_CLAIMED_REWARD = 'view_claimed_reward';
+export const viewClaimedReward = reward => {
+  return {
+    type: VIEW_CLAIMED_REWARD,
+    payload: reward,
+  };
+};
+
+export const HIDE_CLAIMED_REWARD = 'hide_claimed_reward';
+export const hideClaimedReward = () => {
+  return {
+    type: HIDE_CLAIMED_REWARD,
   };
 };

@@ -1,5 +1,9 @@
 import { all, call, put, takeEvery } from 'redux-saga/effects';
-import { FETCH_REWARDS_ASYNC, CLAIM_REWARD_ASYNC } from '../actions';
+import {
+  FETCH_REWARDS_ASYNC,
+  CLAIM_REWARD_ASYNC,
+  FETCH_CLAIMED_REWARDS_ASYNC,
+} from '../actions';
 import { Toast } from 'native-base';
 // import Big from 'big.js';
 
@@ -8,6 +12,7 @@ import * as Rehive from '../../util/rehive';
 function* fetchRewards() {
   try {
     const response = yield call(Rehive.getRewards);
+    // console.log('fetchRewards', response);
     if (response.status === 'error') {
       yield put({
         type: FETCH_REWARDS_ASYNC.success,
@@ -48,9 +53,34 @@ function* claimReward(action) {
   }
 }
 
+function* fetchClaimedRewards() {
+  try {
+    const response = yield call(Rehive.getClaimedRewards);
+    // console.log('fetchClaimedRewards', response);
+    if (response.status === 'error') {
+      yield put({
+        type: FETCH_CLAIMED_REWARDS_ASYNC.success,
+        payload: null,
+      });
+    } else {
+      yield put({
+        type: FETCH_CLAIMED_REWARDS_ASYNC.success,
+        payload: response.data,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    yield put({
+      type: FETCH_CLAIMED_REWARDS_ASYNC.error,
+      payload: error.message,
+    });
+  }
+}
+
 // function*
 
 export const rewardsSagas = all([
   takeEvery(FETCH_REWARDS_ASYNC.pending, fetchRewards),
   takeEvery(CLAIM_REWARD_ASYNC.pending, claimReward),
+  takeEvery(FETCH_CLAIMED_REWARDS_ASYNC.pending, fetchClaimedRewards),
 ]);

@@ -210,11 +210,14 @@ export const createTransferEthereum = data =>
 
 /* REWARDS */
 export const getRewards = () =>
-  callApi('GET', rewards_service_url + '/user/rewards/');
+  callApi('GET', rewards_service_url + '/user/campaigns/');
 
 export const claimReward = id => {
   callApi('POST', rewards_service_url + 'user/rewards/request/' + id);
 };
+
+export const getClaimedRewards = () =>
+  callApi('GET', rewards_service_url + '/user/rewards/');
 
 /* GENERAL */
 export const callApi = (method, route, data) => {

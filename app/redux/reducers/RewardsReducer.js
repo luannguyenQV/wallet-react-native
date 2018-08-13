@@ -4,6 +4,9 @@ import {
   CLAIM_REWARD_ASYNC,
   VIEW_REWARD,
   HIDE_REWARD,
+  FETCH_CLAIMED_REWARDS_ASYNC,
+  VIEW_CLAIMED_REWARD,
+  HIDE_CLAIMED_REWARD,
 } from '../actions/RewardsActions';
 
 const INITIAL_STATE = {
@@ -70,6 +73,41 @@ export default (state = INITIAL_STATE, action) => {
         claimLoading: false,
       };
 
+    case FETCH_CLAIMED_REWARDS_ASYNC.pending:
+      return {
+        ...state,
+        claimedRewardsLoading: true,
+        claimedRewardsError: '',
+        showClaimedDetail: false,
+        tempClaimedReward: null,
+      };
+    case FETCH_CLAIMED_REWARDS_ASYNC.success:
+      return {
+        ...state,
+        claimedRewards: action.payload,
+        claimedRewardsLoading: false,
+        claimedRewardsError: '',
+      };
+    case FETCH_CLAIMED_REWARDS_ASYNC.error:
+      return {
+        ...state,
+        claimedRewardsLoading: false,
+        claimedRewardsError: action.payload,
+      };
+
+    case VIEW_CLAIMED_REWARD:
+      return {
+        ...state,
+        tempClaimedReward: action.payload,
+        showClaimedDetail: true,
+      };
+    case HIDE_CLAIMED_REWARD:
+      return {
+        ...state,
+        tempClaimedReward: null,
+        showClaimedDetail: false,
+      };
+
     default:
       return state;
   }
@@ -85,4 +123,15 @@ export function getRewards(store) {
     loadingDetail: store.rewards.claimLoading,
   };
   return rewards;
+}
+
+export function getClaimedRewards(store) {
+  const claimedRewards = {
+    data: store.rewards.claimedRewards,
+    loading: store.rewards.claimedRewardsLoading,
+    error: store.rewards.claimedRewardsError,
+    tempItem: store.rewards.tempClaimedReward,
+    detail: store.rewards.showClaimedDetail,
+  };
+  return claimedRewards;
 }
