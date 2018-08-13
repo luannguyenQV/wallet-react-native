@@ -188,8 +188,7 @@ class AuthScreen extends Component {
             <View style={buttonsContainer}>
               <Button
                 label="LOG IN"
-                textColor={colors.secondaryContrast}
-                backgroundColor={colors.secondary}
+                color="secondary"
                 size="large"
                 reference={input => {
                   this.login = input;
@@ -199,8 +198,8 @@ class AuthScreen extends Component {
               />
               <Button
                 label="Register"
-                textColor={colors.primaryContrast}
-                backgroundColor="transparent"
+                color="primary"
+                type="text"
                 // size="large"
                 reference={input => {
                   this.login = input;
@@ -262,8 +261,7 @@ class AuthScreen extends Component {
                 <View style={buttonsContainer}>
                   <Button
                     label="USE FINGERPRINT"
-                    textColor={colors.secondaryContrast}
-                    backgroundColor={colors.secondary}
+                    color="secondary"
                     reference={input => {
                       this.login = input;
                     }}
@@ -308,8 +306,7 @@ class AuthScreen extends Component {
                 <View style={buttonsContainer}>
                   <Button
                     label="USE FINGERPRINT"
-                    textColor={colors.secondaryContrast}
-                    backgroundColor={colors.secondary}
+                    color="secondary"
                     reference={input => {
                       this.login = input;
                     }}
@@ -318,8 +315,8 @@ class AuthScreen extends Component {
                   />
                   <Button
                     label="USE PIN"
-                    textColor={colors.primaryContrast}
-                    backgroundColor="transparent"
+                    color="primary"
+                    type="text"
                     reference={input => {
                       this.login = input;
                     }}

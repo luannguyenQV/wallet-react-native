@@ -108,17 +108,11 @@ class QRCodeScannerScreen extends Component {
               ) : null}
               {note ? <Output label="Note" value={note} /> : null}
 
-              <Button
-                label="Accept"
-                onPress={this.accept}
-                textColor={colors.secondaryContrast}
-                backgroundColor={colors.secondary}
-              />
+              <Button label="Accept" onPress={this.accept} color="secondary" />
               <Button
                 label="Scan again"
                 onPress={() => this.setState({ camera: true })}
-                textColor={colors.secondaryContrast}
-                backgroundColor={colors.secondary}
+                color="secondary"
               />
             </View>
           )

@@ -58,7 +58,6 @@ class TwoFactorScreen extends Component {
   }
 
   renderLanding() {
-    const { colors } = this.props.company_config;
     return (
       <View style={styles.contentStyle}>
         <Text style={styles.textStyle}>
@@ -74,14 +73,13 @@ class TwoFactorScreen extends Component {
           <View>
             <Button
               label="TOKEN"
-              textColor={colors.primaryContrast}
-              backgroundColor={colors.primary}
+              color="primary"
               onPress={() => this.props.nextStateMFA('token')}
             />
             <Button
               label="SMS"
-              textColor={colors.primary}
-              backgroundColor="transparent"
+              color="primary"
+              type="text"
               onPress={() => this.props.nextStateMFA('sms')}
             />
           </View>
@@ -91,7 +89,6 @@ class TwoFactorScreen extends Component {
   }
 
   renderEnabled() {
-    const { colors } = this.props.company_config;
     return (
       <View style={styles.contentStyle}>
         <Text style={styles.textStyle}>
@@ -102,8 +99,7 @@ class TwoFactorScreen extends Component {
         </Text>
         <Button
           label="DISABLE"
-          textColor={colors.primaryContrast}
-          backgroundColor={colors.primary}
+          color="primary"
           onPress={() => this.props.nextStateMFA('')}
         />
       </View>
@@ -111,7 +107,6 @@ class TwoFactorScreen extends Component {
   }
 
   renderToken() {
-    const { colors } = this.props.company_config;
     const { mfaToken } = this.props;
     console.log(mfaToken);
     let decComp = decodeURIComponent(mfaToken.otpauth_url);
@@ -138,14 +133,13 @@ class TwoFactorScreen extends Component {
         <Output label="Key" value={mfaToken.key} copy />
         <Button
           label="ENABLE"
-          textColor={colors.primaryContrast}
-          backgroundColor={colors.primary}
+          color="primary"
           onPress={() => this.props.nextStateMFA('verifyToken')}
         />
         <Button
           label="CANCEL"
-          textColor={colors.primary}
-          backgroundColor="transparent"
+          color="primary"
+          type="text"
           onPress={() => this.props.nextStateMFA('back')}
         />
       </InputContainer>
@@ -153,7 +147,6 @@ class TwoFactorScreen extends Component {
   }
 
   renderSMS() {
-    const { colors } = this.props.company_config;
     return (
       <View style={styles.contentStyle}>
         <Text style={styles.textStyle}>
@@ -169,18 +162,16 @@ class TwoFactorScreen extends Component {
           onChangeText={value =>
             this.props.authFieldChange({ prop: 'mfaMobile', value })
           }
-          colors={colors}
         />
         <Button
           label="ENABLE"
-          textColor={colors.primaryContrast}
-          backgroundColor={colors.primary}
+          color="primary"
           onPress={() => this.props.nextStateMFA('verifySMS')}
         />
         <Button
           label="CANCEL"
-          textColor={colors.primary}
-          backgroundColor="transparent"
+          color="primary"
+          type="text"
           onPress={() => this.props.nextStateMFA('back')}
         />
       </View>
@@ -230,17 +221,9 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = ({ auth, user }) => {
-  const {
-    company_config,
-    mfaState,
-    mfaToken,
-    mfaError,
-    mfaLoading,
-    mfaMobile,
-  } = auth;
+  const { mfaState, mfaToken, mfaError, mfaLoading, mfaMobile } = auth;
   const { profile } = user;
   return {
-    company_config,
     mfaState,
     mfaToken,
     mfaError,

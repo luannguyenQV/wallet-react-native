@@ -107,8 +107,7 @@ class _MultiFactorAuthentication extends Component {
             <View>
               <Button
                 label="OPEN GOOGLE AUTHENTICATOR"
-                textColor={colors.secondaryContrast}
-                backgroundColor={colors.secondary}
+                color="secondary"
                 reference={input => {
                   this.login = input;
                 }}
@@ -132,9 +131,8 @@ class _MultiFactorAuthentication extends Component {
         ) : (
           <View style={{ padding: 8 }}>
             <Button
+              color="secondary"
               label="Resend SMS"
-              textColor={colors.secondaryContrast}
-              backgroundColor={colors.secondary}
               size="large"
               reference={input => {
                 this.login = input;

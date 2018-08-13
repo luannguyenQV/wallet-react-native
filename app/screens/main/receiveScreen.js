@@ -95,12 +95,14 @@ class ReceiveScreen extends Component {
             }}>
             <View style={{ width: SCREEN_WIDTH / 2 }}>
               <Button
-                backgroundColor={
-                  type === 'email' ? colors.focusContrast : colors.secondary
-                }
-                textColor={
-                  type === 'email' ? colors.focus : colors.secondaryContrast
-                }
+                buttonStyle={{
+                  backgroundColor:
+                    type === 'email' ? colors.focusContrast : colors.secondary,
+                }}
+                textStyle={{
+                  color:
+                    type === 'email' ? colors.focus : colors.secondaryContrast,
+                }}
                 onPress={() => this.switchToEmail()}
                 label="EMAIL"
                 size="small"
@@ -110,12 +112,14 @@ class ReceiveScreen extends Component {
             </View>
             <View style={{ width: SCREEN_WIDTH / 2 }}>
               <Button
-                backgroundColor={
-                  type === 'crypto' ? colors.focusContrast : colors.secondary
-                }
-                textColor={
-                  type === 'crypto' ? colors.focus : colors.secondaryContrast
-                }
+                buttonStyle={{
+                  backgroundColor:
+                    type === 'crypto' ? colors.focusContrast : colors.secondary,
+                }}
+                textStyle={{
+                  color:
+                    type === 'crypto' ? colors.focus : colors.secondaryContrast,
+                }}
                 onPress={() => this.switchToCrypto()}
                 label="CRYPTO"
                 size="small"

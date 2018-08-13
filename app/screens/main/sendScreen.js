@@ -329,16 +329,18 @@ class SendScreen extends Component {
               }}>
               <View style={{ flex: 1 }}>
                 <Button
-                  backgroundColor={
-                    contactsType === 'email'
-                      ? colors.focusContrast
-                      : colors.secondary
-                  }
-                  textColor={
-                    contactsType === 'email'
-                      ? colors.focus
-                      : colors.secondaryContrast
-                  }
+                  buttonStyle={{
+                    backgroundColor:
+                      contactsType === 'email'
+                        ? colors.focusContrast
+                        : colors.secondary,
+                  }}
+                  textStyle={{
+                    color:
+                      contactsType === 'email'
+                        ? colors.focus
+                        : colors.secondaryContrast,
+                  }}
                   onPress={() => setContactType('email')}
                   label="EMAIL"
                   size="small"
@@ -348,16 +350,18 @@ class SendScreen extends Component {
               </View>
               <View style={{ flex: 1 }}>
                 <Button
-                  backgroundColor={
-                    contactsType === 'mobile'
-                      ? colors.focusContrast
-                      : colors.secondary
-                  }
-                  textColor={
-                    contactsType === 'mobile'
-                      ? colors.focus
-                      : colors.secondaryContrast
-                  }
+                  buttonStyle={{
+                    backgroundColor:
+                      contactsType === 'mobile'
+                        ? colors.focusContrast
+                        : colors.secondary,
+                  }}
+                  textStyle={{
+                    color:
+                      contactsType === 'mobile'
+                        ? colors.focus
+                        : colors.secondaryContrast,
+                  }}
                   onPress={() => setContactType('mobile')}
                   label="MOBILE"
                   size="small"
@@ -368,16 +372,18 @@ class SendScreen extends Component {
               {sendType === ('stellar' || 'ethereum' || 'bitcoin') ? (
                 <View style={{ flex: 1 }}>
                   <Button
-                    backgroundColor={
-                      contactsType === 'crypto'
-                        ? colors.focusContrast
-                        : colors.secondary
-                    }
-                    textColor={
-                      contactsType === 'crypto'
-                        ? colors.focus
-                        : colors.secondaryContrast
-                    }
+                    buttonStyle={{
+                      backgroundColor:
+                        contactsType === 'crypto'
+                          ? colors.focusContrast
+                          : colors.secondary,
+                    }}
+                    textStyle={{
+                      color:
+                        contactsType === 'crypto'
+                          ? colors.focus
+                          : colors.secondaryContrast,
+                    }}
                     onPress={() => setContactType('crypto')}
                     label="CRYPTO"
                     size="small"
@@ -471,7 +477,7 @@ class SendScreen extends Component {
   }
 
   render() {
-    const { pin, fingerprint, company_config } = this.props;
+    const { pin, fingerprint } = this.props;
     // console.log(pin, fingerprint);
     return (
       <View style={{ flex: 1 }}>

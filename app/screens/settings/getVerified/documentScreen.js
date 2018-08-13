@@ -58,8 +58,6 @@ class DocumentScreen extends Component {
     if (category) {
       options = document_category[0].document_types;
     }
-    const { company_config } = this.props;
-    const { colors } = company_config;
 
     switch (state) {
       case 'document_type':
@@ -71,14 +69,12 @@ class DocumentScreen extends Component {
                 ? 'Your name and address must be clearly visible and be dated within the last 3 months.'
                 : ''}
             </Text>
-            {/* <ButtonList> */}
             <FlatList
               contentContainerStyle={viewStyleButtonContainer}
               data={options}
               renderItem={({ item }) => this.renderTypeButton(item)}
               keyExtractor={item => item.id.toString()}
             />
-            {/* </ButtonList> */}
           </View>
         );
       case 'confirm':
@@ -96,14 +92,13 @@ class DocumentScreen extends Component {
               <View style={{ paddingHorizontal: 24 }}>
                 <Button
                   label="Upload"
-                  textColor={colors.secondaryContrast}
-                  backgroundColor={colors.secondary}
+                  color="secondary"
                   onPress={() => this.uploadDocument()}
                 />
                 <Button
                   label="Cancel"
-                  textColor={colors.secondaryContrast}
-                  backgroundColor={colors.secondary}
+                  color="secondary"
+                  type="text"
                   onPress={() => this.resetState()}
                 />
               </View>
@@ -114,14 +109,10 @@ class DocumentScreen extends Component {
   }
 
   renderTypeButton = item => {
-    const { company_config } = this.props;
-    const { colors } = company_config;
     return (
       <Button
         label={item.description}
-        // size="small"
-        textColor={colors.secondaryContrast}
-        backgroundColor={colors.secondary}
+        color="secondary"
         onPress={() => this.selectType(item.document_type)}
       />
     );
@@ -182,10 +173,9 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user, auth }) => {
-  const { company_config } = auth;
+const mapStateToProps = ({ user }) => {
   const { loading } = user;
-  return { loading, company_config };
+  return { loading };
 };
 
 export default connect(mapStateToProps, {

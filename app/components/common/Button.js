@@ -6,16 +6,19 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Colors from './../../config/colors';
-
 import context from './context';
 
 class _Button extends Component {
   _buttonStyle() {
-    const { _buttonStyle } = styles;
-    const { backgroundColor, size, round, buttonStyle } = this.props;
+    const { type, color, size, round, buttonStyle, colors } = this.props;
+
+    let backgroundColor = 'transparent';
+    if (type === 'contained') {
+      backgroundColor = colors[color];
+    }
+    console.log(buttonStyle);
     return [
-      _buttonStyle,
+      styles._buttonStyle,
       {
         backgroundColor,
         height: size === 'large' ? 40 : size === 'small' ? 30 : 36,
@@ -28,14 +31,20 @@ class _Button extends Component {
   }
 
   textStyle() {
-    const { textStyle } = styles;
-    const { size, textColor } = this.props;
+    const { size, type, color, colors, textStyle } = this.props;
+
+    let textColor = colors[color];
+    if (type === 'contained') {
+      textColor = colors[color + 'Contrast'];
+    }
+
     return [
-      textStyle,
+      styles._textStyle,
       {
         color: textColor,
         fontSize: size === 'large' ? 18 : size === 'small' ? 12 : 14,
       },
+      textStyle,
     ];
   }
 
@@ -51,7 +60,6 @@ class _Button extends Component {
       containerStyle,
     } = this.props;
     const { _containerStyle } = styles;
-    console.log('theme', this.props.colors);
     return (
       // <ColorContext.Consumer>
       //   {colors => (
@@ -95,6 +103,9 @@ _Button.propTypes = {
   round: PropTypes.bool, // Rounded corners
   buttonStyle: PropTypes.object, // override button style
   containerStyle: PropTypes.object, // override container style
+  textStyle: PropTypes.object, // override text style
+  color: PropTypes.string, // main color
+  colors: PropTypes.object, // colors from context
 };
 
 _Button.defaultProps = {
@@ -106,11 +117,10 @@ _Button.defaultProps = {
   icon: '',
   size: '',
   type: 'contained',
-  backgroundColor: Colors.primary,
-  textColor: Colors.primaryContrast,
   round: false,
   buttonStyle: {},
   containerStyle: {},
+  color: 'primary',
 };
 
 const styles = {
@@ -131,7 +141,7 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
   },
-  textStyle: {
+  _textStyle: {
     textAlign: 'center',
     fontWeight: 'bold',
   },

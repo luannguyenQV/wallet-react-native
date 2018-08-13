@@ -51,9 +51,7 @@ class ChangePasswordScreen extends Component {
       changePassword,
       old_passwordError,
       new_passwordError,
-      company_config,
     } = this.props;
-    const { colors } = company_config;
     return (
       <View style={styles.container}>
         <Header
@@ -87,8 +85,7 @@ class ChangePasswordScreen extends Component {
 
           <Button
             label="CONFIRM"
-            textColor={colors.primaryContrast}
-            backgroundColor={colors.primary}
+            color="primary"
             onPress={() => changePassword(old_password, new_password)}
           />
           {this.renderModal()}
@@ -114,7 +111,6 @@ const mapStateToProps = ({ auth }) => {
     old_passwordError,
     new_passwordError,
     loading,
-    company_config,
   } = auth;
   return {
     input,
@@ -124,7 +120,6 @@ const mapStateToProps = ({ auth }) => {
     old_passwordError,
     new_passwordError,
     loading,
-    company_config,
   };
 };
 
