@@ -115,11 +115,13 @@ function* checkSendServices(action) {
     if (services.stellar.includes(action.payload.currency.currency.code)) {
       service = 'stellar';
     } else if (
-      services.bitcoin.includes(action.payload.currency.currency.code)
+      action.payload.currency.currency.code === 'XBT'
+      // services.bitcoin.includes(action.payload.currency.currency.code)
     ) {
       service = 'bitcoin';
     } else if (
-      services.ethereum.includes(action.payload.currency.currency.code)
+      action.payload.currency.currency.code === 'ETH'
+      // services.ethereum.includes(action.payload.currency.currency.code)
     ) {
       service = 'ethereum';
     }

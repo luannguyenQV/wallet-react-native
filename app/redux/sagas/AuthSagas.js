@@ -47,15 +47,14 @@ import {
   POST_AUTH_FLOW_START,
   RESET_AUTH,
   POST_AUTH_FLOW_FINISH,
-} from '../actions/AuthActions';
-import { Toast } from 'native-base';
-import {
+  SET_RECEIVE_ADDRESS,
   FETCH_DATA_ASYNC,
   FETCH_ACCOUNTS_ASYNC,
   FETCH_PHONE_CONTACTS_ASYNC,
   FETCH_REWARDS_ASYNC,
   FETCH_CRYPTO_ASYNC,
 } from '../actions';
+import { Toast } from 'native-base';
 
 import * as Rehive from '../../util/rehive';
 import NavigationService from '../../util/navigation';
@@ -665,10 +664,20 @@ function* appLoad() {
     }
     if (services.stellar) {
       let resp = yield call(Rehive.getStellarUser);
+      console.log('stellar', resp);
       if (resp.data && !resp.data.username) {
         const { user } = yield select(getAuth);
         yield call(Rehive.setStellarUsername, {
           username: user.username,
+        });
+      }
+      if (resp.data && !resp.data.crypto) {
+        yield put({
+          type: SET_RECEIVE_ADDRESS,
+          payload: {
+            receiveAddress: resp.data.crypto.public_address,
+            receiveMemo: resp.data.crypto.memo,
+          },
         });
       }
       count++;

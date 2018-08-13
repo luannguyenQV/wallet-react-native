@@ -3,8 +3,9 @@ import company_configs from './../config/company_configs';
 import defaultCompanyConfig from './../config/default_company_config.json';
 
 const stellar_service_url = 'https://stellar.services.rehive.io/api/1';
-const bitcoin_service_url = 'https://reward.s.services.rehive.io/api';
-const ethereum_service_url = 'https://reward.s.services.rehive.io/api';
+const bitcoin_service_url = 'https://bitcoin.s.services.rehive.io/api/1';
+const ethereum_service_url = 'https://ethereum.s.services.rehive.io/api/1';
+const rewards_service_url = 'https://reward.services.rehive.io/api';
 
 // SDK initialization
 export let r;
@@ -186,19 +187,34 @@ export const setStellarUsername = data =>
 export const getStellarUser = () =>
   callApi('GET', stellar_service_url + '/user/');
 
-// export const createTransferStellar = data =>
-//   Promise.resolve(
-//     callApi('POST', stellar_service_url + '/transactions/send/', data)
-//       .then(response => response)
-//       .catch(err => err),
-//   );
-
 export const createTransferStellar = data =>
   new Promise((resolve, reject) =>
     callApi('POST', stellar_service_url + '/transactions/send/', data)
       .then(response => resolve(response))
       .catch(err => reject(err)),
   );
+
+export const createTransferBitcoin = data =>
+  new Promise((resolve, reject) =>
+    callApi('POST', bitcoin_service_url + '/transactions/send/', data)
+      .then(response => resolve(response))
+      .catch(err => reject(err)),
+  );
+
+export const createTransferEthereum = data =>
+  new Promise((resolve, reject) =>
+    callApi('POST', ethereum_service_url + '/wallet/send/', data)
+      .then(response => resolve(response))
+      .catch(err => reject(err)),
+  );
+
+/* REWARDS */
+export const getRewards = () =>
+  callApi('GET', rewards_service_url + '/user/rewards/');
+
+export const claimReward = id => {
+  callApi('POST', rewards_service_url + 'user/rewards/request/' + id);
+};
 
 /* GENERAL */
 export const callApi = (method, route, data) => {
