@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TextInput, FlatList } from 'react-native';
 import PropTypes from 'prop-types';
 import Colors from './../../config/colors';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { MaterialIcons as Icon } from '@expo/vector-icons';
 import CountryPicker from 'react-native-country-picker-modal';
 import { ListItem, ListSeparator } from './ListItem';
 

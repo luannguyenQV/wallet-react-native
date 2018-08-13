@@ -45,7 +45,8 @@ function* fetchData(action) {
         response = yield call(Rehive.getProfile);
         break;
       case 'address':
-        response = yield call(Rehive.getAddress);
+        response = yield call(Rehive.getAddresses);
+        console.log('address', response);
         break;
       case 'document':
         response = yield call(Rehive.getDocuments);
@@ -133,8 +134,14 @@ function* updateItem(action) {
         if (data.id) {
           response = yield call(Rehive.updateMobile, data.id, data);
         } else {
-          // yield call(validateMobile, data.number);
           response = yield call(Rehive.createMobile, data);
+        }
+        break;
+      case 'address':
+        if (data.id) {
+          response = yield call(Rehive.updateAddress, data.id, data);
+        } else {
+          response = yield call(Rehive.createAddress, data);
         }
         break;
       case 'email':
@@ -191,6 +198,9 @@ function* deleteItem(action) {
     switch (type) {
       case 'mobile':
         response = yield call(Rehive.deleteMobile, data.id);
+        break;
+      case 'address':
+        response = yield call(Rehive.deleteAddress, data.id);
         break;
       case 'email':
         response = yield call(Rehive.deleteEmail, data.id);

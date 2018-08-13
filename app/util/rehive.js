@@ -75,9 +75,13 @@ export const updateProfileImage = file => {
 };
 
 // Address
-export const getAddress = () => r.user.address.get();
+export const getAddresses = () => r.user.addresses.get();
 
-export const updateAddress = data => r.user.address.update(data);
+export const createAddress = data => r.user.addresses.create(data);
+
+export const updateAddress = data => r.user.addresses.update(data);
+
+export const deleteAddress = id => r.user.addresses.delete(id);
 
 // Bank Accounts
 export const getBankAccounts = () => r.user.bankAccounts.get();

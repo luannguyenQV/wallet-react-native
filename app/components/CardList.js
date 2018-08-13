@@ -267,7 +267,6 @@ class CardList extends Component {
       // redux actions
       updateItem,
       fetchData,
-      fetchAccounts,
       colors,
     } = this.props;
     return (
