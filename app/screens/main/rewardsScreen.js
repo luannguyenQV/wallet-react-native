@@ -20,7 +20,7 @@ import Header from './../../components/header';
 // import Wallet from './../../components/wallet';
 import { Output, PopUpGeneral } from '../../components/common';
 import CardList from './../../components/CardList';
-import { performDivisibility } from './../../util/general';
+import { performDivisibility, standardizeString } from './../../util/general';
 
 class RewardsScreen extends Component {
   static navigationOptions = {
@@ -41,7 +41,7 @@ class RewardsScreen extends Component {
       <View style={styles.viewStyleContainer}>
         <Output label="" value={item.description} />
         <Output
-          label=""
+          label="Amount"
           value={
             item.currency.symbol +
             ' ' +
@@ -57,7 +57,7 @@ class RewardsScreen extends Component {
       <View style={styles.viewStyleContainer}>
         <Output label="" value={item.description} />
         <Output
-          label=""
+          label="Amount"
           value={
             item.currency.symbol +
             ' ' +
@@ -75,7 +75,7 @@ class RewardsScreen extends Component {
       <View style={styles.viewStyleContainer}>
         <Output label="" value={item.campaign.description} />
         <Output
-          label=""
+          label="Amount"
           value={
             item.currency.symbol +
             ' ' +
@@ -87,18 +87,22 @@ class RewardsScreen extends Component {
   }
 
   renderClaimedDetail(item) {
+    console.log(item);
     return (
       <View style={styles.viewStyleContainer}>
         <Output label="" value={item.campaign.description} />
         <Output
-          label=""
+          label="Amount"
           value={
             item.currency.symbol +
             ' ' +
             performDivisibility(item.amount, item.currency.divisibility)
           }
         />
-        <Output label="Rewards type" value={item.reward_type} />
+        <Output label="Type" value={item.reward_type} />
+        <Output label="Status" value={standardizeString(item.status)} />
+        {/* <Output label="Start date" value={item.start_date} />
+        <Output label="End date" value={item.end_date} /> */}
       </View>
     );
   }
@@ -171,9 +175,9 @@ class RewardsScreen extends Component {
                 loadingData={claimedRewards.loading}
                 identifier="identifier"
                 onRefresh={fetchClaimedRewards}
-                renderContent={this.renderContent}
+                renderContent={this.renderClaimedContent}
                 showReward={claimedRewards.detail}
-                renderDetail={this.renderDetail}
+                renderDetail={this.renderClaimedDetail}
                 title={item => (item ? item.campaign.name : '')}
                 // subtitle={item =>
                 //   item ? standardizeString(item.account_name) : ''
