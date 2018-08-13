@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { ImagePicker, Permissions } from 'expo';
-import Colors from './../../config/colors';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import { PopUpGeneral } from './PopUpGeneral';
 import { ButtonList } from './ButtonList';
 import { Button } from './Button';

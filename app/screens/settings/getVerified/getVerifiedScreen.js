@@ -99,39 +99,40 @@ class GetVerifiedScreen extends Component {
 
   renderAddresses() {
     const { address } = this.props;
-
     let value = '';
-    if (address) {
-      if (address.line_1) {
-        value = value + address.line_1;
+    let status = address.status ? address.status.toUpperCase() : 'INCOMPLETE';
+    if (address.length > 0) {
+      const tempAddress = address[0];
+      status = address.status ? address.status.toUpperCase() : status;
+      if (tempAddress.line_1) {
+        value = value + tempAddress.line_1;
       }
-      if (address.line_2) {
-        value = value + (value ? ', ' : '') + address.line_2;
+      if (tempAddress.line_2) {
+        value = value + (value ? ', ' : '') + tempAddress.line_2;
       }
-      if (address.city) {
-        value = value + (value ? ', ' : '') + address.city;
+      if (tempAddress.city) {
+        value = value + (value ? ', ' : '') + tempAddress.city;
       }
-      if (address.state_province) {
-        value = value + (value ? ', ' : '') + address.state_province;
+      if (tempAddress.state_province) {
+        value = value + (value ? ', ' : '') + tempAddress.state_province;
       }
-      if (address.country) {
-        value = value + (value ? ', ' : '') + address.country;
+      if (tempAddress.country) {
+        value = value + (value ? ', ' : '') + tempAddress.country;
       }
-      if (address.postal_code) {
-        value = value + (value ? ', ' : '') + address.postal_code;
+      if (tempAddress.postal_code) {
+        value = value + (value ? ', ' : '') + tempAddress.postal_code;
       }
     }
     if (!value) {
       value = 'Not yet provided';
     }
-    let status = address.status ? address.status.toUpperCase() : 'INCOMPLETE';
 
     return (
       <GetVerifiedOption
         label="Address"
         value={value ? value : 'Not yet provided'}
         status={status}
-        gotoAddress="SettingsAddress"
+        gotoAddress="SettingsAddresses"
         goTo={this.goTo}
       />
     );

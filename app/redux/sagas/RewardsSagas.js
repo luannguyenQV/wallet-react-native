@@ -5,13 +5,14 @@ import { Toast } from 'native-base';
 
 import * as Rehive from '../../util/rehive';
 
-const rewards_service_url = 'https://reward.s.services.rehive.io/api';
+const rewards_service_url = 'https://reward.services.rehive.io/api';
 
 function* fetchRewards() {
   try {
     const route = rewards_service_url + '/user/rewards/';
     const response = yield call(Rehive.callApi, 'GET', route);
-    if (response.status === 'error' || !response.ok) {
+    if (response.status === 'error') {
+      console.log(response);
       yield put({
         type: FETCH_REWARDS_ASYNC.success,
         payload: null,
@@ -19,7 +20,7 @@ function* fetchRewards() {
     } else {
       yield put({
         type: FETCH_REWARDS_ASYNC.success,
-        payload: response.data.results,
+        payload: response.data,
       });
     }
   } catch (error) {

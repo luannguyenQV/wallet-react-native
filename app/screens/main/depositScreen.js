@@ -1,18 +1,10 @@
 import React, { Component } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Alert,
-  TouchableHighlight,
-  Clipboard,
-} from 'react-native';
+import { View, Text, Alert, TouchableHighlight, Clipboard } from 'react-native';
 import { connect } from 'react-redux';
 import { fetchData } from './../../redux/actions';
 
-import Colors from './../../config/colors';
 import Header from './../../components/header';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 
 import { Output } from './../../components/common';
 import CardList from './../../components/CardList';

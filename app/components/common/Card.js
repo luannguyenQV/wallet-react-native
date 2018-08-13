@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import { Spinner } from './Spinner';
 import { HeaderButton } from './HeaderButton';
 import TouchableCircle from './../touchableCircle';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { MaterialIcons as Icon } from '@expo/vector-icons';
 import Swipeable from 'react-native-swipeable';
 import Colors from './../../config/colors';
 
@@ -271,6 +271,7 @@ const styles = {
     flexDirection: 'row',
     justifyContent: 'flex-end',
     width: '100%',
+    height: 52,
     padding: 8,
   },
   textStyleAction: {

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Text, View, Dimensions, TouchableHighlight } from 'react-native';
-// import { Icon } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { MaterialIcons as Icon } from '@expo/vector-icons';
 import moment from 'moment';
 import { performDivisibility } from './../util/general';
 
