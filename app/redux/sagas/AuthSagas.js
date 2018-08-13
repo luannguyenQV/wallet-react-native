@@ -658,7 +658,7 @@ function* appLoad() {
   console.log('appLoad');
   try {
     yield put({ type: POST_LOADING });
-    let count = 10;
+    let count = 11;
     const { services } = yield select(getCompanyConfig);
     if (services.rewards) {
       count++;
