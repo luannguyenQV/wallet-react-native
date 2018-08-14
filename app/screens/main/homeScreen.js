@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, FlatList } from 'react-native';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
 import {
   logoutUser,
@@ -10,9 +10,10 @@ import {
 import Swiper from 'react-native-swiper';
 
 import Header from './../../components/header';
-import HeaderWallet from '../../components/HeaderWallet';
+import WalletHeader from '../../components/WalletHeader';
 import TransactionList from './../../components/TransactionList';
 import HomeCards from './../../components/HomeCards';
+import { MyView } from './../../components/common';
 
 const renderPagination = (index, total, context) => {
   return (
@@ -40,9 +41,9 @@ class HomeScreen extends Component {
     const { wallets, activeWalletIndex, company_config } = this.props;
 
     return (
-      <View style={styles.container}>
+      <MyView f={1}>
         <Header navigation={this.props.navigation} drawer right noShadow />
-        <HeaderWallet
+        <WalletHeader
           wallets={wallets}
           buttons={[
             { id: 0, type: 'receive' },
@@ -62,7 +63,7 @@ class HomeScreen extends Component {
             }
           />
         </Swiper>
-      </View>
+      </MyView>
     );
   }
 }

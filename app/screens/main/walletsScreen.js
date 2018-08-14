@@ -15,7 +15,7 @@ import Header from './../../components/header';
 // import Wallet from './../../components/wallet';
 import { Output, PopUpGeneral } from '../../components/common';
 import { standardizeString, performDivisibility } from './../../util/general';
-import HeaderWallet from './../../components/HeaderWallet';
+import WalletHeader from './../../components/WalletHeader';
 import TransactionList from './../../components/TransactionList';
 import CardList from './../../components/CardList';
 
@@ -92,7 +92,7 @@ class WalletsScreen extends Component {
     buttons[i] = { id: i++, type: 'send' };
     return (
       <View style={styles.viewStyleDetailCard}>
-        <HeaderWallet
+        <WalletHeader
           wallets={[item]}
           buttons={buttons}
           navigation={navigation}
