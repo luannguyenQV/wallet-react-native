@@ -4,9 +4,9 @@ import {
   CLAIM_REWARD_ASYNC,
   VIEW_REWARD,
   HIDE_REWARD,
-  FETCH_CLAIMED_REWARDS_ASYNC,
-  VIEW_CLAIMED_REWARD,
-  HIDE_CLAIMED_REWARD,
+  FETCH_CAMPAIGNS_ASYNC,
+  VIEW_CAMPAIGN,
+  HIDE_CAMPAIGN,
 } from '../actions/RewardsActions';
 
 const INITIAL_STATE = {
@@ -24,7 +24,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         rewardsLoading: true,
         rewardsError: '',
-        showDetail: false,
+        showRewardDetail: false,
         tempReward: null,
       };
     case FETCH_REWARDS_ASYNC.success:
@@ -45,66 +45,66 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         tempReward: action.payload,
-        showDetail: true,
+        showRewardDetail: true,
       };
     case HIDE_REWARD:
       return {
         ...state,
         tempReward: null,
-        showDetail: false,
+        showRewardDetail: false,
       };
 
     case CLAIM_REWARD_ASYNC.pending:
       return {
         ...state,
-        claimError: '',
-        claimLoading: true,
+        claimRewardError: '',
+        claimRewardLoading: true,
       };
     case CLAIM_REWARD_ASYNC.success:
       return {
         ...state,
-        claimError: '',
-        claimLoading: false,
+        claimRewardError: '',
+        claimRewardLoading: false,
       };
     case CLAIM_REWARD_ASYNC.error:
       return {
         ...state,
-        claimError: action.payload,
-        claimLoading: false,
+        claimRewardError: action.payload,
+        claimRewardLoading: false,
       };
 
-    case FETCH_CLAIMED_REWARDS_ASYNC.pending:
+    case FETCH_CAMPAIGNS_ASYNC.pending:
       return {
         ...state,
-        claimedRewardsLoading: true,
-        claimedRewardsError: '',
-        showClaimedDetail: false,
-        tempClaimedReward: null,
+        campaignsLoading: true,
+        campaignsError: '',
+        showCampaignDetail: false,
+        tempCampaign: null,
       };
-    case FETCH_CLAIMED_REWARDS_ASYNC.success:
+    case FETCH_CAMPAIGNS_ASYNC.success:
       return {
         ...state,
-        claimedRewards: action.payload,
-        claimedRewardsLoading: false,
-        claimedRewardsError: '',
+        campaigns: action.payload,
+        campaignsLoading: false,
+        campaignsError: '',
       };
-    case FETCH_CLAIMED_REWARDS_ASYNC.error:
+    case FETCH_CAMPAIGNS_ASYNC.error:
       return {
         ...state,
-        claimedRewardsLoading: false,
-        claimedRewardsError: action.payload,
+        campaignsLoading: false,
+        campaignsError: action.payload,
       };
 
-    case VIEW_CLAIMED_REWARD:
+    case VIEW_CAMPAIGN:
       return {
         ...state,
-        tempClaimedReward: action.payload,
+        tempCampaign: action.payload,
         showClaimedDetail: true,
       };
-    case HIDE_CLAIMED_REWARD:
+    case HIDE_CAMPAIGN:
       return {
         ...state,
-        tempClaimedReward: null,
+        tempCampaign: null,
         showClaimedDetail: false,
       };
 
@@ -119,19 +119,19 @@ export function getRewards(store) {
     loading: store.rewards.rewardsLoading,
     error: store.rewards.rewardsError,
     tempItem: store.rewards.tempReward,
-    detail: store.rewards.showDetail,
-    loadingDetail: store.rewards.claimLoading,
+    detail: store.rewards.showRewardDetail,
   };
   return rewards;
 }
 
-export function getClaimedRewards(store) {
-  const claimedRewards = {
-    data: store.rewards.claimedRewards,
-    loading: store.rewards.claimedRewardsLoading,
-    error: store.rewards.claimedRewardsError,
-    tempItem: store.rewards.tempClaimedReward,
-    detail: store.rewards.showClaimedDetail,
+export function getCampaigns(store) {
+  const campaigns = {
+    data: store.rewards.campaigns,
+    loading: store.rewards.campaignsLoading,
+    error: store.rewards.campaignsError,
+    tempItem: store.rewards.tempCampaign,
+    detail: store.rewards.showCampaignDetail,
+    loadingDetail: store.rewards.claimRewardLoading,
   };
-  return claimedRewards;
+  return campaigns;
 }

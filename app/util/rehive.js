@@ -210,14 +210,13 @@ export const createTransferEthereum = data =>
 
 /* REWARDS */
 export const getRewards = () =>
-  callApi('GET', rewards_service_url + '/user/campaigns/');
-
-export const claimReward = id => {
-  callApi('POST', rewards_service_url + 'user/rewards/request/' + id);
-};
-
-export const getClaimedRewards = () =>
   callApi('GET', rewards_service_url + '/user/rewards/');
+
+export const claimReward = data =>
+  callApi('POST', rewards_service_url + '/user/rewards/', data);
+
+export const getCampaigns = () =>
+  callApi('GET', rewards_service_url + '/user/campaigns/');
 
 /* GENERAL */
 export const callApi = (method, route, data) => {
@@ -235,7 +234,7 @@ export const callApi = (method, route, data) => {
     mode: 'cors',
     headers,
   };
-  // console.log(data);
+  console.log(data);
   if (data) {
     config['body'] = JSON.stringify(data);
   }

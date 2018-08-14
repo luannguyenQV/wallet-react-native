@@ -2,7 +2,7 @@ import { all, call, put, takeEvery } from 'redux-saga/effects';
 import {
   FETCH_REWARDS_ASYNC,
   CLAIM_REWARD_ASYNC,
-  FETCH_CLAIMED_REWARDS_ASYNC,
+  FETCH_CAMPAIGNS_ASYNC,
 } from '../actions';
 import { Toast } from 'native-base';
 // import Big from 'big.js';
@@ -32,17 +32,28 @@ function* fetchRewards() {
 
 function* claimReward(action) {
   try {
-    yield call(Rehive.claimReward, action.payload.identifiere);
-
-    Toast.show({
-      text:
-        'Your reward has been requested and it will reflect in your wallet balance upon admin approval',
-      duration: 3000,
+    console.log(action);
+    const response = yield call(Rehive.claimReward, {
+      campaign: action.payload.identifier,
     });
-
-    yield put({
-      type: CLAIM_REWARD_ASYNC.success,
-    });
+    console.log(response);
+    if (response.status === 'success') {
+      yield put({ type: CLAIM_REWARD_ASYNC.success });
+      Toast.show({
+        text:
+          'Your reward has been requested and it will reflect in your wallet balance upon admin approval',
+        duration: 3000,
+      });
+    } else {
+      yield put({
+        type: CLAIM_REWARD_ASYNC.error,
+        payload: response.message,
+      });
+      Toast.show({
+        text: 'Error posting reward claim',
+        duration: 3000,
+      });
+    }
   } catch (error) {
     console.log(error);
     Toast.show({
@@ -53,25 +64,24 @@ function* claimReward(action) {
   }
 }
 
-function* fetchClaimedRewards() {
+function* fetchCampaigns() {
   try {
-    const response = yield call(Rehive.getClaimedRewards);
-    // console.log('fetchClaimedRewards', response);
+    const response = yield call(Rehive.getCampaigns);
     if (response.status === 'error') {
       yield put({
-        type: FETCH_CLAIMED_REWARDS_ASYNC.success,
+        type: FETCH_CAMPAIGNS_ASYNC.success,
         payload: null,
       });
     } else {
       yield put({
-        type: FETCH_CLAIMED_REWARDS_ASYNC.success,
+        type: FETCH_CAMPAIGNS_ASYNC.success,
         payload: response.data,
       });
     }
   } catch (error) {
     console.log(error);
     yield put({
-      type: FETCH_CLAIMED_REWARDS_ASYNC.error,
+      type: FETCH_CAMPAIGNS_ASYNC.error,
       payload: error.message,
     });
   }
@@ -82,5 +92,5 @@ function* fetchClaimedRewards() {
 export const rewardsSagas = all([
   takeEvery(FETCH_REWARDS_ASYNC.pending, fetchRewards),
   takeEvery(CLAIM_REWARD_ASYNC.pending, claimReward),
-  takeEvery(FETCH_CLAIMED_REWARDS_ASYNC.pending, fetchClaimedRewards),
+  takeEvery(FETCH_CAMPAIGNS_ASYNC.pending, fetchCampaigns),
 ]);

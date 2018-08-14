@@ -28,24 +28,22 @@ export const claimReward = reward => {
   };
 };
 
-export const FETCH_CLAIMED_REWARDS_ASYNC = createAsyncTypes(
-  'fetch_claimed_rewards',
-);
-export const fetchClaimedRewards = () => {
-  return { type: FETCH_CLAIMED_REWARDS_ASYNC.pending };
+export const FETCH_CAMPAIGNS_ASYNC = createAsyncTypes('fetch_campaigns');
+export const fetchCampaigns = () => {
+  return { type: FETCH_CAMPAIGNS_ASYNC.pending };
 };
 
-export const VIEW_CLAIMED_REWARD = 'view_claimed_reward';
-export const viewClaimedReward = reward => {
+export const VIEW_CAMPAIGN = 'view_campaign';
+export const viewCampaign = reward => {
   return {
-    type: VIEW_CLAIMED_REWARD,
+    type: VIEW_CAMPAIGN,
     payload: reward,
   };
 };
 
-export const HIDE_CLAIMED_REWARD = 'hide_claimed_reward';
-export const hideClaimedReward = () => {
+export const HIDE_CAMPAIGN = 'hide_campaign';
+export const hideCampaign = () => {
   return {
-    type: HIDE_CLAIMED_REWARD,
+    type: HIDE_CAMPAIGN,
   };
 };

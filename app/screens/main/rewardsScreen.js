@@ -6,19 +6,18 @@ import {
   claimReward,
   viewReward,
   hideReward,
-  fetchClaimedRewards,
-  viewClaimedReward,
-  hideClaimedReward,
+  fetchCampaigns,
+  viewCampaign,
+  hideCampaign,
 } from './../../redux/actions';
 import { Container, Content, Tab, Tabs } from 'native-base';
 import {
   getRewards,
-  getClaimedRewards,
+  getCampaigns,
 } from './../../redux/reducers/RewardsReducer';
 
 import Header from './../../components/header';
-// import Wallet from './../../components/wallet';
-import { Output, PopUpGeneral } from '../../components/common';
+import { Output } from '../../components/common';
 import CardList from './../../components/CardList';
 import { performDivisibility, standardizeString } from './../../util/general';
 
@@ -36,7 +35,7 @@ class RewardsScreen extends Component {
     this.props.fetchRewards();
   }
 
-  renderContent(item) {
+  renderCampaignContent(item) {
     return (
       <View style={styles.viewStyleContainer}>
         <Output label="" value={item.description} />
@@ -52,7 +51,7 @@ class RewardsScreen extends Component {
     );
   }
 
-  renderDetail(item) {
+  renderCampaignDetail(item) {
     return (
       <View style={styles.viewStyleContainer}>
         <Output label="" value={item.description} />
@@ -70,7 +69,7 @@ class RewardsScreen extends Component {
     );
   }
 
-  renderClaimedContent(item) {
+  renderRewardContent(item) {
     return (
       <View style={styles.viewStyleContainer}>
         <Output label="" value={item.campaign.description} />
@@ -86,8 +85,7 @@ class RewardsScreen extends Component {
     );
   }
 
-  renderClaimedDetail(item) {
-    console.log(item);
+  renderRewardDetail(item) {
     return (
       <View style={styles.viewStyleContainer}>
         <Output label="" value={item.campaign.description} />
@@ -110,15 +108,15 @@ class RewardsScreen extends Component {
   render() {
     const {
       company_config,
-      rewards,
+      campaigns,
       fetchRewards,
       viewReward,
       hideReward,
+      rewards,
+      fetchCampaigns,
+      viewCampaign,
+      hideCampaign,
       claimReward,
-      claimedRewards,
-      fetchClaimedRewards,
-      viewClaimedReward,
-      hideClaimedReward,
     } = this.props;
     return (
       <View style={styles.container}>
@@ -134,7 +132,37 @@ class RewardsScreen extends Component {
               backgroundColor: company_config.colors.focus,
             }}>
             <Tab
-              heading="Campaigns"
+              heading="Available"
+              activeTextStyle={{ color: company_config.colors.focus }}>
+              <CardList
+                colors={company_config.colors}
+                type="campaigns"
+                navigation={this.props.navigation}
+                data={campaigns.data}
+                tempItem={campaigns.tempItem}
+                loadingData={campaigns.loading}
+                identifier="name"
+                onRefresh={fetchCampaigns}
+                renderContent={this.renderCampaignContent}
+                showDetail={campaigns.detail}
+                renderDetail={this.renderCampaignDetail}
+                title={item => (item ? item.name : '')}
+                // subtitle={item =>
+                //   item ? standardizeString(item.account_name) : ''
+                // }
+                onPressTitle={item => viewCampaign(item)}
+                onPressContent={item => viewCampaign(item)}
+                emptyListMessage="No rewards available"
+                titleStyle="secondary"
+                keyExtractor={item => item.identifier}
+                textActionOne="CLAIM"
+                onPressActionOne={item => claimReward(item)}
+                onPressActionTwo={() => hideCampaign()}
+                loadingDetail={campaigns.loadingDetail}
+              />
+            </Tab>
+            <Tab
+              heading="Claimed"
               activeTextStyle={{ color: company_config.colors.focus }}>
               <CardList
                 colors={company_config.colors}
@@ -145,52 +173,22 @@ class RewardsScreen extends Component {
                 loadingData={rewards.loading}
                 identifier="identifier"
                 onRefresh={fetchRewards}
-                renderContent={this.renderContent}
+                renderContent={this.renderRewardContent}
                 showReward={rewards.detail}
-                renderDetail={this.renderDetail}
-                title={item => (item ? item.name : '')}
+                renderDetail={this.renderRewardDetail}
+                title={item => (item ? item.campaign.name : '')}
                 // subtitle={item =>
                 //   item ? standardizeString(item.account_name) : ''
                 // }
                 onPressTitle={item => viewReward(item)}
                 onPressContent={item => viewReward(item)}
-                emptyListMessage="No rewards available"
-                titleStyle="secondary"
-                keyExtractor={item => item.identifier}
-                textActionOne="CLAIM"
-                onPressActionOne={item => claimReward(item)}
-                onPressActionTwo={() => hideReward()}
-                loadingDetail={rewards.loadingDetail}
-              />
-            </Tab>
-            <Tab
-              heading="Rewards"
-              activeTextStyle={{ color: company_config.colors.focus }}>
-              <CardList
-                colors={company_config.colors}
-                type="claimedRewards"
-                navigation={this.props.navigation}
-                data={claimedRewards.data}
-                tempItem={claimedRewards.tempItem}
-                loadingData={claimedRewards.loading}
-                identifier="identifier"
-                onRefresh={fetchClaimedRewards}
-                renderContent={this.renderClaimedContent}
-                showReward={claimedRewards.detail}
-                renderDetail={this.renderClaimedDetail}
-                title={item => (item ? item.campaign.name : '')}
-                // subtitle={item =>
-                //   item ? standardizeString(item.account_name) : ''
-                // }
-                onPressTitle={item => viewClaimedReward(item)}
-                onPressContent={item => viewClaimedReward(item)}
-                emptyListMessage="No claimed rewards"
+                emptyListMessage="No rewards claimed"
                 titleStyle="secondary"
                 keyExtractor={item => item.identifier}
                 // textActionOne="CLAIM"
                 // onPressActionOne={item => claimReward(item)}
-                onPressActionTwo={() => hideClaimedReward()}
-                loadingDetail={claimedRewards.loadingDetail}
+                onPressActionTwo={() => hideReward()}
+                loadingDetail={rewards.loadingDetail}
               />
             </Tab>
           </Tabs>
@@ -229,8 +227,8 @@ const mapStateToProps = store => {
   const { company_config } = store.auth;
   return {
     company_config,
+    campaigns: getCampaigns(store),
     rewards: getRewards(store),
-    claimedRewards: getClaimedRewards(store),
   };
 };
 
@@ -239,7 +237,7 @@ export default connect(mapStateToProps, {
   claimReward,
   viewReward,
   hideReward,
-  fetchClaimedRewards,
-  viewClaimedReward,
-  hideClaimedReward,
+  fetchCampaigns,
+  viewCampaign,
+  hideCampaign,
 })(RewardsScreen);
