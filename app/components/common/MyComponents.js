@@ -4,14 +4,18 @@ import PropTypes from 'prop-types';
 import context from './context';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
+const rem = SCREEN_WIDTH > 340 ? 18 : 16;
+const fontRem = 20;
 
 class _MyView extends Component {
   _viewStyle() {
     const { f, fD, p, m, aI, jC } = this.props;
+    console.log(SCREEN_WIDTH);
+    console.log(SCREEN_WIDTH / 8);
     return {
-      flex: f,
+      flex: f ? 1 : 0,
       flexDirection: fD,
-      padding: calculateRem(p),
+      padding: padding(p),
     };
   }
 
@@ -22,12 +26,10 @@ class _MyView extends Component {
   }
 }
 
-const calculateRem = number => {
-  number;
-};
+const padding = p => p * (SCREEN_WIDTH / rem);
 
 _MyView.propTypes = {
-  f: PropTypes.number, // Flex
+  f: PropTypes.bool, // Flex
   fD: PropTypes.string, // Flex direction
   aI: PropTypes.string, // Align items
   jC: PropTypes.string, // Justify content
@@ -38,7 +40,7 @@ _MyView.propTypes = {
 };
 
 _MyView.defaultProps = {
-  f: 0,
+  f: false,
   fD: 'column',
   aI: '',
   jC: '',

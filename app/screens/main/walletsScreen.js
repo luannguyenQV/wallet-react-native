@@ -13,7 +13,7 @@ import {
 
 import Header from './../../components/header';
 // import Wallet from './../../components/wallet';
-import { Output, PopUpGeneral } from '../../components/common';
+import { Output, MyView } from '../../components/common';
 import { standardizeString, performDivisibility } from './../../util/general';
 import WalletHeader from './../../components/WalletHeader';
 import TransactionList from './../../components/TransactionList';
@@ -73,10 +73,10 @@ class WalletsScreen extends Component {
       ).toFixed(item.currency.currency.divisibility);
 
     return (
-      <View style={styles.viewStyleContainer}>
+      <MyView p={0.5}>
         <Output label="Balance" value={balance} />
         <Output label="Available" value={available} />
-      </View>
+      </MyView>
     );
   }
 
@@ -91,7 +91,7 @@ class WalletsScreen extends Component {
     buttons[i] = { id: i++, type: 'receive' };
     buttons[i] = { id: i++, type: 'send' };
     return (
-      <View style={styles.viewStyleDetailCard}>
+      <View>
         <WalletHeader
           wallets={[item]}
           buttons={buttons}
@@ -114,7 +114,7 @@ class WalletsScreen extends Component {
       tempWallet,
     } = this.props;
     return (
-      <View style={styles.container}>
+      <MyView f>
         <Header navigation={this.props.navigation} drawer title="Wallets" />
         <CardList
           type="wallet"
@@ -150,35 +150,10 @@ class WalletsScreen extends Component {
           }
           canActive
         />
-      </View>
+      </MyView>
     );
   }
 }
-
-const styles = {
-  viewStyleContainer: {
-    paddingLeft: 8,
-  },
-  viewStyleDetailCard: {
-    flex: 1,
-    backgroundColor: '#ffffff',
-    // borderRadius: 2,
-    // borderColor: '#ffffff',
-    // borderWidth: 1,
-    shadowColor: 'rgba(0, 0, 0, 0.6)',
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 2,
-    shadowOffset: {
-      height: 1,
-      width: 2,
-    },
-  },
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-  },
-};
 
 const mapStateToProps = ({ accounts, user, auth }) => {
   const { wallets, loading_accounts, tempWallet, showWallet } = accounts;
