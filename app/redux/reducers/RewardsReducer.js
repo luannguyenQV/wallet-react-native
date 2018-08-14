@@ -9,9 +9,7 @@ import {
   HIDE_CAMPAIGN,
 } from '../actions/RewardsActions';
 
-const INITIAL_STATE = {
-  user: null,
-};
+const INITIAL_STATE = {};
 
 export default (state = INITIAL_STATE, action) => {
   // console.log(action);
@@ -99,13 +97,13 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         tempCampaign: action.payload,
-        showClaimedDetail: true,
+        showCampaignDetail: true,
       };
     case HIDE_CAMPAIGN:
       return {
         ...state,
         tempCampaign: null,
-        showClaimedDetail: false,
+        showCampaignDetail: false,
       };
 
     default:

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import {
   fetchRewards,
   claimReward,
@@ -81,6 +82,14 @@ class RewardsScreen extends Component {
             performDivisibility(item.amount, item.currency.divisibility)
           }
         />
+        <View style={styles.viewStyleFooter}>
+          <View>
+            <Text>{moment(item.created).format('lll')}</Text>
+          </View>
+          <View>
+            <Text>{item.status}</Text>
+          </View>
+        </View>
       </View>
     );
   }
@@ -97,10 +106,14 @@ class RewardsScreen extends Component {
             performDivisibility(item.amount, item.currency.divisibility)
           }
         />
-        <Output label="Type" value={item.reward_type} />
-        <Output label="Status" value={standardizeString(item.status)} />
-        {/* <Output label="Start date" value={item.start_date} />
-        <Output label="End date" value={item.end_date} /> */}
+        <View style={styles.viewStyleFooter}>
+          <View>
+            <Text>{moment(item.created).format('lll')}</Text>
+          </View>
+          <View>
+            <Text>{item.status}</Text>
+          </View>
+        </View>
       </View>
     );
   }
@@ -144,7 +157,7 @@ class RewardsScreen extends Component {
                 identifier="name"
                 onRefresh={fetchCampaigns}
                 renderContent={this.renderCampaignContent}
-                showDetail={campaigns.detail}
+                showReward={campaigns.detail}
                 renderDetail={this.renderCampaignDetail}
                 title={item => (item ? item.name : '')}
                 // subtitle={item =>
@@ -200,7 +213,8 @@ class RewardsScreen extends Component {
 
 const styles = {
   viewStyleContainer: {
-    paddingLeft: 8,
+    padding: 8,
+    paddingTop: 0,
   },
   viewStyleDetailCard: {
     flex: 1,
@@ -220,6 +234,13 @@ const styles = {
   container: {
     flex: 1,
     flexDirection: 'column',
+  },
+  viewStyleFooter: {
+    // flex: 2,
+    padding: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
   },
 };
 
