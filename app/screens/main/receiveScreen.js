@@ -53,7 +53,9 @@ class ReceiveScreen extends Component {
     const imageURI =
       'https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=' +
       encodeURIComponent(
-        'stellar:GANOZF7TIDYZ7MGRVVMAJHBQ7JCWRNRDHPY6N4W5OWU2JWNMQ2D67NVQ?' +
+        'stellar:' +
+          this.props.receiveAddress +
+          '?' +
           (user.username ? 'memo=' + user.username + '&' : '') +
           (currencyCode ? 'currency=' + currencyCode : ''),
       ) +
@@ -64,10 +66,7 @@ class ReceiveScreen extends Component {
   _copyQR() {
     const { type } = this.state;
     const user = this.props.profile;
-    const value =
-      type === 'email'
-        ? user.email
-        : 'GANOZF7TIDYZ7MGRVVMAJHBQ7JCWRNRDHPY6N4W5OWU2JWNMQ2D67NVQ';
+    const value = type === 'email' ? user.email : this.props.receiveAddress;
     Clipboard.setString(value);
     Toast.show({
       text:
@@ -148,7 +147,7 @@ class ReceiveScreen extends Component {
         <View style={{ padding: 16, width: '100%' }}>
           <Output
             label={type === 'email' ? 'Email' : 'Memo'}
-            value={type === 'email' ? this.state.email : user.username}
+            value={type === 'email' ? this.state.email : this.props.receiveMemo}
             copy
           />
         </View>
@@ -174,10 +173,11 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user, auth }) => {
+const mapStateToProps = ({ user, auth, accounts }) => {
   const { company_config } = auth;
   const { profile } = user;
-  return { profile, company_config };
+  const { receiveAddress, receiveMemo } = accounts;
+  return { profile, company_config, receiveAddress, receiveMemo };
 };
 
 export default connect(mapStateToProps, {})(ReceiveScreen);

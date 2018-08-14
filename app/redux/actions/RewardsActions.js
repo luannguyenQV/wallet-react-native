@@ -7,7 +7,6 @@ export const fetchRewards = () => {
 
 export const VIEW_REWARD = 'view_reward';
 export const viewReward = reward => {
-  console.log(reward);
   return {
     type: VIEW_REWARD,
     payload: reward,
@@ -26,5 +25,25 @@ export const claimReward = reward => {
   return {
     type: CLAIM_REWARD_ASYNC.pending,
     payload: reward,
+  };
+};
+
+export const FETCH_CAMPAIGNS_ASYNC = createAsyncTypes('fetch_campaigns');
+export const fetchCampaigns = () => {
+  return { type: FETCH_CAMPAIGNS_ASYNC.pending };
+};
+
+export const VIEW_CAMPAIGN = 'view_campaign';
+export const viewCampaign = reward => {
+  return {
+    type: VIEW_CAMPAIGN,
+    payload: reward,
+  };
+};
+
+export const HIDE_CAMPAIGN = 'hide_campaign';
+export const hideCampaign = () => {
+  return {
+    type: HIDE_CAMPAIGN,
   };
 };
