@@ -227,7 +227,7 @@ class Input extends Component {
                   textStyleFooter,
                   { color: inputError ? colors.error : colors.primaryContrast },
                 ]}>
-                {inputError ? 'Error: ' + inputError : helperText}
+                {inputError ? inputError : helperText}
               </Text>
             </View>
           ) : null}

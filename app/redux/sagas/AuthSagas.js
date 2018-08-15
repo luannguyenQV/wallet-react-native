@@ -671,7 +671,7 @@ function* appLoad() {
           username: user.username,
         });
       }
-      if (resp.data && !resp.data.crypto) {
+      if (resp.data && resp.data.crypto) {
         yield put({
           type: SET_RECEIVE_ADDRESS,
           payload: {
@@ -745,14 +745,17 @@ function* appLoad() {
 
 function* logoutUser() {
   try {
-    yield call(Rehive.logout);
+    const { mainState } = yield select(getAuth);
+    if (mainState !== 'mfa') {
+      yield call(Rehive.logout);
+    }
     yield put({
       type: LOGOUT_USER_ASYNC.success,
     });
     yield call(NavigationService.navigate, 'AuthScreen');
     yield call(init);
   } catch (error) {
-    console.log(error);
+    console.log('logoutUser', error);
     yield put({ type: LOGOUT_USER_ASYNC.error, payload: error.message });
   }
 }

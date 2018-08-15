@@ -116,8 +116,8 @@ class AuthScreen extends Component {
         }
         break;
       case 'pin':
-        textFooterRight = '';
       case 'mfa':
+        textFooterRight = '';
       case 'verification':
         iconHeaderLeft = '';
         textHeaderLeft = 'Log out';
