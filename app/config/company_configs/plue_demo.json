@@ -65,15 +65,15 @@
     "requireDocumentAdvID": true
   },
   "colors": {
-    "primary": "#002D6D",
-    "secondary": "#6180BE",
+    "primary": "#102C62",
+    "secondary": "#2353AF",
     "tertiary": "#c4c4c4",
-    "focus": "#EC4257",
+    "focus": "#FFBC2A",
 
     "primaryContrast": "#f6f6f6",
     "secondaryContrast": "#2d2d2d",
     "tertiaryContrast": "#000000",
-    "focusContrast": "#2d2d2d",
+    "focusContrast": "#000000",
 
     "warning": "#FC8755",
     "error": "#f44336",
