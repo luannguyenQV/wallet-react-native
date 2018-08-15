@@ -151,6 +151,15 @@ class PinScreen extends Component {
     }
   };
 
+  iosScan = async () => {
+    let result = await Expo.Fingerprint.authenticateAsync('Biometric scan');
+
+    if (!result.success) {
+      this.props.navigation.goBack();
+    }
+    return null;
+  };
+
   renderModal() {
     const { modalVisible, modalType } = this.state;
 
@@ -272,6 +281,9 @@ class PinScreen extends Component {
           keyboardShouldPersistTaps={'never'}
           style={styles.viewStyleContainer}
           behavior={'padding'}>
+          {/* {fingerprint && Platform.OS === 'ios' ? (
+            this.iosScan()
+          ) : ( */}
           <PinModal
             pin={pin}
             fingerprint={fingerprint}
@@ -279,6 +291,7 @@ class PinScreen extends Component {
             onSuccess={() => this.setState({ pinVisible: false })}
             onDismiss={() => this.props.navigation.goBack()}
           />
+          )
           {this.renderMainContainer()}
           {this.renderModal()}
         </KeyboardAvoidingView>

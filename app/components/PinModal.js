@@ -4,7 +4,7 @@ Component that request the user to input a pin if pin has been set or
 to scan fingerprint if fingerprint has been set.
 */
 import React, { Component } from 'react';
-import { KeyboardAvoidingView } from 'react-native';
+import { KeyboardAvoidingView, Platform } from 'react-native';
 import PropTypes from 'prop-types';
 import { CodeInput, PopUpGeneral } from './common';
 
@@ -20,6 +20,9 @@ class PinModal extends Component {
     let errorText = '';
 
     if (fingerprint) {
+      if (Platform.OS === 'ios') {
+        onSuccess();
+      }
       // if (!compatible) {
       //   errorText =
       //     'Unable to access devices fingerprint scanner. Please log out to reset fingerprint.';
@@ -60,7 +63,7 @@ class PinModal extends Component {
   };
 
   _onInputPinComplete(code) {
-    const { pin, fingerprint, modalVisible, onSuccess, onDismiss } = this.props;
+    const { pin, onSuccess } = this.props;
     let errorText = '';
     if (pin === code) {
       onSuccess();
@@ -72,7 +75,7 @@ class PinModal extends Component {
   }
 
   render() {
-    const { pin, fingerprint, modalVisible, onSuccess, onDismiss } = this.props;
+    const { pin, modalVisible, onDismiss } = this.props;
 
     const { errorText, contentText } = this.state;
 

@@ -61,16 +61,10 @@ class HomeCards extends Component {
       );
     } else if (image === 'card1') {
       return (
-        <View
-          style={[
-            styles.imageStylePhoto,
-            { backgroundColor: this.props.company_config.colors.primary },
-          ]}>
-          <Image
-            style={styles.imageStylePhoto}
-            source={require('./../../assets/icons/card1_transparent.png')}
-          />
-        </View>
+        <Image
+          style={styles.imageStylePhoto}
+          source={require('./../../assets/icons/card1.png')}
+        />
       );
     }
 
@@ -102,7 +96,10 @@ class HomeCards extends Component {
           title:
             'Welcome to ' + (company && company.name ? company.name : 'Rehive'),
           // description: 'A multi-currency wallet built on the Rehive platform.',
-          image: 'card1',
+          image:
+            company.id.includes('pxpay') || company.id.includes('plue')
+              ? ''
+              : 'card1',
           dismiss: true,
         };
       }

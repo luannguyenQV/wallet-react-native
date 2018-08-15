@@ -264,7 +264,7 @@ class AuthScreen extends Component {
               <View style={viewStyleLanding}>
                 <View style={buttonsContainer}>
                   <Button
-                    label="USE FINGERPRINT"
+                    label="LOG IN WITH FINGERPRINT"
                     textColor={colors.secondaryContrast}
                     backgroundColor={colors.secondary}
                     reference={input => {
