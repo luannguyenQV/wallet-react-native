@@ -581,7 +581,7 @@ class AuthScreen extends Component {
 
     return (
       <KeyboardAvoidingView
-        keyboardShouldPersistTaps={'never'}
+        keyboardShouldPersistTaps={'always'}
         style={[viewStyleContainer, { backgroundColor: colors.primary }]}
         behavior={'padding'}
         // keyboardVerticalOffset={10}

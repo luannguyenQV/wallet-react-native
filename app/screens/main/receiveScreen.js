@@ -131,67 +131,6 @@ class ReceiveScreen extends Component {
         ) : (
           this.renderDetail('email')
         )}
-
-        {/* <View>
-          <View
-            style={{
-              flexDirection: 'row',
-              // justifyContent: 'center',
-            }}>
-            <View style={{ width: SCREEN_WIDTH / 2 }}>
-              <Button
-                backgroundColor={
-                  type === 'email' ? colors.focusContrast : colors.secondary
-                }
-                textColor={
-                  type === 'email' ? colors.focus : colors.secondaryContrast
-                }
-                onPress={() => this.switchToEmail()}
-                label="EMAIL"
-                size="small"
-                round
-                containerStyle={{ margin: 16 }}
-              />
-            </View>
-            <View style={{ width: SCREEN_WIDTH / 2 }}>
-              <Button
-                backgroundColor={
-                  type === 'crypto' ? colors.focusContrast : colors.secondary
-                }
-                textColor={
-                  type === 'crypto' ? colors.focus : colors.secondaryContrast
-                }
-                onPress={() => this.switchToCrypto()}
-                label="CRYPTO"
-                size="small"
-                round
-                containerStyle={{ margin: 16 }}
-              />
-            </View>
-          </View>
-          <Text style={styles.text}>
-            {type === 'crypto'
-              ? 'This QR code is your public address for accepting payments.'
-              : 'This QR code is your Rehive account for use with another Rehive app'}
-          </Text>
-
-          <TouchableHighlight
-            underlayColor={'white'}
-            activeOpacity={0.2}
-            onPress={() => this._copyQR()}>
-            <Image
-              style={{ width: 300, height: 250, alignSelf: 'center' }}
-              source={{ uri: this.state.imageURI }}
-            />
-          </TouchableHighlight>
-        </View>
-        <View style={{ padding: 16, width: '100%' }}>
-          <Output
-            label={type === 'email' ? 'Email' : 'Memo'}
-            value={type === 'email' ? this.state.email : this.props.receiveMemo}
-            copy
-          />
-        </View> */}
       </View>
     );
   }
