@@ -222,6 +222,7 @@ const styles = {
   viewStyleTitle: {
     flexDirection: 'column',
     paddingHorizontal: 8,
+    paddingTop: 4,
     flexGrow: 1,
     flex: 1,
     width: 0,

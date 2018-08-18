@@ -84,6 +84,8 @@ class HomeCards extends Component {
     // add welcome card
     let cards = [];
     let i = 0;
+    const company = company_config.company ? company_config.company : null;
+    console.log(company);
     if (cardConfig) {
       if (
         cardConfig.general.welcome &&
@@ -92,14 +94,11 @@ class HomeCards extends Component {
         cards[i++] = {
           id: 'welcome',
           title:
-            'Welcome to ' +
-            (company_config.company && company_config.company.name
-              ? company_config.company.name
-              : 'Rehive'),
+            'Welcome to ' + (company && company.name ? company.name : 'Rehive'),
           // description: 'A multi-currency wallet built on the Rehive platform.',
           image:
-            company_config.company && company_config.company === 'pxpay_demo'
-              ? 'pxpay'
+            company.id.includes('pxpay') || company.id.includes('plue')
+              ? ''
               : 'card1',
           dismiss: true,
         };

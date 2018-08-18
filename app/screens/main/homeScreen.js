@@ -10,7 +10,7 @@ import {
 import Swiper from 'react-native-swiper';
 
 import Header from './../../components/header';
-import HeaderWallet from '../../components/HeaderWallet';
+import WalletHeader from '../../components/WalletHeader';
 import TransactionList from './../../components/TransactionList';
 import HomeCards from './../../components/HomeCards';
 
@@ -54,7 +54,7 @@ class HomeScreen extends Component {
           noShadow
           // noAccounts={this.state.noAccounts}
         />
-        <HeaderWallet
+        <WalletHeader
           wallets={wallets}
           buttons={[
             { id: 0, type: 'receive' },

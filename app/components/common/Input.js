@@ -113,6 +113,23 @@ class Input extends Component {
     );
   }
 
+  viewStyleContainer() {
+    const { focused } = this.state;
+    if (focused) {
+      return {
+        shadowColor: 'rgba(0, 0, 0, 0.6)',
+        shadowOpacity: 0.3,
+        shadowRadius: 3,
+        shadowOffset: {
+          width: 1,
+          height: 2,
+        },
+        elevation: 2,
+      };
+    }
+    return {};
+  }
+
   render() {
     const {
       label,
@@ -143,10 +160,11 @@ class Input extends Component {
     const { borderColor, focused, iconNameVisibility } = this.state;
 
     return (
-      <View>
+      <View style={this.viewStyleContainer()}>
         <View
           style={[
             viewStyleContainer,
+
             {
               backgroundColor: colors.primaryContrast,
             },
@@ -209,7 +227,7 @@ class Input extends Component {
                   textStyleFooter,
                   { color: inputError ? colors.error : colors.primaryContrast },
                 ]}>
-                {inputError ? 'Error: ' + inputError : helperText}
+                {inputError ? inputError : helperText}
               </Text>
             </View>
           ) : null}

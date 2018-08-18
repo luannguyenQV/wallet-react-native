@@ -17,7 +17,7 @@ import { EmptyListMessage } from './common';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
-class HeaderWallet extends Component {
+class WalletHeader extends Component {
   scrollX = new Animated.Value(0);
 
   componentDidMount() {
@@ -138,24 +138,22 @@ class HeaderWallet extends Component {
       navigation,
       resetWithdraw,
     } = this.props;
+    const wallet = wallets.length > 1 ? wallets[activeWalletIndex] : wallets[0];
+    const currencyCode = wallet.currency.currency.code;
     switch (type) {
       case 'send': {
         resetSend();
-        setSendWallet(
-          wallets.length > 1 ? wallets[activeWalletIndex] : wallets[0],
-        );
+        setSendWallet(wallet);
         navigation.navigate('Send');
         break;
       }
       case 'receive': {
-        navigation.navigate('Receive');
+        navigation.navigate('Receive', { currencyCode });
         break;
       }
       case 'withdraw': {
         resetWithdraw();
-        setWithdrawWallet(
-          wallets.length > 1 ? wallets[activeWalletIndex] : wallets[0],
-        );
+        setWithdrawWallet(wallet);
         navigation.navigate('Withdraw');
         break;
       }
@@ -164,9 +162,7 @@ class HeaderWallet extends Component {
         break;
       }
       case 'more':
-        navigation.navigate('Wallets', {
-          wallet: wallets[activeWalletIndex],
-        });
+        navigation.navigate('Wallets', { wallet });
         break;
       default:
         console.log('Error: unknown button type');
@@ -239,4 +235,4 @@ export default connect(mapStateToProps, {
   resetWithdraw,
   viewWallet,
   hideWallet,
-})(HeaderWallet);
+})(WalletHeader);

@@ -7,6 +7,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { connect } from 'react-redux';
+import { maybeOpenURL } from 'react-native-app-link';
 import {
   updateInputField,
   fetchData,
@@ -25,7 +26,13 @@ import {
 } from './../redux/actions';
 import { standardizeString } from './../util/general';
 
-import { Card, PopUpGeneral, EmptyListMessage, CodeInput } from './common';
+import {
+  Card,
+  PopUpGeneral,
+  EmptyListMessage,
+  CodeInput,
+  Button,
+} from './common';
 
 // make component
 class CardList extends Component {
@@ -173,6 +180,7 @@ class CardList extends Component {
       updateItem,
       confirmDeleteItem,
       verifyItem,
+      company_config,
     } = this.props;
 
     let contentText = '';
@@ -189,23 +197,46 @@ class CardList extends Component {
           onPressActionOne = () => confirmDeleteItem(type, tempItem);
           break;
         case 'primary':
-          contentText = 'Make ' + tempItem[identifier] + ' primary?';
+          contentText =
+            'You are about to set ' +
+            tempItem[identifier] +
+            ' as your primary ' +
+            type +
+            ' for this account';
           textActionOne = 'MAKE PRIMARY';
           onPressActionOne = () => updateItem(type, tempItem);
           break;
         case 'active':
           contentText =
-            'Make ' + tempItem.currency.currency.code + ' active wallet?';
+            'Set ' +
+            tempItem.currency.currency.code +
+            ' as your active wallet so that it will be shown first on the home screen and the top of this list';
           textActionOne = 'MAKE ACTIVE';
           onPressActionOne = () => setActiveCurrency(tempItem);
           break;
         case 'verify':
           textActionTwo = 'CLOSE';
           if (type === 'email') {
-            contentText = 'Verification email has been sent to ' + tempItem;
+            contentText =
+              'Instructions on how to verify your email have been sent to ' +
+              tempItem;
+            // content = ( //TODO:
+            //   <Button
+            //     label="Open email app"
+            //     textColor={company_config.colors.primaryContrast}
+            //     backgroundColor={company_config.colors.primary}
+            //     onPress={() =>
+            //       maybeOpenURL('mailto:', {}).catch(err => {
+            //         console.log(err);
+            //       })
+            //     }
+            //   />
+            // );
           } else if (type === 'mobile') {
             // textActionOne = 'VERIFY';
-            contentText = 'Verification sms has been sent to ' + tempItem;
+            contentText =
+              'An SMS containing a OTP to verify your mobile has been sent to ' +
+              tempItem;
             content = (
               <CodeInput
                 ref={component => (this._pinInput = component)}
@@ -223,7 +254,6 @@ class CardList extends Component {
               />
             );
           }
-
           break;
       }
     }
@@ -341,7 +371,7 @@ const mapStateToProps = ({ user, auth }) => {
     wallet,
     modalType,
   } = user;
-  const { otp } = auth;
+  const { otp, company_config } = auth;
   return {
     profile,
     showDetail,
@@ -352,6 +382,7 @@ const mapStateToProps = ({ user, auth }) => {
     editing,
     wallet,
     otp,
+    company_config,
   };
 };
 

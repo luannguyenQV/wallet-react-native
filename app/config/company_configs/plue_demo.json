@@ -65,15 +65,15 @@
     "requireDocumentAdvID": true
   },
   "colors": {
-    "primary": "#002D6D",
-    "secondary": "#6180BE",
+    "primary": "#102C62",
+    "secondary": "#2353AF",
     "tertiary": "#c4c4c4",
-    "focus": "#EC4257",
+    "focus": "#FFBC2A",
 
     "primaryContrast": "#f6f6f6",
-    "secondaryContrast": "#2d2d2d",
+    "secondaryContrast": "#f6f6f6",
     "tertiaryContrast": "#000000",
-    "focusContrast": "#2d2d2d",
+    "focusContrast": "#000000",
 
     "warning": "#FC8755",
     "error": "#f44336",
@@ -92,15 +92,15 @@
           "id": 0,
           "title": "Card 1",
           "description": "This is your custom text for card 1",
-          "image": "card1",
-          "dismiss": true
+          "dismiss": true,
+          "image": "plue"
         },
         {
           "id": 1,
           "title": "Card 2",
           "description": "This is your custom text for card 2",
-          "image": "card2",
-          "dismiss": false
+          "dismiss": false,
+          "image": "plue"
         }
       ]
     }

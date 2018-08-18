@@ -28,10 +28,13 @@ class AddressesScreen extends Component {
         {line_2 ? <Output label="Address line 2" value={line_2} /> : null}
         {city ? <Output label="City" value={city} /> : null}
         {state_province ? (
-          <Output label="State province" value={state_province} />
+          <Output label="State or province" value={state_province} />
         ) : null}
         {postal_code ? (
-          <Output label="Postal code" value={postal_code} />
+          <Output label="Postal or ZIP code" value={postal_code} />
+        ) : null}
+        {!(line_1 && line_2 && city && state_province && postal_code) ? (
+          <Output label="Incomplete" />
         ) : null}
       </View>
     );
@@ -76,7 +79,7 @@ class AddressesScreen extends Component {
         />
 
         <Input
-          label="State province"
+          label="State or province"
           placeholder="e.g. Western Cape"
           autoCapitalize="none"
           value={tempItem.state_province}
@@ -87,7 +90,7 @@ class AddressesScreen extends Component {
         />
 
         <Input
-          label="Postal code"
+          label="Postal or ZIP code"
           placeholder="e.g. 9001"
           autoCapitalize="none"
           value={tempItem.postal_code}
