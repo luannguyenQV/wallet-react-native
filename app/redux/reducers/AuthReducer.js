@@ -34,8 +34,6 @@ import {
   TOGGLE_TERMS,
 } from '../actions/AuthActions';
 import { HIDE_MODAL } from '../actions/UserActions';
-import Colors from './../../config/colors';
-import { getCompanyConfig } from './../sagas/selectors';
 
 const INITIAL_STATE = {
   mainState: '',
@@ -343,104 +341,4 @@ export default (state = INITIAL_STATE, action) => {
     default:
       return state;
   }
-};
-
-export const colorSelector = createSelector(
-  getCompanyConfig,
-  company_config => {
-    const _colors =
-      company_config && company_config.colors ? company_config.colors : Colors;
-
-    let themes = {
-      light: {
-        primary: 'white',
-        primaryContrast: _colors.primary,
-        secondary: 'lightgrey',
-        header: 'white',
-        headerContrast: _colors.primary,
-        walletHeader: 'white',
-        walletHeaderContrast: _colors.primary,
-        authScreen: 'white',
-        authScreenContrast: _colors.primary,
-      },
-      dark: {},
-    };
-
-    let themeID = 'light';
-
-    let theme = themes[themeID];
-
-    const colors = {
-      ..._colors,
-      header: selectColor('header', theme, _colors, 'primary'),
-      headerContrast: selectColor(
-        'headerContrast',
-        theme,
-        _colors,
-        'primaryContrast',
-      ),
-      authScreen: selectColor('authScreen', theme, _colors, 'primary'),
-      authScreenContrast: selectColor(
-        'authScreenContrast',
-        theme,
-        _colors,
-        'primaryContrast',
-      ),
-    };
-
-    /* 
-
-  TODO: cache library
-
-    **compose colors for 
-    > header
-    > wallet header
-    > drawer header
-    > drawer active
-    > drawer
-    > auth screen
-    > focus ?
-
-    logic for finding theme colors. themes contain list of colors
-
-    order of preference
-    -> look for element color in currently selected theme object
-    -> look for /primary etc/ color of theme
-    -> look for element color in company config
-    -> look for /primary etc/ color of theme
-    -> look for element color of default config
-     > look for /primary etc/ of default config
-
-    ** layout
-    > layout
-    -> currency header w swiper
-    -> slim wallets w news
-    -> 
-    > radius / curve
-    > shadow
-    > rem
-  
-    
-
-    
-    
-    
-    
-    
-    */
-    return colors;
-  },
-);
-
-export const getColor = auth => auth.company_config.colors;
-
-const selectColor = (component, theme, _colors, _default) => {
-  // console.log('in deep select', theme[component]);
-  return theme[component]
-    ? theme[component]
-    : theme[_default]
-      ? theme[_default]
-      : _colors[component]
-        ? _colors[component]
-        : _colors[_default] ? _colors[_default] : Color[_default];
 };

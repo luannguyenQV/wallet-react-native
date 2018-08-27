@@ -1,0 +1,13 @@
+{
+  "light": {
+    "primary": "white",
+    "primaryContrast": "primary",
+    "secondary": "lightgrey",
+    "header": "white",
+    "headerContrast": "primary",
+    "walletHeader": "white",
+    "walletHeaderContrast": "primary",
+    "authScreen": "white",
+    "authScreenContrast": "primary"
+  }
+}

@@ -9,7 +9,7 @@ import NavigationService from './util/navigation';
 import MainNavigator from './routes/mainNavigator';
 
 import { ThemeContext } from './util/config';
-import { colorSelector, getColors } from './redux/reducers/AuthReducer';
+import { colorSelector } from './redux/reducers/ConfigReducer';
 
 // const _XHR = GLOBAL.originalXMLHttpRequest
 //   ? GLOBAL.originalXMLHttpRequest

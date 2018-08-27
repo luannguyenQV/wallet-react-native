@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
-import {} from './../../redux/actions';
+import { changeTheme } from './../../redux/actions';
 import Header from './../../components/header';
 // import HeaderVerified from './../../../components/HeaderVerified';
+import Picker from 'react-native-picker-select';
 
 import {
   SettingsContainer,
   SettingsOption,
   InputContainer,
 } from './../../components/common';
+import { themeSelector } from '../../redux/sagas/selectors';
 
 class SettingsScreen extends Component {
   static navigationOptions = {
@@ -210,6 +212,39 @@ class SettingsScreen extends Component {
     );
   }
 
+  renderAppearance() {
+    let themes = [
+      { label: 'Default', value: 'default' },
+      { label: 'Light', value: 'light' },
+    ];
+    return (
+      <Picker
+        value={this.props.theme}
+        placeholder={{
+          label: 'Select a theme...',
+          value: this.props.theme,
+        }}
+        items={themes}
+        onValueChange={value => {
+          this.props.changeTheme(value);
+        }}
+        // style={{ ...pickerSelectStyles }}
+        // ref={el => {
+        //   this.inputRefs.picker = el;
+        // }}
+      />
+      // <Picker
+      //   selectedValue={this.props.theme}
+      //   style={{ height: 50, width: 100 }}
+      //   onValueChange={(itemValue, itemIndex) =>
+      //     this.props.changeTheme(itemValue)
+      //   }>
+      //   <Picker.Item label="Default" value="default" />
+      //   <Picker.Item label="Light" value="light" />
+      // </Picker>
+    );
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -229,6 +264,9 @@ class SettingsScreen extends Component {
           <SettingsContainer label="Security">
             {this.renderSecurity()}
           </SettingsContainer>
+          <SettingsContainer label="Appearance">
+            {this.renderAppearance()}
+          </SettingsContainer>
         </InputContainer>
       </View>
     );
@@ -245,14 +283,15 @@ const styles = {
   // },
 };
 
-const mapStateToProps = ({ user }) => {
-  const { profile, address, mobile, email } = user;
+const mapStateToProps = state => {
+  const { profile, address, mobile, email } = state.user;
   return {
     profile,
     address,
     mobile,
     email,
+    theme: themeSelector(state),
   };
 };
 
-export default connect(mapStateToProps, {})(SettingsScreen);
+export default connect(mapStateToProps, { changeTheme })(SettingsScreen);
