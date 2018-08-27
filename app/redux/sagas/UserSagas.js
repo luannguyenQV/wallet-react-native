@@ -46,6 +46,7 @@ function* fetchData(action) {
         break;
       case 'address':
         response = yield call(Rehive.getAddress);
+        console.log(response);
         break;
       case 'document':
         response = yield call(Rehive.getDocuments);
@@ -84,6 +85,7 @@ function* fetchData(action) {
       payload: { data, prop: action.payload },
     });
   } catch (error) {
+    console.log(error);
     if (error && error.status && error.status === 403) {
       yield put({
         type: LOGOUT_USER_ASYNC.success,

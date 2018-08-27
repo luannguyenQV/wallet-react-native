@@ -8,6 +8,7 @@ import GetVerifiedOption from './../../../components/getVerifiedOption';
 import HeaderProfile from '../../../components/HeaderProfile';
 
 import { Spinner, InputContainer } from './../../../components/common';
+import { userEmailsSelector } from '../../../redux/reducers/UserReducer';
 
 class GetVerifiedScreen extends Component {
   static navigationOptions = {
@@ -99,6 +100,7 @@ class GetVerifiedScreen extends Component {
 
   renderAddresses() {
     const { address } = this.props;
+    console.log('address', address);
 
     let value = '';
     if (address) {
@@ -303,14 +305,14 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user, auth }) => {
-  const { profile, address, mobile, email, document, loading_profile } = user;
-  const { company_config } = auth;
+const mapStateToProps = state => {
+  const { profile, address, mobile, document, loading_profile } = state.user;
+  const { company_config } = state.auth;
   return {
     profile,
     address,
     mobile,
-    email,
+    email: userEmailsSelector(state),
     document,
     loading_profile,
     company_config,

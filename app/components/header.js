@@ -64,7 +64,6 @@ class _Header extends Component {
       colors,
       noShadow,
     } = this.props;
-    console.log(colors);
     return (
       <View
         style={[
