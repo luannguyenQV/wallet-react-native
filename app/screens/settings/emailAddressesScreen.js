@@ -12,6 +12,7 @@ import {
 import Header from './../../components/header';
 import { Input, Output } from './../../components/common';
 import CardList from './../../components/CardList';
+import { userEmailsSelector } from '../../redux/reducers/UserReducer';
 
 class EmailAddressesScreen extends Component {
   static navigationOptions = {
@@ -87,10 +88,10 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user }) => {
-  const { email, tempItem, updateError, showDetail } = user;
+const mapStateToProps = state => {
+  const { email, tempItem, updateError, showDetail } = state.user;
   return {
-    email,
+    email: userEmailsSelector(state),
     tempItem,
     updateError,
     showDetail,

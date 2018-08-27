@@ -35,6 +35,7 @@ import {
 } from '../actions/AuthActions';
 import { HIDE_MODAL } from '../actions/UserActions';
 import Colors from './../../config/colors';
+import { getCompanyConfig } from './../sagas/selectors';
 
 const INITIAL_STATE = {
   mainState: '',
@@ -344,48 +345,50 @@ export default (state = INITIAL_STATE, action) => {
   }
 };
 
-export function getColors(auth) {
-  const _colors = auth.company_config.colors
-    ? auth.company_config.colors
-    : Colors;
+export const colorSelector = createSelector(
+  getCompanyConfig,
+  company_config => {
+    const _colors =
+      company_config && company_config.colors ? company_config.colors : Colors;
 
-  let themes = [
-    {
-      id: 'light',
-      primary: 'white',
-      primaryContrast: _colors.primary,
-      secondary: 'lightgrey',
-      header: 'white',
-      headerContrast: _colors.primary,
-      walletHeader: 'white',
-      walletHeaderContrast: _colors.primary,
-      authScreen: 'white',
-      authScreenContrast: _colors.primary,
-    },
-  ];
-  let themeID = 'light';
+    let themes = {
+      light: {
+        primary: 'white',
+        primaryContrast: _colors.primary,
+        secondary: 'lightgrey',
+        header: 'white',
+        headerContrast: _colors.primary,
+        walletHeader: 'white',
+        walletHeaderContrast: _colors.primary,
+        authScreen: 'white',
+        authScreenContrast: _colors.primary,
+      },
+      dark: {},
+    };
 
-  let theme = themes.filter(item => item.id === themeID)[0];
+    let themeID = 'light';
 
-  const colors = {
-    ..._colors,
-    header: selectColor('header', theme, _colors, 'primary'),
-    headerContrast: selectColor(
-      'headerContrast',
-      theme,
-      _colors,
-      'primaryContrast',
-    ),
-    authScreen: selectColor('authScreen', theme, _colors, 'primary'),
-    authScreenContrast: selectColor(
-      'authScreenContrast',
-      theme,
-      _colors,
-      'primaryContrast',
-    ),
-  };
+    let theme = themes[themeID];
 
-  /* 
+    const colors = {
+      ..._colors,
+      header: selectColor('header', theme, _colors, 'primary'),
+      headerContrast: selectColor(
+        'headerContrast',
+        theme,
+        _colors,
+        'primaryContrast',
+      ),
+      authScreen: selectColor('authScreen', theme, _colors, 'primary'),
+      authScreenContrast: selectColor(
+        'authScreenContrast',
+        theme,
+        _colors,
+        'primaryContrast',
+      ),
+    };
+
+    /* 
 
   TODO: cache library
 
@@ -425,11 +428,14 @@ export function getColors(auth) {
     
     
     */
-  return colors;
-}
+    return colors;
+  },
+);
+
+export const getColor = auth => auth.company_config.colors;
 
 const selectColor = (component, theme, _colors, _default) => {
-  // console.log('in deep select', theme[component]);
+  console.log('in deep select', theme[component]);
   return theme[component]
     ? theme[component]
     : theme[_default]

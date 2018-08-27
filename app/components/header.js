@@ -64,7 +64,7 @@ class _Header extends Component {
       colors,
       noShadow,
     } = this.props;
-    // console.log(noShadow);
+    console.log(colors);
     return (
       <View
         style={[
@@ -72,7 +72,7 @@ class _Header extends Component {
             elevation: 10,
             zIndex: 11,
             paddingTop: Constants.statusBarHeight,
-            backgroundColor: colors.primary,
+            backgroundColor: colors.header,
           },
           noShadow
             ? null
@@ -169,7 +169,13 @@ class _Header extends Component {
           <View style={styles.title}>
             {title ? (
               <Text
-                style={[styles.titleText, { fontSize: smallTitle ? 16 : 20 }]}>
+                style={[
+                  styles.titleText,
+                  {
+                    fontSize: smallTitle ? 16 : 20,
+                    color: colors.headerContrast,
+                  },
+                ]}>
                 {title}
               </Text>
             ) : null}
@@ -217,7 +223,6 @@ const styles = {
     justifyContent: 'center',
   },
   titleText: {
-    color: 'white',
     fontSize: 20,
     paddingLeft: 0,
   },

@@ -9,7 +9,7 @@ import NavigationService from './util/navigation';
 import MainNavigator from './routes/mainNavigator';
 
 import { ThemeContext } from './util/config';
-import { getColors } from './redux/reducers/AuthReducer';
+import { colorSelector, getColors } from './redux/reducers/AuthReducer';
 
 // const _XHR = GLOBAL.originalXMLHttpRequest
 //   ? GLOBAL.originalXMLHttpRequest
@@ -59,7 +59,6 @@ class Main extends Component {
   render() {
     console.disableYellowBox = true;
     const { isReady, initStarted } = this.state;
-
     if (isReady && initStarted) {
       return (
         <Root>
@@ -97,8 +96,11 @@ class Main extends Component {
   }
 }
 
-const mapStateToProps = ({ auth }) => {
-  return { colors: getColors(auth) };
+const mapStateToProps = state => {
+  return {
+    // colors: getColors(state.auth),
+    colors: colorSelector(state),
+  };
 };
 
 export default connect(mapStateToProps, { init })(Main);

@@ -10,8 +10,8 @@ const fontRem = 20;
 class _MyView extends Component {
   _viewStyle() {
     const { f, fD, p, m, aI, jC } = this.props;
-    console.log(SCREEN_WIDTH);
-    console.log(SCREEN_WIDTH / 8);
+    // console.log(SCREEN_WIDTH);
+    // console.log(SCREEN_WIDTH / 8);
     return {
       flex: f ? 1 : 0,
       flexDirection: fD,
