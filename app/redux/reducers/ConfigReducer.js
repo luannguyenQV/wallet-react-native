@@ -107,11 +107,26 @@ export const getColor = auth => auth.company_config.colors;
 
 const selectColor = (component, theme, _colors, _default) => {
   // console.log('in deep select', theme[component]);
-  return theme[component]
+  let color = theme[component]
     ? theme[component]
     : theme[_default]
       ? theme[_default]
       : _colors[component]
         ? _colors[component]
         : _colors[_default] ? _colors[_default] : Color[_default];
+
+  if (
+    color ===
+    ('primary' ||
+      'secondary' ||
+      'tertiary' ||
+      'focus' ||
+      'primaryContrast' ||
+      'secondaryContrast' ||
+      'tertiaryContrast' ||
+      'focusContrast')
+  ) {
+    return _colors[color];
+  }
+  return color;
 };
