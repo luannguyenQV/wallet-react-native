@@ -221,14 +221,14 @@ class SettingsScreen extends Component {
       <Picker
         value={this.props.theme}
         placeholder={{
-          label: 'Select a theme...',
+          label: this.props.theme,
           value: this.props.theme,
         }}
         items={themes}
         onValueChange={value => {
           this.props.changeTheme(value);
         }}
-        // style={{ ...pickerSelectStyles }}
+        style={{ ...styles }}
         // ref={el => {
         //   this.inputRefs.picker = el;
         // }}
@@ -261,11 +261,11 @@ class SettingsScreen extends Component {
             {/* {this.renderCards()} */}
             {/* {this.renderCryptoAccounts()} */}
           </SettingsContainer>
-          <SettingsContainer label="Security">
-            {this.renderSecurity()}
-          </SettingsContainer>
           <SettingsContainer label="Appearance">
             {this.renderAppearance()}
+          </SettingsContainer>
+          <SettingsContainer label="Security">
+            {this.renderSecurity()}
           </SettingsContainer>
         </InputContainer>
       </View>
@@ -278,9 +278,17 @@ const styles = {
     flex: 1,
     backgroundColor: 'white',
   },
-  // mainContainer: {
-  //   flex: 1,
-  // },
+  inputIOS: {
+    fontSize: 16,
+    paddingTop: 13,
+    paddingHorizontal: 10,
+    paddingBottom: 12,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 4,
+    backgroundColor: 'white',
+    color: 'black',
+  },
 };
 
 const mapStateToProps = state => {
