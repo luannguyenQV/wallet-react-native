@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, FlatList, Text, RefreshControl } from 'react-native';
 import { WebBrowser } from 'expo';
 import { connect } from 'react-redux';
-import { fetchAccounts } from './../redux/actions';
+import { fetchAccounts, fetchTransactions } from './../redux/actions';
 
 import * as Rehive from './../util/rehive';
 
@@ -27,7 +27,8 @@ class TransactionList extends Component {
   };
 
   async componentDidMount() {
-    await this.getTransactions(this.props.currencyCode);
+    const { accountRef, currencyCode } = this.props;
+    await this.getTransactions(accountRef, currencyCode);
   }
 
   async UNSAFE_componentWillReceiveProps(nextProps) {
@@ -36,7 +37,7 @@ class TransactionList extends Component {
     }
   }
 
-  async getTransactions(currencyCode) {
+  async getTransactions(accountRef, currencyCode) {
     if (this.state.previousCurrencyCode !== currencyCode) {
       this.setState({ transactions: [] });
     }
@@ -44,7 +45,13 @@ class TransactionList extends Component {
     // if (this.props.fetchAccounts) {
     //   this.props.fetchAccounts();
     // }
-    let response = await Rehive.getTransactions(currencyCode);
+    const filters = {
+      account: accountRef,
+      currency: currencyCode,
+    };
+    console.log(filters);
+    let response = await Rehive.getTransactions(filters);
+    this.props.fetchTransactions(filters);
     this.setState({
       previousCurrencyCode: currencyCode,
       transactions: response.results,
@@ -54,13 +61,14 @@ class TransactionList extends Component {
 
   renderTransactions() {
     const { transactions, loading } = this.state;
+    const { accountRef, currencyCode } = this.props;
     return (
       <FlatList
         refreshControl={
           <RefreshControl
             refreshing={loading}
             onRefresh={() => {
-              this.getTransactions(this.props.currencyCode);
+              this.getTransactions(accountRef, currencyCode);
               // this.props.fetchAccounts();
             }}
           />
@@ -260,4 +268,5 @@ const mapStateToProps = ({ accounts }) => {
 
 export default connect(mapStateToProps, {
   fetchAccounts,
+  fetchTransactions,
 })(TransactionList);

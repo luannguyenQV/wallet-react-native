@@ -10,6 +10,7 @@ import {
   showModal,
   setActiveCurrency,
 } from './../../redux/actions';
+import { walletsSelector } from './../../redux/reducers/AccountsReducer';
 
 import Header from './../../components/header';
 // import Wallet from './../../components/wallet';
@@ -210,12 +211,12 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ accounts, user, auth }) => {
-  const { wallets, loading_accounts, tempWallet, showWallet } = accounts;
-  const { company_bank_account } = user;
-  const { company_config } = auth;
+const mapStateToProps = state => {
+  const { loading_accounts, tempWallet, showWallet } = state.accounts;
+  const { company_bank_account } = state.user;
+  const { company_config } = state.auth;
   return {
-    wallets,
+    wallets: walletsSelector(state),
     loading_accounts,
     tempWallet,
     showWallet,

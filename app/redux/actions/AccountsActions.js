@@ -22,6 +22,12 @@ export const fetchAccounts = () => {
   return { type: FETCH_ACCOUNTS_ASYNC.pending };
 };
 
+export const FETCH_TRANSACTIONS_ASYNC = createAsyncTypes('fetch_transactions');
+export const fetchTransactions = filters => {
+  console.log('fetchTransactions', filters);
+  return { type: FETCH_TRANSACTIONS_ASYNC.pending, payload: filters };
+};
+
 // TODO: REPLACE
 export const UPDATE_CURRENT_INDEX = 'update_current_index';
 export const setActiveWalletIndex = index => {

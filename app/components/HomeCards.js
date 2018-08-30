@@ -85,7 +85,7 @@ class HomeCards extends Component {
     let cards = [];
     let i = 0;
     const company = company_config.company ? company_config.company : null;
-    console.log(company);
+    // console.log(company);
     if (cardConfig) {
       if (
         cardConfig.general.welcome &&

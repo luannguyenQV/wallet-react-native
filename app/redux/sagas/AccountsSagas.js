@@ -7,6 +7,7 @@ import {
   LOGOUT_USER_ASYNC,
   SET_SEND_WALLET,
   SET_SEND_TYPE,
+  FETCH_TRANSACTIONS_ASYNC,
 } from '../actions';
 import { Toast } from 'native-base';
 // import Big from 'big.js';
@@ -15,61 +16,11 @@ import { getCrypto } from './selectors';
 
 function* fetchAccounts() {
   try {
-    response = yield call(Rehive.getAccounts);
-    const accounts = response.results;
-    let wallets = [];
-    let activeWalletIndex = 0;
-    let currencies;
-    let account;
-    let showAccountLabel = false;
-    // console.log(accounts);
-    if (accounts.length > 0) {
-      // var wallets = _.flatten(_.flatten(accounts, 'users'));
-
-      // console.log('1', _.flatten(accounts.results));
-
-      // let wallets = _.map(accounts.results, function(account) {
-      //   return _.flatten(account.currencies);
-      // });
-
-      // wallets.log('1', _.flatten(accounts));
-
-      // _.map(currencies, 'user');
-
-      // console.log(accounts);
-
-      let index = 0;
-      for (var i = 0; i < accounts.length; i++) {
-        account = accounts[i];
-        currencies = account.currencies;
-        for (var j = 0; j < currencies.length; j++) {
-          wallets[index] = {
-            index,
-            account_reference: account.reference,
-            account_name: account.name,
-            currency: currencies[j],
-          };
-          if (currencies[j].active === true) {
-            activeWalletIndex = index;
-          }
-          index++;
-        }
-      }
-      if (accounts.length > 1) {
-        showAccountLabel = true;
-      }
-      if (wallets.length > 0) {
-        const activeItem = wallets[activeWalletIndex];
-        wallets[activeWalletIndex] = wallets[0];
-        wallets[0] = activeItem;
-      }
-    } else {
-      wallets = [];
-    }
+    const response = yield call(Rehive.getAccounts);
 
     yield put({
       type: FETCH_ACCOUNTS_ASYNC.success,
-      payload: { wallets, activeWalletIndex: 0, showAccountLabel },
+      payload: response.results,
     });
   } catch (error) {
     console.log('accountsFetch', error);
@@ -79,6 +30,26 @@ function* fetchAccounts() {
       });
     }
     yield put({ type: FETCH_ACCOUNTS_ASYNC.error, payload: error.message });
+  }
+}
+
+function* fetchTransactions(action) {
+  try {
+    console.log('action', action);
+    const response = yield call(Rehive.getTransactions, action.payload);
+    // console.log('trans', response);
+    yield put({
+      type: FETCH_TRANSACTIONS_ASYNC.success,
+      payload: { filters: action.payload, transactions: response.results },
+    });
+  } catch (error) {
+    console.log('fetchTransactions', error);
+    if (error.status === 401) {
+      yield put({
+        type: LOGOUT_USER_ASYNC.success,
+      });
+    }
+    yield put({ type: FETCH_TRANSACTIONS_ASYNC.error, payload: error.message });
   }
 }
 
@@ -138,6 +109,7 @@ function* checkSendServices(action) {
 export const accountsSagas = all([
   takeEvery(FETCH_ACCOUNTS_ASYNC.pending, fetchAccounts),
   takeEvery(SEND_ASYNC.success, fetchAccounts),
+  takeEvery(FETCH_TRANSACTIONS_ASYNC.pending, fetchTransactions),
   takeEvery(SET_ACTIVE_CURRENCY_ASYNC.pending, setActiveCurrency),
   takeEvery(SET_SEND_WALLET, checkSendServices),
 ]);

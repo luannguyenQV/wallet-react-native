@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, FlatList } from 'react-native';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
-import {
-  logoutUser,
-  setActiveWalletIndex,
-  fetchAccounts,
-} from './../../redux/actions';
-
+import { logoutUser, fetchAccounts } from './../../redux/actions';
+import { walletsSelector } from './../../redux/reducers/AccountsReducer';
 import Swiper from 'react-native-swiper';
 
 import Header from './../../components/header';
@@ -42,8 +38,9 @@ class HomeScreen extends Component {
       activeWalletIndex,
       fetchAccounts,
       company_config,
+      accounts,
     } = this.props;
-
+    console.log(wallets);
     return (
       <View style={styles.container}>
         <Header
@@ -75,7 +72,14 @@ class HomeScreen extends Component {
             currencyCode={
               wallets && wallets.length
                 ? wallets[activeWalletIndex].currency.currency.code
-                : ''
+                : accounts[0] && accounts[0].currencies[0]
+                  ? accounts[0].currencies[0].currency.code
+                  : ''
+            }
+            accountRef={
+              wallets && wallets.length
+                ? wallets[activeWalletIndex].reference
+                : accounts[0] ? accounts[0].reference : ''
             }
             // showDialog={this.showDialog}
             // logout={this.logout}
@@ -100,10 +104,17 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ auth, accounts }) => {
-  const { token, company_config } = auth;
-  const { wallets, activeWalletIndex, loadingAccounts } = accounts;
-  return { token, company_config, wallets, activeWalletIndex, loadingAccounts };
+const mapStateToProps = state => {
+  const { token, company_config } = state.auth;
+  const { activeWalletIndex, accounts, loadingAccounts } = state.accounts;
+  return {
+    token,
+    company_config,
+    wallets: walletsSelector(state),
+    accounts,
+    activeWalletIndex,
+    loadingAccounts,
+  };
 };
 
 export default connect(mapStateToProps, { logoutUser, fetchAccounts })(

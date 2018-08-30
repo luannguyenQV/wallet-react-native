@@ -135,8 +135,7 @@ export const createMobile = data => r.user.mobiles.create(data);
 export const deleteMobile = id => r.user.mobiles.delete(id);
 
 /* TRANSACTIONS */
-export const getTransactions = currency =>
-  r.transactions.get({ filters: { currency: currency } });
+export const getTransactions = filters => r.transactions.get({ filters });
 
 export const createCredit = (amount, currency) =>
   r.transactions.createCredit({
