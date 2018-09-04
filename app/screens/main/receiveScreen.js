@@ -95,6 +95,9 @@ class ReceiveScreen extends Component {
             }}
           />
         </TouchableHighlight>
+        {type === 'crypto' ? (
+          <Output label={'Address'} value={this.props.receiveAddress} copy />
+        ) : null}
         <Output
           label={type === 'email' ? 'Email' : 'Memo'}
           value={type === 'email' ? user.email : this.props.receiveMemo}
@@ -108,12 +111,7 @@ class ReceiveScreen extends Component {
     const { colors } = this.props.company_config;
     return (
       <View style={styles.container}>
-        <Header
-          navigation={this.props.navigation}
-          colors={colors}
-          back
-          title="Receive"
-        />
+        <Header navigation={this.props.navigation} back title="Receive" />
         {this.state.crypto ? (
           <Container>
             <Tabs

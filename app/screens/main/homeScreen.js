@@ -55,7 +55,6 @@ class HomeScreen extends Component {
         <Header
           navigation={this.props.navigation}
           drawer
-          colors={company_config.colors}
           right
           noShadow
           // noAccounts={this.state.noAccounts}
@@ -78,8 +77,6 @@ class HomeScreen extends Component {
           currencyCode={wallets.activeCurrency}
           colors={company_config.colors}
         />
-        {/* currency={item} accountLabel={account.name} /> */}
-        {/* {this.renderAccounts()} */}
         <Swiper renderPagination={renderPagination} loop={false}>
           <HomeCards navigation={this.props.navigation} />
           <TransactionList

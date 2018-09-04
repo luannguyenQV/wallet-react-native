@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
-import {} from './../../redux/actions';
+import { changeTheme } from './../../redux/actions';
 import Header from './../../components/header';
-import AppConfig from './../../../app.json';
 // import HeaderVerified from './../../../components/HeaderVerified';
+import Picker from 'react-native-picker-select';
 
 import {
   SettingsContainer,
   SettingsOption,
   InputContainer,
 } from './../../components/common';
+import { themeSelector } from '../../redux/sagas/selectors';
 
 class SettingsScreen extends Component {
   static navigationOptions = {
@@ -211,15 +212,43 @@ class SettingsScreen extends Component {
     );
   }
 
+  renderAppearance() {
+    let themes = [
+      { label: 'Default', value: 'default' },
+      { label: 'Light', value: 'light' },
+    ];
+    return (
+      <Picker
+        value={this.props.theme}
+        placeholder={{
+          label: this.props.theme,
+          value: this.props.theme,
+        }}
+        items={themes}
+        onValueChange={value => {
+          this.props.changeTheme(value);
+        }}
+        style={{ ...styles }}
+        // ref={el => {
+        //   this.inputRefs.picker = el;
+        // }}
+      />
+      // <Picker
+      //   selectedValue={this.props.theme}
+      //   style={{ height: 50, width: 100 }}
+      //   onValueChange={(itemValue, itemIndex) =>
+      //     this.props.changeTheme(itemValue)
+      //   }>
+      //   <Picker.Item label="Default" value="default" />
+      //   <Picker.Item label="Light" value="light" />
+      // </Picker>
+    );
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <Header
-          navigation={this.props.navigation}
-          colors={this.props.company_config.colors}
-          drawer
-          title="Settings"
-        />
+        <Header navigation={this.props.navigation} drawer title="Settings" />
         <InputContainer>
           <SettingsContainer label="Personal details">
             {this.renderBasicInfo()}
@@ -231,6 +260,9 @@ class SettingsScreen extends Component {
             {this.renderBankAccounts()}
             {/* {this.renderCards()} */}
             {/* {this.renderCryptoAccounts()} */}
+          </SettingsContainer>
+          <SettingsContainer label="Appearance">
+            {this.renderAppearance()}
           </SettingsContainer>
           <SettingsContainer label="Security">
             {this.renderSecurity()}
@@ -246,21 +278,28 @@ const styles = {
     flex: 1,
     backgroundColor: 'white',
   },
-  // mainContainer: {
-  //   flex: 1,
-  // },
+  inputIOS: {
+    fontSize: 16,
+    paddingTop: 13,
+    paddingHorizontal: 10,
+    paddingBottom: 12,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 4,
+    backgroundColor: 'white',
+    color: 'black',
+  },
 };
 
-const mapStateToProps = ({ user, auth }) => {
-  const { company_config } = auth;
-  const { profile, address, mobile, email } = user;
+const mapStateToProps = state => {
+  const { profile, address, mobile, email } = state.user;
   return {
     profile,
     address,
     mobile,
     email,
-    company_config,
+    theme: themeSelector(state),
   };
 };
 
-export default connect(mapStateToProps, {})(SettingsScreen);
+export default connect(mapStateToProps, { changeTheme })(SettingsScreen);

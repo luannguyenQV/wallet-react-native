@@ -6,6 +6,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import context from './context';
 
 import { Spinner } from './Spinner';
 import { HeaderButton } from './HeaderButton';
@@ -14,7 +15,7 @@ import { MaterialIcons as Icon } from '@expo/vector-icons';
 import Swipeable from 'react-native-swipeable';
 import Colors from './../../config/colors';
 
-const Card = props => {
+const _Card = props => {
   const {
     viewStyleCardContainer,
     viewStyleTitleContainer,
@@ -61,6 +62,7 @@ const Card = props => {
     loading,
     swipeableContent,
     colors,
+    canEdit,
   } = props;
 
   return (
@@ -121,6 +123,12 @@ const Card = props => {
       ) : null}
       <TouchableWithoutFeedback onPress={onPressContent}>
         <View style={[viewStyleContent, { backgroundColor }]}>
+          {canEdit ? (
+            <View
+              style={{ position: 'absolute', right: 8, top: 8, padding: 8 }}>
+              <Icon name={'edit'} size={22} color={'lightgray'} />
+            </View>
+          ) : null}
           {props.children}
           {errorText ? <Text style={textStyleError}>{errorText}</Text> : null}
         </View>
@@ -170,7 +178,7 @@ const Card = props => {
   }
 };
 
-Card.defaultProps = {
+_Card.defaultProps = {
   title: '',
   subtitle: '',
   renderHeader: null,
@@ -185,7 +193,7 @@ Card.defaultProps = {
   backgroundColor: 'white',
 };
 
-Card.propTypes = {
+_Card.propTypes = {
   title: PropTypes.string,
   subtitle: PropTypes.string,
   renderHeader: PropTypes.object,
@@ -295,5 +303,7 @@ const styles = {
 // };
 
 // connect(mapStateToProps, {})(props => Card(props));
+
+const Card = context(_Card);
 
 export { Card };

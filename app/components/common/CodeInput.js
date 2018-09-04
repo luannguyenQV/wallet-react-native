@@ -10,11 +10,12 @@ import {
   Clipboard,
 } from 'react-native';
 import _ from 'lodash';
+import context from './context';
 
 // if ViewPropTypes is not defined fall back to View.propType (to support RN < 0.44)
 const viewPropTypes = ViewPropTypes || View.propTypes;
 
-class CodeInput extends Component {
+class _CodeInput extends Component {
   static propTypes = {
     codeLength: PropTypes.number,
     compareWithCode: PropTypes.string,
@@ -349,5 +350,7 @@ const styles = StyleSheet.create({
     padding: 0,
   },
 });
+
+const CodeInput = context(_CodeInput);
 
 export { CodeInput };

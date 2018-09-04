@@ -22,6 +22,8 @@ import {
 } from '../actions';
 
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
+import { getUser } from './../sagas/selectors';
+import { createSelector } from '../../../node_modules/reselect';
 
 const EMPTY_BANK_ACCOUNT = {
   name: '',
@@ -322,3 +324,7 @@ export default (state = INITIAL_STATE, action) => {
       return state;
   }
 };
+
+export const userEmailsSelector = createSelector(getUser, user => {
+  return user.email;
+});

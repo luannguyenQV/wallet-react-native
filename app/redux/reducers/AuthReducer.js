@@ -1,4 +1,5 @@
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
+import { createSelector } from 'reselect';
 import {
   AUTH_FIELD_CHANGED,
   AUTH_FIELD_ERROR,

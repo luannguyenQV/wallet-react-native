@@ -4,7 +4,7 @@ Component that request the user to input a pin if pin has been set or
 to scan fingerprint if fingerprint has been set.
 */
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Platform } from 'react-native';
 import PropTypes from 'prop-types';
 import { CodeInput, PopUpGeneral } from './common';
 
@@ -89,26 +89,23 @@ class PinModal extends Component {
         errorText={errorText}
         onDismiss={onDismiss}>
         {pin ? (
-          <KeyboardAvoidingView
-            keyboardShouldPersistTaps={'never'}
-            // style={{{flex: 1}}}
-            behavior={'padding'}>
-            <CodeInput
-              ref={component => (this._pinInput = component)}
-              secureTextEntry
-              activeColor="gray"
-              autoFocus
-              inactiveColor="lightgray"
-              className="border-b"
-              codeLength={4}
-              space={7}
-              size={30}
-              inputPosition="center"
-              containerStyle={{ marginTop: 0, paddingBottom: 24 }}
-              onFulfill={code => this._onInputPinComplete(code)}
-            />
-          </KeyboardAvoidingView>
-        ) : null}
+          <CodeInput
+            ref={component => (this._pinInput = component)}
+            secureTextEntry
+            activeColor="gray"
+            autoFocus
+            inactiveColor="lightgray"
+            className="border-b"
+            codeLength={4}
+            space={7}
+            size={30}
+            inputPosition="center"
+            containerStyle={{ marginTop: 0, paddingBottom: 24 }}
+            onFulfill={code => this._onInputPinComplete(code)}
+          />
+        ) : (
+          <View />
+        )}
       </PopUpGeneral>
     );
   }

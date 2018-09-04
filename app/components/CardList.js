@@ -79,11 +79,10 @@ class CardList extends Component {
       primaryItem,
       activeItem,
       resendVerification,
-      colors,
     } = this.props;
     return (
       <Card
-        colors={colors}
+        canEdit={canEdit}
         headerComponent={headerComponent}
         onPressHeader={onPressHeader}
         textTitleLeft={textTitleLeft ? textTitleLeft(item) : ''}
@@ -303,7 +302,7 @@ class CardList extends Component {
       <KeyboardAvoidingView
         style={{
           flex: 1,
-          backgroundColor: '#e4e4e4',
+          backgroundColor: '#e2e2e2',
         }}
         behavior={'padding'}
         enabled>
@@ -312,7 +311,6 @@ class CardList extends Component {
             keyboardDismissMode={'interactive'}
             keyboardShouldPersistTaps="always">
             <Card
-              colors={colors}
               key={type}
               title={wallet ? '' : title ? title(tempItem) : ''}
               colorTitleBackground="white"

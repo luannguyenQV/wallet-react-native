@@ -84,6 +84,7 @@ function* fetchData(action) {
       payload: { data, prop: action.payload },
     });
   } catch (error) {
+    console.log(error);
     if (error && error.status && error.status === 403) {
       yield put({
         type: LOGOUT_USER_ASYNC.success,

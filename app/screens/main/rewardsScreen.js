@@ -12,10 +12,12 @@ import {
   hideCampaign,
 } from './../../redux/actions';
 import { Container, Content, Tab, Tabs } from 'native-base';
+import ScrollableTabView from 'react-native-scrollable-tab-view';
 import {
   getRewards,
   getCampaigns,
 } from './../../redux/reducers/RewardsReducer';
+import { companyConfigSelector } from './../../redux/sagas/selectors';
 
 import Header from './../../components/header';
 import { Output } from '../../components/common';
@@ -120,27 +122,77 @@ class RewardsScreen extends Component {
 
   render() {
     const {
-      company_config,
-      campaigns,
-      fetchRewards,
-      viewReward,
-      hideReward,
       rewards,
+      fetchRewards,
+      campaigns,
       fetchCampaigns,
       viewCampaign,
       hideCampaign,
       claimReward,
+      company_config,
     } = this.props;
     return (
       <View style={styles.container}>
-        <Header
-          navigation={this.props.navigation}
-          colors={company_config.colors}
-          drawer
-          title="Rewards"
-        />
+        <Header navigation={this.props.navigation} drawer title="Rewards" />
+        {/* <ScrollableTabView>
+          <View tabLabel="Available">
+            <CardList
+              type="campaigns"
+              navigation={this.props.navigation}
+              data={campaigns.data}
+              tempItem={campaigns.tempItem}
+              loadingData={campaigns.loading}
+              identifier="name"
+              onRefresh={fetchCampaigns}
+              renderContent={this.renderCampaignContent}
+              showReward={campaigns.detail}
+              renderDetail={this.renderCampaignDetail}
+              title={item => (item ? item.name : '')}
+              // subtitle={item =>
+              //   item ? standardizeString(item.account_name) : ''
+              // }
+              onPressTitle={item => viewCampaign(item)}
+              onPressContent={item => viewCampaign(item)}
+              emptyListMessage="No rewards available"
+              titleStyle="secondary"
+              keyExtractor={item => item.identifier}
+              textActionOne="CLAIM"
+              onPressActionOne={item => claimReward(item)}
+              onPressActionTwo={() => hideCampaign()}
+              loadingDetail={campaigns.loadingDetail}
+            />
+          </View>
+          <View tabLabel="Claimed">
+            <CardList
+              type="rewards"
+              navigation={this.props.navigation}
+              data={rewards.data}
+              tempItem={rewards.tempItem}
+              loadingData={rewards.loading}
+              identifier="identifier"
+              onRefresh={fetchRewards}
+              renderContent={this.renderRewardContent}
+              showReward={rewards.detail}
+              renderDetail={this.renderRewardDetail}
+              title={item => (item ? item.campaign.name : '')}
+              // subtitle={item =>
+              //   item ? standardizeString(item.account_name) : ''
+              // }
+              onPressTitle={item => viewReward(item)}
+              onPressContent={item => viewReward(item)}
+              emptyListMessage="No rewards claimed"
+              titleStyle="secondary"
+              keyExtractor={item => item.identifier}
+              // textActionOne="CLAIM"
+              // onPressActionOne={item => claimReward(item)}
+              onPressActionTwo={() => hideReward()}
+              loadingDetail={rewards.loadingDetail}
+            />
+          </View>
+        </ScrollableTabView> */}
         <Container>
           <Tabs
+            tabStyle={{ backgroundColor: 'white' }}
             tabBarUnderlineStyle={{
               backgroundColor: company_config.colors.focus,
             }}>
@@ -148,7 +200,6 @@ class RewardsScreen extends Component {
               heading="Available"
               activeTextStyle={{ color: company_config.colors.focus }}>
               <CardList
-                colors={company_config.colors}
                 type="campaigns"
                 navigation={this.props.navigation}
                 data={campaigns.data}
@@ -178,7 +229,6 @@ class RewardsScreen extends Component {
               heading="Claimed"
               activeTextStyle={{ color: company_config.colors.focus }}>
               <CardList
-                colors={company_config.colors}
                 type="rewards"
                 navigation={this.props.navigation}
                 data={rewards.data}
@@ -245,9 +295,8 @@ const styles = {
 };
 
 const mapStateToProps = store => {
-  const { company_config } = store.auth;
   return {
-    company_config,
+    company_config: companyConfigSelector(store),
     campaigns: getCampaigns(store),
     rewards: getRewards(store),
   };

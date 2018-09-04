@@ -44,7 +44,6 @@ class HeaderCurrency extends Component {
       textStyleAccount,
       iconStyleTitleRight,
     } = styles;
-    console.log();
     return (
       <View
         style={[
@@ -55,7 +54,7 @@ class HeaderCurrency extends Component {
                 width: SCREEN_WIDTH - 16,
               }
             : { width: SCREEN_WIDTH },
-          { backgroundColor: colors.primary },
+          { backgroundColor: colors.header },
         ]}>
         {showClose ? (
           <View style={iconStyleTitleRight}>
@@ -66,11 +65,11 @@ class HeaderCurrency extends Component {
             />
           </View>
         ) : null}
-        <Text style={[textStyleCode, { color: colors.primaryContrast }]}>
+        <Text style={[textStyleCode, { color: colors.headerContrast }]}>
           {currency.currency.code}
         </Text>
         {showAccountLabel ? (
-          <Text style={[textStyleAccount, { color: colors.primaryContrast }]}>
+          <Text style={[textStyleAccount, { color: colors.headerContrast }]}>
             {account_name}
           </Text>
         ) : null}
