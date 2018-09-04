@@ -12,6 +12,7 @@ import {
   hideCampaign,
 } from './../../redux/actions';
 import { Container, Content, Tab, Tabs } from 'native-base';
+import ScrollableTabView from 'react-native-scrollable-tab-view';
 import {
   getRewards,
   getCampaigns,
@@ -139,8 +140,67 @@ class RewardsScreen extends Component {
           drawer
           title="Rewards"
         />
-        <Container>
+        <ScrollableTabView>
+          <View tabLabel="Available">
+            <CardList
+              colors={company_config.colors}
+              type="campaigns"
+              navigation={this.props.navigation}
+              data={campaigns.data}
+              tempItem={campaigns.tempItem}
+              loadingData={campaigns.loading}
+              identifier="name"
+              onRefresh={fetchCampaigns}
+              renderContent={this.renderCampaignContent}
+              showReward={campaigns.detail}
+              renderDetail={this.renderCampaignDetail}
+              title={item => (item ? item.name : '')}
+              // subtitle={item =>
+              //   item ? standardizeString(item.account_name) : ''
+              // }
+              onPressTitle={item => viewCampaign(item)}
+              onPressContent={item => viewCampaign(item)}
+              emptyListMessage="No rewards available"
+              titleStyle="secondary"
+              keyExtractor={item => item.identifier}
+              textActionOne="CLAIM"
+              onPressActionOne={item => claimReward(item)}
+              onPressActionTwo={() => hideCampaign()}
+              loadingDetail={campaigns.loadingDetail}
+            />
+          </View>
+          <View tabLabel="Claimed">
+            <CardList
+              colors={company_config.colors}
+              type="rewards"
+              navigation={this.props.navigation}
+              data={rewards.data}
+              tempItem={rewards.tempItem}
+              loadingData={rewards.loading}
+              identifier="identifier"
+              onRefresh={fetchRewards}
+              renderContent={this.renderRewardContent}
+              showReward={rewards.detail}
+              renderDetail={this.renderRewardDetail}
+              title={item => (item ? item.campaign.name : '')}
+              // subtitle={item =>
+              //   item ? standardizeString(item.account_name) : ''
+              // }
+              onPressTitle={item => viewReward(item)}
+              onPressContent={item => viewReward(item)}
+              emptyListMessage="No rewards claimed"
+              titleStyle="secondary"
+              keyExtractor={item => item.identifier}
+              // textActionOne="CLAIM"
+              // onPressActionOne={item => claimReward(item)}
+              onPressActionTwo={() => hideReward()}
+              loadingDetail={rewards.loadingDetail}
+            />
+          </View>
+        </ScrollableTabView>
+        {/* <Container>
           <Tabs
+            tabStyle={{ backgroundColor: 'white' }}
             tabBarUnderlineStyle={{
               backgroundColor: company_config.colors.focus,
             }}>
@@ -205,7 +265,7 @@ class RewardsScreen extends Component {
               />
             </Tab>
           </Tabs>
-        </Container>
+        </Container> */}
       </View>
     );
   }
