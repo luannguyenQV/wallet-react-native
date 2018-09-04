@@ -9,17 +9,10 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class WalletActionList extends Component {
   onButtonPress(type) {
-    const {
-      resetSend,
-      navigation,
-      resetWithdraw,
-      currencyCode,
-      accountRef,
-    } = this.props;
+    const { navigation, currencyCode, accountRef } = this.props;
 
     switch (type) {
       case 'send': {
-        resetSend();
         navigation.navigate('Send', { accountRef, currencyCode });
         break;
       }
@@ -28,7 +21,6 @@ class WalletActionList extends Component {
         break;
       }
       case 'withdraw': {
-        resetWithdraw();
         navigation.navigate('Withdraw', { accountRef, currencyCode });
         break;
       }
@@ -57,7 +49,7 @@ class WalletActionList extends Component {
             <WalletAction
               type={item.type}
               onPress={() => this.onButtonPress(item.type)}
-              color={this.props.colors.primaryContrast}
+              color={this.props.colors.primary}
             />
           )}
           keyExtractor={item => item.id.toString()}

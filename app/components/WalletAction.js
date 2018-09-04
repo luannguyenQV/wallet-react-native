@@ -7,7 +7,6 @@ class WalletAction extends Component {
   renderButton() {
     const { type, color } = this.props;
     const { viewStyleContainer, iconStyle, textStyleLabel } = styles;
-    let source = '';
     let label = '';
 
     switch (type) {
