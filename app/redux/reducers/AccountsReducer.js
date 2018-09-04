@@ -85,7 +85,9 @@ export default (state = INITIAL_STATE, action) => {
         transactions: {
           ...state.transactions,
           [account]: {
-            ...state.transactions[account],
+            ...(state.transactions && state.transactions[account]
+              ? state.transactions[account]
+              : null),
             [currency]: transactions,
           },
         },
@@ -275,9 +277,10 @@ export function walletsSelector(state) {
 
   let data = accounts.map(account => {
     account.currencies = account.currencies.map(currency => {
-      currency.transactions = transactions[account.reference]
-        ? transactions[account.reference][currency.currency.code]
-        : {};
+      currency.transactions =
+        transactions && transactions[account.reference]
+          ? transactions[account.reference][currency.currency.code]
+          : {};
       if (currency.active) {
         activeCurrency = currency.currency.code;
       }

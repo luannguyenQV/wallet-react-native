@@ -38,6 +38,12 @@ class TransactionList extends Component {
 
   renderTransactions() {
     const { transactions, accountRef, currencyCode, loading } = this.props;
+    const data =
+      transactions &&
+      transactions[accountRef] &&
+      transactions[accountRef][currencyCode]
+        ? transactions[accountRef][currencyCode]
+        : [];
     return (
       <FlatList
         refreshControl={
@@ -49,7 +55,7 @@ class TransactionList extends Component {
             }}
           />
         }
-        data={transactions[accountRef][currencyCode]}
+        data={data}
         renderItem={({ item }) => this.renderItem(item)}
         keyExtractor={item => item.id}
         ListEmptyComponent={this.renderEmptyList()}
