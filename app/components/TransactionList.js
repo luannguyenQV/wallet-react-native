@@ -19,49 +19,25 @@ import { performDivisibility } from './../util/general';
 import moment from 'moment';
 class TransactionList extends Component {
   state = {
-    previousCurrencyCode: null,
-    transactions: [],
-    loading: false,
     showDetail: false,
     transaction: null,
   };
-
   async componentDidMount() {
     const { accountRef, currencyCode } = this.props;
     await this.getTransactions(accountRef, currencyCode);
   }
 
-  async UNSAFE_componentWillReceiveProps(nextProps) {
-    if (this.state.previousCurrencyCode !== nextProps.currencyCode) {
-      await this.getTransactions(nextProps.currencyCode);
-    }
-  }
-
   async getTransactions(accountRef, currencyCode) {
-    if (this.state.previousCurrencyCode !== currencyCode) {
-      this.setState({ transactions: [] });
-    }
-    // this.setState({ loading: true });
-    // if (this.props.fetchAccounts) {
-    //   this.props.fetchAccounts();
-    // }
     const filters = {
       account: accountRef,
       currency: currencyCode,
     };
-    console.log(filters);
-    let response = await Rehive.getTransactions(filters);
+    console.log('filters', filters);
     this.props.fetchTransactions(filters);
-    this.setState({
-      previousCurrencyCode: currencyCode,
-      transactions: response.results,
-      loading: false,
-    });
   }
 
   renderTransactions() {
-    const { transactions, loading } = this.state;
-    const { accountRef, currencyCode } = this.props;
+    const { transactions, accountRef, currencyCode, loading } = this.props;
     return (
       <FlatList
         refreshControl={
@@ -73,7 +49,7 @@ class TransactionList extends Component {
             }}
           />
         }
-        data={transactions}
+        data={transactions[accountRef][currencyCode]}
         renderItem={({ item }) => this.renderItem(item)}
         keyExtractor={item => item.id}
         ListEmptyComponent={this.renderEmptyList()}
@@ -83,7 +59,7 @@ class TransactionList extends Component {
   }
 
   renderEmptyList() {
-    const { loading } = this.state;
+    const { loading } = this.props;
     if (!loading) {
       return <EmptyListMessage text="No transactions" />;
     }
@@ -147,7 +123,6 @@ class TransactionList extends Component {
           color = Colors.positive;
           break;
         case 'credit':
-          // console.log('Credit');
           iconName = 'call-received';
           headerText = 'Received ' + transaction.currency.code;
           if (transaction.source_transaction) {

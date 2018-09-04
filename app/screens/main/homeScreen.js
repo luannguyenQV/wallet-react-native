@@ -61,50 +61,37 @@ class HomeScreen extends Component {
           // noAccounts={this.state.noAccounts}
         />
         <WalletBalanceList
-          accounts={wallets.data}
+          currencies={wallets.currencies}
+          activeCurrency={wallets.activeCurrency}
           colors={company_config.colors}
           setHomeAccount={setHomeAccount}
           setHomeCurrency={setHomeCurrency}
         />
-        {/* <WalletActionList
+        <WalletActionList
           buttons={[
             { id: 0, type: 'receive' },
             { id: 1, type: 'send' },
             { id: 2, type: 'more' },
           ]}
           navigation={this.props.navigation}
+          accountRef={wallets.activeAccount}
+          currencyCode={wallets.activeCurrency}
           colors={company_config.colors}
-        /> */}
+        />
         {/* currency={item} accountLabel={account.name} /> */}
         {/* {this.renderAccounts()} */}
         <Swiper renderPagination={renderPagination} loop={false}>
-          {/* <View style={{ flex: 1 }} /> */}
           <HomeCards navigation={this.props.navigation} />
           <TransactionList
-            // updateBalance={this.getBalanceInfo}
+            transactions={wallets.transactions}
             // fetchAccounts={fetchAccounts}
-            currencyCode={
-              wallets && wallets.length
-                ? wallets[activeWalletIndex].currency.currency.code
-                : accounts[0] && accounts[0].currencies[0]
-                  ? accounts[0].currencies[0].currency.code
-                  : ''
-            }
-            accountRef={
-              wallets && wallets.length
-                ? wallets[activeWalletIndex].reference
-                : accounts[0] ? accounts[0].reference : ''
-            }
+            loading={wallets.transactionsLoading}
+            currencyCode={wallets.homeCurrency}
+            accountRef={wallets.homeAccount}
             // showDialog={this.showDialog}
             // logout={this.logout}
           />
         </Swiper>
-        {/* <TransactionPopUp
-          popupDialog={popupDialog => {
-            this.popupDialog = popupDialog;
-          }}
-          transactionDetails={this.state.dataToShow}
-        /> */}
       </View>
     );
   }

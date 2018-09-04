@@ -649,7 +649,7 @@ function* postAuthFlow() {
       });
     }
   } catch (error) {
-    console.log(error);
+    console.log('postAuthFlow', error);
   }
 }
 
@@ -665,7 +665,7 @@ function* appLoad() {
     }
     if (services.stellar) {
       let resp = yield call(Rehive.getStellarUser);
-      console.log('stellar', resp);
+      // console.log('stellar', resp);
       if (resp.data && !resp.data.username) {
         const { user } = yield select(getAuth);
         yield call(Rehive.setStellarUsername, {

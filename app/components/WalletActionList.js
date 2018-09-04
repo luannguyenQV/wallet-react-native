@@ -8,40 +8,19 @@ import { EmptyListMessage } from './common';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class WalletActionList extends Component {
-  scrollX = new Animated.Value(0);
-
-  componentDidMount() {
-    if (this.props.wallets.length > 1) {
-      this.flatListRef.scrollToIndex({
-        animated: false,
-        index: this.props.activeWalletIndex || 0,
-      });
-    }
-  }
-
-  getItemLayout = (data, index) => ({
-    length: SCREEN_WIDTH,
-    offset: SCREEN_WIDTH * index,
-    index,
-  });
-
   onButtonPress(type) {
     const {
-      wallets,
-      activeWalletIndex,
-      setWithdrawWallet,
       resetSend,
-      setSendWallet,
       navigation,
       resetWithdraw,
+      currencyCode,
+      accountRef,
     } = this.props;
-    const wallet = wallets.length > 1 ? wallets[activeWalletIndex] : wallets[0];
-    const currencyCode = wallet.currency.currency.code;
+
     switch (type) {
       case 'send': {
         resetSend();
-        setSendWallet(wallet);
-        navigation.navigate('Send');
+        navigation.navigate('Send', { accountRef, currencyCode });
         break;
       }
       case 'receive': {
@@ -50,8 +29,7 @@ class WalletActionList extends Component {
       }
       case 'withdraw': {
         resetWithdraw();
-        setWithdrawWallet(wallet);
-        navigation.navigate('Withdraw');
+        navigation.navigate('Withdraw', { accountRef, currencyCode });
         break;
       }
       case 'deposit': {
@@ -59,7 +37,7 @@ class WalletActionList extends Component {
         break;
       }
       case 'more':
-        navigation.navigate('Wallets', { wallet });
+        // navigation.navigate('Wallets', { wallet });
         break;
       default:
         console.log('Error: unknown button type');

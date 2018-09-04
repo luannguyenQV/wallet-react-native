@@ -11,12 +11,17 @@ class WalletBalanceList extends Component {
   scrollX = new Animated.Value(0);
 
   componentDidMount() {
-    if (this.props.accounts.length > 1) {
-      this.flatListRef.scrollToIndex({
-        animated: false,
-        index: this.props.activeWalletIndex || 0,
-      });
-    }
+    const { currencies, homeAccount, homeCurrency, colors } = this.props;
+
+    // const index = currencies.indexOf(item => item.active);
+    // console.log('index', index);
+
+    // if (this.props.accounts.length > 1) {
+    //   this.flatListRef.scrollToIndex({
+    //     animated: false,
+    //     index: 0,
+    //   });
+    // }
   }
 
   getItemLayout = (data, index) => ({
@@ -25,12 +30,22 @@ class WalletBalanceList extends Component {
     index,
   });
 
-  renderWallets() {
-    const { accounts, showClose, hideWallet, colors } = this.props;
-    console.log('accounts', accounts);
+  renderAccounts() {
+    const { currencies, homeAccount, homeCurrency, colors } = this.props;
 
-    const currencies = accounts[0].currencies ? accounts[0].currencies : [];
+    if (currencies.length) {
+      return <View>{this.renderCurrencies(currencies)}</View>;
+    } else {
+      return (
+        <Text style={[styles.textStyle, { color: colors.primaryContrast }]}>
+          No accounts available
+        </Text>
+      );
+    }
+  }
 
+  renderCurrencies(currencies) {
+    const { homeAccount, homeCurrency, colors } = this.props;
     if (currencies.length === 1) {
       return (
         <HeaderCurrency
@@ -63,21 +78,22 @@ class WalletBalanceList extends Component {
     }
   }
 
-  renderItem(item, index) {
-    return (
-      <Animated.View
-        key={item.account_name + item.currency.currency.code}
-        // style={{ opacity }}
-      >
-        <HeaderCurrency wallet={item} />
-      </Animated.View>
-    );
+  // renderCurrency(item, index) {
+  //   return (
+  //     <Animated.View
+  //       key={item.account_name + item.currency.currency.code}
+  //       // style={{ opacity }}
+  //     >
+  //       <HeaderCurrency wallet={item} />
+  //     </Animated.View>
+  //   );
 
-    return;
-  }
+  //   return;
+  // }
 
   handleViewableItemsChanged = info => {
     if (info.viewableItems && info.viewableItems.length > 0) {
+      this.props.setHomeAccount(info.viewableItems[0].item.account);
       this.props.setHomeCurrency(info.viewableItems[0].item.currency.code);
     }
   };
@@ -87,19 +103,11 @@ class WalletBalanceList extends Component {
   };
 
   render() {
-    const { colors, accounts } = this.props;
-    const { viewStyleContainer, viewStyleBox, textStyle } = styles;
+    const { colors } = this.props;
+    const { viewStyleContainer } = styles;
     return (
       <View style={[viewStyleContainer, { backgroundColor: colors.primary }]}>
-        {accounts && accounts.length > 0 ? (
-          <View>{this.renderWallets()}</View>
-        ) : (
-          <View style={viewStyleBox}>
-            <Text style={[textStyle, { color: colors.primaryContrast }]}>
-              No accounts available
-            </Text>
-          </View>
-        )}
+        {this.renderAccounts()}
       </View>
     );
   }

@@ -270,23 +270,56 @@ export function walletsSelector(state) {
 
   const crypto = state.crypto;
   // console.log('crypto', crypto);
+  // let index = 0;
+  let activeCurrency = '';
 
   let data = accounts.map(account => {
     account.currencies = account.currencies.map(currency => {
       currency.transactions = transactions[account.reference]
         ? transactions[account.reference][currency.currency.code]
         : {};
-      // console.log('currency' + currency.currency.code, currency);
+      if (currency.active) {
+        activeCurrency = currency.currency.code;
+      }
+      // console.log('active' + currency.active);
       return currency;
     });
+    // console.log('account', account);
     return account;
   });
+
+  let currencies = [];
+  let tempCurrencies = [];
+  for (i = 0; i < accounts.length; i++) {
+    tempCurrencies = accounts[i].currencies.map(currency => {
+      currency.account = accounts[i].reference;
+      // console.log('active' + currency.active);
+      return currency;
+    });
+    currencies = currencies.concat(tempCurrencies);
+  }
+
+  // let currencies = accounts.map(account => {
+  //   currencies = account.currencies.map(currency => {
+  //     currency.account = account.reference;
+  //     // console.log('active' + currency.active);
+  //     return currency;
+  //   });
+  //   // console.log('account', account);
+  //   return currencies;
+  // });
+  console.log('currencies', currencies);
+
   let wallets = {
     homeAccount,
     homeCurrency,
+    activeCurrency,
     data,
+    transactions,
+    transactionsLoading,
     showAccountLabel: accounts.length > 1 ? true : false,
     loading,
+    currencies,
   };
 
   //       if (currencies[j].active === true) {

@@ -86,7 +86,6 @@ class CodeInput extends Component {
       this.state.appState.match(/inactive|background/) &&
       nextAppState === 'active'
     ) {
-      console.log('App has come to the foreground!');
       this._getClipboard();
     }
     this.setState({ appState: nextAppState });
@@ -94,8 +93,6 @@ class CodeInput extends Component {
 
   _getClipboard = async () => {
     var content = await Clipboard.getString();
-
-    console.log(content);
     if (content.length === this.props.codeLength) {
       this.props.onFulfill(content);
     }
