@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, Dimensions } from 'react-native';
-import { connect } from 'react-redux';
+import context from './common/context';
 
 import Colors from './../config/colors';
 import { HeaderButton } from './common';
@@ -34,7 +34,7 @@ class HeaderCurrency extends Component {
                 width: SCREEN_WIDTH - 16,
               }
             : { width: SCREEN_WIDTH },
-          { backgroundColor: colors.primary },
+          { backgroundColor: colors.header },
         ]}>
         {showClose ? (
           <View style={iconStyleTitleRight}>
@@ -45,7 +45,7 @@ class HeaderCurrency extends Component {
             />
           </View>
         ) : null}
-        <Text style={[textStyleCode, { color: colors.primaryContrast }]}>
+        <Text style={[textStyleCode, { color: colors.headerContrast }]}>
           {currency.currency.code}
         </Text>
         {/* {showAccountLabel ? (
@@ -70,21 +70,17 @@ class HeaderCurrency extends Component {
 
 const styles = {
   viewStyleContainer: {
-    backgroundColor: Colors.primary,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    // padding: 8,
     paddingBottom: 16,
   },
   textStyleCode: {
-    color: Colors.primaryContrast,
     fontSize: 20,
     fontWeight: 'bold',
     paddingBottom: 0,
   },
   textStyleAccount: {
-    color: Colors.primaryContrast,
     fontSize: 16,
     paddingBottom: 8,
   },
@@ -101,4 +97,4 @@ const styles = {
   },
 };
 
-export default HeaderCurrency;
+export default context(HeaderCurrency);

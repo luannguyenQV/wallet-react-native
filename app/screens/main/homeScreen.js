@@ -62,7 +62,6 @@ class HomeScreen extends Component {
         <WalletBalanceList
           currencies={wallets.currencies}
           activeCurrency={wallets.activeCurrency}
-          colors={company_config.colors}
           setHomeAccount={setHomeAccount}
           setHomeCurrency={setHomeCurrency}
         />
@@ -75,7 +74,6 @@ class HomeScreen extends Component {
           navigation={this.props.navigation}
           accountRef={wallets.activeAccount}
           currencyCode={wallets.activeCurrency}
-          colors={company_config.colors}
         />
         <Swiper renderPagination={renderPagination} loop={false}>
           <HomeCards navigation={this.props.navigation} />

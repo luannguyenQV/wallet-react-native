@@ -4,6 +4,7 @@ import { View, FlatList, Dimensions, Animated, Text } from 'react-native';
 import HeaderCurrency from './HeaderCurrency';
 import { EmptyListMessage } from './common';
 import WalletBalance from './WalletBalance';
+import context from './common/context';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -46,36 +47,36 @@ class WalletBalanceList extends Component {
 
   renderCurrencies(currencies) {
     const { homeAccount, homeCurrency, colors } = this.props;
-    if (currencies.length === 1) {
-      return (
-        <HeaderCurrency
-          detail
-          wallet={currencies[0]}
-          showClose={showClose}
-          closeWallet={hideWallet}
-          colors={colors}
-        />
-      );
-    } else {
-      return (
-        <FlatList
-          onViewableItemsChanged={this.handleViewableItemsChanged}
-          viewabilityConfig={this.viewabilityConfig}
-          ref={ref => {
-            this.flatListRef = ref;
-          }}
-          data={currencies}
-          horizontal
-          pagingEnabled
-          getItemLayout={this.getItemLayout}
-          renderItem={({ item }) => (
-            <WalletBalance currency={item} colors={colors} />
-          )}
-          keyExtractor={item => item.currency.code}
-          showsHorizontalScrollIndicator={false}
-        />
-      );
-    }
+    // if (currencies.length === 1) {
+    //   return (
+    //     <HeaderCurrency
+    //       detail
+    //       wallet={currencies[0]}
+    //       showClose={showClose}
+    //       closeWallet={hideWallet}
+    //       colors={colors}
+    //     />
+    //   );
+    // } else {
+    return (
+      <FlatList
+        onViewableItemsChanged={this.handleViewableItemsChanged}
+        viewabilityConfig={this.viewabilityConfig}
+        ref={ref => {
+          this.flatListRef = ref;
+        }}
+        data={currencies}
+        horizontal
+        pagingEnabled
+        getItemLayout={this.getItemLayout}
+        renderItem={({ item }) => (
+          <WalletBalance currency={item} colors={colors} />
+        )}
+        keyExtractor={item => item.currency.code}
+        showsHorizontalScrollIndicator={false}
+      />
+    );
+    // }
   }
 
   // renderCurrency(item, index) {
@@ -106,7 +107,7 @@ class WalletBalanceList extends Component {
     const { colors } = this.props;
     const { viewStyleContainer } = styles;
     return (
-      <View style={[viewStyleContainer, { backgroundColor: colors.primary }]}>
+      <View style={[viewStyleContainer, { backgroundColor: colors.header }]}>
         {this.renderAccounts()}
       </View>
     );
@@ -117,10 +118,10 @@ const styles = {
   viewStyleContainer: {
     flexDirection: 'column',
     elevation: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 2, height: 2 },
-    shadowRadius: 5,
-    shadowOpacity: 0.3,
+    // shadowColor: '#000',
+    // shadowOffset: { width: 2, height: 2 },
+    // shadowRadius: 5,
+    // shadowOpacity: 0.3,
     zIndex: 10,
   },
   viewStyleButtons: {
@@ -140,4 +141,4 @@ const styles = {
   },
 };
 
-export default WalletBalanceList;
+export default context(WalletBalanceList);

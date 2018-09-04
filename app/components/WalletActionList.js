@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
-import { View, FlatList, Dimensions, Animated, Text } from 'react-native';
+import { View, FlatList, Dimensions } from 'react-native';
+import context from './common/context';
 
 import WalletAction from './WalletAction';
-import HeaderCurrency from './HeaderCurrency';
-import { EmptyListMessage } from './common';
-
-const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class WalletActionList extends Component {
   onButtonPress(type) {
@@ -37,9 +34,10 @@ class WalletActionList extends Component {
   }
 
   render() {
-    const { viewStyleButtons } = styles;
+    const { viewStyleContainer, viewStyleButtons } = styles;
+    const { type, colors } = this.props;
     return (
-      <View>
+      <View style={(viewStyleContainer, { backgroundColor: colors.header })}>
         <FlatList
           contentContainerStyle={viewStyleButtons}
           data={this.props.buttons}
@@ -87,4 +85,4 @@ const styles = {
   },
 };
 
-export default WalletActionList;
+export default context(WalletActionList);

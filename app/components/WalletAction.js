@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
-import Colors from './../config/colors';
+import context from './common/context';
+
 import { CustomIcon } from './../components/common';
 
 class WalletAction extends Component {
   renderButton() {
-    const { type, color } = this.props;
+    const { type, colors } = this.props;
     const { viewStyleContainer, iconStyle, textStyleLabel } = styles;
     let label = '';
 
@@ -34,9 +35,11 @@ class WalletAction extends Component {
         label = 'unknown';
     }
     return (
-      <View style={viewStyleContainer}>
-        <CustomIcon name={type} size={48} color={color} />
-        <Text style={[textStyleLabel, { color }]}>{label}</Text>
+      <View style={[viewStyleContainer, { backgroundColor: colors.header }]}>
+        <CustomIcon name={type} size={48} color={colors.headerContrast} />
+        <Text style={[textStyleLabel, { color: colors.headerContrast }]}>
+          {label}
+        </Text>
       </View>
     );
   }
@@ -64,6 +67,7 @@ const styles = {
     // marginRight: 8,
     justifyContent: 'space-between',
     alignItems: 'center',
+    elevation: 10,
   },
   iconStyle: {
     height: 48,
@@ -71,11 +75,8 @@ const styles = {
     marginBottom: 4,
   },
   textStyleLabel: {
-    color: Colors.primaryContrast,
     fontSize: 14,
-    // fontWeight: 'bold',
-    // paddingTop: 2,
   },
 };
 
-export default WalletAction;
+export default context(WalletAction);
