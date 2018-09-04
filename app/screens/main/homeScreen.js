@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { connect } from 'react-redux';
-import { logoutUser, fetchAccounts } from './../../redux/actions';
+import {
+  logoutUser,
+  fetchAccounts,
+  setHomeAccount,
+  setHomeCurrency,
+} from './../../redux/actions';
 import { walletsSelector } from './../../redux/reducers/AccountsReducer';
 import Swiper from 'react-native-swiper';
 
@@ -9,6 +14,8 @@ import Header from './../../components/header';
 import WalletHeader from '../../components/WalletHeader';
 import TransactionList from './../../components/TransactionList';
 import HomeCards from './../../components/HomeCards';
+import WalletBalanceList from '../../components/WalletBalanceList';
+import WalletActionList from '../../components/WalletActionList';
 
 const renderPagination = (index, total, context) => {
   return (
@@ -39,8 +46,10 @@ class HomeScreen extends Component {
       fetchAccounts,
       company_config,
       accounts,
+      setHomeAccount,
+      setHomeCurrency,
     } = this.props;
-    console.log(wallets);
+    console.log('wallets', wallets);
     return (
       <View style={styles.container}>
         <Header
@@ -51,8 +60,13 @@ class HomeScreen extends Component {
           noShadow
           // noAccounts={this.state.noAccounts}
         />
-        <WalletHeader
-          wallets={wallets}
+        <WalletBalanceList
+          accounts={wallets.data}
+          colors={company_config.colors}
+          setHomeAccount={setHomeAccount}
+          setHomeCurrency={setHomeCurrency}
+        />
+        {/* <WalletActionList
           buttons={[
             { id: 0, type: 'receive' },
             { id: 1, type: 'send' },
@@ -60,7 +74,7 @@ class HomeScreen extends Component {
           ]}
           navigation={this.props.navigation}
           colors={company_config.colors}
-        />
+        /> */}
         {/* currency={item} accountLabel={account.name} /> */}
         {/* {this.renderAccounts()} */}
         <Swiper renderPagination={renderPagination} loop={false}>
@@ -117,6 +131,9 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, { logoutUser, fetchAccounts })(
-  HomeScreen,
-);
+export default connect(mapStateToProps, {
+  logoutUser,
+  fetchAccounts,
+  setHomeAccount,
+  setHomeCurrency,
+})(HomeScreen);

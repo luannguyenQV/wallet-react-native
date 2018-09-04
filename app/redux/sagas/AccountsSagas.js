@@ -35,9 +35,7 @@ function* fetchAccounts() {
 
 function* fetchTransactions(action) {
   try {
-    console.log('action', action);
     const response = yield call(Rehive.getTransactions, action.payload);
-    // console.log('trans', response);
     yield put({
       type: FETCH_TRANSACTIONS_ASYNC.success,
       payload: { filters: action.payload, transactions: response.results },

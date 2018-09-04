@@ -1,6 +1,5 @@
 import {
   FETCH_ACCOUNTS_ASYNC,
-  UPDATE_CURRENT_INDEX,
   ACCOUNT_FIELD_CHANGED,
   ACCOUNT_FIELD_ERROR,
   SET_SEND_STATE,
@@ -18,6 +17,8 @@ import {
   SHOW_MODAL,
   SET_RECEIVE_ADDRESS,
   FETCH_TRANSACTIONS_ASYNC,
+  SET_HOME_ACCOUNT,
+  SET_HOME_CURRENCY,
 } from '../actions';
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 
@@ -63,8 +64,6 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         accounts: action.payload,
-        activeWalletIndex: 0,
-        // showAccountLabel: action.payload.showAccountLabel,
         loading: false,
       };
     case FETCH_ACCOUNTS_ASYNC.error:
@@ -81,13 +80,12 @@ export default (state = INITIAL_STATE, action) => {
     case FETCH_TRANSACTIONS_ASYNC.success:
       const { transactions, filters } = action.payload;
       const { account, currency } = filters;
-      const tempAcc = account ? account : 'default';
       return {
         ...state,
         transactions: {
           ...state.transactions,
-          [tempAcc]: {
-            ...state.transactions[tempAcc],
+          [account]: {
+            ...state.transactions[account],
             [currency]: transactions,
           },
         },
@@ -99,10 +97,15 @@ export default (state = INITIAL_STATE, action) => {
         transactionsLoading: false,
       };
 
-    case UPDATE_CURRENT_INDEX:
+    case SET_HOME_ACCOUNT:
       return {
         ...state,
-        activeWalletIndex: action.payload,
+        homeAccount: action.payload,
+      };
+    case SET_HOME_CURRENCY:
+      return {
+        ...state,
+        homeCurrency: action.payload,
       };
 
     case SHOW_MODAL:
@@ -256,22 +259,20 @@ export default (state = INITIAL_STATE, action) => {
 };
 
 export function walletsSelector(state) {
-  const accounts = state.accounts.accounts;
-  const transactions = state.accounts.transactions;
-  console.log('transactions', transactions);
+  const {
+    accounts,
+    transactions,
+    loading,
+    transactionsLoading,
+    homeAccount,
+    homeCurrency,
+  } = state.accounts;
 
-  let wallets = accounts;
-  let activeWalletIndex = 0;
-  let currencies;
-  let account;
-  let showAccountLabel = false;
+  const crypto = state.crypto;
+  // console.log('crypto', crypto);
 
   let data = accounts.map(account => {
     account.currencies = account.currencies.map(currency => {
-      console.log(
-        'trans',
-        transactions[account.reference][currency.currency.code],
-      );
       currency.transactions = transactions[account.reference]
         ? transactions[account.reference][currency.currency.code]
         : {};
@@ -280,37 +281,22 @@ export function walletsSelector(state) {
     });
     return account;
   });
-  console.log('data', data);
+  let wallets = {
+    homeAccount,
+    homeCurrency,
+    data,
+    showAccountLabel: accounts.length > 1 ? true : false,
+    loading,
+  };
 
-  if (accounts.length > 0) {
-    let index = 0;
-    for (var i = 0; i < accounts.length; i++) {
-      account = accounts[i];
-      currencies = account.currencies;
-      for (var j = 0; j < currencies.length; j++) {
-        wallets = {
-          ...wallets,
-          currencies: {
-            ...wallets.currencies,
-            currenc: {},
-          },
-        };
-        if (currencies[j].active === true) {
-          activeWalletIndex = index;
-        }
-        index++;
-      }
-    }
-    if (accounts.length > 1) {
-      showAccountLabel = true;
-    }
-    if (wallets.length > 0) {
-      const activeItem = wallets[activeWalletIndex];
-      wallets[activeWalletIndex] = wallets[0];
-      wallets[0] = activeItem;
-    }
-  } else {
-    wallets = [];
-  }
+  //       if (currencies[j].active === true) {
+  //         activeWalletIndex = index;
+  //       }
+  // if (wallets.length > 0) {
+  //   const activeItem = wallets[activeWalletIndex];
+  //   wallets[activeWalletIndex] = wallets[0];
+  //   wallets[0] = activeItem;
+  // }
+
   return wallets;
 }

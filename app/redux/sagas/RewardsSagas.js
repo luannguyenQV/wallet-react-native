@@ -12,7 +12,6 @@ import * as Rehive from '../../util/rehive';
 function* fetchRewards() {
   try {
     const response = yield call(Rehive.getRewards);
-    // console.log('fetchRewards', response);
     if (response.status === 'error') {
       yield put({
         type: FETCH_REWARDS_ASYNC.success,
