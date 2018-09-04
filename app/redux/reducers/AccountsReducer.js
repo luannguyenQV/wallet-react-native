@@ -16,6 +16,7 @@ import {
   VIEW_WALLET,
   HIDE_WALLET,
   SHOW_MODAL,
+  SET_RECEIVE_ADDRESS,
 } from '../actions';
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 
@@ -140,6 +141,12 @@ export default (state = INITIAL_STATE, action) => {
         sendState: 'fail',
         sendError: action.payload,
         sending: false,
+      };
+    case SET_RECEIVE_ADDRESS:
+      return {
+        ...state,
+        receiveAddress: action.payload.receiveAddress,
+        receiveMemo: action.payload.receiveMemo,
       };
 
     case SET_WITHDRAW_WALLET:

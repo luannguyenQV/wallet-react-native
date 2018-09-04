@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TextInput, FlatList } from 'react-native';
 import PropTypes from 'prop-types';
 import Colors from './../../config/colors';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { MaterialIcons as Icon } from '@expo/vector-icons';
 import CountryPicker from 'react-native-country-picker-modal';
 import { ListItem, ListSeparator } from './ListItem';
 import context from './context';
@@ -114,6 +114,23 @@ class _Input extends Component {
     );
   }
 
+  viewStyleContainer() {
+    const { focused } = this.state;
+    if (focused) {
+      return {
+        shadowColor: 'rgba(0, 0, 0, 0.6)',
+        shadowOpacity: 0.3,
+        shadowRadius: 3,
+        shadowOffset: {
+          width: 1,
+          height: 2,
+        },
+        elevation: 2,
+      };
+    }
+    return {};
+  }
+
   render() {
     const {
       label,
@@ -144,10 +161,11 @@ class _Input extends Component {
     const { borderColor, focused, iconNameVisibility } = this.state;
 
     return (
-      <View>
+      <View style={this.viewStyleContainer()}>
         <View
           style={[
             viewStyleContainer,
+
             {
               backgroundColor: colors.primaryContrast,
             },
@@ -210,7 +228,7 @@ class _Input extends Component {
                   textStyleFooter,
                   { color: inputError ? colors.error : colors.primaryContrast },
                 ]}>
-                {inputError ? 'Error: ' + inputError : helperText}
+                {inputError ? inputError : helperText}
               </Text>
             </View>
           ) : null}

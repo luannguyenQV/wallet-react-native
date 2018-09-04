@@ -41,8 +41,14 @@ class HomeScreen extends Component {
     const { wallets, activeWalletIndex, company_config } = this.props;
 
     return (
-      <MyView f>
-        <Header navigation={this.props.navigation} drawer right noShadow />
+      <View style={styles.container}>
+        <Header
+          navigation={this.props.navigation}
+          drawer
+          right
+          noShadow
+          // noAccounts={this.state.noAccounts}
+        />
         <WalletHeader
           wallets={wallets}
           buttons={[
@@ -63,7 +69,7 @@ class HomeScreen extends Component {
             }
           />
         </Swiper>
-      </MyView>
+      </View>
     );
   }
 }

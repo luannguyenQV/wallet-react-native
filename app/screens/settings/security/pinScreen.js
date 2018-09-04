@@ -37,8 +37,10 @@ class PinScreen extends Component {
   componentDidMount() {
     if (Expo.Fingerprint.hasHardwareAsync()) {
       this.setState({ hasFingerprintScanner: true });
+      console.log('hasFingerprintScanner');
       if (Expo.Fingerprint.isEnrolledAsync()) {
         this.setState({ hasSavedFingerprints: true });
+        console.log('hasSavedFingerprints');
       }
     }
   }
@@ -145,6 +147,15 @@ class PinScreen extends Component {
     } else {
       this.props.pinFail('Unable to authenticate with biometrics');
     }
+  };
+
+  iosScan = async () => {
+    let result = await Expo.Fingerprint.authenticateAsync('Biometric scan');
+
+    if (!result.success) {
+      this.props.navigation.goBack();
+    }
+    return null;
   };
 
   renderModal() {

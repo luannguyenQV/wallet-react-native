@@ -28,7 +28,7 @@ import ChangePassword from '../screens/settings/security/changePasswordScreen';
 import TwoFactor from '../screens/settings/security/twoFactorScreen';
 import Pin from '../screens/settings/security/pinScreen';
 
-import SettingsAddress from '../screens/settings/addressScreen';
+import SettingsAddresses from '../screens/settings/addressesScreen';
 import SettingsPersonalDetails from '../screens/settings/personalDetailsScreen';
 
 const Stack = {
@@ -45,7 +45,7 @@ const Stack = {
   SettingsMobileNumbers: SettingsMobileNumbers,
   SettingsEmailAddresses: SettingsEmailAddresses,
   SettingsGetVerified: SettingsGetVerified,
-  SettingsAddress: SettingsAddress,
+  SettingsAddresses: SettingsAddresses,
   SettingsBankAccounts: SettingsBankAccounts,
   SettingsCryptoAddresses: SettingsCryptoAddresses,
   ChangePassword: ChangePassword,

@@ -107,12 +107,21 @@ class TwoFactorScreen extends Component {
   }
 
   renderToken() {
-    const { mfaToken } = this.props;
-    console.log(mfaToken);
-    let decComp = decodeURIComponent(mfaToken.otpauth_url);
-    console.log('decComp', decComp);
-    let dec = decodeURI(mfaToken.otpauth_url);
-    console.log('dec', dec);
+    const { colors } = this.props.company_config;
+    const { issuer, account, key, otpauth_url } = this.props.mfaToken;
+    const url =
+      'otpauth://totp/' +
+      issuer +
+      ':' +
+      account +
+      '?secret=' +
+      key +
+      '&digits=6&issuer=' +
+      issuer;
+    console.log('url', url);
+    const encUrl = encodeURI(url);
+    console.log('encUrl', encUrl);
+
     return (
       <InputContainer>
         <View style={{ height: 8 }} />
@@ -125,12 +134,12 @@ class TwoFactorScreen extends Component {
           source={{
             uri:
               'https://chart.googleapis.com/chart?cht=qr&chs=200x200&chld=L|0&chl=' +
-              decodeURIComponent(mfaToken.otpauth_url),
+              encUrl,
           }}
         />
-        <Output label="Issuer" value={mfaToken.issuer} copy />
-        <Output label="Account" value={mfaToken.account} copy />
-        <Output label="Key" value={mfaToken.key} copy />
+        <Output label="Issuer" value={issuer} copy />
+        <Output label="Account" value={account} copy />
+        <Output label="Key" value={key} copy />
         <Button
           label="ENABLE"
           color="primary"

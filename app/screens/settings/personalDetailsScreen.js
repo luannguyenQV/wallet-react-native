@@ -7,6 +7,7 @@ import {
   editItem,
   updateItem,
   updateInputField,
+  uploadProfilePhoto,
 } from './../../redux/actions';
 
 // import CountryPicker from 'react-native-country-picker-modal';
@@ -85,9 +86,8 @@ class PersonalDetailsScreen extends Component {
       updateInputField,
       updateError,
       showDetail,
-      company_config,
+      uploadProfilePhoto,
     } = this.props;
-    const { colors } = company_config;
     const { first_name, last_name, id_number } = profile;
     return (
       <View style={{ flex: 1 }}>
@@ -109,7 +109,7 @@ class PersonalDetailsScreen extends Component {
               : ''
           }
           username={profile.username}
-          colors={colors}
+          uploadProfilePhoto={uploadProfilePhoto}
         />
         <CardContainer>
           <Card
@@ -204,8 +204,7 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user, auth }) => {
-  const { company_config } = auth;
+const mapStateToProps = ({ user }) => {
   const { profile, loading_profile, tempItem, showDetail, updateError } = user;
   return {
     profile,
@@ -213,7 +212,6 @@ const mapStateToProps = ({ user, auth }) => {
     tempItem,
     showDetail,
     updateError,
-    company_config,
   };
 };
 
@@ -222,4 +220,5 @@ export default connect(mapStateToProps, {
   editItem,
   updateItem,
   updateInputField,
+  uploadProfilePhoto,
 })(PersonalDetailsScreen);

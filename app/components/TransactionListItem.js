@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Text, View, Dimensions, TouchableHighlight } from 'react-native';
-// import { Icon } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { MaterialIcons as Icon } from '@expo/vector-icons';
 import moment from 'moment';
 import { performDivisibility } from './../util/general';
 
@@ -33,7 +32,7 @@ class TransactionListItem extends Component {
           headerTextOne = headerTextOne + ' to ';
           headerTextTwo = item.destination_transaction.user.email;
         }
-        color = Colors.positive;
+        color = Colors.negative;
         break;
       case 'credit':
         // console.log('Credit');
@@ -43,7 +42,7 @@ class TransactionListItem extends Component {
           headerTextOne = headerTextOne + ' from ';
           headerTextTwo = item.source_transaction.user.email;
         }
-        color = Colors.negative;
+        color = Colors.positive;
         break;
       default:
         iconName = 'question';

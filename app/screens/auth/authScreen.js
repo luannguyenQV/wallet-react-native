@@ -116,8 +116,8 @@ class AuthScreen extends Component {
         }
         break;
       case 'pin':
-        textFooterRight = '';
       case 'mfa':
+        textFooterRight = '';
       case 'verification':
         iconHeaderLeft = '';
         textHeaderLeft = 'Log out';
@@ -260,7 +260,7 @@ class AuthScreen extends Component {
               <View style={viewStyleLanding}>
                 <View style={buttonsContainer}>
                   <Button
-                    label="USE FINGERPRINT"
+                    label="LOG IN WITH FINGERPRINT"
                     color="secondary"
                     reference={input => {
                       this.login = input;
@@ -571,7 +571,7 @@ class AuthScreen extends Component {
 
     return (
       <KeyboardAvoidingView
-        keyboardShouldPersistTaps={'never'}
+        keyboardShouldPersistTaps={'always'}
         style={[viewStyleContainer, { backgroundColor: colors.primary }]}
         behavior={'padding'}
         // keyboardVerticalOffset={10}

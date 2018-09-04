@@ -3,8 +3,9 @@ import company_configs from './../config/company_configs';
 import defaultCompanyConfig from './../config/default_company_config.json';
 
 const stellar_service_url = 'https://stellar.services.rehive.io/api/1';
-const bitcoin_service_url = 'https://reward.s.services.rehive.io/api';
-const ethereum_service_url = 'https://reward.s.services.rehive.io/api';
+const bitcoin_service_url = 'https://bitcoin.s.services.rehive.io/api/1';
+const ethereum_service_url = 'https://ethereum.s.services.rehive.io/api/1';
+const rewards_service_url = 'https://reward.services.rehive.io/api';
 
 // SDK initialization
 export let r;
@@ -75,9 +76,13 @@ export const updateProfileImage = file => {
 };
 
 // Address
-export const getAddress = () => r.user.address.get();
+export const getAddresses = () => r.user.addresses.get();
 
-export const updateAddress = data => r.user.address.update(data);
+export const createAddress = data => r.user.addresses.create(data);
+
+export const updateAddress = data => r.user.addresses.update(data);
+
+export const deleteAddress = id => r.user.addresses.delete(id);
 
 // Bank Accounts
 export const getBankAccounts = () => r.user.bankAccounts.get();
@@ -182,19 +187,36 @@ export const setStellarUsername = data =>
 export const getStellarUser = () =>
   callApi('GET', stellar_service_url + '/user/');
 
-// export const createTransferStellar = data =>
-//   Promise.resolve(
-//     callApi('POST', stellar_service_url + '/transactions/send/', data)
-//       .then(response => response)
-//       .catch(err => err),
-//   );
-
 export const createTransferStellar = data =>
   new Promise((resolve, reject) =>
     callApi('POST', stellar_service_url + '/transactions/send/', data)
       .then(response => resolve(response))
       .catch(err => reject(err)),
   );
+
+export const createTransferBitcoin = data =>
+  new Promise((resolve, reject) =>
+    callApi('POST', bitcoin_service_url + '/transactions/send/', data)
+      .then(response => resolve(response))
+      .catch(err => reject(err)),
+  );
+
+export const createTransferEthereum = data =>
+  new Promise((resolve, reject) =>
+    callApi('POST', ethereum_service_url + '/wallet/send/', data)
+      .then(response => resolve(response))
+      .catch(err => reject(err)),
+  );
+
+/* REWARDS */
+export const getRewards = () =>
+  callApi('GET', rewards_service_url + '/user/rewards/');
+
+export const claimReward = data =>
+  callApi('POST', rewards_service_url + '/user/rewards/', data);
+
+export const getCampaigns = () =>
+  callApi('GET', rewards_service_url + '/user/campaigns/');
 
 /* GENERAL */
 export const callApi = (method, route, data) => {
@@ -212,7 +234,7 @@ export const callApi = (method, route, data) => {
     mode: 'cors',
     headers,
   };
-  // console.log(data);
+  console.log(data);
   if (data) {
     config['body'] = JSON.stringify(data);
   }

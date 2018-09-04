@@ -45,6 +45,18 @@ class BankAccountsScreen extends Component {
         {swift ? <Output label="Swift" value={swift} /> : null}
         {iban ? <Output label="IBAN" value={iban} /> : null}
         {bic ? <Output label="BIC" value={bic} /> : null}
+        {!(
+          bank_name &&
+          bank_name &&
+          branch_code &&
+          type &&
+          number &&
+          swift &&
+          iban &&
+          bic
+        ) ? (
+          <Output label="Incomplete" />
+        ) : null}
       </View>
     );
   };

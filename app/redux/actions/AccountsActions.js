@@ -125,6 +125,7 @@ export const resetSend = () => {
   };
 };
 
+export const SET_RECEIVE_ADDRESS = 'set_receive_address';
 export const SEND_ASYNC = createAsyncTypes('send');
 export const send = sendData => async dispatch => {
   let amount = new Big(sendData.amount);
@@ -151,8 +152,13 @@ export const send = sendData => async dispatch => {
         data['memo'] = sendData.memo;
         delete data.debit_account;
         delete data.recipient;
-        console.log(data);
         response = await Rehive.createTransferStellar(data);
+        break;
+      case 'bitcoin':
+        response = await Rehive.createTransferBitcoin(data);
+        break;
+      case 'ethereum':
+        response = await Rehive.createTransferEthereum(data);
         break;
     }
     console.log('response', response);

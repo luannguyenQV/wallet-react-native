@@ -189,7 +189,6 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         modalVisible: true,
         modalType: 'verify',
-        tempItem: action.payload ? action.payload : null,
         loading: false,
       };
     case RESEND_VERIFICATION_ASYNC.error:
@@ -205,6 +204,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         modalVisible: false,
         loading: false,
+        tempItem: null,
         updateError: '',
         modalType: '',
       };

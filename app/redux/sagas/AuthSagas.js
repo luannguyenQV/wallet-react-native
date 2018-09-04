@@ -47,15 +47,14 @@ import {
   POST_AUTH_FLOW_START,
   RESET_AUTH,
   POST_AUTH_FLOW_FINISH,
-} from '../actions/AuthActions';
-import { Toast } from 'native-base';
-import {
+  SET_RECEIVE_ADDRESS,
   FETCH_DATA_ASYNC,
   FETCH_ACCOUNTS_ASYNC,
   FETCH_PHONE_CONTACTS_ASYNC,
   FETCH_REWARDS_ASYNC,
   FETCH_CRYPTO_ASYNC,
 } from '../actions';
+import { Toast } from 'native-base';
 
 import * as Rehive from '../../util/rehive';
 import NavigationService from '../../util/navigation';
@@ -238,8 +237,7 @@ function* authFlow() {
                   data = { company, user, password };
                   try {
                     yield put({ type: LOADING });
-                    const tempResp = yield call(Rehive.login, data);
-                    ({ user, token } = tempResp);
+                    ({ user, token } = yield call(Rehive.login, data));
                     yield call(Rehive.initWithToken, token); // initialises sdk with new token
                     yield put({
                       type: LOGIN_USER_ASYNC.success,
@@ -253,9 +251,11 @@ function* authFlow() {
                     });
                     return;
                   } catch (error) {
-                    console.log('initWithToken', error);
+                    console.log('login', error);
                     authError = error.message;
-                    nextDetailState = company_config.auth.identifier;
+                    nextDetailState = company_config.auth.identifier
+                      ? company_config.auth.identifier
+                      : 'email';
                   }
                 }
                 break;
@@ -658,17 +658,27 @@ function* appLoad() {
   console.log('appLoad');
   try {
     yield put({ type: POST_LOADING });
-    let count = 10;
+    let count = 11;
     const { services } = yield select(companyConfigSelector);
     if (services.rewards) {
       count++;
     }
     if (services.stellar) {
       let resp = yield call(Rehive.getStellarUser);
+      console.log('stellar', resp);
       if (resp.data && !resp.data.username) {
         const { user } = yield select(getAuth);
         yield call(Rehive.setStellarUsername, {
           username: user.username,
+        });
+      }
+      if (resp.data && resp.data.crypto) {
+        yield put({
+          type: SET_RECEIVE_ADDRESS,
+          payload: {
+            receiveAddress: resp.data.crypto.public_address,
+            receiveMemo: resp.data.crypto.memo,
+          },
         });
       }
       count++;
@@ -680,7 +690,7 @@ function* appLoad() {
       count++;
     }
 
-    let actions = [
+    yield all([
       // put({ type: POST_LOADING }),
       put({ type: FETCH_ACCOUNTS_ASYNC.pending }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'profile' }),
@@ -704,10 +714,7 @@ function* appLoad() {
       services.ethereum
         ? put({ type: FETCH_REWARDS_ASYNC.pending, payload: 'ethereum' })
         : null,
-    ];
-    // console.log(actions);
-
-    yield all(actions);
+    ]);
 
     // TODO: add timeout and re=fetch any failed api calls
     for (let i = 0; i < count; i++) {
@@ -736,14 +743,17 @@ function* appLoad() {
 
 function* logoutUser() {
   try {
-    yield call(Rehive.logout);
+    const { mainState } = yield select(getAuth);
+    if (mainState !== 'mfa') {
+      yield call(Rehive.logout);
+    }
     yield put({
       type: LOGOUT_USER_ASYNC.success,
     });
     yield call(NavigationService.navigate, 'AuthScreen');
     yield call(init);
   } catch (error) {
-    console.log(error);
+    console.log('logoutUser', error);
     yield put({ type: LOGOUT_USER_ASYNC.error, payload: error.message });
   }
 }

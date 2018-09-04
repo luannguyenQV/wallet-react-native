@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { connect } from 'react-redux';
-import { refreshGetVerified } from './../../../redux/actions';
+import {
+  refreshGetVerified,
+  uploadProfilePhoto,
+} from './../../../redux/actions';
 
 import Header from './../../../components/header';
 import GetVerifiedOption from './../../../components/getVerifiedOption';
@@ -100,40 +103,40 @@ class GetVerifiedScreen extends Component {
 
   renderAddresses() {
     const { address } = this.props;
-    console.log('address', address);
-
     let value = '';
-    if (address) {
-      if (address.line_1) {
-        value = value + address.line_1;
+    let status = address.status ? address.status.toUpperCase() : 'INCOMPLETE';
+    if (address.length > 0) {
+      const tempAddress = address[0];
+      status = address.status ? address.status.toUpperCase() : status;
+      if (tempAddress.line_1) {
+        value = value + tempAddress.line_1;
       }
-      if (address.line_2) {
-        value = value + (value ? ', ' : '') + address.line_2;
+      if (tempAddress.line_2) {
+        value = value + (value ? ', ' : '') + tempAddress.line_2;
       }
-      if (address.city) {
-        value = value + (value ? ', ' : '') + address.city;
+      if (tempAddress.city) {
+        value = value + (value ? ', ' : '') + tempAddress.city;
       }
-      if (address.state_province) {
-        value = value + (value ? ', ' : '') + address.state_province;
+      if (tempAddress.state_province) {
+        value = value + (value ? ', ' : '') + tempAddress.state_province;
       }
-      if (address.country) {
-        value = value + (value ? ', ' : '') + address.country;
+      if (tempAddress.country) {
+        value = value + (value ? ', ' : '') + tempAddress.country;
       }
-      if (address.postal_code) {
-        value = value + (value ? ', ' : '') + address.postal_code;
+      if (tempAddress.postal_code) {
+        value = value + (value ? ', ' : '') + tempAddress.postal_code;
       }
     }
     if (!value) {
       value = 'Not yet provided';
     }
-    let status = address.status ? address.status.toUpperCase() : 'INCOMPLETE';
 
     return (
       <GetVerifiedOption
         label="Address"
         value={value ? value : 'Not yet provided'}
         status={status}
-        gotoAddress="SettingsAddress"
+        gotoAddress="SettingsAddresses"
         goTo={this.goTo}
       />
     );
@@ -249,7 +252,12 @@ class GetVerifiedScreen extends Component {
   }
 
   render() {
-    const { profile, loading_profile, company_config } = this.props;
+    const {
+      profile,
+      loading_profile,
+      company_config,
+      uploadProfilePhoto,
+    } = this.props;
     const { container, mainContainer } = styles;
     // console.log(cm)
     const {
@@ -270,13 +278,13 @@ class GetVerifiedScreen extends Component {
           noShadow
         />
         <HeaderProfile
+          uploadProfilePhoto={uploadProfilePhoto}
           photoLink={profile.profile}
           name={
             profile.first_name
               ? profile.first_name + ' ' + profile.last_name
               : profile.username
           }
-          colors={company_config.colors}
         />
         <View style={mainContainer}>
           {loading_profile ? <Spinner /> : null}
@@ -319,6 +327,7 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, { refreshGetVerified })(
-  GetVerifiedScreen,
-);
+export default connect(mapStateToProps, {
+  refreshGetVerified,
+  uploadProfilePhoto,
+})(GetVerifiedScreen);

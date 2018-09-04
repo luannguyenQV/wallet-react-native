@@ -11,7 +11,8 @@ import { connect } from 'react-redux';
 
 import { Toast } from 'native-base';
 import Header from './../../components/header';
-import { Output, Button } from './../../components/common';
+import { Output } from './../../components/common';
+import { Container, Tab, Tabs } from 'native-base';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -23,51 +24,43 @@ class ReceiveScreen extends Component {
   state = {
     imageURI:
       'https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=undefined&choe=UTF-8',
-    email: '',
-    type: 'email',
+    crypto: false,
   };
 
   componentDidMount() {
-    const currencyCode = this.props.navigation.getParam(currencyCode, '');
-    this.setState({ currencyCode });
-    this.switchToEmail();
-  }
-
-  switchToEmail() {
-    const user = this.props.profile;
-    const currencyCode = this.state.currencyCode;
-    const imageURI =
+    const { profile, crypto } = this.props;
+    const currencyCode = this.props.navigation.state.params.currencyCode;
+    if (
+      crypto.stellar.includes(currencyCode) ||
+      crypto.ethereum.includes(currencyCode) ||
+      crypto.bitcoin.includes(currencyCode)
+    ) {
+      this.setState({ crypto: true });
+    }
+    const emailURI =
       'https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=' +
       encodeURIComponent(
         'rehive:' +
-          user.email +
+          profile.email +
           (currencyCode ? '?currency=' + currencyCode : ''),
       ) +
       '&choe=UTF-8';
-    this.setState({ imageURI, email: user.email, type: 'email' });
-  }
-
-  switchToCrypto() {
-    const user = this.props.profile;
-    const currencyCode = this.state.currencyCode;
-    const imageURI =
+    const cryptoURI =
       'https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=' +
       encodeURIComponent(
-        'stellar:GANOZF7TIDYZ7MGRVVMAJHBQ7JCWRNRDHPY6N4W5OWU2JWNMQ2D67NVQ?' +
-          (user.username ? 'memo=' + user.username + '&' : '') +
+        'stellar:' +
+          this.props.receiveAddress +
+          '?' +
+          (profile.username ? 'memo=' + profile.username + '&' : '') +
           (currencyCode ? 'currency=' + currencyCode : ''),
       ) +
       '&choe=UTF-8';
-    this.setState({ imageURI, type: 'crypto' });
+    this.setState({ cryptoURI, emailURI });
   }
 
-  _copyQR() {
-    const { type } = this.state;
+  _copyQR(type) {
     const user = this.props.profile;
-    const value =
-      type === 'email'
-        ? user.email
-        : 'GANOZF7TIDYZ7MGRVVMAJHBQ7JCWRNRDHPY6N4W5OWU2JWNMQ2D67NVQ';
+    const value = type === 'email' ? user.email : this.props.receiveAddress;
     Clipboard.setString(value);
     Toast.show({
       text:
@@ -80,77 +73,62 @@ class ReceiveScreen extends Component {
     });
   }
 
-  render() {
-    const { type } = this.state;
-    const { colors } = this.props.company_config;
+  renderDetail(type) {
     const user = this.props.profile;
+    return (
+      <View style={{ padding: 16, width: '100%' }}>
+        <Text style={styles.text}>
+          {type === 'crypto'
+            ? 'This QR code is your public address for accepting payments.'
+            : 'This QR code is your Rehive account for use with another Rehive app'}
+        </Text>
+
+        <TouchableHighlight
+          underlayColor={'white'}
+          activeOpacity={0.2}
+          onPress={() => this._copyQR()}>
+          <Image
+            style={{ width: 300, height: 250, alignSelf: 'center' }}
+            source={{
+              uri:
+                type === 'email' ? this.state.emailURI : this.state.cryptoURI,
+            }}
+          />
+        </TouchableHighlight>
+        {type === 'crypto' ? (
+          <Output label={'Address'} value={this.props.receiveAddress} copy />
+        ) : null}
+        <Output
+          label={type === 'email' ? 'Email' : 'Memo'}
+          value={type === 'email' ? user.email : this.props.receiveMemo}
+          copy
+        />
+      </View>
+    );
+  }
+
+  render() {
+    const { colors } = this.props.company_config;
     return (
       <View style={styles.container}>
         <Header navigation={this.props.navigation} back title="Receive" />
-        <View>
-          <View
-            style={{
-              flexDirection: 'row',
-              // justifyContent: 'center',
-            }}>
-            <View style={{ width: SCREEN_WIDTH / 2 }}>
-              <Button
-                buttonStyle={{
-                  backgroundColor:
-                    type === 'email' ? colors.focusContrast : colors.secondary,
-                }}
-                textStyle={{
-                  color:
-                    type === 'email' ? colors.focus : colors.secondaryContrast,
-                }}
-                onPress={() => this.switchToEmail()}
-                label="EMAIL"
-                size="small"
-                round
-                containerStyle={{ margin: 16 }}
-              />
-            </View>
-            <View style={{ width: SCREEN_WIDTH / 2 }}>
-              <Button
-                buttonStyle={{
-                  backgroundColor:
-                    type === 'crypto' ? colors.focusContrast : colors.secondary,
-                }}
-                textStyle={{
-                  color:
-                    type === 'crypto' ? colors.focus : colors.secondaryContrast,
-                }}
-                onPress={() => this.switchToCrypto()}
-                label="CRYPTO"
-                size="small"
-                round
-                containerStyle={{ margin: 16 }}
-              />
-            </View>
-          </View>
-          <Text style={styles.text}>
-            {type === 'crypto'
-              ? 'This QR code is your public address for accepting payments.'
-              : 'This QR code is your Rehive account for use with another Rehive app'}
-          </Text>
-
-          <TouchableHighlight
-            underlayColor={'white'}
-            activeOpacity={0.2}
-            onPress={() => this._copyQR()}>
-            <Image
-              style={{ width: 300, height: 250, alignSelf: 'center' }}
-              source={{ uri: this.state.imageURI }}
-            />
-          </TouchableHighlight>
-        </View>
-        <View style={{ padding: 16, width: '100%' }}>
-          <Output
-            label={type === 'email' ? 'Email' : 'Memo'}
-            value={type === 'email' ? this.state.email : user.username}
-            copy
-          />
-        </View>
+        {this.state.crypto ? (
+          <Container>
+            <Tabs
+              tabBarUnderlineStyle={{
+                backgroundColor: colors.focus,
+              }}>
+              <Tab heading="Email" activeTextStyle={{ color: colors.focus }}>
+                {this.renderDetail('email')}
+              </Tab>
+              <Tab heading="Crypto" activeTextStyle={{ color: colors.focus }}>
+                {this.renderDetail('crypto')}
+              </Tab>
+            </Tabs>
+          </Container>
+        ) : (
+          this.renderDetail('email')
+        )}
       </View>
     );
   }
@@ -173,10 +151,11 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user, auth }) => {
+const mapStateToProps = ({ user, auth, accounts, crypto }) => {
   const { company_config } = auth;
   const { profile } = user;
-  return { profile, company_config };
+  const { receiveAddress, receiveMemo } = accounts;
+  return { profile, company_config, receiveAddress, receiveMemo, crypto };
 };
 
 export default connect(mapStateToProps, {})(ReceiveScreen);

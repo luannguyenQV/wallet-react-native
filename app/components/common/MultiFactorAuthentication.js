@@ -32,7 +32,13 @@ class _MultiFactorAuthentication extends Component {
     const { issuer, account, secret, authScreen } = this.props;
 
     let url =
-      'totp/' + issuer + ':' + account + (secret ? '?secret=' + secret : '');
+      'otpauth://totp/' +
+      issuer +
+      ':' +
+      account +
+      +'?digits=6&issuer:' +
+      issuer +
+      (secret ? '&secret=' + secret : '');
     let appName = '';
     let appStoreId = '';
     let playStoreId = '';

@@ -45,7 +45,6 @@ class TransactionList extends Component {
     //   this.props.fetchAccounts();
     // }
     let response = await Rehive.getTransactions(currencyCode);
-    this.props.fetchAccounts();
     this.setState({
       previousCurrencyCode: currencyCode,
       transactions: response.results,
@@ -60,7 +59,10 @@ class TransactionList extends Component {
         refreshControl={
           <RefreshControl
             refreshing={loading}
-            onRefresh={() => this.getTransactions(this.props.currencyCode)}
+            onRefresh={() => {
+              this.getTransactions(this.props.currencyCode);
+              // this.props.fetchAccounts();
+            }}
           />
         }
         data={transactions}
@@ -207,12 +209,10 @@ class TransactionList extends Component {
 
           <View style={viewStyleFooter}>
             <View>
-              <Text style={textStyleLeft}>
-                {moment(transaction.created).format('lll')}
-              </Text>
+              <Text>{moment(transaction.created).format('lll')}</Text>
             </View>
             <View>
-              <Text style={textStyleRight}>{transaction.status}</Text>
+              <Text>{transaction.status}</Text>
             </View>
           </View>
         </PopUpGeneral>
@@ -242,11 +242,6 @@ const styles = {
     paddingVertical: 8,
     fontWeight: 'bold',
     // alignSelf: 'flex-start',
-    color: Colors.black,
-  },
-  textStyleFooter: {
-    fontSize: 14,
-    // alignSelf: 'flex-end',
     color: Colors.black,
   },
   viewStyleFooter: {
