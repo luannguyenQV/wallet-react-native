@@ -16,7 +16,11 @@ class _CustomDrawer extends Component {
       <View
         style={[styles.container, { backgroundColor: colors.primaryContrast }]}>
         <View>
-          <DrawerHeader navigation={navigation} colors={colors} />
+          <DrawerHeader
+            navigation={navigation}
+            colors={colors}
+            profile={profile}
+          />
         </View>
 
         <ScrollView>

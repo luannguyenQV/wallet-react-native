@@ -50,6 +50,18 @@ export const colorSelector = createSelector(
         _colors,
         'primaryContrast',
       ),
+      drawerHeader: selectColor(
+        'drawerHeader',
+        selectedTheme,
+        _colors,
+        'primary',
+      ),
+      drawerHeaderContrast: selectColor(
+        'drawerHeaderContrast',
+        selectedTheme,
+        _colors,
+        'primaryContrast',
+      ),
       authScreen: selectColor('authScreen', selectedTheme, _colors, 'primary'),
       authScreenContrast: selectColor(
         'authScreenContrast',
@@ -58,47 +70,6 @@ export const colorSelector = createSelector(
         'primaryContrast',
       ),
     };
-
-    /* 
-
-  TODO: cache library
-
-    **compose colors for 
-    > header
-    > wallet header
-    > drawer header
-    > drawer active
-    > drawer
-    > auth screen
-    > focus ?
-
-    logic for finding theme colors. themes contain list of colors
-
-    order of preference
-    -> look for element color in currently selected theme object
-    -> look for /primary etc/ color of theme
-    -> look for element color in company config
-    -> look for /primary etc/ color of theme
-    -> look for element color of default config
-     > look for /primary etc/ of default config
-
-    ** layout
-    > layout
-    -> currency header w swiper
-    -> slim wallets w news
-    -> 
-    > radius / curve
-    > shadow
-    > rem
-  
-    
-
-    
-    
-    
-    
-    
-    */
     return colors;
   },
 );
@@ -116,15 +87,14 @@ const selectColor = (component, theme, _colors, _default) => {
         : _colors[_default] ? _colors[_default] : Color[_default];
 
   if (
-    color ===
-    ('primary' ||
-      'secondary' ||
-      'tertiary' ||
-      'focus' ||
-      'primaryContrast' ||
-      'secondaryContrast' ||
-      'tertiaryContrast' ||
-      'focusContrast')
+    color === 'primary' ||
+    color === 'secondary' ||
+    color === 'tertiary' ||
+    color === 'focus' ||
+    color === 'primaryContrast' ||
+    color === 'secondaryContrast' ||
+    color === 'tertiaryContrast' ||
+    color === 'focusContrast'
   ) {
     return _colors[color];
   }
