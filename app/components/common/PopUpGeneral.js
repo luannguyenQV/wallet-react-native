@@ -6,6 +6,7 @@ import {
   TouchableWithoutFeedback,
   TouchableHighlight,
   KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { HeaderButton } from './HeaderButton';
 import { Spinner } from './Spinner';
@@ -56,7 +57,7 @@ const PopUpGeneral = props => {
       <KeyboardAvoidingView
         keyboardShouldPersistTaps={'always'}
         style={{ flex: 1 }}
-        behavior={'padding'}>
+        behavior={Platform.OS === 'android' ? '' : 'padding'}>
         <TouchableHighlight
           style={backgroundStyle}
           onPress={onDismiss}
