@@ -61,6 +61,7 @@ const Card = props => {
     loading,
     swipeableContent,
     colors,
+    canEdit,
   } = props;
 
   return (
@@ -121,6 +122,12 @@ const Card = props => {
       ) : null}
       <TouchableWithoutFeedback onPress={onPressContent}>
         <View style={[viewStyleContent, { backgroundColor }]}>
+          {canEdit ? (
+            <View
+              style={{ position: 'absolute', right: 8, top: 8, padding: 8 }}>
+              <Icon name={'edit'} size={22} color={'lightgray'} />
+            </View>
+          ) : null}
           {props.children}
           {errorText ? <Text style={textStyleError}>{errorText}</Text> : null}
         </View>

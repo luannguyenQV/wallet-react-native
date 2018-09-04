@@ -80,8 +80,6 @@ class PinModal extends Component {
 
     const { errorText, contentText } = this.state;
 
-    console.log('in pop up');
-
     return (
       <PopUpGeneral
         visible={modalVisible}
