@@ -1,12 +1,10 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { Ionicons as Icon } from '@expo/vector-icons';
-
-import Colors from './../../config/colors';
 import { Spinner } from './Spinner';
 import { HeaderButton } from './HeaderButton';
+import context from './context';
 
-const FullScreenForm = props => {
+const _FullScreenForm = props => {
   const {
     viewStyleContainer,
     viewStyleHeader,
@@ -33,7 +31,11 @@ const FullScreenForm = props => {
   } = props;
 
   return (
-    <View style={[viewStyleContainer, { backgroundColor: colors[color] }]}>
+    <View
+      style={[
+        viewStyleContainer,
+        { backgroundColor: _backgroundColor(colors, color) },
+      ]}>
       {loading ? (
         <Spinner size="large" />
       ) : (
@@ -132,23 +134,25 @@ const styles = {
     justifyContent: 'space-between',
     flexDirection: 'row',
     height: 64,
-    // padding: 8,
     paddingBottom: 16,
     zIndex: 0,
-    // backgroundColor: 'white',
     alignItems: 'center',
   },
   iconStyleHeaderLeft: {
     margin: 16,
-    // opacity: 0.87,
   },
   textStyleAction: {
     fontSize: 18,
     padding: 16,
-    // margin: 8,
     minHeight: 56,
-    // alignSelf: 'flex-end',
   },
 };
 
+const FullScreenForm = context(_FullScreenForm);
+
 export { FullScreenForm };
+
+const _backgroundColor = (colors, color) => {
+  // console.log(colors);
+  return colors[color];
+};

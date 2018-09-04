@@ -1,9 +1,10 @@
 // import lib for making component
 import React from 'react';
 import { View, ActivityIndicator, Image } from 'react-native';
+import context from './context';
 
 // make component
-const Spinner = ({ size, type }) => {
+const _Spinner = ({ size, type }) => {
   return (
     <View style={styles.containerStyle}>
       {type === 'rehive' ? (
@@ -29,5 +30,6 @@ const styles = {
   },
 };
 
-// make component available to other parts of app
+const Spinner = context(_Spinner);
+
 export { Spinner };

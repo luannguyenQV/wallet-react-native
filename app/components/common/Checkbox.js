@@ -3,8 +3,9 @@ import { View, Text, TouchableOpacity, Linking } from 'react-native';
 import Colors from './../../config/colors';
 import { MaterialIcons } from '@expo/vector-icons';
 import { WebBrowser } from 'expo';
+import context from './context';
 
-class Checkbox extends Component {
+class _Checkbox extends Component {
   render() {
     const {
       toggleCheck,
@@ -112,4 +113,7 @@ const styles = {
 };
 
 // make component available to other parts of app
+
+const Checkbox = context(_Checkbox);
+
 export { Checkbox };

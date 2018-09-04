@@ -5,6 +5,7 @@ import UserReducer from './UserReducer';
 import ContactsReducer from './ContactsReducer';
 import RewardsReducer from './RewardsReducer';
 import CryptoReducer from './CryptoReducer';
+import ConfigReducer from './ConfigReducer';
 
 export default combineReducers({
   auth: AuthReducer,
@@ -13,4 +14,5 @@ export default combineReducers({
   contacts: ContactsReducer,
   rewards: RewardsReducer,
   crypto: CryptoReducer,
+  config: ConfigReducer,
 });

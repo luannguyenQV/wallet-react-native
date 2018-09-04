@@ -4,3 +4,4 @@ export * from './UserActions';
 export * from './ContactsActions';
 export * from './RewardsActions';
 export * from './CryptoActions';
+export * from './ConfigActions';

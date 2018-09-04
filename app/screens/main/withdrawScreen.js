@@ -37,11 +37,7 @@ class WithdrawScreen extends Component {
 
   componentDidMount() {
     const { withdrawWallet, wallets, activeWalletIndex } = this.props;
-    console.log('1', withdrawWallet);
-    console.log('2', wallets);
-    console.log('3', activeWalletIndex);
     if (withdrawWallet === null) {
-      console.log('lol');
       this.props.setWithdrawWallet(wallets[activeWalletIndex]);
     }
   }
@@ -50,7 +46,6 @@ class WithdrawScreen extends Component {
     const {
       withdrawWallet,
       withdrawAmount,
-      // withdrawRecipient,
       withdrawBankAccount,
       withdrawNote,
     } = this.props;
@@ -295,15 +290,10 @@ class WithdrawScreen extends Component {
   }
 
   render() {
-    const { pin, fingerprint, company_config } = this.props;
+    const { pin, fingerprint } = this.props;
     return (
       <View style={{ flex: 1 }}>
-        <Header
-          navigation={this.props.navigation}
-          colors={company_config.colors}
-          title="Withdraw"
-          back
-        />
+        <Header navigation={this.props.navigation} title="Withdraw" back />
         <KeyboardAvoidingView
           keyboardShouldPersistTaps={'never'}
           style={styles.viewStyleContainer}

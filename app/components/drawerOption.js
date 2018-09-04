@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Text, TouchableHighlight } from 'react-native';
+import context from './common/context';
 
-export default class DrawerOption extends Component {
+class _DrawerOption extends Component {
   _containerStyle() {
     const { address, activeItemKey, colors } = this.props;
     // console.log()
@@ -54,3 +55,7 @@ const styles = {
     fontWeight: 'normal',
   },
 };
+
+const DrawerOption = context(_DrawerOption);
+
+export default DrawerOption;

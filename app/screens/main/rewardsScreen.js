@@ -17,6 +17,7 @@ import {
   getRewards,
   getCampaigns,
 } from './../../redux/reducers/RewardsReducer';
+import { companyConfigSelector } from './../../redux/sagas/selectors';
 
 import Header from './../../components/header';
 import { Output } from '../../components/common';
@@ -121,29 +122,21 @@ class RewardsScreen extends Component {
 
   render() {
     const {
-      company_config,
-      campaigns,
-      fetchRewards,
-      viewReward,
-      hideReward,
       rewards,
+      fetchRewards,
+      campaigns,
       fetchCampaigns,
       viewCampaign,
       hideCampaign,
       claimReward,
+      company_config,
     } = this.props;
     return (
       <View style={styles.container}>
-        <Header
-          navigation={this.props.navigation}
-          colors={company_config.colors}
-          drawer
-          title="Rewards"
-        />
-        <ScrollableTabView>
+        <Header navigation={this.props.navigation} drawer title="Rewards" />
+        {/* <ScrollableTabView>
           <View tabLabel="Available">
             <CardList
-              colors={company_config.colors}
               type="campaigns"
               navigation={this.props.navigation}
               data={campaigns.data}
@@ -171,7 +164,6 @@ class RewardsScreen extends Component {
           </View>
           <View tabLabel="Claimed">
             <CardList
-              colors={company_config.colors}
               type="rewards"
               navigation={this.props.navigation}
               data={rewards.data}
@@ -197,8 +189,8 @@ class RewardsScreen extends Component {
               loadingDetail={rewards.loadingDetail}
             />
           </View>
-        </ScrollableTabView>
-        {/* <Container>
+        </ScrollableTabView> */}
+        <Container>
           <Tabs
             tabStyle={{ backgroundColor: 'white' }}
             tabBarUnderlineStyle={{
@@ -208,7 +200,6 @@ class RewardsScreen extends Component {
               heading="Available"
               activeTextStyle={{ color: company_config.colors.focus }}>
               <CardList
-                colors={company_config.colors}
                 type="campaigns"
                 navigation={this.props.navigation}
                 data={campaigns.data}
@@ -238,7 +229,6 @@ class RewardsScreen extends Component {
               heading="Claimed"
               activeTextStyle={{ color: company_config.colors.focus }}>
               <CardList
-                colors={company_config.colors}
                 type="rewards"
                 navigation={this.props.navigation}
                 data={rewards.data}
@@ -265,7 +255,7 @@ class RewardsScreen extends Component {
               />
             </Tab>
           </Tabs>
-        </Container> */}
+        </Container>
       </View>
     );
   }
@@ -305,9 +295,8 @@ const styles = {
 };
 
 const mapStateToProps = store => {
-  const { company_config } = store.auth;
   return {
-    company_config,
+    company_config: companyConfigSelector(store),
     campaigns: getCampaigns(store),
     rewards: getRewards(store),
   };

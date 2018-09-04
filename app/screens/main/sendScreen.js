@@ -28,7 +28,6 @@ import {
   Output,
   Button,
 } from './../../components/common';
-import Colors from './../../config/colors';
 import Header from './../../components/header';
 import PinModal from './../../components/PinModal';
 
@@ -301,7 +300,6 @@ class SendScreen extends Component {
             returnKeyType="next"
             autoFocus
             onSubmitEditing={() => validateSendAmount(sendWallet, sendAmount)}
-            colors={colors}
           />
         );
       case 'recipient':
@@ -331,16 +329,18 @@ class SendScreen extends Component {
               }}>
               <View style={{ flex: 1 }}>
                 <Button
-                  backgroundColor={
-                    contactsType === 'email'
-                      ? colors.focusContrast
-                      : colors.secondary
-                  }
-                  textColor={
-                    contactsType === 'email'
-                      ? colors.focus
-                      : colors.secondaryContrast
-                  }
+                  buttonStyle={{
+                    backgroundColor:
+                      contactsType === 'email'
+                        ? colors.focusContrast
+                        : colors.secondary,
+                  }}
+                  textStyle={{
+                    color:
+                      contactsType === 'email'
+                        ? colors.focus
+                        : colors.secondaryContrast,
+                  }}
                   onPress={() => setContactType('email')}
                   label="EMAIL"
                   size="small"
@@ -350,16 +350,18 @@ class SendScreen extends Component {
               </View>
               <View style={{ flex: 1 }}>
                 <Button
-                  backgroundColor={
-                    contactsType === 'mobile'
-                      ? colors.focusContrast
-                      : colors.secondary
-                  }
-                  textColor={
-                    contactsType === 'mobile'
-                      ? colors.focus
-                      : colors.secondaryContrast
-                  }
+                  buttonStyle={{
+                    backgroundColor:
+                      contactsType === 'mobile'
+                        ? colors.focusContrast
+                        : colors.secondary,
+                  }}
+                  textStyle={{
+                    color:
+                      contactsType === 'mobile'
+                        ? colors.focus
+                        : colors.secondaryContrast,
+                  }}
                   onPress={() => setContactType('mobile')}
                   label="MOBILE"
                   size="small"
@@ -370,16 +372,18 @@ class SendScreen extends Component {
               {sendType === ('stellar' || 'ethereum' || 'bitcoin') ? (
                 <View style={{ flex: 1 }}>
                   <Button
-                    backgroundColor={
-                      contactsType === 'crypto'
-                        ? colors.focusContrast
-                        : colors.secondary
-                    }
-                    textColor={
-                      contactsType === 'crypto'
-                        ? colors.focus
-                        : colors.secondaryContrast
-                    }
+                    buttonStyle={{
+                      backgroundColor:
+                        contactsType === 'crypto'
+                          ? colors.focusContrast
+                          : colors.secondary,
+                    }}
+                    textStyle={{
+                      color:
+                        contactsType === 'crypto'
+                          ? colors.focus
+                          : colors.secondaryContrast,
+                    }}
                     onPress={() => setContactType('crypto')}
                     label="CRYPTO"
                     size="small"
@@ -389,13 +393,6 @@ class SendScreen extends Component {
                 </View>
               ) : null}
             </View>
-            {/* <TimerCountdown
-              initialSecondsRemaining={1000 * 60}
-              onTick={secondsRemaining => console.log('tick', secondsRemaining)}
-              onTimeElapsed={() => console.log('complete')}
-              allowFontScaling={true}
-              style={{ fontSize: 20 }}
-            /> */}
 
             <Input
               key="contactsSearch"
@@ -418,7 +415,6 @@ class SendScreen extends Component {
                 });
                 validateSendRecipient(sendType, contactsType, contactsSearch);
               }}
-              colors={colors}
               popUp
               multiline={contactsType === 'crypto' ? true : false}
               data={contacts}
@@ -453,7 +449,6 @@ class SendScreen extends Component {
             returnKeyType="next"
             autoFocus
             onSubmitEditing={() => validateSendMemo(sendMemo)}
-            colors={colors}
           />
         );
       case 'note':
@@ -474,7 +469,6 @@ class SendScreen extends Component {
             returnKeyType="next"
             autoFocus
             onSubmitEditing={() => validateSendNote(sendNote)}
-            colors={colors}
           />
         );
       default:
@@ -483,23 +477,14 @@ class SendScreen extends Component {
   }
 
   render() {
-    const { pin, fingerprint, company_config } = this.props;
+    const { pin, fingerprint } = this.props;
     // console.log(pin, fingerprint);
     return (
       <View style={{ flex: 1 }}>
-        <Header
-          navigation={this.props.navigation}
-          colors={company_config.colors}
-          title="Send"
-          back
-          right
-        />
+        <Header navigation={this.props.navigation} title="Send" back right />
         <KeyboardAvoidingView
           keyboardShouldPersistTaps={'always'}
-          style={[
-            styles.viewStyleContainer,
-            { backgroundColor: company_config.colors.focus },
-          ]}
+          style={styles.viewStyleContainer}
           behavior={'padding'}>
           {this.state.pinVisible ? (
             <PinModal
@@ -550,12 +535,6 @@ const styles = {
     // position: 'absolute',
     // bottom: 0,
   },
-  // contact: {
-  //   height: 40,
-  //   flexDirection: 'column',
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  // },
   textStyleOutput: {
     fontSize: 16,
     // alignSelf: 'center',

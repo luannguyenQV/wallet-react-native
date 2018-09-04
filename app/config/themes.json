@@ -1,0 +1,15 @@
+{
+  "light": {
+    "primary": "white",
+    "primaryContrast": "primary",
+    "secondary": "lightgrey",
+    "header": "white",
+    "headerContrast": "primary",
+    "drawerHeader": "primaryContrast",
+    "drawerHeaderContrast": "primary",
+    "walletHeader": "white",
+    "walletHeaderContrast": "primary",
+    "authScreen": "white",
+    "authScreenContrast": "primary"
+  }
+}

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { View, TouchableHighlight, Image, Text } from 'react-native';
-import { connect } from 'react-redux';
+import context from './common/context';
 
-class DrawerHeader extends Component {
+class _DrawerHeader extends Component {
   render() {
     const { profile, colors } = this.props;
     const {
@@ -17,9 +17,16 @@ class DrawerHeader extends Component {
         onPress={() =>
           this.props.navigation.navigate('SettingsPersonalDetails')
         }>
-        <View style={[viewStyleContainer, { backgroundColor: colors.primary }]}>
+        <View
+          style={[
+            viewStyleContainer,
+            { backgroundColor: colors.drawerHeader },
+          ]}>
           <Image
-            style={[imageStylePhoto, { borderColor: colors.secondary }]}
+            style={[
+              imageStylePhoto,
+              { borderColor: colors.drawerHeaderContrast },
+            ]}
             source={
               profile.profile
                 ? {
@@ -30,12 +37,14 @@ class DrawerHeader extends Component {
             }
           />
           <View style={viewStyleName}>
-            <Text style={[textStyleName, { color: colors.primaryContrast }]}>
+            <Text
+              style={[textStyleName, { color: colors.drawerHeaderContrast }]}>
               {profile.first_name
                 ? profile.first_name + ' ' + profile.last_name
                 : profile.username}
             </Text>
-            <Text style={[textStyleEmail, { color: colors.primaryContrast }]}>
+            <Text
+              style={[textStyleEmail, { color: colors.drawerHeaderContrast }]}>
               {profile.email || ''}
             </Text>
           </View>
@@ -70,9 +79,6 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user }) => {
-  const { profile } = user;
-  return { profile };
-};
+const DrawerHeader = context(_DrawerHeader);
 
-export default connect(mapStateToProps, {})(DrawerHeader);
+export default DrawerHeader;

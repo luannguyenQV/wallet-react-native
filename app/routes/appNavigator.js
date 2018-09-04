@@ -7,7 +7,7 @@ import Rewards from '../screens/main/rewardsScreen';
 
 import Send from '../screens/main/sendScreen';
 import Receive from '../screens/main/receiveScreen';
-import QRCodeScanner from '../screens/main/qrCodeScannerScreen';
+import QRCodeScanner from '../screens/main/qrScannerScreen';
 
 import Deposit from '../screens/main/depositScreen';
 import Withdraw from '../screens/main/withdrawScreen';

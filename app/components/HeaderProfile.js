@@ -1,20 +1,14 @@
 import React, { Component } from 'react';
 import { Text, Image, View, TouchableHighlight } from 'react-native';
-import { connect } from 'react-redux';
-import { uploadProfilePhoto } from './../redux/actions';
 
 import { ImageUpload } from './common';
 
-import Colors from './../config/colors';
+import context from './common/context';
 
-class HeaderProfile extends Component {
+class _HeaderProfile extends Component {
   state = {
     imageUpload: false,
   };
-
-  // uploadImage(image) {
-
-  // }
 
   render() {
     const { photoLink, username, name, colors } = this.props;
@@ -26,7 +20,7 @@ class HeaderProfile extends Component {
       textStyleName,
     } = styles;
     return (
-      <View style={[viewStyleContainer, { backgroundColor: colors.primary }]}>
+      <View style={[viewStyleContainer, { backgroundColor: colors.header }]}>
         <TouchableHighlight
           onPress={() => this.setState({ imageUpload: true })}>
           {photoLink ? (
@@ -34,7 +28,7 @@ class HeaderProfile extends Component {
               style={[
                 imageStylePhoto,
                 {
-                  borderColor: Colors.secondary,
+                  borderColor: colors.headerContrast,
                 },
               ]}
               source={{
@@ -49,7 +43,7 @@ class HeaderProfile extends Component {
               style={[
                 imageStylePhoto,
                 {
-                  borderColor: Colors.secondary,
+                  borderColor: Colors.headerContrast,
                 },
               ]}
             />
@@ -57,7 +51,7 @@ class HeaderProfile extends Component {
         </TouchableHighlight>
 
         <View style={viewStyleName}>
-          <Text style={[textStyleName, { color: colors.primaryContrast }]}>
+          <Text style={[textStyleName, { color: colors.headerContrast }]}>
             {username ? username : name}
           </Text>
         </View>
@@ -104,10 +98,6 @@ const styles = {
   },
 };
 
-const mapStateToProps = () => {
-  return {};
-};
+const HeaderProfile = context(_HeaderProfile);
 
-export default connect(mapStateToProps, {
-  uploadProfilePhoto,
-})(HeaderProfile);
+export default HeaderProfile;

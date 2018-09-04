@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { Constants } from 'expo';
-import { View, Text, StyleSheet, NetInfo } from 'react-native';
-// import colors from './../config/colors';
+import { View, Text, NetInfo } from 'react-native';
 import { HeaderButton } from './common';
-import getVerifiedScreen from '../screens/settings/getVerified/getVerifiedScreen';
+import context from './common/context';
 
-export default class Header extends Component {
+class _Header extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -65,7 +64,6 @@ export default class Header extends Component {
       colors,
       noShadow,
     } = this.props;
-    // console.log(noShadow);
     return (
       <View
         style={[
@@ -73,7 +71,7 @@ export default class Header extends Component {
             elevation: 10,
             zIndex: 11,
             paddingTop: Constants.statusBarHeight,
-            backgroundColor: colors.primary,
+            backgroundColor: colors.header,
           },
           noShadow
             ? null
@@ -170,7 +168,13 @@ export default class Header extends Component {
           <View style={styles.title}>
             {title ? (
               <Text
-                style={[styles.titleText, { fontSize: smallTitle ? 16 : 20 }]}>
+                style={[
+                  styles.titleText,
+                  {
+                    fontSize: smallTitle ? 16 : 20,
+                    color: colors.headerContrast,
+                  },
+                ]}>
                 {title}
               </Text>
             ) : null}
@@ -218,8 +222,11 @@ const styles = {
     justifyContent: 'center',
   },
   titleText: {
-    color: 'white',
     fontSize: 20,
     paddingLeft: 0,
   },
 };
+
+const Header = context(_Header);
+
+export default Header;

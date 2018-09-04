@@ -139,8 +139,8 @@ class AuthScreen extends Component {
         textFooterRight={textFooterRight}
         onPressFooterRight={onPressFooterRight}
         loading={loading}
-        color={'primary'}
-        colors={colors}>
+        color="primary"
+        type="auth">
         {this.renderContent()}
       </FullScreenForm>
     );
@@ -188,8 +188,7 @@ class AuthScreen extends Component {
             <View style={buttonsContainer}>
               <Button
                 label="LOG IN"
-                textColor={colors.secondaryContrast}
-                backgroundColor={colors.secondary}
+                color="secondary"
                 size="large"
                 reference={input => {
                   this.login = input;
@@ -199,8 +198,8 @@ class AuthScreen extends Component {
               />
               <Button
                 label="Register"
-                textColor={colors.primaryContrast}
-                backgroundColor="transparent"
+                color="primaryContrast"
+                type="text"
                 // size="large"
                 reference={input => {
                   this.login = input;
@@ -223,11 +222,8 @@ class AuthScreen extends Component {
       case 'mfa':
         return (
           <MultiFactorAuthentication
-            colors={colors}
             authScreen
             verifyMFA={this.props.verifyMFA}
-            // issuer={user.company}
-            // account={user.email}
             type={detailState}
           />
         );
@@ -265,8 +261,7 @@ class AuthScreen extends Component {
                 <View style={buttonsContainer}>
                   <Button
                     label="LOG IN WITH FINGERPRINT"
-                    textColor={colors.secondaryContrast}
-                    backgroundColor={colors.secondary}
+                    color="secondary"
                     reference={input => {
                       this.login = input;
                     }}
@@ -311,8 +306,7 @@ class AuthScreen extends Component {
                 <View style={buttonsContainer}>
                   <Button
                     label="USE FINGERPRINT"
-                    textColor={colors.secondaryContrast}
-                    backgroundColor={colors.secondary}
+                    color="secondary"
                     reference={input => {
                       this.login = input;
                     }}
@@ -321,8 +315,8 @@ class AuthScreen extends Component {
                   />
                   <Button
                     label="USE PIN"
-                    textColor={colors.primaryContrast}
-                    backgroundColor="transparent"
+                    color="primary"
+                    type="text"
                     reference={input => {
                       this.login = input;
                     }}
@@ -437,8 +431,6 @@ class AuthScreen extends Component {
       termsChecked,
     } = this.props;
 
-    const colors = company_config ? company_config.colors : Colors;
-
     let key = detailState;
     let type = detailState;
     let placeholder = '';
@@ -493,7 +485,6 @@ class AuthScreen extends Component {
       case 'terms':
         return (
           <Checkbox
-            colors={colors}
             link={terms.link}
             description={terms.description}
             title={terms.title}
@@ -517,7 +508,6 @@ class AuthScreen extends Component {
         onChangeText={onChangeText}
         returnKeyType={returnKeyType}
         onSubmitEditing={onSubmitEditing}
-        colors={colors}
       />
     );
   }
@@ -616,12 +606,6 @@ const styles = {
     flexDirection: 'column',
     // alignItems: 'center',
   },
-  viewStylePin: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
-    flexDirection: 'column',
-  },
   viewStyleInput: {
     width: '100%',
     justifyContent: 'center',
@@ -636,26 +620,12 @@ const styles = {
     maxWidth: 150,
     height: 70,
   },
-  imageSmall: {
-    maxWidth: 250,
-    height: 50,
-  },
   textStyle: {
     width: '100%',
     justifyContent: 'center',
     textAlign: 'center',
     padding: 16,
     fontSize: 18,
-  },
-  textContainerTerms: {
-    paddingHorizontal: 25,
-    height: 80,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  textTerms: {
-    fontSize: 12,
-    color: Colors.primary,
   },
 };
 

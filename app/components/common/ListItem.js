@@ -6,7 +6,6 @@ import {
   Image,
   TouchableHighlight,
 } from 'react-native';
-import Colors from './../../config/colors';
 
 class ListItem extends Component {
   render() {

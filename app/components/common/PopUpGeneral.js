@@ -10,9 +10,11 @@ import {
 } from 'react-native';
 import { HeaderButton } from './HeaderButton';
 import { Spinner } from './Spinner';
+import context from './context';
+
 import Colors from './../../config/colors';
 
-const PopUpGeneral = props => {
+const _PopUpGeneral = props => {
   const {
     backgroundStyle,
     containerStyle,
@@ -252,5 +254,7 @@ const styles = {
     borderRadius: 3,
   },
 };
+
+const PopUpGeneral = context(_PopUpGeneral);
 
 export { PopUpGeneral };

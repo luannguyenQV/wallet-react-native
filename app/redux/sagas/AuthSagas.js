@@ -68,7 +68,7 @@ import {
   getToken,
   getCompany,
   getAuth,
-  getCompanyConfig,
+  companyConfigSelector,
   getAuthUser,
 } from './selectors';
 
@@ -659,7 +659,7 @@ function* appLoad() {
   try {
     yield put({ type: POST_LOADING });
     let count = 11;
-    const { services } = yield select(getCompanyConfig);
+    const { services } = yield select(companyConfigSelector);
     if (services.rewards) {
       count++;
     }
