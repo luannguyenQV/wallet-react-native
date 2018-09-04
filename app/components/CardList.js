@@ -83,6 +83,7 @@ class CardList extends Component {
     } = this.props;
     return (
       <Card
+        canEdit={canEdit}
         colors={colors}
         headerComponent={headerComponent}
         onPressHeader={onPressHeader}

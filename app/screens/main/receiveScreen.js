@@ -95,6 +95,9 @@ class ReceiveScreen extends Component {
             }}
           />
         </TouchableHighlight>
+        {type === 'crypto' ? (
+          <Output label={'Address'} value={this.props.receiveAddress} copy />
+        ) : null}
         <Output
           label={type === 'email' ? 'Email' : 'Memo'}
           value={type === 'email' ? user.email : this.props.receiveMemo}

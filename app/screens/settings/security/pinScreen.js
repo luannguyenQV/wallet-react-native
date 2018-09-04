@@ -38,8 +38,10 @@ class PinScreen extends Component {
   componentDidMount() {
     if (Expo.Fingerprint.hasHardwareAsync()) {
       this.setState({ hasFingerprintScanner: true });
+      console.log('hasFingerprintScanner');
       if (Expo.Fingerprint.isEnrolledAsync()) {
         this.setState({ hasSavedFingerprints: true });
+        console.log('hasSavedFingerprints');
       }
     }
   }
@@ -281,9 +283,6 @@ class PinScreen extends Component {
           keyboardShouldPersistTaps={'never'}
           style={styles.viewStyleContainer}
           behavior={'padding'}>
-          {/* {fingerprint && Platform.OS === 'ios' ? (
-            this.iosScan()
-          ) : ( */}
           <PinModal
             pin={pin}
             fingerprint={fingerprint}
@@ -291,7 +290,6 @@ class PinScreen extends Component {
             onSuccess={() => this.setState({ pinVisible: false })}
             onDismiss={() => this.props.navigation.goBack()}
           />
-          )
           {this.renderMainContainer()}
           {this.renderModal()}
         </KeyboardAvoidingView>
