@@ -77,15 +77,21 @@ export const contactsSelector = createSelector(
     const search = contactsState.contactsSearch
       ? contactsState.contactsSearch.toLowerCase()
       : '';
+    let data = null;
     if (search) {
-      const temp = contactsState.contacts.filter(
+      data = contactsState.contacts.filter(
         item =>
           item.type === contactsState.contactsType &&
           (item.name.toLowerCase().includes(search) ||
             item.contact.toLowerCase().includes(search)),
       );
-      return temp;
     }
-    return [];
+    return {
+      data,
+      search: contactsState.contactsSearch,
+      type: contactsState.contactsType,
+      loading: contactsState.loading,
+      error: contactsState.error,
+    };
   },
 );

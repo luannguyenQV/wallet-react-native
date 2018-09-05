@@ -59,11 +59,11 @@ class SendScreen extends Component {
     ); // TODO: Add accountRef
     console.log('currencies', currencies);
     setTransactionType('send');
-    updateAccountField('transactionCurrency', currencies[0]);
-    updateAccountField('transactionRecipient', recipient);
-    updateAccountField('transactionAmount', amount);
-    updateAccountField('transactionMemo', memo);
-    updateAccountField('transactionNote', note);
+    updateAccountField({ prop: 'transactionCurrency', value: currencies[0] });
+    updateAccountField({ prop: 'transactionRecipient', value: recipient });
+    updateAccountField({ prop: 'transactionAmount', value: amount });
+    updateAccountField({ prop: 'transactionMemo', value: memo });
+    updateAccountField({ prop: 'transactionNote', value: note });
 
     validateTransaction('send');
 
@@ -101,7 +101,7 @@ class SendScreen extends Component {
 
   renderMainContainer() {
     const {
-      sending,
+      transaction,
       sendState,
       sendWallet,
       validateSendAmount,
@@ -168,13 +168,13 @@ class SendScreen extends Component {
       <FullScreenForm
         textFooterRight={textFooterRight}
         onPressFooterRight={onPressFooterRight}
-        loading={sending}
+        loading={transaction.loading}
         color={'focus'}>
         <View style={viewStyleInputContainer}>
-          {/* {this.renderRecipient()}
           {this.renderAmount()}
-          {this.renderMemo()}
-          {this.renderNote()} */}
+          {this.renderRecipient()}
+          {transaction.currency.crypto === 'stellar' ? this.renderMemo() : null}
+          {this.renderNote()}
         </View>
       </FullScreenForm>
     );
@@ -272,21 +272,16 @@ class SendScreen extends Component {
 
   renderRecipient() {
     const {
-      updateAccountField,
-      validateSendRecipient,
-      sendError,
+      transaction,
       contacts,
-      contactsError,
-      contactsLoading,
-      contactsType,
-      contactsSearch,
-      updateContactField,
+      updateAccountField,
       setContactType,
-      sendType,
+      updateContactField,
     } = this.props;
+    console.log(transaction);
     let label = 'Please enter ';
     let placeholder = '';
-    switch (contactsType) {
+    switch (contacts.type) {
       case 'mobile':
         label = label + 'recipient name or mobile number';
         placeholder = 'e.g +27821234567';
@@ -310,18 +305,7 @@ class SendScreen extends Component {
           }}>
           <View style={{ flex: 1 }}>
             <Button
-              buttonStyle={{
-                backgroundColor:
-                  contactsType === 'email'
-                    ? colors.focusContrast
-                    : colors.secondary,
-              }}
-              textStyle={{
-                color:
-                  contactsType === 'email'
-                    ? colors.focus
-                    : colors.secondaryContrast,
-              }}
+              color={contacts.type === 'email' ? 'primary' : 'secondary'}
               onPress={() => setContactType('email')}
               label="EMAIL"
               size="small"
@@ -331,18 +315,7 @@ class SendScreen extends Component {
           </View>
           <View style={{ flex: 1 }}>
             <Button
-              buttonStyle={{
-                backgroundColor:
-                  contactsType === 'mobile'
-                    ? colors.focusContrast
-                    : colors.secondary,
-              }}
-              textStyle={{
-                color:
-                  contactsType === 'mobile'
-                    ? colors.focus
-                    : colors.secondaryContrast,
-              }}
+              color={contacts.type === 'mobile' ? 'primary' : 'secondary'}
               onPress={() => setContactType('mobile')}
               label="MOBILE"
               size="small"
@@ -350,21 +323,10 @@ class SendScreen extends Component {
               containerStyle={{ marginBottom: 0 }}
             />
           </View>
-          {sendType === ('stellar' || 'ethereum' || 'bitcoin') ? (
+          {transaction.currency.crypto ? (
             <View style={{ flex: 1 }}>
               <Button
-                buttonStyle={{
-                  backgroundColor:
-                    contactsType === 'crypto'
-                      ? colors.focusContrast
-                      : colors.secondary,
-                }}
-                textStyle={{
-                  color:
-                    contactsType === 'crypto'
-                      ? colors.focus
-                      : colors.secondaryContrast,
-                }}
+                color={contacts.type === 'crypto' ? 'primary' : 'secondary'}
                 onPress={() => setContactType('crypto')}
                 label="CRYPTO"
                 size="small"
@@ -379,124 +341,115 @@ class SendScreen extends Component {
           key="contactsSearch"
           placeholder={placeholder}
           label={label}
-          value={contactsSearch}
+          value={contacts.search}
           onChangeText={value =>
             updateContactField({ prop: 'contactsSearch', value })
           }
-          inputError={sendError}
+          inputError={contacts.error}
           reference={input => {
             this.input = input;
           }}
           returnKeyType="next"
-          autoFocus
+          // autoFocus
           onSubmitEditing={() => {
-            updateAccountField({
-              prop: 'sendRecipient',
-              value: contactsSearch,
-            });
-            validateSendRecipient(sendType, contactsType, contactsSearch);
+            // updateAccountField({
+            //   prop: 'sendRecipient',
+            //   value: contacts.search,
+            // });
+            // validateSendRecipient(sendType, contacts.type, contacts.search);
           }}
           popUp
-          multiline={contactsType === 'crypto' ? true : false}
-          data={contacts}
-          loadingData={contactsLoading}
+          multiline={contacts.type === 'crypto' ? true : false}
+          data={contacts.data}
+          loadingData={contacts.loading}
           title="name"
           subtitle="contact"
-          onPressListItem={item => {
-            updateAccountField({
-              prop: 'sendRecipient',
-              value: item.contact,
-            });
-            validateSendRecipient(sendType, contactsType, item.contact);
-          }}
+          // onPressListItem={item => {
+          //   updateAccountField({
+          //     prop: 'sendRecipient',
+          //     value: item.contact,
+          //   });
+          //   validateSendRecipient(
+          //     transaction.type,
+          //     contacts.type,
+          //     item.contact,
+          //   );
+          // }}
         />
       </View>
     );
   }
 
   renderAmount() {
-    const {
-      sendState,
-      sendAmount,
-      sendWallet,
-      sendRecipient,
-      updateAccountField,
-      validateSendAmount,
-      sendError,
-    } = this.props;
+    const { transaction, updateAccountField } = this.props;
+    console.log('trans', transaction);
 
     return (
       <Input
         key="amount"
         placeholder="e.g. 10"
-        label={'Amount [' + sendWallet.currency.currency.symbol + ']'}
-        prefix={sendWallet.currency.currency.symbol}
-        inputError={sendError}
+        label={'Amount [' + transaction.currency.currency.symbol + ']'}
+        // prefix={transaction.currency.currency.symbol}
+        inputError={transaction.amountError}
         reference={input => {
           this.input = input;
         }}
         keyboardType={Platform.OS === 'ios' ? 'decimal-pad' : 'phone-pad'}
-        value={sendAmount}
+        value={transaction.amount}
         onChangeText={value =>
-          updateAccountField({ prop: 'sendAmount', value })
+          updateAccountField({ prop: 'transactionAmount', value })
         }
         returnKeyType="next"
         autoFocus
-        onSubmitEditing={() => validateSendAmount(sendWallet, sendAmount)}
+        // onSubmitEditing={() => validateSendAmount(sendWallet, sendAmount)}
       />
     );
   }
 
   renderMemo() {
-    const {
-      updateAccountField,
-      sendMemo,
-      validateSendMemo,
-      sendError,
-    } = this.props;
+    const { transaction, updateAccountField } = this.props;
 
     return (
       <Input
         key="memo"
-        placeholder=""
+        placeholder="Memo"
         label="Memo"
-        value={sendMemo}
-        onChangeText={value => updateAccountField({ prop: 'sendMemo', value })}
-        inputError={sendError}
+        value={transaction.memo}
+        onChangeText={value =>
+          updateAccountField({ prop: 'transactionMemo', value })
+        }
+        // inputError={sendError}
         reference={input => {
           this.input = input;
         }}
         multiline
         returnKeyType="next"
-        autoFocus
-        onSubmitEditing={() => validateSendMemo(sendMemo)}
+        // autoFocus
+        // onSubmitEditing={() => validateSendMemo(sendMemo)}
       />
     );
   }
 
   renderNote() {
-    const {
-      updateAccountField,
-      sendNote,
-      validateSendNote,
-      sendError,
-    } = this.props;
+    const { transaction, updateAccountField } = this.props;
 
     return (
       <Input
         key="note"
         placeholder="e.g. Rent"
         label="Note"
-        value={sendNote}
-        onChangeText={value => updateAccountField({ prop: 'sendNote', value })}
-        inputError={sendError}
+        value={transaction.note}
+        onChangeText={value =>
+          updateAccountField({ prop: 'transactionNote', value })
+        }
+        // inputError={sendError}
         reference={input => {
           this.input = input;
         }}
         multiline
         returnKeyType="next"
-        autoFocus
-        onSubmitEditing={() => validateSendNote(sendNote)}
+        // autoFocus
+        // onSubmitEditing={() => validateSendNote(sendNote)}
       />
     );
   }
@@ -535,20 +488,11 @@ const styles = {
     flex: 1,
     flexDirection: 'column',
   },
-  viewStyleTopContainer: {
-    // justifyContent: 'center',
-    paddingTop: 16,
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    // backgroundColor: 'orange',
-    // flex: 2,
-    paddingBottom: 0,
-  },
   buttonStyleOutput: { width: '100%', borderRadius: 3, marginHorizontal: 8 },
   viewStyleInputContainer: {
     flex: 1,
     borderRadius: 2,
+    padding: 8,
   },
   textStyleOutput: {
     fontSize: 16,

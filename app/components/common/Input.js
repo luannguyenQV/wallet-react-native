@@ -160,6 +160,8 @@ class _Input extends Component {
 
     const { borderColor, focused, iconNameVisibility } = this.state;
 
+    console.log(focused, value);
+
     return (
       <View style={this.viewStyleContainer()}>
         <View
