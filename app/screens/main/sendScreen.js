@@ -17,7 +17,7 @@ import {
   setContactType,
   updateContactField,
 } from '../../redux/actions';
-import { getContacts } from './../../redux/reducers/ContactsReducer';
+import { contactsSelector } from './../../redux/reducers/ContactsReducer';
 import {
   walletsSelector,
   transactionSelector,
@@ -48,9 +48,24 @@ class SendScreen extends Component {
       recipient,
     } = this.props.navigation.state.params;
 
-    const { wallets, setTransactionType, setTransactionCurrency } = this.props;
-    console.log(wallets);
+    const {
+      wallets,
+      setTransactionType,
+      updateAccountField,
+      validateTransaction,
+    } = this.props;
+    const currencies = wallets.currencies.filter(
+      item => item.currency.code === currencyCode,
+    ); // TODO: Add accountRef
+    console.log('currencies', currencies);
     setTransactionType('send');
+    updateAccountField('transactionCurrency', currencies[0]);
+    updateAccountField('transactionRecipient', recipient);
+    updateAccountField('transactionAmount', amount);
+    updateAccountField('transactionMemo', memo);
+    updateAccountField('transactionNote', note);
+
+    validateTransaction('send');
 
     // const currency = wallets.c
     // setTransactionCurrency();
@@ -105,59 +120,62 @@ class SendScreen extends Component {
       company_config,
     } = this.props;
 
-    const { viewStyleBottomContainer } = styles;
+    const { viewStyleInputContainer } = styles;
 
     let textFooterRight = 'Next';
     let onPressFooterRight = () => {};
 
-    switch (sendState) {
-      case 'amount':
-        onPressFooterRight = () => validateSendAmount(sendWallet, sendAmount);
-        break;
-      case 'recipient':
-        onPressFooterRight = () => {
-          updateAccountField({
-            prop: 'sendRecipient',
-            value: contactsSearch,
-          });
-          validateSendRecipient(sendType, contactsType, contactsSearch);
-        };
-        break;
-      case 'memo':
-        onPressFooterRight = () => validateSendMemo(sendMemo);
-        break;
-      case 'note':
-        onPressFooterRight = () => validateSendNote(sendNote);
-        break;
-      case 'confirm':
-        textFooterRight = 'Confirm';
-        onPressFooterRight = () => {
-          if (company_config.pin.send) {
-            this.setState({ pinVisible: true });
-          } else {
-            this.performSend();
-          }
-        };
-        break;
-      case 'success':
-        textFooterRight = 'Close';
-        onPressFooterRight = () => this.props.navigation.goBack();
-        break;
-      case 'fail':
-        textFooterRight = 'Close';
-        onPressFooterRight = () => this.props.navigation.goBack();
-        break;
-    }
+    // switch (sendState) {
+    //   case 'amount':
+    //     onPressFooterRight = () => validateSendAmount(sendWallet, sendAmount);
+    //     break;
+    //   case 'recipient':
+    //     onPressFooterRight = () => {
+    //       updateAccountField({
+    //         prop: 'sendRecipient',
+    //         value: contactsSearch,
+    //       });
+    //       validateSendRecipient(sendType, contactsType, contactsSearch);
+    //     };
+    //     break;
+    //   case 'memo':
+    //     onPressFooterRight = () => validateSendMemo(sendMemo);
+    //     break;
+    //   case 'note':
+    //     onPressFooterRight = () => validateSendNote(sendNote);
+    //     break;
+    //   case 'confirm':
+    //     textFooterRight = 'Confirm';
+    //     onPressFooterRight = () => {
+    //       if (company_config.pin.send) {
+    //         this.setState({ pinVisible: true });
+    //       } else {
+    //         this.performSend();
+    //       }
+    //     };
+    //     break;
+    //   case 'success':
+    //     textFooterRight = 'Close';
+    //     onPressFooterRight = () => this.props.navigation.goBack();
+    //     break;
+    //   case 'fail':
+    //     textFooterRight = 'Close';
+    //     onPressFooterRight = () => this.props.navigation.goBack();
+    //     break;
+    // }
 
     return (
       <FullScreenForm
         textFooterRight={textFooterRight}
         onPressFooterRight={onPressFooterRight}
         loading={sending}
-        color={'focus'}
-        colors={company_config.colors}>
-        {this.renderTop()}
-        <View style={viewStyleBottomContainer}>{this.renderBottom()}</View>
+        color={'focus'}>
+        <View style={viewStyleInputContainer}>
+          {/* {this.renderRecipient()}
+          {this.renderAmount()}
+          {this.renderMemo()}
+          {this.renderNote()} */}
+        </View>
       </FullScreenForm>
     );
   }
@@ -252,21 +270,11 @@ class SendScreen extends Component {
     );
   }
 
-  renderBottom() {
+  renderRecipient() {
     const {
-      sendState,
-      sendAmount,
-      sendWallet,
-      sendRecipient,
       updateAccountField,
-      sendNote,
-      sendMemo,
-      validateSendAmount,
       validateSendRecipient,
-      validateSendMemo,
-      validateSendNote,
       sendError,
-      company_config,
       contacts,
       contactsError,
       contactsLoading,
@@ -276,202 +284,221 @@ class SendScreen extends Component {
       setContactType,
       sendType,
     } = this.props;
-    const { colors } = company_config;
-    // console.log(sendType);
-    switch (sendState) {
-      case 'amount':
-        return (
-          <Input
-            key="amount"
-            placeholder="e.g. 10"
-            label={'Amount [' + sendWallet.currency.currency.symbol + ']'}
-            prefix={sendWallet.currency.currency.symbol}
-            inputError={sendError}
-            reference={input => {
-              this.input = input;
-            }}
-            keyboardType={Platform.OS === 'ios' ? 'decimal-pad' : 'phone-pad'}
-            value={sendAmount}
-            onChangeText={value =>
-              updateAccountField({ prop: 'sendAmount', value })
-            }
-            returnKeyType="next"
-            autoFocus
-            onSubmitEditing={() => validateSendAmount(sendWallet, sendAmount)}
-          />
-        );
-      case 'recipient':
-        let label = 'Please enter ';
-        let placeholder = '';
-        switch (contactsType) {
-          case 'mobile':
-            label = label + 'recipient name or mobile number';
-            placeholder = 'e.g +27821234567';
-            break;
-          case 'email':
-            label = label + 'recipient name or email';
-            placeholder = 'e.g. user@rehive.com';
-            break;
-          case 'crypto':
-            label = label + sendType + ' address';
-            placeholder = 'GAQGVZYIZ2DX56EB6TZYGBD...';
-            break;
-        }
-        return (
-          <View>
-            <View
-              style={{
-                flexDirection: 'row',
-                // alignItems: 'center',
-                // justifyContent: 'center',
-              }}>
-              <View style={{ flex: 1 }}>
-                <Button
-                  buttonStyle={{
-                    backgroundColor:
-                      contactsType === 'email'
-                        ? colors.focusContrast
-                        : colors.secondary,
-                  }}
-                  textStyle={{
-                    color:
-                      contactsType === 'email'
-                        ? colors.focus
-                        : colors.secondaryContrast,
-                  }}
-                  onPress={() => setContactType('email')}
-                  label="EMAIL"
-                  size="small"
-                  round
-                  containerStyle={{ marginBottom: 0 }}
-                />
-              </View>
-              <View style={{ flex: 1 }}>
-                <Button
-                  buttonStyle={{
-                    backgroundColor:
-                      contactsType === 'mobile'
-                        ? colors.focusContrast
-                        : colors.secondary,
-                  }}
-                  textStyle={{
-                    color:
-                      contactsType === 'mobile'
-                        ? colors.focus
-                        : colors.secondaryContrast,
-                  }}
-                  onPress={() => setContactType('mobile')}
-                  label="MOBILE"
-                  size="small"
-                  round
-                  containerStyle={{ marginBottom: 0 }}
-                />
-              </View>
-              {sendType === ('stellar' || 'ethereum' || 'bitcoin') ? (
-                <View style={{ flex: 1 }}>
-                  <Button
-                    buttonStyle={{
-                      backgroundColor:
-                        contactsType === 'crypto'
-                          ? colors.focusContrast
-                          : colors.secondary,
-                    }}
-                    textStyle={{
-                      color:
-                        contactsType === 'crypto'
-                          ? colors.focus
-                          : colors.secondaryContrast,
-                    }}
-                    onPress={() => setContactType('crypto')}
-                    label="CRYPTO"
-                    size="small"
-                    round
-                    containerStyle={{ marginBottom: 0 }}
-                  />
-                </View>
-              ) : null}
-            </View>
-
-            <Input
-              key="contactsSearch"
-              placeholder={placeholder}
-              label={label}
-              value={contactsSearch}
-              onChangeText={value =>
-                updateContactField({ prop: 'contactsSearch', value })
-              }
-              inputError={sendError}
-              reference={input => {
-                this.input = input;
+    let label = 'Please enter ';
+    let placeholder = '';
+    switch (contactsType) {
+      case 'mobile':
+        label = label + 'recipient name or mobile number';
+        placeholder = 'e.g +27821234567';
+        break;
+      case 'email':
+        label = label + 'recipient name or email';
+        placeholder = 'e.g. user@rehive.com';
+        break;
+      case 'crypto':
+        label = label + sendType + ' address';
+        placeholder = 'GAQGVZYIZ2DX56EB6TZYGBD...';
+        break;
+    }
+    return (
+      <View>
+        <View
+          style={{
+            flexDirection: 'row',
+            // alignItems: 'center',
+            // justifyContent: 'center',
+          }}>
+          <View style={{ flex: 1 }}>
+            <Button
+              buttonStyle={{
+                backgroundColor:
+                  contactsType === 'email'
+                    ? colors.focusContrast
+                    : colors.secondary,
               }}
-              returnKeyType="next"
-              autoFocus
-              onSubmitEditing={() => {
-                updateAccountField({
-                  prop: 'sendRecipient',
-                  value: contactsSearch,
-                });
-                validateSendRecipient(sendType, contactsType, contactsSearch);
+              textStyle={{
+                color:
+                  contactsType === 'email'
+                    ? colors.focus
+                    : colors.secondaryContrast,
               }}
-              popUp
-              multiline={contactsType === 'crypto' ? true : false}
-              data={contacts}
-              loadingData={contactsLoading}
-              title="name"
-              subtitle="contact"
-              onPressListItem={item => {
-                updateAccountField({
-                  prop: 'sendRecipient',
-                  value: item.contact,
-                });
-                validateSendRecipient(sendType, contactsType, item.contact);
-              }}
+              onPress={() => setContactType('email')}
+              label="EMAIL"
+              size="small"
+              round
+              containerStyle={{ marginBottom: 0 }}
             />
           </View>
-        );
-      case 'memo':
-        return (
-          <Input
-            key="memo"
-            placeholder=""
-            label="Memo"
-            value={sendMemo}
-            onChangeText={value =>
-              updateAccountField({ prop: 'sendMemo', value })
-            }
-            inputError={sendError}
-            reference={input => {
-              this.input = input;
-            }}
-            multiline
-            returnKeyType="next"
-            autoFocus
-            onSubmitEditing={() => validateSendMemo(sendMemo)}
-          />
-        );
-      case 'note':
-        return (
-          <Input
-            key="note"
-            placeholder="e.g. Rent"
-            label="Note"
-            value={sendNote}
-            onChangeText={value =>
-              updateAccountField({ prop: 'sendNote', value })
-            }
-            inputError={sendError}
-            reference={input => {
-              this.input = input;
-            }}
-            multiline
-            returnKeyType="next"
-            autoFocus
-            onSubmitEditing={() => validateSendNote(sendNote)}
-          />
-        );
-      default:
-        return <View />;
-    }
+          <View style={{ flex: 1 }}>
+            <Button
+              buttonStyle={{
+                backgroundColor:
+                  contactsType === 'mobile'
+                    ? colors.focusContrast
+                    : colors.secondary,
+              }}
+              textStyle={{
+                color:
+                  contactsType === 'mobile'
+                    ? colors.focus
+                    : colors.secondaryContrast,
+              }}
+              onPress={() => setContactType('mobile')}
+              label="MOBILE"
+              size="small"
+              round
+              containerStyle={{ marginBottom: 0 }}
+            />
+          </View>
+          {sendType === ('stellar' || 'ethereum' || 'bitcoin') ? (
+            <View style={{ flex: 1 }}>
+              <Button
+                buttonStyle={{
+                  backgroundColor:
+                    contactsType === 'crypto'
+                      ? colors.focusContrast
+                      : colors.secondary,
+                }}
+                textStyle={{
+                  color:
+                    contactsType === 'crypto'
+                      ? colors.focus
+                      : colors.secondaryContrast,
+                }}
+                onPress={() => setContactType('crypto')}
+                label="CRYPTO"
+                size="small"
+                round
+                containerStyle={{ marginBottom: 0 }}
+              />
+            </View>
+          ) : null}
+        </View>
+
+        <Input
+          key="contactsSearch"
+          placeholder={placeholder}
+          label={label}
+          value={contactsSearch}
+          onChangeText={value =>
+            updateContactField({ prop: 'contactsSearch', value })
+          }
+          inputError={sendError}
+          reference={input => {
+            this.input = input;
+          }}
+          returnKeyType="next"
+          autoFocus
+          onSubmitEditing={() => {
+            updateAccountField({
+              prop: 'sendRecipient',
+              value: contactsSearch,
+            });
+            validateSendRecipient(sendType, contactsType, contactsSearch);
+          }}
+          popUp
+          multiline={contactsType === 'crypto' ? true : false}
+          data={contacts}
+          loadingData={contactsLoading}
+          title="name"
+          subtitle="contact"
+          onPressListItem={item => {
+            updateAccountField({
+              prop: 'sendRecipient',
+              value: item.contact,
+            });
+            validateSendRecipient(sendType, contactsType, item.contact);
+          }}
+        />
+      </View>
+    );
+  }
+
+  renderAmount() {
+    const {
+      sendState,
+      sendAmount,
+      sendWallet,
+      sendRecipient,
+      updateAccountField,
+      validateSendAmount,
+      sendError,
+    } = this.props;
+
+    return (
+      <Input
+        key="amount"
+        placeholder="e.g. 10"
+        label={'Amount [' + sendWallet.currency.currency.symbol + ']'}
+        prefix={sendWallet.currency.currency.symbol}
+        inputError={sendError}
+        reference={input => {
+          this.input = input;
+        }}
+        keyboardType={Platform.OS === 'ios' ? 'decimal-pad' : 'phone-pad'}
+        value={sendAmount}
+        onChangeText={value =>
+          updateAccountField({ prop: 'sendAmount', value })
+        }
+        returnKeyType="next"
+        autoFocus
+        onSubmitEditing={() => validateSendAmount(sendWallet, sendAmount)}
+      />
+    );
+  }
+
+  renderMemo() {
+    const {
+      updateAccountField,
+      sendMemo,
+      validateSendMemo,
+      sendError,
+    } = this.props;
+
+    return (
+      <Input
+        key="memo"
+        placeholder=""
+        label="Memo"
+        value={sendMemo}
+        onChangeText={value => updateAccountField({ prop: 'sendMemo', value })}
+        inputError={sendError}
+        reference={input => {
+          this.input = input;
+        }}
+        multiline
+        returnKeyType="next"
+        autoFocus
+        onSubmitEditing={() => validateSendMemo(sendMemo)}
+      />
+    );
+  }
+
+  renderNote() {
+    const {
+      updateAccountField,
+      sendNote,
+      validateSendNote,
+      sendError,
+    } = this.props;
+
+    return (
+      <Input
+        key="note"
+        placeholder="e.g. Rent"
+        label="Note"
+        value={sendNote}
+        onChangeText={value => updateAccountField({ prop: 'sendNote', value })}
+        inputError={sendError}
+        reference={input => {
+          this.input = input;
+        }}
+        multiline
+        returnKeyType="next"
+        autoFocus
+        onSubmitEditing={() => validateSendNote(sendNote)}
+      />
+    );
   }
 
   render() {
@@ -484,7 +511,7 @@ class SendScreen extends Component {
           keyboardShouldPersistTaps={'always'}
           style={styles.viewStyleContainer}
           behavior={'padding'}>
-          {this.state.pinVisible ? (
+          {/* {this.state.pinVisible ? (
             <PinModal
               pin={pin}
               fingerprint={fingerprint}
@@ -495,13 +522,8 @@ class SendScreen extends Component {
               }}
               onDismiss={() => this.setState({ pinVisible: false })}
             />
-          ) : null}
-          {/* <TouchableWithoutFeedback
-            style={{ flex: 1 }}
-            onPress={Keyboard.dismiss}
-            accessible={false}> */}
+          ) : null} */}
           {this.renderMainContainer()}
-          {/* </TouchableWithoutFeedback> */}
         </KeyboardAvoidingView>
       </View>
     );
@@ -524,14 +546,9 @@ const styles = {
     paddingBottom: 0,
   },
   buttonStyleOutput: { width: '100%', borderRadius: 3, marginHorizontal: 8 },
-  viewStyleBottomContainer: {
-    // justifyContent: 'center',
-    // alignSelf: 'flex-end',
+  viewStyleInputContainer: {
     flex: 1,
-    // minHeight: 100,
     borderRadius: 2,
-    // position: 'absolute',
-    // bottom: 0,
   },
   textStyleOutput: {
     fontSize: 16,
@@ -553,25 +570,13 @@ const styles = {
 
 const mapStateToProps = state => {
   const { pin, fingerprint, company_config } = state.auth;
-  const {
-    contacts,
-    contactsError,
-    contactsLoading,
-    contactsType,
-    contactsSearch,
-  } = state.contacts;
   return {
     wallets: walletsSelector(state),
     transaction: transactionSelector(state),
     pin,
     fingerprint,
     company_config,
-    contacts,
-    contactsError,
-    contactsLoading,
-    contactsType,
-    contactsSearch,
-    contacts: getContacts(contacts),
+    contacts: contactsSelector(state),
   };
 };
 

@@ -7,9 +7,12 @@ import {
 } from '../actions';
 
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
+import { createSelector } from 'reselect';
+import { contactsStateSelector } from '../sagas/selectors';
 
 const INITIAL_STATE = {
   contacts: [],
+  contactsSearch: '',
   contactsLoading: false,
   contactsType: 'email',
 };
@@ -68,16 +71,21 @@ export default (state = INITIAL_STATE, action) => {
   }
 };
 
-export function getContacts(contacts) {
-  const search = contacts.contactsSearch.toLowerCase();
-  if (contacts.contactsSearch) {
-    const temp = contacts.contacts.filter(
-      item =>
-        item.type === contacts.contactsType &&
-        (item.name.toLowerCase().includes(search) ||
-          item.contact.toLowerCase().includes(search)),
-    );
-    return temp;
-  }
-  return [];
-}
+export const contactsSelector = createSelector(
+  [contactsStateSelector],
+  contactsState => {
+    const search = contactsState.contactsSearch
+      ? contactsState.contactsSearch.toLowerCase()
+      : '';
+    if (search) {
+      const temp = contactsState.contacts.filter(
+        item =>
+          item.type === contactsState.contactsType &&
+          (item.name.toLowerCase().includes(search) ||
+            item.contact.toLowerCase().includes(search)),
+      );
+      return temp;
+    }
+    return [];
+  },
+);

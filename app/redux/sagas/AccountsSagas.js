@@ -9,11 +9,14 @@ import {
   SET_SEND_TYPE,
   FETCH_TRANSACTIONS_ASYNC,
   SET_TRANSACTION_CURRENCY,
+  VALIDATE_TRANSACTION,
 } from '../actions';
 import { Toast } from 'native-base';
 // import Big from 'big.js';
 import * as Rehive from '../../util/rehive';
 import { cryptoSelector } from './selectors';
+import { takeLatest } from 'redux-saga';
+import { transactionSelector } from '../reducers/AccountsReducer';
 
 function* fetchAccounts() {
   try {
@@ -105,10 +108,27 @@ function* checkSendServices(action) {
   }
 }
 
+function* validateTransaction(action) {
+  try {
+    const type = action.payload;
+    const transaction = yield select(transactionSelector);
+    console.log('transaction', transaction);
+
+    // yield put({
+    //   type: SET_SEND_TYPE,
+    //   payload: service,
+    // });
+  } catch (error) {
+    console.log('checkSendServices', error);
+    // yield put({ type: FETCH_ACCOUNTS_ASYNC.error, payload: error.message });
+  }
+}
+
 export const accountsSagas = all([
   takeEvery(FETCH_ACCOUNTS_ASYNC.pending, fetchAccounts),
   takeEvery(SEND_ASYNC.success, fetchAccounts),
   takeEvery(FETCH_TRANSACTIONS_ASYNC.pending, fetchTransactions),
   takeEvery(SET_ACTIVE_CURRENCY_ASYNC.pending, setActiveCurrency),
   takeEvery(SET_TRANSACTION_CURRENCY, checkSendServices),
+  takeLatest(VALIDATE_TRANSACTION, validateTransaction),
 ]);

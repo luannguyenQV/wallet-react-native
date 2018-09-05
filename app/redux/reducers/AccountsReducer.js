@@ -19,6 +19,7 @@ import {
   FETCH_TRANSACTIONS_ASYNC,
   SET_HOME_ACCOUNT,
   SET_HOME_CURRENCY,
+  SET_TRANSACTION_FIELD,
 } from '../actions';
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 import { createSelector } from 'reselect';
@@ -32,30 +33,31 @@ const INITIAL_STATE = {
   loading: false,
   loadingActiveCurrencyChange: false,
 
-  sendAmount: 0,
-  sendWallet: null,
-  sendRecipient: '',
-  sendNote: '',
-  sendMemo: '',
-  sendReference: null,
-  sendState: '',
+  transactionAmount: 0,
+  transactionCurrency: null,
+  transactionRecipient: '',
+  transactionNote: '',
+  transactionMemo: '',
+  transactionReference: null,
 
   tempWallet: null,
   showWallet: false,
-
-  withdrawAmount: 0,
-  withdrawWallet: null,
-  withdrawRecipient: '',
-  withdrawNote: '',
-  withdrawReference: null,
-  withdrawState: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
-  // console.log(action);
+  console.log(action);
   switch (action.type) {
     case PERSIST_REHYDRATE:
       return action.payload.auth || INITIAL_STATE;
+
+    case ACCOUNT_FIELD_CHANGED:
+      return { ...state, [action.payload.prop]: action.payload.value };
+    case ACCOUNT_FIELD_ERROR:
+      return {
+        ...state,
+        sendError: action.payload,
+        withdrawError: action.payload,
+      };
 
     case FETCH_ACCOUNTS_ASYNC.pending:
       return {
@@ -121,15 +123,6 @@ export default (state = INITIAL_STATE, action) => {
       }
       return { ...state };
 
-    case ACCOUNT_FIELD_CHANGED:
-      return { ...state, [action.payload.prop]: action.payload.value };
-    case ACCOUNT_FIELD_ERROR:
-      return {
-        ...state,
-        sendError: action.payload,
-        withdrawError: action.payload,
-      };
-
     case SET_TRANSACTION_TYPE:
       return {
         ...state,
@@ -141,12 +134,6 @@ export default (state = INITIAL_STATE, action) => {
         transactionWallet: action.payload,
       };
 
-    case SET_SEND_STATE:
-      return {
-        ...state,
-        transactionState: action.payload,
-        transactionError: '',
-      };
     case RESET_TRANSACTION:
       return {
         ...state,
@@ -160,6 +147,7 @@ export default (state = INITIAL_STATE, action) => {
         transactionMemo: '',
         transactionType: '',
       };
+
     case SEND_ASYNC.pending:
       return {
         ...state,
@@ -357,7 +345,6 @@ export const transactionSelector = createSelector(
   accountsState => {
     const {
       transactionType,
-      transactionAccount,
       transactionCurrency,
       transactionAmount,
       transactionAmountError,
@@ -370,7 +357,6 @@ export const transactionSelector = createSelector(
 
     return {
       type: transactionType,
-      account: transactionAccount,
       currency: transactionCurrency,
       amount: transactionAmount,
       amountError: transactionAmountError,

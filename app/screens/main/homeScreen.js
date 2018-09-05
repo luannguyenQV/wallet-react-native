@@ -31,7 +31,6 @@ class HomeScreen extends Component {
 
   render() {
     const { wallets, setHomeAccount, setHomeCurrency } = this.props;
-    console.log('wallets', wallets);
     return (
       <View style={styles.container}>
         <Header navigation={this.props.navigation} drawer right noShadow />

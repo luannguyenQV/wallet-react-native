@@ -10,3 +10,5 @@ export const themeSelector = state => state.config.theme;
 
 export const accountsSelector = state => state.accounts;
 export const cryptoSelector = state => state.crypto;
+
+export const contactsStateSelector = state => state.contacts;

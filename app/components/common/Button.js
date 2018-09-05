@@ -16,7 +16,6 @@ class _Button extends Component {
     if (type === 'contained') {
       backgroundColor = colors[color];
     }
-    console.log(buttonStyle);
     return [
       styles._buttonStyle,
       {

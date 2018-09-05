@@ -10,7 +10,7 @@ import {
 
 export const ACCOUNT_FIELD_CHANGED = 'account_field_changed';
 export const ACCOUNT_FIELD_ERROR = 'account_field_error';
-export const updateAccountField = ({ prop, value }) => {
+export const updateAccountField = (prop, value) => {
   return {
     type: ACCOUNT_FIELD_CHANGED,
     payload: { prop, value },
@@ -56,6 +56,14 @@ export const setTransactionCurrency = currency => {
   return {
     type: SET_TRANSACTION_CURRENCY,
     payload: currency,
+  };
+};
+
+export const VALIDATE_TRANSACTION = 'validate_transaction';
+export const validateTransaction = type => {
+  return {
+    type: VALIDATE_TRANSACTION,
+    payload: type,
   };
 };
 
