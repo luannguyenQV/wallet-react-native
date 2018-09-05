@@ -59,7 +59,7 @@ const _PopUpGeneral = props => {
       <KeyboardAvoidingView
         keyboardShouldPersistTaps={'always'}
         style={{ flex: 1 }}
-        behavior={Platform.OS === 'android' ? '' : 'padding'}>
+        behavior={Platform.OS === 'android' ? 'height' : 'padding'}>
         <TouchableHighlight
           style={backgroundStyle}
           onPress={onDismiss}

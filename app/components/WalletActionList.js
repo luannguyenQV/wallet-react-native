@@ -37,7 +37,7 @@ class WalletActionList extends Component {
     const { viewStyleContainer, viewStyleButtons } = styles;
     const { type, colors } = this.props;
     return (
-      <View style={(viewStyleContainer, { backgroundColor: colors.header })}>
+      <View style={[viewStyleContainer, { backgroundColor: colors.header }]}>
         <FlatList
           contentContainerStyle={viewStyleButtons}
           data={this.props.buttons}
