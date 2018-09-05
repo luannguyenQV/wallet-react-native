@@ -63,7 +63,7 @@ const styles = {
     flexDirection: 'column',
     elevation: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 2, height: 2 },
+    shadowOffset: { width: 0, height: 3 },
     shadowRadius: 5,
     shadowOpacity: 0.3,
     zIndex: 10,

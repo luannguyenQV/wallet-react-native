@@ -122,7 +122,7 @@ const styles = {
     // shadowOffset: { width: 2, height: 2 },
     // shadowRadius: 5,
     // shadowOpacity: 0.3,
-    zIndex: 10,
+    zIndex: 11,
   },
   viewStyleButtons: {
     flexDirection: 'row',
