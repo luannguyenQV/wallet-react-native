@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { ScrollView, Text, View } from 'react-native';
 
-import DrawerHeader from './../components/drawerHeader';
-import DrawerOption from './../components/DrawerOption';
+import DrawerHeader from './DrawerHeader';
+import DrawerItem from './DrawerItem';
 import context from './common/context';
 
 class _CustomDrawer extends Component {
@@ -26,14 +26,14 @@ class _CustomDrawer extends Component {
         <ScrollView>
           <View>
             <View style={styles.navSectionStyle}>
-              <DrawerOption
+              <DrawerItem
                 navigation={navigation}
                 activeItemKey={activeItemKey}
                 name="Home"
                 address="Home"
                 colors={colors}
               />
-              <DrawerOption
+              <DrawerItem
                 navigation={navigation}
                 activeItemKey={activeItemKey}
                 name="Wallets"
@@ -41,7 +41,7 @@ class _CustomDrawer extends Component {
                 colors={colors}
               />
               {services.rewards ? (
-                <DrawerOption
+                <DrawerItem
                   navigation={navigation}
                   activeItemKey={activeItemKey}
                   name="Rewards"
@@ -50,7 +50,7 @@ class _CustomDrawer extends Component {
                 />
               ) : null}
               {/* {!profile.verified ? ( */}
-              <DrawerOption
+              <DrawerItem
                 navigation={navigation}
                 activeItemKey={activeItemKey}
                 name="Get verified"
@@ -58,14 +58,14 @@ class _CustomDrawer extends Component {
                 colors={colors}
               />
               {/* ) : null} */}
-              <DrawerOption
+              <DrawerItem
                 navigation={navigation}
                 activeItemKey={activeItemKey}
                 name="Settings"
                 address="Settings"
                 colors={colors}
               />
-              <DrawerOption
+              <DrawerItem
                 navigation={navigation}
                 activeItemKey={activeItemKey}
                 name="Log out"

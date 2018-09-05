@@ -8,11 +8,12 @@ import {
   SET_SEND_WALLET,
   SET_SEND_TYPE,
   FETCH_TRANSACTIONS_ASYNC,
+  SET_TRANSACTION_CURRENCY,
 } from '../actions';
 import { Toast } from 'native-base';
 // import Big from 'big.js';
 import * as Rehive from '../../util/rehive';
-import { getCrypto } from './selectors';
+import { cryptoSelector } from './selectors';
 
 function* fetchAccounts() {
   try {
@@ -79,7 +80,7 @@ function* setActiveCurrency(action) {
 function* checkSendServices(action) {
   try {
     let service = 'rehive';
-    const services = yield select(getCrypto);
+    const services = yield select(cryptoSelector);
     if (services.stellar.includes(action.payload.currency.currency.code)) {
       service = 'stellar';
     } else if (
@@ -109,5 +110,5 @@ export const accountsSagas = all([
   takeEvery(SEND_ASYNC.success, fetchAccounts),
   takeEvery(FETCH_TRANSACTIONS_ASYNC.pending, fetchTransactions),
   takeEvery(SET_ACTIVE_CURRENCY_ASYNC.pending, setActiveCurrency),
-  takeEvery(SET_SEND_WALLET, checkSendServices),
+  takeEvery(SET_TRANSACTION_CURRENCY, checkSendServices),
 ]);

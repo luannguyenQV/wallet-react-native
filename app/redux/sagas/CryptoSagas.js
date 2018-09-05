@@ -1,29 +1,36 @@
 import { all, call, put, takeEvery } from 'redux-saga/effects';
 import { FETCH_CRYPTO_ASYNC, CLAIM_REWARD_ASYNC } from '../actions';
-import { Toast } from 'native-base';
-// import Big from 'big.js';
 
 import * as Rehive from '../../util/rehive';
 
 function* fetchCrypto(action) {
   try {
-    let route = '';
     const type = action.payload;
     let response;
+    let assets = [];
     switch (type) {
       case 'stellar':
-        response = yield call(Rehive.getStellarAssets, 'GET', route);
+        response = yield call(Rehive.getStellarAssets);
+        if (response.ok) {
+          assets = ['XLM'].concat(
+            response.data ? response.data.map(a => a.currency_code) : [],
+          );
+        }
         break;
-      // case 'bitcoin':
-      //   route = bitcoin_service_url + '/company/assets/';
-      //   break;
-      // case 'ethereum':
-      //   route = ethereum_service_url + '/company/assets/';
-      //   break;
+      case 'bitcoin':
+        response = yield call(Rehive.getBitcoinUser);
+        if (response.ok) {
+          assets = ['XBT', 'TXBT'];
+        }
+        break;
+      case 'ethereum':
+        response = yield call(Rehive.getEthereumUser);
+        if (response.ok) {
+          assets = ['ETH'];
+        }
+        break;
     }
-    const assets = response.data
-      ? response.data.map(a => a.currency_code)
-      : null;
+
     yield put({
       type: FETCH_CRYPTO_ASYNC.success,
       payload: { assets, type },

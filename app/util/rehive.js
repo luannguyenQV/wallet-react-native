@@ -193,12 +193,18 @@ export const createTransferStellar = data =>
       .catch(err => reject(err)),
   );
 
+export const getBitcoinUser = () =>
+  callApi('GET', bitcoin_service_url + '/user/');
+
 export const createTransferBitcoin = data =>
   new Promise((resolve, reject) =>
     callApi('POST', bitcoin_service_url + '/transactions/send/', data)
       .then(response => resolve(response))
       .catch(err => reject(err)),
   );
+
+export const getEthereumUser = () =>
+  callApi('GET', ethereum_service_url + '/user/');
 
 export const createTransferEthereum = data =>
   new Promise((resolve, reject) =>

@@ -43,28 +43,20 @@ export const setHomeCurrency = code => {
   };
 };
 
-export const SET_SEND_TYPE = 'set_send_type';
-export const setSendType = type => {
-  if (type) {
-    return {
-      type: SET_SEND_TYPE,
-      payload: type,
-    };
-  } else {
-    // Return fail?
-  }
+export const SET_TRANSACTION_TYPE = 'set_transaction_type';
+export const setTransactionType = type => {
+  return {
+    type: SET_TRANSACTION_TYPE,
+    payload: type,
+  };
 };
 
-export const SET_SEND_WALLET = 'set_send_wallet';
-export const setSendWallet = wallet => {
-  if (wallet) {
-    return {
-      type: SET_SEND_WALLET,
-      payload: wallet,
-    };
-  } else {
-    // Return fail?
-  }
+export const SET_TRANSACTION_CURRENCY = 'set_transaction_currency';
+export const setTransactionCurrency = currency => {
+  return {
+    type: SET_TRANSACTION_CURRENCY,
+    payload: currency,
+  };
 };
 
 export const validateSendAmount = (wallet, amount) => {
@@ -130,10 +122,10 @@ export const setSendState = state => {
   }
 };
 
-export const RESET_SEND = 'reset_send';
-export const resetSend = () => {
+export const RESET_TRANSACTION = 'reset_transaction';
+export const resetTransaction = () => {
   return {
-    type: RESET_SEND,
+    type: RESET_TRANSACTION,
   };
 };
 

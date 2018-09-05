@@ -681,14 +681,14 @@ function* appLoad() {
           },
         });
       }
-      count++;
+      // count++;
     }
-    if (services.bitcoin) {
-      count++;
-    }
-    if (services.ethereum) {
-      count++;
-    }
+    // if (services.bitcoin) {
+    //   count++;
+    // }
+    // if (services.ethereum) {
+    //   count++;
+    // }
 
     yield all([
       // put({ type: POST_LOADING }),
@@ -709,22 +709,24 @@ function* appLoad() {
         ? put({ type: FETCH_CRYPTO_ASYNC.pending, payload: 'stellar' })
         : null,
       services.bitcoin
-        ? put({ type: FETCH_REWARDS_ASYNC.pending, payload: 'bitcoin' })
+        ? put({ type: FETCH_CRYPTO_ASYNC.pending, payload: 'bitcoin' })
         : null,
       services.ethereum
-        ? put({ type: FETCH_REWARDS_ASYNC.pending, payload: 'ethereum' })
+        ? put({ type: FETCH_CRYPTO_ASYNC.pending, payload: 'ethereum' })
         : null,
     ]);
 
     // TODO: add timeout and re=fetch any failed api calls
+    console.log('count', count);
     for (let i = 0; i < count; i++) {
       yield take([
         FETCH_ACCOUNTS_ASYNC.success,
         FETCH_DATA_ASYNC.success,
         FETCH_PHONE_CONTACTS_ASYNC.success,
         FETCH_REWARDS_ASYNC.success,
-        FETCH_CRYPTO_ASYNC.success,
+        // FETCH_CRYPTO_ASYNC.success,
       ]);
+      console.log('i', i);
     }
     yield put({ type: APP_LOAD_FINISH });
     yield call(NavigationService.navigate, 'App');

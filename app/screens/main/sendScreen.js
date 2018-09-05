@@ -9,18 +9,19 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import {
-  setSendWallet,
-  validateSendAmount,
-  validateSendRecipient,
-  validateSendNote,
-  validateSendMemo,
-  setSendState,
+  setTransactionType,
+  setTransactionCurrency,
+  validateTransaction,
   updateAccountField,
   send,
   setContactType,
   updateContactField,
 } from '../../redux/actions';
 import { getContacts } from './../../redux/reducers/ContactsReducer';
+import {
+  walletsSelector,
+  transactionSelector,
+} from './../../redux/reducers/AccountsReducer';
 
 import {
   Input,
@@ -36,28 +37,25 @@ class SendScreen extends Component {
     title: 'Send',
   });
 
-  state = {
-    input: '',
-    balance: 0,
-    ready: false,
-    refreshing: false,
-    reference: '',
-    searchText: '',
-    data: [],
-    contacts: new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2,
-    }),
-
-    showContacts: false,
-    contactButtonText: 'Show contacts',
-
-    pinVisible: false,
-  };
-
   componentDidMount() {
-    if (this.props.sendWallet === null) {
-      this.props.setSendWallet(wallets[activeWalletIndex]);
-    }
+    console.log('params', this.props.navigation.state.params);
+    const {
+      currencyCode,
+      accountRef,
+      amount,
+      note,
+      memo,
+      recipient,
+    } = this.props.navigation.state.params;
+
+    const { wallets, setTransactionType, setTransactionCurrency } = this.props;
+    console.log(wallets);
+    setTransactionType('send');
+
+    // const currency = wallets.c
+    // setTransactionCurrency();
+
+    // set acc + code
   }
 
   goToBarcodeScanner = () => {
@@ -553,60 +551,35 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ accounts, auth, contacts }) => {
-  const { pin, fingerprint, company_config } = auth;
+const mapStateToProps = state => {
+  const { pin, fingerprint, company_config } = state.auth;
   const {
+    contacts,
     contactsError,
     contactsLoading,
     contactsType,
     contactsSearch,
-  } = contacts;
-  const {
-    wallets,
-    sendAmount,
-    sendWallet,
-    sendRecipient,
-    sendNote,
-    sendReference,
-    sendState,
-    tempCurrency,
-    sendError,
-    sendMemo,
-    sending,
-    sendType,
-  } = accounts;
+  } = state.contacts;
   return {
-    wallets,
-    tempCurrency,
-    sendAmount,
-    sendWallet,
-    sendRecipient,
-    sendNote,
-    sendReference,
-    sendState,
-    sendError,
-    sendMemo,
-    sending,
+    wallets: walletsSelector(state),
+    transaction: transactionSelector(state),
     pin,
     fingerprint,
     company_config,
+    contacts,
     contactsError,
     contactsLoading,
     contactsType,
     contactsSearch,
-    sendType,
     contacts: getContacts(contacts),
   };
 };
 
 export default connect(mapStateToProps, {
   updateAccountField,
-  setSendWallet,
-  validateSendAmount,
-  validateSendRecipient,
-  validateSendMemo,
-  validateSendNote,
-  setSendState,
+  setTransactionType,
+  setTransactionCurrency,
+  validateTransaction,
   send,
   setContactType,
   updateContactField,

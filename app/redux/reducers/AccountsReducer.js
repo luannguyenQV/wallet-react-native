@@ -3,9 +3,9 @@ import {
   ACCOUNT_FIELD_CHANGED,
   ACCOUNT_FIELD_ERROR,
   SET_SEND_STATE,
-  SET_SEND_TYPE,
-  SET_SEND_WALLET,
-  RESET_SEND,
+  SET_TRANSACTION_TYPE,
+  SET_TRANSACTION_CURRENCY,
+  RESET_TRANSACTION,
   SEND_ASYNC,
   SET_WITHDRAW_STATE,
   WITHDRAW_ASYNC,
@@ -21,6 +21,8 @@ import {
   SET_HOME_CURRENCY,
 } from '../actions';
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
+import { createSelector } from 'reselect';
+import { accountsSelector, cryptoSelector } from './../sagas/selectors';
 
 const INITIAL_STATE = {
   accounts: [],
@@ -128,56 +130,55 @@ export default (state = INITIAL_STATE, action) => {
         withdrawError: action.payload,
       };
 
-    case SET_SEND_WALLET:
+    case SET_TRANSACTION_TYPE:
       return {
         ...state,
-        sendWallet: action.payload,
-        sendState: 'amount',
-        sendError: '',
-        sendType: '',
+        transactionType: action.payload,
       };
-    case SET_SEND_TYPE:
+    case SET_TRANSACTION_CURRENCY:
       return {
         ...state,
-        sendType: action.payload,
+        transactionWallet: action.payload,
       };
+
     case SET_SEND_STATE:
       return {
         ...state,
-        sendState: action.payload,
-        sendError: '',
+        transactionState: action.payload,
+        transactionError: '',
       };
-    case RESET_SEND:
+    case RESET_TRANSACTION:
       return {
         ...state,
-        sendAmount: '',
-        sendCurrency: '',
-        sendRecipient: '',
-        sendNote: '',
-        sendReference: '',
-        sendState: 'amount',
-        sendError: '',
-        sendMemo: '',
-        sendType: '',
+        transactionAmount: '',
+        transactionCurrency: '',
+        transactionRecipient: '',
+        transactionNote: '',
+        transactionReference: '',
+        transactionState: 'amount',
+        transactionError: '',
+        transactionMemo: '',
+        transactionType: '',
       };
     case SEND_ASYNC.pending:
       return {
         ...state,
-        sending: true,
+        transactionLoading: true,
       };
     case SEND_ASYNC.success:
       return {
         ...state,
-        sendState: 'success',
-        sending: false,
+        transactionState: 'success',
+        transactionLoading: false,
       };
     case SEND_ASYNC.error:
       return {
         ...state,
-        sendState: 'fail',
-        sendError: action.payload,
-        sending: false,
+        transactionState: 'fail',
+        transactionError: action.payload,
+        transactionLoading: false,
       };
+
     case SET_RECEIVE_ADDRESS:
       return {
         ...state,
@@ -207,6 +208,7 @@ export default (state = INITIAL_STATE, action) => {
         withdrawBankAccount: action.payload,
         withdrawError: '',
       };
+
     case RESET_WITHDRAW:
       return {
         ...state,
@@ -260,79 +262,121 @@ export default (state = INITIAL_STATE, action) => {
   }
 };
 
-export function walletsSelector(state) {
-  const {
-    accounts,
-    transactions,
-    loading,
-    transactionsLoading,
-    homeAccount,
-    homeCurrency,
-  } = state.accounts;
+export const walletsSelector = createSelector(
+  [accountsSelector, cryptoSelector],
+  (accountsState, cryptoState) => {
+    const {
+      accounts,
+      transactions,
+      loading,
+      transactionsLoading,
+      homeAccount,
+      homeCurrency,
+    } = accountsState;
 
-  const crypto = state.crypto;
-  // console.log('crypto', crypto);
-  // let index = 0;
-  let activeCurrency = '';
+    console.log('crypto', cryptoState);
+    // let index = 0;
+    let activeCurrency = '';
 
-  let data = accounts.map(account => {
-    account.currencies = account.currencies.map(currency => {
-      currency.transactions =
-        transactions && transactions[account.reference]
-          ? transactions[account.reference][currency.currency.code]
-          : {};
-      if (currency.active) {
-        activeCurrency = currency.currency.code;
-      }
-      // console.log('active' + currency.active);
-      return currency;
+    let data = accounts.map(account => {
+      account.currencies = account.currencies.map(currency => {
+        currency.transactions =
+          transactions && transactions[account.reference]
+            ? transactions[account.reference][currency.currency.code]
+            : {};
+        if (currency.active) {
+          activeCurrency = currency.currency.code;
+        }
+        // console.log('active' + currency.active);
+        return currency;
+      });
+      // console.log('account', account);
+      return account;
     });
-    // console.log('account', account);
-    return account;
-  });
 
-  let currencies = [];
-  let tempCurrencies = [];
-  for (i = 0; i < accounts.length; i++) {
-    tempCurrencies = accounts[i].currencies.map(currency => {
-      currency.account = accounts[i].reference;
-      // console.log('active' + currency.active);
-      return currency;
-    });
-    currencies = currencies.concat(tempCurrencies);
-  }
+    let currencies = [];
+    let tempCurrencies = [];
+    for (i = 0; i < accounts.length; i++) {
+      tempCurrencies = accounts[i].currencies.map(currency => {
+        currency.account = accounts[i].reference;
+        const currencyCode = currency.currency.code;
+        if (cryptoState.stellar.indexOf(currencyCode) !== -1) {
+          currency.crypto = 'stellar';
+        } else if (cryptoState.bitcoin.indexOf(currencyCode) !== -1) {
+          currency.crypto = 'bitcoin';
+        } else if (cryptoState.ethereum.indexOf(currencyCode) !== -1) {
+          currency.crypto = 'ethereum';
+        }
 
-  // let currencies = accounts.map(account => {
-  //   currencies = account.currencies.map(currency => {
-  //     currency.account = account.reference;
-  //     // console.log('active' + currency.active);
-  //     return currency;
-  //   });
-  //   // console.log('account', account);
-  //   return currencies;
-  // });
-  console.log('currencies', currencies);
+        // console.log('active' + currency.active);
+        return currency;
+      });
+      currencies = currencies.concat(tempCurrencies);
+    }
 
-  let wallets = {
-    homeAccount,
-    homeCurrency,
-    activeCurrency,
-    data,
-    transactions,
-    transactionsLoading,
-    showAccountLabel: accounts.length > 1 ? true : false,
-    loading,
-    currencies,
-  };
+    // let currencies = accounts.map(account => {
+    //   currencies = account.currencies.map(currency => {
+    //     currency.account = account.reference;
+    //     // console.log('active' + currency.active);
+    //     return currency;
+    //   });
+    //   // console.log('account', account);
+    //   return currencies;
+    // });
+    console.log('currencies', currencies);
 
-  //       if (currencies[j].active === true) {
-  //         activeWalletIndex = index;
-  //       }
-  // if (wallets.length > 0) {
-  //   const activeItem = wallets[activeWalletIndex];
-  //   wallets[activeWalletIndex] = wallets[0];
-  //   wallets[0] = activeItem;
-  // }
+    let wallets = {
+      homeAccount,
+      homeCurrency,
+      activeCurrency,
+      data,
+      transactions,
+      transactionsLoading,
+      showAccountLabel: accounts.length > 1 ? true : false,
+      loading,
+      currencies,
+    };
 
-  return wallets;
-}
+    //       if (currencies[j].active === true) {
+    //         activeWalletIndex = index;
+    //       }
+    // if (wallets.length > 0) {
+    //   const activeItem = wallets[activeWalletIndex];
+    //   wallets[activeWalletIndex] = wallets[0];
+    //   wallets[0] = activeItem;
+    // }
+
+    return wallets;
+  },
+);
+
+export const transactionSelector = createSelector(
+  [accountsSelector, cryptoSelector],
+  accountsState => {
+    const {
+      transactionType,
+      transactionAccount,
+      transactionCurrency,
+      transactionAmount,
+      transactionAmountError,
+      transactionRecipient,
+      transactionRecipientError,
+      transactionMemo,
+      transactionNote,
+      transactionLoading,
+    } = accountsState;
+
+    return {
+      type: transactionType,
+      account: transactionAccount,
+      currency: transactionCurrency,
+      amount: transactionAmount,
+      amountError: transactionAmountError,
+      recipient: transactionRecipient,
+      recipientError: transactionRecipientError,
+      memo: transactionMemo,
+      note: transactionNote,
+      loading: transactionLoading,
+    };
+  },
+);

@@ -5,9 +5,9 @@
     "description": "A demo company on the Rehive platform"
   },
   "services": {
-    "bitcoin": false,
+    "bitcoin": true,
     "stellar": true,
-    "ethereum": false,
+    "ethereum": true,
     "rewards": true
   },
   "auth": {
