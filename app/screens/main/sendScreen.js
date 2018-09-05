@@ -381,8 +381,7 @@ class SendScreen extends Component {
   }
 
   renderAmount() {
-    const { transaction, updateAccountField } = this.props;
-    console.log('trans', transaction);
+    const { transaction, updateAccountField, validateTransaction } = this.props;
 
     return (
       <Input
@@ -401,7 +400,8 @@ class SendScreen extends Component {
         }
         returnKeyType="next"
         autoFocus
-        // onSubmitEditing={() => validateSendAmount(sendWallet, sendAmount)}
+        // onSubmitEditing={() => validateTransaction()}
+        onBlur={() => validateTransaction()}
       />
     );
   }
@@ -448,8 +448,7 @@ class SendScreen extends Component {
         }}
         multiline
         returnKeyType="next"
-        // autoFocus
-        // onSubmitEditing={() => validateSendNote(sendNote)}
+        onSubmitEditing={() => validateTransaction()}
       />
     );
   }

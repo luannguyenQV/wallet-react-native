@@ -1,4 +1,11 @@
-import { all, call, put, takeEvery, select } from 'redux-saga/effects';
+import {
+  all,
+  call,
+  put,
+  takeEvery,
+  takeLatest,
+  select,
+} from 'redux-saga/effects';
 import {
   FETCH_ACCOUNTS_ASYNC,
   SET_ACTIVE_CURRENCY_ASYNC,
@@ -15,7 +22,6 @@ import { Toast } from 'native-base';
 // import Big from 'big.js';
 import * as Rehive from '../../util/rehive';
 import { cryptoSelector } from './selectors';
-import { takeLatest } from 'redux-saga';
 import { transactionSelector } from '../reducers/AccountsReducer';
 
 function* fetchAccounts() {
@@ -110,17 +116,34 @@ function* checkSendServices(action) {
 
 function* validateTransaction(action) {
   try {
+    console.log('validateTransaction');
     const type = action.payload;
     const transaction = yield select(transactionSelector);
-    console.log('transaction', transaction);
+    console.log('trans', transaction);
+    const currency = transaction.currency;
+    console.log('currency', currency);
+    // switch(type) {
+    //   case 'send':
 
-    // yield put({
-    //   type: SET_SEND_TYPE,
-    //   payload: service,
-    // });
+    // }
+    let transactionAmountError = '';
+    let amount = parseInt(transaction.amount, 10);
+    for (let i = 0; i < currency.currency.divisibility; i++) {
+      amount = amount * 10;
+    }
+    if (!amount || amount === 0) {
+      transactionAmountError = 'Amount must be greater than 0';
+    } else if (amount > currency.available_balance) {
+      transactionAmountError = 'Amount must be less than available balance';
+    }
+
+    yield put({
+      type: VALIDATE_TRANSACTION.success,
+      payload: { transactionAmountError },
+    });
   } catch (error) {
-    console.log('checkSendServices', error);
-    // yield put({ type: FETCH_ACCOUNTS_ASYNC.error, payload: error.message });
+    console.log('validateTransaction', error);
+    yield put({ type: VALIDATE_TRANSACTION.error, payload: error.message });
   }
 }
 
@@ -130,5 +153,5 @@ export const accountsSagas = all([
   takeEvery(FETCH_TRANSACTIONS_ASYNC.pending, fetchTransactions),
   takeEvery(SET_ACTIVE_CURRENCY_ASYNC.pending, setActiveCurrency),
   takeEvery(SET_TRANSACTION_CURRENCY, checkSendServices),
-  takeLatest(VALIDATE_TRANSACTION, validateTransaction),
+  takeLatest(VALIDATE_TRANSACTION.pending, validateTransaction),
 ]);

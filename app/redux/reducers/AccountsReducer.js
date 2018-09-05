@@ -2,7 +2,7 @@ import {
   FETCH_ACCOUNTS_ASYNC,
   ACCOUNT_FIELD_CHANGED,
   ACCOUNT_FIELD_ERROR,
-  SET_SEND_STATE,
+  VALIDATE_TRANSACTION,
   SET_TRANSACTION_TYPE,
   SET_TRANSACTION_CURRENCY,
   RESET_TRANSACTION,
@@ -146,6 +146,24 @@ export default (state = INITIAL_STATE, action) => {
         transactionError: '',
         transactionMemo: '',
         transactionType: '',
+      };
+
+    case VALIDATE_TRANSACTION.pending:
+      return {
+        ...state,
+        transactionLoading: true,
+      };
+    case VALIDATE_TRANSACTION.success:
+      return {
+        ...state,
+        ...action.payload,
+        transactionLoading: false,
+      };
+    case VALIDATE_TRANSACTION.error:
+      return {
+        ...state,
+        transactionError: action.payload,
+        transactionLoading: false,
       };
 
     case SEND_ASYNC.pending:
@@ -313,7 +331,7 @@ export const walletsSelector = createSelector(
     //   // console.log('account', account);
     //   return currencies;
     // });
-    console.log('currencies', currencies);
+    // console.log('currencies', currencies);
 
     let wallets = {
       homeAccount,

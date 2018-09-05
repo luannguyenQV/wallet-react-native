@@ -20,6 +20,7 @@ class _Input extends Component {
     this.setState({
       focused: false,
     });
+    this.props.onBlur();
   }
 
   _OnFocus() {
@@ -160,8 +161,6 @@ class _Input extends Component {
 
     const { borderColor, focused, iconNameVisibility } = this.state;
 
-    console.log(focused, value);
-
     return (
       <View style={this.viewStyleContainer()}>
         <View
@@ -296,6 +295,7 @@ _Input.propTypes = {
   size: PropTypes.string, // Size of button (small / default or '' / large)
   type: PropTypes.string, // Type of button (text, contained, TODO: outlined)
   colors: PropTypes.object, // Button color
+  onBlur: PropTypes.func, // Function to execute on press
 };
 
 _Input.defaultProps = {
@@ -308,6 +308,7 @@ _Input.defaultProps = {
   size: '',
   type: 'contained',
   colors: Colors,
+  onBlur: () => {},
   // backgroundColor: colors.primary,
   // textColor: colors.primaryContrast,
 };

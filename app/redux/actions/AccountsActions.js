@@ -59,10 +59,10 @@ export const setTransactionCurrency = currency => {
   };
 };
 
-export const VALIDATE_TRANSACTION = 'validate_transaction';
+export const VALIDATE_TRANSACTION = createAsyncTypes('validate_transaction');
 export const validateTransaction = type => {
   return {
-    type: VALIDATE_TRANSACTION,
+    type: VALIDATE_TRANSACTION.pending,
     payload: type,
   };
 };
