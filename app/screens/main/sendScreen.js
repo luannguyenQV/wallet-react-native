@@ -37,6 +37,10 @@ class SendScreen extends Component {
     title: 'Send',
   });
 
+  state = {
+    pinVisible: false,
+  };
+
   componentDidMount() {
     console.log('params', this.props.navigation.state.params);
     const {
@@ -100,69 +104,40 @@ class SendScreen extends Component {
   }
 
   renderMainContainer() {
-    const {
-      transaction,
-      sendState,
-      sendWallet,
-      validateSendAmount,
-      validateSendRecipient,
-      validateSendNote,
-      validateSendMemo,
-      sendAmount,
-      contactsSearch,
-      contactsType,
-      sendType,
-      sendMemo,
-      sendNote,
-      sendError,
-      setSendState,
-      updateAccountField,
-      company_config,
-    } = this.props;
+    const { transaction } = this.props;
 
     const { viewStyleInputContainer } = styles;
 
-    let textFooterRight = 'Next';
+    let textFooterRight = '';
     let onPressFooterRight = () => {};
 
-    // switch (sendState) {
-    //   case 'amount':
-    //     onPressFooterRight = () => validateSendAmount(sendWallet, sendAmount);
-    //     break;
-    //   case 'recipient':
-    //     onPressFooterRight = () => {
-    //       updateAccountField({
-    //         prop: 'sendRecipient',
-    //         value: contactsSearch,
-    //       });
-    //       validateSendRecipient(sendType, contactsType, contactsSearch);
-    //     };
-    //     break;
-    //   case 'memo':
-    //     onPressFooterRight = () => validateSendMemo(sendMemo);
-    //     break;
-    //   case 'note':
-    //     onPressFooterRight = () => validateSendNote(sendNote);
-    //     break;
-    //   case 'confirm':
-    //     textFooterRight = 'Confirm';
-    //     onPressFooterRight = () => {
-    //       if (company_config.pin.send) {
-    //         this.setState({ pinVisible: true });
-    //       } else {
-    //         this.performSend();
-    //       }
-    //     };
-    //     break;
-    //   case 'success':
-    //     textFooterRight = 'Close';
-    //     onPressFooterRight = () => this.props.navigation.goBack();
-    //     break;
-    //   case 'fail':
-    //     textFooterRight = 'Close';
-    //     onPressFooterRight = () => this.props.navigation.goBack();
-    //     break;
-    // }
+    switch (sendState) {
+      case 'confirm':
+        textFooterRight = 'Confirm';
+        onPressFooterRight = () => {
+          if (company_config.pin.send) {
+            this.setState({ pinVisible: true });
+          } else {
+            this.performSend();
+          }
+        };
+        break;
+      case 'success':
+        textFooterRight = 'Close';
+        onPressFooterRight = () => this.props.navigation.goBack();
+        break;
+      case 'fail':
+        textFooterRight = 'Close';
+        onPressFooterRight = () => this.props.navigation.goBack();
+        break;
+      default:
+        onPressFooterRight = () => {
+          validateSendAmount(sendWallet, sendAmount);
+        };
+        textFooterRight =
+          transaction.amount && transaction.recipient ? 'Next' : '';
+        break;
+    }
 
     return (
       <FullScreenForm
@@ -477,7 +452,7 @@ class SendScreen extends Component {
           keyboardShouldPersistTaps={'always'}
           style={styles.viewStyleContainer}
           behavior={'padding'}>
-          {/* {this.state.pinVisible ? (
+          {this.state.pinVisible ? (
             <PinModal
               pin={pin}
               fingerprint={fingerprint}
@@ -488,7 +463,7 @@ class SendScreen extends Component {
               }}
               onDismiss={() => this.setState({ pinVisible: false })}
             />
-          ) : null} */}
+          ) : null}
           {this.renderMainContainer()}
         </KeyboardAvoidingView>
       </View>
