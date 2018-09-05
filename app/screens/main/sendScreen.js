@@ -277,6 +277,7 @@ class SendScreen extends Component {
       updateAccountField,
       setContactType,
       updateContactField,
+      validateTransaction,
     } = this.props;
     console.log(transaction);
     let label = 'Please enter ';
@@ -345,18 +346,25 @@ class SendScreen extends Component {
           onChangeText={value =>
             updateContactField({ prop: 'contactsSearch', value })
           }
-          inputError={contacts.error}
+          inputError={transaction.recipientError}
           reference={input => {
             this.input = input;
           }}
           returnKeyType="next"
           // autoFocus
           onSubmitEditing={() => {
-            // updateAccountField({
-            //   prop: 'sendRecipient',
-            //   value: contacts.search,
-            // });
-            // validateSendRecipient(sendType, contacts.type, contacts.search);
+            updateAccountField({
+              prop: 'transactionRecipient',
+              value: contacts.search,
+            });
+            validateTransaction();
+          }}
+          onBlur={() => {
+            updateAccountField({
+              prop: 'transactionRecipient',
+              value: contacts.search,
+            });
+            validateTransaction();
           }}
           popUp
           multiline={contacts.type === 'crypto' ? true : false}
@@ -364,17 +372,13 @@ class SendScreen extends Component {
           loadingData={contacts.loading}
           title="name"
           subtitle="contact"
-          // onPressListItem={item => {
-          //   updateAccountField({
-          //     prop: 'sendRecipient',
-          //     value: item.contact,
-          //   });
-          //   validateSendRecipient(
-          //     transaction.type,
-          //     contacts.type,
-          //     item.contact,
-          //   );
-          // }}
+          onPressListItem={item => {
+            updateAccountField({
+              prop: 'transactionRecipient',
+              value: item.contact,
+            });
+            validateTransaction();
+          }}
         />
       </View>
     );
@@ -399,7 +403,7 @@ class SendScreen extends Component {
           updateAccountField({ prop: 'transactionAmount', value })
         }
         returnKeyType="next"
-        // autoFocus
+        autoFocus
         // onSubmitEditing={() => validateTransaction()}
         onBlur={() => validateTransaction()}
       />

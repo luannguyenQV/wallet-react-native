@@ -4,6 +4,7 @@ import {
   CONTACT_FIELD_CHANGED,
   CONTACT_FIELD_ERROR,
   RESET_SEND,
+  SET_TRANSACTION_TYPE,
 } from '../actions';
 
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
@@ -21,7 +22,7 @@ export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case PERSIST_REHYDRATE:
       return action.payload.auth || INITIAL_STATE;
-    case RESET_SEND:
+    case SET_TRANSACTION_TYPE:
       return {
         ...state,
         contactsSearch: '',

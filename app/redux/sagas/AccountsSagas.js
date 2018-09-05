@@ -25,6 +25,12 @@ import { cryptoSelector } from './selectors';
 import { transactionSelector } from '../reducers/AccountsReducer';
 import { contactsSelector } from '../reducers/ContactsReducer';
 
+import {
+  validateEmail,
+  validateMobile,
+  validateCrypto,
+} from '../../util/validation';
+
 function* fetchAccounts() {
   try {
     const response = yield call(Rehive.getAccounts);
