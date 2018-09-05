@@ -19,7 +19,7 @@ import {
   FETCH_TRANSACTIONS_ASYNC,
   SET_HOME_ACCOUNT,
   SET_HOME_CURRENCY,
-  SET_TRANSACTION_FIELD,
+  SET_TRANSACTION_STATE,
 } from '../actions';
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 import { createSelector } from 'reselect';
@@ -127,6 +127,12 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         transactionType: action.payload,
+        transactionState: '',
+      };
+    case SET_TRANSACTION_STATE:
+      return {
+        ...state,
+        transactionState: action.payload,
       };
     case SET_TRANSACTION_CURRENCY:
       return {
@@ -137,6 +143,7 @@ export default (state = INITIAL_STATE, action) => {
     case RESET_TRANSACTION:
       return {
         ...state,
+        transactionState: '',
         transactionAmount: '',
         transactionCurrency: '',
         transactionRecipient: '',
@@ -362,6 +369,7 @@ export const transactionSelector = createSelector(
   [accountsSelector, cryptoSelector],
   accountsState => {
     const {
+      transactionState,
       transactionType,
       transactionCurrency,
       transactionAmount,
@@ -374,6 +382,7 @@ export const transactionSelector = createSelector(
     } = accountsState;
 
     return {
+      state: transactionState,
       type: transactionType,
       currency: transactionCurrency,
       amount: transactionAmount,

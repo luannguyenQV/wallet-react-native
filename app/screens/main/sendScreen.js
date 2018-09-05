@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import {
   setTransactionType,
   setTransactionCurrency,
+  setTransactionState,
   validateTransaction,
   updateAccountField,
   send,
@@ -82,36 +83,34 @@ class SendScreen extends Component {
   };
 
   performSend() {
-    const {
-      sendWallet,
-      sendAmount,
-      sendRecipient,
-      sendNote,
-      sendType,
-      sendMemo,
-    } = this.props;
+    const { transaction } = this.props;
 
     let data = {
-      type: sendType,
-      amount: sendAmount,
-      recipient: sendRecipient,
-      note: sendNote,
-      memo: sendMemo,
-      currency: sendWallet.currency.currency,
-      reference: sendWallet.account_reference,
+      type: transaction.type,
+      amount: transaction.amount,
+      recipient: transaction.recipient,
+      note: transaction.note,
+      memo: transaction.memo,
+      currency: transaction.currency.currency.code,
+      reference: transaction.currency.account,
     };
     this.props.send(data);
   }
 
   renderMainContainer() {
-    const { transaction } = this.props;
-
+    const {
+      transaction,
+      setTransactionState,
+      validateTransaction,
+      company_config,
+    } = this.props;
+    console.log(transaction);
     const { viewStyleInputContainer } = styles;
 
     let textFooterRight = '';
     let onPressFooterRight = () => {};
 
-    switch (sendState) {
+    switch (transaction.state) {
       case 'confirm':
         textFooterRight = 'Confirm';
         onPressFooterRight = () => {
@@ -132,7 +131,8 @@ class SendScreen extends Component {
         break;
       default:
         onPressFooterRight = () => {
-          validateSendAmount(sendWallet, sendAmount);
+          validateTransaction();
+          setTransactionState('confirm');
         };
         textFooterRight =
           transaction.amount && transaction.recipient ? 'Next' : '';
@@ -145,28 +145,26 @@ class SendScreen extends Component {
         onPressFooterRight={onPressFooterRight}
         loading={transaction.loading}
         color={'focus'}>
-        <View style={viewStyleInputContainer}>
-          {this.renderAmount()}
-          {this.renderRecipient()}
-          {transaction.currency.crypto === 'stellar' ? this.renderMemo() : null}
-          {this.renderNote()}
-        </View>
+        {transaction.state ? (
+          this.renderTop()
+        ) : (
+          <View style={viewStyleInputContainer}>
+            {this.renderAmount()}
+            {this.renderRecipient()}
+            {transaction.currency && transaction.currency.crypto === 'stellar'
+              ? this.renderMemo()
+              : null}
+            {this.renderNote()}
+          </View>
+        )}
       </FullScreenForm>
     );
   }
 
   renderTop() {
-    const {
-      sendState,
-      sendWallet,
-      sendAmount,
-      sendRecipient,
-      sendMemo,
-      sendNote,
-      sendError,
-      setSendState,
-    } = this.props;
-    const currency = sendWallet.currency.currency;
+    const { transaction } = this.props;
+
+    const sendState = transaction.state;
 
     const {
       viewStyleTopContainer,
@@ -174,6 +172,7 @@ class SendScreen extends Component {
       viewStyleError,
       textStyleError,
     } = styles;
+
     return (
       <View style={viewStyleTopContainer}>
         {sendState === 'success' ? (
@@ -186,53 +185,32 @@ class SendScreen extends Component {
             <Text style={textStyleError}>Please confirm details</Text>
           </View>
         ) : null}
-        {sendState === 'note' ||
-        sendState === 'recipient' ||
-        sendState === 'memo' ||
-        sendState === 'confirm' ||
-        sendState === 'success' ? (
+        {sendState === 'confirm' || sendState === 'success' ? (
           <TouchableHighlight
-            onPress={() => setSendState('amount')}
+            onPress={() =>
+              sendState === 'confirm' ? setTransactionState('') : {}
+            }
             underlayColor="lightgrey"
             style={buttonStyleOutput}>
-            <Output
-              label="Amount"
-              value={
-                currency.symbol +
-                ' ' +
-                parseFloat(sendAmount).toFixed(currency.divisibility)
-              }
-            />
-          </TouchableHighlight>
-        ) : null}
-        {sendState === 'note' ||
-        sendState === 'memo' ||
-        sendState === 'confirm' ||
-        sendState === 'success' ? (
-          <TouchableHighlight
-            onPress={() => setSendState('recipient')}
-            underlayColor="lightgrey"
-            style={buttonStyleOutput}>
-            <Output label="Recipient" value={sendRecipient} />
-          </TouchableHighlight>
-        ) : null}
-        {(sendState === 'note' ||
-          sendState === 'confirm' ||
-          sendState === 'success') &&
-        sendMemo ? (
-          <TouchableHighlight
-            onPress={() => setSendState('memo')}
-            underlayColor="lightgrey"
-            style={buttonStyleOutput}>
-            <Output label="Memo" value={sendMemo} />
-          </TouchableHighlight>
-        ) : null}
-        {(sendState === 'confirm' || sendState === 'success') && sendNote ? (
-          <TouchableHighlight
-            onPress={() => setSendState('note')}
-            underlayColor="lightgrey"
-            style={buttonStyleOutput}>
-            <Output label="Note" value={sendNote} />
+            <View>
+              <Output
+                label="Amount"
+                value={
+                  transaction.currency.currency.symbol +
+                  ' ' +
+                  parseFloat(transaction.amount).toFixed(
+                    transaction.currency.currency.divisibility,
+                  )
+                }
+              />
+              <Output label="Recipient" value={transaction.recipient} />
+              {transaction.memo ? (
+                <Output label="Memo" value={transaction.memo} />
+              ) : null}
+              {transaction.note ? (
+                <Output label="Note" value={transaction.note} />
+              ) : null}
+            </View>
           </TouchableHighlight>
         ) : null}
         {sendState === 'fail' ? (
@@ -520,4 +498,5 @@ export default connect(mapStateToProps, {
   send,
   setContactType,
   updateContactField,
+  setTransactionState,
 })(SendScreen);
