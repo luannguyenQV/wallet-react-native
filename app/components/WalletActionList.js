@@ -6,19 +6,19 @@ import WalletAction from './WalletAction';
 
 class WalletActionList extends Component {
   onButtonPress(type) {
-    const { navigation, currencyCode, accountRef } = this.props;
+    const { navigation, currency, account } = this.props;
 
     switch (type) {
       case 'send': {
-        navigation.navigate('Send', { accountRef, currencyCode });
+        navigation.navigate('Send', { account, currency });
         break;
       }
       case 'receive': {
-        navigation.navigate('Receive', { currencyCode });
+        navigation.navigate('Receive', { currency });
         break;
       }
       case 'withdraw': {
-        navigation.navigate('Withdraw', { accountRef, currencyCode });
+        navigation.navigate('Withdraw', { account, currency });
         break;
       }
       case 'deposit': {

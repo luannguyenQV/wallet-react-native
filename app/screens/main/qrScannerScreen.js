@@ -45,6 +45,7 @@ class QRCodeScannerScreen extends Component {
       recipient,
       note,
       type,
+      memo,
     } = this.state.data;
     this.props.resetSend();
     if (account) {
@@ -71,7 +72,14 @@ class QRCodeScannerScreen extends Component {
     this.props.updateContactField({ prop: 'contactsSearch', value: recipient });
     this.props.updateAccountField({ prop: 'sendNote', value: note });
     this.props.navigation.goBack();
-    this.props.navigation.navigate('Send');
+    this.props.navigation.navigate('Send', {
+      account,
+      currency,
+      amount,
+      note,
+      memo,
+      recipient,
+    });
   };
 
   _handleBarCodeRead = raw => {

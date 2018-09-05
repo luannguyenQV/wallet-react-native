@@ -7,7 +7,10 @@ import {
   setHomeAccount,
   setHomeCurrency,
 } from './../../redux/actions';
-import { walletsSelector } from './../../redux/reducers/AccountsReducer';
+import {
+  walletsSelector,
+  homeSelector,
+} from './../../redux/reducers/AccountsReducer';
 import Swiper from 'react-native-swiper';
 
 import Header from './../../components/header';
@@ -30,13 +33,13 @@ class HomeScreen extends Component {
   };
 
   render() {
-    const { wallets, setHomeAccount, setHomeCurrency } = this.props;
+    const { wallets, home, setHomeAccount, setHomeCurrency } = this.props;
     return (
       <View style={styles.container}>
         <Header navigation={this.props.navigation} drawer right noShadow />
         <WalletBalanceList
           currencies={wallets.currencies}
-          activeCurrency={wallets.activeCurrency}
+          activeCurrency={home.currency}
           setHomeAccount={setHomeAccount}
           setHomeCurrency={setHomeCurrency}
         />
@@ -47,8 +50,8 @@ class HomeScreen extends Component {
             { id: 2, type: 'more' },
           ]}
           navigation={this.props.navigation}
-          accountRef={wallets.activeAccount}
-          currencyCode={wallets.activeCurrency}
+          account={home.account}
+          currency={home.currency}
         />
         <Swiper renderPagination={renderPagination} loop={false}>
           <HomeCards navigation={this.props.navigation} />
@@ -56,8 +59,8 @@ class HomeScreen extends Component {
             transactions={wallets.transactions}
             // fetchAccounts={fetchAccounts}
             loading={wallets.transactionsLoading}
-            currencyCode={wallets.homeCurrency}
-            accountRef={wallets.homeAccount}
+            currencyCode={home.currency}
+            accountRef={home.account}
           />
         </Swiper>
       </View>
@@ -72,15 +75,9 @@ const styles = {
 };
 
 const mapStateToProps = state => {
-  const { token, company_config } = state.auth;
-  const { activeWalletIndex, accounts, loadingAccounts } = state.accounts;
   return {
-    token,
-    company_config,
     wallets: walletsSelector(state),
-    accounts,
-    activeWalletIndex,
-    loadingAccounts,
+    home: homeSelector(state),
   };
 };
 

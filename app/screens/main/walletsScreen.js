@@ -52,12 +52,9 @@ class WalletsScreen extends Component {
   };
 
   send = item => {
-    // this.props.resetSend();
-    // this.props.setSendWallet(item);
-
     this.props.navigation.navigate('Send', {
-      accountRef: item.account,
-      currencyCode: item.currency.code,
+      account: item.account,
+      currency: item.currency.code,
     });
   };
 

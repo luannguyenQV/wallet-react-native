@@ -283,8 +283,6 @@ export const walletsSelector = createSelector(
       transactions,
       loading,
       transactionsLoading,
-      homeAccount,
-      homeCurrency,
     } = accountsState;
 
     // console.log('crypto', cryptoState);
@@ -341,8 +339,6 @@ export const walletsSelector = createSelector(
     // console.log('currencies', currencies);
 
     let wallets = {
-      homeAccount,
-      homeCurrency,
       activeCurrency,
       data,
       transactions,
@@ -392,6 +388,18 @@ export const transactionSelector = createSelector(
       memo: transactionMemo,
       note: transactionNote,
       loading: transactionLoading,
+    };
+  },
+);
+
+export const homeSelector = createSelector(
+  [accountsSelector],
+  accountsState => {
+    const { homeAccount, homeCurrency } = accountsState;
+
+    return {
+      account: homeAccount,
+      currency: homeCurrency,
     };
   },
 );

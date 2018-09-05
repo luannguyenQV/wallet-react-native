@@ -45,8 +45,8 @@ class SendScreen extends Component {
   componentDidMount() {
     console.log('params', this.props.navigation.state.params);
     const {
-      currencyCode,
-      accountRef,
+      account,
+      currency,
       amount,
       note,
       memo,
@@ -60,7 +60,7 @@ class SendScreen extends Component {
       validateTransaction,
     } = this.props;
     const currencies = wallets.currencies.filter(
-      item => item.currency.code === currencyCode,
+      item => item.currency.code === currency,
     ); // TODO: Add accountRef
     console.log('currencies', currencies);
     setTransactionType('send');
