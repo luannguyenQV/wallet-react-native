@@ -399,7 +399,7 @@ class SendScreen extends Component {
           updateAccountField({ prop: 'transactionAmount', value })
         }
         returnKeyType="next"
-        autoFocus
+        // autoFocus
         // onSubmitEditing={() => validateTransaction()}
         onBlur={() => validateTransaction()}
       />

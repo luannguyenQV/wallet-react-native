@@ -52,26 +52,29 @@ class WalletsScreen extends Component {
   };
 
   send = item => {
-    this.props.resetSend();
-    this.props.setSendWallet(item);
-    this.props.navigation.navigate('Send');
+    // this.props.resetSend();
+    // this.props.setSendWallet(item);
+
+    this.props.navigation.navigate('Send', {
+      accountRef: item.account,
+      currencyCode: item.currency.code,
+    });
   };
 
   renderContent(item) {
     const balance =
-      item.currency.currency.symbol +
+      item.currency.symbol +
       ' ' +
-      performDivisibility(
-        item.currency.balance,
-        item.currency.currency.divisibility,
-      ).toFixed(item.currency.currency.divisibility);
+      performDivisibility(item.balance, item.currency.divisibility).toFixed(
+        item.currency.divisibility,
+      );
     const available =
-      item.currency.currency.symbol +
+      item.currency.symbol +
       ' ' +
       performDivisibility(
-        item.currency.available_balance,
-        item.currency.currency.divisibility,
-      ).toFixed(item.currency.currency.divisibility);
+        item.available_balance,
+        item.currency.divisibility,
+      ).toFixed(item.currency.divisibility);
 
     return (
       <MyView p={0.5}>
@@ -98,9 +101,8 @@ class WalletsScreen extends Component {
           buttons={buttons}
           navigation={navigation}
           showClose
-          colors={this.props.company_config.colors}
         />
-        <TransactionList currencyCode={item.currency.currency.code} />
+        <TransactionList currencyCode={item.currency.code} />
       </View>
     );
   }
@@ -114,15 +116,16 @@ class WalletsScreen extends Component {
       showModal,
       tempWallet,
     } = this.props;
+    console.log('wallets', wallets);
     return (
       <MyView f>
         <Header navigation={this.props.navigation} drawer title="Wallets" />
         <CardList
           type="wallet"
           navigation={this.props.navigation}
-          data={wallets}
+          data={wallets.currencies}
           tempItem={tempWallet}
-          loadingData={loading_accounts}
+          loadingData={wallets.loading}
           identifier="reference"
           onRefresh={fetchAccounts}
           activeItem={item => showModal('wallet', item, 'active')}
@@ -131,22 +134,22 @@ class WalletsScreen extends Component {
           renderDetail={(item, navigation) =>
             this.renderDetail(item, navigation)
           }
-          itemActive={item => (item ? item.currency.active : false)}
-          textTitleLeft={item => (item ? item.currency.currency.code : '')}
+          itemActive={item => (item ? item.active : false)}
+          textTitleLeft={item => (item ? item.currency.code : '')}
           // onPressTitleLeft={item => this.showModal(item)}
-          title={item => (item ? item.currency.currency.description : '')}
+          title={item => (item ? item.currency.description : '')}
           subtitle={item => (item ? standardizeString(item.account_name) : '')}
           onPressTitle={item => viewWallet(item)}
           onPressContent={item => viewWallet(item)}
           emptyListMessage="No wallets added yet"
           titleStyle="secondary"
-          keyExtractor={item => item.index.toString()}
+          keyExtractor={item => item.account + item.currency.code}
           textActionOne="SEND"
           onPressActionOne={item => this.send(item)}
           textActionTwo="RECEIVE"
           onPressActionTwo={item =>
             this.props.navigation.navigate('Receive', {
-              currencyCode: item.currency.currency.code,
+              currencyCode: item.currency.code,
             })
           }
           canActive
@@ -156,17 +159,15 @@ class WalletsScreen extends Component {
   }
 }
 
-const mapStateToProps = ({ accounts, user, auth }) => {
-  const { loading_accounts, tempWallet, showWallet } = accounts;
-  const { company_bank_account } = user;
-  const { company_config } = auth;
+const mapStateToProps = state => {
+  const { loading_accounts, tempWallet, showWallet } = state.accounts;
+  const { company_bank_account } = state.user;
   return {
     wallets: walletsSelector(state),
     loading_accounts,
     tempWallet,
     showWallet,
     company_bank_account,
-    company_config,
   };
 };
 

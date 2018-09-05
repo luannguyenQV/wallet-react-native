@@ -23,6 +23,7 @@ import { Toast } from 'native-base';
 import * as Rehive from '../../util/rehive';
 import { cryptoSelector } from './selectors';
 import { transactionSelector } from '../reducers/AccountsReducer';
+import { contactsSelector } from '../reducers/ContactsReducer';
 
 function* fetchAccounts() {
   try {
@@ -119,27 +120,42 @@ function* validateTransaction(action) {
     console.log('validateTransaction');
     const type = action.payload;
     const transaction = yield select(transactionSelector);
-    console.log('trans', transaction);
-    const currency = transaction.currency;
+    const contacts = yield select(contactsSelector);
+    console.log('contacts', contacts);
     console.log('currency', currency);
     // switch(type) {
     //   case 'send':
 
     // }
+    // Amount validation
+    const currency = transaction.currency;
     let transactionAmountError = '';
     let amount = parseInt(transaction.amount, 10);
     for (let i = 0; i < currency.currency.divisibility; i++) {
       amount = amount * 10;
     }
-    if (!amount || amount === 0) {
-      transactionAmountError = 'Amount must be greater than 0';
-    } else if (amount > currency.available_balance) {
-      transactionAmountError = 'Amount must be less than available balance';
+    if (amount) {
+      if (amount > currency.available_balance) {
+        transactionAmountError = 'Amount must be less than available balance';
+      }
+    }
+
+    // Recipient validation
+    const recipient = transaction.recipient;
+    let transactionRecipientError = '';
+    if (recipient) {
+      if (contacts.type == 'email') {
+        transactionRecipientError = validateEmail(recipient);
+      } else if (contacts.type == 'mobile') {
+        transactionRecipientError = validateMobile(recipient);
+      } else if (contacts.type == 'crypto') {
+        transactionRecipientError = validateCrypto(recipient, sendType);
+      }
     }
 
     yield put({
       type: VALIDATE_TRANSACTION.success,
-      payload: { transactionAmountError },
+      payload: { transactionAmountError, transactionRecipientError },
     });
   } catch (error) {
     console.log('validateTransaction', error);
