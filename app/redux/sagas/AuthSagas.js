@@ -717,7 +717,6 @@ function* appLoad() {
     ]);
 
     // TODO: add timeout and re=fetch any failed api calls
-    console.log('count', count);
     for (let i = 0; i < count; i++) {
       yield take([
         FETCH_ACCOUNTS_ASYNC.success,
@@ -726,7 +725,6 @@ function* appLoad() {
         FETCH_REWARDS_ASYNC.success,
         // FETCH_CRYPTO_ASYNC.success,
       ]);
-      console.log('i', i);
     }
     yield put({ type: APP_LOAD_FINISH });
     yield call(NavigationService.navigate, 'App');

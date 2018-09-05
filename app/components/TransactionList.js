@@ -32,7 +32,6 @@ class TransactionList extends Component {
       account: accountRef,
       currency: currencyCode,
     };
-    console.log('filters', filters);
     this.props.fetchTransactions(filters);
   }
 

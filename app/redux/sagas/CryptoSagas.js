@@ -11,7 +11,7 @@ function* fetchCrypto(action) {
     switch (type) {
       case 'stellar':
         response = yield call(Rehive.getStellarAssets);
-        if (response.ok) {
+        if (response.status === 'success') {
           assets = ['XLM'].concat(
             response.data ? response.data.map(a => a.currency_code) : [],
           );
@@ -19,13 +19,13 @@ function* fetchCrypto(action) {
         break;
       case 'bitcoin':
         response = yield call(Rehive.getBitcoinUser);
-        if (response.ok) {
+        if (response.status === 'success') {
           assets = ['XBT', 'TXBT'];
         }
         break;
       case 'ethereum':
         response = yield call(Rehive.getEthereumUser);
-        if (response.ok) {
+        if (response.status === 'success') {
           assets = ['ETH'];
         }
         break;

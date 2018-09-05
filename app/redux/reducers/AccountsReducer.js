@@ -274,7 +274,7 @@ export const walletsSelector = createSelector(
       homeCurrency,
     } = accountsState;
 
-    console.log('crypto', cryptoState);
+    // console.log('crypto', cryptoState);
     // let index = 0;
     let activeCurrency = '';
 
@@ -306,6 +306,8 @@ export const walletsSelector = createSelector(
           currency.crypto = 'bitcoin';
         } else if (cryptoState.ethereum.indexOf(currencyCode) !== -1) {
           currency.crypto = 'ethereum';
+        } else {
+          currency.crypto = '';
         }
 
         // console.log('active' + currency.active);
