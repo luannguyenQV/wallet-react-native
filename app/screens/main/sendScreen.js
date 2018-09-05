@@ -348,7 +348,7 @@ class SendScreen extends Component {
           }
           inputError={transaction.recipientError}
           reference={input => {
-            this.input = input;
+            this.recipientInput = input;
           }}
           returnKeyType="next"
           // autoFocus
@@ -357,6 +357,9 @@ class SendScreen extends Component {
               prop: 'transactionRecipient',
               value: contacts.search,
             });
+            transaction.currency.crypto === 'stellar'
+              ? this.memoInput.focus()
+              : this.noteInput.focus();
             validateTransaction();
           }}
           onBlur={() => {
@@ -377,6 +380,10 @@ class SendScreen extends Component {
               prop: 'transactionRecipient',
               value: item.contact,
             });
+            updateContactField({ prop: 'contactsSearch', value: item.contact });
+            transaction.currency.crypto === 'stellar'
+              ? this.memoInput.focus()
+              : this.noteInput.focus();
             validateTransaction();
           }}
         />
@@ -395,7 +402,7 @@ class SendScreen extends Component {
         // prefix={transaction.currency.currency.symbol}
         inputError={transaction.amountError}
         reference={input => {
-          this.input = input;
+          this.amountInput = input;
         }}
         keyboardType={Platform.OS === 'ios' ? 'decimal-pad' : 'phone-pad'}
         value={transaction.amount}
@@ -404,7 +411,10 @@ class SendScreen extends Component {
         }
         returnKeyType="next"
         autoFocus
-        // onSubmitEditing={() => validateTransaction()}
+        onSubmitEditing={() => {
+          // validateTransaction();
+          this.recipientInput.focus();
+        }}
         onBlur={() => validateTransaction()}
       />
     );
@@ -424,12 +434,12 @@ class SendScreen extends Component {
         }
         // inputError={sendError}
         reference={input => {
-          this.input = input;
+          this.memoInput = input;
         }}
         multiline
         returnKeyType="next"
         // autoFocus
-        // onSubmitEditing={() => validateSendMemo(sendMemo)}
+        onSubmitEditing={() => this.noteInput.focus()}
       />
     );
   }
@@ -448,7 +458,7 @@ class SendScreen extends Component {
         }
         // inputError={sendError}
         reference={input => {
-          this.input = input;
+          this.noteInput = input;
         }}
         multiline
         returnKeyType="next"

@@ -1,5 +1,5 @@
 import { StrKey } from './strkey';
-// import { PhoneNumberUtil } from 'google-libphonenumber';
+import { PhoneNumberUtil } from 'google-libphonenumber';
 // import WAValidator from 'wallet-address-validator';
 global.Buffer = require('buffer').Buffer;
 
@@ -28,6 +28,17 @@ export const validatePassword = password => {
   return '';
 };
 
+export const validateMobile = mobile => {
+  const phoneUtil = PhoneNumberUtil.getInstance();
+  // if number does not contain +27 TODO:
+  const countryCode = mobile.includes('+') ? '' : 'US';
+  const number = phoneUtil.parse(mobile, countryCode);
+  let resp = phoneUtil.isPossibleNumber(number);
+  if (!resp) {
+    return 'Please enter a valid mobile number';
+  }
+  return '';
+};
 // export const validateMobile = mobile =>
 //   new Promise((resolve, reject) => {
 //     console.log('mobile', mobile);
