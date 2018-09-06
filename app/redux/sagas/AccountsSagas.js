@@ -172,27 +172,24 @@ function* validateTransaction(action) {
 function* send(action) {
   console.log('send', action);
   try {
-    const sendData = action.payload;
-    let amount = new Big(sendData.amount);
-    for (let i = 0; i < sendData.currency.divisibility; i++) {
+    const transaction = action.payload;
+    let amount = new Big(transaction.amount);
+    for (let i = 0; i < transaction.currency.currency.divisibility; i++) {
       amount = amount.times(10);
     }
     let data = {
       amount: parseInt(amount, 0),
-      recipient: sendData.recipient,
-      note: sendData.note,
-      currency: sendData.currency,
-      debit_account: sendData.reference,
+      recipient: transaction.recipient,
+      note: transaction.note,
+      currency: transaction.currency.currency.code,
+      debit_account: transaction.currency.account,
     };
     let response = '';
     console.log('data', data);
-    switch (sendData.service) {
-      case 'rehive':
-        response = yield call(Rehive.createTransfer, data);
-        break;
+    switch (transaction.currency.crypto) {
       case 'stellar':
         data['to_reference'] = data.recipient;
-        data['memo'] = sendData.memo;
+        data['memo'] = transaction.memo;
         delete data.debit_account;
         delete data.recipient;
         response = yield call(Rehive.createTransferStellar, data);
@@ -202,6 +199,9 @@ function* send(action) {
         break;
       case 'ethereum':
         response = yield call(Rehive.createTransferEthereum, data);
+        break;
+      default:
+        response = yield call(Rehive.createTransfer, data);
         break;
     }
     console.log('response', response);

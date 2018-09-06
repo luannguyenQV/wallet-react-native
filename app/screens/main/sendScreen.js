@@ -90,11 +90,7 @@ class SendScreen extends Component {
       recipient: transaction.recipient,
       note: transaction.note,
       memo: transaction.memo,
-      currency: transaction.currency.currency.code,
-      reference: transaction.currency.account,
-      service: transaction.currency.crypto
-        ? transaction.currency.crypto
-        : 'rehive',
+      currency: transaction.currency,
     };
     this.props.send(data);
   }
@@ -245,7 +241,7 @@ class SendScreen extends Component {
         placeholder = 'e.g. user@rehive.com';
         break;
       case 'crypto':
-        label = label + sendType + ' address';
+        label = label + transaction.currency.crypto + ' address';
         placeholder = 'GAQGVZYIZ2DX56EB6TZYGBD...';
         break;
     }
