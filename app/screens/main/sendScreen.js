@@ -362,6 +362,9 @@ class SendScreen extends Component {
           this.recipientInput.focus();
         }}
         onBlur={() => validateTransaction()}
+        type={'money'}
+        precision={transaction.currency.currency.divisibility}
+        unit={transaction.currency.currency.symbol + ' '}
       />
     );
   }

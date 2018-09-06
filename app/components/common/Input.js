@@ -6,6 +6,7 @@ import { MaterialIcons as Icon } from '@expo/vector-icons';
 import CountryPicker from 'react-native-country-picker-modal';
 import { ListItem, ListSeparator } from './ListItem';
 import context from './context';
+import { TextInputMask } from 'react-native-masked-text';
 
 class _Input extends Component {
   state = {
@@ -62,6 +63,8 @@ class _Input extends Component {
       autoCorrect,
       multiline,
       colors,
+      precision,
+      unit,
     } = this.props;
 
     const {
@@ -72,6 +75,35 @@ class _Input extends Component {
     } = styles;
 
     const { focused, secureTextEntry, cca2 } = this.state;
+
+    // if (type === 'money') {
+    //   return (
+    //     <TextInputMask
+    //       type={'money'}
+    //       options={{
+    //         precision: precision,
+    //         unit: unit,
+    //       }}
+    //       style={textStyleInput}
+    //       onFocus={() => this._OnFocus()}
+    //       onBlur={() => this._OnBlur()}
+    //       underlineColorAndroid="transparent"
+    //       autoCapitalize={autoCapitalize ? autoCapitalize : 'none'}
+    //       autoCorrect={autoCorrect ? autoCorrect : false}
+    //       placeholder={focused ? placeholder : label}
+    //       value={value ? value : '0'}
+    //       onChangeText={onChangeText}
+    //       refInput={reference}
+    //       selectTextOnFocus
+    //       secureTextEntry={secureTextEntry}
+    //       keyboardType={keyboardType}
+    //       returnKeyType={returnKeyType}
+    //       onSubmitEditing={onSubmitEditing}
+    //       autoFocus={autoFocus}
+    //       blurOnSubmit={false}
+    //     />
+    //   );
+    // }
 
     return (
       <View
