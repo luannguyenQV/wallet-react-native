@@ -375,6 +375,7 @@ export const transactionSelector = createSelector(
       transactionMemo,
       transactionNote,
       transactionLoading,
+      transactionError,
     } = accountsState;
 
     return {
@@ -388,6 +389,7 @@ export const transactionSelector = createSelector(
       memo: transactionMemo,
       note: transactionNote,
       loading: transactionLoading,
+      error: transactionError,
     };
   },
 );

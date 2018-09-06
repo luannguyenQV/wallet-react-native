@@ -36,41 +36,9 @@ class QRCodeScannerScreen extends Component {
     this.setState({ hasCameraPermission: status === 'granted' });
   }
 
-  accept = () => {
-    const { wallets } = this.props;
-    const {
-      account,
-      currency,
-      amount,
-      recipient,
-      note,
-      type,
-      memo,
-    } = this.state.data;
-    this.props.resetSend();
-    if (account) {
-      // set account?
-    }
-    if (currency) {
-      this.props.setSendWallet(wallets[0]);
-      this.props.setContactType('crypto');
-      // wallets.filter
-      // set account?
-      // search for currency,
-    } else {
-      // default use
-      // this.props.setSendWallet(
-      //   this.props.wallets[this.props.activeWalletIndex],
-      // );
-    }
-    if (type != 'rehive') {
-      this.props.setContactType('crypto');
-    }
+  accept = data => {
+    const { account, currency, amount, recipient, note, type, memo } = data;
 
-    this.props.setSendType(type);
-    this.props.updateAccountField({ prop: 'sendAmount', value: amount });
-    this.props.updateContactField({ prop: 'contactsSearch', value: recipient });
-    this.props.updateAccountField({ prop: 'sendNote', value: note });
     this.props.navigation.goBack();
     this.props.navigation.navigate('Send', {
       account,
@@ -84,7 +52,8 @@ class QRCodeScannerScreen extends Component {
 
   _handleBarCodeRead = raw => {
     const data = decodeQR(raw.data);
-    this.setState({ camera: false, data });
+    this.accept(data);
+    // this.setState({ camera: false, data });
   };
 
   render() {

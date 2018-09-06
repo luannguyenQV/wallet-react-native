@@ -43,7 +43,7 @@ class SendScreen extends Component {
   };
 
   componentDidMount() {
-    console.log('params', this.props.navigation.state.params);
+    // console.log('params', this.props.navigation.state.params);
     const {
       account,
       currency,
@@ -59,10 +59,11 @@ class SendScreen extends Component {
       updateAccountField,
       validateTransaction,
     } = this.props;
+
     const currencies = wallets.currencies.filter(
       item => item.currency.code === currency,
-    ); // TODO: Add accountRef
-    console.log('currencies', currencies);
+    ); // TODO: Add accountRef && if no currency use active
+    // console.log('currencies', currencies);
     setTransactionType('send');
     updateAccountField({ prop: 'transactionCurrency', value: currencies[0] });
     updateAccountField({ prop: 'transactionRecipient', value: recipient });
@@ -71,11 +72,9 @@ class SendScreen extends Component {
     updateAccountField({ prop: 'transactionNote', value: note });
 
     validateTransaction('send');
-
-    // const currency = wallets.c
-    // setTransactionCurrency();
-
-    // set acc + code
+    if (currencies[0] && recipient && amount) {
+      setTransactionState('confirm');
+    }
   }
 
   goToBarcodeScanner = () => {
@@ -93,6 +92,9 @@ class SendScreen extends Component {
       memo: transaction.memo,
       currency: transaction.currency.currency.code,
       reference: transaction.currency.account,
+      service: transaction.currency.crypto
+        ? transaction.currency.crypto
+        : 'rehive',
     };
     this.props.send(data);
   }
@@ -104,7 +106,7 @@ class SendScreen extends Component {
       validateTransaction,
       company_config,
     } = this.props;
-    console.log(transaction);
+    // console.log(transaction);
     const { viewStyleInputContainer } = styles;
 
     let textFooterRight = '';
@@ -164,8 +166,6 @@ class SendScreen extends Component {
   renderTop() {
     const { transaction } = this.props;
 
-    const sendState = transaction.state;
-
     const {
       viewStyleTopContainer,
       buttonStyleOutput,
@@ -175,20 +175,20 @@ class SendScreen extends Component {
 
     return (
       <View style={viewStyleTopContainer}>
-        {sendState === 'success' ? (
+        {transaction.state === 'success' ? (
           <View style={viewStyleError}>
             <Text style={textStyleError}>Send successful!</Text>
           </View>
         ) : null}
-        {sendState === 'confirm' ? (
+        {transaction.state === 'confirm' ? (
           <View style={viewStyleError}>
             <Text style={textStyleError}>Please confirm details</Text>
           </View>
         ) : null}
-        {sendState === 'confirm' || sendState === 'success' ? (
+        {transaction.state === 'confirm' || transaction.state === 'success' ? (
           <TouchableHighlight
             onPress={() =>
-              sendState === 'confirm' ? setTransactionState('') : {}
+              transaction.state === 'confirm' ? setTransactionState('') : {}
             }
             underlayColor="lightgrey"
             style={buttonStyleOutput}>
@@ -213,10 +213,10 @@ class SendScreen extends Component {
             </View>
           </TouchableHighlight>
         ) : null}
-        {sendState === 'fail' ? (
+        {transaction.state === 'fail' ? (
           <View style={viewStyleError}>
             <Text style={textStyleError}>Send failed</Text>
-            <Text style={textStyleError}>{sendError}</Text>
+            <Text style={textStyleError}>{transaction.state}</Text>
           </View>
         ) : null}
       </View>
@@ -232,7 +232,7 @@ class SendScreen extends Component {
       updateContactField,
       validateTransaction,
     } = this.props;
-    console.log(transaction);
+    // console.log(transaction);
     let label = 'Please enter ';
     let placeholder = '';
     switch (contacts.type) {
@@ -346,12 +346,17 @@ class SendScreen extends Component {
 
   renderAmount() {
     const { transaction, updateAccountField, validateTransaction } = this.props;
-
+    console.log('amount transaction', transaction);
     return (
       <Input
         key="amount"
         placeholder="e.g. 10"
-        label={'Amount [' + transaction.currency.currency.symbol + ']'}
+        label={
+          'Amount' +
+          (transaction.currency && transaction.currency.currency
+            ? ' [' + transaction.currency.currency.symbol + ']'
+            : '')
+        }
         // prefix={transaction.currency.currency.symbol}
         inputError={transaction.amountError}
         reference={input => {

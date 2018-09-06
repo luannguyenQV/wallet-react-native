@@ -19,7 +19,7 @@ import {
   VALIDATE_TRANSACTION,
 } from '../actions';
 import { Toast } from 'native-base';
-// import Big from 'big.js';
+import Big from 'big.js';
 import * as Rehive from '../../util/rehive';
 import { cryptoSelector } from './selectors';
 import { transactionSelector } from '../reducers/AccountsReducer';
@@ -123,12 +123,12 @@ function* checkSendServices(action) {
 
 function* validateTransaction(action) {
   try {
-    console.log('validateTransaction');
+    // console.log('validateTransaction');
     const type = action.payload;
     const transaction = yield select(transactionSelector);
     const contacts = yield select(contactsSelector);
-    console.log('contacts', contacts);
-    console.log('currency', currency);
+    // console.log('contacts', contacts);
+    // console.log('currency', currency);
     // switch(type) {
     //   case 'send':
 
@@ -169,6 +169,52 @@ function* validateTransaction(action) {
   }
 }
 
+function* send(action) {
+  console.log('send', action);
+  try {
+    const sendData = action.payload;
+    let amount = new Big(sendData.amount);
+    for (let i = 0; i < sendData.currency.divisibility; i++) {
+      amount = amount.times(10);
+    }
+    let data = {
+      amount: parseInt(amount, 0),
+      recipient: sendData.recipient,
+      note: sendData.note,
+      currency: sendData.currency,
+      debit_account: sendData.reference,
+    };
+    let response = '';
+    console.log('data', data);
+    switch (sendData.service) {
+      case 'rehive':
+        response = yield call(Rehive.createTransfer, data);
+        break;
+      case 'stellar':
+        data['to_reference'] = data.recipient;
+        data['memo'] = sendData.memo;
+        delete data.debit_account;
+        delete data.recipient;
+        response = yield call(Rehive.createTransferStellar, data);
+        break;
+      case 'bitcoin':
+        response = yield call(Rehive.createTransferBitcoin, data);
+        break;
+      case 'ethereum':
+        response = yield call(Rehive.createTransferEthereum, data);
+        break;
+    }
+    console.log('response', response);
+
+    yield put({
+      type: SEND_ASYNC.success,
+    });
+  } catch (error) {
+    console.log('send', error);
+    yield put({ type: SEND_ASYNC.error, payload: error.message });
+  }
+}
+
 export const accountsSagas = all([
   takeEvery(FETCH_ACCOUNTS_ASYNC.pending, fetchAccounts),
   takeEvery(SEND_ASYNC.success, fetchAccounts),
@@ -176,4 +222,5 @@ export const accountsSagas = all([
   takeEvery(SET_ACTIVE_CURRENCY_ASYNC.pending, setActiveCurrency),
   takeEvery(SET_TRANSACTION_CURRENCY, checkSendServices),
   takeLatest(VALIDATE_TRANSACTION.pending, validateTransaction),
+  takeEvery(SEND_ASYNC.pending, send),
 ]);
