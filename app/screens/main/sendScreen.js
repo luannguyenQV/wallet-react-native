@@ -17,6 +17,8 @@ import {
   send,
   setContactType,
   updateContactField,
+  hidePin,
+  showPin,
 } from '../../redux/actions';
 import { contactsSelector } from './../../redux/reducers/ContactsReducer';
 import {
@@ -38,12 +40,7 @@ class SendScreen extends Component {
     title: 'Send',
   });
 
-  state = {
-    pinVisible: false,
-  };
-
   componentDidMount() {
-    console.log('params', this.props.navigation.state.params);
     const {
       account,
       currency,
@@ -113,7 +110,7 @@ class SendScreen extends Component {
         textFooterRight = 'Confirm';
         onPressFooterRight = () => {
           if (company_config.pin.send) {
-            this.setState({ pinVisible: true });
+            this.props.showPin();
           } else {
             this.performSend();
           }
@@ -247,12 +244,7 @@ class SendScreen extends Component {
     }
     return (
       <View>
-        <View
-          style={{
-            flexDirection: 'row',
-            // alignItems: 'center',
-            // justifyContent: 'center',
-          }}>
+        <View style={{ flexDirection: 'row' }}>
           <View style={{ flex: 1 }}>
             <Button
               color={contacts.type === 'email' ? 'primary' : 'secondary'}
@@ -422,7 +414,7 @@ class SendScreen extends Component {
   }
 
   render() {
-    const { pin, fingerprint } = this.props;
+    const { pin, fingerprint, pinVisible, hidePin } = this.props;
     // console.log(pin, fingerprint);
     return (
       <View style={{ flex: 1 }}>
@@ -431,16 +423,16 @@ class SendScreen extends Component {
           keyboardShouldPersistTaps={'always'}
           style={styles.viewStyleContainer}
           behavior={'padding'}>
-          {this.state.pinVisible ? (
+          {pinVisible ? (
             <PinModal
               pin={pin}
               fingerprint={fingerprint}
-              modalVisible={this.state.pinVisible}
+              modalVisible={pinVisible}
               onSuccess={() => {
-                this.setState({ pinVisible: false });
+                hidePin();
                 this.performSend();
               }}
-              onDismiss={() => this.setState({ pinVisible: false })}
+              onDismiss={() => hidePin()}
             />
           ) : null}
           {this.renderMainContainer()}
@@ -469,7 +461,7 @@ const styles = {
   },
   viewStyleError: {
     width: '100%',
-    paddingTop: 8,
+    paddingTop: 16,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
@@ -481,11 +473,12 @@ const styles = {
 };
 
 const mapStateToProps = state => {
-  const { pin, fingerprint, company_config } = state.auth;
+  const { pin, fingerprint, pinVisible, company_config } = state.auth;
   return {
     currencies: currenciesSelector(state),
     transaction: transactionSelector(state),
     pin,
+    pinVisible,
     fingerprint,
     company_config,
     contacts: contactsSelector(state),
@@ -501,4 +494,6 @@ export default connect(mapStateToProps, {
   setContactType,
   updateContactField,
   setTransactionState,
+  hidePin,
+  showPin,
 })(SendScreen);

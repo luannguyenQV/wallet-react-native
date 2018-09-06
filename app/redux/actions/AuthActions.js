@@ -299,3 +299,17 @@ export const toggleTerms = () => {
     type: TOGGLE_TERMS,
   };
 };
+
+export const SHOW_PIN = 'show_pin';
+export const showPin = () => {
+  return {
+    type: SHOW_PIN,
+  };
+};
+
+export const HIDE_PIN = 'hide_pin';
+export const hidePin = () => {
+  return {
+    type: HIDE_PIN,
+  };
+};

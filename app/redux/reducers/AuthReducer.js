@@ -32,8 +32,11 @@ import {
   AUTH_STORE_USER,
   POST_AUTH_FLOW_FINISH,
   TOGGLE_TERMS,
+  SHOW_PIN,
+  HIDE_PIN,
 } from '../actions/AuthActions';
 import { HIDE_MODAL } from '../actions/UserActions';
+import { SET_TRANSACTION_TYPE } from '../actions';
 
 const INITIAL_STATE = {
   mainState: '',
@@ -61,6 +64,7 @@ const INITIAL_STATE = {
 
   pin: '',
   fingerprint: false,
+  pinVisible: false,
   mfaState: 'loading',
 };
 
@@ -321,6 +325,18 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         mfaToken: action.payload,
+      };
+
+    case SHOW_PIN:
+      return {
+        ...state,
+        pinVisible: true,
+      };
+    case SET_TRANSACTION_TYPE:
+    case HIDE_PIN:
+      return {
+        ...state,
+        pinVisible: false,
       };
 
     case LOGOUT_USER_ASYNC.success:

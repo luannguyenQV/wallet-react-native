@@ -234,7 +234,7 @@ class _Input extends Component {
             </View>
           ) : null}
 
-          {data ? (
+          {data && focused ? (
             <FlatList
               // refreshControl={
               //   <RefreshControl
