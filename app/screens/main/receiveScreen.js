@@ -13,6 +13,7 @@ import { Toast } from 'native-base';
 import Header from './../../components/header';
 import { Output } from './../../components/common';
 import { Container, Tab, Tabs } from 'native-base';
+import { currenciesSelector } from '../../redux/reducers/AccountsReducer';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -28,14 +29,28 @@ class ReceiveScreen extends Component {
   };
 
   componentDidMount() {
-    const { profile, crypto } = this.props;
-    const currencyCode = this.props.navigation.state.params.currencyCode;
-    if (
-      crypto.stellar.includes(currencyCode) ||
-      crypto.ethereum.includes(currencyCode) ||
-      crypto.bitcoin.includes(currencyCode)
-    ) {
-      this.setState({ crypto: true });
+    const { profile, crypto, currencies } = this.props;
+    const currencyCode = this.props.navigation.state.params.currency;
+
+    const currency = currencies.data.find(
+      item => item.currency.code === currencyCode,
+    ); // TODO: Add accountRef && if no currency use active
+
+    let cryptoURI = '';
+    const cryptoType = currency.crypto;
+    const cryptoTemp = crypto[cryptoType] ? crypto[cryptoType] : '';
+    if (cryptoType) {
+      cryptoURI =
+        'https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=' +
+        encodeURIComponent(
+          cryptoType +
+            ':' +
+            cryptoTemp.address +
+            '?' +
+            (cryptoTemp.memo ? 'memo=' + cryptoTemp.memo + '&' : '') +
+            (currencyCode ? 'currency=' + currencyCode : ''),
+        ) +
+        '&choe=UTF-8';
     }
     const emailURI =
       'https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=' +
@@ -45,22 +60,17 @@ class ReceiveScreen extends Component {
           (currencyCode ? '?currency=' + currencyCode : ''),
       ) +
       '&choe=UTF-8';
-    const cryptoURI =
-      'https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=' +
-      encodeURIComponent(
-        'stellar:' +
-          this.props.receiveAddress +
-          '?' +
-          (profile.username ? 'memo=' + profile.username + '&' : '') +
-          (currencyCode ? 'currency=' + currencyCode : ''),
-      ) +
-      '&choe=UTF-8';
-    this.setState({ cryptoURI, emailURI });
+
+    this.setState({
+      cryptoURI,
+      emailURI,
+      crypto: cryptoTemp,
+    });
   }
 
   _copyQR(type) {
     const user = this.props.profile;
-    const value = type === 'email' ? user.email : this.props.receiveAddress;
+    const value = type === 'email' ? user.email : this.state.crypto.address;
     Clipboard.setString(value);
     Toast.show({
       text:
@@ -86,7 +96,7 @@ class ReceiveScreen extends Component {
         <TouchableHighlight
           underlayColor={'white'}
           activeOpacity={0.2}
-          onPress={() => this._copyQR()}>
+          onPress={() => this._copyQR(type)}>
           <Image
             style={{ width: 300, height: 250, alignSelf: 'center' }}
             source={{
@@ -96,11 +106,11 @@ class ReceiveScreen extends Component {
           />
         </TouchableHighlight>
         {type === 'crypto' ? (
-          <Output label={'Address'} value={this.props.receiveAddress} copy />
+          <Output label={'Address'} value={this.state.crypto.address} copy />
         ) : null}
         <Output
           label={type === 'email' ? 'Email' : 'Memo'}
-          value={type === 'email' ? user.email : this.props.receiveMemo}
+          value={type === 'email' ? user.email : this.state.crypto.memo}
           copy
         />
       </View>
@@ -151,11 +161,13 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user, auth, accounts, crypto }) => {
-  const { company_config } = auth;
-  const { profile } = user;
-  const { receiveAddress, receiveMemo } = accounts;
-  return { profile, company_config, receiveAddress, receiveMemo, crypto };
+const mapStateToProps = state => {
+  return {
+    currencies: currenciesSelector(state),
+    profile: state.user.profile,
+    company_config: state.auth.company_config,
+    crypto: state.crypto,
+  };
 };
 
 export default connect(mapStateToProps, {})(ReceiveScreen);

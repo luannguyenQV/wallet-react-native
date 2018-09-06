@@ -19,10 +19,12 @@ export default (state = INITIAL_STATE, action) => {
         loading: true,
       };
     case FETCH_CRYPTO_ASYNC.success:
-      const { type, assets } = action.payload;
       return {
         ...state,
-        [type]: { ...state.type, currencies: assets },
+        [action.payload.type]: {
+          ...state[action.payload.type],
+          currencies: action.payload.assets,
+        },
         loading: false,
         error: '',
       };
@@ -34,13 +36,12 @@ export default (state = INITIAL_STATE, action) => {
       };
 
     case SET_RECEIVE_ADDRESS:
-      const { address, memo } = action.payload;
       return {
         ...state,
-        [type]: {
-          ...state.type,
-          address: address,
-          memo: memo ? memo : '',
+        [action.payload.type]: {
+          ...state[action.payload.type],
+          address: action.payload.address,
+          memo: action.payload.memo ? action.payload.memo : '',
         },
       };
 

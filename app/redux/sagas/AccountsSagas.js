@@ -155,7 +155,10 @@ function* validateTransaction(action) {
       } else if (contacts.type == 'mobile') {
         transactionRecipientError = validateMobile(recipient);
       } else if (contacts.type == 'crypto') {
-        transactionRecipientError = validateCrypto(recipient, sendType);
+        transactionRecipientError = validateCrypto(
+          recipient,
+          transaction.currency.crypto,
+        );
       }
     }
 

@@ -62,17 +62,20 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: true,
+        error: '',
       };
     case FETCH_ACCOUNTS_ASYNC.success:
       return {
         ...state,
         accounts: action.payload,
         loading: false,
+        error: '',
       };
     case FETCH_ACCOUNTS_ASYNC.error:
       return {
         ...state,
         loading: false,
+        error: action.payload,
       };
 
     case FETCH_TRANSACTIONS_ASYNC.pending:
@@ -267,35 +270,30 @@ export default (state = INITIAL_STATE, action) => {
   }
 };
 
-export const walletsSelector = createSelector(
+export const currenciesSelector = createSelector(
   [accountsSelector, cryptoSelector],
   (accountsState, cryptoState) => {
-    const {
-      accounts,
-      transactions,
-      loading,
-      transactionsLoading,
-    } = accountsState;
+    const { accounts, loading, error } = accountsState;
 
     // console.log('crypto', cryptoState);
     // let index = 0;
     let activeCurrency = '';
 
-    let data = accounts.map(account => {
-      account.currencies = account.currencies.map(currency => {
-        currency.transactions =
-          transactions && transactions[account.reference]
-            ? transactions[account.reference][currency.currency.code]
-            : {};
-        if (currency.active) {
-          activeCurrency = currency.currency.code;
-        }
-        // console.log('active' + currency.active);
-        return currency;
-      });
-      // console.log('account', account);
-      return account;
-    });
+    // let data = accounts.map(account => {
+    //   account.currencies = account.currencies.map(currency => {
+    //     currency.transactions =
+    //       transactions && transactions[account.reference]
+    //         ? transactions[account.reference][currency.currency.code]
+    //         : {};
+    //     if (currency.active) {
+    //       activeCurrency = currency.currency.code;
+    //     }
+    //     // console.log('active' + currency.active);
+    //     return currency;
+    //   });
+    //   // console.log('account', account);
+    //   return account;
+    // });
 
     let currencies = [];
     let tempCurrencies = [];
@@ -316,6 +314,9 @@ export const walletsSelector = createSelector(
         } else {
           currency.crypto = '';
         }
+        if (currency.active) {
+          activeCurrency = currency.currency.code;
+        }
 
         // console.log('active' + currency.active);
         return currency;
@@ -323,37 +324,21 @@ export const walletsSelector = createSelector(
       currencies = currencies.concat(tempCurrencies);
     }
 
-    // let currencies = accounts.map(account => {
-    //   currencies = account.currencies.map(currency => {
-    //     currency.account = account.reference;
-    //     // console.log('active' + currency.active);
-    //     return currency;
-    //   });
-    //   // console.log('account', account);
-    //   return currencies;
-    // });
-    // console.log('currencies', currencies);
+    const activeIndex = currencies.findIndex(
+      item => item.currency.code === activeCurrency,
+    );
 
-    let wallets = {
-      activeCurrency,
-      data,
-      transactions,
-      transactionsLoading,
-      showAccountLabel: accounts.length > 1 ? true : false,
+    if (currencies.length > 0) {
+      const activeItem = currencies[activeIndex];
+      currencies[activeIndex] = currencies[0];
+      currencies[0] = activeItem;
+    }
+
+    return {
+      data: currencies,
       loading,
-      currencies,
+      error,
     };
-
-    //       if (currencies[j].active === true) {
-    //         activeWalletIndex = index;
-    //       }
-    // if (wallets.length > 0) {
-    //   const activeItem = wallets[activeWalletIndex];
-    //   wallets[activeWalletIndex] = wallets[0];
-    //   wallets[0] = activeItem;
-    // }
-
-    return wallets;
   },
 );
 

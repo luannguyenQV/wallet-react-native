@@ -30,6 +30,7 @@ function* fetchCrypto(action) {
         }
         break;
     }
+    console.log('response', response);
 
     yield put({
       type: FETCH_CRYPTO_ASYNC.success,

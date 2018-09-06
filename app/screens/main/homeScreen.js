@@ -8,7 +8,7 @@ import {
   setHomeCurrency,
 } from './../../redux/actions';
 import {
-  walletsSelector,
+  currenciesSelector,
   homeSelector,
 } from './../../redux/reducers/AccountsReducer';
 import Swiper from 'react-native-swiper';
@@ -33,12 +33,18 @@ class HomeScreen extends Component {
   };
 
   render() {
-    const { wallets, home, setHomeAccount, setHomeCurrency } = this.props;
+    const {
+      currencies,
+      transactions,
+      home,
+      setHomeAccount,
+      setHomeCurrency,
+    } = this.props;
     return (
       <View style={styles.container}>
         <Header navigation={this.props.navigation} drawer right noShadow />
         <WalletBalanceList
-          currencies={wallets.currencies}
+          currencies={currencies.data}
           activeCurrency={home.currency}
           setHomeAccount={setHomeAccount}
           setHomeCurrency={setHomeCurrency}
@@ -56,9 +62,9 @@ class HomeScreen extends Component {
         <Swiper renderPagination={renderPagination} loop={false}>
           <HomeCards navigation={this.props.navigation} />
           <TransactionList
-            transactions={wallets.transactions}
+            transactions={transactions.data}
             // fetchAccounts={fetchAccounts}
-            loading={wallets.transactionsLoading}
+            loading={transactions.loading}
             currencyCode={home.currency}
             accountRef={home.account}
           />
@@ -76,8 +82,9 @@ const styles = {
 
 const mapStateToProps = state => {
   return {
-    wallets: walletsSelector(state),
+    currencies: currenciesSelector(state),
     home: homeSelector(state),
+    transactions: state.accounts.transactions,
   };
 };
 

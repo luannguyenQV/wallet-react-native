@@ -20,7 +20,7 @@ import {
 } from '../../redux/actions';
 import { contactsSelector } from './../../redux/reducers/ContactsReducer';
 import {
-  walletsSelector,
+  currenciesSelector,
   transactionSelector,
 } from './../../redux/reducers/AccountsReducer';
 
@@ -54,25 +54,25 @@ class SendScreen extends Component {
     } = this.props.navigation.state.params;
 
     const {
-      wallets,
+      currencies,
       setTransactionType,
       updateAccountField,
       validateTransaction,
     } = this.props;
 
-    const currencies = wallets.currencies.filter(
+    const tempCurrency = currencies.data.find(
       item => item.currency.code === currency,
     ); // TODO: Add accountRef && if no currency use active
     // console.log('currencies', currencies);
     setTransactionType('send');
-    updateAccountField({ prop: 'transactionCurrency', value: currencies[0] });
+    updateAccountField({ prop: 'transactionCurrency', value: tempCurrency });
     updateAccountField({ prop: 'transactionRecipient', value: recipient });
     updateAccountField({ prop: 'transactionAmount', value: amount });
     updateAccountField({ prop: 'transactionMemo', value: memo });
     updateAccountField({ prop: 'transactionNote', value: note });
 
     validateTransaction('send');
-    if (currencies[0] && recipient && amount) {
+    if (tempCurrency && recipient && amount) {
       setTransactionState('confirm');
     }
   }
@@ -482,7 +482,7 @@ const styles = {
 const mapStateToProps = state => {
   const { pin, fingerprint, company_config } = state.auth;
   return {
-    wallets: walletsSelector(state),
+    currencies: currenciesSelector(state),
     transaction: transactionSelector(state),
     pin,
     fingerprint,
