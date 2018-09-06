@@ -36,7 +36,7 @@ class TransactionList extends Component {
   }
 
   renderTransactions() {
-    const { transactions, accountRef, currencyCode } = this.props;
+    const { transactions, loading, accountRef, currencyCode } = this.props;
     const data =
       transactions &&
       transactions[accountRef] &&
@@ -47,7 +47,7 @@ class TransactionList extends Component {
       <FlatList
         refreshControl={
           <RefreshControl
-            refreshing={transactions.loading}
+            refreshing={loading}
             onRefresh={() => {
               this.getTransactions(accountRef, currencyCode);
               // this.props.fetchAccounts();
@@ -242,7 +242,10 @@ const styles = {
 };
 
 const mapStateToProps = state => {
-  return { transactions: state.accounts.transactions };
+  return {
+    transactions: state.accounts.transactions,
+    loading: state.accounts.loading,
+  };
 };
 
 export default connect(mapStateToProps, {

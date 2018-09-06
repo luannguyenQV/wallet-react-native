@@ -342,7 +342,7 @@ class SendScreen extends Component {
 
   renderAmount() {
     const { transaction, updateAccountField, validateTransaction } = this.props;
-    console.log('amount transaction', transaction);
+    // console.log('amount transaction', transaction);
     return (
       <Input
         key="amount"
