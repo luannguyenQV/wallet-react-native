@@ -26,7 +26,7 @@ class WalletActionList extends Component {
         break;
       }
       case 'more':
-        // navigation.navigate('Wallets', { wallet });
+        navigation.navigate('Wallets', { account, currency });
         break;
       default:
         console.log('Error: unknown button type');

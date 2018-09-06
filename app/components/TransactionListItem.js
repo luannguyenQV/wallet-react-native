@@ -59,7 +59,7 @@ class TransactionListItem extends Component {
         <View style={viewStyleContainer}>
           <Icon name={iconName} size={24} color={color ? color : 'black'} />
           <View style={{ paddingLeft: 8, paddingRight: 2 }}>
-            {SCREEN_WIDTH < 350 ? (
+            {SCREEN_WIDTH < 400 ? (
               <View>
                 <Text style={textStyleHeader}>{headerTextOne}</Text>
                 {headerTextTwo ? (

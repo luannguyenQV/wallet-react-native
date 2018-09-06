@@ -469,6 +469,7 @@ const styles = {
   },
   viewStyleError: {
     width: '100%',
+    paddingTop: 8,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',

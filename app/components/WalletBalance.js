@@ -22,7 +22,7 @@ class HeaderCurrency extends Component {
   }
 
   render() {
-    const { detail, showClose, closeWallet, colors, currency } = this.props;
+    const { detail, onClose, colors, currency } = this.props;
     const { viewStyleContainer, textStyleCode, iconStyleTitleRight } = styles;
     return (
       <View
@@ -36,13 +36,9 @@ class HeaderCurrency extends Component {
             : { width: SCREEN_WIDTH },
           { backgroundColor: colors.header },
         ]}>
-        {showClose ? (
+        {onClose ? (
           <View style={iconStyleTitleRight}>
-            <HeaderButton
-              icon="close"
-              onPress={closeWallet}
-              color="lightgrey"
-            />
+            <HeaderButton icon="close" onPress={onClose} color="lightgrey" />
           </View>
         ) : null}
         <Text style={[textStyleCode, { color: colors.headerContrast }]}>
@@ -74,6 +70,12 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     paddingBottom: 16,
+    elevation: 10,
+    // shadowColor: '#000',
+    // shadowOffset: { width: 2, height: 2 },
+    // shadowRadius: 5,
+    // shadowOpacity: 0.3,
+    zIndex: 11,
   },
   textStyleCode: {
     fontSize: 20,

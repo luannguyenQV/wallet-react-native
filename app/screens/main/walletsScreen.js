@@ -10,13 +10,14 @@ import {
   showModal,
   setActiveCurrency,
 } from './../../redux/actions';
-import { walletsSelector } from './../../redux/reducers/AccountsReducer';
+import { currenciesSelector } from './../../redux/reducers/AccountsReducer';
 
 import Header from './../../components/header';
 // import Wallet from './../../components/wallet';
 import { Output, MyView } from '../../components/common';
 import { standardizeString, performDivisibility } from './../../util/general';
-import WalletHeader from './../../components/WalletHeader';
+import WalletBalance from '../../components/WalletBalance';
+import WalletActionList from '../../components/WalletActionList';
 import TransactionList from './../../components/TransactionList';
 import CardList from './../../components/CardList';
 
@@ -31,13 +32,13 @@ class WalletsScreen extends Component {
   };
 
   componentDidMount() {
-    let wallet = null;
     if (this.props.navigation.state.params) {
-      wallet = this.props.navigation.state.params.wallet;
-      this.props.navigation.state.params.wallet = null;
-    }
-    if (wallet) {
-      this.props.viewWallet(wallet);
+      const { currencies } = this.props;
+      const currency = currencies.data.find(
+        item =>
+          item.currency.code === this.props.navigation.state.params.currency,
+      );
+      this.props.viewWallet(currency);
     } else {
       this.props.hideWallet();
     }
@@ -93,13 +94,17 @@ class WalletsScreen extends Component {
     buttons[i] = { id: i++, type: 'send' };
     return (
       <View>
-        <WalletHeader
-          wallets={[item]}
+        <WalletBalance detail currency={item} onClose={this.props.hideWallet} />
+        <WalletActionList
           buttons={buttons}
-          navigation={navigation}
-          showClose
+          navigation={this.props.navigation}
+          account={item.account}
+          currency={item.currency.code}
         />
-        <TransactionList currencyCode={item.currency.code} />
+        <TransactionList
+          accountRef={item.account}
+          currencyCode={item.currency.code}
+        />
       </View>
     );
   }
@@ -108,21 +113,20 @@ class WalletsScreen extends Component {
     const {
       fetchAccounts,
       loading_accounts,
-      wallets,
+      currencies,
       viewWallet,
       showModal,
       tempWallet,
     } = this.props;
-    console.log('wallets', wallets);
     return (
       <MyView f>
         <Header navigation={this.props.navigation} drawer title="Wallets" />
         <CardList
           type="wallet"
           navigation={this.props.navigation}
-          data={wallets.currencies}
+          data={currencies.data}
           tempItem={tempWallet}
-          loadingData={wallets.loading}
+          loadingData={currencies.loading}
           identifier="reference"
           onRefresh={fetchAccounts}
           activeItem={item => showModal('wallet', item, 'active')}
@@ -138,7 +142,7 @@ class WalletsScreen extends Component {
           subtitle={item => (item ? standardizeString(item.account_name) : '')}
           onPressTitle={item => viewWallet(item)}
           onPressContent={item => viewWallet(item)}
-          emptyListMessage="No wallets added yet"
+          emptyListMessage="No currencies added yet"
           titleStyle="secondary"
           keyExtractor={item => item.account + item.currency.code}
           textActionOne="SEND"
@@ -160,7 +164,7 @@ const mapStateToProps = state => {
   const { loading_accounts, tempWallet, showWallet } = state.accounts;
   const { company_bank_account } = state.user;
   return {
-    wallets: walletsSelector(state),
+    currencies: currenciesSelector(state),
     loading_accounts,
     tempWallet,
     showWallet,

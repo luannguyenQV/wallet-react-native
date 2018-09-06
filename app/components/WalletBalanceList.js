@@ -69,9 +69,7 @@ class WalletBalanceList extends Component {
         horizontal
         pagingEnabled
         getItemLayout={this.getItemLayout}
-        renderItem={({ item }) => (
-          <WalletBalance currency={item} colors={colors} />
-        )}
+        renderItem={({ item }) => <WalletBalance currency={item} />}
         keyExtractor={item => item.currency.code}
         showsHorizontalScrollIndicator={false}
       />

@@ -62,9 +62,6 @@ class HomeScreen extends Component {
         <Swiper renderPagination={renderPagination} loop={false}>
           <HomeCards navigation={this.props.navigation} />
           <TransactionList
-            transactions={transactions.data}
-            // fetchAccounts={fetchAccounts}
-            loading={transactions.loading}
             currencyCode={home.currency}
             accountRef={home.account}
           />
