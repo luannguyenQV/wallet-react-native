@@ -214,21 +214,22 @@ class SettingsScreen extends Component {
 
   renderAppearance() {
     let themes = [
-      { label: 'Default', value: 'default' },
-      { label: 'Light', value: 'light' },
+      { label: 'Theme: Default', value: 'default' },
+      { label: 'Theme: Light', value: 'light' },
     ];
     return (
       <Picker
         value={this.props.theme}
-        placeholder={{
-          label: this.props.theme,
-          value: this.props.theme,
-        }}
+        // placeholder={{
+        //   label: this.props.theme,
+        //   value: this.props.theme,
+        // }}
         items={themes}
         onValueChange={value => {
           this.props.changeTheme(value);
         }}
         style={{ ...styles }}
+        hideIcon
         // ref={el => {
         //   this.inputRefs.picker = el;
         // }}
@@ -280,12 +281,7 @@ const styles = {
   },
   inputIOS: {
     fontSize: 16,
-    paddingTop: 13,
-    paddingHorizontal: 10,
-    paddingBottom: 12,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 4,
+    padding: 8,
     backgroundColor: 'white',
     color: 'black',
   },

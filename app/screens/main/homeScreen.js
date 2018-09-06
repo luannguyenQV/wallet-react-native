@@ -33,13 +33,7 @@ class HomeScreen extends Component {
   };
 
   render() {
-    const {
-      currencies,
-      transactions,
-      home,
-      setHomeAccount,
-      setHomeCurrency,
-    } = this.props;
+    const { currencies, home, setHomeAccount, setHomeCurrency } = this.props;
     return (
       <View style={styles.container}>
         <Header navigation={this.props.navigation} drawer right noShadow />
