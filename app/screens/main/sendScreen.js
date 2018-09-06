@@ -43,7 +43,7 @@ class SendScreen extends Component {
   };
 
   componentDidMount() {
-    // console.log('params', this.props.navigation.state.params);
+    console.log('params', this.props.navigation.state.params);
     const {
       account,
       currency,
@@ -273,7 +273,7 @@ class SendScreen extends Component {
               containerStyle={{ marginBottom: 0 }}
             />
           </View>
-          {transaction.currency.crypto ? (
+          {transaction.currency && transaction.currency.crypto ? (
             <View style={{ flex: 1 }}>
               <Button
                 color={contacts.type === 'crypto' ? 'primary' : 'secondary'}

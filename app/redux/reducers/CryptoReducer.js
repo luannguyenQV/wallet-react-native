@@ -1,15 +1,10 @@
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
-import {
-  FETCH_CRYPTO_ASYNC,
-  CLAIM_REWARD_ASYNC,
-  VIEW_REWARD,
-  HIDE_REWARD,
-} from '../actions/';
+import { FETCH_CRYPTO_ASYNC, SET_RECEIVE_ADDRESS } from '../actions/';
 
 const INITIAL_STATE = {
-  stellar: [],
-  ethereum: [],
-  bitcoin: [],
+  stellar: { currencies: [], address: '', memo: '' },
+  ethereum: { currencies: [], address: '' },
+  bitcoin: { currencies: [], address: '' },
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -27,7 +22,7 @@ export default (state = INITIAL_STATE, action) => {
       const { type, assets } = action.payload;
       return {
         ...state,
-        [type]: assets,
+        [type]: { ...state.type, currencies: assets },
         loading: false,
         error: '',
       };
@@ -36,6 +31,17 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         loading: false,
         error: action.payload,
+      };
+
+    case SET_RECEIVE_ADDRESS:
+      const { address, memo } = action.payload;
+      return {
+        ...state,
+        [type]: {
+          ...state.type,
+          address: address,
+          memo: memo ? memo : '',
+        },
       };
 
     default:

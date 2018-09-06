@@ -146,7 +146,7 @@ class WalletsScreen extends Component {
           textActionTwo="RECEIVE"
           onPressActionTwo={item =>
             this.props.navigation.navigate('Receive', {
-              currencyCode: item.currency.code,
+              currency: item.currency.code,
             })
           }
           canActive

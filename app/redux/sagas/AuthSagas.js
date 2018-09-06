@@ -665,19 +665,20 @@ function* appLoad() {
     }
     if (services.stellar) {
       let resp = yield call(Rehive.getStellarUser);
-      // console.log('stellar', resp);
-      if (resp.data && !resp.data.username) {
+      const data = resp.data;
+      if (data && !data.username) {
         const { user } = yield select(getAuth);
         yield call(Rehive.setStellarUsername, {
           username: user.username,
         });
       }
-      if (resp.data && resp.data.crypto) {
+      if (data && data.crypto) {
         yield put({
           type: SET_RECEIVE_ADDRESS,
           payload: {
-            receiveAddress: resp.data.crypto.public_address,
-            receiveMemo: resp.data.crypto.memo,
+            type: 'stellar',
+            address: data.crypto.public_address,
+            memo: data.crypto.memo,
           },
         });
       }

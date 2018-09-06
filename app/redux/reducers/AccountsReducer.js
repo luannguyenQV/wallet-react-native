@@ -15,7 +15,6 @@ import {
   VIEW_WALLET,
   HIDE_WALLET,
   SHOW_MODAL,
-  SET_RECEIVE_ADDRESS,
   FETCH_TRANSACTIONS_ASYNC,
   SET_HOME_ACCOUNT,
   SET_HOME_CURRENCY,
@@ -33,7 +32,7 @@ const INITIAL_STATE = {
   loading: false,
   loadingActiveCurrencyChange: false,
 
-  transactionAmount: 0,
+  transactionAmount: '0',
   transactionCurrency: null,
   transactionRecipient: '',
   transactionNote: '',
@@ -192,13 +191,6 @@ export default (state = INITIAL_STATE, action) => {
         transactionLoading: false,
       };
 
-    case SET_RECEIVE_ADDRESS:
-      return {
-        ...state,
-        receiveAddress: action.payload.receiveAddress,
-        receiveMemo: action.payload.receiveMemo,
-      };
-
     case SET_WITHDRAW_WALLET:
       return {
         ...state,
@@ -311,11 +303,15 @@ export const walletsSelector = createSelector(
       tempCurrencies = accounts[i].currencies.map(currency => {
         currency.account = accounts[i].reference;
         const currencyCode = currency.currency.code;
-        if (cryptoState.stellar.indexOf(currencyCode) !== -1) {
+        if (cryptoState.stellar.currencies.indexOf(currencyCode) !== -1) {
           currency.crypto = 'stellar';
-        } else if (cryptoState.bitcoin.indexOf(currencyCode) !== -1) {
+        } else if (
+          cryptoState.bitcoin.currencies.indexOf(currencyCode) !== -1
+        ) {
           currency.crypto = 'bitcoin';
-        } else if (cryptoState.ethereum.indexOf(currencyCode) !== -1) {
+        } else if (
+          cryptoState.ethereum.currencies.indexOf(currencyCode) !== -1
+        ) {
           currency.crypto = 'ethereum';
         } else {
           currency.crypto = '';
