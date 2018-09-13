@@ -171,6 +171,7 @@ export default (state = INITIAL_STATE, action) => {
     case VALIDATE_TRANSACTION.error:
       return {
         ...state,
+        transactionState: '',
         transactionError: action.payload,
         transactionLoading: false,
       };

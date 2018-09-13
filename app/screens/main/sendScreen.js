@@ -43,6 +43,7 @@ class SendScreen extends Component {
   componentDidMount() {
     const {
       account,
+      type,
       currency,
       amount,
       note,
@@ -55,23 +56,33 @@ class SendScreen extends Component {
       setTransactionType,
       updateAccountField,
       validateTransaction,
+      updateContactField,
+      setContactType,
     } = this.props;
 
     const tempCurrency = currencies.data.find(
       item => item.currency.code === currency,
     ); // TODO: Add accountRef && if no currency use active
     // console.log('currencies', currencies);
+
     setTransactionType('send');
+    setContactType(
+      !type || type === 'rehive'
+        ? !recipient || recipient.includes('@') ? 'email' : 'mobile'
+        : 'crypto',
+    );
     updateAccountField({ prop: 'transactionCurrency', value: tempCurrency });
-    updateAccountField({ prop: 'transactionRecipient', value: recipient });
     updateAccountField({ prop: 'transactionAmount', value: amount });
+    updateContactField({ prop: 'contactsSearch', recipient });
+    updateAccountField({ prop: 'transactionRecipient', value: recipient });
     updateAccountField({ prop: 'transactionMemo', value: memo });
     updateAccountField({ prop: 'transactionNote', value: note });
 
-    validateTransaction('send');
     if (tempCurrency && recipient && amount) {
       setTransactionState('confirm');
     }
+
+    validateTransaction('send');
   }
 
   goToBarcodeScanner = () => {
@@ -341,7 +352,7 @@ class SendScreen extends Component {
         placeholder="e.g. 10"
         label={
           'Amount' +
-          (transaction.currency && transaction.currency.currency
+          (transaction && transaction.currency && transaction.currency.currency
             ? ' [' + transaction.currency.currency.symbol + ']'
             : '')
         }
@@ -363,8 +374,8 @@ class SendScreen extends Component {
         }}
         onBlur={() => validateTransaction()}
         type={'money'}
-        precision={transaction.currency.currency.divisibility}
-        unit={transaction.currency.currency.symbol + ' '}
+        // precision={transaction.currency.currency.divisibility}
+        // unit={transaction.currency.currency.symbol + ' '}
       />
     );
   }

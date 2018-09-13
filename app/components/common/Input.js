@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, FlatList } from 'react-native';
+import { View, Text, TextInput, FlatList, Platform } from 'react-native';
 import PropTypes from 'prop-types';
 import Colors from './../../config/colors';
 import { MaterialIcons as Icon } from '@expo/vector-icons';
@@ -18,6 +18,7 @@ class _Input extends Component {
   };
 
   _OnBlur() {
+    console.log('blur');
     this.setState({
       focused: false,
     });
@@ -25,6 +26,7 @@ class _Input extends Component {
   }
 
   _OnFocus() {
+    console.log('focus');
     this.setState({
       focused: true,
     });
@@ -130,10 +132,10 @@ class _Input extends Component {
           underlineColorAndroid="transparent"
           autoCapitalize={autoCapitalize ? autoCapitalize : 'none'}
           autoCorrect={autoCorrect ? autoCorrect : false}
-          placeholder={focused ? placeholder : label}
+          // placeholder={focused ? placeholder : label}
           value={value}
           onChangeText={onChangeText}
-          ref={reference}
+          // ref={reference}
           selectTextOnFocus
           secureTextEntry={secureTextEntry}
           keyboardType={keyboardType}
@@ -150,18 +152,22 @@ class _Input extends Component {
   viewStyleContainer() {
     const { focused } = this.state;
     if (focused) {
-      return {
-        shadowColor: 'rgba(0, 0, 0, 0.6)',
-        shadowOpacity: 0.3,
-        shadowRadius: 3,
-        shadowOffset: {
-          width: 1,
-          height: 2,
-        },
-        elevation: 2,
-      };
+      if (Platform.OS === 'ios') {
+        return {
+          shadowColor: 'rgba(0, 0, 0, 0.6)',
+          shadowOpacity: 0.3,
+          shadowRadius: 3,
+          shadowOffset: {
+            width: 1,
+            height: 2,
+          },
+        };
+      } else {
+        return { elevation: 10 };
+      }
+      //
     }
-    return {};
+    return { elevation: 1 };
   }
 
   render() {

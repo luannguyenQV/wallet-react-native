@@ -38,9 +38,11 @@ class QRCodeScannerScreen extends Component {
 
   accept = data => {
     const { account, currency, amount, recipient, note, type, memo } = data;
+    console.log('data', data);
 
     this.props.navigation.goBack();
     this.props.navigation.navigate('Send', {
+      type,
       account,
       currency,
       amount,

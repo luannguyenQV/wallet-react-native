@@ -672,7 +672,7 @@ function* appLoad() {
           username: user.username,
         });
       }
-      console.log('data', data);
+      // console.log('data', data);
       if (data && data.crypto) {
         yield put({
           type: SET_RECEIVE_ADDRESS,

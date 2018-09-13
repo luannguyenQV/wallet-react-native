@@ -13,7 +13,7 @@ export const standardizeString = string => {
 };
 
 export const snakeString = string => {
-  console.log(string);
+  // console.log(string);
   if (string) {
     return string.toLowerCase().replace(' ', '_');
   }
