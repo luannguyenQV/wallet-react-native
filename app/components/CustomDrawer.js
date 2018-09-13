@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { ScrollView, Text, View } from 'react-native';
 
-import DrawerHeader from './DrawerHeader';
+import HeaderDrawer from './HeaderDrawer';
 import DrawerItem from './DrawerItem';
 import context from './common/context';
 
@@ -16,7 +16,7 @@ class _CustomDrawer extends Component {
       <View
         style={[styles.container, { backgroundColor: colors.primaryContrast }]}>
         <View>
-          <DrawerHeader
+          <HeaderDrawer
             navigation={navigation}
             colors={colors}
             profile={profile}

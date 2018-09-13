@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, TouchableHighlight, Image, Text } from 'react-native';
 import context from './common/context';
 
-class _DrawerHeader extends Component {
+class _HeaderDrawer extends Component {
   render() {
     const { profile, colors } = this.props;
     const {
@@ -79,6 +79,6 @@ const styles = {
   },
 };
 
-const DrawerHeader = context(_DrawerHeader);
+const HeaderDrawer = context(_HeaderDrawer);
 
-export default DrawerHeader;
+export default HeaderDrawer;
