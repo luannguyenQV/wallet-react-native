@@ -132,10 +132,10 @@ class _Input extends Component {
           underlineColorAndroid="transparent"
           autoCapitalize={autoCapitalize ? autoCapitalize : 'none'}
           autoCorrect={autoCorrect ? autoCorrect : false}
-          // placeholder={focused ? placeholder : label}
+          placeholder={focused ? placeholder : label}
           value={value}
           onChangeText={onChangeText}
-          // ref={reference}
+          ref={reference}
           selectTextOnFocus
           secureTextEntry={secureTextEntry}
           keyboardType={keyboardType}
