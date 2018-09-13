@@ -6,7 +6,6 @@ import {
   KeyboardAvoidingView,
   UIManager,
   Platform,
-  Text,
   Dimensions,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
@@ -40,6 +39,7 @@ import {
   CodeInput,
   MultiFactorAuthentication,
   Checkbox,
+  Text,
 } from './../../components/common';
 import { standardizeString } from './../../util/general';
 import client from './../../config/client';
@@ -63,8 +63,6 @@ class AuthScreen extends Component {
       company_config,
       terms,
     } = this.props;
-
-    const colors = company_config ? company_config.colors : Colors;
 
     let iconHeaderLeft = 'arrow-back';
     let textHeaderLeft = '';
@@ -166,8 +164,6 @@ class AuthScreen extends Component {
       user,
     } = this.props;
 
-    const colors = company_config ? company_config.colors : Colors;
-
     const slides = company_config ? company_config.sliders.landing : null;
 
     switch (mainState) {
@@ -198,7 +194,7 @@ class AuthScreen extends Component {
               />
               <Button
                 label="Register"
-                color="primaryContrast"
+                color="authContrast"
                 type="text"
                 // size="large"
                 reference={input => {
@@ -213,7 +209,7 @@ class AuthScreen extends Component {
       case 'forgot':
         return (
           <View style={viewStyleLanding}>
-            <Text style={[textStyle, { color: colors.primaryContrast }]}>
+            <Text color="authScreenContrast">
               Instructions on how to reset your password will be sent to
             </Text>
             <View style={viewStyleInput}>{this.renderInput()}</View>
@@ -232,12 +228,8 @@ class AuthScreen extends Component {
           case 'pin':
             return (
               <View style={viewStyleInput}>
-                <Text style={[textStyle, { color: colors.primaryContrast }]}>
-                  Please enter pin
-                </Text>
-                <Text style={[textStyle, { color: colors.error }]}>
-                  {pinError}
-                </Text>
+                <Text color="authScreenContrast">Please enter pin</Text>
+                <Text color="error">{pinError}</Text>
                 <CodeInput
                   ref={component => (this._pinInput = component)}
                   secureTextEntry
@@ -275,14 +267,12 @@ class AuthScreen extends Component {
           case 'confirm_pin':
             return (
               <View style={viewStyleLanding}>
-                <Text style={[textStyle, { color: colors.primaryContrast }]}>
+                <Text color="authScreenContrast">
                   {detailState === 'set_pin'
                     ? 'Please enter pin'
                     : 'Please confirm pin'}
                 </Text>
-                <Text style={[textStyle, { color: colors.error }]}>
-                  {authError}
-                </Text>
+                <Text color="error">{authError}</Text>
                 <CodeInput
                   ref={component => (this._pinInput = component)}
                   secureTextEntry
@@ -332,7 +322,7 @@ class AuthScreen extends Component {
           case 'email':
             return (
               <View style={viewStyleLanding}>
-                <Text style={[textStyle, { color: colors.primaryContrast }]}>
+                <Text color="authScreenContrast">
                   Please verify your email by following the instructions sent to{' '}
                   {email}
                 </Text>
@@ -619,13 +609,6 @@ const styles = {
   image: {
     maxWidth: 150,
     height: 70,
-  },
-  textStyle: {
-    width: '100%',
-    justifyContent: 'center',
-    textAlign: 'center',
-    padding: 16,
-    fontSize: 18,
   },
 };
 

@@ -21,3 +21,4 @@ export * from './Slides';
 export * from './MultiFactorAuthentication';
 export * from './CodeInput';
 export * from './MyComponents';
+export * from './Text';

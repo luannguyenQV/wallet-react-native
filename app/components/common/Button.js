@@ -35,6 +35,7 @@ class _Button extends Component {
     let textColor = colors[color];
     if (type === 'contained') {
       textColor = colors[color + 'Contrast'];
+      console.log('textColor', textColor);
     }
 
     return [
