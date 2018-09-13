@@ -1,7 +1,10 @@
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 import { createSelector } from 'reselect';
 import { CHANGE_THEME, SET_COMPANY } from '../actions';
-import { companyConfigSelector, themeSelector } from './../sagas/selectors';
+import {
+  companyConfigSelector,
+  themeStateSelector,
+} from './../sagas/selectors';
 
 import themes from './../../config/themes.json';
 import Colors from './../../config/colors';
@@ -34,7 +37,7 @@ export default (state = INITIAL_STATE, action) => {
 };
 
 export const colorSelector = createSelector(
-  [companyConfigSelector, themeSelector],
+  [companyConfigSelector, themeStateSelector],
   (company_config, theme) => {
     const _colors =
       company_config && company_config.colors ? company_config.colors : Colors;
@@ -107,3 +110,63 @@ const selectColor = (component, theme, _colors, _default) => {
   }
   return color;
 };
+
+export const themeSelector = createSelector(
+  [companyConfigSelector, themeStateSelector],
+  (company_config, theme) => {
+    // const _colors =
+    //   company_config && company_config.colors ? company_config.colors : Colors;
+
+    // let selectedTheme = themes[theme] ? themes[theme] : {};
+
+    // if(company_config.theme && company_config.theme.authSpinner){
+    //   return
+
+    // }
+
+    return {
+      authSpinner:
+        company_config.theme && company_config.theme.authSpinner
+          ? company_config.theme.authSpinner
+          : '',
+    };
+
+    // const colors = {
+    //   ..._colors,
+    //   header: selectColor('header', selectedTheme, _colors, 'primary'),
+    //   headerContrast: selectColor(
+    //     'headerContrast',
+    //     selectedTheme,
+    //     _colors,
+    //     'primaryContrast',
+    //   ),
+    //   drawerHeader: selectColor(
+    //     'drawerHeader',
+    //     selectedTheme,
+    //     _colors,
+    //     'primary',
+    //   ),
+    //   drawerHeaderContrast: selectColor(
+    //     'drawerHeaderContrast',
+    //     selectedTheme,
+    //     _colors,
+    //     'primaryContrast',
+    //   ),
+    //   authScreen: selectColor('authScreen', selectedTheme, _colors, 'primary'),
+    //   authScreenContrast: selectColor(
+    //     'authScreenContrast',
+    //     selectedTheme,
+    //     _colors,
+    //     'primaryContrast',
+    //   ),
+    //   sendScreen: selectColor('sendScreen', selectedTheme, _colors, 'focus'),
+    //   sendScreenContrast: selectColor(
+    //     'sendScreenContrast',
+    //     selectedTheme,
+    //     _colors,
+    //     'focusContrast',
+    //   ),
+    // };
+    // return colors;
+  },
+);

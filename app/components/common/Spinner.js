@@ -4,10 +4,18 @@ import { View, ActivityIndicator, Image } from 'react-native';
 import context from './context';
 
 // make component
-const _Spinner = ({ size, type }) => {
+const _Spinner = ({ size, type, colors, color, backgroundColor, theme }) => {
   return (
-    <View style={styles.containerStyle}>
-      {type === 'rehive' ? (
+    <View
+      style={[
+        styles.containerStyle,
+        {
+          backgroundColor: colors[backgroundColor]
+            ? colors[backgroundColor]
+            : 'white',
+        },
+      ]}>
+      {theme[type + 'Spinner'] === 'rehive' ? (
         <Image
           style={{
             height: size === 'large' ? 150 : 50,
@@ -16,7 +24,10 @@ const _Spinner = ({ size, type }) => {
           source={require('./../../../assets/icons/rehive_spinner_150.gif')}
         />
       ) : (
-        <ActivityIndicator size={size || 'large'} />
+        <ActivityIndicator
+          size={size || 'large'}
+          color={colors[color ? color : 'primary']}
+        />
       )}
     </View>
   );

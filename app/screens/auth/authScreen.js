@@ -136,7 +136,7 @@ class AuthScreen extends Component {
         onPressHeaderRight={onPressHeaderRight}
         textFooterRight={textFooterRight}
         onPressFooterRight={onPressFooterRight}
-        loading={loading}
+        // loading={loading}
         color="primary"
         type="auth">
         {this.renderContent()}
@@ -547,7 +547,7 @@ class AuthScreen extends Component {
         textActionOne={textActionOne}
         onPressActionOne={onPressActionOne}
         onDismiss={onPressActionOne}
-        // loading={loading}
+        loading={loading}
         // errorText={updateError}
       />
     );
@@ -557,18 +557,16 @@ class AuthScreen extends Component {
     const { loading, appLoading, postLoading, company_config } = this.props;
     const { viewStyleContainer } = styles;
 
-    const colors = company_config ? company_config.colors : Colors;
-
     return (
       <KeyboardAvoidingView
         keyboardShouldPersistTaps={'always'}
-        style={[viewStyleContainer, { backgroundColor: colors.primary }]}
+        style={viewStyleContainer}
         behavior={'padding'}
         // keyboardVerticalOffset={10}
       >
         {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}> */}
         {loading || postLoading || appLoading ? (
-          <Spinner size="large" />
+          <Spinner type="auth" size="large" color="authContrast" />
         ) : (
           this.renderMainContainer()
         )}

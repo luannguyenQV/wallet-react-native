@@ -9,7 +9,7 @@ import NavigationService from './util/navigation';
 import MainNavigator from './routes/mainNavigator';
 
 import { ThemeContext } from './util/config';
-import { colorSelector } from './redux/reducers/ConfigReducer';
+import { colorSelector, themeSelector } from './redux/reducers/ConfigReducer';
 
 // const _XHR = GLOBAL.originalXMLHttpRequest
 //   ? GLOBAL.originalXMLHttpRequest
@@ -59,10 +59,12 @@ class Main extends Component {
   render() {
     console.disableYellowBox = true;
     const { isReady, initStarted } = this.state;
+    const { colors, theme } = this.props;
+
     if (isReady && initStarted) {
       return (
         <Root>
-          <ThemeContext.Provider value={{ colors: this.props.colors }}>
+          <ThemeContext.Provider value={{ colors, theme }}>
             <MainNavigator
               ref={navigatorRef => {
                 NavigationService.setTopLevelNavigator(navigatorRef);
@@ -100,6 +102,7 @@ const mapStateToProps = state => {
   return {
     // colors: getColors(state.auth),
     colors: colorSelector(state),
+    theme: themeSelector(state),
   };
 };
 

@@ -11,7 +11,7 @@ import {
   SettingsOption,
   InputContainer,
 } from './../../components/common';
-import { themeSelector } from '../../redux/sagas/selectors';
+import { themeStateSelector } from '../../redux/sagas/selectors';
 
 class SettingsScreen extends Component {
   static navigationOptions = {
@@ -294,7 +294,7 @@ const mapStateToProps = state => {
     address,
     mobile,
     email,
-    theme: themeSelector(state),
+    theme: themeStateSelector(state),
   };
 };
 

@@ -42,6 +42,9 @@
     "withdraw": true,
     "updateDetails": false
   },
+  "theme": {
+    "authSpinner": "rehive"
+  },
   "home": {
     "header": "wallet",
     "detail": [
