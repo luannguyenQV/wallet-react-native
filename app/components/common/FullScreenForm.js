@@ -157,7 +157,6 @@ const FullScreenForm = context(_FullScreenForm);
 export { FullScreenForm };
 
 const _backgroundColor = (colors, type) => {
-  console.log('type', type);
   return colors[type + 'Screen'];
 };
 

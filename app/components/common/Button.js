@@ -35,7 +35,6 @@ class _Button extends Component {
     let textColor = colors[color];
     if (type === 'contained') {
       textColor = colors[color + 'Contrast'];
-      console.log('textColor', textColor);
     }
 
     return [
@@ -61,8 +60,6 @@ class _Button extends Component {
     } = this.props;
     const { _containerStyle } = styles;
     return (
-      // <ColorContext.Consumer>
-      //   {colors => (
       <Animatable.View
         ref={reference}
         style={[_containerStyle, containerStyle]}
@@ -83,8 +80,6 @@ class _Button extends Component {
           </View>
         </TouchableOpacity>
       </Animatable.View>
-      // )}
-      // </ColorContext.Consumer>
     );
   }
 }

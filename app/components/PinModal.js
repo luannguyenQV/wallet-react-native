@@ -13,6 +13,9 @@ class PinModal extends Component {
   componentDidMount() {
     const { pin, fingerprint, onSuccess } = this.props;
 
+    console.log('pin', pin);
+    console.log('fingerprint', fingerprint);
+
     // let compatible = await this.checkDeviceForHardware();
     // let fingerprints = await this.checkForFingerprints();
 
@@ -55,9 +58,7 @@ class PinModal extends Component {
   scanFingerprint = async () => {
     let result = await Expo.Fingerprint.authenticateAsync('Scan your finger.');
     if (result.success) {
-      if (!Platform.OS === 'ios') {
-        this.props.onSuccess();
-      }
+      this.props.onSuccess();
     } else {
       this.setState({ errorText: 'Unable to authenticate with fingerprint' });
     }

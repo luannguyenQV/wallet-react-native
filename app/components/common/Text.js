@@ -8,9 +8,8 @@ import context from './context';
 
 class _Text extends Component {
   textStyle() {
-    const { children, textStyle } = this.props;
     const { _textStyle } = styles;
-    const { color, colors, style } = this.props;
+    const { color, colors, textStyle } = this.props;
 
     return [
       _textStyle,

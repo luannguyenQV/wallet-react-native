@@ -194,7 +194,7 @@ class AuthScreen extends Component {
               />
               <Button
                 label="Register"
-                color="authContrast"
+                color="authScreenContrast"
                 type="text"
                 // size="large"
                 reference={input => {
@@ -566,7 +566,12 @@ class AuthScreen extends Component {
       >
         {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}> */}
         {loading || postLoading || appLoading ? (
-          <Spinner type="auth" size="large" color="authContrast" />
+          <Spinner
+            type="auth"
+            size="large"
+            color="authScreenContrast"
+            backgroundColor="authScreen"
+          />
         ) : (
           this.renderMainContainer()
         )}

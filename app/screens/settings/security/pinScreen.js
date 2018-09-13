@@ -259,7 +259,10 @@ class PinScreen extends Component {
             pin={pin}
             fingerprint={fingerprint}
             modalVisible={pinVisible}
-            onSuccess={() => this.setState({ pinVisible: false })}
+            onSuccess={() => {
+              console.log('success');
+              this.setState({ pinVisible: false });
+            }}
             onDismiss={() => this.props.navigation.goBack()}
           />
           {this.renderMainContainer()}
