@@ -210,7 +210,7 @@ class AuthScreen extends Component {
         return (
           <View style={viewStyleLanding}>
             <Text color="authScreenContrast">
-              Instructions on how to reset your password will be sent to
+              Please enter your account email, mobile or username
             </Text>
             <View style={viewStyleInput}>{this.renderInput()}</View>
           </View>
