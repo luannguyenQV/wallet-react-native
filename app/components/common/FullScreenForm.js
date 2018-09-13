@@ -28,13 +28,14 @@ const _FullScreenForm = props => {
     loading,
     color,
     colors,
+    type,
   } = props;
 
   return (
     <View
       style={[
         viewStyleContainer,
-        { backgroundColor: _backgroundColor(colors, color) },
+        { backgroundColor: _backgroundColor(colors, type) },
       ]}>
       {loading ? (
         <Spinner size="large" />
@@ -46,14 +47,14 @@ const _FullScreenForm = props => {
                 <HeaderButton
                   icon={iconHeaderLeft}
                   onPress={onPressHeaderLeft}
-                  color={colors[color + 'Contrast']}
+                  color={_contrastColor(colors, type)}
                 />
               ) : textHeaderLeft ? (
                 <TouchableOpacity onPress={onPressHeaderLeft}>
                   <Text
                     style={[
                       textStyleAction,
-                      { color: colors[color + 'Contrast'] },
+                      { color: _contrastColor(colors, type) },
                     ]}>
                     {textHeaderLeft}
                   </Text>
@@ -66,7 +67,7 @@ const _FullScreenForm = props => {
                   <Text
                     style={[
                       textStyleAction,
-                      { color: colors[color + 'Contrast'] },
+                      { color: _contrastColor(colors, type) },
                     ]}>
                     {textHeaderRight}
                   </Text>
@@ -84,7 +85,7 @@ const _FullScreenForm = props => {
                   <Text
                     style={[
                       textStyleAction,
-                      { color: colors[color + 'Contrast'] },
+                      { color: _contrastColor(colors, type) },
                     ]}>
                     {textFooterLeft}
                   </Text>
@@ -97,7 +98,10 @@ const _FullScreenForm = props => {
                   <Text
                     style={[
                       textStyleAction,
-                      { color: colors[color + 'Contrast'], textAlign: 'right' },
+                      {
+                        color: _contrastColor(colors, type),
+                        textAlign: 'right',
+                      },
                     ]}>
                     {textFooterRight}
                   </Text>
@@ -152,7 +156,16 @@ const FullScreenForm = context(_FullScreenForm);
 
 export { FullScreenForm };
 
-const _backgroundColor = (colors, color) => {
-  // console.log(colors);
-  return colors[color];
+const _backgroundColor = (colors, type) => {
+  console.log('colors', colors);
+  console.log('type', type);
+  const color = colors[type + 'Screen'];
+  console.log(color);
+  return colors[type + 'Screen'];
+};
+
+const _contrastColor = (colors, type) => {
+  console.log('colors', colors);
+  console.log('type', type);
+  return colors[type + 'ScreenContrast'];
 };

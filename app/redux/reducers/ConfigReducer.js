@@ -69,6 +69,13 @@ export const colorSelector = createSelector(
         _colors,
         'primaryContrast',
       ),
+      sendScreen: selectColor('sendScreen', selectedTheme, _colors, 'focus'),
+      sendScreenContrast: selectColor(
+        'sendScreenContrast',
+        selectedTheme,
+        _colors,
+        'focusContrast',
+      ),
     };
     return colors;
   },

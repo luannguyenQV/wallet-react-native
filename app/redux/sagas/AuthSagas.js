@@ -727,6 +727,7 @@ function* appLoad() {
         FETCH_REWARDS_ASYNC.success,
         // FETCH_CRYPTO_ASYNC.success,
       ]);
+      console.log(i, count);
     }
     yield put({ type: APP_LOAD_FINISH });
     yield call(NavigationService.navigate, 'App');

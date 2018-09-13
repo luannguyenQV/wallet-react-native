@@ -10,6 +10,8 @@
     "walletHeader": "white",
     "walletHeaderContrast": "primary",
     "authScreen": "white",
-    "authScreenContrast": "primary"
+    "authScreenContrast": "primary",
+    "sendScreen": "white",
+    "sendScreenContrast": "primary"
   }
 }
