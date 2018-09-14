@@ -104,10 +104,11 @@ class GetVerifiedScreen extends Component {
   renderAddresses() {
     const { address } = this.props;
     let value = '';
-    let status = address.status ? address.status.toUpperCase() : 'INCOMPLETE';
+    let status = 'INCOMPLETE';
+    console.log('address', address);
     if (address.length > 0) {
       const tempAddress = address[0];
-      status = address.status ? address.status.toUpperCase() : status;
+      status = tempAddress.status ? tempAddress.status.toUpperCase() : status;
       if (tempAddress.line_1) {
         value = value + tempAddress.line_1;
       }
