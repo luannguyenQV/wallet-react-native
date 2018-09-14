@@ -128,6 +128,7 @@ export const uploadProfilePhoto = image => {
     name: 'profile',
     type: 'image/jpg',
   };
+  console.log('uploadPP', file);
   return {
     type: UPLOAD_PROFILE_PHOTO_ASYNC.pending,
     payload: file,

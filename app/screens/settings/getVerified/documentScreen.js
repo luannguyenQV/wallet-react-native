@@ -147,6 +147,7 @@ class DocumentScreen extends Component {
 const styles = {
   container: {
     flex: 1,
+    backgroundColor: 'white',
   },
   viewStyleContent: {
     alignItems: 'center',

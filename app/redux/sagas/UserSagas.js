@@ -267,7 +267,8 @@ function* verifyItem(action) {
 
 function* uploadProfilePhoto(action) {
   try {
-    yield call(Rehive.updateProfileImage, action.payload);
+    const resp = yield call(Rehive.updateProfileImage, action.payload);
+    console.log(resp);
     yield put({ type: UPLOAD_PROFILE_PHOTO_ASYNC.success });
     yield put({ type: FETCH_DATA_ASYNC.pending, payload: 'profile' });
   } catch (error) {

@@ -70,9 +70,11 @@ export const getProfile = () => r.user.get();
 export const updateProfile = data => r.user.update(data);
 
 export const updateProfileImage = file => {
+  console.log('file', file);
   let formData = new FormData();
   formData.append('profile', file);
-  r.user.update(formData);
+  console.log('formData', formData);
+  return r.user.update(formData);
 };
 
 // Address
