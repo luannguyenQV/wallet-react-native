@@ -103,7 +103,9 @@ export const verifyItem = (type, otp) => {
 
 export const SHOW_MODAL = 'show_modal';
 export const showModal = (type, item, modalType) => {
+  console.log('type', type);
   console.log('item', item);
+  console.log('modalType', modalType);
   return {
     type: SHOW_MODAL,
     payload: { type, item, modalType },

@@ -136,7 +136,9 @@ class WalletsScreen extends Component {
             this.renderDetail(item, navigation)
           }
           itemActive={item => (item ? item.active : false)}
-          textTitleLeft={item => (item ? item.currency.code : '')}
+          textTitleLeft={item =>
+            item && item.currency ? item.currency.code : ''
+          }
           // onPressTitleLeft={item => this.showModal(item)}
           title={item => (item ? item.currency.description : '')}
           subtitle={item => (item ? standardizeString(item.account_name) : '')}

@@ -208,7 +208,7 @@ class CardList extends Component {
         case 'active':
           contentText =
             'Set ' +
-            tempItem.currency.currency.code +
+            tempItem.currency.code +
             ' as your active wallet so that it will be shown first on the home screen and the top of this list';
           textActionOne = 'MAKE ACTIVE';
           onPressActionOne = () => setActiveCurrency(tempItem);

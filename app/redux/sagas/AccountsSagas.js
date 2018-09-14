@@ -73,11 +73,11 @@ function* setActiveCurrency(action) {
     // console.log(action);
     yield call(
       Rehive.setActiveCurrency,
-      action.payload.account_reference,
-      action.payload.currency.currency.code,
+      action.payload.account,
+      action.payload.currency.code,
     );
     Toast.show({
-      text: action.payload.currency.currency.code + ' set as active currency',
+      text: action.payload.currency.code + ' set as active currency',
     });
     yield all([
       put({ type: SET_ACTIVE_CURRENCY_ASYNC.success }),
