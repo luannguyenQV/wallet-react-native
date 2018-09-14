@@ -12,7 +12,7 @@ import {
   SEND_ASYNC,
   HIDE_MODAL,
   LOGOUT_USER_ASYNC,
-  SET_SEND_WALLET,
+  SET_TRANSACTION_STATE,
   SET_SEND_TYPE,
   FETCH_TRANSACTIONS_ASYNC,
   SET_TRANSACTION_CURRENCY,
@@ -129,10 +129,7 @@ function* validateTransaction(action) {
     const contacts = yield select(contactsSelector);
     // console.log('contacts', contacts);
     // console.log('currency', currency);
-    // switch(type) {
-    //   case 'send':
 
-    // }
     // Amount validation
     const currency = transaction.currency;
     let transactionAmountError = '';
@@ -140,10 +137,16 @@ function* validateTransaction(action) {
     for (let i = 0; i < currency.currency.divisibility; i++) {
       amount = amount * 10;
     }
-    if (amount) {
+    if (amount !== '') {
+      if (amount <= 0) {
+        transactionAmountError = 'Amount must be greater than 0';
+      }
       if (amount > currency.available_balance) {
         transactionAmountError = 'Amount must be less than available balance';
       }
+    } else {
+      // transactionAmountError = 'Amount must be greater than 0';
+      // TODO: some error must be returned here to prevent moving to confirm screen
     }
 
     // Recipient validation
@@ -160,6 +163,16 @@ function* validateTransaction(action) {
           transaction.currency.crypto,
         );
       }
+    }
+
+    switch (type) {
+      case 'confirm':
+        if (!transactionAmountError && !transactionRecipientError) {
+          yield put({
+            type: SET_TRANSACTION_STATE,
+            payload: 'confirm',
+          });
+        }
     }
 
     yield put({

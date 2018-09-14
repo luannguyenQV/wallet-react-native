@@ -82,6 +82,7 @@ class SendScreen extends Component {
       setTransactionState('confirm');
     }
 
+    // if(amount ||)
     validateTransaction('send');
   }
 
@@ -137,8 +138,8 @@ class SendScreen extends Component {
         break;
       default:
         onPressFooterRight = () => {
-          validateTransaction();
-          setTransactionState('confirm');
+          validateTransaction('confirm');
+          // setTransactionState('confirm');
         };
         textFooterRight =
           transaction.amount && transaction.recipient ? 'Next' : '';
