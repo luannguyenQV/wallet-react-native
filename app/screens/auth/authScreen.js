@@ -274,7 +274,7 @@ class AuthScreen extends Component {
                 </Text>
                 <Text color="error">{authError}</Text>
                 <CodeInput
-                  ref={component => (this._pinInput = component)}
+                  ref={component => (this._pinInput2 = component)}
                   secureTextEntry
                   activeColor="gray"
                   autoFocus
