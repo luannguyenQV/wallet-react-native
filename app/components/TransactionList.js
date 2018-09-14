@@ -223,6 +223,7 @@ const styles = {
     flex: 1,
     paddingHorizontal: 8,
     zIndex: 2,
+    backgroundColor: 'white',
   },
   textStyleHeader: {
     fontSize: 20,

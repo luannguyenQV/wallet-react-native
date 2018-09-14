@@ -28,20 +28,20 @@ class TransactionListItem extends Component {
         // console.log('Debit');
         iconName = 'call-made';
         headerTextOne = 'Sent';
-        if (item.destination_transaction) {
-          headerTextOne = headerTextOne + ' to ';
-          headerTextTwo = item.destination_transaction.user.email;
-        }
+        // if (item.destination_transaction) {
+        //   headerTextOne = headerTextOne + ' to ';
+        //   headerTextTwo = item.destination_transaction.user.email;
+        // }
         color = Colors.negative;
         break;
       case 'credit':
         // console.log('Credit');
         iconName = 'call-received';
         headerTextOne = 'Received';
-        if (item.source_transaction) {
-          headerTextOne = headerTextOne + ' from ';
-          headerTextTwo = item.source_transaction.user.email;
-        }
+        // if (item.source_transaction) {
+        //   headerTextOne = headerTextOne + ' from ';
+        //   headerTextTwo = item.source_transaction.user.email;
+        // }
         color = Colors.positive;
         break;
       default:
@@ -100,6 +100,7 @@ const styles = {
     paddingRight: 8,
     paddingLeft: 4,
     justifyContent: 'flex-start',
+    backgroundColor: 'white',
   },
   viewStyleAmount: {
     // right: 0,
