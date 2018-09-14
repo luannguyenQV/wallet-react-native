@@ -28,7 +28,8 @@ import {
   logoutUser,
 } from '../../redux/actions';
 
-import Colors from './../../config/colors';
+import { colorSelector } from './../../redux/reducers/ConfigReducer';
+
 import {
   Button,
   FullScreenForm,
@@ -554,13 +555,13 @@ class AuthScreen extends Component {
   }
 
   render() {
-    const { loading, appLoading, postLoading, company_config } = this.props;
+    const { loading, appLoading, postLoading, colors } = this.props;
     const { viewStyleContainer } = styles;
 
     return (
       <KeyboardAvoidingView
         keyboardShouldPersistTaps={'always'}
-        style={viewStyleContainer}
+        style={[viewStyleContainer, { backgroundColor: colors.authScreen }]}
         behavior={'padding'}
         // keyboardVerticalOffset={10}
       >
@@ -615,7 +616,7 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ auth }) => {
+const mapStateToProps = state => {
   const {
     detailState,
     countryCode,
@@ -644,7 +645,7 @@ const mapStateToProps = ({ auth }) => {
     user,
     terms,
     termsChecked,
-  } = auth;
+  } = state.auth;
   return {
     detailState,
     countryCode,
@@ -673,6 +674,7 @@ const mapStateToProps = ({ auth }) => {
     user,
     terms,
     termsChecked,
+    colors: colorSelector(state),
   };
 };
 
