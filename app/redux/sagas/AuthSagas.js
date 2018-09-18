@@ -24,7 +24,7 @@ import {
   REGISTER_USER_ASYNC,
   NEXT_AUTH_FORM_STATE,
   UPDATE_AUTH_FORM_STATE,
-  APP_LOAD_FINISH,
+  APP_LOAD,
   CHANGE_PASSWORD_ASYNC,
   RESET_PASSWORD_ASYNC,
   LOGOUT_USER_ASYNC,
@@ -657,7 +657,7 @@ function* postAuthFlow() {
 function* appLoad() {
   console.log('appLoad');
   try {
-    yield put({ type: POST_LOADING });
+    yield put({ type: APP_LOAD.pending });
     let count = 11;
     const { services } = yield select(companyConfigSelector);
     if (services.rewards) {
@@ -729,7 +729,7 @@ function* appLoad() {
       ]);
       // console.log(i, count);
     }
-    yield put({ type: APP_LOAD_FINISH });
+    yield put({ type: APP_LOAD.success });
     yield call(NavigationService.navigate, 'App');
   } catch (error) {
     console.log(error);

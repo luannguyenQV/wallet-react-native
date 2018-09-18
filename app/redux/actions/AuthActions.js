@@ -8,43 +8,11 @@ import { authValidation } from '../../util/validation';
 import { createAsyncTypes } from '../store/Utilities';
 
 export const INIT = createAsyncTypes('init');
+export const APP_LOAD = createAsyncTypes('app_load');
 export const init = () => {
   return {
     type: INIT.pending,
   };
-};
-
-export const APP_LOAD_START = 'APP_LOAD_START';
-export const APP_LOAD_FINISH = 'APP_LOAD_FINISH';
-export const initialLoad = props => async dispatch => {
-  dispatch({ type: APP_LOAD_START });
-
-  if (props.token) {
-    dispatch({ type: LOGIN_USER_ASYNC.success, payload: props.token });
-  } else {
-    dispatch({
-      type: AUTH_FIELD_ERROR,
-      payload: '',
-    });
-    if (props.company) {
-      dispatch({
-        type: UPDATE_AUTH_FORM_STATE,
-        payload: {
-          iconHeaderLeft: 'arrow-back',
-          mainState: 'landing',
-        },
-      });
-    } else {
-      dispatch({
-        type: UPDATE_AUTH_FORM_STATE,
-        payload: {
-          textFooterRight: 'Next',
-          mainState: 'company',
-          detailState: 'company',
-        },
-      });
-    }
-  }
 };
 
 export const AUTH_FIELD_CHANGED = 'auth_field_changed';

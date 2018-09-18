@@ -9,8 +9,7 @@ import {
   RESET_PASSWORD_ASYNC,
   LOGOUT_USER_ASYNC,
   RESET_AUTH,
-  APP_LOAD_START,
-  APP_LOAD_FINISH,
+  APP_LOAD,
   SET_PIN,
   RESET_PIN,
   ACTIVATE_FINGERPRINT,
@@ -269,12 +268,14 @@ export default (state = INITIAL_STATE, action) => {
         pinError: action.payload,
       };
 
-    case APP_LOAD_START:
+    case APP_LOAD.pending:
       return {
         ...state,
+        mainState: '',
+        detailState: '',
         appLoading: true,
       };
-    case APP_LOAD_FINISH:
+    case APP_LOAD.success:
       return {
         ...state,
         appLoading: false,

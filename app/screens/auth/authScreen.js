@@ -384,19 +384,19 @@ class AuthScreen extends Component {
     this.props.nextAuthFormState();
   }
 
-  _scanFingerprint = async () => {
-    if (Platform.OS === 'android') {
-      this.props.showFingerprintModal();
-    }
-    let result = await Expo.Fingerprint.authenticateAsync('Biometric scan');
-    this.props.hideModal();
+  // _scanFingerprint = async () => {
+  //   if (Platform.OS === 'android') {
+  //     this.props.showFingerprintModal();
+  //   }
+  //   let result = await Expo.Fingerprint.authenticateAsync('Biometric scan');
+  //   this.props.hideModal();
 
-    if (result.success) {
-      this.props.pinSuccess();
-    } else {
-      this.props.pinFail('Unable to authenticate with biometrics');
-    }
-  };
+  //   if (result.success) {
+  //     this.props.pinSuccess();
+  //   } else {
+  //     this.props.pinFail('Unable to authenticate with biometrics');
+  //   }
+  // };
 
   _activateFingerprint = async () => {
     if (Platform.OS === 'android') {
