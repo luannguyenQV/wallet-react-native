@@ -15,7 +15,7 @@ import context from './context';
 // if ViewPropTypes is not defined fall back to View.propType (to support RN < 0.44)
 const viewPropTypes = ViewPropTypes || View.propTypes;
 
-class _CodeInput extends Component {
+class CodeInput extends Component {
   static propTypes = {
     codeLength: PropTypes.number,
     compareWithCode: PropTypes.string,
@@ -351,6 +351,6 @@ const styles = StyleSheet.create({
   },
 });
 
-const CodeInput = context(_CodeInput);
+// const CodeInput = context(_CodeInput);
 
 export { CodeInput };

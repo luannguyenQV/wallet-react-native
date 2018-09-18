@@ -7,9 +7,11 @@ import React, { Component } from 'react';
 import { View, Text, Platform } from 'react-native';
 import PropTypes from 'prop-types';
 import { CodeInput, PopUpGeneral } from './common';
+import context from './common/context';
+import { Toast } from 'native-base';
 
-class PinModal extends Component {
-  state = { contentText: '', errorText: '' };
+class _PinConfirm extends Component {
+  state = { contentText: '', errorText: '', attempt: 0 };
   async componentDidMount() {
     const { pin, fingerprint, onSuccess } = this.props;
 
@@ -20,9 +22,6 @@ class PinModal extends Component {
     let errorText = '';
 
     if (fingerprint) {
-      if (Platform.OS === 'ios') {
-        onSuccess();
-      }
       let compatible = await Expo.Fingerprint.hasHardwareAsync();
       let fingerprints = await Expo.Fingerprint.isEnrolledAsync();
       console.log(fingerprints, compatible);
@@ -30,7 +29,9 @@ class PinModal extends Component {
         errorText =
           'Unable to access devices stored fingerprints. Please log out to reset fingerprint.';
       } else {
-        contentText = 'Please scan your fingerprint to proceed';
+        if (Platform.OS !== 'ios') {
+          contentText = 'Please scan your fingerprint to proceed';
+        }
         this.scanFingerprint();
       }
     } else if (pin) {
@@ -52,15 +53,27 @@ class PinModal extends Component {
   };
 
   _onInputPinComplete(code) {
-    const { pin, onSuccess } = this.props;
-    let errorText = '';
+    const { pin, attempts, onSuccess, onDismiss } = this.props;
+    let { attempt } = this.state;
+    attempt = attempt + 1;
     if (pin === code) {
       onSuccess();
     } else {
-      this._pinInput.clear();
-      errorText = 'Incorrect pin, please try again';
+      if (thisAttempt < attempts) {
+        this._pinInput.clear();
+        let errorText =
+          '[' +
+          thisAttempt.toString() +
+          '/' +
+          attempts.toString() +
+          '] ' +
+          'Incorrect pin, please try again';
+        this.setState({ errorText, attempt: thisAttempt });
+      } else {
+        Toast.show({ text: 'Too many incorrect attempts. Logged out.' });
+        onDismiss();
+      }
     }
-    this.setState({ errorText });
   }
 
   renderInput() {
@@ -87,14 +100,14 @@ class PinModal extends Component {
   }
 
   render() {
-    const { modal, modalVisible, onDismiss } = this.props;
+    const { modal, modalVisible, onDismiss, colors } = this.props;
     const { viewStyleContainer, textStyle } = styles;
 
-    const { errorText, contentText } = this.state;
+    const { errorText, contentText, attempt } = this.state;
 
     return modal ? (
       <PopUpGeneral
-        visible={modalVisible}
+        visible={modalVisible && contentText}
         contentText={contentText}
         textActionOne={'CANCEL'}
         onPressActionOne={onDismiss}
@@ -103,42 +116,57 @@ class PinModal extends Component {
         {this.renderInput()}
       </PopUpGeneral>
     ) : (
-      <View style={viewStyleContainer}>
+      <View
+        style={[
+          viewStyleContainer,
+          { backgroundColor: colors.primaryContrast },
+        ]}>
         <Text style={textStyle}>{contentText}</Text>
         {this.renderInput()}
+        {errorText ? (
+          <Text style={[textStyle, { paddingTop: 16, color: colors.negative }]}>
+            {errorText}
+          </Text>
+        ) : null}
       </View>
     );
   }
 }
 
-PinModal.propTypes = {
+_PinConfirm.propTypes = {
   pin: PropTypes.string, // Required pin
   fingerprint: PropTypes.bool, // Required fingerprint
   modalVisible: PropTypes.bool, // Required fingerprint
   onSuccess: PropTypes.func, // Function if pin/fingerprint success
   onDismiss: PropTypes.func, // Function to execute on dismiss
+  attempts: PropTypes.number,
 };
 
-PinModal.defaultProps = {
+_PinConfirm.defaultProps = {
   pin: '',
   fingerprint: false,
   modalVisible: false,
   onSuccess: () => {},
   onDismiss: () => {},
+  attempts: 3,
 };
 
 const styles = {
   viewStyleContainer: {
-    flex: 1,
+    // flex: 1,
     padding: 8,
+    borderRadius: 5,
+    overflow: 'hidden',
+    paddingBottom: 16,
   },
   textStyle: {
     fontSize: 16,
     textAlign: 'center',
     color: 'black',
-    padding: 8,
-    paddingBottom: 16,
+    // paddingTop: 16,
   },
 };
 
-export default PinModal;
+const PinConfirm = context(_PinConfirm);
+
+export default PinConfirm;
