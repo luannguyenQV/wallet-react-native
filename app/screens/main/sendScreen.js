@@ -440,6 +440,7 @@ class SendScreen extends Component {
           behavior={'padding'}>
           {pinVisible ? (
             <PinModal
+              modal
               pin={pin}
               fingerprint={fingerprint}
               modalVisible={pinVisible}

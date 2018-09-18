@@ -4,7 +4,7 @@ Component that request the user to input a pin if pin has been set or
 to scan fingerprint if fingerprint has been set.
 */
 import React, { Component } from 'react';
-import { View, Platform } from 'react-native';
+import { View, Text, Platform } from 'react-native';
 import PropTypes from 'prop-types';
 import { CodeInput, PopUpGeneral } from './common';
 
@@ -76,12 +76,36 @@ class PinModal extends Component {
     this.setState({ errorText });
   }
 
+  renderInput() {
+    const { pin } = this.props;
+    if (pin) {
+      return (
+        <CodeInput
+          ref={component => (this._pinInput = component)}
+          secureTextEntry
+          activeColor="gray"
+          autoFocus
+          inactiveColor="lightgray"
+          className="border-b"
+          codeLength={4}
+          space={7}
+          size={30}
+          inputPosition="center"
+          containerStyle={{ marginTop: 0, paddingBottom: 24 }}
+          onFulfill={code => this._onInputPinComplete(code)}
+        />
+      );
+    }
+    return <View />;
+  }
+
   render() {
-    const { pin, modalVisible, onDismiss } = this.props;
+    const { modal, modalVisible, onDismiss } = this.props;
+    const { viewStyleContainer, textStyle } = styles;
 
     const { errorText, contentText } = this.state;
 
-    return (
+    return modal ? (
       <PopUpGeneral
         visible={modalVisible}
         contentText={contentText}
@@ -89,25 +113,13 @@ class PinModal extends Component {
         onPressActionOne={onDismiss}
         errorText={errorText}
         onDismiss={onDismiss}>
-        {pin ? (
-          <CodeInput
-            ref={component => (this._pinInput = component)}
-            secureTextEntry
-            activeColor="gray"
-            autoFocus
-            inactiveColor="lightgray"
-            className="border-b"
-            codeLength={4}
-            space={7}
-            size={30}
-            inputPosition="center"
-            containerStyle={{ marginTop: 0, paddingBottom: 24 }}
-            onFulfill={code => this._onInputPinComplete(code)}
-          />
-        ) : (
-          <View />
-        )}
+        {this.renderInput()}
       </PopUpGeneral>
+    ) : (
+      <View style={viewStyleContainer}>
+        <Text style={textStyle}>{contentText}</Text>
+        {this.renderInput()}
+      </View>
     );
   }
 }
@@ -131,13 +143,14 @@ PinModal.defaultProps = {
 const styles = {
   viewStyleContainer: {
     flex: 1,
-    flexDirection: 'row',
-    borderBottomColor: 'lightgrey',
-    borderBottomWidth: 1,
-    paddingVertical: 8,
-    paddingRight: 8,
-    paddingLeft: 4,
-    justifyContent: 'flex-start',
+    padding: 8,
+  },
+  textStyle: {
+    fontSize: 16,
+    textAlign: 'center',
+    color: 'black',
+    padding: 8,
+    paddingBottom: 16,
   },
 };
 

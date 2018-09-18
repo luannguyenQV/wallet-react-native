@@ -256,6 +256,7 @@ class PinScreen extends Component {
           style={styles.viewStyleContainer}
           behavior={'padding'}>
           <PinModal
+            modal
             pin={pin}
             fingerprint={fingerprint}
             modalVisible={pinVisible}

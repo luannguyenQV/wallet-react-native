@@ -44,6 +44,7 @@ import {
 } from './../../components/common';
 import { standardizeString } from './../../util/general';
 import client from './../../config/client';
+import PinModal from '../../components/PinModal';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -159,7 +160,8 @@ class AuthScreen extends Component {
       detailState,
       nextAuthFormState,
       company_config,
-      pinError,
+      pin,
+      fingerprint,
       authError,
       email,
       user,
@@ -226,10 +228,17 @@ class AuthScreen extends Component {
         );
       case 'pin':
         switch (detailState) {
+          case 'fingerprint':
           case 'pin':
             return (
               <View style={viewStyleInput}>
-                <Text color="authScreenContrast">Please enter pin</Text>
+                <PinModal
+                  pin={pin}
+                  fingerprint={fingerprint}
+                  onSuccess={() => this.props.pinSuccess()}
+                  onDismiss={() => this.props.logoutUser()}
+                />
+                {/* <Text color="authScreenContrast">Please enter pin</Text>
                 <Text color="error">{pinError}</Text>
                 <CodeInput
                   ref={component => (this._pinInput = component)}
@@ -244,26 +253,25 @@ class AuthScreen extends Component {
                   inputPosition="center"
                   containerStyle={{ marginTop: 0, paddingBottom: 24 }}
                   onFulfill={code => this._onInputPinComplete(code)}
-                />
+                /> */}
               </View>
             );
-          case 'fingerprint':
-            // this._scanFingerprint();
-            return (
-              <View style={viewStyleLanding}>
-                <View style={buttonsContainer}>
-                  <Button
-                    label="LOG IN WITH FINGERPRINT"
-                    color="secondary"
-                    reference={input => {
-                      this.login = input;
-                    }}
-                    onPress={() => this._scanFingerprint()}
-                    animation="slideInRight"
-                  />
-                </View>
-              </View>
-            );
+          // this._scanFingerprint();
+          // return (
+          //   <View style={viewStyleLanding}>
+          //     <View style={buttonsContainer}>
+          //       <Button
+          //         label="LOG IN WITH FINGERPRINT"
+          //         color="secondary"
+          //         reference={input => {
+          //           this.login = input;
+          //         }}
+          //         onPress={() => this._scanFingerprint()}
+          //         animation="slideInRight"
+          //       />
+          //     </View>
+          //   </View>
+          // );
           case 'set_pin':
           case 'confirm_pin':
             return (
