@@ -52,18 +52,22 @@ class HomeCards extends Component {
 
   renderImage(image) {
     const { company_config } = this.props;
+    const { imageStylePhoto } = styles;
     if (image === 'pxpay' || company_config.company.id.includes('pxpay')) {
       return (
         <Image
-          style={styles.imageStylePhoto}
+          style={imageStylePhoto}
           source={require('./../../assets/icons/pxpay.png')}
         />
       );
     } else if (image === 'card1') {
       return (
         <Image
-          style={styles.imageStylePhoto}
-          source={require('./../../assets/icons/card1.png')}
+          style={[
+            imageStylePhoto,
+            { backgroundColor: this.props.company_config.colors.primary },
+          ]}
+          source={require('./../../assets/icons/card1_transparent.png')}
         />
       );
     }
@@ -71,7 +75,7 @@ class HomeCards extends Component {
     return (
       <View
         style={[
-          styles.imageStylePhoto,
+          imageStylePhoto,
           { backgroundColor: this.props.company_config.colors.primary },
         ]}
       />
