@@ -67,6 +67,7 @@ class PinScreen extends Component {
     if (showPin) {
       return (
         <View>
+          <Text style={styles.textStyle}>Please input pin</Text>
           <CodeInput
             ref={component => (this._pinInput2 = component)}
             secureTextEntry
@@ -287,10 +288,11 @@ const styles = {
     justifyContent: 'center',
     padding: 16,
   },
-  commentText: {
+  textStyle: {
     fontSize: 16,
     textAlign: 'center',
     color: 'black',
+    padding: 8,
   },
   pinInfo: {
     flex: 2,

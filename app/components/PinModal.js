@@ -10,14 +10,11 @@ import { CodeInput, PopUpGeneral } from './common';
 
 class PinModal extends Component {
   state = { contentText: '', errorText: '' };
-  componentDidMount() {
+  async componentDidMount() {
     const { pin, fingerprint, onSuccess } = this.props;
 
     console.log('pin', pin);
     console.log('fingerprint', fingerprint);
-
-    // let compatible = await this.checkDeviceForHardware();
-    // let fingerprints = await this.checkForFingerprints();
 
     let contentText = '';
     let errorText = '';
@@ -26,16 +23,16 @@ class PinModal extends Component {
       if (Platform.OS === 'ios') {
         onSuccess();
       }
-      // if (!compatible) {
-      //   errorText =
-      //     'Unable to access devices fingerprint scanner. Please log out to reset fingerprint.';
-      // } else if (!fingerprints) {
-      //   errorText =
-      //     'Unable to access devices stored fingerprints. Please log out to reset fingerprint.';
-      // } else {
-      contentText = 'Please scan your fingerprint to proceed';
-      this.scanFingerprint();
-      // }
+      let compatible = await Expo.Fingerprint.hasHardwareAsync();
+      let fingerprints = await Expo.Fingerprint.isEnrolledAsync();
+      console.log(fingerprints, compatible);
+      if (!fingerprints && !compatible) {
+        errorText =
+          'Unable to access devices stored fingerprints. Please log out to reset fingerprint.';
+      } else {
+        contentText = 'Please scan your fingerprint to proceed';
+        this.scanFingerprint();
+      }
     } else if (pin) {
       contentText = 'Please input your pin to proceed';
     } else {
@@ -44,16 +41,6 @@ class PinModal extends Component {
 
     this.setState({ errorText, contentText });
   }
-
-  checkDeviceForHardware = async () => {
-    let compatible = await Expo.Fingerprint.hasHardwareAsync();
-    this.setState({ compatible });
-  };
-
-  checkForFingerprints = async () => {
-    let fingerprints = await Expo.Fingerprint.isEnrolledAsync();
-    this.setState({ fingerprints });
-  };
 
   scanFingerprint = async () => {
     let result = await Expo.Fingerprint.authenticateAsync('Scan your finger.');
