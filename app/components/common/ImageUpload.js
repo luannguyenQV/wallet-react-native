@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { ImagePicker, Permissions } from 'expo';
+import { Toast } from 'native-base';
 import { PopUpGeneral } from './PopUpGeneral';
 import { ButtonList } from './ButtonList';
 import { Button } from './Button';
@@ -18,13 +19,7 @@ class ImageUpload extends Component {
       allowsEditing: true,
       // aspect: [4, 3],
     });
-    if (!result.cancelled) {
-      this.props.onSave(result.uri);
-      this.props.onDismiss();
-      // this.setState({
-      //   image: result.uri,
-      // });
-    }
+    this.handleImagePicker(result);
   };
 
   launchImageLibrary = async () => {
@@ -33,14 +28,16 @@ class ImageUpload extends Component {
       mediaTypes: 'Images',
       allowsEditing: true,
     });
+    this.handleImagePicker(result);
+  };
+
+  handleImagePicker(result) {
     if (!result.cancelled) {
+      Toast.show({ text: 'Image uploaded' });
       this.props.onSave(result.uri);
       this.props.onDismiss();
-      // this.setState({
-      //   image: result.uri,
-      // });
     }
-  };
+  }
 
   render() {
     const { visible, onDismiss } = this.props;
@@ -48,27 +45,16 @@ class ImageUpload extends Component {
     return (
       <PopUpGeneral visible={visible} onDismiss={onDismiss}>
         <ButtonList>
-          <Button
-            label="Use camera"
-            onPress={this.launchCamera} //this.openModal(item.document_type)}
-          />
+          <Button label="Use camera" onPress={this.launchCamera} />
           <Button
             label="Choose from gallery"
-            onPress={this.launchImageLibrary} //this.openModal(item.document_type)}
+            onPress={this.launchImageLibrary}
           />
-          <Button
-            type="text"
-            label="Cancel"
-            onPress={() => onDismiss()} //this.openModal(item.document_type)}
-          />
+          <Button type="text" label="Cancel" onPress={() => onDismiss()} />
         </ButtonList>
       </PopUpGeneral>
     );
   }
 }
-
-const styles = {
-  viewStyleContainer: {},
-};
 
 export { ImageUpload };
