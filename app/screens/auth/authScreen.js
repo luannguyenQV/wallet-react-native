@@ -417,6 +417,7 @@ class AuthScreen extends Component {
       detailState,
       authError,
       company,
+      companies,
       tempCompany,
       email,
       mobile,
@@ -430,24 +431,37 @@ class AuthScreen extends Component {
       termsChecked,
     } = this.props;
 
+    const { authFieldChange, nextAuthFormState } = this.props;
+
     let key = detailState;
     let type = detailState;
     let placeholder = '';
     let label = standardizeString(detailState);
     let value = '';
-    let onChangeText = value =>
-      this.props.authFieldChange({ prop: detailState, value });
+    let onChangeText = value => authFieldChange({ prop: detailState, value });
+    let data = [];
+    let onPressListItem = () => {};
     let returnKeyType = 'done';
-    let onSubmitEditing = () => this.props.nextAuthFormState('');
+    let onSubmitEditing = () => nextAuthFormState('');
     let keyboardType = 'default';
     let autoCapitalize = 'none';
 
     switch (detailState) {
       case 'company':
+        console.log('companies', companies);
+        console.log('tempCompany', tempCompany);
+        // console.log('companies', companies);
         placeholder = 'e.g. Rehive';
         value = tempCompany;
-        onChangeText = value =>
-          this.props.authFieldChange({ prop: 'tempCompany', value });
+        onChangeText = value => authFieldChange({ prop: 'tempCompany', value });
+        data = tempCompany
+          ? companies.filter(item => item.toLowerCase().includes(tempCompany))
+          : [];
+        onPressListItem = item => {
+          console.log('item pressed', item);
+          authFieldChange({ prop: 'tempCompany', value: item });
+          nextAuthFormState('');
+        };
         break;
       case 'email':
         value = email;
@@ -497,11 +511,13 @@ class AuthScreen extends Component {
       <Input
         key={key}
         type={type}
+        data={data}
         placeholder={placeholder}
         label={label}
         value={value}
         inputError={authError}
-        // autoFocus
+        popUp
+        onPressListItem={onPressListItem}
         autoCapitalize={autoCapitalize}
         keyboardType={keyboardType}
         onChangeText={onChangeText}
@@ -653,6 +669,7 @@ const mapStateToProps = state => {
     user,
     terms,
     termsChecked,
+    companies,
   } = state.auth;
   return {
     detailState,
@@ -660,6 +677,7 @@ const mapStateToProps = state => {
     mainState,
     tempCompany,
     company,
+    companies,
     authError,
     email,
     emailError,

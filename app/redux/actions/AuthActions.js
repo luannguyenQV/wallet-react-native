@@ -17,6 +17,7 @@ export const init = () => {
 
 export const AUTH_FIELD_CHANGED = 'auth_field_changed';
 export const authFieldChange = ({ prop, value }) => {
+  console.log(prop, value);
   return {
     type: AUTH_FIELD_CHANGED,
     payload: { prop, value },

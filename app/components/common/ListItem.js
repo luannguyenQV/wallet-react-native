@@ -40,7 +40,9 @@ class ListItem extends Component {
           </View>
           <View style={viewStyleTitle}>
             <Text style={textStyleTitle}>{title}</Text>
-            <Text style={textStyleSubtitle}>{subtitle}</Text>
+            {subtitle ? (
+              <Text style={textStyleSubtitle}>{subtitle}</Text>
+            ) : null}
           </View>
         </View>
       </TouchableHighlight>

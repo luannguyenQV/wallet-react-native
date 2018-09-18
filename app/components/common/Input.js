@@ -303,12 +303,12 @@ class _Input extends Component {
               renderItem={({ item }) => (
                 <ListItem
                   onPress={() => onPressListItem(item)}
-                  title={item[title]}
+                  title={item[title] ? item[title] : item}
                   subtitle={item[subtitle]}
                   // image={item.image ? item.image : null}
                 />
               )}
-              keyExtractor={item => (item.id ? item.id.toString() : '')}
+              keyExtractor={item => (item.id ? item.id.toString() : item)}
               ItemSeparatorComponent={ListSeparator}
               // ListEmptyComponent={<ListItem title="No data" />}
             />
