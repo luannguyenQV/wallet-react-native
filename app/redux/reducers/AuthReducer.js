@@ -182,15 +182,9 @@ export default (state = INITIAL_STATE, action) => {
 
     case SET_COMPANY:
       let companies = state.companies ? state.companies : [];
-      console.log(companies.indexOf(action.payload.company));
       if (companies.indexOf(action.payload.company) === -1) {
         companies.push(action.payload.company);
       }
-      console.log({
-        company: action.payload.company,
-        company_config: action.payload.company_config,
-        companies,
-      });
       return {
         ...state,
         company: action.payload.company,

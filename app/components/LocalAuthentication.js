@@ -6,12 +6,13 @@ to scan fingerprint if fingerprint has been set.
 import React, { Component } from 'react';
 import { View, Text, Platform } from 'react-native';
 import PropTypes from 'prop-types';
-import { CodeInput, PopUpGeneral } from './common';
+import { CodeInput, PopUpGeneral, Button } from './common';
 import context from './common/context';
 import { Toast } from 'native-base';
 
-class _PinConfirm extends Component {
+class _LocalAuthentication extends Component {
   state = { contentText: '', errorText: '', attempt: 0 };
+
   async componentDidMount() {
     const { pin, fingerprint, onSuccess } = this.props;
 
@@ -44,46 +45,49 @@ class _PinConfirm extends Component {
   }
 
   scanFingerprint = async () => {
+    // let contentText = '';
+    // await this.setState({ contentText });
     let result = await Expo.Fingerprint.authenticateAsync('Scan your finger.');
     if (result.success) {
       this.props.onSuccess();
     } else {
-      this.setState({ errorText: 'Unable to authenticate with fingerprint' });
+      this.handleFail();
     }
   };
 
-  // if finger print cancelled or failed have a button to try again or log out,
-  // perhaps show name of phone user and say "Not you?"
-  // this logic moves out of this component and onto the authScreen
-  // this means all other actions are once off failure as they are now which is fine
-  // woooohooo
-
-  _onInputPinComplete(code) {
-    const { pin, attempts, onSuccess, onDismiss } = this.props;
+  handleFail() {
+    console.log('handle fail');
+    const { attempts, onDismiss } = this.props;
     let { attempt } = this.state;
     attempt = attempt + 1;
+    if (attempt < attempts) {
+      let errorText =
+        '[' +
+        attempt.toString() +
+        '/' +
+        attempts.toString() +
+        '] ' +
+        'Unable to authenticate, please try again';
+      this.setState({ errorText, attempt });
+    } else {
+      Toast.show({ text: 'Too many incorrect attempts.' });
+      onDismiss();
+    }
+  }
+
+  _onInputPinComplete(code) {
+    const { pin, onSuccess } = this.props;
     if (pin === code) {
       onSuccess();
     } else {
-      if (thisAttempt < attempts) {
-        this._pinInput.clear();
-        let errorText =
-          '[' +
-          thisAttempt.toString() +
-          '/' +
-          attempts.toString() +
-          '] ' +
-          'Incorrect pin, please try again';
-        this.setState({ errorText, attempt: thisAttempt });
-      } else {
-        Toast.show({ text: 'Too many incorrect attempts. Logged out.' });
-        onDismiss();
-      }
+      this._pinInput.clear();
+      this.handleFail();
     }
   }
 
   renderInput() {
-    const { pin } = this.props;
+    const { pin, fingerprint } = this.props;
+    const { attempt } = this.state;
     if (pin) {
       return (
         <CodeInput
@@ -97,8 +101,16 @@ class _PinConfirm extends Component {
           space={7}
           size={30}
           inputPosition="center"
-          containerStyle={{ marginTop: 0, paddingBottom: 24 }}
           onFulfill={code => this._onInputPinComplete(code)}
+        />
+      );
+    } else if (fingerprint && attempt > 0) {
+      return (
+        <Button
+          label="TRY AGAIN"
+          color="secondary"
+          reference={input => (this._fingerprint = input)}
+          onPress={() => this.scanFingerprint()}
         />
       );
     }
@@ -110,10 +122,9 @@ class _PinConfirm extends Component {
     const { viewStyleContainer, textStyle } = styles;
 
     const { errorText, contentText, attempt } = this.state;
-
     return modal ? (
       <PopUpGeneral
-        visible={modalVisible && contentText}
+        visible={modalVisible && (contentText || errorText ? true : false)}
         contentText={contentText}
         textActionOne={'CANCEL'}
         onPressActionOne={onDismiss}
@@ -121,25 +132,25 @@ class _PinConfirm extends Component {
         onDismiss={onDismiss}>
         {this.renderInput()}
       </PopUpGeneral>
-    ) : (
+    ) : contentText || errorText ? (
       <View
         style={[
           viewStyleContainer,
           { backgroundColor: colors.primaryContrast },
         ]}>
-        <Text style={textStyle}>{contentText}</Text>
-        {this.renderInput()}
+        {contentText ? <Text style={textStyle}>{contentText}</Text> : null}
         {errorText ? (
-          <Text style={[textStyle, { paddingTop: 16, color: colors.negative }]}>
+          <Text style={[textStyle, { padding: 8, color: colors.negative }]}>
             {errorText}
           </Text>
         ) : null}
+        {this.renderInput()}
       </View>
-    );
+    ) : null;
   }
 }
 
-_PinConfirm.propTypes = {
+_LocalAuthentication.propTypes = {
   pin: PropTypes.string, // Required pin
   fingerprint: PropTypes.bool, // Required fingerprint
   modalVisible: PropTypes.bool, // Required fingerprint
@@ -148,31 +159,28 @@ _PinConfirm.propTypes = {
   attempts: PropTypes.number,
 };
 
-_PinConfirm.defaultProps = {
+_LocalAuthentication.defaultProps = {
   pin: '',
   fingerprint: false,
   modalVisible: false,
   onSuccess: () => {},
   onDismiss: () => {},
-  attempts: 3,
+  attempts: 1,
 };
 
 const styles = {
   viewStyleContainer: {
-    // flex: 1,
     padding: 8,
     borderRadius: 5,
     overflow: 'hidden',
-    paddingBottom: 16,
   },
   textStyle: {
     fontSize: 16,
     textAlign: 'center',
     color: 'black',
-    // paddingTop: 16,
   },
 };
 
-const PinConfirm = context(_PinConfirm);
+const LocalAuthentication = context(_LocalAuthentication);
 
-export default PinConfirm;
+export default LocalAuthentication;

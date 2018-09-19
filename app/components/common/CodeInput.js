@@ -340,9 +340,13 @@ class CodeInput extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
+    // width: '100%',
     flexDirection: 'row',
-    marginTop: 20,
+    // marginTop: 20,
+    margin: 8,
+    // paddingBottom: 16,
+    // backgroundColor: 'orange',
   },
   codeInput: {
     backgroundColor: 'transparent',

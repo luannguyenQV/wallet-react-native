@@ -33,7 +33,7 @@ import {
   Button,
 } from './../../components/common';
 import Header from './../../components/header';
-import PinConfirm from '../../components/PinConfirm';
+import LocalAuthentication from '../../components/LocalAuthentication';
 
 class SendScreen extends Component {
   static navigationOptions = () => ({
@@ -438,7 +438,7 @@ class SendScreen extends Component {
           style={styles.viewStyleContainer}
           behavior={'padding'}>
           {pinVisible ? (
-            <PinConfirm
+            <LocalAuthentication
               modal
               pin={pin}
               fingerprint={fingerprint}

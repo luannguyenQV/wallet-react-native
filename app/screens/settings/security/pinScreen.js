@@ -15,7 +15,7 @@ import {
 } from './../../../redux/actions';
 
 import Header from './../../../components/header';
-import PinConfirm from '../../../components/PinConfirm';
+import LocalAuthentication from '../../../components/LocalAuthentication';
 
 import { Button, PopUpGeneral, CodeInput } from './../../../components/common';
 
@@ -84,7 +84,7 @@ class PinScreen extends Component {
               this.setState({
                 new_pin: code,
                 modalVisible: true,
-                modalType: 'setPinConfirm',
+                modalType: 'setLocalAuthentication',
               })
             }
           />
@@ -191,7 +191,7 @@ class PinScreen extends Component {
       //   // this.pinInput.clear();
       //   showPin = true;
       //   break;
-      case 'setPinConfirm':
+      case 'setLocalAuthentication':
         contentText = 'Please confirm your pin';
         // this._pinInput.clear();
         showPin = true;
@@ -256,7 +256,7 @@ class PinScreen extends Component {
           keyboardShouldPersistTaps={'never'}
           style={styles.viewStyleContainer}
           behavior={'padding'}>
-          <PinConfirm
+          <LocalAuthentication
             modal
             pin={pin}
             fingerprint={fingerprint}

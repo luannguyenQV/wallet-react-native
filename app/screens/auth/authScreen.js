@@ -44,7 +44,7 @@ import {
 } from './../../components/common';
 import { standardizeString } from './../../util/general';
 import client from './../../config/client';
-import PinConfirm from '../../components/PinConfirm';
+import LocalAuthentication from '../../components/LocalAuthentication';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -232,8 +232,9 @@ class AuthScreen extends Component {
           case 'pin':
             return (
               <View style={viewStyleInput}>
-                <PinConfirm
+                <LocalAuthentication
                   pin={pin}
+                  attempts={3}
                   fingerprint={fingerprint}
                   onSuccess={() => this.props.pinSuccess()}
                   onDismiss={() => this.props.logoutUser()}
