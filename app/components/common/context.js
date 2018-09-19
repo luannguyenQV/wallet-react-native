@@ -7,10 +7,6 @@ import { ThemeContext } from './../../util/config';
 //function that receives a component, and returns a new composed component.
 const context = ComposedComponent => {
   class ContextComponent extends Component {
-    // getChildContext() {
-    //   return { theme: this.props.theme || this.context.theme };
-    // }
-
     render() {
       return (
         <ThemeContext.Consumer>

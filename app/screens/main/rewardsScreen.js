@@ -22,6 +22,10 @@ import { Output, Tabs } from '../../components/common';
 import CardList from './../../components/CardList';
 import { performDivisibility, standardizeString } from './../../util/general';
 
+import ScrollableTabView, {
+  ScrollableTabBar,
+} from 'react-native-scrollable-tab-view';
+
 class RewardsScreen extends Component {
   static navigationOptions = {
     title: 'Rewards',
@@ -138,64 +142,123 @@ class RewardsScreen extends Component {
           title="Rewards"
         />
         <Tabs>
-          <View tabLabel="Available">
-            <CardList
-              type="campaigns"
-              navigation={this.props.navigation}
-              data={campaigns.data}
-              tempItem={campaigns.tempItem}
-              loadingData={campaigns.loading}
-              identifier="name"
-              onRefresh={fetchCampaigns}
-              renderContent={this.renderCampaignContent}
-              showReward={campaigns.detail}
-              renderDetail={this.renderCampaignDetail}
-              title={item => (item ? item.name : '')}
-              // subtitle={item =>
-              //   item ? standardizeString(item.account_name) : ''
-              // }
-              onPressTitle={item => viewCampaign(item)}
-              onPressContent={item => viewCampaign(item)}
-              emptyListMessage="No rewards available"
-              titleStyle="secondary"
-              keyExtractor={item => item.identifier}
-              textActionOne="CLAIM"
-              onPressActionOne={item => claimReward(item)}
-              onPressActionTwo={() => hideCampaign()}
-              loadingDetail={campaigns.loadingDetail}
-            />
-          </View>
-          <View tabLabel="Claimed">
-            <CardList
-              type="rewards"
-              navigation={this.props.navigation}
-              data={rewards.data}
-              tempItem={rewards.tempItem}
-              loadingData={rewards.loading}
-              identifier="identifier"
-              onRefresh={fetchRewards}
-              renderContent={this.renderRewardContent}
-              showReward={rewards.detail}
-              renderDetail={this.renderRewardDetail}
-              title={item => (item ? item.campaign.name : '')}
-              // subtitle={item =>
-              //   item ? standardizeString(item.account_name) : ''
-              // }
-              onPressTitle={item => viewReward(item)}
-              onPressContent={item => viewReward(item)}
-              emptyListMessage="No rewards claimed"
-              titleStyle="secondary"
-              keyExtractor={item => item.identifier}
-              // textActionOne="CLAIM"
-              // onPressActionOne={item => claimReward(item)}
-              onPressActionTwo={() => hideReward()}
-              loadingDetail={rewards.loadingDetail}
-            />
-          </View>
+          <CardList
+            tabLabel="Available"
+            type="campaigns"
+            navigation={this.props.navigation}
+            data={campaigns.data}
+            tempItem={campaigns.tempItem}
+            loadingData={campaigns.loading}
+            identifier="name"
+            onRefresh={fetchCampaigns}
+            renderContent={this.renderCampaignContent}
+            showReward={campaigns.detail}
+            renderDetail={this.renderCampaignDetail}
+            title={item => (item ? item.name : '')}
+            // subtitle={item =>
+            //   item ? standardizeString(item.account_name) : ''
+            // }
+            onPressTitle={item => viewCampaign(item)}
+            onPressContent={item => viewCampaign(item)}
+            emptyListMessage="No rewards available"
+            titleStyle="secondary"
+            keyExtractor={item => item.identifier}
+            textActionOne="CLAIM"
+            onPressActionOne={item => claimReward(item)}
+            onPressActionTwo={() => hideCampaign()}
+            loadingDetail={campaigns.loadingDetail}
+          />
+          <CardList
+            tabLabel="Claimed"
+            type="rewards"
+            navigation={this.props.navigation}
+            data={rewards.data}
+            tempItem={rewards.tempItem}
+            loadingData={rewards.loading}
+            identifier="identifier"
+            onRefresh={fetchRewards}
+            renderContent={this.renderRewardContent}
+            showReward={rewards.detail}
+            renderDetail={this.renderRewardDetail}
+            title={item => (item ? item.campaign.name : '')}
+            // subtitle={item =>
+            //   item ? standardizeString(item.account_name) : ''
+            // }
+            onPressTitle={item => viewReward(item)}
+            onPressContent={item => viewReward(item)}
+            emptyListMessage="No rewards claimed"
+            titleStyle="secondary"
+            keyExtractor={item => item.identifier}
+            // textActionOne="CLAIM"
+            // onPressActionOne={item => claimReward(item)}
+            onPressActionTwo={() => hideReward()}
+            loadingDetail={rewards.loadingDetail}
+          />
         </Tabs>
       </View>
     );
   }
+}
+
+{
+  /* <Tabs
+tabLabel1="Available"
+tabContent1={
+  <CardList
+    type="campaigns"
+    navigation={this.props.navigation}
+    data={campaigns.data}
+    tempItem={campaigns.tempItem}
+    loadingData={campaigns.loading}
+    identifier="name"
+    onRefresh={fetchCampaigns}
+    renderContent={this.renderCampaignContent}
+    showReward={campaigns.detail}
+    renderDetail={this.renderCampaignDetail}
+    title={item => (item ? item.name : '')}
+    // subtitle={item =>
+    //   item ? standardizeString(item.account_name) : ''
+    // }
+    onPressTitle={item => viewCampaign(item)}
+    onPressContent={item => viewCampaign(item)}
+    emptyListMessage="No rewards available"
+    titleStyle="secondary"
+    keyExtractor={item => item.identifier}
+    textActionOne="CLAIM"
+    onPressActionOne={item => claimReward(item)}
+    onPressActionTwo={() => hideCampaign()}
+    loadingDetail={campaigns.loadingDetail}
+  />
+}
+tabLabel2="Claimed"
+tabContent2={
+  <CardList
+    type="rewards"
+    navigation={this.props.navigation}
+    data={rewards.data}
+    tempItem={rewards.tempItem}
+    loadingData={rewards.loading}
+    identifier="identifier"
+    onRefresh={fetchRewards}
+    renderContent={this.renderRewardContent}
+    showReward={rewards.detail}
+    renderDetail={this.renderRewardDetail}
+    title={item => (item ? item.campaign.name : '')}
+    // subtitle={item =>
+    //   item ? standardizeString(item.account_name) : ''
+    // }
+    onPressTitle={item => viewReward(item)}
+    onPressContent={item => viewReward(item)}
+    emptyListMessage="No rewards claimed"
+    titleStyle="secondary"
+    keyExtractor={item => item.identifier}
+    // textActionOne="CLAIM"
+    // onPressActionOne={item => claimReward(item)}
+    onPressActionTwo={() => hideReward()}
+    loadingDetail={rewards.loadingDetail}
+  />
+}
+/> */
 }
 
 const styles = {

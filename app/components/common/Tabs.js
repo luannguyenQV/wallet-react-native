@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableHighlight, Clipboard } from 'react-native';
 import context from './context';
 
 import ScrollableTabView, {
@@ -8,56 +7,29 @@ import ScrollableTabView, {
 
 class _Tabs extends Component {
   render() {
-    const { children } = this.props;
-
-    const { viewStyleContainer } = styles;
+    const { children, colors } = this.props;
 
     return (
       <ScrollableTabView
+        prerenderingSiblingsNumber={1}
         initialPage={0}
-        tabBarTextStyle={{ fontSize: 16 }}
-        tabBarBackgroundColor={'white'}
+        tabBarTextStyle={{ fontSize: 16, color: colors.headerContrast }}
+        tabBarBackgroundColor={colors.header}
+        style={{
+          elevation: 10,
+          zIndex: 10,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 3 },
+          shadowRadius: 5,
+          shadowOpacity: 0.3,
+        }}
+        tabBarUnderlineStyle={{ backgroundColor: colors.headerContrast }}
         renderTabBar={() => <ScrollableTabBar />}>
         {children}
       </ScrollableTabView>
     );
   }
 }
-
-const styles = {
-  viewStyleContainer: {
-    flexDirection: 'column',
-    borderBottomWidth: 0,
-    // flexWrap: 'wrap',
-    margin: 8,
-  },
-  viewStyleContent: {
-    flexDirection: 'row',
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  viewStyleLabel: {
-    flexDirection: 'row',
-  },
-  viewStyleValue: {
-    flexDirection: 'row',
-    paddingRight: 8,
-  },
-  textStyleLabel: {
-    fontSize: 12,
-    color: 'black',
-    opacity: 0.6,
-  },
-  textStyleValue: {
-    paddingLeft: 0,
-    paddingTop: 2,
-    color: 'black',
-    fontWeight: 'normal',
-    flex: 1,
-    fontSize: 16,
-  },
-};
 
 const Tabs = context(_Tabs);
 

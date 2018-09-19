@@ -11,8 +11,8 @@ import { connect } from 'react-redux';
 
 import { Toast } from 'native-base';
 import Header from './../../components/header';
-import { Output } from './../../components/common';
-import { Container, Tab, Tabs } from 'native-base';
+import { Output, Tabs } from './../../components/common';
+// import { Container, Tab, Tabs } from 'native-base';
 import { currenciesSelector } from '../../redux/reducers/AccountsReducer';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -117,24 +117,20 @@ class ReceiveScreen extends Component {
   }
 
   render() {
-    const { colors } = this.props.company_config;
+    const { crypto } = this.state;
     return (
       <View style={styles.container}>
-        <Header navigation={this.props.navigation} back title="Receive" />
-        {this.state.crypto ? (
-          <Container>
-            <Tabs
-              tabBarUnderlineStyle={{
-                backgroundColor: colors.focus,
-              }}>
-              <Tab heading="Email" activeTextStyle={{ color: colors.focus }}>
-                {this.renderDetail('email')}
-              </Tab>
-              <Tab heading="Crypto" activeTextStyle={{ color: colors.focus }}>
-                {this.renderDetail('crypto')}
-              </Tab>
-            </Tabs>
-          </Container>
+        <Header
+          navigation={this.props.navigation}
+          back
+          noShadow={crypto}
+          title="Receive"
+        />
+        {crypto ? (
+          <Tabs>
+            <View tabLabel="Email">{this.renderDetail('email')}</View>
+            <View tabLabel="Crypto">{this.renderDetail('crypto')}</View>
+          </Tabs>
         ) : (
           this.renderDetail('email')
         )}
@@ -164,7 +160,6 @@ const mapStateToProps = state => {
   return {
     currencies: currenciesSelector(state),
     profile: state.user.profile,
-    company_config: state.auth.company_config,
     crypto: state.crypto,
   };
 };

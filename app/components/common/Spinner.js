@@ -48,6 +48,7 @@ const styles = {
     justifyContent: 'center',
     padding: 8,
     alignItems: 'center',
+    width: '100%',
   },
 };
 
