@@ -100,7 +100,6 @@ class Main extends Component {
 
 const mapStateToProps = state => {
   return {
-    // colors: getColors(state.auth),
     colors: colorSelector(state),
     theme: themeSelector(state),
   };

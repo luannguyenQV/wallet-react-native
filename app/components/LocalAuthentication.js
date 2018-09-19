@@ -16,33 +16,20 @@ class _LocalAuthentication extends Component {
   async componentDidMount() {
     const { pin, fingerprint, onSuccess } = this.props;
 
-    let contentText = '';
-    let errorText = '';
-
     if (fingerprint) {
       let compatible = await Expo.Fingerprint.hasHardwareAsync();
       let fingerprints = await Expo.Fingerprint.isEnrolledAsync();
       if (!fingerprints && !compatible) {
-        errorText =
-          'Unable to access devices stored fingerprints. Please log out to reset local authentication.';
+        this.setState({ errorText: 'Unable to access local authentication' });
       } else {
-        if (Platform.OS !== 'ios') {
-          contentText = 'Please scan your fingerprint to proceed';
-        }
         this.scanFingerprint();
       }
-    } else if (pin) {
-      contentText = 'Please input your pin to proceed';
-    } else {
+    } else if (!pin) {
       onSuccess();
     }
-
-    this.setState({ errorText, contentText });
   }
 
   scanFingerprint = async () => {
-    // let contentText = '';
-    // await this.setState({ contentText });
     let result = await Expo.Fingerprint.authenticateAsync();
     if (result.success) {
       this.props.onSuccess();
@@ -72,8 +59,9 @@ class _LocalAuthentication extends Component {
 
   _onInputPinComplete(code) {
     const { pin, onSuccess } = this.props;
-    if (pin === code) {
-      onSuccess();
+    if (pin === 'set' || pin === code) {
+      onSuccess(code);
+      this._pinInput.clear();
     } else {
       this._pinInput.clear();
       this.handleFail();
@@ -113,12 +101,26 @@ class _LocalAuthentication extends Component {
   }
 
   render() {
-    const { modal, modalVisible, onDismiss, colors } = this.props;
+    const {
+      modal,
+      modalVisible,
+      onDismiss,
+      colors,
+      pin,
+      type,
+      fingerprint,
+      backgroundColor,
+    } = this.props;
     const { viewStyleContainer, textStyle } = styles;
 
-    const { errorText, contentText } = this.state;
-    console.log('errorText', errorText);
-    console.log('contentText', contentText);
+    const { errorText } = this.state;
+
+    const contentText = pin
+      ? 'Please ' + (type ? type : 'enter') + ' your pin'
+      : fingerprint && Platform.OS !== 'ios'
+        ? 'Please scan your fingerprint'
+        : '';
+
     return modal ? (
       <PopUpGeneral
         visible={modalVisible && (contentText || errorText ? true : false)}
@@ -129,11 +131,11 @@ class _LocalAuthentication extends Component {
         onDismiss={onDismiss}>
         {this.renderInput()}
       </PopUpGeneral>
-    ) : contentText || errorText ? (
+    ) : contentText || errorText || pin ? (
       <View
         style={[
           viewStyleContainer,
-          { backgroundColor: colors.primaryContrast },
+          { backgroundColor: colors[backgroundColor] },
         ]}>
         {contentText ? <Text style={textStyle}>{contentText}</Text> : null}
         {errorText ? (
@@ -156,6 +158,8 @@ _LocalAuthentication.propTypes = {
   attempts: PropTypes.number,
   modal: PropTypes.bool,
   colors: PropTypes.object,
+  backgroundColor: PropTypes.string,
+  type: PropTypes.string,
 };
 
 _LocalAuthentication.defaultProps = {
@@ -166,6 +170,8 @@ _LocalAuthentication.defaultProps = {
   onDismiss: () => {},
   attempts: 1,
   modal: false,
+  backgroundColor: 'white',
+  type: '',
 };
 
 const styles = {

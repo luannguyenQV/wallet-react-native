@@ -235,44 +235,13 @@ class AuthScreen extends Component {
                 <LocalAuthentication
                   pin={pin}
                   attempts={3}
+                  backgroundColor={'primaryContrast'}
                   fingerprint={fingerprint}
                   onSuccess={() => this.props.pinSuccess()}
                   onDismiss={() => this.props.logoutUser()}
                 />
-                {/* <Text color="authScreenContrast">Please enter pin</Text>
-                <Text color="error">{pinError}</Text>
-                <CodeInput
-                  ref={component => (this._pinInput = component)}
-                  secureTextEntry
-                  activeColor="gray"
-                  autoFocus
-                  inactiveColor="lightgray"
-                  className="border-b"
-                  codeLength={4}
-                  space={7}
-                  size={30}
-                  inputPosition="center"
-                  containerStyle={{ marginTop: 0, paddingBottom: 24 }}
-                  onFulfill={code => this._onInputPinComplete(code)}
-                /> */}
               </View>
             );
-          // this._scanFingerprint();
-          // return (
-          //   <View style={viewStyleLanding}>
-          //     <View style={buttonsContainer}>
-          //       <Button
-          //         label="LOG IN WITH FINGERPRINT"
-          //         color="secondary"
-          //         reference={input => {
-          //           this.login = input;
-          //         }}
-          //         onPress={() => this._scanFingerprint()}
-          //         animation="slideInRight"
-          //       />
-          //     </View>
-          //   </View>
-          // );
           case 'set_pin':
           case 'confirm_pin':
             return (
@@ -384,20 +353,6 @@ class AuthScreen extends Component {
     }
     this.props.nextAuthFormState();
   }
-
-  // _scanFingerprint = async () => {
-  //   if (Platform.OS === 'android') {
-  //     this.props.showFingerprintModal();
-  //   }
-  //   let result = await Expo.Fingerprint.authenticateAsync('Biometric scan');
-  //   this.props.hideModal();
-
-  //   if (result.success) {
-  //     this.props.pinSuccess();
-  //   } else {
-  //     this.props.pinFail('Unable to authenticate with biometrics');
-  //   }
-  // };
 
   _activateFingerprint = async () => {
     if (Platform.OS === 'android') {
@@ -722,3 +677,5 @@ export default connect(mapStateToProps, {
   toggleTerms,
   logoutUser,
 })(AuthScreen);
+
+//727

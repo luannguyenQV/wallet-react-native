@@ -18,6 +18,7 @@ import Header from './../../../components/header';
 import LocalAuthentication from '../../../components/LocalAuthentication';
 
 import { Button, PopUpGeneral, CodeInput } from './../../../components/common';
+import { Toast } from 'native-base';
 
 class PinScreen extends Component {
   static navigationOptions = {
@@ -25,13 +26,15 @@ class PinScreen extends Component {
   };
 
   state = {
-    new_pin: '',
     modalVisible: false,
     modalType: 'none',
     pinState: 'none',
     pinVisible: true,
     hasFingerprintScanner: false,
     hasSavedFingerprints: false,
+
+    tempPin: '',
+    viewState: 'auth',
   };
 
   componentDidMount() {
@@ -67,7 +70,7 @@ class PinScreen extends Component {
     if (showPin) {
       return (
         <View>
-          <Text style={styles.textStyle}>Please input pin</Text>
+          <Text style={styles.textStyle}>Please input your pin</Text>
           <CodeInput
             ref={component => (this._pinInput2 = component)}
             secureTextEntry
@@ -97,36 +100,6 @@ class PinScreen extends Component {
         </View>
       );
     } else {
-      return (
-        <View style={{ alignContent: 'center' }}>
-          {!hasFingerprintScanner ? (
-            <Text>No fingerprint scanner</Text>
-          ) : !hasSavedFingerprints ? (
-            <Text>No fingerprints saved</Text>
-          ) : (
-            <Button
-              label="ACTIVATE FINGERPRINT"
-              color="primary"
-              onPress={this.activateFingerprint}
-            />
-          )}
-
-          <Button
-            label="SET PIN"
-            color="secondary"
-            onPress={() => this.setState({ showPin: true })}
-          />
-
-          {pin || fingerprint ? (
-            <Button
-              label="RESET"
-              color="primary"
-              type="text"
-              onPress={this.resetPin}
-            />
-          ) : null}
-        </View>
-      );
     }
   }
 
@@ -241,41 +214,132 @@ class PinScreen extends Component {
     );
   }
 
-  render() {
+  renderLanding() {
     const { pin, fingerprint } = this.props;
-    const { pinVisible } = this.state;
+    const { hasFingerprintScanner, hasSavedFingerprints } = this.state;
+    return (
+      <View style={{ alignContent: 'center', padding: 8 }}>
+        {!hasFingerprintScanner ? (
+          <Text>No fingerprint scanner</Text>
+        ) : !hasSavedFingerprints ? (
+          <Text>No fingerprints saved</Text>
+        ) : (
+          <Button
+            label="ACTIVATE FINGERPRINT"
+            color="primary"
+            onPress={() => this.setState({ viewState: 'fingerprint' })}
+          />
+        )}
+
+        <Button
+          label="SET PIN"
+          color="secondary"
+          onPress={() => this.setState({ viewState: 'pin' })}
+        />
+
+        {pin || fingerprint ? (
+          <Button
+            label="RESET"
+            color="primary"
+            type="text"
+            onPress={this.resetPin}
+          />
+        ) : null}
+      </View>
+    );
+  }
+
+  renderContent() {
+    const { viewState } = this.state;
+    let pin = '';
+    let fingerprint = false;
+    let onDismiss = () => {};
+    let onSuccess = () => {};
+    let onCancel = () => this.setState({ viewState: 'landing' });
+    let type = '';
+    console.log(viewState);
+    switch (viewState) {
+      case 'auth':
+        ({ pin, fingerprint } = this.props);
+        onSuccess = () => this.setState({ viewState: 'landing' });
+        onDismiss = () => this.props.navigation.goBack();
+        onCancel = onDismiss;
+        break;
+      case 'fingerprint':
+        fingerprint = true;
+        onSuccess = () => {
+          this.props.activateFingerprint();
+          Toast.show({
+            text: 'Local authentication: fingerprint/biometrics activated',
+            duration: 3500,
+          });
+          this.props.navigation.goBack();
+        };
+        onDismiss = () => {}; //this.props.navigation.goBack();
+        break;
+      case 'pin':
+        pin = 'set';
+        onSuccess = code =>
+          this.setState({ tempPin: code, viewState: 'confirm' });
+        onDismiss = () => {}; //this.props.navigation.goBack();
+        break;
+      case 'confirm':
+        pin = this.state.tempPin;
+        type = 'confirm';
+        onSuccess = code => {
+          this.props.setPin(code);
+          Toast.show({
+            text: 'Local authentication: pin activated',
+            duration: 3500,
+          });
+          this.props.navigation.goBack();
+        };
+        onDismiss = () => {}; //this.props.navigation.goBack();
+        break;
+      case 'landing':
+        return this.renderLanding();
+      default:
+        break;
+    }
 
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ padding: 8 }}>
+        <LocalAuthentication
+          pin={pin}
+          fingerprint={fingerprint}
+          attempts={3}
+          type={type}
+          // modalVisible={pinVisible}
+          onSuccess={onSuccess}
+          onDismiss={onDismiss}
+        />
+        {viewState !== 'landing' ? (
+          <Button
+            label="CANCEL"
+            color="primary"
+            type="text"
+            onPress={onCancel}
+          />
+        ) : null}
+      </View>
+    );
+  }
+
+  render() {
+    return (
+      <View style={{ flex: 1, backgroundColor: 'white' }}>
         <Header
           navigation={this.props.navigation}
           title="Set pin/fingerprint"
           back
         />
-        <LocalAuthentication
-          modal
-          pin={pin}
-          fingerprint={fingerprint}
-          modalVisible={pinVisible}
-          onSuccess={() => {
-            console.log('success');
-            this.setState({ pinVisible: false });
-          }}
-          onDismiss={() => this.props.navigation.goBack()}
-        />
-        {this.renderMainContainer()}
-        {this.renderModal()}
+        {this.renderContent()}
       </View>
     );
   }
 }
 
 const styles = {
-  viewStyleContainer: {
-    flex: 1,
-    backgroundColor: 'white',
-    padding: 16,
-  },
   buttonStyle: {
     flex: 1,
     backgroundColor: 'lightgrey',
