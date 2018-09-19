@@ -252,24 +252,19 @@ class PinScreen extends Component {
           title="Set pin/fingerprint"
           back
         />
-        <KeyboardAvoidingView
-          keyboardShouldPersistTaps={'never'}
-          style={styles.viewStyleContainer}
-          behavior={'padding'}>
-          <LocalAuthentication
-            modal
-            pin={pin}
-            fingerprint={fingerprint}
-            modalVisible={pinVisible}
-            onSuccess={() => {
-              console.log('success');
-              this.setState({ pinVisible: false });
-            }}
-            onDismiss={() => this.props.navigation.goBack()}
-          />
-          {this.renderMainContainer()}
-          {this.renderModal()}
-        </KeyboardAvoidingView>
+        <LocalAuthentication
+          modal
+          pin={pin}
+          fingerprint={fingerprint}
+          modalVisible={pinVisible}
+          onSuccess={() => {
+            console.log('success');
+            this.setState({ pinVisible: false });
+          }}
+          onDismiss={() => this.props.navigation.goBack()}
+        />
+        {this.renderMainContainer()}
+        {this.renderModal()}
       </View>
     );
   }

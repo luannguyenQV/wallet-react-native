@@ -117,6 +117,8 @@ class _LocalAuthentication extends Component {
     const { viewStyleContainer, textStyle } = styles;
 
     const { errorText, contentText } = this.state;
+    console.log('errorText', errorText);
+    console.log('contentText', contentText);
     return modal ? (
       <PopUpGeneral
         visible={modalVisible && (contentText || errorText ? true : false)}
@@ -163,7 +165,7 @@ _LocalAuthentication.defaultProps = {
   onSuccess: () => {},
   onDismiss: () => {},
   attempts: 1,
-  modal: true,
+  modal: false,
 };
 
 const styles = {
