@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, FlatList, Image } from 'react-native';
 import { connect } from 'react-redux';
-import { uploadDocument } from './../../../redux/actions';
+import { uploadDocument, resetUserErrors } from './../../../redux/actions';
 import Header from './../../../components/header';
 
 import { ImageUpload, Button, Spinner } from '../../../components/common';
@@ -24,6 +24,7 @@ class DocumentScreen extends Component {
   }
 
   resetState() {
+    this.props.resetUserErrors();
     this.setState({
       document_type: '',
       state: 'document_type',
@@ -45,6 +46,7 @@ class DocumentScreen extends Component {
 
   renderContent() {
     const { category, state } = this.state;
+    const { updateError } = this.props;
     const {
       textStyleDescription,
       viewStyleButtonContainer,
@@ -80,30 +82,36 @@ class DocumentScreen extends Component {
         );
       case 'confirm':
         return (
-          <View>
+          <View style={{ justifyContent: 'flex-start' }}>
             <View style={viewStyleImageContainer}>
               <Image
                 style={{ height: 300, width: 300 }}
                 source={{ uri: this.state.image }}
               />
             </View>
-            {this.props.loading ? (
-              <Spinner size="large" />
-            ) : (
-              <View style={{ paddingHorizontal: 24 }}>
+            <View style={viewStyleButtonContainer}>
+              {updateError ? (
+                <Text style={[textStyleDescription, { color: '#f44336' }]}>
+                  {updateError}
+                </Text>
+              ) : null}
+              {this.props.loading ? (
+                <Spinner containerStyle={{ margin: 8 }} />
+              ) : (
                 <Button
-                  label="Upload"
+                  label="CONFIRM & UPLOAD"
                   color="secondary"
                   onPress={() => this.uploadDocument()}
                 />
-                <Button
-                  label="Cancel"
-                  color="secondary"
-                  type="text"
-                  onPress={() => this.resetState()}
-                />
-              </View>
-            )}
+              )}
+              <Button
+                label="Cancel"
+                color="secondary"
+                type="text"
+                onPress={() => this.resetState()}
+              />
+            </View>
+            }
           </View>
         );
     }
@@ -178,10 +186,11 @@ const styles = {
 };
 
 const mapStateToProps = ({ user }) => {
-  const { loading } = user;
-  return { loading };
+  const { loading, updateError } = user;
+  return { loading, updateError };
 };
 
 export default connect(mapStateToProps, {
   uploadDocument,
+  resetUserErrors,
 })(DocumentScreen);

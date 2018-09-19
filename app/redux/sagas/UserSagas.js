@@ -288,7 +288,12 @@ function* uploadDocument(action) {
     NavigationService.navigate('GetVerified');
   } catch (error) {
     console.log(error);
-    yield put({ type: UPLOAD_DOCUMENT_ASYNC.error, payload: error.message });
+    const message = error
+      ? error.non_field_errors && error.non_field_errors.length > 0
+        ? error.non_field_errors[0]
+        : ''
+      : error.message ? error.message : '';
+    yield put({ type: UPLOAD_DOCUMENT_ASYNC.error, payload: message });
   }
 }
 

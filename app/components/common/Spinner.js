@@ -4,16 +4,25 @@ import { View, ActivityIndicator, Image } from 'react-native';
 import context from './context';
 
 // make component
-const _Spinner = ({ size, type, colors, color, backgroundColor, theme }) => {
+const _Spinner = ({
+  size,
+  type,
+  colors,
+  color,
+  backgroundColor,
+  theme,
+  containerStyle,
+}) => {
   return (
     <View
       style={[
-        styles.containerStyle,
+        styles._containerStyle,
         {
           backgroundColor: colors[backgroundColor]
             ? colors[backgroundColor]
             : 'white',
         },
+        containerStyle,
       ]}>
       {theme[type + 'Spinner'] === 'rehive' ? (
         <Image
@@ -25,7 +34,7 @@ const _Spinner = ({ size, type, colors, color, backgroundColor, theme }) => {
         />
       ) : (
         <ActivityIndicator
-          size={size || 'large'}
+          size={size || 'small'}
           color={colors[color ? color : 'primary']}
         />
       )}
@@ -34,9 +43,10 @@ const _Spinner = ({ size, type, colors, color, backgroundColor, theme }) => {
 };
 
 const styles = {
-  containerStyle: {
-    flex: 1,
+  _containerStyle: {
+    // flex: 1,
     justifyContent: 'center',
+    padding: 8,
     alignItems: 'center',
   },
 };

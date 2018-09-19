@@ -154,6 +154,13 @@ export const uploadDocument = (image, category, document_type) => {
   };
 };
 
+export const RESET_USER_ERRORS = 'reset_user_errors';
+export const resetUserErrors = () => {
+  return {
+    type: RESET_USER_ERRORS,
+  };
+};
+
 export const CARD_DISMISS = 'card_dismiss';
 export const cardDismiss = card_id => {
   return {
