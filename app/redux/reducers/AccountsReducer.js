@@ -19,6 +19,7 @@ import {
   SET_HOME_ACCOUNT,
   SET_HOME_CURRENCY,
   SET_TRANSACTION_STATE,
+  CONTACT_FIELD_CHANGED,
 } from '../actions';
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 import { createSelector } from 'reselect';
@@ -49,8 +50,14 @@ export default (state = INITIAL_STATE, action) => {
     case PERSIST_REHYDRATE:
       return action.payload.auth || INITIAL_STATE;
 
+    case CONTACT_FIELD_CHANGED:
     case ACCOUNT_FIELD_CHANGED:
-      return { ...state, [action.payload.prop]: action.payload.value };
+      return {
+        ...state,
+        [action.payload.prop]: action.payload.value,
+        transactionAmountError: '',
+        transactionRecipientError: '',
+      };
     case ACCOUNT_FIELD_ERROR:
       return {
         ...state,

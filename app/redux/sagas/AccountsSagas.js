@@ -17,6 +17,7 @@ import {
   FETCH_TRANSACTIONS_ASYNC,
   SET_TRANSACTION_CURRENCY,
   VALIDATE_TRANSACTION,
+  ACCOUNT_FIELD_CHANGED,
 } from '../actions';
 import { Toast } from 'native-base';
 import Big from 'big.js';
@@ -150,7 +151,9 @@ function* validateTransaction(action) {
     }
 
     // Recipient validation
-    const recipient = transaction.recipient;
+    const recipient = transaction.recipient
+      ? transaction.recipient
+      : contacts.search;
     let transactionRecipientError = '';
     if (recipient) {
       if (contacts.type == 'email') {
@@ -168,6 +171,10 @@ function* validateTransaction(action) {
     switch (type) {
       case 'confirm':
         if (!transactionAmountError && !transactionRecipientError) {
+          yield put({
+            type: ACCOUNT_FIELD_CHANGED,
+            payload: { prop: 'transactionRecipient', value: recipient },
+          });
           yield put({
             type: SET_TRANSACTION_STATE,
             payload: 'confirm',

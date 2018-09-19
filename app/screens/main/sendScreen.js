@@ -116,41 +116,8 @@ class SendScreen extends Component {
     let textFooterRight = '';
     let onPressFooterRight = () => {};
 
-    switch (transaction.state) {
-      case 'confirm':
-        textFooterRight = 'Confirm';
-        onPressFooterRight = () => {
-          if (company_config.pin.send) {
-            this.props.showPin();
-          } else {
-            this.performSend();
-          }
-        };
-        break;
-      case 'success':
-        textFooterRight = 'Close';
-        onPressFooterRight = () => this.props.navigation.goBack();
-        break;
-      case 'fail':
-        textFooterRight = 'Close';
-        onPressFooterRight = () => this.props.navigation.goBack();
-        break;
-      default:
-        onPressFooterRight = () => {
-          validateTransaction('confirm');
-          // setTransactionState('confirm');
-        };
-        textFooterRight =
-          transaction.amount && transaction.recipient ? 'Next' : '';
-        break;
-    }
-
     return (
-      <FullScreenForm
-        textFooterRight={textFooterRight}
-        onPressFooterRight={onPressFooterRight}
-        loading={transaction.loading}
-        color={'focus'}>
+      <FullScreenForm loading={transaction.loading} color={'focus'}>
         {transaction.state ? (
           this.renderTop()
         ) : (
@@ -428,11 +395,45 @@ class SendScreen extends Component {
   }
 
   render() {
-    const { pin, fingerprint, pinVisible, hidePin } = this.props;
-    // console.log(pin, fingerprint);
+    const {
+      pin,
+      fingerprint,
+      pinVisible,
+      hidePin,
+      transaction,
+      company_config,
+      contacts,
+    } = this.props;
+    let onPressHeader = () => this.props.validateTransaction('confirm');
+    let textHeader =
+      transaction.amount && (transaction.recipient || contacts.search)
+        ? 'Next'
+        : '';
+    switch (transaction.state) {
+      case 'confirm':
+        textHeader = 'Confirm';
+        onPressHeader = () => {
+          if (company_config.pin.send) {
+            this.props.showPin();
+          } else {
+            this.performSend();
+          }
+        };
+        break;
+      case 'fail':
+      case 'success':
+        textHeader = '';
+    }
+
     return (
       <View style={{ flex: 1 }}>
-        <Header navigation={this.props.navigation} title="Send" back right />
+        <Header
+          navigation={this.props.navigation}
+          title="Send"
+          back
+          headerRightText={textHeader}
+          headerRightOnPress={onPressHeader}
+        />
         <KeyboardAvoidingView
           keyboardShouldPersistTaps={'always'}
           style={styles.viewStyleContainer}
