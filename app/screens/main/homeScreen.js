@@ -40,7 +40,6 @@ class HomeScreen extends Component {
         <WalletBalanceList
           currencies={currencies.data}
           activeCurrency={home.currency}
-          setHomeAccount={setHomeAccount}
           setHomeCurrency={setHomeCurrency}
         />
         <WalletActionList
@@ -50,15 +49,11 @@ class HomeScreen extends Component {
             { id: 2, type: 'more' },
           ]}
           navigation={this.props.navigation}
-          account={home.account}
           currency={home.currency}
         />
         <Swiper renderPagination={renderPagination} loop={false}>
           <HomeCards navigation={this.props.navigation} />
-          <TransactionList
-            currencyCode={home.currency}
-            accountRef={home.account}
-          />
+          <TransactionList currency={home.currency} />
         </Swiper>
       </View>
     );

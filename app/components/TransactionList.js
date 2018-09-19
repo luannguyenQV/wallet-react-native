@@ -36,7 +36,9 @@ class TransactionList extends Component {
   }
 
   renderTransactions() {
-    const { transactions, loading, accountRef, currencyCode } = this.props;
+    const { transactions, loading, currency } = this.props;
+    const accountRef = currency.account;
+    const currencyCode = currency.currency.code;
     const data =
       transactions &&
       transactions[accountRef] &&
@@ -50,7 +52,6 @@ class TransactionList extends Component {
             refreshing={loading}
             onRefresh={() => {
               this.getTransactions(accountRef, currencyCode);
-              // this.props.fetchAccounts();
             }}
           />
         }

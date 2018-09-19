@@ -105,11 +105,11 @@ export default (state = INITIAL_STATE, action) => {
         transactionsLoading: false,
       };
 
-    case SET_HOME_ACCOUNT:
-      return {
-        ...state,
-        homeAccount: action.payload,
-      };
+    // case SET_HOME_ACCOUNT:
+    //   return {
+    //     ...state,
+    //     homeAccount: action.payload,
+    //   };
     case SET_HOME_CURRENCY:
       return {
         ...state,
@@ -276,25 +276,7 @@ export const currenciesSelector = createSelector(
   (accountsState, cryptoState) => {
     const { accounts, loading, error } = accountsState;
 
-    // console.log('crypto', cryptoState);
-    // let index = 0;
     let activeCurrency = '';
-
-    // let data = accounts.map(account => {
-    //   account.currencies = account.currencies.map(currency => {
-    //     currency.transactions =
-    //       transactions && transactions[account.reference]
-    //         ? transactions[account.reference][currency.currency.code]
-    //         : {};
-    //     if (currency.active) {
-    //       activeCurrency = currency.currency.code;
-    //     }
-    //     // console.log('active' + currency.active);
-    //     return currency;
-    //   });
-    //   // console.log('account', account);
-    //   return account;
-    // });
 
     let currencies = [];
     let tempCurrencies = [];
@@ -379,11 +361,10 @@ export const transactionSelector = createSelector(
 export const homeSelector = createSelector(
   [accountsSelector],
   accountsState => {
-    const { homeAccount, homeCurrency } = accountsState;
+    const { homeCurrency } = accountsState;
 
     return {
-      account: homeAccount,
-      currency: homeCurrency,
+      currency: homeCurrency ? homeCurrency : {},
     };
   },
 );

@@ -20,19 +20,19 @@ export const fetchTransactions = filters => {
   return { type: FETCH_TRANSACTIONS_ASYNC.pending, payload: filters };
 };
 
-export const SET_HOME_ACCOUNT = 'set_home_account';
-export const setHomeAccount = account => {
-  return {
-    type: SET_HOME_ACCOUNT,
-    payload: account,
-  };
-};
+// export const SET_HOME_ACCOUNT = 'set_home_account';
+// export const setHomeAccount = account => {
+//   return {
+//     type: SET_HOME_ACCOUNT,
+//     payload: account,
+//   };
+// };
 
 export const SET_HOME_CURRENCY = 'set_home_currency';
-export const setHomeCurrency = code => {
+export const setHomeCurrency = currency => {
   return {
     type: SET_HOME_CURRENCY,
-    payload: code,
+    payload: currency,
   };
 };
 

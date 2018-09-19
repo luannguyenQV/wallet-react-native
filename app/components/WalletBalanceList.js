@@ -32,10 +32,25 @@ class WalletBalanceList extends Component {
   });
 
   renderAccounts() {
-    const { currencies, homeAccount, homeCurrency, colors } = this.props;
+    const { currencies, colors } = this.props;
 
     if (currencies.length) {
-      return <View>{this.renderCurrencies(currencies)}</View>;
+      return (
+        <View>
+          <FlatList
+            onViewableItemsChanged={this.handleViewableItemsChanged}
+            viewabilityConfig={this.viewabilityConfig}
+            ref={ref => (this.flatListRef = ref)}
+            data={currencies}
+            horizontal
+            pagingEnabled
+            getItemLayout={this.getItemLayout}
+            renderItem={({ item }) => <WalletBalance currency={item} />}
+            keyExtractor={item => item.currency.code}
+            showsHorizontalScrollIndicator={false}
+          />
+        </View>
+      );
     } else {
       return (
         <Text style={[styles.textStyle, { color: colors.primaryContrast }]}>
@@ -45,55 +60,9 @@ class WalletBalanceList extends Component {
     }
   }
 
-  renderCurrencies(currencies) {
-    const { homeAccount, homeCurrency, colors } = this.props;
-    // if (currencies.length === 1) {
-    //   return (
-    //     <HeaderCurrency
-    //       detail
-    //       wallet={currencies[0]}
-    //       showClose={showClose}
-    //       closeWallet={hideWallet}
-    //       colors={colors}
-    //     />
-    //   );
-    // } else {
-    return (
-      <FlatList
-        onViewableItemsChanged={this.handleViewableItemsChanged}
-        viewabilityConfig={this.viewabilityConfig}
-        ref={ref => {
-          this.flatListRef = ref;
-        }}
-        data={currencies}
-        horizontal
-        pagingEnabled
-        getItemLayout={this.getItemLayout}
-        renderItem={({ item }) => <WalletBalance currency={item} />}
-        keyExtractor={item => item.currency.code}
-        showsHorizontalScrollIndicator={false}
-      />
-    );
-    // }
-  }
-
-  // renderCurrency(item, index) {
-  //   return (
-  //     <Animated.View
-  //       key={item.account_name + item.currency.currency.code}
-  //       // style={{ opacity }}
-  //     >
-  //       <HeaderCurrency wallet={item} />
-  //     </Animated.View>
-  //   );
-
-  //   return;
-  // }
-
   handleViewableItemsChanged = info => {
     if (info.viewableItems && info.viewableItems.length > 0) {
-      this.props.setHomeAccount(info.viewableItems[0].item.account);
-      this.props.setHomeCurrency(info.viewableItems[0].item.currency.code);
+      this.props.setHomeCurrency(info.viewableItems[0].item);
     }
   };
 

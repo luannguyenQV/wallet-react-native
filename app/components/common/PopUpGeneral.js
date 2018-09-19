@@ -133,7 +133,10 @@ const _PopUpGeneral = props => {
                 {textActionOne || textActionTwo ? (
                   <View style={viewStyleFooter}>
                     {loading ? (
-                      <Spinner size="small" />
+                      <Spinner
+                        size="small"
+                        containerStyle={{ width: '100%' }}
+                      />
                     ) : (
                       <View style={viewStyleActionContainer}>
                         {textActionTwo ? (
@@ -214,7 +217,8 @@ const styles = {
     padding: 8,
   },
   textStyleError: {
-    paddingTop: 8,
+    padding: 8,
+    paddingBottom: 0,
     fontSize: 14,
     color: Colors.error,
   },
