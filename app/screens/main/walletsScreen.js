@@ -54,8 +54,7 @@ class WalletsScreen extends Component {
 
   send = item => {
     this.props.navigation.navigate('Send', {
-      account: item.account,
-      currency: item.currency.code,
+      currency: item,
     });
   };
 
@@ -98,13 +97,9 @@ class WalletsScreen extends Component {
         <WalletActionList
           buttons={buttons}
           navigation={this.props.navigation}
-          account={item.account}
-          currency={item.currency.code}
+          currency={item}
         />
-        <TransactionList
-          accountRef={item.account}
-          currencyCode={item.currency.code}
-        />
+        <TransactionList currency={item} />
       </View>
     );
   }
@@ -148,12 +143,12 @@ class WalletsScreen extends Component {
           titleStyle="secondary"
           keyExtractor={item => item.account + item.currency.code}
           textActionOne="SEND"
-          onPressActionOne={item => this.send(item)}
+          onPressActionOne={item =>
+            this.props.navigation.navigate('Send', { currency: item })
+          }
           textActionTwo="RECEIVE"
           onPressActionTwo={item =>
-            this.props.navigation.navigate('Receive', {
-              currency: item.currency.code,
-            })
+            this.props.navigation.navigate('Receive', { currency: item })
           }
           canActive
         />

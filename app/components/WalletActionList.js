@@ -6,11 +6,11 @@ import WalletAction from './WalletAction';
 
 class WalletActionList extends Component {
   onButtonPress(type) {
-    const { navigation, currency, account } = this.props;
+    const { navigation, currency } = this.props;
 
     switch (type) {
       case 'send': {
-        navigation.navigate('Send', { account, currency });
+        navigation.navigate('Send', { currency });
         break;
       }
       case 'receive': {
@@ -18,7 +18,7 @@ class WalletActionList extends Component {
         break;
       }
       case 'withdraw': {
-        navigation.navigate('Withdraw', { account, currency });
+        navigation.navigate('Withdraw', { currency });
         break;
       }
       case 'deposit': {
@@ -26,7 +26,7 @@ class WalletActionList extends Component {
         break;
       }
       case 'more':
-        navigation.navigate('Wallets', { account, currency });
+        navigation.navigate('Wallets', { currency });
         break;
       default:
         console.log('Error: unknown button type');
@@ -35,7 +35,7 @@ class WalletActionList extends Component {
 
   render() {
     const { viewStyleContainer, viewStyleButtons } = styles;
-    const { type, colors } = this.props;
+    const { colors } = this.props;
     return (
       <View style={[viewStyleContainer, { backgroundColor: colors.header }]}>
         <FlatList

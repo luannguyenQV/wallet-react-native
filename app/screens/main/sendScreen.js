@@ -42,7 +42,6 @@ class SendScreen extends Component {
 
   componentDidMount() {
     const {
-      account,
       type,
       currency,
       amount,
@@ -60,9 +59,9 @@ class SendScreen extends Component {
       setContactType,
     } = this.props;
 
-    const tempCurrency = currencies.data.find(
-      item => item.currency.code === currency,
-    ); // TODO: Add accountRef && if no currency use active
+    // const tempCurrency = currencies.data.find(
+    //   item => item.currency.code === currency,
+    // ); // TODO: Add accountRef && if no currency use active
     // console.log('currencies', currencies);
 
     setTransactionType('send');
@@ -71,14 +70,14 @@ class SendScreen extends Component {
         ? !recipient || recipient.includes('@') ? 'email' : 'mobile'
         : 'crypto',
     );
-    updateAccountField({ prop: 'transactionCurrency', value: tempCurrency });
+    updateAccountField({ prop: 'transactionCurrency', value: currency });
     updateAccountField({ prop: 'transactionAmount', value: amount });
     updateContactField({ prop: 'contactsSearch', recipient });
     updateAccountField({ prop: 'transactionRecipient', value: recipient });
     updateAccountField({ prop: 'transactionMemo', value: memo });
     updateAccountField({ prop: 'transactionNote', value: note });
 
-    if (tempCurrency && recipient && amount) {
+    if (currency && recipient && amount) {
       setTransactionState('confirm');
     }
 
