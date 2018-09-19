@@ -52,6 +52,12 @@ class _PinConfirm extends Component {
     }
   };
 
+  // if finger print cancelled or failed have a button to try again or log out,
+  // perhaps show name of phone user and say "Not you?"
+  // this logic moves out of this component and onto the authScreen
+  // this means all other actions are once off failure as they are now which is fine
+  // woooohooo
+
   _onInputPinComplete(code) {
     const { pin, attempts, onSuccess, onDismiss } = this.props;
     let { attempt } = this.state;

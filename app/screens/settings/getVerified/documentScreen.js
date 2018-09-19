@@ -58,11 +58,12 @@ class DocumentScreen extends Component {
     if (category) {
       options = document_category[0].document_types;
     }
+    console.log(options);
 
     switch (state) {
       case 'document_type':
         return (
-          <View>
+          <View style={{ width: '100%' }}>
             <Text style={textStyleDescription}>
               Please upload one of the following documents.{' '}
               {category === 'Proof of Address'
@@ -125,7 +126,9 @@ class DocumentScreen extends Component {
       <View style={styles.container}>
         <Header navigation={this.props.navigation} back title="Documents" />
         <View style={viewStyleContent}>
-          <Text style={textStyleHeader}>{category}</Text>
+          <View>
+            <Text style={textStyleHeader}>{category}</Text>
+          </View>
           {this.renderContent()}
         </View>
 
@@ -152,15 +155,15 @@ const styles = {
   viewStyleContent: {
     alignItems: 'center',
     justifyContent: 'flex-start',
-    padding: 16,
+    padding: 8,
   },
   viewStyleButtonContainer: {
-    paddingVertical: 8,
+    paddingHorizontal: 8,
   },
   viewStyleImageContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 8,
+    // padding: 8,
   },
   textStyleHeader: {
     fontSize: 20,
