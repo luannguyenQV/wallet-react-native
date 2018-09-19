@@ -44,7 +44,7 @@ import {
 } from './../../components/common';
 import { standardizeString } from './../../util/general';
 import client from './../../config/client';
-import PinModal from '../../components/PinModal';
+import PinConfirm from '../../components/PinConfirm';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -232,7 +232,7 @@ class AuthScreen extends Component {
           case 'pin':
             return (
               <View style={viewStyleInput}>
-                <PinModal
+                <PinConfirm
                   pin={pin}
                   fingerprint={fingerprint}
                   onSuccess={() => this.props.pinSuccess()}

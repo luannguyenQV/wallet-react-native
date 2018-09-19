@@ -4,7 +4,6 @@
 This file contains all the TYPE declarations and ACTION functions 
 that relate to the auth flows
 */
-import { authValidation } from '../../util/validation';
 import { createAsyncTypes } from '../store/Utilities';
 
 export const INIT = createAsyncTypes('init');
@@ -17,7 +16,6 @@ export const init = () => {
 
 export const AUTH_FIELD_CHANGED = 'auth_field_changed';
 export const authFieldChange = ({ prop, value }) => {
-  console.log(prop, value);
   return {
     type: AUTH_FIELD_CHANGED,
     payload: { prop, value },

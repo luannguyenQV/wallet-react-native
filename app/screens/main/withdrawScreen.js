@@ -24,7 +24,7 @@ import {
 import { Input, FullScreenForm, Output } from './../../components/common';
 import Colors from './../../config/colors';
 import Header from './../../components/header';
-import PinModal from './../../components/PinModal';
+import PinConfirm from '../../components/PinConfirm';
 
 class WithdrawScreen extends Component {
   static navigationOptions = () => ({
@@ -299,7 +299,7 @@ class WithdrawScreen extends Component {
           style={styles.viewStyleContainer}
           behavior={'padding'}>
           {this.state.pinVisible ? (
-            <PinModal
+            <PinConfirm
               pin={pin}
               fingerprint={fingerprint}
               modalVisible={this.state.pinVisible}

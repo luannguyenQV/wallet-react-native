@@ -182,6 +182,10 @@ function* authFlow() {
             // Tries to dummy register a user for company which validates if company exists
             // TODO: this should be revised, but requires platform improvements
             yield put({ type: LOADING });
+            if (!tempCompany) {
+              authError = 'Please enter a valid company ID';
+              break;
+            }
             yield call(Rehive.register, { company: tempCompany.toLowerCase() });
           } catch (error) {
             if (error.data && error.data.company) {

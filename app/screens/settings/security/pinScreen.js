@@ -15,7 +15,7 @@ import {
 } from './../../../redux/actions';
 
 import Header from './../../../components/header';
-import PinModal from './../../../components/PinModal';
+import PinConfirm from '../../../components/PinConfirm';
 
 import { Button, PopUpGeneral, CodeInput } from './../../../components/common';
 
@@ -256,7 +256,7 @@ class PinScreen extends Component {
           keyboardShouldPersistTaps={'never'}
           style={styles.viewStyleContainer}
           behavior={'padding'}>
-          <PinModal
+          <PinConfirm
             modal
             pin={pin}
             fingerprint={fingerprint}
