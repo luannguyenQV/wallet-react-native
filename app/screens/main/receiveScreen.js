@@ -29,12 +29,11 @@ class ReceiveScreen extends Component {
   };
 
   componentDidMount() {
-    const { profile, crypto, currencies } = this.props;
-    const currencyCode = this.props.navigation.state.params.currency;
+    const { profile, crypto } = this.props;
+    const currency = this.props.navigation.state.params.currency;
 
-    const currency = currencies.data.find(
-      item => item.currency.code === currencyCode,
-    ); // TODO: Add accountRef && if no currency use active
+    // const accountRef = currency.account;
+    const currencyCode = currency.currency.code;
 
     let cryptoURI = '';
     const cryptoType = currency.crypto;
