@@ -11,8 +11,6 @@ import {
   viewCampaign,
   hideCampaign,
 } from './../../redux/actions';
-import { Container, Content, Tab, Tabs } from 'native-base';
-import ScrollableTabView from 'react-native-scrollable-tab-view';
 import {
   getRewards,
   getCampaigns,
@@ -20,7 +18,7 @@ import {
 import { companyConfigSelector } from './../../redux/sagas/selectors';
 
 import Header from './../../components/header';
-import { Output } from '../../components/common';
+import { Output, Tabs } from '../../components/common';
 import CardList from './../../components/CardList';
 import { performDivisibility, standardizeString } from './../../util/general';
 
@@ -133,8 +131,13 @@ class RewardsScreen extends Component {
     } = this.props;
     return (
       <View style={styles.container}>
-        <Header navigation={this.props.navigation} drawer title="Rewards" />
-        {/* <ScrollableTabView>
+        <Header
+          navigation={this.props.navigation}
+          drawer
+          noShadow
+          title="Rewards"
+        />
+        <Tabs>
           <View tabLabel="Available">
             <CardList
               type="campaigns"
@@ -189,73 +192,7 @@ class RewardsScreen extends Component {
               loadingDetail={rewards.loadingDetail}
             />
           </View>
-        </ScrollableTabView> */}
-        <Container>
-          <Tabs
-            tabStyle={{ backgroundColor: 'white' }}
-            tabBarUnderlineStyle={{
-              backgroundColor: company_config.colors.focus,
-            }}>
-            <Tab
-              heading="Available"
-              activeTextStyle={{ color: company_config.colors.focus }}>
-              <CardList
-                type="campaigns"
-                navigation={this.props.navigation}
-                data={campaigns.data}
-                tempItem={campaigns.tempItem}
-                loadingData={campaigns.loading}
-                identifier="name"
-                onRefresh={fetchCampaigns}
-                renderContent={this.renderCampaignContent}
-                showReward={campaigns.detail}
-                renderDetail={this.renderCampaignDetail}
-                title={item => (item ? item.name : '')}
-                // subtitle={item =>
-                //   item ? standardizeString(item.account_name) : ''
-                // }
-                onPressTitle={item => viewCampaign(item)}
-                onPressContent={item => viewCampaign(item)}
-                emptyListMessage="No rewards available"
-                titleStyle="secondary"
-                keyExtractor={item => item.identifier}
-                textActionOne="CLAIM"
-                onPressActionOne={item => claimReward(item)}
-                onPressActionTwo={() => hideCampaign()}
-                loadingDetail={campaigns.loadingDetail}
-              />
-            </Tab>
-            <Tab
-              heading="Claimed"
-              activeTextStyle={{ color: company_config.colors.focus }}>
-              <CardList
-                type="rewards"
-                navigation={this.props.navigation}
-                data={rewards.data}
-                tempItem={rewards.tempItem}
-                loadingData={rewards.loading}
-                identifier="identifier"
-                onRefresh={fetchRewards}
-                renderContent={this.renderRewardContent}
-                showReward={rewards.detail}
-                renderDetail={this.renderRewardDetail}
-                title={item => (item ? item.campaign.name : '')}
-                // subtitle={item =>
-                //   item ? standardizeString(item.account_name) : ''
-                // }
-                onPressTitle={item => viewReward(item)}
-                onPressContent={item => viewReward(item)}
-                emptyListMessage="No rewards claimed"
-                titleStyle="secondary"
-                keyExtractor={item => item.identifier}
-                // textActionOne="CLAIM"
-                // onPressActionOne={item => claimReward(item)}
-                onPressActionTwo={() => hideReward()}
-                loadingDetail={rewards.loadingDetail}
-              />
-            </Tab>
-          </Tabs>
-        </Container>
+        </Tabs>
       </View>
     );
   }

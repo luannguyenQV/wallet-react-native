@@ -22,3 +22,4 @@ export * from './MultiFactorAuthentication';
 export * from './CodeInput';
 export * from './MyComponents';
 export * from './Text';
+export * from './Tabs';

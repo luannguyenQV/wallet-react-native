@@ -23,7 +23,10 @@ class TransactionList extends Component {
     transaction: null,
   };
   async componentDidMount() {
-    const { accountRef, currencyCode } = this.props;
+    const { currency } = this.props;
+    const accountRef = currency.account ? currency.account : '';
+    const currencyCode =
+      currency.currency && currency.currency.code ? currency.currency.code : '';
     this.getTransactions(accountRef, currencyCode);
   }
 
@@ -37,8 +40,9 @@ class TransactionList extends Component {
 
   renderTransactions() {
     const { transactions, loading, currency } = this.props;
-    const accountRef = currency.account;
-    const currencyCode = currency.currency.code;
+    const accountRef = currency.account ? currency.account : '';
+    const currencyCode =
+      currency.currency && currency.currency.code ? currency.currency.code : '';
     const data =
       transactions &&
       transactions[accountRef] &&
