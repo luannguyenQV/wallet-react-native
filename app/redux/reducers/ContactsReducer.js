@@ -83,8 +83,11 @@ export const contactsSelector = createSelector(
       data = contactsState.contacts.filter(
         item =>
           item.type === contactsState.contactsType &&
-          (item.name.toLowerCase().includes(search) ||
-            item.contact.toLowerCase().includes(search)),
+          (item.name
+            ? item.name.toLowerCase().includes(search)
+            : false || item.contact
+              ? item.contact.toLowerCase().includes(search)
+              : false),
       );
     }
     return {

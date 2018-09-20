@@ -18,7 +18,6 @@ class _Input extends Component {
   };
 
   _OnBlur() {
-    console.log('blur');
     this.setState({
       focused: false,
     });
@@ -26,7 +25,6 @@ class _Input extends Component {
   }
 
   _OnFocus() {
-    console.log('focus');
     this.setState({
       focused: true,
     });

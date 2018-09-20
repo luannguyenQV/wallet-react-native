@@ -134,7 +134,7 @@ function* validateTransaction(action) {
     // Amount validation
     const currency = transaction.currency;
     let transactionAmountError = '';
-    let amount = parseInt(transaction.amount, 10);
+    let amount = parseFloat(transaction.amount);
     for (let i = 0; i < currency.currency.divisibility; i++) {
       amount = amount * 10;
     }

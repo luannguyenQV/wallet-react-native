@@ -1,12 +1,12 @@
 {
   "company": {
-    "id": "default",
-    "name": "Default",
+    "id": "demo_company",
+    "name": "Demo Company",
     "description": ""
   },
   "services": {
     "bitcoin": false,
-    "stellar": false,
+    "stellar": true,
     "ethereum": false,
     "rewards": false
   },

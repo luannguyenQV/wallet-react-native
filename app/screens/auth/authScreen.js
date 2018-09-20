@@ -404,9 +404,6 @@ class AuthScreen extends Component {
 
     switch (detailState) {
       case 'company':
-        console.log('companies', companies);
-        console.log('tempCompany', tempCompany);
-        // console.log('companies', companies);
         placeholder = 'e.g. Rehive';
         value = tempCompany;
         onChangeText = value => authFieldChange({ prop: 'tempCompany', value });
@@ -414,7 +411,6 @@ class AuthScreen extends Component {
           ? companies.filter(item => item.toLowerCase().includes(tempCompany))
           : [];
         onPressListItem = item => {
-          console.log('item pressed', item);
           authFieldChange({ prop: 'tempCompany', value: item });
           nextAuthFormState('');
         };

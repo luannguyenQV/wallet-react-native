@@ -664,11 +664,13 @@ function* appLoad() {
     yield put({ type: APP_LOAD.pending });
     let count = 11;
     const { services } = yield select(companyConfigSelector);
+    console.log(services);
     if (services.rewards) {
       count++;
     }
     if (services.stellar) {
       let resp = yield call(Rehive.getStellarUser);
+      console.log('resp', resp);
       const data = resp.data;
       if (data && !data.username) {
         const { user } = yield select(getAuth);
@@ -676,7 +678,7 @@ function* appLoad() {
           username: user.username,
         });
       }
-      // console.log('data', data);
+      console.log('data', data);
       if (data && data.crypto) {
         yield put({
           type: SET_RECEIVE_ADDRESS,
