@@ -84,15 +84,15 @@
       "custom": [
         {
           "id": 0,
-          "title": "Card 1",
-          "description": "This is your custom text for card 1",
+          "title": "Demo Company",
+          "description": "A demo wallet on the Rehive platform",
           "image": "card1",
           "dismiss": true
         },
         {
           "id": 1,
-          "title": "Card 2",
-          "description": "This is your custom text for card 2",
+          "title": "Happy Testing",
+          "description": "For internal and external testing",
           "image": "card2",
           "dismiss": false
         }
@@ -103,8 +103,8 @@
     "landing": [
       {
         "id": 0,
-        "title": "Slide 1",
-        "description": "This is your custom text for slide 1",
+        "title": "Demo Company",
+        "description": "A demo wallet on the Rehive platform",
         "image": "card1"
       }
     ]
@@ -113,8 +113,8 @@
     "login": [
       {
         "id": "0",
-        "title": "Login 1",
-        "description": "This is your custom text for login screen 1",
+        "title": "Demo Company",
+        "description": "A demo wallet on the Rehive platform",
         "image": "card1"
       }
     ]
