@@ -41,44 +41,47 @@ class AddressesScreen extends Component {
   };
 
   renderDetail = () => {
-    const {
-      tempItem,
-      updateError,
-      updateInputField,
-      company_config,
-    } = this.props;
-    const { colors } = company_config;
+    const { tempItem, updateItem, updateInputField } = this.props;
 
     return (
       <View>
         <Input
+          reference={r => (this.line_1 = r)}
+          onSubmitEditing={() => this.line_2.focus()}
           label="Address line 1"
           placeholder="e.g. 158 Kloof Street"
           autoCapitalize="none"
           value={tempItem.line_1}
           onChangeText={input => updateInputField('address', 'line_1', input)}
-          colors={colors}
+          returnKeyType="next"
         />
 
         <Input
+          reference={r => (this.line_2 = r)}
+          onSubmitEditing={() => this.city.focus()}
           label="Address line 2"
           placeholder="e.g. Gardens"
           autoCapitalize="none"
           value={tempItem.line_2}
           onChangeText={input => updateInputField('address', 'line_2', input)}
-          colors={colors}
+          returnKeyType="next"
         />
 
         <Input
+          reference={r => (this.city = r)}
+          onSubmitEditing={() => this.state_province.focus()}
           label="City"
           placeholder="e.g. Cape Town"
           autoCapitalize="none"
           value={tempItem.city}
           onChangeText={input => updateInputField('address', 'city', input)}
-          colors={colors}
+          returnKeyType="next"
         />
 
         <Input
+          reference={r => (this.state_province = r)}
+          onSubmitEditing={() => this.postal_code.focus()}
+          returnKeyType="next"
           label="State or province"
           placeholder="e.g. Western Cape"
           autoCapitalize="none"
@@ -86,32 +89,27 @@ class AddressesScreen extends Component {
           onChangeText={input =>
             updateInputField('address', 'state_province', input)
           }
-          colors={colors}
         />
 
         <Input
+          reference={r => (this.postal_code = r)}
+          // onSubmitEditing={() => this.recipientInput.focus()}
           label="Postal or ZIP code"
+          keyboardType={'numeric'}
           placeholder="e.g. 9001"
           autoCapitalize="none"
           value={tempItem.postal_code}
           onChangeText={input =>
             updateInputField('address', 'postal_code', input)
           }
-          colors={colors}
+          onSubmitEditing={() => updateItem('address', tempItem)}
         />
       </View>
     );
   };
 
   render() {
-    const {
-      address,
-      tempItem,
-      newItem,
-      updateItem,
-      showDetail,
-      company_config,
-    } = this.props;
+    const { address, tempItem, newItem, updateItem, showDetail } = this.props;
     return (
       <View style={styles.container}>
         <Header
@@ -124,10 +122,8 @@ class AddressesScreen extends Component {
               ? () => updateItem('address', tempItem)
               : () => newItem('address')
           }
-          colors={company_config.colors}
         />
         <CardList
-          colors={company_config.colors}
           type="address"
           data={address}
           tempItem={tempItem}
@@ -156,8 +152,7 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user, auth }) => {
-  const { company_config } = auth;
+const mapStateToProps = ({ user }) => {
   const { address, loading_address, tempItem, showDetail, updateError } = user;
   return {
     address,
@@ -165,7 +160,6 @@ const mapStateToProps = ({ user, auth }) => {
     showDetail,
     tempItem,
     updateError,
-    company_config,
   };
 };
 

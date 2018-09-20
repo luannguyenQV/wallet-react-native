@@ -62,7 +62,7 @@ class BankAccountsScreen extends Component {
   };
 
   renderDetail = () => {
-    const { tempItem, updateError, updateInputField } = this.props;
+    const { tempItem, updateError, updateInputField, updateItem } = this.props;
     const {
       name,
       number,
@@ -86,6 +86,9 @@ class BankAccountsScreen extends Component {
           onChangeText={input =>
             updateInputField('bank_account', 'name', input)
           }
+          reference={r => (this.name = r)}
+          onSubmitEditing={() => this.number.focus()}
+          returnKeyType="next"
         />
         <Input
           label="Account number"
@@ -95,6 +98,10 @@ class BankAccountsScreen extends Component {
           onChangeText={input =>
             updateInputField('bank_account', 'number', input)
           }
+          reference={r => (this.number = r)}
+          onSubmitEditing={() => this.type.focus()}
+          returnKeyType="next"
+          keyboardType={'numeric'}
         />
         <Input
           label="Account type"
@@ -104,6 +111,9 @@ class BankAccountsScreen extends Component {
           onChangeText={input =>
             updateInputField('bank_account', 'type', input)
           }
+          reference={r => (this.type = r)}
+          onSubmitEditing={() => this.bank_name.focus()}
+          returnKeyType="next"
         />
         <Input
           label="Bank name"
@@ -113,6 +123,9 @@ class BankAccountsScreen extends Component {
           onChangeText={input =>
             updateInputField('bank_account', 'bank_name', input)
           }
+          reference={r => (this.bank_name = r)}
+          onSubmitEditing={() => this.bank_code.focus()}
+          returnKeyType="next"
         />
         <Input
           label="Bank code"
@@ -122,6 +135,9 @@ class BankAccountsScreen extends Component {
           onChangeText={input =>
             updateInputField('bank_account', 'bank_code', input)
           }
+          reference={r => (this.bank_code = r)}
+          onSubmitEditing={() => this.branch_code.focus()}
+          returnKeyType="next"
         />
         <Input
           label="Branch code"
@@ -131,6 +147,9 @@ class BankAccountsScreen extends Component {
           onChangeText={input =>
             updateInputField('bank_account', 'branch_code', input)
           }
+          reference={r => (this.branch_code = r)}
+          onSubmitEditing={() => this.swift.focus()}
+          returnKeyType="next"
         />
         <Input
           label="Swift code"
@@ -140,6 +159,9 @@ class BankAccountsScreen extends Component {
           onChangeText={input =>
             updateInputField('bank_account', 'swift', input)
           }
+          reference={r => (this.swift = r)}
+          onSubmitEditing={() => this.iban.focus()}
+          returnKeyType="next"
         />
         <Input
           label="IBAN number"
@@ -149,6 +171,9 @@ class BankAccountsScreen extends Component {
           onChangeText={input =>
             updateInputField('bank_account', 'iban', input)
           }
+          reference={r => (this.iban = r)}
+          onSubmitEditing={() => this.bic.focus()}
+          returnKeyType="next"
         />
         <Input
           label="BIC number"
@@ -156,11 +181,11 @@ class BankAccountsScreen extends Component {
           autoCapitalize="none"
           value={bic}
           onChangeText={input => updateInputField('bank_account', 'bic', input)}
+          onSubmitEditing={() => updateItem('bank_account', tempItem)}
+          reference={r => (this.bic = r)}
         />
       </View>
     );
-    // }
-    return;
   };
 
   render() {
