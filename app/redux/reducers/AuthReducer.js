@@ -83,6 +83,9 @@ export default (state = INITIAL_STATE, action) => {
         postLoading: false,
         pinError: '',
         code: '',
+        password: '', // these are here
+        old_password: '', // to ensure all
+        new_password: '', // passwords are reset
       };
     case INIT.success:
       return {
@@ -146,7 +149,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: true,
-        passwordError: '',
+        inputError: '',
       };
     case CHANGE_PASSWORD_ASYNC.success:
       return {
@@ -159,7 +162,7 @@ export default (state = INITIAL_STATE, action) => {
     case CHANGE_PASSWORD_ASYNC.error:
       return {
         ...state,
-        passwordError: action.payload,
+        inputError: action.payload,
         password: '',
         old_password: '',
         new_password: '',
@@ -222,6 +225,8 @@ export default (state = INITIAL_STATE, action) => {
         loading: false,
         appLoading: false,
         skip: false,
+        old_password: '',
+        new_password: '',
       };
     case AUTH_COMPLETE:
       return {

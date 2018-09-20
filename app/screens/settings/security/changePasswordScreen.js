@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
-import { View, Alert } from 'react-native';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
 import {
   authFieldChange,
   changePassword,
   hideModal,
+  resetAuth,
 } from '../../../redux/actions';
 import {
   Input,
   InputContainer,
   Button,
-  PopUpGeneral,
+  Text,
 } from './../../../components/common';
 import Header from './../../../components/header';
 
@@ -19,28 +20,8 @@ class ChangePasswordScreen extends Component {
     label: 'Change password',
   };
 
-  renderModal() {
-    const { modalVisible, hideModal } = this.props;
-
-    if (modalVisible) {
-      if (modalVisible && !inputError) {
-        modalText = 'Password updated';
-        modalAction = () => this.props.navigation.goBack();
-      } else {
-        modalText = 'Error: ' + inputError;
-        modalAction = () => hideModal;
-      }
-      return (
-        <PopUpGeneral
-          visible={modalVisible}
-          contentText={modalText}
-          textActionOne={'Close'}
-          onPressActionOne={modalAction}
-          onDismiss={modalAction}
-        />
-      );
-    }
-    return null;
+  componentWillUnmount() {
+    this.props.resetAuth();
   }
 
   render() {
@@ -48,12 +29,14 @@ class ChangePasswordScreen extends Component {
       new_password,
       old_password,
       authFieldChange,
+      inputError,
       changePassword,
       old_passwordError,
       new_passwordError,
     } = this.props;
+    const { container, textStyle } = styles;
     return (
-      <View style={styles.container}>
+      <View style={container}>
         <Header
           navigation={this.props.navigation}
           back
@@ -83,12 +66,17 @@ class ChangePasswordScreen extends Component {
             }
           />
 
+          {inputError ? (
+            <Text style={{ padding: 8 }} color={'negative'}>
+              {inputError}
+            </Text>
+          ) : null}
+
           <Button
             label="CONFIRM"
             color="primary"
             onPress={() => changePassword(old_password, new_password)}
           />
-          {this.renderModal()}
         </InputContainer>
       </View>
     );
@@ -99,6 +87,11 @@ const styles = {
   container: {
     flex: 1,
     backgroundColor: 'white',
+  },
+  textStyle: {
+    fontSize: 16,
+    textAlign: 'center',
+    color: 'black',
   },
 };
 
@@ -127,4 +120,5 @@ export default connect(mapStateToProps, {
   authFieldChange,
   changePassword,
   hideModal,
+  resetAuth,
 })(ChangePasswordScreen);
