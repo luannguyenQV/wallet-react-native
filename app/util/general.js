@@ -36,9 +36,7 @@ export const decodeQR = string => {
     recipient = temp[0];
     if (temp[1]) {
       temp = temp[1].split('&');
-      console.log(temp);
       for (i = 0; i < temp.length; i++) {
-        console.log('temp-i', temp[i]);
         let detail = temp[i].split('=');
         switch (detail[0]) {
           case 'amount':

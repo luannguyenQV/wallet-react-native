@@ -51,7 +51,6 @@ class SendScreen extends Component {
     } = this.props.navigation.state.params;
 
     const {
-      currencies,
       setTransactionType,
       updateAccountField,
       validateTransaction,
@@ -59,18 +58,16 @@ class SendScreen extends Component {
       setContactType,
     } = this.props;
 
-    // const tempCurrency = currencies.data.find(
-    //   item => item.currency.code === currency,
-    // ); // TODO: Add accountRef && if no currency use active
-    // console.log('currencies', currencies);
-
     setTransactionType('send');
+    updateAccountField({
+      prop: 'transactionCurrency',
+      value: currency,
+    });
     setContactType(
       !type || type === 'rehive'
         ? !recipient || recipient.includes('@') ? 'email' : 'mobile'
         : 'crypto',
     );
-    updateAccountField({ prop: 'transactionCurrency', value: currency });
     updateAccountField({ prop: 'transactionAmount', value: amount });
     updateContactField({ prop: 'contactsSearch', recipient });
     updateAccountField({ prop: 'transactionRecipient', value: recipient });
@@ -104,17 +101,8 @@ class SendScreen extends Component {
   }
 
   renderMainContainer() {
-    const {
-      transaction,
-      setTransactionState,
-      validateTransaction,
-      company_config,
-    } = this.props;
-    // console.log(transaction);
+    const { transaction } = this.props;
     const { viewStyleInputContainer } = styles;
-
-    let textFooterRight = '';
-    let onPressFooterRight = () => {};
 
     return (
       <FullScreenForm loading={transaction.loading} color={'focus'}>

@@ -1,19 +1,13 @@
 import React, { Component } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { BarCodeScanner, Permissions } from 'expo';
 import Header from './../../components/header';
 import { connect } from 'react-redux';
-import {
-  resetSend,
-  setSendWallet,
-  updateAccountField,
-  updateContactField,
-  setContactType,
-  setSendType,
-} from './../../redux/actions';
+import { currenciesSelector } from './../../redux/reducers/AccountsReducer';
 import { decodeQR } from './../../util/general';
 
 import { Output, Button, EmptyListMessage } from './../../components/common';
+import { Toast } from 'native-base';
 
 class QRCodeScannerScreen extends Component {
   static navigationOptions = {
@@ -37,25 +31,40 @@ class QRCodeScannerScreen extends Component {
   }
 
   accept = data => {
+    let { currencies } = this.props;
     const { account, currency, amount, recipient, note, type, memo } = data;
-    console.log('data', data);
 
+    console.log('currencies', currencies, currency);
+    currencies = currencies.data.filter(
+      item => item.currency.code === currency,
+    );
+    console.log('currencies', currencies);
+    if (currencies.length > 1) {
+      currencies = currencies.filter(item => item[account] === account);
+    }
+    console.log('currencies', currencies);
+    if (currencies.length === 1) {
+      this.props.navigation.goBack();
+      this.props.navigation.navigate('Send', {
+        type,
+        account,
+        currency: currencies[0],
+        amount,
+        note,
+        memo,
+        recipient,
+      });
+      return;
+    }
     this.props.navigation.goBack();
-    this.props.navigation.navigate('Send', {
-      type,
-      account,
-      currency,
-      amount,
-      note,
-      memo,
-      recipient,
+    Toast.show({
+      text: 'unable to find currency' + (account ? ' and account' : ''),
     });
   };
 
   _handleBarCodeRead = raw => {
     const data = decodeQR(raw.data);
     this.accept(data);
-    // this.setState({ camera: false, data });
   };
 
   render() {
@@ -119,16 +128,8 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ accounts }) => {
-  const { wallets } = accounts;
-  return { wallets };
+const mapStateToProps = state => {
+  return { currencies: currenciesSelector(state) };
 };
 
-export default connect(mapStateToProps, {
-  resetSend,
-  setSendWallet,
-  updateAccountField,
-  updateContactField,
-  setContactType,
-  setSendType,
-})(QRCodeScannerScreen);
+export default connect(mapStateToProps, {})(QRCodeScannerScreen);

@@ -33,11 +33,7 @@ class WalletsScreen extends Component {
 
   componentDidMount() {
     if (this.props.navigation.state.params) {
-      const { currencies } = this.props;
-      const currency = currencies.data.find(
-        item =>
-          item.currency.code === this.props.navigation.state.params.currency,
-      );
+      const currency = this.props.navigation.state.params.currency;
       this.props.viewWallet(currency);
     } else {
       this.props.hideWallet();

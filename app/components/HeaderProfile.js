@@ -43,7 +43,7 @@ class _HeaderProfile extends Component {
               style={[
                 imageStylePhoto,
                 {
-                  borderColor: Colors.headerContrast,
+                  borderColor: colors.headerContrast,
                 },
               ]}
             />

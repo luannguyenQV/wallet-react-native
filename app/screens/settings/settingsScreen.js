@@ -230,6 +230,10 @@ class SettingsScreen extends Component {
         }}
         style={{ ...styles }}
         hideIcon
+        // underline={{
+        //   borderTopWidth: 0,
+        //   height: 0,
+        // }}
         // ref={el => {
         //   this.inputRefs.picker = el;
         // }}
