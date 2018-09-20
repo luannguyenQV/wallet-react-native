@@ -107,8 +107,7 @@ class TwoFactorScreen extends Component {
   }
 
   renderToken() {
-    const { colors } = this.props.company_config;
-    const { issuer, account, key, otpauth_url } = this.props.mfaToken;
+    const { issuer, account, key } = this.props.mfaToken;
     const url =
       'otpauth://totp/' +
       issuer +
@@ -118,9 +117,7 @@ class TwoFactorScreen extends Component {
       key +
       '&digits=6&issuer=' +
       issuer;
-    console.log('url', url);
     const encUrl = encodeURI(url);
-    console.log('encUrl', encUrl);
 
     return (
       <InputContainer>

@@ -136,7 +136,7 @@ class _MultiFactorAuthentication extends Component {
           </View>
         ) : (
           <View style={{ padding: 8 }}>
-            <Button
+            {/* <Button
               color="secondary"
               label="Resend SMS"
               size="large"
@@ -145,7 +145,7 @@ class _MultiFactorAuthentication extends Component {
               }}
               // onPress={() => resendSMS()}
               animation="fadeInUpBig"
-            />
+            /> */}
           </View>
         )}
       </View>

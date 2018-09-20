@@ -93,7 +93,12 @@ class _LocalAuthentication extends Component {
           label="TRY AGAIN"
           color="secondary"
           reference={input => (this._fingerprint = input)}
-          onPress={() => this.scanFingerprint()}
+          onPress={() => {
+            if (Platform.OS === 'android') {
+              Toast.show({ text: 'Please try scan again' });
+            }
+            this.scanFingerprint();
+          }}
         />
       );
     }
