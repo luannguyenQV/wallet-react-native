@@ -24,7 +24,7 @@
     ],
     "first_name": false,
     "last_name": false,
-    "username": false,
+    "username": true,
     "country": false,
     "pin": "",
     "mfa": ""

@@ -7,7 +7,7 @@ import {
 } from './../sagas/selectors';
 
 import themes from './../../config/themes.json';
-import Colors from './../../config/colors';
+import default_company_config from './../../config/default_company_config.json';
 
 const INITIAL_STATE = {
   company_config: {},
@@ -40,7 +40,9 @@ export const colorSelector = createSelector(
   [companyConfigSelector, themeStateSelector],
   (company_config, theme) => {
     const _colors =
-      company_config && company_config.colors ? company_config.colors : Colors;
+      company_config && company_config.colors
+        ? company_config.colors
+        : default_company_config.colors;
 
     let selectedTheme = themes[theme] ? themes[theme] : {};
 
@@ -94,7 +96,9 @@ const selectColor = (component, theme, _colors, _default) => {
       ? theme[_default]
       : _colors[component]
         ? _colors[component]
-        : _colors[_default] ? _colors[_default] : Color[_default];
+        : _colors[_default]
+          ? _colors[_default]
+          : default_company_config.colors[_default];
 
   if (
     color === 'primary' ||

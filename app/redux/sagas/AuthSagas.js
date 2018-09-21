@@ -679,16 +679,15 @@ function* appLoad() {
         });
       }
       console.log('data', data);
-      if (data && data.crypto) {
-        yield put({
-          type: SET_RECEIVE_ADDRESS,
-          payload: {
-            type: 'stellar',
-            address: data.crypto.public_address,
-            memo: data.crypto.memo,
-          },
-        });
-      }
+      yield put({
+        type: SET_RECEIVE_ADDRESS,
+        payload: {
+          type: 'stellar',
+          address: data && data.crypto ? data.crypto.public_address : '',
+          memo: data && data.crypto ? data.crypto.memo : '',
+        },
+      });
+
       // count++;
     }
     // if (services.bitcoin) {
