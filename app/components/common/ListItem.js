@@ -6,6 +6,7 @@ import {
   Image,
   TouchableHighlight,
 } from 'react-native';
+import PropTypes from 'prop-types';
 
 class ListItem extends Component {
   render() {
@@ -16,11 +17,12 @@ class ListItem extends Component {
       textStyleTitle,
       textStyleSubtitle,
     } = styles;
-    const { image, title, subtitle } = this.props;
+    const { image, title, subtitle, onPress } = this.props;
+    console.log('title', title);
     return (
       <TouchableHighlight
         underlayColor={'white'}
-        onPress={item => this.props.onPress(item)}>
+        onPress={item => onPress(item)}>
         <View style={viewStyleContainer}>
           <View style={viewStyleImage}>
             {image ? (
@@ -39,9 +41,9 @@ class ListItem extends Component {
             )}
           </View>
           <View style={viewStyleTitle}>
-            <Text style={textStyleTitle}>{title}</Text>
+            <Text style={textStyleTitle}>{title ? title : subtitle}</Text>
             {subtitle ? (
-              <Text style={textStyleSubtitle}>{subtitle}</Text>
+              <Text style={textStyleSubtitle}>{title ? subtitle : ''}</Text>
             ) : null}
           </View>
         </View>
@@ -49,6 +51,20 @@ class ListItem extends Component {
     );
   }
 }
+
+ListItem.propTypes = {
+  image: PropTypes.string, // Text displayed on button
+  title: PropTypes.string, // Animation type
+  subtitle: PropTypes.string, // Animation type
+  onPress: PropTypes.func, // Function to execute on press
+};
+
+ListItem.defaultProps = {
+  image: '',
+  title: '',
+  subtitle: '',
+  onPress: () => {},
+};
 
 const ListSeparator = () => (
   <View

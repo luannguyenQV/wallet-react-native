@@ -191,7 +191,6 @@ class SendScreen extends Component {
       updateContactField,
       validateTransaction,
     } = this.props;
-    // console.log(transaction);
     let label = 'Please enter ';
     let placeholder = '';
     switch (contacts.type) {
@@ -412,6 +411,7 @@ class SendScreen extends Component {
       case 'success':
         textHeader = '';
     }
+    console.log(contacts);
 
     return (
       <View style={{ flex: 1 }}>

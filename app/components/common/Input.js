@@ -301,7 +301,7 @@ class _Input extends Component {
               renderItem={({ item }) => (
                 <ListItem
                   onPress={() => onPressListItem(item)}
-                  title={item[title] ? item[title] : item}
+                  title={title ? item[title] : item}
                   subtitle={item[subtitle]}
                   // image={item.image ? item.image : null}
                 />
@@ -345,8 +345,6 @@ _Input.defaultProps = {
   type: 'contained',
   colors: Colors,
   onBlur: () => {},
-  // backgroundColor: colors.primary,
-  // textColor: colors.primaryContrast,
 };
 
 const styles = {
