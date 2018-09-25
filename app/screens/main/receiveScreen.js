@@ -1,19 +1,30 @@
 import React, { Component } from 'react';
 import {
   View,
-  Text,
+  Platform,
   Image,
   Dimensions,
   TouchableHighlight,
   Clipboard,
 } from 'react-native';
 import { connect } from 'react-redux';
+import {
+  setTransactionType,
+  setTransactionCurrency,
+  setTransactionState,
+  updateAccountField,
+  setReceiveType,
+  toggleAccountField,
+  resetReceive,
+} from '../../redux/actions';
 
 import { Toast } from 'native-base';
 import Header from './../../components/header';
-import { Output, Tabs } from './../../components/common';
-// import { Container, Tab, Tabs } from 'native-base';
-import { currenciesSelector } from '../../redux/reducers/AccountsReducer';
+import { Output, Input, Button, Checkbox } from './../../components/common';
+import {
+  currenciesSelector,
+  receiveSelector,
+} from './../../redux/reducers/AccountsReducer';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -29,95 +40,38 @@ class ReceiveScreen extends Component {
   };
 
   componentDidMount() {
-    const { profile, crypto } = this.props;
-    const currency = this.props.navigation.state.params.currency;
+    const { currency } = this.props.navigation.state.params;
 
-    // const accountRef = currency.account;
-    const currencyCode = currency.currency.code;
-
-    let cryptoURI = '';
-    const cryptoType = currency.crypto;
-    const cryptoTemp = crypto[cryptoType] ? crypto[cryptoType] : '';
-    if (cryptoType) {
-      cryptoURI =
-        'https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=' +
-        encodeURIComponent(
-          cryptoType +
-            ':' +
-            cryptoTemp.address +
-            '?' +
-            (cryptoTemp.memo ? 'memo=' + cryptoTemp.memo + '&' : '') +
-            (currencyCode ? 'currency=' + currencyCode : ''),
-        ) +
-        '&choe=UTF-8';
-    }
-    const emailURI =
-      'https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=' +
-      encodeURIComponent(
-        'rehive:' +
-          profile.email +
-          (currencyCode ? '?currency=' + currencyCode : ''),
-      ) +
-      '&choe=UTF-8';
-
-    this.setState({
-      cryptoURI,
-      emailURI,
-      crypto: cryptoTemp,
+    this.props.resetReceive();
+    this.props.updateAccountField({
+      prop: 'receiveCurrency',
+      value: currency,
     });
+    this.props.toggleAccountField('receiveCurrency');
   }
 
-  _copyQR(type) {
-    const user = this.props.profile;
-    const value = type === 'email' ? user.email : this.state.crypto.address;
-    Clipboard.setString(value);
+  _copyQR(receive) {
+    Clipboard.setString(receive.value);
     Toast.show({
       text:
-        value +
+        receive.value +
         ' copied.' +
-        (type === 'email'
-          ? ''
-          : ' Please remember to include your memo when sending to this address.'),
+        (receive.type === 'stellar'
+          ? ' Please remember to include your memo when sending to this address.'
+          : ''),
       duration: 3000,
     });
   }
 
-  renderDetail(type) {
-    const user = this.props.profile;
-    return (
-      <View style={{ padding: 16, width: '100%' }}>
-        <Text style={styles.text}>
-          {type === 'crypto'
-            ? 'This QR code is your public address for accepting payments.'
-            : 'This QR code is your Rehive account for use with another Rehive app'}
-        </Text>
-
-        <TouchableHighlight
-          underlayColor={'white'}
-          activeOpacity={0.2}
-          onPress={() => this._copyQR(type)}>
-          <Image
-            style={{ width: 300, height: 250, alignSelf: 'center' }}
-            source={{
-              uri:
-                type === 'email' ? this.state.emailURI : this.state.cryptoURI,
-            }}
-          />
-        </TouchableHighlight>
-        {type === 'crypto' ? (
-          <Output label={'Address'} value={this.state.crypto.address} copy />
-        ) : null}
-        <Output
-          label={type === 'email' ? 'Email' : 'Memo'}
-          value={type === 'email' ? user.email : this.state.crypto.memo}
-          copy
-        />
-      </View>
-    );
-  }
-
   render() {
     const { crypto } = this.state;
+    const {
+      receive,
+      contacts,
+      updateAccountField,
+      setReceiveType,
+      updateContactField,
+    } = this.props;
     return (
       <View style={styles.container}>
         <Header
@@ -126,14 +80,126 @@ class ReceiveScreen extends Component {
           noShadow={crypto}
           title="Receive"
         />
-        {crypto ? (
-          <Tabs>
-            <View tabLabel="Email">{this.renderDetail('email')}</View>
-            <View tabLabel="Crypto">{this.renderDetail('crypto')}</View>
-          </Tabs>
-        ) : (
-          this.renderDetail('email')
-        )}
+        <View style={{ padding: 8, width: '100%' }}>
+          <Output label={''} value={receive.value} copy />
+          <TouchableHighlight
+            underlayColor={'white'}
+            activeOpacity={0.2}
+            onPress={() => this._copyQR(receive)}>
+            <Image
+              style={{ width: 300, height: 220, alignSelf: 'center' }}
+              source={{
+                uri:
+                  'https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=&choe=UTF-8' +
+                  encodeURIComponent(receive.value),
+              }}
+            />
+          </TouchableHighlight>
+          {receive.buttons ? (
+            <View style={{ flexDirection: 'row' }}>
+              {receive.email ? (
+                <View style={{ flex: 1 }}>
+                  <Button
+                    color={receive.type === 'email' ? 'primary' : 'secondary'}
+                    onPress={() => setReceiveType('email')}
+                    label="EMAIL"
+                    size="small"
+                    round
+                    containerStyle={{ marginBottom: 0 }}
+                  />
+                </View>
+              ) : null}
+              {receive.mobile ? (
+                <View style={{ flex: 1 }}>
+                  <Button
+                    color={receive.type === 'mobile' ? 'primary' : 'secondary'}
+                    onPress={() => setReceiveType('mobile')}
+                    label="MOBILE"
+                    size="small"
+                    round
+                    containerStyle={{ marginBottom: 0 }}
+                  />
+                </View>
+              ) : null}
+              {receive.crypto ? (
+                <View style={{ flex: 1 }}>
+                  <Button
+                    color={receive.type === 'crypto' ? 'primary' : 'secondary'}
+                    onPress={() => setReceiveType('crypto')}
+                    label="CRYPTO"
+                    size="small"
+                    round
+                    containerStyle={{ marginBottom: 0 }}
+                  />
+                </View>
+              ) : null}
+            </View>
+          ) : null}
+          <Input
+            key="amount"
+            placeholder="e.g. 10"
+            label={
+              'Amount' +
+              (receive && receive.currency && receive.currency.currency
+                ? ' [' + receive.currency.currency.symbol + ']'
+                : '')
+            }
+            reference={input => (this.amountInput = input)}
+            keyboardType={Platform.OS === 'ios' ? 'decimal-pad' : 'phone-pad'}
+            value={receive.amount}
+            onChangeText={value =>
+              updateAccountField({ prop: 'receiveAmount', value })
+            }
+            returnKeyType="next"
+            onSubmitEditing={() =>
+              true ? this.memoInput.focus() : this.noteInput.focus()
+            }
+            type={'money'}
+            // precision={transaction.currency.currency.divisibility}
+            // unit={transaction.currency.currency.symbol + ' '}
+            toggleCheck={() => this.props.toggleAccountField('receiveAmount')}
+            checked={receive.amountSelected}
+          />
+          <Input
+            key="memo"
+            placeholder="Memo"
+            label="Memo"
+            value={receive.memo}
+            onChangeText={value =>
+              updateAccountField({ prop: 'receiveMemo', value })
+            }
+            reference={input => (this.memoInput = input)}
+            returnKeyType="next"
+            // autoFocus
+            onSubmitEditing={() => this.noteInput.focus()}
+            toggleCheck={() => this.props.toggleAccountField('receiveMemo')}
+            checked={receive.memoSelected}
+          />
+          <Input
+            key="note"
+            placeholder="e.g. Rent"
+            label="Note"
+            value={receive.note}
+            onChangeText={value =>
+              updateAccountField({ prop: 'receiveNote', value })
+            }
+            // inputError={sendError}
+            reference={input => (this.noteInput = input)}
+            multiline
+            returnKeyType="next"
+            toggleCheck={() => this.props.toggleAccountField('receiveNote')}
+            checked={receive.noteSelected}
+          />
+          {receive.currency ? (
+            <Checkbox
+              title={'Currency: ' + receive.currency.currency.code}
+              toggleCheck={() =>
+                this.props.toggleAccountField('receiveCurrency')
+              }
+              value={receive.currencySelected}
+            />
+          ) : null}
+        </View>
       </View>
     );
   }
@@ -159,9 +225,18 @@ const styles = {
 const mapStateToProps = state => {
   return {
     currencies: currenciesSelector(state),
+    receive: receiveSelector(state),
     profile: state.user.profile,
     crypto: state.crypto,
   };
 };
 
-export default connect(mapStateToProps, {})(ReceiveScreen);
+export default connect(mapStateToProps, {
+  setTransactionType,
+  setTransactionCurrency,
+  setTransactionState,
+  updateAccountField,
+  setReceiveType,
+  toggleAccountField,
+  resetReceive,
+})(ReceiveScreen);
