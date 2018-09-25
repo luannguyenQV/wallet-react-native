@@ -3,13 +3,14 @@ import { View } from 'react-native';
 import { connect } from 'react-redux';
 import { changeTheme } from './../../redux/actions';
 import Header from './../../components/header';
-// import HeaderVerified from './../../../components/HeaderVerified';
+import App from './../../../app.json';
 import Picker from 'react-native-picker-select';
 
 import {
   SettingsContainer,
   SettingsOption,
   InputContainer,
+  Text,
 } from './../../components/common';
 import { themeStateSelector } from '../../redux/sagas/selectors';
 
@@ -272,6 +273,7 @@ class SettingsScreen extends Component {
           <SettingsContainer label="Security">
             {this.renderSecurity()}
           </SettingsContainer>
+          <Text>Version: {App.expo.version}</Text>
         </InputContainer>
       </View>
     );
