@@ -50,6 +50,12 @@ class ReceiveScreen extends Component {
       prop: 'receiveCurrency',
       value: currency,
     });
+    if (currency.crypto === 'stellar') {
+      this.props.updateAccountField({
+        prop: 'receiveMemo',
+        value: this.props.crypto.stellar.memo,
+      });
+    }
     this.props.toggleAccountField('receiveCurrency');
   }
 

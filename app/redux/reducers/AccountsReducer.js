@@ -435,6 +435,9 @@ export const receiveSelector = createSelector(
           ? receiveAddresses.number
           : userState.mobile[0].number ? userState.mobile[0].number : '';
         break;
+      case 'crypto':
+        receiveAddress = cryptoState[receiveCurrency.crypto].address;
+        break;
     }
 
     if (receiveCurrencySelected) {
@@ -458,7 +461,7 @@ export const receiveSelector = createSelector(
       count++;
     }
     value =
-      (receiveType === 'crypto' ? 'crypto' : 'rehive') +
+      (receiveType === 'crypto' ? receiveCurrency.crypto : 'rehive') +
       ':' +
       receiveAddress +
       value;
@@ -477,7 +480,7 @@ export const receiveSelector = createSelector(
       count++;
     }
     if (receiveCurrency && receiveCurrency.crypto) {
-      email = true;
+      crypto = true;
       count++;
     }
     const buttons = count > 1 ? true : false;
