@@ -67,22 +67,10 @@ class ReceiveScreen extends Component {
   }
 
   render() {
-    const { crypto } = this.state;
-    const {
-      receive,
-      contacts,
-      updateAccountField,
-      setReceiveType,
-      updateContactField,
-    } = this.props;
+    const { receive, updateAccountField, setReceiveType } = this.props;
     return (
       <View style={styles.container}>
-        <Header
-          navigation={this.props.navigation}
-          back
-          noShadow={crypto}
-          title="Receive"
-        />
+        <Header navigation={this.props.navigation} back title="Receive" />
         <KeyboardAwareScrollView
           resetScrollToCoords={{ x: 0, y: 0 }}
           contentContainerStyle={{ padding: 8 }}
@@ -97,12 +85,12 @@ class ReceiveScreen extends Component {
               <Image
                 style={{
                   width: SCREEN_WIDTH - 64,
-                  height: SCREEN_WIDTH - 128,
+                  height: 220,
                   alignSelf: 'center',
                 }}
                 source={{
                   uri:
-                    'https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=&choe=UTF-8' +
+                    'https://chart.googleapis.com/chart?chs=250x250&cht=qr&choe=UTF-8&chl=' +
                     encodeURIComponent(receive.value),
                 }}
               />
@@ -168,7 +156,9 @@ class ReceiveScreen extends Component {
               }
               returnKeyType="next"
               onSubmitEditing={() =>
-                true ? this.memoInput.focus() : this.noteInput.focus()
+                receive.currency && receive.currency.crypto === 'stellar'
+                  ? this.memoInput.focus()
+                  : this.noteInput.focus()
               }
               type={'money'}
               // precision={transaction.currency.currency.divisibility}
@@ -176,21 +166,23 @@ class ReceiveScreen extends Component {
               toggleCheck={() => this.props.toggleAccountField('receiveAmount')}
               checked={receive.amountSelected}
             />
-            <Input
-              key="memo"
-              placeholder="Memo"
-              label="Memo"
-              value={receive.memo}
-              onChangeText={value =>
-                updateAccountField({ prop: 'receiveMemo', value })
-              }
-              reference={input => (this.memoInput = input)}
-              returnKeyType="next"
-              // autoFocus
-              onSubmitEditing={() => this.noteInput.focus()}
-              toggleCheck={() => this.props.toggleAccountField('receiveMemo')}
-              checked={receive.memoSelected}
-            />
+            {receive.currency && receive.currency.crypto === 'stellar' ? (
+              <Input
+                key="memo"
+                placeholder="Memo"
+                label="Memo"
+                value={receive.memo}
+                onChangeText={value =>
+                  updateAccountField({ prop: 'receiveMemo', value })
+                }
+                reference={input => (this.memoInput = input)}
+                returnKeyType="next"
+                // autoFocus
+                onSubmitEditing={() => this.noteInput.focus()}
+                toggleCheck={() => this.props.toggleAccountField('receiveMemo')}
+                checked={receive.memoSelected}
+              />
+            ) : null}
             <Input
               key="note"
               placeholder="e.g. Rent"

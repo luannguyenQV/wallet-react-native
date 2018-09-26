@@ -420,7 +420,6 @@ export const receiveSelector = createSelector(
     let count = 0;
     let value = '';
 
-    console.log(userState.email);
     let receiveAddress = '';
     let receiveAddresses = [];
     switch (receiveType) {
