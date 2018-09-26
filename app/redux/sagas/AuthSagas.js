@@ -216,21 +216,27 @@ function* authFlow() {
           } else {
             nextMainState = nextFormState; // either register / login depending on button pressed
             let index = 0;
-            // requiredInputs = [
-            //   {
-            //     id: index++,
-            //     name: company_config.auth.identifier
-            //       ? company_config.auth.identifier
-            //       : 'email',
-            //   },
-            //   {
-            //     id: index++,
-            //     name: ,
-            //   },
-            // ];
-            nextDetailState = company_config.auth.identifier
-              ? company_config.auth.identifier
-              : 'email';
+            requiredInputs.push({
+              id: index++,
+              name: company_config.auth.identifier
+                ? company_config.auth.identifier
+                : 'email',
+            });
+            if (nextFormState === 'register') {
+              if (company_config.auth.username) {
+                requiredInputs.push({
+                  id: index++,
+                  name: 'username',
+                });
+              }
+            }
+            requiredInputs.push({
+              id: index++,
+              name: 'password',
+            });
+
+            console.log(requiredInputs);
+            nextDetailState = requiredInputs[0].name;
           } // ensures user is prompted for the correct info
           break;
         case 'login':
@@ -357,6 +363,7 @@ function* authFlow() {
         payload: {
           mainState: nextMainState,
           detailState: nextDetailState,
+          requiredInputs,
           authError,
           skip,
         },
