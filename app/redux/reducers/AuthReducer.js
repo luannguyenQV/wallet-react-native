@@ -1,5 +1,6 @@
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 import { createSelector } from 'reselect';
+import { authStateSelector } from '../sagas/selectors';
 import {
   AUTH_FIELD_CHANGED,
   AUTH_FIELD_ERROR,
@@ -378,3 +379,44 @@ export default (state = INITIAL_STATE, action) => {
       return state;
   }
 };
+
+export const authSelector = createSelector([authStateSelector], authState => {
+  const company = {
+    data: authState.tempCompany,
+    loading: authState.companyLoading,
+    error: authState.companyError,
+  };
+  const email = {
+    data: authState.email,
+    loading: authState.emailLoading,
+    error: authState.emailError,
+  };
+  const password = {
+    data: authState.password,
+    loading: authState.passwordLoading,
+    error: authState.passwordError,
+  };
+  const username = {
+    data: authState.username,
+    loading: authState.usernameLoading,
+    error: authState.usernameError,
+  };
+  const first_name = {
+    data: authState.first_name,
+    loading: authState.first_nameLoading,
+    error: authState.first_nameError,
+  };
+  const last_name = {
+    data: authState.last_name,
+    loading: authState.last_nameLoading,
+    error: authState.last_nameError,
+  };
+  return {
+    company,
+    email,
+    password,
+    username,
+    first_name,
+    last_name,
+  };
+});

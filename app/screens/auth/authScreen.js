@@ -31,6 +31,7 @@ import {
 } from '../../redux/actions';
 
 import { colorSelector } from './../../redux/reducers/ConfigReducer';
+import { authSelector } from './../../redux/reducers/AuthReducer';
 
 import {
   Button,
@@ -325,7 +326,7 @@ class AuthScreen extends Component {
         );
       default:
         // return <View style={viewStyleInput}>{this.renderInput()}</View>;
-        console.log(requiredInputs);
+        // console.log(requiredInputs);
         return (
           <FlatList
             data={requiredInputs}
@@ -378,20 +379,12 @@ class AuthScreen extends Component {
     const {
       // detailState,
       authError,
-      company,
       companies,
-      tempCompany,
-      email,
-      mobile,
-      password,
-      first_name,
-      last_name,
-      country,
-      username,
       terms,
       termsChecked,
+      auth,
     } = this.props;
-    console.log(item, index);
+    // console.log(item, index);
     const detailState = item.name;
 
     const { authFieldChange, nextAuthFormState } = this.props;
@@ -399,8 +392,6 @@ class AuthScreen extends Component {
     let key = detailState;
     let type = detailState;
     let placeholder = '';
-    let label = standardizeString(detailState);
-    let value = '';
     let onChangeText = value => authFieldChange({ prop: detailState, value });
     let data = [];
     let onPressListItem = () => {};
@@ -409,13 +400,18 @@ class AuthScreen extends Component {
     let keyboardType = 'default';
     let autoCapitalize = 'none';
 
+    const label = standardizeString(detailState);
+    const value = auth[detailState].data;
+    // const onBlur = this.props.validate(detailState);
+
     switch (detailState) {
       case 'company':
         placeholder = 'e.g. Rehive';
-        value = tempCompany;
         onChangeText = value => authFieldChange({ prop: 'tempCompany', value });
-        data = tempCompany
-          ? companies.filter(item => item.toLowerCase().includes(tempCompany))
+        data = auth[detailState].data
+          ? companies.filter(item =>
+              item.toLowerCase().includes(auth[detailState].data),
+            )
           : [];
         onPressListItem = item => {
           authFieldChange({ prop: 'tempCompany', value: item });
@@ -423,35 +419,28 @@ class AuthScreen extends Component {
         };
         break;
       case 'email':
-        value = email;
         placeholder = 'e.g. user@gmail.com';
         keyboardType = 'email-address';
         break;
       case 'mobile':
-        value = mobile;
         placeholder = 'e.g. +12345678';
         keyboardType = 'numeric';
         break;
       case 'password':
-        value = password;
         placeholder = 'e.g. Password';
         break;
       case 'first_name':
         autoCapitalize = 'words';
-        value = first_name;
         placeholder = 'e.g. John';
         break;
       case 'last_name':
         autoCapitalize = 'words';
-        value = last_name;
         placeholder = 'e.g. Snow';
         break;
       case 'username':
-        value = username;
         placeholder = 'e.g. jon_snow';
         break;
       case 'country':
-        value = country;
         placeholder = 'Password';
         break;
       case 'terms':
@@ -545,10 +534,7 @@ class AuthScreen extends Component {
       <KeyboardAvoidingView
         keyboardShouldPersistTaps={'always'}
         style={[viewStyleContainer, { backgroundColor: colors.authScreen }]}
-        behavior={'padding'}
-        // keyboardVerticalOffset={10}
-      >
-        {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}> */}
+        behavior={'padding'}>
         {loading || postLoading || appLoading ? (
           <Spinner
             type="auth"
@@ -559,7 +545,6 @@ class AuthScreen extends Component {
         ) : (
           this.renderMainContainer()
         )}
-        {/* </TouchableWithoutFeedback> */}
         {this.renderModal()}
       </KeyboardAvoidingView>
     );
@@ -607,12 +592,6 @@ const mapStateToProps = state => {
     tempCompany,
     company,
     authError,
-    email,
-    emailError,
-    mobile,
-    mobileError,
-    password,
-    passwordError,
     loading,
     token,
     appLoading,
@@ -639,12 +618,6 @@ const mapStateToProps = state => {
     company,
     companies,
     authError,
-    email,
-    emailError,
-    mobile,
-    mobileError,
-    password,
-    passwordError,
     loading,
     token,
     appLoading,
@@ -661,6 +634,7 @@ const mapStateToProps = state => {
     terms,
     termsChecked,
     requiredInputs,
+    auth: authSelector(state),
     colors: colorSelector(state),
   };
 };

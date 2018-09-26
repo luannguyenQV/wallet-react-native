@@ -331,7 +331,7 @@ _Input.propTypes = {
   size: PropTypes.string, // Size of button (small / default or '' / large)
   type: PropTypes.string, // Type of button (text, contained, TODO: outlined)
   colors: PropTypes.object, // Button color
-  onBlur: PropTypes.func, // Function to execute on press
+  onBlur: PropTypes.func, // Function to execute on blur
 };
 
 _Input.defaultProps = {

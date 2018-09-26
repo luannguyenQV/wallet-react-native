@@ -67,7 +67,7 @@ import client from './../../config/client';
 import {
   getToken,
   getCompany,
-  getAuth,
+  authStateSelector,
   companyConfigSelector,
   getAuthUser,
 } from './selectors';
@@ -95,7 +95,7 @@ function* init() {
             yield call(Rehive.verifyToken, token);
             yield call(Rehive.initWithToken, token);
             if (company_config.pin.appLoad) {
-              const { pin, fingerprint } = yield select(getAuth);
+              const { pin, fingerprint } = yield select(authStateSelector);
               if (pin || fingerprint) {
                 if (fingerprint) {
                   yield call(initialAuthState, 'pin', 'fingerprint');
@@ -168,7 +168,7 @@ function* authFlow() {
         mobile,
         password,
         company_config,
-      } = yield select(getAuth);
+      } = yield select(authStateSelector);
       // if no state changes are made stay in current state
       let requiredInputs = [];
       let nextMainState = mainState;
@@ -335,7 +335,7 @@ function* authFlow() {
         //               data,
         //             ));
         //           } else {
-        //             const tempAuth = yield select(getAuth);
+        //             const tempAuth = yield select(authStateSelector);
         //             nextMainState = tempAuth.mainState;
         //             nextDetailState = tempAuth.detailState;
         //           }
@@ -378,7 +378,7 @@ function* termsFlow() {
   console.log('termsFlow');
   let authError = '';
   try {
-    const { company_config } = yield select(getAuth);
+    const { company_config } = yield select(authStateSelector);
     const length = company_config.auth.terms.length;
     for (let i = 0; i < length; i) {
       yield put({
@@ -393,7 +393,7 @@ function* termsFlow() {
       const resp = yield take([NEXT_AUTH_FORM_STATE, UPDATE_AUTH_FORM_STATE]);
       console.log('resp', resp);
       if (resp.type === NEXT_AUTH_FORM_STATE) {
-        const { termsChecked } = yield select(getAuth);
+        const { termsChecked } = yield select(authStateSelector);
         if (termsChecked) {
           i++;
         } else {
@@ -432,7 +432,7 @@ function* registerFlow(data) {
     // return { success: true };
   } catch (error) {
     console.log('registerFlow', error);
-    const { company_config } = yield select(getAuth);
+    const { company_config } = yield select(authStateSelector);
     authError = error.message;
     nextDetailState = company_config.auth.identifier;
   }
@@ -449,7 +449,9 @@ function* postAuthFlow() {
   try {
     let run = true;
     while (run) {
-      const { mainState, detailState, company_config } = yield select(getAuth);
+      const { mainState, detailState, company_config } = yield select(
+        authStateSelector,
+      );
       let nextMainState = mainState;
       let nextDetailState = detailState;
       let authError = '';
@@ -556,7 +558,7 @@ function* postAuthFlow() {
                 yield put({ type: POST_NOT_LOADING });
                 yield take(NEXT_AUTH_FORM_STATE);
                 yield put({ type: POST_LOADING });
-                const { first_name } = yield select(getAuth);
+                const { first_name } = yield select(authStateSelector);
                 if (first_name) {
                   user = yield call(Rehive.updateProfile, { first_name });
                   yield put({ type: AUTH_STORE_USER, payload: user });
@@ -570,7 +572,7 @@ function* postAuthFlow() {
                 yield put({ type: POST_NOT_LOADING });
                 yield take(NEXT_AUTH_FORM_STATE);
                 yield put({ type: POST_LOADING });
-                const { last_name } = yield select(getAuth);
+                const { last_name } = yield select(authStateSelector);
                 if (last_name) {
                   user = yield call(Rehive.updateProfile, { last_name });
                   yield put({ type: AUTH_STORE_USER, payload: user });
@@ -584,7 +586,7 @@ function* postAuthFlow() {
                 yield put({ type: POST_NOT_LOADING });
                 yield take(NEXT_AUTH_FORM_STATE);
                 yield put({ type: POST_LOADING });
-                const { username } = yield select(getAuth);
+                const { username } = yield select(authStateSelector);
                 if (username) {
                   try {
                     let resp = yield call(Rehive.updateProfile, { username });
@@ -615,7 +617,7 @@ function* postAuthFlow() {
                 yield put({ type: POST_NOT_LOADING });
                 yield take(NEXT_AUTH_FORM_STATE);
                 yield put({ type: POST_LOADING });
-                const { country } = yield select(getAuth);
+                const { country } = yield select(authStateSelector);
                 if (country) {
                   yield call(Rehive.updateProfile, { country });
                 }
@@ -708,7 +710,7 @@ function* appLoad() {
       console.log('resp', resp);
       const data = resp.data;
       if (data && !data.username) {
-        const { user } = yield select(getAuth);
+        const { user } = yield select(authStateSelector);
         yield call(Rehive.setStellarUsername, {
           username: user.username,
         });
@@ -779,7 +781,7 @@ function* appLoad() {
 
 function* logoutUser() {
   try {
-    const { mainState } = yield select(getAuth);
+    const { mainState } = yield select(authStateSelector);
     if (mainState !== 'mfa') {
       yield call(Rehive.logout);
     }
@@ -891,7 +893,7 @@ function* mfaFlow() {
         if (action.payload === 'back') {
           yield put({ type: UPDATE_MFA_STATE, payload: 'landing' });
         } else {
-          const { mfaMobile } = yield select(getAuth);
+          const { mfaMobile } = yield select(authStateSelector);
           console.log(mfaMobile);
           yield call(Rehive.enableAuthSMS, mfaMobile);
           yield put({ type: UPDATE_MFA_STATE, payload: 'verifySMS' });
