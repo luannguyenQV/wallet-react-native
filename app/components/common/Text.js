@@ -41,7 +41,7 @@ class _Text extends Component {
 }
 
 _Text.propTypes = {
-  children: PropTypes.array, // Text displayed on button
+  children: PropTypes.oneOfType([PropTypes.string, PropTypes.array]), // Text displayed
   fontSize: PropTypes.number,
   margin: PropTypes.number,
   padding: PropTypes.number,

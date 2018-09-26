@@ -69,7 +69,7 @@ class AuthScreen extends Component {
     let iconHeaderLeft = 'arrow-back';
     let textHeaderLeft = '';
     let onPressHeaderLeft = () => {
-      this.props.previousAuthFormState(this.props);
+      this.props.nextAuthFormState('back');
     };
 
     let textHeaderRight = '';

@@ -170,6 +170,7 @@ function* authFlow() {
         company_config,
       } = yield select(getAuth);
       // if no state changes are made stay in current state
+      let requiredInputs = [];
       let nextMainState = mainState;
       let nextDetailState = detailState;
       let authError = '';
@@ -209,118 +210,145 @@ function* authFlow() {
           }
           break;
         case 'landing':
-          nextMainState = nextFormState; // either register / login depending on button pressed
-          nextDetailState = company_config.auth.identifier
-            ? company_config.auth.identifier
-            : 'email'; // ensures user is prompted for the correct info
+          if (nextFormState === 'back') {
+            nextMainState = 'company';
+            nextDetailState = 'company';
+          } else {
+            nextMainState = nextFormState; // either register / login depending on button pressed
+            let index = 0;
+            // requiredInputs = [
+            //   {
+            //     id: index++,
+            //     name: company_config.auth.identifier
+            //       ? company_config.auth.identifier
+            //       : 'email',
+            //   },
+            //   {
+            //     id: index++,
+            //     name: ,
+            //   },
+            // ];
+            nextDetailState = company_config.auth.identifier
+              ? company_config.auth.identifier
+              : 'email';
+          } // ensures user is prompted for the correct info
           break;
         case 'login':
+        case 'register':
           if (nextFormState === 'forgot') {
             nextMainState = 'forgot';
             // TODO: update this to handle forgot password to other identifiers (mobile?)
             nextDetailState = 'email';
-          } else {
-            switch (detailState) {
-              case 'email':
-                authError = validateEmail(email); // validation function returns empty if successful
-                if (!authError) {
-                  nextDetailState = 'password';
-                  user = email;
-                }
-                break;
-              case 'mobile':
-                authError = validateMobile(mobile);
-                if (!authError) {
-                  nextDetailState = 'password';
-                  user = mobile;
-                }
-                break;
-              case 'password':
-                authError = validatePassword(password);
-                if (!authError) {
-                  data = { company, user, password };
-                  try {
-                    yield put({ type: LOADING });
-                    ({ user, token } = yield call(Rehive.login, data));
-                    yield call(Rehive.initWithToken, token); // initialises sdk with new token
-                    yield put({
-                      type: LOGIN_USER_ASYNC.success,
-                      payload: user,
-                    });
-                    yield take(POST_AUTH_FLOW_FINISH);
-                    // waits for postAuthFlow to complete, when complete stores token and exists auth flow
-                    yield put({
-                      type: AUTH_COMPLETE,
-                      payload: { user, token },
-                    });
-                    return;
-                  } catch (error) {
-                    console.log('login', error);
-                    authError = error.message;
-                    nextDetailState = company_config.auth.identifier
-                      ? company_config.auth.identifier
-                      : 'email';
-                  }
-                }
-                break;
-            }
+          } else if (nextFormState === 'back') {
+            nextMainState = 'landing';
+            nextDetailState = '';
           }
           break;
-        case 'register':
-          switch (detailState) {
-            case 'email':
-              authError = validateEmail(email);
-              if (!authError) {
-                user = email;
-                nextDetailState = 'password';
-              }
-              break;
-            case 'mobile':
-              authError = validateMobile(mobile);
-              if (!authError) {
-                user = mobile;
-                nextDetailState = 'password';
-              }
-              break;
-            case 'password':
-              authError = validatePassword(password);
-              if (!authError) {
-                const terms = company_config.auth.terms;
-                if (terms && terms.length > 0) {
-                  if (yield call(termsFlow)) {
-                    terms_and_conditions = true;
-                    data = {
-                      company,
-                      email,
-                      password1: password,
-                      password2: password,
-                      terms_and_conditions,
-                    };
-                    ({ authError, nextDetailState } = yield call(
-                      registerFlow,
-                      data,
-                    ));
-                  } else {
-                    const tempAuth = yield select(getAuth);
-                    nextMainState = tempAuth.mainState;
-                    nextDetailState = tempAuth.detailState;
-                  }
-                } else {
-                  data = {
-                    company,
-                    email,
-                    password1: password,
-                    password2: password,
-                    terms_and_conditions,
-                  };
-                  ({ authError, nextDetailState } = yield call(
-                    registerFlow,
-                    data,
-                  ));
-                }
-              }
-              break;
+        case 'forgot':
+          if (nextFormState === 'back') {
+            nextMainState = 'login';
+            nextDetailState = company_config.auth.identifier
+              ? company_config.auth.identifier
+              : 'email';
           }
+        // switch (detailState) {
+        //   case 'email':
+        //     authError = validateEmail(email); // validation function returns empty if successful
+        //     if (!authError) {
+        //       nextDetailState = 'password';
+        //       user = email;
+        //     }
+        //     break;
+        //   case 'mobile':
+        //     authError = validateMobile(mobile);
+        //     if (!authError) {
+        //       nextDetailState = 'password';
+        //       user = mobile;
+        //     }
+        //     break;
+        //   case 'password':
+        //     authError = validatePassword(password);
+        //     if (!authError) {
+        //       data = { company, user, password };
+        //       try {
+        //         yield put({ type: LOADING });
+        //         ({ user, token } = yield call(Rehive.login, data));
+        //         yield call(Rehive.initWithToken, token); // initialises sdk with new token
+        //         yield put({
+        //           type: LOGIN_USER_ASYNC.success,
+        //           payload: user,
+        //         });
+        //         yield take(POST_AUTH_FLOW_FINISH);
+        //         // waits for postAuthFlow to complete, when complete stores token and exists auth flow
+        //         yield put({
+        //           type: AUTH_COMPLETE,
+        //           payload: { user, token },
+        //         });
+        //         return;
+        //       } catch (error) {
+        //         console.log('login', error);
+        //         authError = error.message;
+        //         nextDetailState = company_config.auth.identifier
+        //           ? company_config.auth.identifier
+        //           : 'email';
+        //       }
+        //     }
+        //     break;
+        // }
+        // case 'register':
+        //   switch (detailState) {
+        //     case 'email':
+        //       authError = validateEmail(email);
+        //       if (!authError) {
+        //         user = email;
+        //         nextDetailState = 'password';
+        //       }
+        //       break;
+        //     case 'mobile':
+        //       authError = validateMobile(mobile);
+        //       if (!authError) {
+        //         user = mobile;
+        //         nextDetailState = 'password';
+        //       }
+        //       break;
+        //     case 'password':
+        //       authError = validatePassword(password);
+        //       if (!authError) {
+        //         const terms = company_config.auth.terms;
+        //         if (terms && terms.length > 0) {
+        //           if (yield call(termsFlow)) {
+        //             terms_and_conditions = true;
+        //             data = {
+        //               company,
+        //               email,
+        //               password1: password,
+        //               password2: password,
+        //               terms_and_conditions,
+        //             };
+        //             ({ authError, nextDetailState } = yield call(
+        //               registerFlow,
+        //               data,
+        //             ));
+        //           } else {
+        //             const tempAuth = yield select(getAuth);
+        //             nextMainState = tempAuth.mainState;
+        //             nextDetailState = tempAuth.detailState;
+        //           }
+        //         } else {
+        //           data = {
+        //             company,
+        //             email,
+        //             password1: password,
+        //             password2: password,
+        //             terms_and_conditions,
+        //           };
+        //           ({ authError, nextDetailState } = yield call(
+        //             registerFlow,
+        //             data,
+        //           ));
+        //         }
+        //       }
+        //       break;
       }
 
       // execute transition
@@ -741,13 +769,6 @@ function* appLoad() {
     yield put({ type: LOGIN_USER_ASYNC.error, payload: error.message });
   }
 }
-// function* handleSucesses() {
-//   try {
-//   } catch (error) {
-//     console.log(error);
-//     yield put({ type: LOGIN_USER_ASYNC.error, payload: error.message });
-//   }
-// }
 
 function* logoutUser() {
   try {
