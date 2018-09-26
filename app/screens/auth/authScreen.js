@@ -7,6 +7,8 @@ import {
   UIManager,
   Platform,
   Dimensions,
+  FlatList,
+  RefreshControl,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { connect } from 'react-redux';
@@ -98,22 +100,10 @@ class AuthScreen extends Component {
       case 'login':
         textHeaderRight = 'Forgot?';
         onPressHeaderRight = () => nextAuthFormState('forgot');
-        if (detailState === 'password') {
-          textFooterRight = 'Log in';
-        }
+        textFooterRight = 'Log in';
         break;
       case 'register':
-        if (
-          (detailState === 'password' &&
-            !company_config.auth.terms &&
-            company_config.auth.terms.length === 0) ||
-          (company_config.auth.terms &&
-            terms &&
-            terms.id &&
-            company_config.auth.terms.length - 1 === terms.id)
-        ) {
-          textFooterRight = 'Register';
-        }
+        textFooterRight = 'Register';
         break;
       case 'pin':
       case 'mfa':
@@ -165,6 +155,7 @@ class AuthScreen extends Component {
       authError,
       email,
       user,
+      requiredInputs,
     } = this.props;
 
     const slides = company_config ? company_config.sliders.landing : null;
@@ -326,8 +317,23 @@ class AuthScreen extends Component {
               </View>
             );
         }
+      case 'company':
+        return (
+          <View style={viewStyleInput}>
+            {this.renderInput({ id: 0, name: 'company' }, 0)}
+          </View>
+        );
       default:
-        return <View style={viewStyleInput}>{this.renderInput()}</View>;
+        // return <View style={viewStyleInput}>{this.renderInput()}</View>;
+        console.log(requiredInputs);
+        return (
+          <FlatList
+            data={requiredInputs}
+            renderItem={({ item, index }) => this.renderInput(item, index)}
+            keyExtractor={item => item.id.toString()}
+            // ListEmptyComponent={this.renderEmptyList()}
+          />
+        );
     }
   }
 
@@ -368,9 +374,9 @@ class AuthScreen extends Component {
     }
   };
 
-  renderInput() {
+  renderInput(item, index) {
     const {
-      detailState,
+      // detailState,
       authError,
       company,
       companies,
@@ -381,11 +387,12 @@ class AuthScreen extends Component {
       first_name,
       last_name,
       country,
-      company_config,
       username,
       terms,
       termsChecked,
     } = this.props;
+    console.log(item, index);
+    const detailState = item.name;
 
     const { authFieldChange, nextAuthFormState } = this.props;
 
@@ -622,6 +629,7 @@ const mapStateToProps = state => {
     terms,
     termsChecked,
     companies,
+    requiredInputs,
   } = state.auth;
   return {
     detailState,
@@ -652,6 +660,7 @@ const mapStateToProps = state => {
     user,
     terms,
     termsChecked,
+    requiredInputs,
     colors: colorSelector(state),
   };
 };

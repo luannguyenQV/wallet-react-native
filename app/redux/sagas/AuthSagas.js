@@ -235,7 +235,6 @@ function* authFlow() {
               name: 'password',
             });
 
-            console.log(requiredInputs);
             nextDetailState = requiredInputs[0].name;
           } // ensures user is prompted for the correct info
           break;
@@ -357,6 +356,7 @@ function* authFlow() {
         //       break;
       }
 
+      console.log(requiredInputs);
       // execute transition
       yield put({
         type: UPDATE_AUTH_FORM_STATE,

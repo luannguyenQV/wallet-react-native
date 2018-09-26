@@ -126,7 +126,14 @@ export default (state = INITIAL_STATE, action) => {
       };
 
     case UPDATE_AUTH_FORM_STATE:
-      const { mainState, detailState, authError, skip, terms } = action.payload;
+      const {
+        mainState,
+        detailState,
+        authError,
+        skip,
+        terms,
+        requiredInputs,
+      } = action.payload;
       return {
         ...state,
         mainState,
@@ -134,6 +141,7 @@ export default (state = INITIAL_STATE, action) => {
         authError,
         skip,
         terms,
+        requiredInputs,
         termsChecked: false,
         password: detailState === 'terms' ? state.password : '',
         loading: false,
