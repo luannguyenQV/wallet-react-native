@@ -151,12 +151,11 @@ class AuthScreen extends Component {
       detailState,
       nextAuthFormState,
       company_config,
-      pin,
-      fingerprint,
+      localAuth,
       authError,
       email,
       user,
-      requiredInputs,
+      authInputs,
     } = this.props;
 
     const slides = company_config ? company_config.sliders.landing : null;
@@ -225,10 +224,10 @@ class AuthScreen extends Component {
             return (
               <View style={viewStyleInput}>
                 <LocalAuthentication
-                  pin={pin}
+                  pin={localAuth.pin}
                   attempts={3}
                   backgroundColor={'primaryContrast'}
-                  fingerprint={fingerprint}
+                  fingerprint={localAuth.fingerprint}
                   onSuccess={() => this.props.pinSuccess()}
                   onDismiss={() => this.props.logoutUser()}
                 />
@@ -326,10 +325,10 @@ class AuthScreen extends Component {
         );
       default:
         // return <View style={viewStyleInput}>{this.renderInput()}</View>;
-        // console.log(requiredInputs);
+        // console.log(authInputs);
         return (
           <FlatList
-            data={requiredInputs}
+            data={authInputs}
             renderItem={({ item, index }) => this.renderInput(item, index)}
             keyExtractor={item => item.id.toString()}
             // ListEmptyComponent={this.renderEmptyList()}
@@ -338,9 +337,11 @@ class AuthScreen extends Component {
     }
   }
 
+  _onBlur() {}
+
   _onInputPinComplete(code) {
-    const { pin } = this.props;
-    if (pin === code) {
+    const { localAuth } = this.props;
+    if (localAuth.pin === code) {
       this.props.pinSuccess();
     } else {
       this._pinInput.clear();
@@ -395,8 +396,12 @@ class AuthScreen extends Component {
     let onChangeText = value => authFieldChange({ prop: detailState, value });
     let data = [];
     let onPressListItem = () => {};
-    let returnKeyType = 'done';
-    let onSubmitEditing = () => nextAuthFormState('');
+    let returnKeyType = 'next';
+    let onSubmitEditing = () => {
+      console.log('hi');
+      // nextAuthFormState('');
+      this.password.focus();
+    };
     let keyboardType = 'default';
     let autoCapitalize = 'none';
 
@@ -457,6 +462,9 @@ class AuthScreen extends Component {
     }
     return (
       <Input
+        reference={input => {
+          this[detailState] = input;
+        }}
         key={key}
         type={type}
         data={data}
@@ -483,14 +491,12 @@ class AuthScreen extends Component {
       resetAuth,
       loading,
       email,
-      authError,
     } = this.props;
     // console.log(this.props);
 
     let contentText = '';
     let textActionOne = 'OK';
     let onPressActionOne = hideModal;
-    let content = null;
     switch (modalType) {
       case 'loginError':
         contentText = 'Unable to log in with provided credentials';
@@ -590,16 +596,13 @@ const mapStateToProps = state => {
     countryCode,
     mainState,
     tempCompany,
+    companies,
     company,
     authError,
     loading,
-    token,
     appLoading,
     modalVisible,
     modalType,
-    pin,
-    fingerprint,
-    pinError,
     skip,
     company_config,
     postLoading,
@@ -607,8 +610,7 @@ const mapStateToProps = state => {
     user,
     terms,
     termsChecked,
-    companies,
-    requiredInputs,
+    authInputs,
   } = state.auth;
   return {
     detailState,
@@ -619,21 +621,18 @@ const mapStateToProps = state => {
     companies,
     authError,
     loading,
-    token,
     appLoading,
     modalVisible,
     modalType,
     company_config,
-    pin,
-    fingerprint,
-    pinError,
     skip,
     postLoading,
     code,
     user,
     terms,
     termsChecked,
-    requiredInputs,
+    authInputs,
+    localAuth: localAuthSelector(state),
     auth: authSelector(state),
     colors: colorSelector(state),
   };

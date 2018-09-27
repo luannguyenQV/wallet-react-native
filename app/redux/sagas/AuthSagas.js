@@ -53,6 +53,8 @@ import {
   FETCH_PHONE_CONTACTS_ASYNC,
   FETCH_REWARDS_ASYNC,
   FETCH_CRYPTO_ASYNC,
+  INIT_INPUTS,
+  VALIDATE_INPUT,
 } from '../actions';
 import { Toast } from 'native-base';
 
@@ -170,7 +172,6 @@ function* authFlow() {
         company_config,
       } = yield select(authStateSelector);
       // if no state changes are made stay in current state
-      let requiredInputs = [];
       let nextMainState = mainState;
       let nextDetailState = detailState;
       let authError = '';
@@ -214,28 +215,9 @@ function* authFlow() {
             nextMainState = 'company';
             nextDetailState = 'company';
           } else {
+            yield put({ type: INIT_INPUTS.pending, payload: nextFormState });
+            yield take(INIT_INPUTS.success);
             nextMainState = nextFormState; // either register / login depending on button pressed
-            let index = 0;
-            requiredInputs.push({
-              id: index++,
-              name: company_config.auth.identifier
-                ? company_config.auth.identifier
-                : 'email',
-            });
-            if (nextFormState === 'register') {
-              if (company_config.auth.username) {
-                requiredInputs.push({
-                  id: index++,
-                  name: 'username',
-                });
-              }
-            }
-            requiredInputs.push({
-              id: index++,
-              name: 'password',
-            });
-
-            nextDetailState = requiredInputs[0].name;
           } // ensures user is prompted for the correct info
           break;
         case 'login':
@@ -247,6 +229,31 @@ function* authFlow() {
           } else if (nextFormState === 'back') {
             nextMainState = 'landing';
             nextDetailState = '';
+          } else {
+            data = { company, user: email, password };
+            console.log(data);
+            try {
+              yield put({ type: LOADING });
+              ({ user, token } = yield call(Rehive.login, data));
+              yield call(Rehive.initWithToken, token); // initialises sdk with new token
+              yield put({
+                type: LOGIN_USER_ASYNC.success,
+                payload: user,
+              });
+              yield take(POST_AUTH_FLOW_FINISH);
+              // waits for postAuthFlow to complete, when complete stores token and exists auth flow
+              yield put({
+                type: AUTH_COMPLETE,
+                payload: { user, token },
+              });
+              return;
+            } catch (error) {
+              console.log('login', error);
+              authError = error.message;
+              nextDetailState = company_config.auth.identifier
+                ? company_config.auth.identifier
+                : 'email';
+            }
           }
           break;
         case 'forgot':
@@ -356,19 +363,72 @@ function* authFlow() {
         //       break;
       }
 
-      console.log(requiredInputs);
       // execute transition
       yield put({
         type: UPDATE_AUTH_FORM_STATE,
         payload: {
           mainState: nextMainState,
           detailState: nextDetailState,
-          requiredInputs,
           authError,
           skip,
         },
       });
     }
+  } catch (error) {
+    console.log('authFlow', error);
+  }
+}
+
+function* inputFlow(action) {
+  console.log('inputFlow');
+  let authError = '';
+  try {
+    const { company_config } = yield select(authStateSelector);
+    const nextFormState = action.payload;
+    let index = 0;
+    let authInputs = [];
+    authInputs.push({
+      id: index++,
+      name: company_config.auth.identifier
+        ? company_config.auth.identifier
+        : 'email',
+    });
+    if (nextFormState === 'register') {
+      if (company_config.auth.username) {
+        authInputs.push({
+          id: index++,
+          name: 'username',
+        });
+      }
+      if (company_config.auth.first_name) {
+        authInputs.push({
+          id: index++,
+          name: 'first_name',
+        });
+      }
+      if (company_config.auth.last_name) {
+        authInputs.push({
+          id: index++,
+          name: 'last_name',
+        });
+      }
+    }
+    authInputs.push({
+      id: index++,
+      name: 'password',
+    });
+    yield put({
+      type: INIT_INPUTS.success,
+      payload: authInputs,
+    });
+    // while (true) {
+    //   const action = yield take(VALIDATE_INPUT.pending);
+    //   console.log(action);
+    // }
+    // setup input array
+    //put
+    //while loop
+    /*  */
   } catch (error) {
     console.log('authFlow', error);
   }
@@ -944,4 +1004,5 @@ export const authSagas = all([
   takeEvery(CHANGE_PASSWORD_ASYNC.pending, changePassword),
   takeEvery(LOGOUT_USER_ASYNC.pending, logoutUser),
   takeLatest(RESET_PASSWORD_ASYNC.pending, resetPassword),
+  takeLatest(INIT_INPUTS.pending, inputFlow),
 ]);

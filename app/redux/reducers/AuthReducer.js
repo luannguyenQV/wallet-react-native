@@ -1,6 +1,6 @@
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 import { createSelector } from 'reselect';
-import { authStateSelector } from '../sagas/selectors';
+import { authStateSelector, companyConfigSelector } from '../sagas/selectors';
 import {
   AUTH_FIELD_CHANGED,
   AUTH_FIELD_ERROR,
@@ -34,6 +34,7 @@ import {
   TOGGLE_TERMS,
   SHOW_PIN,
   HIDE_PIN,
+  INIT_INPUTS,
 } from '../actions/AuthActions';
 import { HIDE_MODAL } from '../actions/UserActions';
 import { SET_TRANSACTION_TYPE } from '../actions';
@@ -127,14 +128,7 @@ export default (state = INITIAL_STATE, action) => {
       };
 
     case UPDATE_AUTH_FORM_STATE:
-      const {
-        mainState,
-        detailState,
-        authError,
-        skip,
-        terms,
-        requiredInputs,
-      } = action.payload;
+      const { mainState, detailState, authError, skip, terms } = action.payload;
       return {
         ...state,
         mainState,
@@ -142,10 +136,15 @@ export default (state = INITIAL_STATE, action) => {
         authError,
         skip,
         terms,
-        requiredInputs,
         termsChecked: false,
         password: detailState === 'terms' ? state.password : '',
         loading: false,
+      };
+    case INIT_INPUTS.success:
+      return {
+        ...state,
+        authInputs: action.payload,
+        authInputIndex: 0,
       };
 
     case LOGIN_USER_ASYNC.success:
@@ -380,43 +379,74 @@ export default (state = INITIAL_STATE, action) => {
   }
 };
 
-export const authSelector = createSelector([authStateSelector], authState => {
-  const company = {
-    data: authState.tempCompany,
-    loading: authState.companyLoading,
-    error: authState.companyError,
-  };
-  const email = {
-    data: authState.email,
-    loading: authState.emailLoading,
-    error: authState.emailError,
-  };
-  const password = {
-    data: authState.password,
-    loading: authState.passwordLoading,
-    error: authState.passwordError,
-  };
-  const username = {
-    data: authState.username,
-    loading: authState.usernameLoading,
-    error: authState.usernameError,
-  };
-  const first_name = {
-    data: authState.first_name,
-    loading: authState.first_nameLoading,
-    error: authState.first_nameError,
-  };
-  const last_name = {
-    data: authState.last_name,
-    loading: authState.last_nameLoading,
-    error: authState.last_nameError,
-  };
-  return {
-    company,
-    email,
-    password,
-    username,
-    first_name,
-    last_name,
-  };
-});
+export const authSelector = createSelector(
+  [authStateSelector, companyConfigSelector],
+  (authState, companyConfig) => {
+    const { authInputs, authInputIndex } = authState;
+
+    const company = {
+      data: authState.tempCompany,
+      loading: authState.companyLoading,
+      error: authState.companyError,
+      helperText: '',
+      required: true,
+    };
+    const email = {
+      data: authState.email,
+      loading: authState.emailLoading,
+      error: authState.emailError,
+      helperText: '',
+      required: companyConfig.auth.email === 'required',
+    };
+    const password = {
+      data: authState.password,
+      loading: authState.passwordLoading,
+      error: authState.passwordError,
+      helperText: '',
+      required: true,
+    };
+    const username = {
+      data: authState.username,
+      loading: authState.usernameLoading,
+      error: authState.usernameError,
+      helperText: '',
+      required: companyConfig.auth.username,
+    };
+    const first_name = {
+      data: authState.first_name,
+      loading: authState.first_nameLoading,
+      error: authState.first_nameError,
+      helperText: '',
+      required: companyConfig.auth.first_name,
+    };
+    const last_name = {
+      data: authState.last_name,
+      loading: authState.last_nameLoading,
+      error: authState.last_nameError,
+      helperText: '',
+      required: companyConfig.auth.last_name,
+    };
+    return {
+      company,
+      email,
+      password,
+      username,
+      first_name,
+      last_name,
+      authInputs,
+      authInputIndex,
+    };
+  },
+);
+
+export const localAuthSelector = createSelector(
+  [authStateSelector, companyConfigSelector],
+  (authState, companyConfig) => {
+    return {
+      pin: authState.pin,
+      fingerprint: authState.fingerprint,
+      appLoad: companyConfig.pin.appLoad,
+      send: companyConfig.pin.send,
+    };
+  },
+);

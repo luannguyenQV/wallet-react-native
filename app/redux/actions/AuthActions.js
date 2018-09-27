@@ -22,6 +22,8 @@ export const authFieldChange = ({ prop, value }) => {
   };
 };
 
+export const VALIDATE_INPUT = createAsyncTypes('validate_input');
+export const INIT_INPUTS = createAsyncTypes('set_inputs');
 export const AUTH_FIELD_ERROR = 'auth_field_error';
 export const LOGIN_USER_ASYNC = createAsyncTypes('login_user');
 export const REGISTER_USER_ASYNC = createAsyncTypes('register_user');
