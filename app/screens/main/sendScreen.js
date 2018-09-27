@@ -49,6 +49,7 @@ class SendScreen extends Component {
       memo,
       recipient,
     } = this.props.navigation.state.params;
+    console.log(this.props.navigation.state.params);
 
     const {
       setTransactionType,
@@ -69,17 +70,17 @@ class SendScreen extends Component {
         : 'crypto',
     );
     updateAccountField({ prop: 'transactionAmount', value: amount });
-    updateContactField({ prop: 'contactsSearch', recipient });
+    updateContactField({ prop: 'contactsSearch', value: recipient });
     updateAccountField({ prop: 'transactionRecipient', value: recipient });
     updateAccountField({ prop: 'transactionMemo', value: memo });
     updateAccountField({ prop: 'transactionNote', value: note });
 
     if (currency && recipient && amount) {
+      console.log('hi');
       setTransactionState('confirm');
+    } else {
+      validateTransaction('send');
     }
-
-    // if(amount ||)
-    validateTransaction('send');
   }
 
   goToBarcodeScanner = () => {
@@ -299,7 +300,6 @@ class SendScreen extends Component {
 
   renderAmount() {
     const { transaction, updateAccountField, validateTransaction } = this.props;
-    // console.log('amount transaction', transaction);
     return (
       <Input
         key="amount"
@@ -411,7 +411,6 @@ class SendScreen extends Component {
       case 'success':
         textHeader = '';
     }
-    console.log(contacts);
 
     return (
       <View style={{ flex: 1 }}>

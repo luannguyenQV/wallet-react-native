@@ -14,64 +14,42 @@ class QRCodeScannerScreen extends Component {
     title: 'QR code scanner',
   };
 
-  state = {
-    camera: true,
-    reference: '',
-    data: {
-      type: '',
-      amount: '',
-      recipient: '',
-      note: '',
-    },
-  };
+  state = { hasCameraPermission: false };
 
   async componentDidMount() {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     this.setState({ hasCameraPermission: status === 'granted' });
   }
 
-  accept = data => {
+  _handleBarCodeRead = raw => {
+    const data = decodeQR(raw.data);
     let { currencies } = this.props;
     const { account, currency, amount, recipient, note, type, memo } = data;
 
-    console.log('currencies', currencies, currency);
     currencies = currencies.data.filter(
       item => item.currency.code === currency,
     );
-    console.log('currencies', currencies);
     if (currencies.length > 1) {
       currencies = currencies.filter(item => item[account] === account);
     }
-    console.log('currencies', currencies);
-    if (currencies.length === 1) {
-      this.props.navigation.goBack();
-      this.props.navigation.navigate('Send', {
-        type,
-        account,
-        currency: currencies[0],
-        amount,
-        note,
-        memo,
-        recipient,
-      });
-      return;
+
+    if (currencies.length === 0) {
+      currencies = this.props.currencies.data;
     }
     this.props.navigation.goBack();
-    Toast.show({
-      text: 'unable to find currency' + (account ? ' and account' : ''),
+    this.props.navigation.navigate('Send', {
+      type,
+      account,
+      currency: currencies[0],
+      amount,
+      note,
+      memo,
+      recipient,
     });
   };
 
-  _handleBarCodeRead = raw => {
-    console.log('raw', raw);
-    const data = decodeQR(raw.data);
-    this.accept(data);
-  };
-
   render() {
-    const { hasCameraPermission, data } = this.state;
-    const { type, currency, account, amount, recipient, note } = data;
-    const { viewStyleConfirm } = styles;
+    const { hasCameraPermission } = this.state;
 
     return (
       <View style={{ flex: 1 }}>

@@ -55,8 +55,8 @@ class ReceiveScreen extends Component {
         prop: 'receiveMemo',
         value: this.props.crypto.stellar.memo,
       });
+      this.props.toggleAccountField('receiveCurrency');
     }
-    this.props.toggleAccountField('receiveCurrency');
   }
 
   _copyQR(receive) {
