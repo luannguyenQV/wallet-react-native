@@ -84,6 +84,7 @@ function* fetchData(action) {
       payload: { data, prop: action.payload },
     });
   } catch (error) {
+    console.log(error);
     if (error && error.status && error.status === 403) {
       yield put({
         type: LOGOUT_USER_ASYNC.success,
@@ -266,7 +267,8 @@ function* verifyItem(action) {
 
 function* uploadProfilePhoto(action) {
   try {
-    yield call(Rehive.updateProfileImage, action.payload);
+    const resp = yield call(Rehive.updateProfileImage, action.payload);
+    console.log(resp);
     yield put({ type: UPLOAD_PROFILE_PHOTO_ASYNC.success });
     yield put({ type: FETCH_DATA_ASYNC.pending, payload: 'profile' });
   } catch (error) {
@@ -286,7 +288,12 @@ function* uploadDocument(action) {
     NavigationService.navigate('GetVerified');
   } catch (error) {
     console.log(error);
-    yield put({ type: UPLOAD_DOCUMENT_ASYNC.error, payload: error.message });
+    const message = error
+      ? error.non_field_errors && error.non_field_errors.length > 0
+        ? error.non_field_errors[0]
+        : ''
+      : error.message ? error.message : '';
+    yield put({ type: UPLOAD_DOCUMENT_ASYNC.error, payload: message });
   }
 }
 

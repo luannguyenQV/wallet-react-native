@@ -10,6 +10,7 @@ import {
   Clipboard,
 } from 'react-native';
 import _ from 'lodash';
+import context from './context';
 
 // if ViewPropTypes is not defined fall back to View.propType (to support RN < 0.44)
 const viewPropTypes = ViewPropTypes || View.propTypes;
@@ -86,7 +87,6 @@ class CodeInput extends Component {
       this.state.appState.match(/inactive|background/) &&
       nextAppState === 'active'
     ) {
-      console.log('App has come to the foreground!');
       this._getClipboard();
     }
     this.setState({ appState: nextAppState });
@@ -94,8 +94,6 @@ class CodeInput extends Component {
 
   _getClipboard = async () => {
     var content = await Clipboard.getString();
-
-    console.log(content);
     if (content.length === this.props.codeLength) {
       this.props.onFulfill(content);
     }
@@ -342,9 +340,13 @@ class CodeInput extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
+    // width: '100%',
     flexDirection: 'row',
-    marginTop: 20,
+    // marginTop: 20,
+    margin: 8,
+    // paddingBottom: 16,
+    // backgroundColor: 'orange',
   },
   codeInput: {
     backgroundColor: 'transparent',
@@ -352,5 +354,7 @@ const styles = StyleSheet.create({
     padding: 0,
   },
 });
+
+// const CodeInput = context(_CodeInput);
 
 export { CodeInput };

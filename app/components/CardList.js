@@ -79,12 +79,10 @@ class CardList extends Component {
       primaryItem,
       activeItem,
       resendVerification,
-      colors,
     } = this.props;
     return (
       <Card
         canEdit={canEdit}
-        colors={colors}
         headerComponent={headerComponent}
         onPressHeader={onPressHeader}
         textTitleLeft={textTitleLeft ? textTitleLeft(item) : ''}
@@ -210,7 +208,7 @@ class CardList extends Component {
         case 'active':
           contentText =
             'Set ' +
-            tempItem.currency.currency.code +
+            tempItem.currency.code +
             ' as your active wallet so that it will be shown first on the home screen and the top of this list';
           textActionOne = 'MAKE ACTIVE';
           onPressActionOne = () => setActiveCurrency(tempItem);
@@ -304,7 +302,7 @@ class CardList extends Component {
       <KeyboardAvoidingView
         style={{
           flex: 1,
-          backgroundColor: '#e4e4e4',
+          backgroundColor: '#e2e2e2',
         }}
         behavior={'padding'}
         enabled>
@@ -313,7 +311,6 @@ class CardList extends Component {
             keyboardDismissMode={'interactive'}
             keyboardShouldPersistTaps="always">
             <Card
-              colors={colors}
               key={type}
               title={wallet ? '' : title ? title(tempItem) : ''}
               colorTitleBackground="white"

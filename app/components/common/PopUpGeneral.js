@@ -10,9 +10,11 @@ import {
 } from 'react-native';
 import { HeaderButton } from './HeaderButton';
 import { Spinner } from './Spinner';
+import context from './context';
+
 import Colors from './../../config/colors';
 
-const PopUpGeneral = props => {
+const _PopUpGeneral = props => {
   const {
     backgroundStyle,
     containerStyle,
@@ -57,7 +59,7 @@ const PopUpGeneral = props => {
       <KeyboardAvoidingView
         keyboardShouldPersistTaps={'always'}
         style={{ flex: 1 }}
-        behavior={Platform.OS === 'android' ? '' : 'padding'}>
+        behavior={Platform.OS === 'android' ? 'height' : 'padding'}>
         <TouchableHighlight
           style={backgroundStyle}
           onPress={onDismiss}
@@ -131,7 +133,10 @@ const PopUpGeneral = props => {
                 {textActionOne || textActionTwo ? (
                   <View style={viewStyleFooter}>
                     {loading ? (
-                      <Spinner size="small" />
+                      <Spinner
+                        size="small"
+                        containerStyle={{ width: '100%' }}
+                      />
                     ) : (
                       <View style={viewStyleActionContainer}>
                         {textActionTwo ? (
@@ -212,7 +217,8 @@ const styles = {
     padding: 8,
   },
   textStyleError: {
-    paddingTop: 8,
+    padding: 8,
+    paddingBottom: 0,
     fontSize: 14,
     color: Colors.error,
   },
@@ -252,5 +258,7 @@ const styles = {
     borderRadius: 3,
   },
 };
+
+const PopUpGeneral = context(_PopUpGeneral);
 
 export { PopUpGeneral };

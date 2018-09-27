@@ -6,31 +6,25 @@
   },
   "services": {
     "bitcoin": false,
-    "stellar": true,
+    "stellar": false,
     "ethereum": false,
-    "rewards": true
+    "rewards": false
   },
   "auth": {
     "identifier": "email",
-    "email": "required",
+    "email": "",
     "mobile": "",
     "terms": [
       {
         "id": 0,
         "title": "Privacy Policy",
         "description": "Click here to read more on the privacy policy",
-        "link": ""
-      },
-      {
-        "id": 1,
-        "title": "User Agreement",
-        "description": "Click here to read more on the user agreement",
-        "link": ""
+        "link": "https://www.iubenda.com/privacy-policy/83456137"
       }
     ],
-    "first_name": true,
-    "last_name": true,
-    "username": true,
+    "first_name": false,
+    "last_name": false,
+    "username": false,
     "country": false,
     "pin": "",
     "mfa": ""
@@ -56,15 +50,15 @@
     ]
   },
   "colors": {
-    "primary": "#4d4d4d",
-    "secondary": "#a6a6a6",
-    "tertiary": "#c4c4c4",
-    "focus": "#9797F0",
+    "primary": "#5336FF",
+    "secondary": "#A4A5F5",
+    "tertiary": "#FBFB8B",
+    "focus": "#F45DEB",
 
-    "primaryContrast": "#f3f3f3",
-    "secondaryContrast": "#2d2d2d",
+    "primaryContrast": "#f6f6f6",
+    "secondaryContrast": "#1b1b1b",
     "tertiaryContrast": "#000000",
-    "focusContrast": "#2d2d2d",
+    "focusContrast": "#ffffff",
 
     "warning": "#FC8755",
     "error": "#f44336",

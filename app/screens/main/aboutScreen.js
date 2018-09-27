@@ -50,12 +50,7 @@ class AboutScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Header
-          navigation={this.props.navigation}
-          colors={Colors}
-          drawer
-          title="About"
-        />
+        <Header navigation={this.props.navigation} drawer title="About" />
         <View style={styles.details}>
           <Text style={{ fontSize: 30, color: 'black' }}>
             {this.state.company.name}

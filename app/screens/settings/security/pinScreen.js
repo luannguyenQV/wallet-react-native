@@ -14,11 +14,11 @@ import {
   newItem,
 } from './../../../redux/actions';
 
-import Colors from './../../../config/colors';
 import Header from './../../../components/header';
-import PinModal from './../../../components/PinModal';
+import LocalAuthentication from '../../../components/LocalAuthentication';
 
 import { Button, PopUpGeneral, CodeInput } from './../../../components/common';
+import { Toast } from 'native-base';
 
 class PinScreen extends Component {
   static navigationOptions = {
@@ -26,13 +26,15 @@ class PinScreen extends Component {
   };
 
   state = {
-    new_pin: '',
     modalVisible: false,
     modalType: 'none',
     pinState: 'none',
     pinVisible: true,
     hasFingerprintScanner: false,
     hasSavedFingerprints: false,
+
+    tempPin: '',
+    viewState: 'auth',
   };
 
   componentDidMount() {
@@ -63,11 +65,12 @@ class PinScreen extends Component {
   };
 
   renderMainContainer() {
-    const { pin, fingerprint, company_config } = this.props;
+    const { pin, fingerprint } = this.props;
     const { hasFingerprintScanner, hasSavedFingerprints, showPin } = this.state;
     if (showPin) {
       return (
         <View>
+          <Text style={styles.textStyle}>Please input your pin</Text>
           <CodeInput
             ref={component => (this._pinInput2 = component)}
             secureTextEntry
@@ -84,52 +87,19 @@ class PinScreen extends Component {
               this.setState({
                 new_pin: code,
                 modalVisible: true,
-                modalType: 'setPinConfirm',
+                modalType: 'setLocalAuthentication',
               })
             }
           />
 
           <Button
             label="CANCEL"
-            textColor={company_config.colors.primaryContrast}
-            backgroundColor={company_config.colors.primary}
+            color="primary"
             onPress={() => this.setState({ showPin: false })}
           />
         </View>
       );
     } else {
-      return (
-        <View style={{ alignContent: 'center' }}>
-          {!hasFingerprintScanner ? (
-            <Text>No fingerprint scanner</Text>
-          ) : !hasSavedFingerprints ? (
-            <Text>No fingerprints saved</Text>
-          ) : (
-            <Button
-              label="ACTIVATE FINGERPRINT"
-              textColor={company_config.colors.primaryContrast}
-              backgroundColor={company_config.colors.primary}
-              onPress={this.activateFingerprint}
-            />
-          )}
-
-          <Button
-            label="SET PIN"
-            textColor={company_config.colors.secondaryContrast}
-            backgroundColor={company_config.colors.secondary}
-            onPress={() => this.setState({ showPin: true })}
-          />
-
-          {pin || fingerprint ? (
-            <Button
-              label="RESET"
-              textColor={company_config.colors.primary}
-              backgroundColor="transparent"
-              onPress={this.resetPin}
-            />
-          ) : null}
-        </View>
-      );
     }
   }
 
@@ -194,7 +164,7 @@ class PinScreen extends Component {
       //   // this.pinInput.clear();
       //   showPin = true;
       //   break;
-      case 'setPinConfirm':
+      case 'setLocalAuthentication':
         contentText = 'Please confirm your pin';
         // this._pinInput.clear();
         showPin = true;
@@ -223,9 +193,7 @@ class PinScreen extends Component {
         contentText={contentText}
         textActionOne={actionText}
         onPressActionOne={action}
-        errorText={errorText}
-        // onDismiss={actionFunction}
-      >
+        errorText={errorText}>
         {showPin ? (
           <CodeInput
             ref={component => (this._pinInput = component)}
@@ -246,64 +214,132 @@ class PinScreen extends Component {
     );
   }
 
-  // _onInputPinComplete(code) {
-  //   const { pin } = this.props;
-  //   const { modalType } = this.state;
-  //   switch (modalType) {
-  //     case 'inputPin':
-  //       if (pin === code) {
-  //         this.setState({
-  //           modalVisible: false,
-  //           modalType: 'none',
-  //           pinState: 'landing',
-  //         });
-  //       } else {
-  //         this.setState({ modalType: 'inputPinError' });
-  //       }
-  //       break;
-  //     case 'setPinConfirm':
-  //       this.setPin(code);
-  //       break;
-  //   }
-  // }
+  renderLanding() {
+    const { pin, fingerprint } = this.props;
+    const { hasFingerprintScanner, hasSavedFingerprints } = this.state;
+    return (
+      <View style={{ alignContent: 'center', padding: 8 }}>
+        {!hasFingerprintScanner ? (
+          <Text>No fingerprint scanner</Text>
+        ) : !hasSavedFingerprints ? (
+          <Text>No fingerprints saved</Text>
+        ) : (
+          <Button
+            label="ACTIVATE FINGERPRINT"
+            color="primary"
+            onPress={() => this.setState({ viewState: 'fingerprint' })}
+          />
+        )}
 
-  render() {
-    const { pin, fingerprint, company_config } = this.props;
-    const { pinVisible } = this.state;
+        <Button
+          label="SET PIN"
+          color="secondary"
+          onPress={() => this.setState({ viewState: 'pin' })}
+        />
+
+        {pin || fingerprint ? (
+          <Button
+            label="RESET"
+            color="primary"
+            type="text"
+            onPress={this.resetPin}
+          />
+        ) : null}
+      </View>
+    );
+  }
+
+  renderContent() {
+    const { viewState } = this.state;
+    let pin = '';
+    let fingerprint = false;
+    let onDismiss = () => {};
+    let onSuccess = () => {};
+    let onCancel = () => this.setState({ viewState: 'landing' });
+    let type = '';
+    console.log(viewState);
+    switch (viewState) {
+      case 'auth':
+        ({ pin, fingerprint } = this.props);
+        onSuccess = () => this.setState({ viewState: 'landing' });
+        onDismiss = () => this.props.navigation.goBack();
+        onCancel = onDismiss;
+        break;
+      case 'fingerprint':
+        fingerprint = true;
+        onSuccess = () => {
+          this.props.activateFingerprint();
+          Toast.show({
+            text: 'Local authentication: fingerprint/biometrics activated',
+            duration: 3500,
+          });
+          this.props.navigation.goBack();
+        };
+        onDismiss = () => {}; //this.props.navigation.goBack();
+        break;
+      case 'pin':
+        pin = 'set';
+        onSuccess = code =>
+          this.setState({ tempPin: code, viewState: 'confirm' });
+        onDismiss = () => {}; //this.props.navigation.goBack();
+        break;
+      case 'confirm':
+        pin = this.state.tempPin;
+        type = 'confirm';
+        onSuccess = code => {
+          this.props.setPin(code);
+          Toast.show({
+            text: 'Local authentication: pin activated',
+            duration: 3500,
+          });
+          this.props.navigation.goBack();
+        };
+        onDismiss = () => {}; //this.props.navigation.goBack();
+        break;
+      case 'landing':
+        return this.renderLanding();
+      default:
+        break;
+    }
 
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ padding: 8 }}>
+        <LocalAuthentication
+          pin={pin}
+          fingerprint={fingerprint}
+          attempts={3}
+          type={type}
+          // modalVisible={pinVisible}
+          onSuccess={onSuccess}
+          onDismiss={onDismiss}
+        />
+        {viewState !== 'landing' ? (
+          <Button
+            label="CANCEL"
+            color="primary"
+            type="text"
+            onPress={onCancel}
+          />
+        ) : null}
+      </View>
+    );
+  }
+
+  render() {
+    return (
+      <View style={{ flex: 1, backgroundColor: 'white' }}>
         <Header
           navigation={this.props.navigation}
           title="Set pin/fingerprint"
           back
-          colors={company_config.colors}
         />
-        <KeyboardAvoidingView
-          keyboardShouldPersistTaps={'never'}
-          style={styles.viewStyleContainer}
-          behavior={'padding'}>
-          <PinModal
-            pin={pin}
-            fingerprint={fingerprint}
-            modalVisible={pinVisible}
-            onSuccess={() => this.setState({ pinVisible: false })}
-            onDismiss={() => this.props.navigation.goBack()}
-          />
-          {this.renderMainContainer()}
-          {this.renderModal()}
-        </KeyboardAvoidingView>
+        {this.renderContent()}
       </View>
     );
   }
 }
 
 const styles = {
-  viewStyleContainer: {
-    flex: 1,
-    backgroundColor: 'white',
-    padding: 16,
-  },
   buttonStyle: {
     flex: 1,
     backgroundColor: 'lightgrey',
@@ -311,10 +347,11 @@ const styles = {
     justifyContent: 'center',
     padding: 16,
   },
-  commentText: {
+  textStyle: {
     fontSize: 16,
     textAlign: 'center',
     color: 'black',
+    padding: 8,
   },
   pinInfo: {
     flex: 2,
@@ -327,8 +364,8 @@ const styles = {
   },
 };
 const mapStateToProps = ({ auth }) => {
-  const { pin, fingerprint, company_config } = auth;
-  return { pin, fingerprint, company_config };
+  const { pin, fingerprint } = auth;
+  return { pin, fingerprint };
 };
 
 export default connect(mapStateToProps, {

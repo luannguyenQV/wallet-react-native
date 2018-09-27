@@ -1,0 +1,122 @@
+{
+  "company": {
+    "id": "demo_company",
+    "name": "Demo Company",
+    "description": ""
+  },
+  "services": {
+    "bitcoin": false,
+    "stellar": true,
+    "ethereum": false,
+    "rewards": false
+  },
+  "auth": {
+    "identifier": "email",
+    "email": "",
+    "mobile": "",
+    "terms": [
+      {
+        "id": 0,
+        "title": "Privacy Policy",
+        "description": "Click here to read more on the privacy policy",
+        "link": "https://www.iubenda.com/privacy-policy/83456137"
+      }
+    ],
+    "first_name": false,
+    "last_name": false,
+    "username": true,
+    "country": false,
+    "pin": "",
+    "mfa": ""
+  },
+  "pin": {
+    "appLoad": true,
+    "security": false,
+    "send": true,
+    "withdraw": true,
+    "updateDetails": false
+  },
+  "home": {
+    "header": "wallet",
+    "detail": [
+      {
+        "order": 0,
+        "type": "cards"
+      },
+      {
+        "order": 1,
+        "type": "transactions"
+      }
+    ]
+  },
+  "colors": {
+    "primary": "#5336FF",
+    "secondary": "#A4A5F5",
+    "tertiary": "#FBFB8B",
+    "focus": "#F45DEB",
+
+    "primaryContrast": "#f6f6f6",
+    "secondaryContrast": "#1b1b1b",
+    "tertiaryContrast": "#000000",
+    "focusContrast": "#ffffff",
+
+    "warning": "#FC8755",
+    "error": "#f44336",
+    "success": "#4CAF50",
+    "positive": "#4CAF50",
+    "negative": "#f44336"
+  },
+  "verification": {
+    "requirePersonal": true,
+    "requireAddress": true,
+    "requireMobile": true,
+    "requireEmail": true,
+    "requireDocumentID": true,
+    "requireDocumentAddress": true,
+    "requireDocumentAdvID": true
+  },
+  "cards": {
+    "home": {
+      "general": {
+        "welcome": true,
+        "verify": true
+      },
+      "custom": [
+        {
+          "id": 0,
+          "title": "Demo Company",
+          "description": "A demo wallet on the Rehive platform",
+          "image": "card1",
+          "dismiss": true
+        },
+        {
+          "id": 1,
+          "title": "Happy Testing",
+          "description": "For internal and external testing",
+          "image": "card2",
+          "dismiss": false
+        }
+      ]
+    }
+  },
+  "sliders": {
+    "landing": [
+      {
+        "id": 0,
+        "title": "Demo Company",
+        "description": "A demo wallet on the Rehive platform",
+        "image": "card1"
+      }
+    ]
+  },
+  "screens": {
+    "login": [
+      {
+        "id": "0",
+        "title": "Demo Company",
+        "description": "A demo wallet on the Rehive platform",
+        "image": "card1"
+      }
+    ]
+  }
+}

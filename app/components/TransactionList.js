@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, FlatList, Text, RefreshControl } from 'react-native';
 import { WebBrowser } from 'expo';
 import { connect } from 'react-redux';
-import { fetchAccounts } from './../redux/actions';
+import { fetchAccounts, fetchTransactions } from './../redux/actions';
 
 import * as Rehive from './../util/rehive';
 
@@ -19,53 +19,47 @@ import { performDivisibility } from './../util/general';
 import moment from 'moment';
 class TransactionList extends Component {
   state = {
-    previousCurrencyCode: null,
-    transactions: [],
-    loading: false,
     showDetail: false,
     transaction: null,
   };
-
   async componentDidMount() {
-    await this.getTransactions(this.props.currencyCode);
+    const { currency } = this.props;
+    const accountRef = currency.account ? currency.account : '';
+    const currencyCode =
+      currency.currency && currency.currency.code ? currency.currency.code : '';
+    this.getTransactions(accountRef, currencyCode);
   }
 
-  async UNSAFE_componentWillReceiveProps(nextProps) {
-    if (this.state.previousCurrencyCode !== nextProps.currencyCode) {
-      await this.getTransactions(nextProps.currencyCode);
-    }
-  }
-
-  async getTransactions(currencyCode) {
-    if (this.state.previousCurrencyCode !== currencyCode) {
-      this.setState({ transactions: [] });
-    }
-    // this.setState({ loading: true });
-    // if (this.props.fetchAccounts) {
-    //   this.props.fetchAccounts();
-    // }
-    let response = await Rehive.getTransactions(currencyCode);
-    this.setState({
-      previousCurrencyCode: currencyCode,
-      transactions: response.results,
-      loading: false,
-    });
+  async getTransactions(accountRef, currencyCode) {
+    const filters = {
+      account: accountRef,
+      currency: currencyCode,
+    };
+    this.props.fetchTransactions(filters);
   }
 
   renderTransactions() {
-    const { transactions, loading } = this.state;
+    const { transactions, loading, currency } = this.props;
+    const accountRef = currency.account ? currency.account : '';
+    const currencyCode =
+      currency.currency && currency.currency.code ? currency.currency.code : '';
+    const data =
+      transactions &&
+      transactions[accountRef] &&
+      transactions[accountRef][currencyCode]
+        ? transactions[accountRef][currencyCode]
+        : [];
     return (
       <FlatList
         refreshControl={
           <RefreshControl
             refreshing={loading}
             onRefresh={() => {
-              this.getTransactions(this.props.currencyCode);
-              // this.props.fetchAccounts();
+              this.getTransactions(accountRef, currencyCode);
             }}
           />
         }
-        data={transactions}
+        data={data}
         renderItem={({ item }) => this.renderItem(item)}
         keyExtractor={item => item.id}
         ListEmptyComponent={this.renderEmptyList()}
@@ -75,7 +69,7 @@ class TransactionList extends Component {
   }
 
   renderEmptyList() {
-    const { loading } = this.state;
+    const { loading } = this.props;
     if (!loading) {
       return <EmptyListMessage text="No transactions" />;
     }
@@ -139,7 +133,6 @@ class TransactionList extends Component {
           color = Colors.positive;
           break;
         case 'credit':
-          // console.log('Credit');
           iconName = 'call-received';
           headerText = 'Received ' + transaction.currency.code;
           if (transaction.source_transaction) {
@@ -235,6 +228,7 @@ const styles = {
     flex: 1,
     paddingHorizontal: 8,
     zIndex: 2,
+    backgroundColor: 'white',
   },
   textStyleHeader: {
     fontSize: 20,
@@ -253,11 +247,14 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ accounts }) => {
-  const { wallets } = accounts;
-  return { wallets };
+const mapStateToProps = state => {
+  return {
+    transactions: state.accounts.transactions,
+    loading: state.accounts.loading,
+  };
 };
 
 export default connect(mapStateToProps, {
   fetchAccounts,
+  fetchTransactions,
 })(TransactionList);

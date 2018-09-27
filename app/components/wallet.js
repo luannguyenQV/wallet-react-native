@@ -54,7 +54,6 @@ class Wallet extends Component {
       ).toFixed(wallet.currency.currency.divisibility);
     return (
       <Card
-        colors={colors}
         onPressTitle={showDetails}
         title={wallet.currency.currency.description}
         subtitle={wallet.account_name}

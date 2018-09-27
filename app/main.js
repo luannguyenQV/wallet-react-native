@@ -8,6 +8,9 @@ import { Root } from 'native-base';
 import NavigationService from './util/navigation';
 import MainNavigator from './routes/mainNavigator';
 
+import { ThemeContext } from './util/config';
+import { colorSelector, themeSelector } from './redux/reducers/ConfigReducer';
+
 // const _XHR = GLOBAL.originalXMLHttpRequest
 //   ? GLOBAL.originalXMLHttpRequest
 //   : GLOBAL.XMLHttpRequest;
@@ -56,15 +59,18 @@ class Main extends Component {
   render() {
     console.disableYellowBox = true;
     const { isReady, initStarted } = this.state;
+    const { colors, theme } = this.props;
 
     if (isReady && initStarted) {
       return (
         <Root>
-          <MainNavigator
-            ref={navigatorRef => {
-              NavigationService.setTopLevelNavigator(navigatorRef);
-            }}
-          />
+          <ThemeContext.Provider value={{ colors, theme }}>
+            <MainNavigator
+              ref={navigatorRef => {
+                NavigationService.setTopLevelNavigator(navigatorRef);
+              }}
+            />
+          </ThemeContext.Provider>
         </Root>
       );
     } else {
@@ -92,8 +98,11 @@ class Main extends Component {
   }
 }
 
-const mapStateToProps = () => {
-  return {};
+const mapStateToProps = state => {
+  return {
+    colors: colorSelector(state),
+    theme: themeSelector(state),
+  };
 };
 
 export default connect(mapStateToProps, { init })(Main);

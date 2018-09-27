@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableHighlight, Clipboard } from 'react-native';
 import { Toast } from 'native-base';
-import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import context from './context';
 
-class Output extends Component {
+class _Output extends Component {
   renderOutput() {
     const { label, value, copy, onPress } = this.props;
 
@@ -106,5 +107,7 @@ const styles = {
     fontSize: 16,
   },
 };
+
+const Output = context(_Output);
 
 export { Output };

@@ -24,7 +24,7 @@ import {
   REGISTER_USER_ASYNC,
   NEXT_AUTH_FORM_STATE,
   UPDATE_AUTH_FORM_STATE,
-  APP_LOAD_FINISH,
+  APP_LOAD,
   CHANGE_PASSWORD_ASYNC,
   RESET_PASSWORD_ASYNC,
   LOGOUT_USER_ASYNC,
@@ -68,7 +68,7 @@ import {
   getToken,
   getCompany,
   getAuth,
-  getCompanyConfig,
+  companyConfigSelector,
   getAuthUser,
 } from './selectors';
 
@@ -182,6 +182,10 @@ function* authFlow() {
             // Tries to dummy register a user for company which validates if company exists
             // TODO: this should be revised, but requires platform improvements
             yield put({ type: LOADING });
+            if (!tempCompany) {
+              authError = 'Please enter a valid company ID';
+              break;
+            }
             yield call(Rehive.register, { company: tempCompany.toLowerCase() });
           } catch (error) {
             if (error.data && error.data.company) {
@@ -649,7 +653,7 @@ function* postAuthFlow() {
       });
     }
   } catch (error) {
-    console.log(error);
+    console.log('postAuthFlow', error);
   }
 }
 
@@ -657,38 +661,41 @@ function* postAuthFlow() {
 function* appLoad() {
   console.log('appLoad');
   try {
-    yield put({ type: POST_LOADING });
+    yield put({ type: APP_LOAD.pending });
     let count = 11;
-    const { services } = yield select(getCompanyConfig);
+    const { services } = yield select(companyConfigSelector);
+    console.log(services);
     if (services.rewards) {
       count++;
     }
     if (services.stellar) {
       let resp = yield call(Rehive.getStellarUser);
-      console.log('stellar', resp);
-      if (resp.data && !resp.data.username) {
+      console.log('resp', resp);
+      const data = resp.data;
+      if (data && !data.username) {
         const { user } = yield select(getAuth);
         yield call(Rehive.setStellarUsername, {
           username: user.username,
         });
       }
-      if (resp.data && resp.data.crypto) {
-        yield put({
-          type: SET_RECEIVE_ADDRESS,
-          payload: {
-            receiveAddress: resp.data.crypto.public_address,
-            receiveMemo: resp.data.crypto.memo,
-          },
-        });
-      }
-      count++;
+      console.log('data', data);
+      yield put({
+        type: SET_RECEIVE_ADDRESS,
+        payload: {
+          type: 'stellar',
+          address: data && data.crypto ? data.crypto.public_address : '',
+          memo: data && data.crypto ? data.crypto.memo : '',
+        },
+      });
+
+      // count++;
     }
-    if (services.bitcoin) {
-      count++;
-    }
-    if (services.ethereum) {
-      count++;
-    }
+    // if (services.bitcoin) {
+    //   count++;
+    // }
+    // if (services.ethereum) {
+    //   count++;
+    // }
 
     yield all([
       // put({ type: POST_LOADING }),
@@ -709,10 +716,10 @@ function* appLoad() {
         ? put({ type: FETCH_CRYPTO_ASYNC.pending, payload: 'stellar' })
         : null,
       services.bitcoin
-        ? put({ type: FETCH_REWARDS_ASYNC.pending, payload: 'bitcoin' })
+        ? put({ type: FETCH_CRYPTO_ASYNC.pending, payload: 'bitcoin' })
         : null,
       services.ethereum
-        ? put({ type: FETCH_REWARDS_ASYNC.pending, payload: 'ethereum' })
+        ? put({ type: FETCH_CRYPTO_ASYNC.pending, payload: 'ethereum' })
         : null,
     ]);
 
@@ -723,10 +730,11 @@ function* appLoad() {
         FETCH_DATA_ASYNC.success,
         FETCH_PHONE_CONTACTS_ASYNC.success,
         FETCH_REWARDS_ASYNC.success,
-        FETCH_CRYPTO_ASYNC.success,
+        // FETCH_CRYPTO_ASYNC.success,
       ]);
+      // console.log(i, count);
     }
-    yield put({ type: APP_LOAD_FINISH });
+    yield put({ type: APP_LOAD.success });
     yield call(NavigationService.navigate, 'App');
   } catch (error) {
     console.log(error);

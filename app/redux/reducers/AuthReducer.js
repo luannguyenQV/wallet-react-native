@@ -1,4 +1,5 @@
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
+import { createSelector } from 'reselect';
 import {
   AUTH_FIELD_CHANGED,
   AUTH_FIELD_ERROR,
@@ -8,8 +9,7 @@ import {
   RESET_PASSWORD_ASYNC,
   LOGOUT_USER_ASYNC,
   RESET_AUTH,
-  APP_LOAD_START,
-  APP_LOAD_FINISH,
+  APP_LOAD,
   SET_PIN,
   RESET_PIN,
   ACTIVATE_FINGERPRINT,
@@ -31,8 +31,11 @@ import {
   AUTH_STORE_USER,
   POST_AUTH_FLOW_FINISH,
   TOGGLE_TERMS,
+  SHOW_PIN,
+  HIDE_PIN,
 } from '../actions/AuthActions';
 import { HIDE_MODAL } from '../actions/UserActions';
+import { SET_TRANSACTION_TYPE } from '../actions';
 
 const INITIAL_STATE = {
   mainState: '',
@@ -48,6 +51,7 @@ const INITIAL_STATE = {
   // lineNumber: null,
   company: '',
   companyError: '',
+  companies: [],
   password: '',
   passwordError: '',
   new_password: '',
@@ -60,6 +64,7 @@ const INITIAL_STATE = {
 
   pin: '',
   fingerprint: false,
+  pinVisible: false,
   mfaState: 'loading',
 };
 
@@ -78,6 +83,9 @@ export default (state = INITIAL_STATE, action) => {
         postLoading: false,
         pinError: '',
         code: '',
+        password: '', // these are here
+        old_password: '', // to ensure all
+        new_password: '', // passwords are reset
       };
     case INIT.success:
       return {
@@ -141,7 +149,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: true,
-        passwordError: '',
+        inputError: '',
       };
     case CHANGE_PASSWORD_ASYNC.success:
       return {
@@ -154,7 +162,7 @@ export default (state = INITIAL_STATE, action) => {
     case CHANGE_PASSWORD_ASYNC.error:
       return {
         ...state,
-        passwordError: action.payload,
+        inputError: action.payload,
         password: '',
         old_password: '',
         new_password: '',
@@ -176,10 +184,15 @@ export default (state = INITIAL_STATE, action) => {
       };
 
     case SET_COMPANY:
+      let companies = state.companies ? state.companies : [];
+      if (companies.indexOf(action.payload.company) === -1) {
+        companies.push(action.payload.company);
+      }
       return {
         ...state,
         company: action.payload.company,
         company_config: action.payload.company_config,
+        companies,
       };
 
     case RESET_PASSWORD_ASYNC.pending:
@@ -212,6 +225,8 @@ export default (state = INITIAL_STATE, action) => {
         loading: false,
         appLoading: false,
         skip: false,
+        old_password: '',
+        new_password: '',
       };
     case AUTH_COMPLETE:
       return {
@@ -264,12 +279,14 @@ export default (state = INITIAL_STATE, action) => {
         pinError: action.payload,
       };
 
-    case APP_LOAD_START:
+    case APP_LOAD.pending:
       return {
         ...state,
+        mainState: '',
+        detailState: '',
         appLoading: true,
       };
-    case APP_LOAD_FINISH:
+    case APP_LOAD.success:
       return {
         ...state,
         appLoading: false,
@@ -320,6 +337,18 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         mfaToken: action.payload,
+      };
+
+    case SHOW_PIN:
+      return {
+        ...state,
+        pinVisible: true,
+      };
+    case SET_TRANSACTION_TYPE:
+    case HIDE_PIN:
+      return {
+        ...state,
+        pinVisible: false,
       };
 
     case LOGOUT_USER_ASYNC.success:

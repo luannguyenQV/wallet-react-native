@@ -10,9 +10,10 @@ import { maybeOpenURL } from 'react-native-app-link';
 
 import { CodeInput } from './CodeInput';
 import { Button } from './Button';
-import { Screen, Paragraph, Typography } from './styles';
+// import { Screen, Paragraph, Typography } from './styles';
+import context from './context';
 
-class MultiFactorAuthentication extends Component {
+class _MultiFactorAuthentication extends Component {
   state = { hasGAuth: false, hasAuthy: false };
 
   _onInputPinComplete(code) {
@@ -75,7 +76,7 @@ class MultiFactorAuthentication extends Component {
     } = this.props;
     const { viewStyleContainer, textStyle } = styles;
     return (
-      <Screen>
+      <View style={viewStyleContainer}>
         <Text
           style={[
             textStyle,
@@ -112,8 +113,7 @@ class MultiFactorAuthentication extends Component {
             <View>
               <Button
                 label="OPEN GOOGLE AUTHENTICATOR"
-                textColor={colors.secondaryContrast}
-                backgroundColor={colors.secondary}
+                color="secondary"
                 reference={input => {
                   this.login = input;
                 }}
@@ -136,20 +136,19 @@ class MultiFactorAuthentication extends Component {
           </View>
         ) : (
           <View style={{ padding: 8 }}>
-            <Button
+            {/* <Button
+              color="secondary"
               label="Resend SMS"
-              textColor={colors.secondaryContrast}
-              backgroundColor={colors.secondary}
               size="large"
               reference={input => {
                 this.login = input;
               }}
               // onPress={() => resendSMS()}
               animation="fadeInUpBig"
-            />
+            /> */}
           </View>
         )}
-      </Screen>
+      </View>
     );
   }
 }
@@ -172,14 +171,9 @@ class MultiFactorAuthentication extends Component {
 
 const styles = {
   viewStyleContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    borderBottomColor: 'lightgrey',
-    borderBottomWidth: 1,
-    paddingVertical: 8,
-    paddingRight: 8,
-    paddingLeft: 4,
-    justifyContent: 'flex-start',
+    // flex: 1,
+    padding: 8,
+    // justifyContent: 'flex-start',
   },
   textStyle: {
     width: '100%',
@@ -191,5 +185,7 @@ const styles = {
     color: 'black',
   },
 };
+
+const MultiFactorAuthentication = context(_MultiFactorAuthentication);
 
 export { MultiFactorAuthentication };

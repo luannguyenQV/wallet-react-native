@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import Colors from './../../config/colors';
 
 const EmptyListMessage = ({ text }) => {
   const { viewStyleContainer, viewStyleBox, textStyle } = styles;

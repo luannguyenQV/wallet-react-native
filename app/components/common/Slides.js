@@ -7,10 +7,11 @@ import {
   Image,
   Animated,
 } from 'react-native';
+import context from './context';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
-class Slides extends Component {
+class _Slides extends Component {
   scrollX = new Animated.Value(0);
 
   renderSlides() {
@@ -121,5 +122,7 @@ const styles = {
     textAlign: 'center',
   },
 };
+
+const Slides = context(_Slides);
 
 export { Slides };

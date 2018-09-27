@@ -19,9 +19,12 @@ import {
   LOGOUT_USER,
   VIEW_WALLET,
   HIDE_WALLET,
+  RESET_USER_ERRORS,
 } from '../actions';
 
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
+import { getUser } from './../sagas/selectors';
+import { createSelector } from '../../../node_modules/reselect';
 
 const EMPTY_BANK_ACCOUNT = {
   name: '',
@@ -86,6 +89,7 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action) => {
+  // console.log(action);
   switch (action.type) {
     case PERSIST_REHYDRATE:
       return action.payload.auth || INITIAL_STATE;
@@ -289,6 +293,11 @@ export default (state = INITIAL_STATE, action) => {
         updateError: action.payload,
         loading: false,
       };
+    case RESET_USER_ERRORS:
+      return {
+        ...state,
+        updateError: '',
+      };
 
     case VIEW_WALLET:
       return {
@@ -322,3 +331,7 @@ export default (state = INITIAL_STATE, action) => {
       return state;
   }
 };
+
+export const userEmailsSelector = createSelector(getUser, user => {
+  return user.email;
+});

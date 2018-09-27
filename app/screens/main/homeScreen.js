@@ -1,18 +1,23 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, FlatList } from 'react-native';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
 import {
   logoutUser,
-  setActiveWalletIndex,
   fetchAccounts,
+  setHomeAccount,
+  setHomeCurrency,
 } from './../../redux/actions';
-
+import {
+  currenciesSelector,
+  homeSelector,
+} from './../../redux/reducers/AccountsReducer';
 import Swiper from 'react-native-swiper';
 
 import Header from './../../components/header';
-import WalletHeader from '../../components/WalletHeader';
 import TransactionList from './../../components/TransactionList';
 import HomeCards from './../../components/HomeCards';
+import WalletBalanceList from '../../components/WalletBalanceList';
+import WalletActionList from '../../components/WalletActionList';
 
 const renderPagination = (index, total, context) => {
   return (
@@ -27,66 +32,29 @@ class HomeScreen extends Component {
     label: 'Home',
   };
 
-  componentDidMount() {
-    // ContactService.getAllContacts();
-  }
-
-  showDialog = item => {
-    this.setState({ dataToShow: item });
-    this.popupDialog.show();
-  };
-
   render() {
-    const {
-      wallets,
-      activeWalletIndex,
-      fetchAccounts,
-      company_config,
-    } = this.props;
-
+    const { currencies, home, setHomeAccount, setHomeCurrency } = this.props;
     return (
       <View style={styles.container}>
-        <Header
-          navigation={this.props.navigation}
-          drawer
-          colors={company_config.colors}
-          right
-          noShadow
-          // noAccounts={this.state.noAccounts}
+        <Header navigation={this.props.navigation} drawer right noShadow />
+        <WalletBalanceList
+          currencies={currencies.data}
+          activeCurrency={home.currency}
+          setHomeCurrency={setHomeCurrency}
         />
-        <WalletHeader
-          wallets={wallets}
+        <WalletActionList
           buttons={[
             { id: 0, type: 'receive' },
             { id: 1, type: 'send' },
             { id: 2, type: 'more' },
           ]}
           navigation={this.props.navigation}
-          colors={company_config.colors}
+          currency={home.currency}
         />
-        {/* currency={item} accountLabel={account.name} /> */}
-        {/* {this.renderAccounts()} */}
         <Swiper renderPagination={renderPagination} loop={false}>
-          {/* <View style={{ flex: 1 }} /> */}
           <HomeCards navigation={this.props.navigation} />
-          <TransactionList
-            // updateBalance={this.getBalanceInfo}
-            // fetchAccounts={fetchAccounts}
-            currencyCode={
-              wallets && wallets.length
-                ? wallets[activeWalletIndex].currency.currency.code
-                : ''
-            }
-            // showDialog={this.showDialog}
-            // logout={this.logout}
-          />
+          <TransactionList currency={home.currency} />
         </Swiper>
-        {/* <TransactionPopUp
-          popupDialog={popupDialog => {
-            this.popupDialog = popupDialog;
-          }}
-          transactionDetails={this.state.dataToShow}
-        /> */}
       </View>
     );
   }
@@ -95,17 +63,20 @@ class HomeScreen extends Component {
 const styles = {
   container: {
     flex: 1,
-    flexDirection: 'column',
-    backgroundColor: 'white',
   },
 };
 
-const mapStateToProps = ({ auth, accounts }) => {
-  const { token, company_config } = auth;
-  const { wallets, activeWalletIndex, loadingAccounts } = accounts;
-  return { token, company_config, wallets, activeWalletIndex, loadingAccounts };
+const mapStateToProps = state => {
+  return {
+    currencies: currenciesSelector(state),
+    home: homeSelector(state),
+    transactions: state.accounts.transactions,
+  };
 };
 
-export default connect(mapStateToProps, { logoutUser, fetchAccounts })(
-  HomeScreen,
-);
+export default connect(mapStateToProps, {
+  logoutUser,
+  fetchAccounts,
+  setHomeAccount,
+  setHomeCurrency,
+})(HomeScreen);

@@ -11,8 +11,9 @@ import { connect } from 'react-redux';
 
 import { Toast } from 'native-base';
 import Header from './../../components/header';
-import { Output } from './../../components/common';
-import { Container, Tab, Tabs } from 'native-base';
+import { Output, Tabs } from './../../components/common';
+// import { Container, Tab, Tabs } from 'native-base';
+import { currenciesSelector } from '../../redux/reducers/AccountsReducer';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -29,13 +30,26 @@ class ReceiveScreen extends Component {
 
   componentDidMount() {
     const { profile, crypto } = this.props;
-    const currencyCode = this.props.navigation.state.params.currencyCode;
-    if (
-      crypto.stellar.includes(currencyCode) ||
-      crypto.ethereum.includes(currencyCode) ||
-      crypto.bitcoin.includes(currencyCode)
-    ) {
-      this.setState({ crypto: true });
+    const currency = this.props.navigation.state.params.currency;
+
+    // const accountRef = currency.account;
+    const currencyCode = currency.currency.code;
+
+    let cryptoURI = '';
+    const cryptoType = currency.crypto;
+    const cryptoTemp = crypto[cryptoType] ? crypto[cryptoType] : '';
+    if (cryptoType) {
+      cryptoURI =
+        'https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=' +
+        encodeURIComponent(
+          cryptoType +
+            ':' +
+            cryptoTemp.address +
+            '?' +
+            (cryptoTemp.memo ? 'memo=' + cryptoTemp.memo + '&' : '') +
+            (currencyCode ? 'currency=' + currencyCode : ''),
+        ) +
+        '&choe=UTF-8';
     }
     const emailURI =
       'https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=' +
@@ -45,22 +59,17 @@ class ReceiveScreen extends Component {
           (currencyCode ? '?currency=' + currencyCode : ''),
       ) +
       '&choe=UTF-8';
-    const cryptoURI =
-      'https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=' +
-      encodeURIComponent(
-        'stellar:' +
-          this.props.receiveAddress +
-          '?' +
-          (profile.username ? 'memo=' + profile.username + '&' : '') +
-          (currencyCode ? 'currency=' + currencyCode : ''),
-      ) +
-      '&choe=UTF-8';
-    this.setState({ cryptoURI, emailURI });
+
+    this.setState({
+      cryptoURI,
+      emailURI,
+      crypto: cryptoTemp,
+    });
   }
 
   _copyQR(type) {
     const user = this.props.profile;
-    const value = type === 'email' ? user.email : this.props.receiveAddress;
+    const value = type === 'email' ? user.email : this.state.crypto.address;
     Clipboard.setString(value);
     Toast.show({
       text:
@@ -86,7 +95,7 @@ class ReceiveScreen extends Component {
         <TouchableHighlight
           underlayColor={'white'}
           activeOpacity={0.2}
-          onPress={() => this._copyQR()}>
+          onPress={() => this._copyQR(type)}>
           <Image
             style={{ width: 300, height: 250, alignSelf: 'center' }}
             source={{
@@ -96,11 +105,11 @@ class ReceiveScreen extends Component {
           />
         </TouchableHighlight>
         {type === 'crypto' ? (
-          <Output label={'Address'} value={this.props.receiveAddress} copy />
+          <Output label={'Address'} value={this.state.crypto.address} copy />
         ) : null}
         <Output
           label={type === 'email' ? 'Email' : 'Memo'}
-          value={type === 'email' ? user.email : this.props.receiveMemo}
+          value={type === 'email' ? user.email : this.state.crypto.memo}
           copy
         />
       </View>
@@ -108,29 +117,20 @@ class ReceiveScreen extends Component {
   }
 
   render() {
-    const { colors } = this.props.company_config;
+    const { crypto } = this.state;
     return (
       <View style={styles.container}>
         <Header
           navigation={this.props.navigation}
-          colors={colors}
           back
+          noShadow={crypto}
           title="Receive"
         />
-        {this.state.crypto ? (
-          <Container>
-            <Tabs
-              tabBarUnderlineStyle={{
-                backgroundColor: colors.focus,
-              }}>
-              <Tab heading="Email" activeTextStyle={{ color: colors.focus }}>
-                {this.renderDetail('email')}
-              </Tab>
-              <Tab heading="Crypto" activeTextStyle={{ color: colors.focus }}>
-                {this.renderDetail('crypto')}
-              </Tab>
-            </Tabs>
-          </Container>
+        {crypto ? (
+          <Tabs>
+            <View tabLabel="Email">{this.renderDetail('email')}</View>
+            <View tabLabel="Crypto">{this.renderDetail('crypto')}</View>
+          </Tabs>
         ) : (
           this.renderDetail('email')
         )}
@@ -156,11 +156,12 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user, auth, accounts, crypto }) => {
-  const { company_config } = auth;
-  const { profile } = user;
-  const { receiveAddress, receiveMemo } = accounts;
-  return { profile, company_config, receiveAddress, receiveMemo, crypto };
+const mapStateToProps = state => {
+  return {
+    currencies: currenciesSelector(state),
+    profile: state.user.profile,
+    crypto: state.crypto,
+  };
 };
 
 export default connect(mapStateToProps, {})(ReceiveScreen);

@@ -1,19 +1,13 @@
 import React, { Component } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { BarCodeScanner, Permissions } from 'expo';
 import Header from './../../components/header';
 import { connect } from 'react-redux';
-import {
-  resetSend,
-  setSendWallet,
-  updateAccountField,
-  updateContactField,
-  setContactType,
-  setSendType,
-} from './../../redux/actions';
+import { currenciesSelector } from './../../redux/reducers/AccountsReducer';
 import { decodeQR } from './../../util/general';
 
 import { Output, Button, EmptyListMessage } from './../../components/common';
+import { Toast } from 'native-base';
 
 class QRCodeScannerScreen extends Component {
   static navigationOptions = {
@@ -36,47 +30,41 @@ class QRCodeScannerScreen extends Component {
     this.setState({ hasCameraPermission: status === 'granted' });
   }
 
-  accept = () => {
-    const { wallets } = this.props;
-    const {
-      account,
-      currency,
-      amount,
-      recipient,
-      note,
-      type,
-    } = this.state.data;
-    this.props.resetSend();
-    if (account) {
-      // set account?
-    }
-    if (currency) {
-      this.props.setSendWallet(wallets[0]);
-      this.props.setContactType('crypto');
-      // wallets.filter
-      // set account?
-      // search for currency,
-    } else {
-      // default use
-      // this.props.setSendWallet(
-      //   this.props.wallets[this.props.activeWalletIndex],
-      // );
-    }
-    if (type != 'rehive') {
-      this.props.setContactType('crypto');
-    }
+  accept = data => {
+    let { currencies } = this.props;
+    const { account, currency, amount, recipient, note, type, memo } = data;
 
-    this.props.setSendType(type);
-    this.props.updateAccountField({ prop: 'sendAmount', value: amount });
-    this.props.updateContactField({ prop: 'contactsSearch', value: recipient });
-    this.props.updateAccountField({ prop: 'sendNote', value: note });
+    console.log('currencies', currencies, currency);
+    currencies = currencies.data.filter(
+      item => item.currency.code === currency,
+    );
+    console.log('currencies', currencies);
+    if (currencies.length > 1) {
+      currencies = currencies.filter(item => item[account] === account);
+    }
+    console.log('currencies', currencies);
+    if (currencies.length === 1) {
+      this.props.navigation.goBack();
+      this.props.navigation.navigate('Send', {
+        type,
+        account,
+        currency: currencies[0],
+        amount,
+        note,
+        memo,
+        recipient,
+      });
+      return;
+    }
     this.props.navigation.goBack();
-    this.props.navigation.navigate('Send');
+    Toast.show({
+      text: 'unable to find currency' + (account ? ' and account' : ''),
+    });
   };
 
   _handleBarCodeRead = raw => {
     const data = decodeQR(raw.data);
-    this.setState({ camera: false, data });
+    this.accept(data);
   };
 
   render() {
@@ -84,16 +72,12 @@ class QRCodeScannerScreen extends Component {
     const { type, currency, account, amount, recipient, note } = data;
     const { viewStyleConfirm } = styles;
 
-    const { company_config } = this.props;
-    const { colors } = company_config;
-
     return (
       <View style={{ flex: 1 }}>
         <Header
           navigation={this.props.navigation}
           back
           title="QR code scanner"
-          colors={this.props.company_config.colors}
         />
         {hasCameraPermission ? (
           this.state.camera ? (
@@ -112,17 +96,11 @@ class QRCodeScannerScreen extends Component {
               ) : null}
               {note ? <Output label="Note" value={note} /> : null}
 
-              <Button
-                label="Accept"
-                onPress={this.accept}
-                textColor={colors.secondaryContrast}
-                backgroundColor={colors.secondary}
-              />
+              <Button label="Accept" onPress={this.accept} color="secondary" />
               <Button
                 label="Scan again"
                 onPress={() => this.setState({ camera: true })}
-                textColor={colors.secondaryContrast}
-                backgroundColor={colors.secondary}
+                color="secondary"
               />
             </View>
           )
@@ -150,17 +128,8 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ auth, accounts }) => {
-  const { company_config } = auth;
-  const { wallets } = accounts;
-  return { company_config, wallets };
+const mapStateToProps = state => {
+  return { currencies: currenciesSelector(state) };
 };
 
-export default connect(mapStateToProps, {
-  resetSend,
-  setSendWallet,
-  updateAccountField,
-  updateContactField,
-  setContactType,
-  setSendType,
-})(QRCodeScannerScreen);
+export default connect(mapStateToProps, {})(QRCodeScannerScreen);

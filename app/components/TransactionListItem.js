@@ -28,20 +28,20 @@ class TransactionListItem extends Component {
         // console.log('Debit');
         iconName = 'call-made';
         headerTextOne = 'Sent';
-        if (item.destination_transaction) {
-          headerTextOne = headerTextOne + ' to ';
-          headerTextTwo = item.destination_transaction.user.email;
-        }
+        // if (item.destination_transaction) {
+        //   headerTextOne = headerTextOne + ' to ';
+        //   headerTextTwo = item.destination_transaction.user.email;
+        // }
         color = Colors.negative;
         break;
       case 'credit':
         // console.log('Credit');
         iconName = 'call-received';
         headerTextOne = 'Received';
-        if (item.source_transaction) {
-          headerTextOne = headerTextOne + ' from ';
-          headerTextTwo = item.source_transaction.user.email;
-        }
+        // if (item.source_transaction) {
+        //   headerTextOne = headerTextOne + ' from ';
+        //   headerTextTwo = item.source_transaction.user.email;
+        // }
         color = Colors.positive;
         break;
       default:
@@ -59,7 +59,7 @@ class TransactionListItem extends Component {
         <View style={viewStyleContainer}>
           <Icon name={iconName} size={24} color={color ? color : 'black'} />
           <View style={{ paddingLeft: 8, paddingRight: 2 }}>
-            {SCREEN_WIDTH < 350 ? (
+            {SCREEN_WIDTH < 400 ? (
               <View>
                 <Text style={textStyleHeader}>{headerTextOne}</Text>
                 {headerTextTwo ? (
@@ -100,6 +100,7 @@ const styles = {
     paddingRight: 8,
     paddingLeft: 4,
     justifyContent: 'flex-start',
+    backgroundColor: 'white',
   },
   viewStyleAmount: {
     // right: 0,

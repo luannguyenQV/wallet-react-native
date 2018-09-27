@@ -5,15 +5,19 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import * as Animatable from 'react-native-animatable';
-import { MaterialIcons as Icon } from '@expo/vector-icons';
-import Colors from './../../config/colors';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import context from './context';
 
-class Button extends Component {
+class _Button extends Component {
   _buttonStyle() {
-    const { _buttonStyle } = styles;
-    const { backgroundColor, size, round, buttonStyle } = this.props;
+    const { type, color, size, round, buttonStyle, colors } = this.props;
+
+    let backgroundColor = 'transparent';
+    if (type === 'contained') {
+      backgroundColor = colors[color];
+    }
     return [
-      _buttonStyle,
+      styles._buttonStyle,
       {
         backgroundColor,
         height: size === 'large' ? 40 : size === 'small' ? 30 : 36,
@@ -26,14 +30,20 @@ class Button extends Component {
   }
 
   textStyle() {
-    const { textStyle } = styles;
-    const { size, textColor } = this.props;
+    const { size, type, color, colors, textStyle } = this.props;
+
+    let textColor = colors[color];
+    if (type === 'contained') {
+      textColor = colors[color + 'Contrast'];
+    }
+
     return [
-      textStyle,
+      styles._textStyle,
       {
         color: textColor,
         fontSize: size === 'large' ? 18 : size === 'small' ? 12 : 14,
       },
+      textStyle,
     ];
   }
 
@@ -74,7 +84,7 @@ class Button extends Component {
   }
 }
 
-Button.propTypes = {
+_Button.propTypes = {
   label: PropTypes.string, // Text displayed on button
   reference: PropTypes.func, // For animations
   animation: PropTypes.string, // Animation type
@@ -88,9 +98,12 @@ Button.propTypes = {
   round: PropTypes.bool, // Rounded corners
   buttonStyle: PropTypes.object, // override button style
   containerStyle: PropTypes.object, // override container style
+  textStyle: PropTypes.object, // override text style
+  color: PropTypes.string, // main color
+  colors: PropTypes.object, // colors from context
 };
 
-Button.defaultProps = {
+_Button.defaultProps = {
   label: '',
   reference: () => {},
   animation: '',
@@ -99,11 +112,10 @@ Button.defaultProps = {
   icon: '',
   size: '',
   type: 'contained',
-  backgroundColor: Colors.primary,
-  textColor: Colors.primaryContrast,
   round: false,
   buttonStyle: {},
   containerStyle: {},
+  color: 'primary',
 };
 
 const styles = {
@@ -124,10 +136,12 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
   },
-  textStyle: {
+  _textStyle: {
     textAlign: 'center',
     fontWeight: 'bold',
   },
 };
+
+const Button = context(_Button);
 
 export { Button };

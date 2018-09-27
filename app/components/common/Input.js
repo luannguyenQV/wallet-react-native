@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, FlatList } from 'react-native';
+import { View, Text, TextInput, FlatList, Platform } from 'react-native';
 import PropTypes from 'prop-types';
 import Colors from './../../config/colors';
 import { MaterialIcons as Icon } from '@expo/vector-icons';
 import CountryPicker from 'react-native-country-picker-modal';
 import { ListItem, ListSeparator } from './ListItem';
+import context from './context';
+import { TextInputMask } from 'react-native-masked-text';
 
-class Input extends Component {
+class _Input extends Component {
   state = {
     focused: false,
     iconNameVisibility: 'visibility',
@@ -19,6 +21,7 @@ class Input extends Component {
     this.setState({
       focused: false,
     });
+    this.props.onBlur();
   }
 
   _OnFocus() {
@@ -60,6 +63,8 @@ class Input extends Component {
       autoCorrect,
       multiline,
       colors,
+      precision,
+      unit,
     } = this.props;
 
     const {
@@ -70,6 +75,35 @@ class Input extends Component {
     } = styles;
 
     const { focused, secureTextEntry, cca2 } = this.state;
+
+    // if (type === 'money') {
+    //   return (
+    //     <TextInputMask
+    //       type={'money'}
+    //       options={{
+    //         precision: precision,
+    //         unit: unit,
+    //       }}
+    //       style={textStyleInput}
+    //       onFocus={() => this._OnFocus()}
+    //       onBlur={() => this._OnBlur()}
+    //       underlineColorAndroid="transparent"
+    //       autoCapitalize={autoCapitalize ? autoCapitalize : 'none'}
+    //       autoCorrect={autoCorrect ? autoCorrect : false}
+    //       placeholder={focused ? placeholder : label}
+    //       value={value ? value : '0'}
+    //       onChangeText={onChangeText}
+    //       refInput={reference}
+    //       selectTextOnFocus
+    //       secureTextEntry={secureTextEntry}
+    //       keyboardType={keyboardType}
+    //       returnKeyType={returnKeyType}
+    //       onSubmitEditing={onSubmitEditing}
+    //       autoFocus={autoFocus}
+    //       blurOnSubmit={false}
+    //     />
+    //   );
+    // }
 
     return (
       <View
@@ -116,18 +150,22 @@ class Input extends Component {
   viewStyleContainer() {
     const { focused } = this.state;
     if (focused) {
-      return {
-        shadowColor: 'rgba(0, 0, 0, 0.6)',
-        shadowOpacity: 0.3,
-        shadowRadius: 3,
-        shadowOffset: {
-          width: 1,
-          height: 2,
-        },
-        elevation: 2,
-      };
+      if (Platform.OS === 'ios') {
+        return {
+          shadowColor: 'rgba(0, 0, 0, 0.6)',
+          shadowOpacity: 0.3,
+          shadowRadius: 3,
+          shadowOffset: {
+            width: 1,
+            height: 2,
+          },
+        };
+      } else {
+        return { elevation: 10 };
+      }
+      //
     }
-    return {};
+    return { elevation: 1 };
   }
 
   render() {
@@ -232,7 +270,7 @@ class Input extends Component {
             </View>
           ) : null}
 
-          {data ? (
+          {data && focused ? (
             <FlatList
               // refreshControl={
               //   <RefreshControl
@@ -263,12 +301,12 @@ class Input extends Component {
               renderItem={({ item }) => (
                 <ListItem
                   onPress={() => onPressListItem(item)}
-                  title={item[title]}
+                  title={title ? item[title] : item}
                   subtitle={item[subtitle]}
                   // image={item.image ? item.image : null}
                 />
               )}
-              keyExtractor={item => (item.id ? item.id.toString() : '')}
+              keyExtractor={item => (item.id ? item.id.toString() : item)}
               ItemSeparatorComponent={ListSeparator}
               // ListEmptyComponent={<ListItem title="No data" />}
             />
@@ -283,7 +321,7 @@ class Input extends Component {
   // );
 }
 
-Input.propTypes = {
+_Input.propTypes = {
   label: PropTypes.string, // Text displayed on button
   reference: PropTypes.func, // For animations
   animation: PropTypes.string, // Animation type
@@ -293,9 +331,10 @@ Input.propTypes = {
   size: PropTypes.string, // Size of button (small / default or '' / large)
   type: PropTypes.string, // Type of button (text, contained, TODO: outlined)
   colors: PropTypes.object, // Button color
+  onBlur: PropTypes.func, // Function to execute on press
 };
 
-Input.defaultProps = {
+_Input.defaultProps = {
   label: '',
   reference: () => {},
   animation: '',
@@ -305,8 +344,7 @@ Input.defaultProps = {
   size: '',
   type: 'contained',
   colors: Colors,
-  // backgroundColor: colors.primary,
-  // textColor: colors.primaryContrast,
+  onBlur: () => {},
 };
 
 const styles = {
@@ -371,6 +409,8 @@ const styles = {
     position: 'absolute',
   },
 };
+
+const Input = context(_Input);
 
 export { Input };
 

@@ -72,7 +72,7 @@ export const updateProfile = data => r.user.update(data);
 export const updateProfileImage = file => {
   let formData = new FormData();
   formData.append('profile', file);
-  r.user.update(formData);
+  return r.user.update(formData);
 };
 
 // Address
@@ -135,8 +135,7 @@ export const createMobile = data => r.user.mobiles.create(data);
 export const deleteMobile = id => r.user.mobiles.delete(id);
 
 /* TRANSACTIONS */
-export const getTransactions = currency =>
-  r.transactions.get({ filters: { currency: currency } });
+export const getTransactions = filters => r.transactions.get({ filters });
 
 export const createCredit = (amount, currency) =>
   r.transactions.createCredit({
@@ -194,12 +193,18 @@ export const createTransferStellar = data =>
       .catch(err => reject(err)),
   );
 
+export const getBitcoinUser = () =>
+  callApi('GET', bitcoin_service_url + '/user/');
+
 export const createTransferBitcoin = data =>
   new Promise((resolve, reject) =>
     callApi('POST', bitcoin_service_url + '/transactions/send/', data)
       .then(response => resolve(response))
       .catch(err => reject(err)),
   );
+
+export const getEthereumUser = () =>
+  callApi('GET', ethereum_service_url + '/user/');
 
 export const createTransferEthereum = data =>
   new Promise((resolve, reject) =>
@@ -234,7 +239,6 @@ export const callApi = (method, route, data) => {
     mode: 'cors',
     headers,
   };
-  console.log(data);
   if (data) {
     config['body'] = JSON.stringify(data);
   }

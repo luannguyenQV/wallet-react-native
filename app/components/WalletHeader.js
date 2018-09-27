@@ -13,7 +13,6 @@ import {
 
 import WalletAction from './WalletAction';
 import HeaderCurrency from './HeaderCurrency';
-import { EmptyListMessage } from './common';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -118,7 +117,7 @@ class WalletHeader extends Component {
             <WalletAction
               type={item.type}
               onPress={() => this.onButtonPress(item.type)}
-              color={this.props.colors.primaryContrast}
+              color={this.props.colors.headerContrast}
             />
           )}
           keyExtractor={item => item.id.toString()}
@@ -173,7 +172,7 @@ class WalletHeader extends Component {
     const { colors, wallets } = this.props;
     const { viewStyleContainer, viewStyleBox, textStyle } = styles;
     return (
-      <View style={[viewStyleContainer, { backgroundColor: colors.primary }]}>
+      <View style={[viewStyleContainer, { backgroundColor: colors.header }]}>
         {wallets && wallets.length > 0 ? (
           <View>
             {this.renderWallets()}
@@ -181,7 +180,7 @@ class WalletHeader extends Component {
           </View>
         ) : (
           <View style={viewStyleBox}>
-            <Text style={[textStyle, { color: colors.primaryContrast }]}>
+            <Text style={[textStyle, { color: colors.headerContrast }]}>
               No company currencies available
             </Text>
           </View>
@@ -226,6 +225,8 @@ const mapStateToProps = ({ accounts }) => {
     tempWallet,
   };
 };
+
+// const WalletHeader = context(_WalletHeader);
 
 export default connect(mapStateToProps, {
   setActiveWalletIndex,

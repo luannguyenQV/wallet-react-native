@@ -5,9 +5,9 @@
     "description": "A demo company on the Rehive platform"
   },
   "services": {
-    "bitcoin": false,
+    "bitcoin": true,
     "stellar": true,
-    "ethereum": false,
+    "ethereum": true,
     "rewards": true
   },
   "auth": {
@@ -42,6 +42,9 @@
     "withdraw": true,
     "updateDetails": false
   },
+  "theme": {
+    "authSpinner": "rehive"
+  },
   "home": {
     "header": "wallet",
     "detail": [
@@ -65,15 +68,15 @@
     "requireDocumentAdvID": true
   },
   "colors": {
-    "primary": "#4d4d4d",
-    "secondary": "#a6a6a6",
-    "tertiary": "#c4c4c4",
-    "focus": "#9797F0",
+    "primary": "#5336FF",
+    "secondary": "#A4A5F5",
+    "tertiary": "#FBFB8B",
+    "focus": "#F45DEB",
 
-    "primaryContrast": "#f3f3f3",
-    "secondaryContrast": "#2d2d2d",
+    "primaryContrast": "#f6f6f6",
+    "secondaryContrast": "#1b1b1b",
     "tertiaryContrast": "#000000",
-    "focusContrast": "#2d2d2d",
+    "focusContrast": "#ffffff",
 
     "warning": "#FC8755",
     "error": "#f44336",

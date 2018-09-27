@@ -2,7 +2,7 @@
   "expo": {
     "name": "Rehive Wallet",
     "description": "A multi-currency wallet built on the Rehive platform.",
-    "version": "0.10.4",
+    "version": "1.0.2",
     "slug": "rehive-wallet",
     "privacy": "public",
     "sdkVersion": "28.0.0",
@@ -11,7 +11,8 @@
     "icon": "./assets/icons/icon.png",
     "splash": {
       "image": "./assets/icons/splash.png",
-      "primaryColor": "#ffffff"
+      "primaryColor": "#ffffff",
+      "resizeMode": "contain"
     },
     "assetBundlePatterns": ["./assets/icons/*"],
     "ios": {
@@ -19,7 +20,7 @@
       "bundleIdentifier": "com.rehive.wallet"
     },
     "android": {
-      "package": "com.rehive_wallet"
+      "package": "com.rehivewallet"
     }
   }
 }

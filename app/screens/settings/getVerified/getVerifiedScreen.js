@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { connect } from 'react-redux';
-import { refreshGetVerified } from './../../../redux/actions';
+import {
+  refreshGetVerified,
+  uploadProfilePhoto,
+} from './../../../redux/actions';
 
 import Header from './../../../components/header';
 import GetVerifiedOption from './../../../components/getVerifiedOption';
 import HeaderProfile from '../../../components/HeaderProfile';
 
 import { Spinner, InputContainer } from './../../../components/common';
+import { userEmailsSelector } from '../../../redux/reducers/UserReducer';
 
 class GetVerifiedScreen extends Component {
   static navigationOptions = {
@@ -100,10 +104,11 @@ class GetVerifiedScreen extends Component {
   renderAddresses() {
     const { address } = this.props;
     let value = '';
-    let status = address.status ? address.status.toUpperCase() : 'INCOMPLETE';
+    let status = 'INCOMPLETE';
+    console.log('address', address);
     if (address.length > 0) {
       const tempAddress = address[0];
-      status = address.status ? address.status.toUpperCase() : status;
+      status = tempAddress.status ? tempAddress.status.toUpperCase() : status;
       if (tempAddress.line_1) {
         value = value + tempAddress.line_1;
       }
@@ -248,7 +253,12 @@ class GetVerifiedScreen extends Component {
   }
 
   render() {
-    const { profile, loading_profile, company_config } = this.props;
+    const {
+      profile,
+      loading_profile,
+      company_config,
+      uploadProfilePhoto,
+    } = this.props;
     const { container, mainContainer } = styles;
     // console.log(cm)
     const {
@@ -266,17 +276,16 @@ class GetVerifiedScreen extends Component {
           navigation={this.props.navigation}
           drawer
           title="Get verified"
-          colors={company_config.colors}
           noShadow
         />
         <HeaderProfile
+          uploadProfilePhoto={uploadProfilePhoto}
           photoLink={profile.profile}
           name={
             profile.first_name
               ? profile.first_name + ' ' + profile.last_name
               : profile.username
           }
-          colors={company_config.colors}
         />
         <View style={mainContainer}>
           {loading_profile ? <Spinner /> : null}
@@ -305,20 +314,21 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user, auth }) => {
-  const { profile, address, mobile, email, document, loading_profile } = user;
-  const { company_config } = auth;
+const mapStateToProps = state => {
+  const { profile, address, mobile, document, loading_profile } = state.user;
+  const { company_config } = state.auth;
   return {
     profile,
     address,
     mobile,
-    email,
+    email: userEmailsSelector(state),
     document,
     loading_profile,
     company_config,
   };
 };
 
-export default connect(mapStateToProps, { refreshGetVerified })(
-  GetVerifiedScreen,
-);
+export default connect(mapStateToProps, {
+  refreshGetVerified,
+  uploadProfilePhoto,
+})(GetVerifiedScreen);

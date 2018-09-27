@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, FlatList, Image } from 'react-native';
 import { connect } from 'react-redux';
-import { uploadDocument } from './../../../redux/actions';
+import { uploadDocument, resetUserErrors } from './../../../redux/actions';
 import Header from './../../../components/header';
 
 import { ImageUpload, Button, Spinner } from '../../../components/common';
@@ -24,6 +24,7 @@ class DocumentScreen extends Component {
   }
 
   resetState() {
+    this.props.resetUserErrors();
     this.setState({
       document_type: '',
       state: 'document_type',
@@ -45,6 +46,7 @@ class DocumentScreen extends Component {
 
   renderContent() {
     const { category, state } = this.state;
+    const { updateError } = this.props;
     const {
       textStyleDescription,
       viewStyleButtonContainer,
@@ -58,70 +60,68 @@ class DocumentScreen extends Component {
     if (category) {
       options = document_category[0].document_types;
     }
-    const { company_config } = this.props;
-    const { colors } = company_config;
+    console.log(options);
 
     switch (state) {
       case 'document_type':
         return (
-          <View>
+          <View style={{ width: '100%' }}>
             <Text style={textStyleDescription}>
               Please upload one of the following documents.{' '}
               {category === 'Proof of Address'
                 ? 'Your name and address must be clearly visible and be dated within the last 3 months.'
                 : ''}
             </Text>
-            {/* <ButtonList> */}
             <FlatList
               contentContainerStyle={viewStyleButtonContainer}
               data={options}
               renderItem={({ item }) => this.renderTypeButton(item)}
               keyExtractor={item => item.id.toString()}
             />
-            {/* </ButtonList> */}
           </View>
         );
       case 'confirm':
         return (
-          <View>
+          <View style={{ justifyContent: 'flex-start' }}>
             <View style={viewStyleImageContainer}>
               <Image
                 style={{ height: 300, width: 300 }}
                 source={{ uri: this.state.image }}
               />
             </View>
-            {this.props.loading ? (
-              <Spinner size="large" />
-            ) : (
-              <View style={{ paddingHorizontal: 24 }}>
+            <View style={viewStyleButtonContainer}>
+              {updateError ? (
+                <Text style={[textStyleDescription, { color: '#f44336' }]}>
+                  {updateError}
+                </Text>
+              ) : null}
+              {this.props.loading ? (
+                <Spinner containerStyle={{ margin: 8 }} />
+              ) : (
                 <Button
-                  label="Upload"
-                  textColor={colors.secondaryContrast}
-                  backgroundColor={colors.secondary}
+                  label="CONFIRM & UPLOAD"
+                  color="secondary"
                   onPress={() => this.uploadDocument()}
                 />
-                <Button
-                  label="Cancel"
-                  textColor={colors.secondaryContrast}
-                  backgroundColor={colors.secondary}
-                  onPress={() => this.resetState()}
-                />
-              </View>
-            )}
+              )}
+              <Button
+                label="Cancel"
+                color="secondary"
+                type="text"
+                onPress={() => this.resetState()}
+              />
+            </View>
+            }
           </View>
         );
     }
   }
 
   renderTypeButton = item => {
-    const { company_config } = this.props;
-    const { colors } = company_config;
     return (
       <Button
         label={item.description}
-        // size="small"
-        textColor={colors.secondaryContrast}
-        backgroundColor={colors.secondary}
+        color="secondary"
         onPress={() => this.selectType(item.document_type)}
       />
     );
@@ -132,14 +132,11 @@ class DocumentScreen extends Component {
     const { textStyleHeader, viewStyleContent } = styles;
     return (
       <View style={styles.container}>
-        <Header
-          navigation={this.props.navigation}
-          colors={this.props.company_config.colors}
-          back
-          title="Documents"
-        />
+        <Header navigation={this.props.navigation} back title="Documents" />
         <View style={viewStyleContent}>
-          <Text style={textStyleHeader}>{category}</Text>
+          <View>
+            <Text style={textStyleHeader}>{category}</Text>
+          </View>
           {this.renderContent()}
         </View>
 
@@ -158,22 +155,23 @@ class DocumentScreen extends Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flex: 1,
+    backgroundColor: 'white',
   },
   viewStyleContent: {
     alignItems: 'center',
     justifyContent: 'flex-start',
-    padding: 16,
+    padding: 8,
   },
   viewStyleButtonContainer: {
-    paddingVertical: 8,
+    paddingHorizontal: 8,
   },
   viewStyleImageContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 8,
+    // padding: 8,
   },
   textStyleHeader: {
     fontSize: 20,
@@ -185,14 +183,14 @@ const styles = StyleSheet.create({
     padding: 8,
     textAlign: 'center',
   },
-});
+};
 
-const mapStateToProps = ({ user, auth }) => {
-  const { company_config } = auth;
-  const { loading } = user;
-  return { loading, company_config };
+const mapStateToProps = ({ user }) => {
+  const { loading, updateError } = user;
+  return { loading, updateError };
 };
 
 export default connect(mapStateToProps, {
   uploadDocument,
+  resetUserErrors,
 })(DocumentScreen);

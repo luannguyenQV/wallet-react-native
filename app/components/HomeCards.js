@@ -52,18 +52,22 @@ class HomeCards extends Component {
 
   renderImage(image) {
     const { company_config } = this.props;
+    const { imageStylePhoto } = styles;
     if (image === 'pxpay' || company_config.company.id.includes('pxpay')) {
       return (
         <Image
-          style={styles.imageStylePhoto}
+          style={imageStylePhoto}
           source={require('./../../assets/icons/pxpay.png')}
         />
       );
     } else if (image === 'card1') {
       return (
         <Image
-          style={styles.imageStylePhoto}
-          source={require('./../../assets/icons/card1.png')}
+          style={[
+            imageStylePhoto,
+            { backgroundColor: this.props.company_config.colors.primary },
+          ]}
+          source={require('./../../assets/icons/card1_transparent.png')}
         />
       );
     }
@@ -71,7 +75,7 @@ class HomeCards extends Component {
     return (
       <View
         style={[
-          styles.imageStylePhoto,
+          imageStylePhoto,
           { backgroundColor: this.props.company_config.colors.primary },
         ]}
       />
@@ -85,7 +89,7 @@ class HomeCards extends Component {
     let cards = [];
     let i = 0;
     const company = company_config.company ? company_config.company : null;
-    console.log(company);
+    // console.log(company);
     if (cardConfig) {
       if (
         cardConfig.general.welcome &&
@@ -145,16 +149,12 @@ class HomeCards extends Component {
 
   renderCard(item) {
     const { textStyleContent } = styles;
-    const { company_config } = this.props;
     let imageString = './../../assets/icons/' + item.image + '.png';
     return (
       <Card
-        colors={company_config.colors}
         key={item.id}
         title={item.title}
         renderHeader={this.renderImage(item.image)}
-        colorTitleBackground={company_config.colors.primary}
-        colorTitleText={company_config.colors.primaryContrast}
         onPressActionOne={() =>
           item.navigate
             ? this.props.navigation.navigate(item.navigate)
@@ -171,14 +171,14 @@ class HomeCards extends Component {
   }
 
   renderFooter() {
-    const { dismissedCards, cardRestoreAll, company_config } = this.props;
+    const { dismissedCards, cardRestoreAll } = this.props;
     const { viewStyleFooter } = styles;
     if (dismissedCards && dismissedCards.length > 0) {
       return (
         <View style={viewStyleFooter}>
           <Button
             label="RESTORE ALL"
-            textColor={company_config.colors.secondary}
+            color="secondary"
             type="text"
             onPress={cardRestoreAll}
             backgroundColor="transparent"
