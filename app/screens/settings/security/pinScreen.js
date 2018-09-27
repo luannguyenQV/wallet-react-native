@@ -38,10 +38,10 @@ class PinScreen extends Component {
   };
 
   componentDidMount() {
-    if (Expo.Fingerprint.hasHardwareAsync()) {
+    if (Expo.LocalAuthentication.hasHardwareAsync()) {
       this.setState({ hasFingerprintScanner: true });
       console.log('hasFingerprintScanner');
-      if (Expo.Fingerprint.isEnrolledAsync()) {
+      if (Expo.LocalAuthentication.isEnrolledAsync()) {
         this.setState({ hasSavedFingerprints: true });
         console.log('hasSavedFingerprints');
       }
@@ -110,7 +110,7 @@ class PinScreen extends Component {
         modalType: 'setFingerprint',
       });
     }
-    let result = await Expo.Fingerprint.authenticateAsync('Biometric scan');
+    let result = await Expo.LocalAuthentication.authenticateAsync('Biometric scan');
 
     if (result.success) {
       this.props.activateFingerprint();
@@ -124,7 +124,7 @@ class PinScreen extends Component {
   };
 
   iosScan = async () => {
-    let result = await Expo.Fingerprint.authenticateAsync('Biometric scan');
+    let result = await Expo.LocalAuthentication.authenticateAsync('Biometric scan');
 
     if (!result.success) {
       this.props.navigation.goBack();
@@ -148,13 +148,13 @@ class PinScreen extends Component {
         contentText = 'Please scan your fingerprint to activate this feature';
         action = () => {
           if (Platform.os !== 'ios') {
-            Expo.Fingerprint.cancelAuthenticate();
+            Expo.LocalAuthentication.cancelAuthenticate();
           }
           this.setState({ modalVisible: false, modalType: 'none' });
         };
         break;
       case 'confirmFingerprint':
-        contentText = 'Fingerprint has been set';
+        contentText = 'LocalAuthentication has been set';
         actionText = 'CLOSE';
         break;
       case 'inputPinError':

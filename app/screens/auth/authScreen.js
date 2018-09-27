@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Fingerprint, Constants } from 'expo';
+import { Constants } from 'expo';
 import {
   View,
   Image,
@@ -358,7 +358,9 @@ class AuthScreen extends Component {
     if (Platform.OS === 'android') {
       this.props.showFingerprintModal();
     }
-    let result = await Expo.Fingerprint.authenticateAsync('Biometric scan');
+    let result = await Expo.LocalAuthentication.authenticateAsync(
+      'Biometric scan',
+    );
     this.props.hideModal();
 
     if (result.success) {
@@ -510,7 +512,7 @@ class AuthScreen extends Component {
         textActionOne = 'CANCEL';
         onPressActionOne = () => {
           if (Platform.os !== 'ios') {
-            Fingerprint.cancelAuthenticate();
+            Expo.LocalAuthentication.cancelAuthenticate();
           }
           hideModal();
         };

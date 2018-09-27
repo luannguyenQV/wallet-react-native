@@ -17,8 +17,8 @@ class _LocalAuthentication extends Component {
     const { pin, fingerprint, onSuccess } = this.props;
 
     if (fingerprint) {
-      let compatible = await Expo.Fingerprint.hasHardwareAsync();
-      let fingerprints = await Expo.Fingerprint.isEnrolledAsync();
+      let compatible = await Expo.LocalAuthentication.hasHardwareAsync();
+      let fingerprints = await Expo.LocalAuthentication.isEnrolledAsync();
       if (!fingerprints && !compatible) {
         this.setState({ errorText: 'Unable to access local authentication' });
       } else {
@@ -30,7 +30,7 @@ class _LocalAuthentication extends Component {
   }
 
   scanFingerprint = async () => {
-    let result = await Expo.Fingerprint.authenticateAsync();
+    let result = await Expo.LocalAuthentication.authenticateAsync();
     if (result.success) {
       this.props.onSuccess();
     } else {

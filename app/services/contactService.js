@@ -1,4 +1,4 @@
-import Expo from 'expo';
+import { Contacts } from 'expo';
 import { Alert } from 'react-native';
 
 const PAGE_SIZE = 500;
@@ -10,28 +10,28 @@ var contactService = {
     );
 
     if (permission.status !== 'granted') {
-      Alert.alert('Error', 'Permission denied');
       return;
     }
 
-    let response = await Expo.Contacts.getContactsAsync({
+    let response = await Contacts.getContactsAsync({
       fields: [
-        Expo.Contacts.PHONE_NUMBERS,
-        Expo.Contacts.EMAILS,
-        Expo.Contacts.THUMBNAIL,
+        Contacts.Fields.PhoneNumbers,
+        Contacts.Fields.Emails,
+        Contacts.Fields.Image,
       ],
       pageSize: PAGE_SIZE,
       pageOffset: 0,
     });
+    console.log(response);
 
     let contacts = response.data;
 
     for (i = 1; i < response.total / PAGE_SIZE; i++) {
-      response = await Expo.Contacts.getContactsAsync({
+      response = await Contacts.getContactsAsync({
         fields: [
-          Expo.Contacts.PHONE_NUMBERS,
-          Expo.Contacts.EMAILS,
-          Expo.Contacts.THUMBNAIL,
+          Contacts.Fields.PhoneNumbers,
+          Contacts.Fields.Emails,
+          Contacts.Fields.Image,
         ],
         pageSize: PAGE_SIZE,
         pageOffset: PAGE_SIZE * i,
@@ -43,7 +43,7 @@ var contactService = {
     var alreadyAdded = [];
     let count = 0;
     contacts.forEach(node => {
-      var thumbnail = node.thumbnail ? node.thumbnail.uri : null;
+      var thumbnail = node.image ? node.image.uri : null;
       if (typeof node.phoneNumbers !== 'undefined') {
         node.phoneNumbers.forEach(number => {
           var mobile = number.number;

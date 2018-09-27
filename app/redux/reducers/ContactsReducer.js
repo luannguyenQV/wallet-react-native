@@ -90,6 +90,7 @@ export const contactsSelector = createSelector(
               : false),
       );
     }
+    // return {};
     return {
       data,
       search: contactsState.contactsSearch,
