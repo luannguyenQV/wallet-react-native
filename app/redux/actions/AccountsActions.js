@@ -190,3 +190,26 @@ export const hideWallet = () => {
     type: HIDE_WALLET,
   };
 };
+
+export const TOGGLE_ACCOUNT_FIELD = 'toggle_account_field';
+export const toggleAccountField = field => {
+  return {
+    type: TOGGLE_ACCOUNT_FIELD,
+    payload: field,
+  };
+};
+
+export const RESET_RECEIVE = 'reset_receive';
+export const resetReceive = () => {
+  return {
+    type: RESET_RECEIVE,
+  };
+};
+
+export const SET_RECEIVE_TYPE = 'set_receive_type';
+export const setReceiveType = type => {
+  return {
+    type: SET_RECEIVE_TYPE,
+    payload: type,
+  };
+};

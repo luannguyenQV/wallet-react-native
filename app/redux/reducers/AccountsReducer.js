@@ -16,14 +16,20 @@ import {
   HIDE_WALLET,
   SHOW_MODAL,
   FETCH_TRANSACTIONS_ASYNC,
-  SET_HOME_ACCOUNT,
+  TOGGLE_ACCOUNT_FIELD,
   SET_HOME_CURRENCY,
   SET_TRANSACTION_STATE,
   CONTACT_FIELD_CHANGED,
+  SET_RECEIVE_TYPE,
+  RESET_RECEIVE,
 } from '../actions';
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 import { createSelector } from 'reselect';
-import { accountsSelector, cryptoSelector } from './../sagas/selectors';
+import {
+  accountsSelector,
+  cryptoSelector,
+  userSelector,
+} from './../sagas/selectors';
 
 const INITIAL_STATE = {
   accounts: [],
@@ -55,6 +61,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         [action.payload.prop]: action.payload.value,
+        [action.payload.prop + 'Selected']: true,
         transactionAmountError: '',
         transactionRecipientError: '',
       };
@@ -271,6 +278,35 @@ export default (state = INITIAL_STATE, action) => {
         showWallet: false,
       };
 
+    case TOGGLE_ACCOUNT_FIELD:
+      return {
+        ...state,
+        [action.payload + 'Selected']: !state[action.payload + 'Selected'],
+      };
+    case SET_RECEIVE_TYPE:
+      return {
+        ...state,
+        receiveType: action.payload,
+      };
+    case RESET_RECEIVE:
+      return {
+        ...state,
+        receiveType: 'email',
+        receiveCurrency: {},
+        receiveAmount: '',
+        receiveAmountError: '',
+        receiveAddress: '',
+        receiveAddressError: '',
+        receiveMemo: '',
+        receiveNote: '',
+        receiveLoading: '',
+        receiveError: '',
+        receiveCurrencySelected: false,
+        receiveAmountSelected: false,
+        receiveMemoSelected: false,
+        receiveNoteSelected: false,
+      };
+
     // case LOGOUT_USER:
     //   return INITIAL_STATE;
     default:
@@ -335,32 +371,18 @@ export const currenciesSelector = createSelector(
 export const transactionSelector = createSelector(
   [accountsSelector, cryptoSelector],
   accountsState => {
-    const {
-      transactionState,
-      transactionType,
-      transactionCurrency,
-      transactionAmount,
-      transactionAmountError,
-      transactionRecipient,
-      transactionRecipientError,
-      transactionMemo,
-      transactionNote,
-      transactionLoading,
-      transactionError,
-    } = accountsState;
-
     return {
-      state: transactionState,
-      type: transactionType,
-      currency: transactionCurrency,
-      amount: transactionAmount,
-      amountError: transactionAmountError,
-      recipient: transactionRecipient,
-      recipientError: transactionRecipientError,
-      memo: transactionMemo,
-      note: transactionNote,
-      loading: transactionLoading,
-      error: transactionError,
+      state: accountsState.transactionState,
+      type: accountsState.transactionType,
+      currency: accountsState.transactionCurrency,
+      amount: accountsState.transactionAmount,
+      amountError: accountsState.transactionAmountError,
+      recipient: accountsState.transactionRecipient,
+      recipientError: accountsState.transactionRecipientError,
+      memo: accountsState.transactionMemo,
+      note: accountsState.transactionNote,
+      loading: accountsState.transactionLoading,
+      error: accountsState.transactionError,
     };
   },
 );
@@ -372,6 +394,116 @@ export const homeSelector = createSelector(
 
     return {
       currency: homeCurrency ? homeCurrency : {},
+    };
+  },
+);
+
+export const receiveSelector = createSelector(
+  [accountsSelector, cryptoSelector, userSelector],
+  (accountsState, cryptoState, userState) => {
+    const {
+      receiveType,
+      receiveCurrency,
+      receiveAmount,
+      receiveAmountError,
+      // receiveAddress,
+      // receiveAddressError,
+      receiveMemo,
+      receiveNote,
+      receiveLoading,
+      receiveError,
+      receiveCurrencySelected,
+      receiveAmountSelected,
+      receiveMemoSelected,
+      receiveNoteSelected,
+    } = accountsState;
+    let count = 0;
+    let value = '';
+
+    let receiveAddress = '';
+    let receiveAddresses = [];
+    switch (receiveType) {
+      case 'email':
+        receiveAddresses = userState.email.find(item => item.primary === true);
+        receiveAddress = receiveAddresses
+          ? receiveAddresses.email
+          : userState.email[0].email ? userState.email[0].email : '';
+        break;
+      case 'mobile':
+        receiveAddresses = userState.mobile.find(item => item.primary === true);
+        receiveAddress = receiveAddresses
+          ? receiveAddresses.number
+          : userState.mobile[0].number ? userState.mobile[0].number : '';
+        break;
+      case 'crypto':
+        receiveAddress = cryptoState[receiveCurrency.crypto].address;
+        break;
+    }
+
+    if (receiveCurrencySelected) {
+      value =
+        value +
+        (count > 0 ? '&' : '?') +
+        'currency=' +
+        receiveCurrency.currency.code;
+      count++;
+    }
+    if (receiveAmountSelected) {
+      value = value + (count > 0 ? '&' : '?') + 'amount=' + receiveAmount;
+      count++;
+    }
+    if (receiveMemoSelected && receiveType === 'crypto') {
+      value = value + (count > 0 ? '&' : '?') + 'memo=' + receiveMemo;
+      count++;
+    }
+    if (receiveNoteSelected) {
+      value = value + (count > 0 ? '&' : '?') + 'note=' + receiveNote;
+      count++;
+    }
+    value =
+      (receiveType === 'crypto' ? receiveCurrency.crypto : 'rehive') +
+      ':' +
+      receiveAddress +
+      value;
+
+    let email = false;
+    let mobile = false;
+    let crypto = false;
+    count = 0;
+
+    if (userState.email && userState.email.length > 0) {
+      email = true;
+      count++;
+    }
+    if (userState.mobile && userState.mobile.length > 0) {
+      mobile = true;
+      count++;
+    }
+    if (receiveCurrency && receiveCurrency.crypto) {
+      crypto = true;
+      count++;
+    }
+    const buttons = count > 1 ? true : false;
+
+    return {
+      value,
+      type: receiveType,
+      currency: receiveCurrency,
+      currencySelected: receiveCurrencySelected,
+      amount: receiveAmount,
+      amountSelected: receiveAmountSelected,
+      amountError: receiveAmountError,
+      address: receiveAddress,
+      memo: receiveMemo,
+      memoSelected: receiveMemoSelected,
+      note: receiveNote,
+      noteSelected: receiveNoteSelected,
+      loading: receiveLoading,
+      error: receiveError,
+      email,
+      mobile,
+      crypto,
+      buttons,
     };
   },
 );

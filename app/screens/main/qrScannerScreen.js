@@ -63,6 +63,7 @@ class QRCodeScannerScreen extends Component {
   };
 
   _handleBarCodeRead = raw => {
+    console.log('raw', raw);
     const data = decodeQR(raw.data);
     this.accept(data);
   };
@@ -80,30 +81,11 @@ class QRCodeScannerScreen extends Component {
           title="QR code scanner"
         />
         {hasCameraPermission ? (
-          this.state.camera ? (
-            <BarCodeScanner
-              onBarCodeRead={this._handleBarCodeRead}
-              style={{ flex: 1 }}
-            />
-          ) : (
-            <View style={viewStyleConfirm}>
-              {type ? <Output label="Type" value={type} /> : null}
-              {account ? <Output label="Account" value={account} /> : null}
-              {currency ? <Output label="Currency" value={currency} /> : null}
-              {amount ? <Output label="Amount" value={amount} /> : null}
-              {recipient ? (
-                <Output label="Recipient" value={recipient} />
-              ) : null}
-              {note ? <Output label="Note" value={note} /> : null}
-
-              <Button label="Accept" onPress={this.accept} color="secondary" />
-              <Button
-                label="Scan again"
-                onPress={() => this.setState({ camera: true })}
-                color="secondary"
-              />
-            </View>
-          )
+          <BarCodeScanner
+            onBarCodeRead={this._handleBarCodeRead}
+            style={{ flex: 1 }}
+            barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
+          />
         ) : (
           <EmptyListMessage text="No access to camera" />
         )}

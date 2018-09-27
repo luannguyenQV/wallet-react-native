@@ -3,6 +3,7 @@ import { View, Text, TextInput, FlatList, Platform } from 'react-native';
 import PropTypes from 'prop-types';
 import Colors from './../../config/colors';
 import { MaterialIcons as Icon } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import CountryPicker from 'react-native-country-picker-modal';
 import { ListItem, ListSeparator } from './ListItem';
 import context from './context';
@@ -182,6 +183,8 @@ class _Input extends Component {
       type,
       onPressListItem,
       colors,
+      checked,
+      toggleCheck,
     } = this.props;
 
     const {
@@ -191,7 +194,7 @@ class _Input extends Component {
       textStyleLabel,
       textStyleFooter,
       viewStyleContent,
-      viewStylePopUp,
+      viewStyleCheckbox,
       iconStyleVisibility,
     } = styles;
 
@@ -207,18 +210,25 @@ class _Input extends Component {
               backgroundColor: colors.primaryContrast,
             },
           ]}>
-          <View style={{ flexDirection: 'row' }}>
-            <View
-              style={[
-                viewStyleContent,
-                {
-                  borderColor: inputError
-                    ? colors.error
-                    : focused ? colors.focus : 'lightgrey',
-                  borderBottomWidth: inputError || focused ? 2 : 2,
-                  width: '100%',
-                },
-              ]}>
+          <View
+            style={{
+              flexDirection: 'row',
+              borderColor: inputError
+                ? colors.error
+                : focused ? colors.focus : 'lightgrey',
+              borderBottomWidth: inputError || focused ? 2 : 2,
+            }}>
+            {toggleCheck ? (
+              <View style={viewStyleCheckbox}>
+                <MaterialIcons
+                  onPress={toggleCheck} //value ? {this.setState({ value })} : 'square-outline'}
+                  name={checked ? 'check-box' : 'check-box-outline-blank'}
+                  size={32}
+                  color={checked ? colors.primary : 'lightgrey'}
+                />
+              </View>
+            ) : null}
+            <View style={[viewStyleContent, { width: '100%' }]}>
               {focused || value ? (
                 <View style={viewStyleLabel}>
                   <Text
@@ -407,6 +417,13 @@ const styles = {
     height: 24,
     right: 12,
     position: 'absolute',
+  },
+  viewStyleCheckbox: {
+    padding: 4,
+    paddingRight: 0,
+    paddingLeft: 8,
+    justifyContent: 'center',
+    // marginVertical: 12,
   },
 };
 

@@ -41,14 +41,23 @@ class _Checkbox extends Component {
               color={value ? colors.primary : 'lightgrey'}
             />
           </View>
-          <View style={viewStyleText}>
-            <Text style={textStyle}>{title}</Text>
-            <TouchableOpacity onPress={() => WebBrowser.openBrowserAsync(link)}>
-              <View style={viewStyleTextLink}>
-                <Text style={textStyleLink}>{description}</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
+          {title ? (
+            <View style={viewStyleText}>
+              <Text style={textStyle}>{title}</Text>
+              {description ? (
+                link ? (
+                  <TouchableOpacity
+                    onPress={() => WebBrowser.openBrowserAsync(link)}>
+                    <View style={viewStyleTextLink}>
+                      <Text style={textStyleLink}>{description}</Text>
+                    </View>
+                  </TouchableOpacity>
+                ) : (
+                  <Text style={textStyleLink}>{description}</Text>
+                )
+              ) : null}
+            </View>
+          ) : null}
         </View>
         {error ? (
           <View>
@@ -68,6 +77,7 @@ const styles = {
     margin: 8,
     padding: 8,
     borderRadius: 5,
+    // width: '100%',
     // overflow: 'hidden',
   },
   viewStyleContainerCheckbox: {
@@ -84,6 +94,7 @@ const styles = {
     // flexDirection: 'column',
     paddingLeft: 8,
     paddingRight: 16,
+    justifyContent: 'center',
     // flexWrap: 'wrap',
   },
   viewStyleTextLink: {
