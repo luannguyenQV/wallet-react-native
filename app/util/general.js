@@ -27,6 +27,7 @@ export const decodeQR = string => {
       amount,
       account,
       currency,
+      memo,
       note = '';
 
     let temp = string.split(':');
@@ -57,7 +58,7 @@ export const decodeQR = string => {
         }
       }
     }
-    return { type, recipient, amount, note, currency, account };
+    return { type, recipient, amount, note, currency, account, memo };
   }
   return '';
 };
