@@ -452,7 +452,7 @@ export const receiveSelector = createSelector(
       value = value + (count > 0 ? '&' : '?') + 'amount=' + receiveAmount;
       count++;
     }
-    if (receiveMemoSelected) {
+    if (receiveMemoSelected && receiveType === 'crypto') {
       value = value + (count > 0 ? '&' : '?') + 'memo=' + receiveMemo;
       count++;
     }
