@@ -442,11 +442,12 @@ export const authSelector = createSelector(
 export const localAuthSelector = createSelector(
   [authStateSelector, companyConfigSelector],
   (authState, companyConfig) => {
+    console.log(companyConfig);
     return {
       pin: authState.pin,
       fingerprint: authState.fingerprint,
-      appLoad: companyConfig.pin.appLoad,
-      send: companyConfig.pin.send,
+      appLoad: companyConfig.pin ? companyConfig.pin.appLoad : false,
+      send: companyConfig.pin ? companyConfig.pin.send : false,
     };
   },
 );

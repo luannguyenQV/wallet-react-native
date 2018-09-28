@@ -8,7 +8,6 @@ import {
   Platform,
   Dimensions,
   FlatList,
-  RefreshControl,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { connect } from 'react-redux';
@@ -29,9 +28,13 @@ import {
   toggleTerms,
   logoutUser,
 } from '../../redux/actions';
+import Carousel from 'react-native-snap-carousel';
 
 import { colorSelector } from './../../redux/reducers/ConfigReducer';
-import { authSelector } from './../../redux/reducers/AuthReducer';
+import {
+  authSelector,
+  localAuthSelector,
+} from './../../redux/reducers/AuthReducer';
 
 import {
   Button,
@@ -57,7 +60,6 @@ UIManager.setLayoutAnimationEnabledExperimental &&
 class AuthScreen extends Component {
   renderMainContainer() {
     const {
-      loading,
       mainState,
       detailState,
       nextAuthFormState,
@@ -324,16 +326,34 @@ class AuthScreen extends Component {
           </View>
         );
       default:
-        // return <View style={viewStyleInput}>{this.renderInput()}</View>;
         // console.log(authInputs);
         return (
-          <FlatList
-            data={authInputs}
-            renderItem={({ item, index }) => this.renderInput(item, index)}
-            keyExtractor={item => item.id.toString()}
-            // ListEmptyComponent={this.renderEmptyList()}
-          />
+          <View style={[viewStyleInput, { padding: 0 }]}>
+            <Carousel
+              ref={c => {
+                this._carousel = c;
+              }}
+              data={authInputs}
+              renderItem={({ item, index }) => this.renderInput(item, index)}
+              sliderHeight={200}
+              itemHeight={80}
+              // sliderWidth={SCREEN_WIDTH}
+              // itemWidth={SCREEN_WIDTH - 64}
+              vertical
+              activeSlideAlignment={'center'}
+              // layoutCardOffset={40}
+            />
+          </View>
         );
+      // return (
+      //   <FlatList
+      //     contentContainerStyle={viewStyleInput}
+      //     data={authInputs}
+      //     renderItem={({ item, index }) => this.renderInput(item, index)}
+      //     keyExtractor={item => item.id.toString()}
+      //     // ListEmptyComponent={this.renderEmptyList()}
+      //   />
+      // );
     }
   }
 
@@ -577,7 +597,7 @@ const styles = {
   viewStyleInput: {
     width: '100%',
     justifyContent: 'center',
-    flex: 1,
+    // flex: 1,
     padding: 16,
   },
   imageContainer: {
