@@ -339,10 +339,15 @@ class AuthScreen extends Component {
               renderItem={({ item, index }) => this.renderInput(item, index)}
               sliderHeight={200}
               itemHeight={80}
-              // sliderWidth={SCREEN_WIDTH}
-              // itemWidth={SCREEN_WIDTH - 64}
+              sliderWidth={SCREEN_WIDTH}
+              itemWidth={SCREEN_WIDTH - 64}
               vertical
               activeSlideAlignment={'center'}
+              inactiveSlideOpacity={0.5}
+              inactiveSlideScale={0.7}
+              onSnapToItem={slideIndex =>
+                this[authInputs[slideIndex].name].focus()
+              }
               // layoutCardOffset={40}
             />
           </View>
@@ -359,7 +364,9 @@ class AuthScreen extends Component {
     }
   }
 
-  _onBlur() {}
+  _onBlur(item) {
+    console.log('blur', item.name);
+  }
 
   _onInputPinComplete(code) {
     const { localAuth } = this.props;
@@ -399,15 +406,10 @@ class AuthScreen extends Component {
   };
 
   renderInput(item, index) {
-    const {
-      // detailState,
-      authError,
-      companies,
-      terms,
-      termsChecked,
-      auth,
-    } = this.props;
-    // console.log(item, index);
+    const { authError, companies, terms, termsChecked, auth } = this.props;
+    console.log(item, index);
+    console.log(auth);
+    const { authInputs } = auth;
     const detailState = item.name;
 
     const { authFieldChange, nextAuthFormState } = this.props;
@@ -420,10 +422,21 @@ class AuthScreen extends Component {
     let onPressListItem = () => {};
     let returnKeyType = 'next';
     let onSubmitEditing = () => {
-      this.password.focus();
+      if (authInputs.length > index) {
+        this[authInputs[index + 1].name].focus();
+      } else {
+        // send next state
+      }
     };
     let keyboardType = 'default';
     let autoCapitalize = 'none';
+    let onFocus = () =>
+      this._carousel.snapToItem(
+        index,
+        (animated = true),
+        (fireCallback = true),
+      );
+    let onBlur = () => this._onBlur(item);
 
     const label = standardizeString(detailState);
     const value = auth[detailState].data;
@@ -499,6 +512,8 @@ class AuthScreen extends Component {
         onChangeText={onChangeText}
         returnKeyType={returnKeyType}
         onSubmitEditing={onSubmitEditing}
+        onFocus={onFocus}
+        onBlur={onBlur}
       />
     );
   }

@@ -28,6 +28,7 @@ class _Input extends Component {
     this.setState({
       focused: true,
     });
+    this.props.onFocus();
   }
 
   togglePasswordVisibility = () => {
