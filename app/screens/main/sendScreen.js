@@ -317,7 +317,7 @@ class SendScreen extends Component {
               prop: 'transactionCurrency',
               value: currency,
             });
-            // validateTransaction('send');
+            validateTransaction('send');
           }}
         />
         <View style={{ flex: 1 }}>

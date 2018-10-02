@@ -8,16 +8,8 @@ import { ListItem, ListSeparator } from './common';
 import Picker from 'react-native-picker-select';
 
 class _CurrencySelector extends Component {
-  componentDidMount() {
-    console.log('_picker', this._picker);
-    const picker = this.picker;
-    this._picker.setInputRef(picker);
-    console.log('picker', this.picker);
-    // console.log('picker', this.picker);
-  }
   renderOutput() {
-    const { currency, currencies, updateCurrency } = this.props;
-    console.log(currency);
+    const { currency, currencies } = this.props;
 
     const {
       viewStyleContent,
@@ -27,7 +19,7 @@ class _CurrencySelector extends Component {
       textStyleValue,
     } = styles;
 
-    const text = currency ? currency.currency.code : '';
+    const text = currency && currency.currency ? currency.currency.code : '';
 
     const items = currencies.data.map(item => {
       return {
@@ -42,47 +34,51 @@ class _CurrencySelector extends Component {
         value: item.currency.code,
       };
     });
-    console.log(text.length);
+
     return (
-      <View style={viewStyleContent}>
-        <View style={{ flex: 1 }}>
-          {/* {currency.account ? (
+      <Picker
+        value={text}
+        placeholder={{}}
+        items={items}
+        onValueChange={value => this._updateCurrency(value)}
+        // style={pickerStyle}
+        hideIcon
+        ref={p => (this._picker = p)}
+        // mode={'dropdown'}
+        // animate
+      >
+        <View style={viewStyleContent}>
+          <View style={{ flex: 1 }}>
+            {/* {currency.account ? (
             <View style={viewStyleLabel}>
               <Text style={[textStyleLabel]}>{label}</Text>
             </View>
           ) : null} */}
-          <View style={viewStyleValue}>
-            <Text
-              style={[
-                _textStyleCode,
-                {
-                  fontSize:
-                    text.length <= 3
-                      ? 24
-                      : text.length == 4 ? 17 : text.length == 5 ? 18 : 17,
-                },
-              ]}>
-              {text}
-            </Text>
+            <View style={viewStyleValue}>
+              <Text
+                style={[
+                  _textStyleCode,
+                  {
+                    fontSize:
+                      text.length <= 3
+                        ? 20
+                        : text.length == 4
+                          ? 16
+                          : text.length == 5 ? 18 : text.length == 6 ? 17 : 16,
+                  },
+                ]}>
+                {text}
+              </Text>
+            </View>
           </View>
+          <Icon
+            name="chevron-down"
+            size={20}
+            color={'black'}
+            style={{ opacity: 0.8, paddingTop: 4 }}
+          />
         </View>
-        <Icon
-          name="chevron-down"
-          size={20}
-          color={'black'}
-          style={{ opacity: 0.8, paddingTop: 4 }}
-        />
-
-        <Picker
-          value={currency}
-          placeholder={{}}
-          items={items}
-          onValueChange={value => this._updateCurrency(value)}
-          style={{ ...styles }}
-          hideIcon
-          ref={p => (this._picker = p)}
-        />
-      </View>
+      </Picker>
     );
   }
 
@@ -91,16 +87,13 @@ class _CurrencySelector extends Component {
     currencies = currencies.data.filter(
       item => item.currency.code === currency,
     );
-    console.log(currency, currencies);
     this.props.updateCurrency(currencies[0]);
   }
 
   render() {
-    const { colors, currencies, currency } = this.props;
+    const { colors } = this.props;
 
     const { viewStyleContainer } = styles;
-    const focused = true;
-
     return (
       <View style={{ flexDirection: 'column' }}>
         <View
@@ -108,56 +101,14 @@ class _CurrencySelector extends Component {
             viewStyleContainer,
             {
               backgroundColor: colors.primaryContrast,
-              borderColor: focused ? colors.focus : 'lightgrey',
+              borderColor:
+                // this._picker && this._picker.state.showPicker
+                //   ? colors.focus
+                'lightgrey',
             },
           ]}>
-          <TouchableHighlight
-            underlayColor={'white'}
-            activeOpacity={0.2}
-            onPress={() => this._picker.togglePicker()}>
-            {this.renderOutput()}
-          </TouchableHighlight>
+          {this.renderOutput()}
         </View>
-        {/* {focused ? (
-          <FlatList
-            // refreshControl={
-            //   <RefreshControl
-            //     refreshing={loadingData}
-            //     onRefresh={() => fetchData(type)}
-            //   />string.indexOf(substring) !== -1
-            // }
-            keyboardShouldPersistTaps="handled"
-            style={{
-              backgroundColor: colors.primaryContrast,
-              maxHeight: 150,
-              borderBottomLeftRadius: 5,
-              borderBottomRightRadius: 5,
-              overflow: 'hidden',
-            }}
-            contentContainerStyle={{
-              borderBottomLeftRadius: 5,
-              borderBottomRightRadius: 5,
-              // overflow: 'hidden',
-            }}
-            // data={data.filter(item => item[title] === value)}
-            data={currencies}
-            renderItem={({ item }) => (
-              <ListItem
-                noImage
-                // onPress={() => onPressListItem(item)}
-                title={'sup'} //item.currency.code}
-                subtitle={
-                  'hello'
-                  //
-                }
-                // image={item.image ? item.image : null}
-              />
-            )}
-            // keyExtractor={item => item.currency.code.toString()}
-            ItemSeparatorComponent={ListSeparator}
-            // ListEmptyComponent={<ListItem title="No data" />}
-          />
-        ) : null} */}
       </View>
     );
   }
@@ -167,10 +118,9 @@ const styles = {
   viewStyleContainer: {
     flexDirection: 'column',
     borderBottomWidth: 0,
-    // flexWrap: 'wrap',
     margin: 8,
     width: 100,
-    height: 58,
+    height: 61,
     borderTopRightRadius: 5,
     borderTopLeftRadius: 5,
     overflow: 'hidden',
@@ -191,7 +141,7 @@ const styles = {
   viewStyleValue: {
     flexDirection: 'row',
     // paddingRight: 8,
-    marginHorizontal: 8,
+    marginHorizontal: 6,
   },
   textStyleLabel: {
     fontSize: 12,
@@ -206,13 +156,6 @@ const styles = {
     textAlign: 'center',
     opacity: 0.8,
     // marginRight: 8,
-  },
-  inputIOS: {
-    fontSize: 16,
-    width: 0,
-    // padding: 8,
-    // backgroundColor: 'white',
-    color: 'black',
   },
 };
 

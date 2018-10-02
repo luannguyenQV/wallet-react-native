@@ -358,7 +358,7 @@ _Input.defaultProps = {
 
 const styles = {
   viewStyleContainer: {
-    minHeight: 57,
+    minHeight: 60,
     borderTopRightRadius: 5,
     borderTopLeftRadius: 5,
     overflow: 'hidden',
@@ -366,7 +366,7 @@ const styles = {
   },
   viewStyleContent: {
     paddingHorizontal: 12,
-    minHeight: 57,
+    minHeight: 60,
     justifyContent: 'center',
   },
   viewStylePopUp: {
