@@ -205,7 +205,6 @@ class _Input extends Component {
         <View
           style={[
             viewStyleContainer,
-
             {
               backgroundColor: colors.primaryContrast,
             },
