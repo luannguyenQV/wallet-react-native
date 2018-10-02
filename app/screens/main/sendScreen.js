@@ -311,6 +311,14 @@ class SendScreen extends Component {
         <CurrencySelector
           currency={transaction.currency}
           currencies={currencies}
+          updateCurrency={currency => {
+            console.log('updating', currency);
+            updateAccountField({
+              prop: 'transactionCurrency',
+              value: currency,
+            });
+            // validateTransaction('send');
+          }}
         />
         <View style={{ flex: 1 }}>
           <Input

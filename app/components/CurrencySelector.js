@@ -16,7 +16,7 @@ class _CurrencySelector extends Component {
     // console.log('picker', this.picker);
   }
   renderOutput() {
-    const { currency, currencies } = this.props;
+    const { currency, currencies, updateCurrency } = this.props;
     console.log(currency);
 
     const {
@@ -77,40 +77,23 @@ class _CurrencySelector extends Component {
           value={currency}
           placeholder={{}}
           items={items}
-          onValueChange={value => {
-            console.log(value);
-            // this.props.changeTheme(value);
-          }}
+          onValueChange={value => this._updateCurrency(value)}
           style={{ ...styles }}
           hideIcon
           ref={p => (this._picker = p)}
-          // underline={{
-          //   borderTopWidth: 0,
-          //   height: 0,
-          // }}
-          // ref={el => {
-          //   this.inputRefs.picker = el;
-          // }}
         />
       </View>
     );
   }
 
-  // renderPickerItems() {
-  //   return this.props.currencies.map(item => {
-  //     console.log(item);
-  //     return (
-  //       <Picker.Item
-  //         label={item.currency.code}
-  //         value={
-  //
-  //         }
-  //         key={item.currency.code || item.label}
-  //         // color={item.color}
-  //       />
-  //     );
-  //   });
-  // }
+  _updateCurrency(currency) {
+    let { currencies } = this.props;
+    currencies = currencies.data.filter(
+      item => item.currency.code === currency,
+    );
+    console.log(currency, currencies);
+    this.props.updateCurrency(currencies[0]);
+  }
 
   render() {
     const { colors, currencies, currency } = this.props;
