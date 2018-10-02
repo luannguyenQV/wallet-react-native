@@ -24,6 +24,7 @@ class QRCodeScannerScreen extends Component {
   _handleBarCodeRead = raw => {
     const data = decodeQR(raw.data);
     let { currencies } = this.props;
+    console.log(data);
     const { account, currency, amount, recipient, note, type, memo } = data;
 
     currencies = currencies.data.filter(
