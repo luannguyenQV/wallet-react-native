@@ -28,6 +28,13 @@ export const validatePassword = password => {
   return '';
 };
 
+export const validateGeneral = input => {
+  if (!input || input.length < 0) {
+    return 'Cannot be blank';
+  }
+  return '';
+};
+
 export const validateMobile = mobile => {
   const phoneUtil = PhoneNumberUtil.getInstance();
   // if number does not contain +27 TODO:

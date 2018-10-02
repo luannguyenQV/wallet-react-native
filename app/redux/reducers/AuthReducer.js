@@ -35,6 +35,7 @@ import {
   SHOW_PIN,
   HIDE_PIN,
   INIT_INPUTS,
+  VALIDATE_INPUT,
 } from '../actions/AuthActions';
 import { HIDE_MODAL } from '../actions/UserActions';
 import { SET_TRANSACTION_TYPE } from '../actions';
@@ -51,7 +52,7 @@ const INITIAL_STATE = {
   // countryName: 'US',
   // countryCode: '+1',
   // lineNumber: null,
-  company: '',
+  company: 'test_company_1',
   companyError: '',
   companies: [],
   password: '',
@@ -121,7 +122,7 @@ export default (state = INITIAL_STATE, action) => {
         [action.payload.prop + 'Error']: '',
         authError: '',
       };
-    case AUTH_FIELD_ERROR:
+    case VALIDATE_INPUT.success:
       return {
         ...state,
         [action.payload.prop + 'Error']: action.payload.error,
@@ -225,16 +226,22 @@ export default (state = INITIAL_STATE, action) => {
     case RESET_AUTH:
       return {
         ...state,
-        authError: '',
-        password: '',
         mainState: 'landing',
         detailState: '',
         modalVisible: false,
         loading: false,
         appLoading: false,
         skip: false,
+        password: '',
         old_password: '',
         new_password: '',
+        passwordError: '',
+        companyError: '',
+        emailError: '',
+        mobileError: '',
+        usernameError: '',
+        first_nameError: '',
+        last_nameError: '',
       };
     case AUTH_COMPLETE:
       return {
@@ -426,6 +433,12 @@ export const authSelector = createSelector(
       helperText: '',
       required: companyConfig.auth.last_name,
     };
+    // for (let i = 0; i < terms.length; i++) {
+    //   authInputs.push({
+    //     id: index++,
+    //     name: 'terms' + i.toString(),
+    //     terms: terms[i],
+    //   });
     return {
       company,
       email,

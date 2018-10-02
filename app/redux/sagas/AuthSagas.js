@@ -64,6 +64,7 @@ import {
   validateEmail,
   validateMobile,
   validatePassword,
+  validateGeneral,
 } from '../../util/validation';
 import client from './../../config/client';
 import {
@@ -387,31 +388,45 @@ function* inputFlow(action) {
     const nextFormState = action.payload;
     let index = 0;
     let authInputs = [];
+    const {
+      identifier,
+      username,
+      first_name,
+      last_name,
+      terms,
+    } = company_config.auth;
     authInputs.push({
       id: index++,
-      name: company_config.auth.identifier
-        ? company_config.auth.identifier
-        : 'email',
+      name: identifier ? identifier : 'email',
     });
     if (nextFormState === 'register') {
-      if (company_config.auth.username) {
+      if (username) {
         authInputs.push({
           id: index++,
           name: 'username',
         });
       }
-      if (company_config.auth.first_name) {
+      if (first_name) {
         authInputs.push({
           id: index++,
           name: 'first_name',
         });
       }
-      if (company_config.auth.last_name) {
+      if (last_name) {
         authInputs.push({
           id: index++,
           name: 'last_name',
         });
       }
+      // if (terms) {
+      //   for (let i = 0; i < terms.length; i++) {
+      //     authInputs.push({
+      //       id: index++,
+      //       name: 'terms' + i.toString(),
+      //       terms: terms[i],
+      //     });
+      //   }
+      // }
     }
     authInputs.push({
       id: index++,
@@ -992,6 +1007,39 @@ function* verifyMFA() {
   }
 }
 
+function* validateInput(action) {
+  try {
+    const { prop, value } = action.payload;
+
+    let error = '';
+    switch (prop) {
+      case 'company':
+        if (!value) {
+          error = 'Please enter a company ID';
+        }
+        break;
+      case 'email':
+        error = validateEmail(value);
+        break;
+      case 'mobile':
+        error = validateMobile(value);
+        break;
+      case 'password':
+        error = validatePassword(value);
+        break;
+      default:
+        error = validateGeneral(value);
+    }
+
+    console.log('validation', error);
+    yield put({ type: VALIDATE_INPUT.success, payload: { prop, error } });
+    yield call(NavigationService.goBack);
+  } catch (error) {
+    console.log('validation', error);
+    yield put({ type: VALIDATE_INPUT.error, payload: error.message });
+  }
+}
+
 export const authSagas = all([
   takeLatest(INIT.pending, init),
   takeLatest(INIT.success, authFlow),
@@ -1005,4 +1053,5 @@ export const authSagas = all([
   takeEvery(LOGOUT_USER_ASYNC.pending, logoutUser),
   takeLatest(RESET_PASSWORD_ASYNC.pending, resetPassword),
   takeLatest(INIT_INPUTS.pending, inputFlow),
+  takeEvery(VALIDATE_INPUT.pending, validateInput),
 ]);

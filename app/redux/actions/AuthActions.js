@@ -88,6 +88,13 @@ export const previousAuthFormState = props => {
     },
   };
 };
+export const validateInput = (prop, value) => {
+  console.log(prop, value);
+  return {
+    type: VALIDATE_INPUT.pending,
+    payload: { prop, value },
+  };
+};
 
 export const CHANGE_PASSWORD_ASYNC = createAsyncTypes('change_password');
 export const changePassword = (old_password, new_password) => {

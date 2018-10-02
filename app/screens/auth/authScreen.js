@@ -27,8 +27,9 @@ import {
   verifyMFA,
   toggleTerms,
   logoutUser,
+  validateInput,
 } from '../../redux/actions';
-import Carousel from 'react-native-snap-carousel';
+import Carousel, { Pagination } from 'react-native-snap-carousel';
 
 import { colorSelector } from './../../redux/reducers/ConfigReducer';
 import {
@@ -140,14 +141,7 @@ class AuthScreen extends Component {
   }
 
   renderContent() {
-    const {
-      viewStyleInput,
-      buttonsContainer,
-      viewStyleLanding,
-      imageContainer,
-      image,
-      textStyle,
-    } = styles;
+    const { viewStyleInput, buttonsContainer, imageContainer, image } = styles;
     const {
       mainState,
       detailState,
@@ -158,6 +152,8 @@ class AuthScreen extends Component {
       email,
       user,
       authInputs,
+      auth,
+      colors,
     } = this.props;
 
     const slides = company_config ? company_config.sliders.landing : null;
@@ -330,41 +326,58 @@ class AuthScreen extends Component {
       default:
         // console.log(authInputs);
         return (
-          <View style={[viewStyleInput, { padding: 0 }]}>
+          <View style={viewStyleInput}>
+            <Pagination
+              dotsLength={auth.authInputs.length}
+              activeDotIndex={1}
+              // containerStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.75)' }}
+              dotStyle={{
+                width: 10,
+                height: 10,
+                borderRadius: 5,
+                marginHorizontal: 8,
+                backgroundColor: colors.authScreenContrast,
+              }}
+              // inactiveDotStyle={
+              //   {
+              //     // Define styles for inactive dots here
+              //   }
+              // }
+              inactiveDotOpacity={0.6}
+              inactiveDotScale={0.7}
+              // tappableDots={true}
+              // carouselRef={this._carousel}
+            />
             <Carousel
               ref={c => {
                 this._carousel = c;
               }}
               data={authInputs}
               renderItem={({ item, index }) => this.renderInput(item, index)}
-              sliderHeight={200}
-              itemHeight={80}
-              sliderWidth={SCREEN_WIDTH}
-              itemWidth={SCREEN_WIDTH - 64}
+              sliderHeight={260}
+              itemHeight={95}
+              // sliderWidth={SCREEN_WIDTH - 32}
+              // itemWidth={SCREEN_WIDTH - 64}
               vertical
               activeSlideAlignment={'center'}
-              inactiveSlideOpacity={0.5}
+              inactiveSlideOpacity={0.9}
               inactiveSlideScale={0.7}
               onSnapToItem={slideIndex =>
                 this[authInputs[slideIndex].name].focus()
               }
-              // layoutCardOffset={40}
+              // useScrollView
+              keyboardShouldPersistTaps={'always'}
+              layoutCardOffset={20}
+              removeClippedSubviews={Platform.OS != 'ios'}
+              // removeClippedSubviews={false}
             />
           </View>
         );
-      // return (
-      //   <FlatList
-      //     contentContainerStyle={viewStyleInput}
-      //     data={authInputs}
-      //     renderItem={({ item, index }) => this.renderInput(item, index)}
-      //     keyExtractor={item => item.id.toString()}
-      //     // ListEmptyComponent={this.renderEmptyList()}
-      //   />
-      // );
     }
   }
 
   _onBlur(item) {
+    this.props.validateInput(item.name, this.props.auth[item.name].data);
     console.log('blur', item.name);
   }
 
@@ -407,8 +420,8 @@ class AuthScreen extends Component {
 
   renderInput(item, index) {
     const { authError, companies, terms, termsChecked, auth } = this.props;
-    console.log(item, index);
-    console.log(auth);
+    // console.log(item, index);
+    // console.log(auth);
     const { authInputs } = auth;
     const detailState = item.name;
 
@@ -422,24 +435,30 @@ class AuthScreen extends Component {
     let onPressListItem = () => {};
     let returnKeyType = 'next';
     let onSubmitEditing = () => {
-      if (authInputs.length > index) {
+      if (authInputs.length > index + 1 && detailState !== 'company') {
         this[authInputs[index + 1].name].focus();
       } else {
+        nextAuthFormState('');
         // send next state
       }
     };
     let keyboardType = 'default';
     let autoCapitalize = 'none';
-    let onFocus = () =>
-      this._carousel.snapToItem(
-        index,
-        (animated = true),
-        (fireCallback = true),
-      );
+    let onFocus = () => {
+      if (detailState !== 'company') {
+        // this.props.setAuthIndex(index)
+        this._carousel.snapToItem(
+          index,
+          (animated = true),
+          (fireCallback = true),
+        );
+      }
+    };
     let onBlur = () => this._onBlur(item);
 
     const label = standardizeString(detailState);
     const value = auth[detailState].data;
+    const inputError = auth[detailState].error;
     // const onBlur = this.props.validate(detailState);
 
     switch (detailState) {
@@ -481,17 +500,18 @@ class AuthScreen extends Component {
       case 'country':
         placeholder = 'Password';
         break;
-      case 'terms':
-        return (
-          <Checkbox
-            link={terms.link}
-            description={terms.description}
-            title={terms.title}
-            toggleCheck={() => this.props.toggleTerms()}
-            value={termsChecked}
-            error={authError}
-          />
-        );
+    }
+    if (detailState.includes('terms')) {
+      return (
+        <Checkbox
+          link={item.terms.link}
+          description={item.terms.description}
+          title={item.terms.title}
+          // toggleCheck={() => this.props.toggleTerms()}
+          // value={termsChecked}
+          // error={authError}
+        />
+      );
     }
     return (
       <Input
@@ -504,7 +524,7 @@ class AuthScreen extends Component {
         placeholder={placeholder}
         label={label}
         value={value}
-        inputError={authError}
+        inputError={inputError}
         popUp
         onPressListItem={onPressListItem}
         autoCapitalize={autoCapitalize}
@@ -689,6 +709,7 @@ export default connect(mapStateToProps, {
   verifyMFA,
   toggleTerms,
   logoutUser,
+  validateInput,
 })(AuthScreen);
 
 //727
