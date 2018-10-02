@@ -31,6 +31,7 @@ import {
   FullScreenForm,
   Output,
   Button,
+  ButtonList,
 } from './../../components/common';
 import Header from './../../components/header';
 import LocalAuthentication from '../../components/LocalAuthentication';
@@ -76,7 +77,6 @@ class SendScreen extends Component {
     updateAccountField({ prop: 'transactionNote', value: note });
 
     if (currency && recipient && amount) {
-      console.log('hi');
       setTransactionState('confirm');
     } else {
       validateTransaction('send');
@@ -124,7 +124,7 @@ class SendScreen extends Component {
   }
 
   renderTop() {
-    const { transaction } = this.props;
+    const { transaction, company_config, setTransactionState } = this.props;
 
     const {
       viewStyleTopContainer,
@@ -172,6 +172,23 @@ class SendScreen extends Component {
               ) : null}
             </View>
           </TouchableHighlight>
+        ) : null}
+        {transaction.state === 'confirm' ? (
+          <ButtonList containerStyle={{ padding: 8 }}>
+            <Button
+              label="CONFIRM"
+              onPress={() =>
+                company_config.pin.send
+                  ? this.props.showPin()
+                  : this.performSend()
+              }
+            />
+            <Button
+              type="text"
+              label="CANCEL"
+              onPress={() => setTransactionState('')}
+            />
+          </ButtonList>
         ) : null}
         {transaction.state === 'fail' ? (
           <View style={viewStyleError}>
@@ -388,29 +405,15 @@ class SendScreen extends Component {
       pinVisible,
       hidePin,
       transaction,
-      company_config,
       contacts,
     } = this.props;
     let onPressHeader = () => this.props.validateTransaction('confirm');
     let textHeader =
-      transaction.amount && (transaction.recipient || contacts.search)
+      !transaction.state &&
+      transaction.amount &&
+      (transaction.recipient || contacts.search)
         ? 'Next'
         : '';
-    switch (transaction.state) {
-      case 'confirm':
-        textHeader = 'Confirm';
-        onPressHeader = () => {
-          if (company_config.pin.send) {
-            this.props.showPin();
-          } else {
-            this.performSend();
-          }
-        };
-        break;
-      case 'fail':
-      case 'success':
-        textHeader = '';
-    }
 
     return (
       <View style={{ flex: 1 }}>
