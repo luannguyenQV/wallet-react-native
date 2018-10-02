@@ -17,29 +17,31 @@ class ListItem extends Component {
       textStyleTitle,
       textStyleSubtitle,
     } = styles;
-    const { image, title, subtitle, onPress } = this.props;
+    const { image, title, subtitle, onPress, noImage } = this.props;
     console.log('title', title);
     return (
       <TouchableHighlight
         underlayColor={'white'}
         onPress={item => onPress(item)}>
         <View style={viewStyleContainer}>
-          <View style={viewStyleImage}>
-            {image ? (
-              <Image
-                style={{ height: 32, width: 32, borderRadius: 16 }}
-                source={{
-                  uri: image,
-                  cache: 'only-if-cached',
-                }}
-              />
-            ) : (
-              <Image
-                source={require('./../../../assets/icons/profile.png')}
-                style={{ height: 32, width: 32 }}
-              />
-            )}
-          </View>
+          {!noImage ? (
+            <View style={viewStyleImage}>
+              {image ? (
+                <Image
+                  style={{ height: 32, width: 32, borderRadius: 16 }}
+                  source={{
+                    uri: image,
+                    cache: 'only-if-cached',
+                  }}
+                />
+              ) : (
+                <Image
+                  source={require('./../../../assets/icons/profile.png')}
+                  style={{ height: 32, width: 32 }}
+                />
+              )}
+            </View>
+          ) : null}
           <View style={viewStyleTitle}>
             <Text style={textStyleTitle}>{title ? title : subtitle}</Text>
             {subtitle ? (
@@ -57,6 +59,7 @@ ListItem.propTypes = {
   title: PropTypes.string, // Animation type
   subtitle: PropTypes.string, // Animation type
   onPress: PropTypes.func, // Function to execute on press
+  noImage: PropTypes.bool,
 };
 
 ListItem.defaultProps = {
@@ -64,6 +67,7 @@ ListItem.defaultProps = {
   title: '',
   subtitle: '',
   onPress: () => {},
+  noImage: false,
 };
 
 const ListSeparator = () => (

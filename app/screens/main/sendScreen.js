@@ -300,10 +300,18 @@ class SendScreen extends Component {
   }
 
   renderAmount() {
-    const { transaction, updateAccountField, validateTransaction } = this.props;
+    const {
+      transaction,
+      updateAccountField,
+      validateTransaction,
+      currencies,
+    } = this.props;
     return (
       <View style={{ flexDirection: 'row' }}>
-        <CurrencySelector currency={transaction.currency} />
+        <CurrencySelector
+          currency={transaction.currency}
+          currencies={currencies}
+        />
         <View style={{ flex: 1 }}>
           <Input
             key="amount"

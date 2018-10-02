@@ -221,10 +221,7 @@ class SettingsScreen extends Component {
     return (
       <Picker
         value={this.props.theme}
-        // placeholder={{
-        //   label: this.props.theme,
-        //   value: this.props.theme,
-        // }}
+        placeholder={{}}
         items={themes}
         onValueChange={value => {
           this.props.changeTheme(value);
@@ -239,15 +236,6 @@ class SettingsScreen extends Component {
         //   this.inputRefs.picker = el;
         // }}
       />
-      // <Picker
-      //   selectedValue={this.props.theme}
-      //   style={{ height: 50, width: 100 }}
-      //   onValueChange={(itemValue, itemIndex) =>
-      //     this.props.changeTheme(itemValue)
-      //   }>
-      //   <Picker.Item label="Default" value="default" />
-      //   <Picker.Item label="Light" value="light" />
-      // </Picker>
     );
   }
 
