@@ -25,7 +25,9 @@ class _CurrencySelector extends Component {
       return {
         label:
           item.currency.code +
-          ': ' +
+          (currencies.multipleAccounts
+            ? ' (' + item.account_name + '): '
+            : ': ') +
           item.currency.symbol +
           performDivisibility(
             item.available_balance,
