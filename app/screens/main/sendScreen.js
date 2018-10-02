@@ -312,7 +312,6 @@ class SendScreen extends Component {
           currency={transaction.currency}
           currencies={currencies}
           updateCurrency={currency => {
-            console.log('updating', currency);
             updateAccountField({
               prop: 'transactionCurrency',
               value: currency,

@@ -28,6 +28,7 @@ import {
   currenciesSelector,
   receiveSelector,
 } from './../../redux/reducers/AccountsReducer';
+import { CurrencySelector } from '../../components/CurrencySelector';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -73,7 +74,12 @@ class ReceiveScreen extends Component {
   }
 
   renderContent() {
-    const { receive, updateAccountField, setReceiveType } = this.props;
+    const {
+      receive,
+      updateAccountField,
+      setReceiveType,
+      currencies,
+    } = this.props;
     return (
       <View style={{ flex: 1 }}>
         <Output label={''} value={receive.value} copy />
@@ -199,11 +205,26 @@ class ReceiveScreen extends Component {
           checked={receive.noteSelected}
         />
         {receive.currency ? (
-          <Checkbox
-            title={'Currency: ' + receive.currency.currency.code}
-            toggleCheck={() => this.props.toggleAccountField('receiveCurrency')}
-            value={receive.currencySelected}
-          />
+          <View style={{ flexDirection: 'row' }}>
+            <Checkbox
+              // title={'Currency: ' + receive.currency.currency.code}
+              toggleCheck={() =>
+                this.props.toggleAccountField('receiveCurrency')
+              }
+              value={receive.currencySelected}
+            />
+
+            <CurrencySelector
+              currency={receive.currency}
+              currencies={currencies}
+              updateCurrency={currency => {
+                updateAccountField({
+                  prop: 'receiveCurrency',
+                  value: currency,
+                });
+              }}
+            />
+          </View>
         ) : null}
       </View>
     );

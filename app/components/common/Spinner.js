@@ -30,7 +30,7 @@ const _Spinner = ({
             height: size === 'large' ? 150 : 50,
             width: size === 'large' ? 150 : 50,
           }}
-          source={require('./../../../assets/icons/rehive_spinner_150.gif')}
+          source={require('./../../../assets/icons/rehive_spinner.gif')}
         />
       ) : (
         <ActivityIndicator
