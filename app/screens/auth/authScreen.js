@@ -134,7 +134,7 @@ class AuthScreen extends Component {
         // loading={loading}
         color="primary"
         type="auth">
-        {this.renderContent()}
+        <View style={styles.viewStyleLanding}>{this.renderContent()}</View>
       </FullScreenForm>
     );
   }
@@ -165,7 +165,7 @@ class AuthScreen extends Component {
     switch (mainState) {
       case 'landing':
         return (
-          <View style={viewStyleLanding}>
+          <View style={{ width: '100%' }}>
             <Animatable.View style={imageContainer} animation="zoomInRight">
               {slides && slides.length > 0 ? (
                 <Slides data={slides} height={200} width={SCREEN_WIDTH} />
@@ -204,7 +204,7 @@ class AuthScreen extends Component {
         );
       case 'forgot':
         return (
-          <View style={viewStyleLanding}>
+          <View>
             <Text color="authScreenContrast">
               Please enter your account email, mobile or username
             </Text>
@@ -213,11 +213,13 @@ class AuthScreen extends Component {
         );
       case 'mfa':
         return (
-          <MultiFactorAuthentication
-            authScreen
-            verifyMFA={this.props.verifyMFA}
-            type={detailState}
-          />
+          <View style={viewStyleInput}>
+            <MultiFactorAuthentication
+              authScreen
+              verifyMFA={this.props.verifyMFA}
+              type={detailState}
+            />
+          </View>
         );
       case 'pin':
         switch (detailState) {
@@ -238,7 +240,7 @@ class AuthScreen extends Component {
           case 'set_pin':
           case 'confirm_pin':
             return (
-              <View style={viewStyleLanding}>
+              <View style={viewStyleInput}>
                 <Text color="authScreenContrast">
                   {detailState === 'set_pin'
                     ? 'Please enter pin'
@@ -264,28 +266,26 @@ class AuthScreen extends Component {
 
           case 'set_fingerprint':
             return (
-              <View style={viewStyleLanding}>
-                <View style={buttonsContainer}>
-                  <Button
-                    label="USE FINGERPRINT"
-                    color="secondary"
-                    reference={input => {
-                      this.login = input;
-                    }}
-                    onPress={() => this._activateFingerprint()}
-                    animation="slideInRight"
-                  />
-                  <Button
-                    label="USE PIN"
-                    color="primary"
-                    type="text"
-                    reference={input => {
-                      this.login = input;
-                    }}
-                    onPress={() => nextAuthFormState('pin')}
-                    animation="slideInRight"
-                  />
-                </View>
+              <View style={buttonsContainer}>
+                <Button
+                  label="USE FINGERPRINT"
+                  color="secondary"
+                  reference={input => {
+                    this.login = input;
+                  }}
+                  onPress={() => this._activateFingerprint()}
+                  animation="slideInRight"
+                />
+                <Button
+                  label="USE PIN"
+                  color="primary"
+                  type="text"
+                  reference={input => {
+                    this.login = input;
+                  }}
+                  onPress={() => nextAuthFormState('pin')}
+                  animation="slideInRight"
+                />
               </View>
             );
         }
@@ -293,12 +293,13 @@ class AuthScreen extends Component {
         switch (detailState) {
           case 'email':
             return (
-              <View style={viewStyleLanding}>
-                <Text color="authScreenContrast">
-                  Please verify your email by following the instructions sent to{' '}
-                  {email}
-                </Text>
-                {/* <Button
+              <Text color="authScreenContrast">
+                Please verify your email by following the instructions sent to{' '}
+                {email}
+              </Text>
+            );
+            {
+              /* <Button
                 label="Open email app"
                 textColor={company_config.colors.secondaryContrast}
                 backgroundColor={company_config.colors.secondary}
@@ -306,8 +307,10 @@ class AuthScreen extends Component {
                 reference={input => { this.login = input; }}
                 onPress={() => nextAuthFormState('login')}
                 animation="fadeInUpBig"
-              /> */}
-                {/* <Button
+              /> */
+            }
+            {
+              /* <Button
                   label="Resend email"
                   textColor={company_config.colors.primaryContrast}
                   backgroundColor="transparent"
@@ -315,9 +318,8 @@ class AuthScreen extends Component {
                   reference={input => { this.login = input; }}
                   onPress={() => nextAuthFormState('register')}
                   animation="fadeInUpBig"
-                /> */}
-              </View>
-            );
+                /> */
+            }
         }
       case 'company':
         return (
@@ -418,8 +420,6 @@ class AuthScreen extends Component {
     let onPressListItem = () => {};
     let returnKeyType = 'next';
     let onSubmitEditing = () => {
-      console.log('hi');
-      // nextAuthFormState('');
       this.password.focus();
     };
     let keyboardType = 'default';
