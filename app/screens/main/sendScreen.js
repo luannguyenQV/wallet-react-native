@@ -36,6 +36,7 @@ import {
 } from './../../components/common';
 import Header from './../../components/header';
 import LocalAuthentication from '../../components/LocalAuthentication';
+import { CurrencySelector } from '../../components/CurrencySelector';
 
 class SendScreen extends Component {
   static navigationOptions = () => ({
@@ -320,38 +321,61 @@ class SendScreen extends Component {
   }
 
   renderAmount() {
-    const { transaction, updateAccountField, validateTransaction } = this.props;
+    const {
+      transaction,
+      updateAccountField,
+      validateTransaction,
+      currencies,
+    } = this.props;
+    console.log(transaction);
     return (
-      <Input
-        key="amount"
-        placeholder="e.g. 10"
-        label={
-          'Amount' +
-          (transaction && transaction.currency && transaction.currency.currency
-            ? ' [' + transaction.currency.currency.symbol + ']'
-            : '')
-        }
-        // prefix={transaction.currency.currency.symbol}
-        inputError={transaction.amountError}
-        reference={input => {
-          this.amountInput = input;
-        }}
-        keyboardType={Platform.OS === 'ios' ? 'decimal-pad' : 'phone-pad'}
-        value={transaction.amount}
-        onChangeText={value =>
-          updateAccountField({ prop: 'transactionAmount', value })
-        }
-        returnKeyType="next"
-        autoFocus
-        onSubmitEditing={() => {
-          // validateTransaction();
-          this.recipientInput.focus();
-        }}
-        onBlur={() => validateTransaction()}
-        type={'money'}
-        // precision={transaction.currency.currency.divisibility}
-        // unit={transaction.currency.currency.symbol + ' '}
-      />
+      <View style={{ flexDirection: 'row' }}>
+        <CurrencySelector
+          currency={transaction.currency}
+          currencies={currencies}
+          updateCurrency={currency => {
+            updateAccountField({
+              prop: 'transactionCurrency',
+              value: currency,
+            });
+            // validateTransaction('send');
+          }}
+        />
+        <View style={{ flex: 1 }}>
+          <Input
+            key="amount"
+            placeholder="e.g. 10"
+            label={
+              'Amount' +
+              (transaction &&
+              transaction.currency &&
+              transaction.currency.currency
+                ? ' [' + transaction.currency.currency.symbol + ']'
+                : '')
+            }
+            // prefix={transaction.currency.currency.symbol}
+            inputError={transaction.amountError}
+            reference={input => {
+              this.amountInput = input;
+            }}
+            keyboardType={Platform.OS === 'ios' ? 'decimal-pad' : 'phone-pad'}
+            value={transaction.amount}
+            onChangeText={value =>
+              updateAccountField({ prop: 'transactionAmount', value })
+            }
+            returnKeyType="next"
+            autoFocus
+            onSubmitEditing={() => {
+              // validateTransaction();
+              this.recipientInput.focus();
+            }}
+            onBlur={() => validateTransaction()}
+            type={'money'}
+            // precision={transaction.currency.currency.divisibility}
+            // unit={transaction.currency.currency.symbol + ' '}
+          />
+        </View>
+      </View>
     );
   }
 

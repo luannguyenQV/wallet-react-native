@@ -326,6 +326,7 @@ export const currenciesSelector = createSelector(
     for (i = 0; i < accounts.length; i++) {
       tempCurrencies = accounts[i].currencies.map(currency => {
         currency.account = accounts[i].reference;
+        currency.account_name = accounts[i].name;
         const currencyCode = currency.currency.code;
         if (cryptoState.stellar.currencies.indexOf(currencyCode) !== -1) {
           currency.crypto = 'stellar';
@@ -362,6 +363,7 @@ export const currenciesSelector = createSelector(
 
     return {
       data: currencies,
+      multipleAccounts: accounts.length > 1,
       loading,
       error,
     };
