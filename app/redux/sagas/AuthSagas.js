@@ -664,7 +664,7 @@ function* appLoad() {
     yield put({ type: APP_LOAD.pending });
     let count = 11;
     const { services } = yield select(companyConfigSelector);
-    // console.log(services);
+    console.log('services', services);
     if (services.rewards) {
       count++;
     }
@@ -690,12 +690,16 @@ function* appLoad() {
 
       // count++;
     }
-    // if (services.bitcoin) {
-    //   count++;
-    // }
-    // if (services.ethereum) {
-    //   count++;
-    // }
+    if (services.bitcoin) {
+      let resp = yield call(Rehive.getBitcoinUser);
+      console.log('bitcoin', resp);
+      // count++;
+    }
+    if (services.ethereum) {
+      let resp = yield call(Rehive.getEthereumUser);
+      console.log('eth', resp);
+      // count++;
+    }
 
     yield all([
       // put({ type: POST_LOADING }),

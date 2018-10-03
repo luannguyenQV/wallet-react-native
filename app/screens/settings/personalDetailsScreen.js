@@ -37,6 +37,7 @@ class PersonalDetailsScreen extends Component {
 
   toggleEdit = () => {
     const data = {
+      // username: this.props.profile.username,
       first_name: this.props.profile.first_name,
       last_name: this.props.profile.last_name,
       id_number: this.props.profile.id_number,
@@ -44,36 +45,6 @@ class PersonalDetailsScreen extends Component {
       // profile: this.props.profile.profile,
     };
     this.props.editItem('profile', data);
-  };
-
-  navigateToUploadImage = result => {
-    this.props.navigation.navigate('UploadImage', { image: result });
-  };
-
-  // openModal = () => {
-  //   this.setState({ modalVisible: true });
-  // };
-
-  launchCamera = async () => {
-    let result = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-      aspect: [4, 3],
-    });
-    this.setState({ modalVisible: false });
-    if (!result.cancelled) {
-      this.navigateToUploadImage(result);
-    }
-  };
-
-  launchImageLibrary = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      aspect: [4, 3],
-    });
-    this.setState({ modalVisible: false });
-    if (!result.cancelled) {
-      this.navigateToUploadImage(result);
-    }
   };
 
   render() {
@@ -123,6 +94,15 @@ class PersonalDetailsScreen extends Component {
             <View>
               {showDetail ? (
                 <View>
+                  {/* <Input
+                    label="Username"
+                    placeholder="eg. john_smitch"
+                    autoCapitalize="none"
+                    value={tempItem.username}
+                    onChangeText={input =>
+                      updateInputField('profile', 'username', input)
+                    }
+                  /> */}
                   <Input
                     label="First name"
                     placeholder="eg. John"

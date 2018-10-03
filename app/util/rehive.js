@@ -2,7 +2,7 @@ import Rehive from 'rehive';
 import company_configs from './../config/company_configs';
 import defaultCompanyConfig from './../config/default_company_config.json';
 
-const stellar_service_url = 'https://stellar.services.rehive.io/api/1';
+const stellar_service_url = 'https://stellar.s.services.rehive.io/api/1';
 const bitcoin_service_url = 'https://bitcoin.s.services.rehive.io/api/1';
 const ethereum_service_url = 'https://ethereum.s.services.rehive.io/api/1';
 const rewards_service_url = 'https://reward.services.rehive.io/api';
@@ -11,13 +11,13 @@ const rewards_service_url = 'https://reward.services.rehive.io/api';
 export let r;
 let token = '';
 export const initWithoutToken = () => {
-  r = new Rehive({ apiVersion: 3 });
-  // r = new Rehive({ apiVersion: 3, network: 'staging' });
+  // r = new Rehive({ apiVersion: 3 });
+  r = new Rehive({ apiVersion: 3, network: 'staging' });
   token = '';
 };
 export const initWithToken = apiToken => {
-  r = new Rehive({ apiVersion: 3, apiToken });
-  // r = new Rehive({ apiVersion: 3, apiToken, network: 'staging' });
+  // r = new Rehive({ apiVersion: 3, apiToken });
+  r = new Rehive({ apiVersion: 3, apiToken, network: 'staging' });
   token = apiToken;
 };
 export const verifyToken = token => r.auth.tokens.verify({ token });
