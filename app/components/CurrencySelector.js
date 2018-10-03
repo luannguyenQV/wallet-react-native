@@ -19,7 +19,9 @@ class _CurrencySelector extends Component {
       textStyleValue,
     } = styles;
 
-    const text = currency && currency.currency ? currency.currency.code : '';
+    const code = currency && currency.currency ? currency.currency.code : '';
+
+    const value = currency ? currency.account + ':' + code : '';
 
     const items = currencies.data.map(item => {
       return {
@@ -33,43 +35,36 @@ class _CurrencySelector extends Component {
             item.available_balance,
             item.currency.divisibility,
           ).toFixed(item.currency.divisibility),
-        value: item.currency.code,
+        value: item.account + ':' + item.currency.code,
+        key: item.account + ':' + item.currency.code,
       };
     });
 
     return (
       <Picker
-        value={text}
+        value={value}
         placeholder={{}}
         items={items}
         onValueChange={value => this._updateCurrency(value)}
         // style={pickerStyle}
         hideIcon
-        ref={p => (this._picker = p)}
-        // mode={'dropdown'}
-        // animate
-      >
+        ref={p => (this._picker = p)}>
         <View style={viewStyleContent}>
           <View style={{ flex: 1 }}>
-            {/* {currency.account ? (
-            <View style={viewStyleLabel}>
-              <Text style={[textStyleLabel]}>{label}</Text>
-            </View>
-          ) : null} */}
             <View style={viewStyleValue}>
               <Text
                 style={[
                   _textStyleCode,
                   {
                     fontSize:
-                      text.length <= 3
+                      code.length <= 3
                         ? 20
-                        : text.length == 4
+                        : code.length == 4
                           ? 16
-                          : text.length == 5 ? 18 : text.length == 6 ? 17 : 16,
+                          : code.length == 5 ? 15 : code.length == 6 ? 17 : 16,
                   },
                 ]}>
-                {text}
+                {code}
               </Text>
             </View>
           </View>
@@ -86,9 +81,14 @@ class _CurrencySelector extends Component {
 
   _updateCurrency(currency) {
     let { currencies } = this.props;
-    currencies = currencies.data.filter(
-      item => item.currency.code === currency,
-    );
+    let temp = currency.split(':');
+    console.log('0', currencies);
+    currencies = currencies.data.filter(item => item.currency.code === temp[1]);
+    console.log('1', currencies);
+    if (currencies.length > 1) {
+      currencies = currencies.filter(item => item.account === temp[0]);
+    }
+    console.log('2', currencies);
     this.props.updateCurrency(currencies[0]);
   }
 
@@ -103,10 +103,7 @@ class _CurrencySelector extends Component {
             viewStyleContainer,
             {
               backgroundColor: colors.primaryContrast,
-              borderColor:
-                // this._picker && this._picker.state.showPicker
-                //   ? colors.focus
-                'lightgrey',
+              borderColor: 'lightgrey',
             },
           ]}>
           {this.renderOutput()}

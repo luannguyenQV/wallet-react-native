@@ -306,6 +306,7 @@ class SendScreen extends Component {
       validateTransaction,
       currencies,
     } = this.props;
+    console.log(transaction);
     return (
       <View style={{ flexDirection: 'row' }}>
         <CurrencySelector
@@ -316,7 +317,7 @@ class SendScreen extends Component {
               prop: 'transactionCurrency',
               value: currency,
             });
-            validateTransaction('send');
+            // validateTransaction('send');
           }}
         />
         <View style={{ flex: 1 }}>
