@@ -119,11 +119,6 @@ export default (state = INITIAL_STATE, action) => {
         transactionsLoading: false,
       };
 
-    // case SET_HOME_ACCOUNT:
-    //   return {
-    //     ...state,
-    //     homeAccount: action.payload,
-    //   };
     case SET_HOME_CURRENCY:
       return {
         ...state,
@@ -287,6 +282,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         receiveType: action.payload,
+        receiveCurrencySelected: !(action.payload === 'crypto'),
       };
     case RESET_RECEIVE:
       return {

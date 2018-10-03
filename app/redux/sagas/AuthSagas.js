@@ -662,44 +662,8 @@ function* appLoad() {
   console.log('appLoad');
   try {
     yield put({ type: APP_LOAD.pending });
-    let count = 11;
+    let count = 1;
     const { services } = yield select(companyConfigSelector);
-    console.log('services', services);
-    if (services.rewards) {
-      count++;
-    }
-    if (services.stellar) {
-      let resp = yield call(Rehive.getStellarUser);
-      // console.log('resp', resp);
-      const data = resp.data;
-      if (data && !data.username) {
-        const { user } = yield select(getAuth);
-        yield call(Rehive.setStellarUsername, {
-          username: user.username,
-        });
-      }
-      // console.log('data', data);
-      yield put({
-        type: SET_RECEIVE_ADDRESS,
-        payload: {
-          type: 'stellar',
-          address: data && data.crypto ? data.crypto.public_address : '',
-          memo: data && data.crypto ? data.crypto.memo : '',
-        },
-      });
-
-      // count++;
-    }
-    if (services.bitcoin) {
-      let resp = yield call(Rehive.getBitcoinUser);
-      console.log('bitcoin', resp);
-      // count++;
-    }
-    if (services.ethereum) {
-      let resp = yield call(Rehive.getEthereumUser);
-      console.log('eth', resp);
-      // count++;
-    }
 
     yield all([
       // put({ type: POST_LOADING }),
@@ -731,10 +695,8 @@ function* appLoad() {
     for (let i = 0; i < count; i++) {
       yield take([
         FETCH_ACCOUNTS_ASYNC.success,
-        FETCH_DATA_ASYNC.success,
-        FETCH_PHONE_CONTACTS_ASYNC.success,
-        FETCH_REWARDS_ASYNC.success,
-        // FETCH_CRYPTO_ASYNC.success,
+        // FETCH_DATA_ASYNC.success,
+        // FETCH_REWARDS_ASYNC.success,
       ]);
       // console.log(i, count);
     }
