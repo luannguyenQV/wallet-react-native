@@ -20,7 +20,11 @@
       "bundleIdentifier": "com.rehive.wallet-staging",
       "infoPlist": {
         "NSContactsUsageDescription":
-          "Allow access if you would like to easily add recipients from your device"
+          "Allow access if you would like to easily add recipients from your device",
+        "NSCameraUsageDescription":
+          "All access to upload an image using your device camera",
+        "NSPhotoLibraryUsageDescription":
+          "All access to upload an image from your device storage"
       }
     },
     "android": {
