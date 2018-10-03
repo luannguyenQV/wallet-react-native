@@ -662,7 +662,7 @@ function* appLoad() {
   console.log('appLoad');
   try {
     yield put({ type: APP_LOAD.pending });
-    let count = 11;
+    let count = 10;
     const { services } = yield select(companyConfigSelector);
     // console.log(services);
     if (services.rewards) {
@@ -710,7 +710,6 @@ function* appLoad() {
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'company' }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_bank_account' }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_currency' }),
-      put({ type: FETCH_PHONE_CONTACTS_ASYNC.pending }),
       services.rewards ? put({ type: FETCH_REWARDS_ASYNC.pending }) : null,
       services.stellar
         ? put({ type: FETCH_CRYPTO_ASYNC.pending, payload: 'stellar' })

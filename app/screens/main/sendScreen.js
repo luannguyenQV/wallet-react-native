@@ -19,6 +19,7 @@ import {
   updateContactField,
   hidePin,
   showPin,
+  fetchPhoneContacts,
 } from '../../redux/actions';
 import { contactsSelector } from './../../redux/reducers/ContactsReducer';
 import {
@@ -58,7 +59,10 @@ class SendScreen extends Component {
       validateTransaction,
       updateContactField,
       setContactType,
+      fetchPhoneContacts,
     } = this.props;
+
+    fetchPhoneContacts();
 
     setTransactionType('send');
     updateAccountField({
@@ -502,4 +506,5 @@ export default connect(mapStateToProps, {
   setTransactionState,
   hidePin,
   showPin,
+  fetchPhoneContacts,
 })(SendScreen);
