@@ -237,13 +237,15 @@ export const createCryptoTransfer = data => {
       url = stellar_service_url + '/transactions/send/';
       break;
   }
+
+  delete data.currency;
   return new Promise((resolve, reject) =>
     callApi('POST', url, data)
       .then(response => {
         if (response.ok) {
           resolve(response);
         } else {
-          reject('Transaction failed');
+          reject(response);
         }
       })
       .catch(err => reject(err)),

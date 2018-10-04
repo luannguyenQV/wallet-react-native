@@ -202,32 +202,27 @@ function* send(action) {
     }
     let data = {
       amount: parseInt(amount, 0),
-      recipient: transaction.recipient,
-      note: transaction.note,
+      to_reference: transaction.recipient,
       currency: transaction.currency.currency.code,
-      debit_account: transaction.currency.account,
     };
     let response = '';
     console.log('data', data);
     switch (transaction.currency.crypto) {
       case 'stellar':
-        data['to_reference'] = data.recipient;
         data['memo'] = transaction.memo;
-        delete data.debit_account;
-        delete data.recipient;
         response = yield call(Rehive.createCryptoTransfer, data);
         break;
       case 'bitcoin':
         response = yield call(Rehive.createCryptoTransfer, data);
         break;
       case 'ethereum':
-        data['to_reference'] = data.recipient;
-        delete data.debit_account;
-        delete data.note;
-        delete data.recipient;
         response = yield call(Rehive.createCryptoTransfer, data);
         break;
       default:
+        data['note'] = transaction.note;
+        data['debit_account'] = transaction.currency.account;
+        data['recipient'] = transaction.recipient;
+        delete data.to_reference;
         response = yield call(Rehive.createTransfer, data);
         break;
     }
