@@ -662,15 +662,15 @@ function* appLoad() {
   console.log('appLoad');
   try {
     yield put({ type: APP_LOAD.pending });
-    let count = 11;
+    let count = 10;
     const { services } = yield select(companyConfigSelector);
-    console.log(services);
+    // console.log(services);
     if (services.rewards) {
       count++;
     }
     if (services.stellar) {
       let resp = yield call(Rehive.getStellarUser);
-      console.log('resp', resp);
+      // console.log('resp', resp);
       const data = resp.data;
       if (data && !data.username) {
         const { user } = yield select(getAuth);
@@ -678,7 +678,7 @@ function* appLoad() {
           username: user.username,
         });
       }
-      console.log('data', data);
+      // console.log('data', data);
       yield put({
         type: SET_RECEIVE_ADDRESS,
         payload: {
@@ -710,7 +710,6 @@ function* appLoad() {
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'company' }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_bank_account' }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_currency' }),
-      put({ type: FETCH_PHONE_CONTACTS_ASYNC.pending }),
       services.rewards ? put({ type: FETCH_REWARDS_ASYNC.pending }) : null,
       services.stellar
         ? put({ type: FETCH_CRYPTO_ASYNC.pending, payload: 'stellar' })

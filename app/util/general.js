@@ -27,37 +27,41 @@ export const decodeQR = string => {
       amount,
       account,
       currency,
+      memo,
       note = '';
+    if (string.includes(':')) {
+      let temp = string.split(':');
+      type = temp[0];
 
-    let temp = string.split(':');
-    type = temp[0];
-
-    temp = temp[1].split('?');
-    recipient = temp[0];
-    if (temp[1]) {
-      temp = temp[1].split('&');
-      for (i = 0; i < temp.length; i++) {
-        let detail = temp[i].split('=');
-        switch (detail[0]) {
-          case 'amount':
-            amount = detail[1];
-            break;
-          case 'note':
-            note = detail[1];
-            break;
-          case 'memo':
-            memo = detail[1];
-            break;
-          case 'account':
-            account = detail[1];
-            break;
-          case 'currency':
-            currency = detail[1];
-            break;
+      temp = temp[1].split('?');
+      recipient = temp[0];
+      if (temp[1]) {
+        temp = temp[1].split('&');
+        for (i = 0; i < temp.length; i++) {
+          let detail = temp[i].split('=');
+          switch (detail[0]) {
+            case 'amount':
+              amount = detail[1];
+              break;
+            case 'note':
+              note = detail[1];
+              break;
+            case 'memo':
+              memo = detail[1];
+              break;
+            case 'account':
+              account = detail[1];
+              break;
+            case 'currency':
+              currency = detail[1];
+              break;
+          }
         }
       }
+    } else {
+      recipient = string;
     }
-    return { type, recipient, amount, note, currency, account };
+    return { type, recipient, amount, note, currency, account, memo };
   }
   return '';
 };

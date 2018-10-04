@@ -14,63 +14,43 @@ class QRCodeScannerScreen extends Component {
     title: 'QR code scanner',
   };
 
-  state = {
-    camera: true,
-    reference: '',
-    data: {
-      type: '',
-      amount: '',
-      recipient: '',
-      note: '',
-    },
-  };
+  state = { hasCameraPermission: false };
 
   async componentDidMount() {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     this.setState({ hasCameraPermission: status === 'granted' });
   }
 
-  accept = data => {
+  _handleBarCodeRead = raw => {
+    const data = decodeQR(raw.data);
     let { currencies } = this.props;
+    console.log(data);
     const { account, currency, amount, recipient, note, type, memo } = data;
 
-    console.log('currencies', currencies, currency);
     currencies = currencies.data.filter(
       item => item.currency.code === currency,
     );
-    console.log('currencies', currencies);
     if (currencies.length > 1) {
       currencies = currencies.filter(item => item[account] === account);
     }
-    console.log('currencies', currencies);
-    if (currencies.length === 1) {
-      this.props.navigation.goBack();
-      this.props.navigation.navigate('Send', {
-        type,
-        account,
-        currency: currencies[0],
-        amount,
-        note,
-        memo,
-        recipient,
-      });
-      return;
+
+    if (currencies.length === 0) {
+      currencies = this.props.currencies.data;
     }
     this.props.navigation.goBack();
-    Toast.show({
-      text: 'unable to find currency' + (account ? ' and account' : ''),
+    this.props.navigation.navigate('Send', {
+      type,
+      account,
+      currency: currencies[0],
+      amount,
+      note,
+      memo,
+      recipient,
     });
   };
 
-  _handleBarCodeRead = raw => {
-    const data = decodeQR(raw.data);
-    this.accept(data);
-  };
-
   render() {
-    const { hasCameraPermission, data } = this.state;
-    const { type, currency, account, amount, recipient, note } = data;
-    const { viewStyleConfirm } = styles;
+    const { hasCameraPermission } = this.state;
 
     return (
       <View style={{ flex: 1 }}>
@@ -80,30 +60,11 @@ class QRCodeScannerScreen extends Component {
           title="QR code scanner"
         />
         {hasCameraPermission ? (
-          this.state.camera ? (
-            <BarCodeScanner
-              onBarCodeRead={this._handleBarCodeRead}
-              style={{ flex: 1 }}
-            />
-          ) : (
-            <View style={viewStyleConfirm}>
-              {type ? <Output label="Type" value={type} /> : null}
-              {account ? <Output label="Account" value={account} /> : null}
-              {currency ? <Output label="Currency" value={currency} /> : null}
-              {amount ? <Output label="Amount" value={amount} /> : null}
-              {recipient ? (
-                <Output label="Recipient" value={recipient} />
-              ) : null}
-              {note ? <Output label="Note" value={note} /> : null}
-
-              <Button label="Accept" onPress={this.accept} color="secondary" />
-              <Button
-                label="Scan again"
-                onPress={() => this.setState({ camera: true })}
-                color="secondary"
-              />
-            </View>
-          )
+          <BarCodeScanner
+            onBarCodeRead={this._handleBarCodeRead}
+            style={{ flex: 1 }}
+            barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
+          />
         ) : (
           <EmptyListMessage text="No access to camera" />
         )}

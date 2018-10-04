@@ -19,6 +19,7 @@ import {
   updateContactField,
   hidePin,
   showPin,
+  fetchPhoneContacts,
 } from '../../redux/actions';
 import { contactsSelector } from './../../redux/reducers/ContactsReducer';
 import {
@@ -31,9 +32,11 @@ import {
   FullScreenForm,
   Output,
   Button,
+  ButtonList,
 } from './../../components/common';
 import Header from './../../components/header';
 import LocalAuthentication from '../../components/LocalAuthentication';
+import { CurrencySelector } from '../../components/CurrencySelector';
 
 class SendScreen extends Component {
   static navigationOptions = () => ({
@@ -49,6 +52,7 @@ class SendScreen extends Component {
       memo,
       recipient,
     } = this.props.navigation.state.params;
+    console.log(this.props.navigation.state.params);
 
     const {
       setTransactionType,
@@ -56,7 +60,10 @@ class SendScreen extends Component {
       validateTransaction,
       updateContactField,
       setContactType,
+      fetchPhoneContacts,
     } = this.props;
+
+    fetchPhoneContacts();
 
     setTransactionType('send');
     updateAccountField({
@@ -69,17 +76,16 @@ class SendScreen extends Component {
         : 'crypto',
     );
     updateAccountField({ prop: 'transactionAmount', value: amount });
-    updateContactField({ prop: 'contactsSearch', recipient });
+    updateContactField({ prop: 'contactsSearch', value: recipient });
     updateAccountField({ prop: 'transactionRecipient', value: recipient });
     updateAccountField({ prop: 'transactionMemo', value: memo });
     updateAccountField({ prop: 'transactionNote', value: note });
 
     if (currency && recipient && amount) {
       setTransactionState('confirm');
+    } else {
+      validateTransaction('send');
     }
-
-    // if(amount ||)
-    validateTransaction('send');
   }
 
   goToBarcodeScanner = () => {
@@ -123,7 +129,7 @@ class SendScreen extends Component {
   }
 
   renderTop() {
-    const { transaction } = this.props;
+    const { transaction, company_config, setTransactionState } = this.props;
 
     const {
       viewStyleTopContainer,
@@ -171,6 +177,23 @@ class SendScreen extends Component {
               ) : null}
             </View>
           </TouchableHighlight>
+        ) : null}
+        {transaction.state === 'confirm' ? (
+          <ButtonList containerStyle={{ padding: 8 }}>
+            <Button
+              label="CONFIRM"
+              onPress={() =>
+                company_config.pin.send
+                  ? this.props.showPin()
+                  : this.performSend()
+              }
+            />
+            <Button
+              type="text"
+              label="CANCEL"
+              onPress={() => setTransactionState('')}
+            />
+          </ButtonList>
         ) : null}
         {transaction.state === 'fail' ? (
           <View style={viewStyleError}>
@@ -298,39 +321,61 @@ class SendScreen extends Component {
   }
 
   renderAmount() {
-    const { transaction, updateAccountField, validateTransaction } = this.props;
-    // console.log('amount transaction', transaction);
+    const {
+      transaction,
+      updateAccountField,
+      validateTransaction,
+      currencies,
+    } = this.props;
+    console.log(transaction);
     return (
-      <Input
-        key="amount"
-        placeholder="e.g. 10"
-        label={
-          'Amount' +
-          (transaction && transaction.currency && transaction.currency.currency
-            ? ' [' + transaction.currency.currency.symbol + ']'
-            : '')
-        }
-        // prefix={transaction.currency.currency.symbol}
-        inputError={transaction.amountError}
-        reference={input => {
-          this.amountInput = input;
-        }}
-        keyboardType={Platform.OS === 'ios' ? 'decimal-pad' : 'phone-pad'}
-        value={transaction.amount}
-        onChangeText={value =>
-          updateAccountField({ prop: 'transactionAmount', value })
-        }
-        returnKeyType="next"
-        autoFocus
-        onSubmitEditing={() => {
-          // validateTransaction();
-          this.recipientInput.focus();
-        }}
-        onBlur={() => validateTransaction()}
-        type={'money'}
-        // precision={transaction.currency.currency.divisibility}
-        // unit={transaction.currency.currency.symbol + ' '}
-      />
+      <View style={{ flexDirection: 'row' }}>
+        <CurrencySelector
+          currency={transaction.currency}
+          currencies={currencies}
+          updateCurrency={currency => {
+            updateAccountField({
+              prop: 'transactionCurrency',
+              value: currency,
+            });
+            // validateTransaction('send');
+          }}
+        />
+        <View style={{ flex: 1 }}>
+          <Input
+            key="amount"
+            placeholder="e.g. 10"
+            label={
+              'Amount' +
+              (transaction &&
+              transaction.currency &&
+              transaction.currency.currency
+                ? ' [' + transaction.currency.currency.symbol + ']'
+                : '')
+            }
+            // prefix={transaction.currency.currency.symbol}
+            inputError={transaction.amountError}
+            reference={input => {
+              this.amountInput = input;
+            }}
+            keyboardType={Platform.OS === 'ios' ? 'decimal-pad' : 'phone-pad'}
+            value={transaction.amount}
+            onChangeText={value =>
+              updateAccountField({ prop: 'transactionAmount', value })
+            }
+            returnKeyType="next"
+            autoFocus
+            onSubmitEditing={() => {
+              // validateTransaction();
+              this.recipientInput.focus();
+            }}
+            onBlur={() => validateTransaction()}
+            type={'money'}
+            // precision={transaction.currency.currency.divisibility}
+            // unit={transaction.currency.currency.symbol + ' '}
+          />
+        </View>
+      </View>
     );
   }
 
@@ -388,30 +433,15 @@ class SendScreen extends Component {
       pinVisible,
       hidePin,
       transaction,
-      company_config,
       contacts,
     } = this.props;
     let onPressHeader = () => this.props.validateTransaction('confirm');
     let textHeader =
-      transaction.amount && (transaction.recipient || contacts.search)
+      !transaction.state &&
+      transaction.amount &&
+      (transaction.recipient || contacts.search)
         ? 'Next'
         : '';
-    switch (transaction.state) {
-      case 'confirm':
-        textHeader = 'Confirm';
-        onPressHeader = () => {
-          if (company_config.pin.send) {
-            this.props.showPin();
-          } else {
-            this.performSend();
-          }
-        };
-        break;
-      case 'fail':
-      case 'success':
-        textHeader = '';
-    }
-    console.log(contacts);
 
     return (
       <View style={{ flex: 1 }}>
@@ -500,4 +530,5 @@ export default connect(mapStateToProps, {
   setTransactionState,
   hidePin,
   showPin,
+  fetchPhoneContacts,
 })(SendScreen);

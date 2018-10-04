@@ -78,8 +78,8 @@ export const contactsSelector = createSelector(
     const search = contactsState.contactsSearch
       ? contactsState.contactsSearch.toLowerCase()
       : '';
-    let data = null;
-    if (search) {
+    let data = [];
+    if (search && contactsState.contacts) {
       data = contactsState.contacts.filter(
         item =>
           item.type === contactsState.contactsType &&

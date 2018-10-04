@@ -17,7 +17,6 @@ function* fetchPhoneContacts() {
   try {
     let response = null;
     response = yield call(ContactService.getAllContacts);
-
     yield put({
       type: FETCH_PHONE_CONTACTS_ASYNC.success,
       payload: response,
