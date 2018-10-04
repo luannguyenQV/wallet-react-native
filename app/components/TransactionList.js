@@ -92,12 +92,32 @@ class TransactionList extends Component {
 
   async openBrowser(transaction) {
     const metadata = transaction.metadata;
-    if (metadata && metadata.type === 'stellar') {
-      this.hideModal();
-      await WebBrowser.openBrowserAsync(
-        'http://stellarchain.io/tx/' + metadata.hash,
-      );
-      this.showModal(transaction);
+    console.log(metadata);
+    if (metadata && metadata.type) {
+      switch (metadata.type) {
+        case 'stellar':
+          this.hideModal();
+          await WebBrowser.openBrowserAsync(
+            'http://stellarchain.io/tx/' + metadata.hash,
+          );
+          this.showModal(transaction);
+          break;
+        case 'bitcoin':
+          this.hideModal();
+          await WebBrowser.openBrowserAsync(
+            'https://live.blockcypher.com/btc-testnet/tx/' + metadata.hash,
+            // 'https://live.blockcypher.com/btc/tx/' + metadata.hash,
+          );
+          this.showModal(transaction);
+          break;
+        case 'ethereum':
+          this.hideModal();
+          await WebBrowser.openBrowserAsync(
+            'https://etherscan.io/tx/' + metadata.hash,
+          );
+          this.showModal(transaction);
+          break;
+      }
     }
   }
 

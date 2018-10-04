@@ -215,13 +215,17 @@ function* send(action) {
         data['memo'] = transaction.memo;
         delete data.debit_account;
         delete data.recipient;
-        response = yield call(Rehive.createTransferStellar, data);
+        response = yield call(Rehive.createCryptoTransfer, data);
         break;
       case 'bitcoin':
-        response = yield call(Rehive.createTransferBitcoin, data);
+        response = yield call(Rehive.createCryptoTransfer, data);
         break;
       case 'ethereum':
-        response = yield call(Rehive.createTransferEthereum, data);
+        data['to_reference'] = data.recipient;
+        delete data.debit_account;
+        delete data.note;
+        delete data.recipient;
+        response = yield call(Rehive.createCryptoTransfer, data);
         break;
       default:
         response = yield call(Rehive.createTransfer, data);

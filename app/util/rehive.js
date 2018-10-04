@@ -189,36 +189,6 @@ export const getStellarAssets = () =>
 export const setStellarUsername = data =>
   callApi('POST', stellar_service_url + '/user/username/set/', data);
 
-export const getStellarUser = () =>
-  callApi('GET', stellar_service_url + '/user/');
-
-export const createTransferStellar = data =>
-  new Promise((resolve, reject) =>
-    callApi('POST', stellar_service_url + '/transactions/send/', data)
-      .then(response => resolve(response))
-      .catch(err => reject(err)),
-  );
-
-export const getBitcoinUser = () =>
-  callApi('GET', bitcoin_service_url + '/user/');
-
-export const createTransferBitcoin = data =>
-  new Promise((resolve, reject) =>
-    callApi('POST', bitcoin_service_url + '/transactions/send/', data)
-      .then(response => resolve(response))
-      .catch(err => reject(err)),
-  );
-
-export const getEthereumUser = () =>
-  callApi('GET', ethereum_service_url + '/user/');
-
-export const createTransferEthereum = data =>
-  new Promise((resolve, reject) =>
-    callApi('POST', ethereum_service_url + '/wallet/send/', data)
-      .then(response => resolve(response))
-      .catch(err => reject(err)),
-  );
-
 export const getCryptoUser = type => {
   let url = '';
   switch (type) {
@@ -269,7 +239,13 @@ export const createCryptoTransfer = data => {
   }
   return new Promise((resolve, reject) =>
     callApi('POST', url, data)
-      .then(response => resolve(response))
+      .then(response => {
+        if (response.ok) {
+          resolve(response);
+        } else {
+          reject('Transaction failed');
+        }
+      })
       .catch(err => reject(err)),
   );
 };

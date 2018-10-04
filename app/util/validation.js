@@ -1,7 +1,8 @@
 import { StrKey } from './strkey';
 import { PhoneNumberUtil } from 'google-libphonenumber';
+import { Buffer } from 'buffer';
+global.Buffer = Buffer;
 // import WAValidator from 'wallet-address-validator';
-global.Buffer = require('buffer').Buffer;
 
 export const IsEmail = email => {
   // let reg = /^[a-zA-Z0-9._+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
@@ -61,9 +62,9 @@ export const validateCrypto = (address, type) => {
         break;
       case 'bitcoin':
       case 'ethereum':
-        if (WAValidator.validate(address, type, 'both')) {
-          return '';
-        }
+        // if (WAValidator.validate(address, type, 'both')) {
+        return '';
+        // }
         break;
     }
   }
