@@ -565,8 +565,8 @@ function* postAuthFlow() {
                 // nextDetailState = 'country';
                 nextMainState = 'pin';
                 nextDetailState = 'set_pin';
-                if (Expo.Fingerprint.hasHardwareAsync()) {
-                  if (Expo.Fingerprint.isEnrolledAsync()) {
+                if (Expo.LocalAuthentication.hasHardwareAsync()) {
+                  if (Expo.LocalAuthentication.isEnrolledAsync()) {
                     nextDetailState = 'set_fingerprint';
                   }
                 }
@@ -587,8 +587,8 @@ function* postAuthFlow() {
               } else {
                 // nextMainState = 'pin';
                 // nextDetailState = 'set_pin';
-                // if (Expo.Fingerprint.hasHardwareAsync()) {
-                //   if (Expo.Fingerprint.isEnrolledAsync()) {
+                // if (Expo.LocalAuthentication.hasHardwareAsync()) {
+                //   if (Expo.LocalAuthentication.isEnrolledAsync()) {
                 //     nextDetailState = 'set_fingerprint';
                 //   }
                 // }

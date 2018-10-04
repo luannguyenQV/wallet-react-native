@@ -312,7 +312,7 @@ class _Input extends Component {
                   onPress={() => onPressListItem(item)}
                   title={title ? item[title] : item}
                   subtitle={item[subtitle]}
-                  // image={item.image ? item.image : null}
+                  image={item.image ? item.image : null}
                 />
               )}
               keyExtractor={item => (item.id ? item.id.toString() : item)}

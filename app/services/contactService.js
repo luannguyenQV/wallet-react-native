@@ -1,4 +1,4 @@
-import Expo from 'expo';
+import { Contacts } from 'expo';
 import { Alert } from 'react-native';
 
 const PAGE_SIZE = 500;
@@ -12,9 +12,9 @@ var contactService = {
     if (permission.status === 'granted') {
       let response = await Expo.Contacts.getContactsAsync({
         fields: [
-          Expo.Contacts.PHONE_NUMBERS,
-          Expo.Contacts.EMAILS,
-          Expo.Contacts.THUMBNAIL,
+          Contacts.Fields.PhoneNumbers,
+          Contacts.Fields.Emails,
+          Contacts.Fields.Image,
         ],
         pageSize: PAGE_SIZE,
         pageOffset: 0,

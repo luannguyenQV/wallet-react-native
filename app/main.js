@@ -60,8 +60,8 @@ class Main extends Component {
     console.disableYellowBox = true;
     const { isReady, initStarted } = this.state;
     const { colors, theme } = this.props;
-
-    if (isReady && initStarted) {
+    // console.log(isReady, initStarted);
+    if (true && (isReady && initStarted)) {
       return (
         <Root>
           <ThemeContext.Provider value={{ colors, theme }}>
@@ -74,24 +74,12 @@ class Main extends Component {
         </Root>
       );
     } else {
-      // return (
-      //   <View style={{ flex: 1, justifyContent: 'center' }}>
-      //     <Image
-      //       source={require('./../assets/icons/icon.png')}
-      //       onLoad={this._loadAssetsAsync}
-      //       style={{
-      //         width: SCREEN_WIDTH,
-      //         height: SCREEN_WIDTH,
-      //       }}
-      //     />
-      //   </View>
-      // );
       return (
         <AppLoading
           startAsync={this._loadAssetsAsync}
           onFinish={() => this.setState({ isReady: true })}
           onError={console.warn}
-          autoHideSplash={false}
+          // autoHideSplash={false}
         />
       );
     }
