@@ -3,7 +3,7 @@
     "name": "Rehive Wallet",
     "description": "A multi-currency wallet built on the Rehive platform.",
     "version": "1.1.4",
-    "slug": "rehive-wallet-staging",
+    "slug": "rehive-wallet",
     "privacy": "public",
     "sdkVersion": "30.0.0",
     "orientation": "portrait",
@@ -17,7 +17,7 @@
     "assetBundlePatterns": ["./assets/icons/*"],
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.rehive.wallet-staging",
+      "bundleIdentifier": "com.rehive.wallet",
       "infoPlist": {
         "NSContactsUsageDescription":
           "Allow access if you would like to easily add recipients from your device",
@@ -28,7 +28,7 @@
       }
     },
     "android": {
-      "package": "com.rehivewallet_staging",
+      "package": "com.rehivewallet",
       "icon": "./assets/icons/icon-1024.png"
     }
   }
