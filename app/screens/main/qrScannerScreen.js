@@ -27,16 +27,51 @@ class QRCodeScannerScreen extends Component {
     console.log(data);
     const { account, currency, amount, recipient, note, type, memo } = data;
 
-    currencies = currencies.data.filter(
-      item => item.currency.code === currency,
-    );
-    if (currencies.length > 1) {
-      currencies = currencies.filter(item => item[account] === account);
+    // TODO: account
+    let currencyCode = '';
+    let accountCode = '';
+    if (!account) {
+      accountCode = currencies.data[0].account;
+    } else {
+      accountCode = account;
     }
 
-    if (currencies.length === 0) {
-      currencies = this.props.currencies.data;
+    if (!currency) {
+      switch (type) {
+        case 'rehive':
+          break;
+        case 'stellar':
+          currencyCode = 'XLM';
+          break;
+        case 'ethereum':
+          currencyCode = 'ETH';
+          break;
+        case 'bitcoin':
+          currencyCode = 'TXBT';
+          break;
+      }
+    } else {
+      currencyCode = currency;
     }
+    console.log('currency', type, currencyCode, accountCode);
+
+    currencies = currencies.data.filter(
+      item => item.currency.code === currencyCode,
+    );
+
+    console.log('currencies', currencies);
+    if (currencies.length > 1) {
+      const tempCurrencies = currencies.filter(
+        item => item.account === accountCode,
+      );
+      if (tempCurrencies) {
+        currencies = tempCurrencies;
+      }
+    }
+
+    console.log('currencies', currencies);
+    console.log('currency', currencies[0]);
+
     this.props.navigation.goBack();
     this.props.navigation.navigate('Send', {
       type,

@@ -221,7 +221,10 @@ class SendScreen extends Component {
         placeholder = 'e.g. user@rehive.com';
         break;
       case 'crypto':
-        label = label + transaction.currency.crypto + ' address';
+        label =
+          label +
+          (transaction.currency ? transaction.currency.crypto + ' ' : '') +
+          'address';
         placeholder = 'GAQGVZYIZ2DX56EB6TZYGBD...';
         break;
     }
