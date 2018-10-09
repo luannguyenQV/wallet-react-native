@@ -316,10 +316,14 @@ export const currenciesSelector = createSelector(
     const { accounts, loading, error } = accountsState;
 
     let activeCurrency = '';
+    let primaryAccount = '';
 
     let currencies = [];
     let tempCurrencies = [];
     for (i = 0; i < accounts.length; i++) {
+      if (!primaryAccount && accounts[i].primary) {
+        primaryAccount = accounts[i].reference;
+      }
       tempCurrencies = accounts[i].currencies.map(currency => {
         currency.account = accounts[i].reference;
         const currencyCode = currency.currency.code;
@@ -336,6 +340,7 @@ export const currenciesSelector = createSelector(
         } else {
           currency.crypto = '';
         }
+
         if (currency.active) {
           activeCurrency = currency.currency.code;
         }
@@ -345,10 +350,13 @@ export const currenciesSelector = createSelector(
       });
       currencies = currencies.concat(tempCurrencies);
     }
-
+    console.log(currencies, primaryAccount, activeCurrency);
     const activeIndex = currencies.findIndex(
-      item => item.currency.code === activeCurrency,
+      item =>
+        item.account === primaryAccount &&
+        item.currency.code === activeCurrency,
     );
+    console.log(activeIndex);
 
     if (currencies.length > 0 && activeIndex !== -1) {
       const activeItem = currencies[activeIndex];
