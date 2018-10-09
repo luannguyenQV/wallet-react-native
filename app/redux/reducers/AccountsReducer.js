@@ -350,13 +350,11 @@ export const currenciesSelector = createSelector(
       });
       currencies = currencies.concat(tempCurrencies);
     }
-    console.log(currencies, primaryAccount, activeCurrency);
     const activeIndex = currencies.findIndex(
       item =>
         item.account === primaryAccount &&
         item.currency.code === activeCurrency,
     );
-    console.log(activeIndex);
 
     if (currencies.length > 0 && activeIndex !== -1) {
       const activeItem = currencies[activeIndex];

@@ -242,7 +242,7 @@ export const createCryptoTransfer = data => {
   return new Promise((resolve, reject) =>
     callApi('POST', url, data)
       .then(response => {
-        if (response.ok) {
+        if (response.ok || response.status === 'success') {
           resolve(response);
         } else {
           reject(response);
