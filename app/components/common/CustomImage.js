@@ -28,17 +28,17 @@ class _CustomImage extends Component {
         return (
           <Image
             style={this.imageStylePhoto()}
-            source={require('./../../../assets/icons/card1_transparent.png')}
-          />
-        );
-      case 'card3':
-        return (
-          <Image
-            style={this.imageStylePhoto()}
-            source={require('./../../../assets/icons/card1_transparent.png')}
+            source={require('./../../../assets/icons/card2_transparent.png')}
           />
         );
       case 'pxpay':
+        return (
+          <Image
+            style={this.imageStylePhoto()}
+            source={require('./../../../assets/icons/pxpay.png')}
+          />
+        );
+      case 'plue':
         return (
           <Image
             style={this.imageStylePhoto()}

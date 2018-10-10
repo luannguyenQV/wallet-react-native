@@ -45,9 +45,8 @@ class Main extends Component {
 
   async _loadAssetsAsync() {
     const imageAssets = cacheImages([
-      require('./../assets/icons/card1.png'),
-      require('./../assets/icons/card2.png'),
-      require('./../assets/icons/card3.png'),
+      require('./../assets/icons/card1_transparent.png'),
+      require('./../assets/icons/card2_transparent.png'),
     ]);
 
     // const fontAssets = cacheFonts([FontAwesome.font]);
