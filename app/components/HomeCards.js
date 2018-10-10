@@ -14,7 +14,7 @@ import { standardizeString } from './../util/general';
 // import { AreaChart, Grid } from 'react-native-svg-charts';
 // import * as shape from 'd3-shape';
 
-import { CardContainer, Card, Button } from './common';
+import { CardContainer, Card, Button, CustomImage } from './common';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -49,38 +49,6 @@ class HomeCards extends Component {
   //     </AreaChart>
   //   );
   // }
-
-  renderImage(image) {
-    const { company_config } = this.props;
-    const { imageStylePhoto } = styles;
-    if (image === 'pxpay' || company_config.company.id.includes('pxpay')) {
-      return (
-        <Image
-          style={imageStylePhoto}
-          source={require('./../../assets/icons/pxpay.png')}
-        />
-      );
-    } else if (image === 'card1') {
-      return (
-        <Image
-          style={[
-            imageStylePhoto,
-            { backgroundColor: this.props.company_config.colors.primary },
-          ]}
-          source={require('./../../assets/icons/card1_transparent.png')}
-        />
-      );
-    }
-
-    return (
-      <View
-        style={[
-          imageStylePhoto,
-          { backgroundColor: this.props.company_config.colors.primary },
-        ]}
-      />
-    );
-  }
 
   renderCards() {
     const { profile, company_config, dismissedCards } = this.props;
@@ -149,12 +117,13 @@ class HomeCards extends Component {
 
   renderCard(item) {
     const { textStyleContent } = styles;
-    let imageString = './../../assets/icons/' + item.image + '.png';
     return (
       <Card
         key={item.id}
         title={item.title}
-        renderHeader={this.renderImage(item.image)}
+        renderHeader={
+          <CustomImage name={item.image} backgroundColor={'header'} />
+        }
         onPressActionOne={() =>
           item.navigate
             ? this.props.navigation.navigate(item.navigate)

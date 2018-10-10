@@ -1,39 +1,61 @@
 import React, { Component } from 'react';
-import { Font } from 'expo';
-import { createIconSet } from '@expo/vector-icons';
+import { Image, Dimensions } from 'react-native';
 import context from './context';
-const glyphMap = {
-  send: 'B',
-  receive: 'A',
-  more: 'z',
-  deposit: 'z',
-  withdraw: 'D',
-  loading: 'C',
-};
-const CustomIconSet = createIconSet(glyphMap, 'FontName');
 
-class _CustomIcon extends Component {
-  state = {
-    fontLoaded: false,
-  };
-  async componentDidMount() {
-    await Font.loadAsync({
-      FontName: require('./../../../assets/fonts/rehive.ttf'),
-    });
+const SCREEN_WIDTH = Dimensions.get('window').width;
 
-    this.setState({ fontLoaded: true });
+class _CustomImage extends Component {
+  imageStylePhoto() {
+    const { backgroundColor, width, height, colors } = this.props;
+
+    return [
+      styles.imageStylePhoto,
+      {
+        backgroundColor: backgroundColor ? colors[backgroundColor] : 'white',
+      },
+    ];
   }
   render() {
-    const { name, size, color } = this.props;
-    if (!this.state.fontLoaded) {
-      return null;
+    switch (this.props.name) {
+      case 'card1':
+        return (
+          <Image
+            style={this.imageStylePhoto()}
+            source={require('./../../../assets/icons/card1_transparent.png')}
+          />
+        );
+      case 'card2':
+        return (
+          <Image
+            style={this.imageStylePhoto()}
+            source={require('./../../../assets/icons/card1_transparent.png')}
+          />
+        );
+      case 'card3':
+        return (
+          <Image
+            style={this.imageStylePhoto()}
+            source={require('./../../../assets/icons/card1_transparent.png')}
+          />
+        );
+      case 'pxpay':
+        return (
+          <Image
+            style={this.imageStylePhoto()}
+            source={require('./../../../assets/icons/pxpay.png')}
+          />
+        );
     }
-
-    return (
-      <CustomIconSet name={name} size={size} color={color ? color : 'black'} />
-    );
   }
 }
-const CustomIcon = context(_CustomIcon);
 
-export { CustomIcon };
+const styles = {
+  imageStylePhoto: {
+    width: SCREEN_WIDTH - 16,
+    height: 120,
+  },
+};
+
+const CustomImage = context(_CustomImage);
+
+export { CustomImage };
