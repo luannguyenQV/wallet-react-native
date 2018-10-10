@@ -3,19 +3,12 @@ import { Font } from 'expo';
 import { createIconSet } from '@expo/vector-icons';
 import context from './context';
 const glyphMap = {
-  send: 'A',
-  receive: 'C',
-  more: 'y',
-  deposit: 'B',
-  withdraw: 'z',
-  warning: 'C',
-  yes: 'd',
-  cancel: 'j',
-  up: 'f',
-  down: 'k',
-  left: 'i',
-  right: 'l',
-  add: 'g',
+  send: 'B',
+  receive: 'A',
+  more: 'z',
+  deposit: 'z',
+  withdraw: 'D',
+  loading: 'C',
 };
 const CustomIconSet = createIconSet(glyphMap, 'FontName');
 
