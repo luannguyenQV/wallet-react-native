@@ -233,6 +233,13 @@ class SettingsScreen extends Component {
             backgroundColor: 'white',
             color: '#707070',
           },
+          inputAndroid: {
+            fontSize: 16,
+            padding: 8,
+            backgroundColor: 'white',
+            color: '#707070',
+          },
+          underline: { borderTopWidth: 0 },
         }}
         hideIcon
         // underline={{

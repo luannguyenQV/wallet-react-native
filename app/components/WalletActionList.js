@@ -61,12 +61,12 @@ class WalletActionList extends Component {
 const styles = {
   viewStyleContainer: {
     flexDirection: 'column',
-    elevation: 1,
+    elevation: 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 2,
     shadowOpacity: 0.15,
-    zIndex: 1,
+    zIndex: 2,
   },
   viewStyleButtons: {
     flexDirection: 'row',
