@@ -81,6 +81,10 @@ export const colorSelector = createSelector(
         _colors,
         'focusContrast',
       ),
+      grey1: '#F8F8FA',
+      grey2: '#EAEAEF',
+      grey3: '#B8B7C6',
+      font: '#707070',
     };
     return colors;
   },

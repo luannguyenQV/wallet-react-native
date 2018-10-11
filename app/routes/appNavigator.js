@@ -1,6 +1,7 @@
 import { createStackNavigator } from 'react-navigation';
 
-import Home from './drawerNavigator';
+import Home from './tabNavigator';
+// import Home from './drawerNavigator';
 
 import Wallets from '../screens/main/walletsScreen';
 import Rewards from '../screens/main/rewardsScreen';
