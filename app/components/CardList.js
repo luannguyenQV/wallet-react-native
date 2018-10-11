@@ -33,6 +33,7 @@ import {
   CodeInput,
   Button,
 } from './common';
+import { colorSelector } from '../redux/reducers/ConfigReducer';
 
 // make component
 class CardList extends Component {
@@ -302,7 +303,7 @@ class CardList extends Component {
       <KeyboardAvoidingView
         style={{
           flex: 1,
-          backgroundColor: '#e2e2e2',
+          backgroundColor: colors.grey2,
         }}
         behavior={'padding'}
         enabled>
@@ -358,7 +359,7 @@ class CardList extends Component {
   }
 }
 
-const mapStateToProps = ({ user, auth }) => {
+const mapStateToProps = state => {
   const {
     profile,
     showDetail,
@@ -368,8 +369,8 @@ const mapStateToProps = ({ user, auth }) => {
     editing,
     wallet,
     modalType,
-  } = user;
-  const { otp, company_config } = auth;
+  } = state.user;
+  const { otp, company_config } = state.auth;
   return {
     profile,
     showDetail,
@@ -381,6 +382,7 @@ const mapStateToProps = ({ user, auth }) => {
     wallet,
     otp,
     company_config,
+    colors: colorSelector(state),
   };
 };
 

@@ -63,6 +63,7 @@ class HomeScreen extends Component {
 const styles = {
   container: {
     flex: 1,
+    backgroundColor: '#EAEAEF',
   },
 };
 

@@ -15,6 +15,7 @@ import { standardizeString } from './../util/general';
 // import * as shape from 'd3-shape';
 
 import { CardContainer, Card, Button, CustomImage } from './common';
+import { colorSelector } from '../redux/reducers/ConfigReducer';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -51,7 +52,7 @@ class HomeCards extends Component {
   // }
 
   renderCards() {
-    const { profile, company_config, dismissedCards } = this.props;
+    const { profile, company_config, dismissedCards, colors } = this.props;
     const cardConfig = company_config.cards ? company_config.cards.home : null;
     // add welcome card
     let cards = [];
@@ -106,6 +107,7 @@ class HomeCards extends Component {
         //     onRefresh={() => fetchData(type)}
         //   />
         // }
+        contentContainerStyle={{ backgroundColor: colors.grey2 }}
         keyboardShouldPersistTaps="always"
         data={cards}
         renderItem={({ item }) => this.renderCard(item)}
@@ -175,7 +177,6 @@ const styles = {
     fontSize: 16,
     padding: 8,
     paddingHorizontal: 16,
-    color: '#707070',
   },
   viewStyleFooter: {
     width: '100%',
@@ -185,10 +186,15 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ auth, user }) => {
-  const { company_config } = auth;
-  const { profile, dismissedCards } = user;
-  return { company_config, profile, dismissedCards };
+const mapStateToProps = state => {
+  const { company_config } = state.auth;
+  const { profile, dismissedCards } = state.user;
+  return {
+    company_config,
+    profile,
+    dismissedCards,
+    colors: colorSelector(state),
+  };
 };
 
 export default connect(mapStateToProps, { cardDismiss, cardRestoreAll })(

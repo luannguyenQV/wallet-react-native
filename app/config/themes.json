@@ -12,6 +12,7 @@
     "authScreen": "white",
     "authScreenContrast": "primary",
     "sendScreen": "white",
-    "sendScreenContrast": "primary"
+    "sendScreenContrast": "primary",
+    "surface": "grey1"
   }
 }
