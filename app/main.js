@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Image } from 'react-native';
 import { connect } from 'react-redux';
 import { AppLoading, Asset } from 'expo';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { init } from './redux/actions';
 import { Root } from 'native-base';
 
@@ -49,9 +50,13 @@ class Main extends Component {
       require('./../assets/icons/card2_transparent.png'),
     ]);
 
-    const fontAssets = Expo.Font.loadAsync({
-      'rehive-font': require('./../assets/fonts/rehive-font.ttf'),
-    });
+    const fontAssets = Expo.Font.loadAsync([
+      {
+        'rehive-font': require('./../assets/fonts/rehive-font.ttf'),
+      },
+      Ionicons.font,
+      MaterialCommunityIcons.font,
+    ]);
 
     await Promise.all([...imageAssets, ...fontAssets]);
   }

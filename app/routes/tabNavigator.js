@@ -10,15 +10,13 @@ import RewardsScreen from '../screens/main/rewardsScreen';
 
 import GetVerifiedScreen from './../screens/settings/getVerified/getVerifiedScreen';
 import SettingsScreen from './../screens/settings/settingsScreen';
-import About from './../screens/main/aboutScreen';
-import LogoutScreen from './../screens/auth/logoutScreen';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 const Stack = {
+  GetVerified: GetVerifiedScreen,
+  Rewards: RewardsScreen,
   Home: HomeScreen,
   Wallets: WalletsScreen,
-  Rewards: RewardsScreen,
-  GetVerified: GetVerifiedScreen,
   Settings: SettingsScreen,
 };
 
@@ -28,24 +26,31 @@ const tabNavigator = createBottomTabNavigator(Stack, {
       const { routeName } = navigation.state;
       let iconName;
       if (routeName === 'Home') {
-        iconName = `home${focused ? '' : '-outline'}`;
+        iconName = `ios-home${focused ? '' : ''}`;
       } else if (routeName === 'Wallets') {
-        iconName = `wallet${focused ? '' : '-outline'}`;
+        iconName = `wallet${focused ? '' : ''}`;
       } else if (routeName === 'Rewards') {
-        iconName = `cart${focused ? '' : '-outline'}`;
+        iconName = `gift${focused ? '' : ''}`;
         // iconName = `star-box`;
       } else if (routeName === 'GetVerified') {
-        iconName = `account${focused ? '' : '-outline'}`;
+        iconName = `ios-person${focused ? '' : ''}`;
       } else if (routeName === 'Settings') {
-        iconName = 'wrench';
+        iconName = 'ios-settings';
         // iconName = `settings${focused ? '' : '-outline'}`;
       }
+      const color = focused ? tintColor : 'lightgray';
 
       // You can return any component that you like here! We usually use an
       // icon component from react-native-vector-icons
-      return (
-        <MaterialCommunityIcons name={iconName} size={25} color={tintColor} />
-      );
+      switch (routeName) {
+        case 'Wallets':
+        case 'Rewards':
+          return (
+            <MaterialCommunityIcons name={iconName} size={25} color={color} />
+          );
+        default:
+          return <Ionicons name={iconName} size={25} color={color} />;
+      }
     },
   }),
   tabBarOptions: {
