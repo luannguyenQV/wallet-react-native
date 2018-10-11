@@ -105,7 +105,6 @@ class GetVerifiedScreen extends Component {
     const { address } = this.props;
     let value = '';
     let status = 'INCOMPLETE';
-    console.log('address', address);
     if (address.length > 0) {
       const tempAddress = address[0];
       status = tempAddress.status ? tempAddress.status.toUpperCase() : status;
@@ -260,7 +259,6 @@ class GetVerifiedScreen extends Component {
       uploadProfilePhoto,
     } = this.props;
     const { container, mainContainer } = styles;
-    // console.log(cm)
     const {
       requirePersonal,
       requireEmail,

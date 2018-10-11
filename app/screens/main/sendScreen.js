@@ -448,6 +448,7 @@ class SendScreen extends Component {
         <Header
           navigation={this.props.navigation}
           title="Send"
+          back
           headerRightText={textHeader}
           headerRightOnPress={onPressHeader}
         />

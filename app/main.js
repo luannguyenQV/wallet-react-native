@@ -50,13 +50,11 @@ class Main extends Component {
       require('./../assets/icons/card2_transparent.png'),
     ]);
 
-    const fontAssets = Expo.Font.loadAsync([
-      {
-        'rehive-font': require('./../assets/fonts/rehive-font.ttf'),
-      },
-      Ionicons.font,
-      MaterialCommunityIcons.font,
-    ]);
+    const fontAssets = Expo.Font.loadAsync({
+      ...Ionicons.font,
+      ...MaterialCommunityIcons.font,
+      'rehive-font': require('./../assets/fonts/rehive-font.ttf'),
+    });
 
     await Promise.all([...imageAssets, ...fontAssets]);
   }

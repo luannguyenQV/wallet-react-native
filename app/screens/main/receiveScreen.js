@@ -234,7 +234,7 @@ class ReceiveScreen extends Component {
     console.log('SCREEN_WIDTH', SCREEN_WIDTH);
     return (
       <View style={styles.container}>
-        <Header navigation={this.props.navigation} title="Receive" />
+        <Header navigation={this.props.navigation} back title="Receive" />
         {/* {Platform.OS === 'android' ? ( */}
         <KeyboardAvoidingView
           style={{ flex: 1 }}

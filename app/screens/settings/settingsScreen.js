@@ -226,7 +226,14 @@ class SettingsScreen extends Component {
         onValueChange={value => {
           this.props.changeTheme(value);
         }}
-        style={{ ...styles }}
+        style={{
+          inputIOS: {
+            fontSize: 16,
+            padding: 8,
+            backgroundColor: 'white',
+            color: '#707070',
+          },
+        }}
         hideIcon
         // underline={{
         //   borderTopWidth: 0,
@@ -272,12 +279,6 @@ const styles = {
   container: {
     flex: 1,
     backgroundColor: 'white',
-  },
-  inputIOS: {
-    fontSize: 16,
-    padding: 8,
-    backgroundColor: 'white',
-    color: 'black',
   },
 };
 
