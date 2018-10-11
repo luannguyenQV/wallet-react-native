@@ -175,6 +175,7 @@ const styles = {
     fontSize: 16,
     padding: 8,
     paddingHorizontal: 16,
+    color: '#707070',
   },
   viewStyleFooter: {
     width: '100%',

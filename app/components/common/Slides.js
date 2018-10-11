@@ -15,7 +15,7 @@ class _Slides extends Component {
   scrollX = new Animated.Value(0);
 
   renderSlides() {
-    const { width, height, data } = this.props;
+    const { width, height, data, colors } = this.props;
     const {
       viewStyleSlide,
       imageStylePhoto,
@@ -41,15 +41,24 @@ class _Slides extends Component {
                 : require('./../../../assets/icons/card1_transparent.png')
             }
           />
-          <Text style={textStyleTitle}>{slide.title}</Text>
-          <Text style={textStyleDescription}>{slide.description}</Text>
+          <Text
+            style={[textStyleTitle, { color: colors['authScreenContrast'] }]}>
+            {slide.title}
+          </Text>
+          <Text
+            style={[
+              textStyleDescription,
+              { color: colors['authScreenContrast'] },
+            ]}>
+            {slide.description}
+          </Text>
         </Animated.View>
       );
     });
   }
 
   render() {
-    const { width, height, data } = this.props;
+    const { width, height, data, colors } = this.props;
     let position = Animated.divide(this.scrollX, width);
     return (
       <View
@@ -85,7 +94,7 @@ class _Slides extends Component {
                   opacity,
                   height: 10,
                   width: 10,
-                  backgroundColor: '#f3f3f3',
+                  backgroundColor: colors['authScreenContrast'],
                   margin: 8,
                   borderRadius: 5,
                 }}
@@ -112,13 +121,11 @@ const styles = {
   },
   textStyleTitle: {
     fontSize: 30,
-    color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
   },
   textStyleDescription: {
     fontSize: 14,
-    color: 'white',
     textAlign: 'center',
   },
 };

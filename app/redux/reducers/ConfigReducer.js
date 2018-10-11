@@ -11,7 +11,7 @@ import default_company_config from './../../config/default_company_config.json';
 
 const INITIAL_STATE = {
   company_config: {},
-  theme: 'default',
+  theme: 'light',
 };
 
 export default (state = INITIAL_STATE, action) => {

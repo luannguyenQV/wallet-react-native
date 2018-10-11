@@ -5,7 +5,7 @@ import context from './context';
 const glyphMap = {
   send: 'A',
   receive: 'C',
-  more: 'y',
+  more: 'n',
   deposit: 'B',
   withdraw: 'z',
   warning: 'C',
@@ -25,7 +25,7 @@ class _CustomIcon extends Component {
   };
   async componentDidMount() {
     await Font.loadAsync({
-      FontName: require('./../../../assets/fonts/rehive.ttf'),
+      FontName: require('./../../../assets/fonts/rehive-font.ttf'),
     });
 
     this.setState({ fontLoaded: true });

@@ -68,10 +68,10 @@
     "requireDocumentAdvID": true
   },
   "colors": {
-    "primary": "#5336FF",
+    "primary": "#5969F6",
     "secondary": "#A4A5F5",
-    "tertiary": "#FBFB8B",
-    "focus": "#F45DEB",
+    "tertiary": "#7FC4FD",
+    "focus": "#FC4F96",
 
     "primaryContrast": "#f6f6f6",
     "secondaryContrast": "#1b1b1b",
