@@ -7,6 +7,7 @@ import {
   editItem,
   updateItem,
   updateInputField,
+  uploadProfilePhoto,
 } from './../../redux/actions';
 
 // import CountryPicker from 'react-native-country-picker-modal';
@@ -85,12 +86,9 @@ class PersonalDetailsScreen extends Component {
       updateInputField,
       updateError,
       showDetail,
-      company_config,
+      uploadProfilePhoto,
     } = this.props;
-    const { colors } = company_config;
     const { first_name, last_name, id_number } = profile;
-    const { viewStyleContainer, imageStylePhoto } = styles;
-    const { modalVisible } = this.state;
     return (
       <View style={{ flex: 1 }}>
         <Header
@@ -101,16 +99,17 @@ class PersonalDetailsScreen extends Component {
           headerRightOnPress={() =>
             showDetail ? updateItem('profile', tempItem) : this.toggleEdit()
           }
-          colors={company_config.colors}
+          noShadow
         />
         <HeaderProfile
           photoLink={profile.profile}
           name={
             profile.first_name
               ? profile.first_name + ' ' + profile.last_name
-              : profile.username
+              : ''
           }
-          colors={colors}
+          username={profile.username}
+          uploadProfilePhoto={uploadProfilePhoto}
         />
         <CardContainer>
           <Card
@@ -132,7 +131,6 @@ class PersonalDetailsScreen extends Component {
                     onChangeText={input =>
                       updateInputField('profile', 'first_name', input)
                     }
-                    colors={colors}
                   />
 
                   <Input
@@ -143,7 +141,6 @@ class PersonalDetailsScreen extends Component {
                     onChangeText={input =>
                       updateInputField('profile', 'last_name', input)
                     }
-                    colors={colors}
                   />
 
                   <Input
@@ -154,7 +151,6 @@ class PersonalDetailsScreen extends Component {
                     onChangeText={input =>
                       updateInputField('profile', 'id_number', input)
                     }
-                    colors={colors}
                   />
                 </View>
               ) : first_name || last_name || id_number ? (
@@ -206,83 +202,9 @@ const styles = {
     flex: 1,
     flexDirection: 'column',
   },
-  input: {
-    flex: 5,
-    fontSize: 16,
-    paddingLeft: 15,
-  },
-  input: {
-    flex: 4,
-    fontSize: 14,
-    borderRightColor: 'lightgray',
-    color: Colors.black,
-  },
-  submit: {
-    marginTop: 10,
-    marginBottom: 10,
-    marginHorizontal: 20,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: 'lightblue',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  pickerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 30,
-    marginHorizontal: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: 'lightgray',
-  },
-  viewStyleContainer: {
-    backgroundColor: Colors.primary,
-    alignItems: 'center',
-    paddingBottom: 8,
-  },
-  imageStylePhoto: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    borderColor: Colors.secondary,
-    borderWidth: 5,
-  },
-  modal: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  bottomModal: {
-    width: '80%',
-    height: 250,
-    borderWidth: 1,
-    borderRadius: 10,
-    backgroundColor: 'white',
-    borderColor: Colors.black,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  languageModal: {
-    width: '100%',
-    paddingBottom: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(0, 0, 0, .10)',
-  },
-  button: {
-    height: 60,
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonText: {
-    fontSize: 18,
-  },
 };
 
-const mapStateToProps = ({ user, auth }) => {
-  const { company_config } = auth;
+const mapStateToProps = ({ user }) => {
   const { profile, loading_profile, tempItem, showDetail, updateError } = user;
   return {
     profile,
@@ -290,7 +212,6 @@ const mapStateToProps = ({ user, auth }) => {
     tempItem,
     showDetail,
     updateError,
-    company_config,
   };
 };
 
@@ -299,4 +220,5 @@ export default connect(mapStateToProps, {
   editItem,
   updateItem,
   updateInputField,
+  uploadProfilePhoto,
 })(PersonalDetailsScreen);

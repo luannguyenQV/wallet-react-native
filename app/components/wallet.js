@@ -31,7 +31,7 @@ class Wallet extends Component {
   };
 
   render() {
-    const { wallet, showDetails } = this.props;
+    const { wallet, showDetails, colors } = this.props;
     const {
       textStyleLabel,
       textStyleBalance,
@@ -103,8 +103,10 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({}) => {
-  return {};
+const mapStateToProps = ({ auth }) => {
+  return {
+    colors: auth.company_config.colors,
+  };
 };
 
 export default connect(mapStateToProps, {

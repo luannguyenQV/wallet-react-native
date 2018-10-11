@@ -91,7 +91,7 @@ export const resendVerification = (type, data, company) => {
 
 export const VERIFY_ASYNC = createAsyncTypes('verify');
 export const verifyItem = (type, otp) => {
-  // console.log(type, value);
+  console.log(type, otp);
   return {
     type: VERIFY_ASYNC.pending,
     payload: {
@@ -103,7 +103,9 @@ export const verifyItem = (type, otp) => {
 
 export const SHOW_MODAL = 'show_modal';
 export const showModal = (type, item, modalType) => {
+  console.log('type', type);
   console.log('item', item);
+  console.log('modalType', modalType);
   return {
     type: SHOW_MODAL,
     payload: { type, item, modalType },
@@ -126,6 +128,7 @@ export const uploadProfilePhoto = image => {
     name: 'profile',
     type: 'image/jpg',
   };
+  console.log('uploadPP', file);
   return {
     type: UPLOAD_PROFILE_PHOTO_ASYNC.pending,
     payload: file,
@@ -148,6 +151,13 @@ export const uploadDocument = (image, category, document_type) => {
       category,
       type: document_type,
     },
+  };
+};
+
+export const RESET_USER_ERRORS = 'reset_user_errors';
+export const resetUserErrors = () => {
+  return {
+    type: RESET_USER_ERRORS,
   };
 };
 

@@ -1,4 +1,5 @@
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
+import { createSelector } from 'reselect';
 import {
   AUTH_FIELD_CHANGED,
   AUTH_FIELD_ERROR,
@@ -8,8 +9,7 @@ import {
   RESET_PASSWORD_ASYNC,
   LOGOUT_USER_ASYNC,
   RESET_AUTH,
-  APP_LOAD_START,
-  APP_LOAD_FINISH,
+  APP_LOAD,
   SET_PIN,
   RESET_PIN,
   ACTIVATE_FINGERPRINT,
@@ -28,8 +28,14 @@ import {
   UPDATE_MFA_STATE,
   UPDATE_MFA_TOKEN,
   VERIFY_MFA,
+  AUTH_STORE_USER,
+  POST_AUTH_FLOW_FINISH,
+  TOGGLE_TERMS,
+  SHOW_PIN,
+  HIDE_PIN,
 } from '../actions/AuthActions';
 import { HIDE_MODAL } from '../actions/UserActions';
+import { SET_TRANSACTION_TYPE } from '../actions';
 
 const INITIAL_STATE = {
   mainState: '',
@@ -45,6 +51,7 @@ const INITIAL_STATE = {
   // lineNumber: null,
   company: '',
   companyError: '',
+  companies: [],
   password: '',
   passwordError: '',
   new_password: '',
@@ -57,6 +64,7 @@ const INITIAL_STATE = {
 
   pin: '',
   fingerprint: false,
+  pinVisible: false,
   mfaState: 'loading',
 };
 
@@ -75,12 +83,26 @@ export default (state = INITIAL_STATE, action) => {
         postLoading: false,
         pinError: '',
         code: '',
+        password: '', // these are here
+        old_password: '', // to ensure all
+        new_password: '', // passwords are reset
       };
     case INIT.success:
+      return {
+        ...state,
+        appLoading: false,
+        mainState: action.payload.mainState,
+        detailState: action.payload.detailState,
+        password: '',
+        loading: false,
+        token: action.payload.mainState === 'landing' ? '' : state.token,
+      };
     case INIT.fail:
       return {
         ...state,
         appLoading: false,
+        pin: '',
+        fingerprint: false,
       };
 
     case VERIFY_MFA:
@@ -104,33 +126,30 @@ export default (state = INITIAL_STATE, action) => {
       };
 
     case UPDATE_AUTH_FORM_STATE:
-      const { mainState, detailState, authError, skip } = action.payload;
+      const { mainState, detailState, authError, skip, terms } = action.payload;
       return {
         ...state,
         mainState,
         detailState,
         authError,
         skip,
-        password: '',
+        terms,
+        termsChecked: false,
+        password: detailState === 'terms' ? state.password : '',
         loading: false,
       };
 
     case LOGIN_USER_ASYNC.success:
       return {
         ...state,
-        mainState: '',
-        detailState: '',
-        token: action.payload,
-        loading: true,
-        pin: '',
-        fingerprint: false,
+        user: action.payload,
       };
 
     case CHANGE_PASSWORD_ASYNC.pending:
       return {
         ...state,
         loading: true,
-        passwordError: '',
+        inputError: '',
       };
     case CHANGE_PASSWORD_ASYNC.success:
       return {
@@ -143,7 +162,7 @@ export default (state = INITIAL_STATE, action) => {
     case CHANGE_PASSWORD_ASYNC.error:
       return {
         ...state,
-        passwordError: action.payload,
+        inputError: action.payload,
         password: '',
         old_password: '',
         new_password: '',
@@ -157,11 +176,23 @@ export default (state = INITIAL_STATE, action) => {
         modalVisible: true,
       };
 
-    case SET_COMPANY:
+    case TOGGLE_TERMS:
       return {
         ...state,
-        company: action.payload.tempCompany,
-        company_config: action.payload.temp_config,
+        termsChecked: !state.termsChecked,
+        authError: '',
+      };
+
+    case SET_COMPANY:
+      let companies = state.companies ? state.companies : [];
+      if (companies.indexOf(action.payload.company) === -1) {
+        companies.push(action.payload.company);
+      }
+      return {
+        ...state,
+        company: action.payload.company,
+        company_config: action.payload.company_config,
+        companies,
       };
 
     case RESET_PASSWORD_ASYNC.pending:
@@ -186,21 +217,34 @@ export default (state = INITIAL_STATE, action) => {
     case RESET_AUTH:
       return {
         ...state,
-        companyError: '',
-        passwordError: '',
-        emailError: '',
+        authError: '',
         password: '',
         mainState: 'landing',
         detailState: '',
         modalVisible: false,
         loading: false,
         appLoading: false,
+        skip: false,
+        old_password: '',
+        new_password: '',
       };
     case AUTH_COMPLETE:
       return {
         ...state,
-        token: action.payload,
+        user: action.payload.user,
+        token: action.payload.token,
+        authError: '',
       };
+    case AUTH_STORE_USER:
+      return {
+        ...state,
+        user: action.payload,
+      };
+    // case POST_AUTH_FLOW_FINISH:
+    //   return {
+    //     ...state,
+    //     // user: action.payload,
+    //   };
 
     case HIDE_MODAL:
       return {
@@ -235,12 +279,14 @@ export default (state = INITIAL_STATE, action) => {
         pinError: action.payload,
       };
 
-    case APP_LOAD_START:
+    case APP_LOAD.pending:
       return {
         ...state,
+        mainState: '',
+        detailState: '',
         appLoading: true,
       };
-    case APP_LOAD_FINISH:
+    case APP_LOAD.success:
       return {
         ...state,
         appLoading: false,
@@ -293,11 +339,27 @@ export default (state = INITIAL_STATE, action) => {
         mfaToken: action.payload,
       };
 
+    case SHOW_PIN:
+      return {
+        ...state,
+        pinVisible: true,
+      };
+    case SET_TRANSACTION_TYPE:
+    case HIDE_PIN:
+      return {
+        ...state,
+        pinVisible: false,
+      };
+
     case LOGOUT_USER_ASYNC.success:
       return {
-        token: null,
+        token: '',
+        authError: '',
         mainState: 'landing',
         detailState: 'landing',
+        pin: '',
+        fingerprint: false,
+        appLoading: false,
         company: state.company,
         company_config: state.company_config,
         email: state.email,

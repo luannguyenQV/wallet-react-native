@@ -4,21 +4,26 @@ import {
   CONTACT_FIELD_CHANGED,
   CONTACT_FIELD_ERROR,
   RESET_SEND,
+  SET_TRANSACTION_TYPE,
 } from '../actions';
 
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
+import { createSelector } from 'reselect';
+import { contactsStateSelector } from '../sagas/selectors';
 
 const INITIAL_STATE = {
   contacts: [],
+  contactsSearch: '',
   contactsLoading: false,
   contactsType: 'email',
+  error: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case PERSIST_REHYDRATE:
       return action.payload.auth || INITIAL_STATE;
-    case RESET_SEND:
+    case SET_TRANSACTION_TYPE:
       return {
         ...state,
         contactsSearch: '',
@@ -68,16 +73,31 @@ export default (state = INITIAL_STATE, action) => {
   }
 };
 
-export function getContacts(contacts) {
-  const search = contacts.contactsSearch.toLowerCase();
-  if (contacts.contactsSearch) {
-    const temp = contacts.contacts.filter(
-      item =>
-        item.type === contacts.contactsType &&
-        (item.name.toLowerCase().includes(search) ||
-          item.contact.toLowerCase().includes(search)),
-    );
-    return temp;
-  }
-  return [];
-}
+export const contactsSelector = createSelector(
+  [contactsStateSelector],
+  contactsState => {
+    const search = contactsState.contactsSearch
+      ? contactsState.contactsSearch.toLowerCase()
+      : '';
+    let data = [];
+    if (search && contactsState.contacts) {
+      data = contactsState.contacts.filter(
+        item =>
+          item.type === contactsState.contactsType &&
+          (item.name
+            ? item.name.toLowerCase().includes(search)
+            : false || item.contact
+              ? item.contact.toLowerCase().includes(search)
+              : false),
+      );
+    }
+    // return {};
+    return {
+      data,
+      search: contactsState.contactsSearch,
+      type: contactsState.contactsType,
+      loading: contactsState.loading,
+      error: contactsState.error,
+    };
+  },
+);

@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { connect } from 'react-redux';
-import { refreshGetVerified } from './../../../redux/actions';
+import {
+  refreshGetVerified,
+  uploadProfilePhoto,
+} from './../../../redux/actions';
 
 import Header from './../../../components/header';
 import GetVerifiedOption from './../../../components/getVerifiedOption';
 import HeaderProfile from '../../../components/HeaderProfile';
 
-import {
-  Spinner,
-  InputContainer,
-  ImageUpload,
-} from './../../../components/common';
+import { Spinner, InputContainer } from './../../../components/common';
+import { userEmailsSelector } from '../../../redux/reducers/UserReducer';
 
 class GetVerifiedScreen extends Component {
   static navigationOptions = {
@@ -34,12 +34,12 @@ class GetVerifiedScreen extends Component {
     const { profile } = this.props;
 
     let value = profile.first_name + ' ' + profile.last_name;
-    let status = profile.status.toUpperCase();
+    let status = profile.status ? profile.status.toUpperCase() : 'INCOMPLETE';
 
     return (
       <GetVerifiedOption
         label="Basic Info"
-        value={value}
+        value={value ? value : 'Not yet provided'}
         status={status}
         gotoAddress="SettingsPersonalDetails"
         goTo={this.goTo}
@@ -103,34 +103,41 @@ class GetVerifiedScreen extends Component {
 
   renderAddresses() {
     const { address } = this.props;
-
     let value = '';
-    if (address.line_1) {
-      value = value + address.line_1 + ', ';
+    let status = 'INCOMPLETE';
+    console.log('address', address);
+    if (address.length > 0) {
+      const tempAddress = address[0];
+      status = tempAddress.status ? tempAddress.status.toUpperCase() : status;
+      if (tempAddress.line_1) {
+        value = value + tempAddress.line_1;
+      }
+      if (tempAddress.line_2) {
+        value = value + (value ? ', ' : '') + tempAddress.line_2;
+      }
+      if (tempAddress.city) {
+        value = value + (value ? ', ' : '') + tempAddress.city;
+      }
+      if (tempAddress.state_province) {
+        value = value + (value ? ', ' : '') + tempAddress.state_province;
+      }
+      if (tempAddress.country) {
+        value = value + (value ? ', ' : '') + tempAddress.country;
+      }
+      if (tempAddress.postal_code) {
+        value = value + (value ? ', ' : '') + tempAddress.postal_code;
+      }
     }
-    if (address.line_2) {
-      value = value + address.line_2 + ', ';
+    if (!value) {
+      value = 'Not yet provided';
     }
-    if (address.city) {
-      value = value + address.city + ', ';
-    }
-    if (address.state_province) {
-      value = value + address.state_province + ', ';
-    }
-    if (address.country) {
-      value = value + address.country + ', ';
-    }
-    if (address.postal_code) {
-      value = value + address.postal_code;
-    }
-    let status = address.status.toUpperCase();
 
     return (
       <GetVerifiedOption
         label="Address"
-        value={value}
+        value={value ? value : 'Not yet provided'}
         status={status}
-        gotoAddress="SettingsAddress"
+        gotoAddress="SettingsAddresses"
         goTo={this.goTo}
       />
     );
@@ -148,13 +155,13 @@ class GetVerifiedScreen extends Component {
     let idPending = idDocuments.filter(doc => doc.status === 'pending');
     let idDenied = idDocuments.filter(doc => doc.status === 'denied');
     if (idVerified.length > 0) {
-      statusIdentity = 'verified';
+      statusIdentity = 'VERIFIED';
       valueIdentity = 'Verified';
     } else if (idPending.length > 0) {
-      statusIdentity = 'pending';
+      statusIdentity = 'PENDING';
       valueIdentity = 'Waiting for approval';
     } else if (idDenied.length) {
-      statusIdentity = 'denied';
+      statusIdentity = 'DENIED';
       valueIdentity = idDenied[0].note;
     }
 
@@ -162,7 +169,7 @@ class GetVerifiedScreen extends Component {
       <GetVerifiedOption
         label="Proof of Identity"
         value={valueIdentity}
-        status={statusIdentity.toUpperCase()}
+        status={statusIdentity}
         gotoAddress="Document"
         goTo={this.goTo}
       />
@@ -185,13 +192,13 @@ class GetVerifiedScreen extends Component {
     );
     let addressDenied = addressDocuments.filter(doc => doc.status === 'denied');
     if (addressVerified.length > 0) {
-      statusAddress = 'verified';
+      statusAddress = 'VERIFIED';
       valueAddress = 'Verified';
     } else if (addressPending.length > 0) {
-      statusAddress = 'pending';
+      statusAddress = 'PENDING';
       valueAddress = 'Waiting for approval';
     } else if (addressDenied.length > 0) {
-      statusAddress = 'denied';
+      statusAddress = 'DENIED';
       valueAddress = idDenied[0].note;
     }
 
@@ -199,7 +206,7 @@ class GetVerifiedScreen extends Component {
       <GetVerifiedOption
         label="Proof of Address"
         value={valueAddress}
-        status={statusAddress.toUpperCase()}
+        status={statusAddress}
         gotoAddress="Document"
         goTo={this.goTo}
       />
@@ -224,13 +231,13 @@ class GetVerifiedScreen extends Component {
       doc => doc.status === 'denied',
     );
     if (idSelfieVerified.length > 0) {
-      statusAdvancedIdentity = 'verified';
+      statusAdvancedIdentity = 'VERIFIED';
       valueAdvancedIdentity = 'Verified';
     } else if (idSelfiePending.length > 0) {
-      statusAdvancedIdentity = 'pending';
+      statusAdvancedIdentity = 'PENDING';
       valueAdvancedIdentity = 'Waiting for approval';
     } else if (idSelfieDenied.length > 0) {
-      statusAdvancedIdentity = 'denied';
+      statusAdvancedIdentity = 'DENIED';
       valueAdvancedIdentity = idSelfieDenied[0].note;
     }
 
@@ -238,7 +245,7 @@ class GetVerifiedScreen extends Component {
       <GetVerifiedOption
         label="Advanced Proof of Identity"
         value={valueAdvancedIdentity}
-        status={statusAdvancedIdentity.toUpperCase()}
+        status={statusAdvancedIdentity}
         gotoAddress="Document"
         goTo={this.goTo}
       />
@@ -246,7 +253,12 @@ class GetVerifiedScreen extends Component {
   }
 
   render() {
-    const { profile, loading_profile, company_config } = this.props;
+    const {
+      profile,
+      loading_profile,
+      company_config,
+      uploadProfilePhoto,
+    } = this.props;
     const { container, mainContainer } = styles;
     // console.log(cm)
     const {
@@ -264,16 +276,16 @@ class GetVerifiedScreen extends Component {
           navigation={this.props.navigation}
           drawer
           title="Get verified"
-          colors={company_config.colors}
+          noShadow
         />
         <HeaderProfile
+          uploadProfilePhoto={uploadProfilePhoto}
           photoLink={profile.profile}
           name={
             profile.first_name
               ? profile.first_name + ' ' + profile.last_name
               : profile.username
           }
-          colors={company_config.colors}
         />
         <View style={mainContainer}>
           {loading_profile ? <Spinner /> : null}
@@ -302,20 +314,21 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user, auth }) => {
-  const { profile, address, mobile, email, document, loading_profile } = user;
-  const { company_config } = auth;
+const mapStateToProps = state => {
+  const { profile, address, mobile, document, loading_profile } = state.user;
+  const { company_config } = state.auth;
   return {
     profile,
     address,
     mobile,
-    email,
+    email: userEmailsSelector(state),
     document,
     loading_profile,
     company_config,
   };
 };
 
-export default connect(mapStateToProps, { refreshGetVerified })(
-  GetVerifiedScreen,
-);
+export default connect(mapStateToProps, {
+  refreshGetVerified,
+  uploadProfilePhoto,
+})(GetVerifiedScreen);

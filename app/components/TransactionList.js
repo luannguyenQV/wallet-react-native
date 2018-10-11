@@ -1,69 +1,75 @@
 import React, { Component } from 'react';
 import { View, FlatList, Text, RefreshControl } from 'react-native';
+import { WebBrowser } from 'expo';
+import { connect } from 'react-redux';
+import { fetchAccounts, fetchTransactions } from './../redux/actions';
 
 import * as Rehive from './../util/rehive';
 
 import TransactionListItem from './TransactionListItem';
-import { Card, EmptyListMessage, PopUpGeneral, Output } from './common';
+import {
+  ListSeparator,
+  EmptyListMessage,
+  PopUpGeneral,
+  Output,
+} from './common';
 import Colors from './../config/colors';
 import { performDivisibility } from './../util/general';
 
 import moment from 'moment';
 class TransactionList extends Component {
   state = {
-    previousCurrencyCode: null,
-    transactions: [],
-    loading: false,
     showDetail: false,
     transaction: null,
   };
-
   async componentDidMount() {
-    await this.getTransactions(this.props.currencyCode);
+    const { currency } = this.props;
+    const accountRef = currency.account ? currency.account : '';
+    const currencyCode =
+      currency.currency && currency.currency.code ? currency.currency.code : '';
+    this.getTransactions(accountRef, currencyCode);
   }
 
-  async UNSAFE_componentWillReceiveProps(nextProps) {
-    if (this.state.previousCurrencyCode !== nextProps.currencyCode) {
-      await this.getTransactions(nextProps.currencyCode);
-    }
-  }
-
-  async getTransactions(currencyCode) {
-    if (this.state.previousCurrencyCode !== currencyCode) {
-      this.setState({ transactions: [] });
-    }
-    // this.setState({ loading: true });
-    // if (this.props.fetchAccounts) {
-    //   this.props.fetchAccounts();
-    // }
-    let response = await Rehive.getTransactions(currencyCode);
-    this.setState({
-      previousCurrencyCode: currencyCode,
-      transactions: response.results,
-      loading: false,
-    });
+  async getTransactions(accountRef, currencyCode) {
+    const filters = {
+      account: accountRef,
+      currency: currencyCode,
+    };
+    this.props.fetchTransactions(filters);
   }
 
   renderTransactions() {
-    const { transactions, loading } = this.state;
+    const { transactions, loading, currency } = this.props;
+    const accountRef = currency.account ? currency.account : '';
+    const currencyCode =
+      currency.currency && currency.currency.code ? currency.currency.code : '';
+    const data =
+      transactions &&
+      transactions[accountRef] &&
+      transactions[accountRef][currencyCode]
+        ? transactions[accountRef][currencyCode]
+        : [];
     return (
       <FlatList
         refreshControl={
           <RefreshControl
             refreshing={loading}
-            onRefresh={() => this.getTransactions(this.props.currencyCode)}
+            onRefresh={() => {
+              this.getTransactions(accountRef, currencyCode);
+            }}
           />
         }
-        data={transactions}
+        data={data}
         renderItem={({ item }) => this.renderItem(item)}
         keyExtractor={item => item.id}
         ListEmptyComponent={this.renderEmptyList()}
+        ItemSeparatorComponent={ListSeparator}
       />
     );
   }
 
   renderEmptyList() {
-    const { loading } = this.state;
+    const { loading } = this.props;
     if (!loading) {
       return <EmptyListMessage text="No transactions" />;
     }
@@ -84,6 +90,17 @@ class TransactionList extends Component {
     );
   };
 
+  async openBrowser(transaction) {
+    const metadata = transaction.metadata;
+    if (metadata && metadata.type === 'stellar') {
+      this.hideModal();
+      await WebBrowser.openBrowserAsync(
+        'http://stellarchain.io/tx/' + metadata.hash,
+      );
+      this.showModal(transaction);
+    }
+  }
+
   renderDetail() {
     const {
       textStyleLeft,
@@ -99,7 +116,7 @@ class TransactionList extends Component {
     let userLabel = '';
 
     if (transaction) {
-      const { amount, label, currency, fee, balance } = transaction;
+      const { amount, label, currency, fee, balance, metadata } = transaction;
       switch (transaction.tx_type) {
         case 'debit':
           // console.log('Debit');
@@ -116,7 +133,6 @@ class TransactionList extends Component {
           color = Colors.positive;
           break;
         case 'credit':
-          // console.log('Credit');
           iconName = 'call-received';
           headerText = 'Received ' + transaction.currency.code;
           if (transaction.source_transaction) {
@@ -132,7 +148,6 @@ class TransactionList extends Component {
           headerText = 'Unknown transaction type';
           color = Colors.warning;
       }
-
       return (
         <PopUpGeneral
           visible={showDetail}
@@ -177,37 +192,20 @@ class TransactionList extends Component {
               )
             }
           />
+          {metadata && metadata.type === 'stellar' ? (
+            <Output
+              label="Stellar chain hash"
+              value={metadata.hash}
+              onPress={() => this.openBrowser(transaction)}
+            />
+          ) : null}
 
-          {/* <PopUpInfo
-            textSize={19}
-            label={'Total amount:'}
-            sign={total_amount < 0 ? '-' : ''}
-            currency={currency}
-            value={total_amount}
-          />
-          <PopUpInfo
-            textSize={17}
-            label={'Fees:'}
-            sign={fee < 0 ? '-' : ''}
-            currency={currency}
-            value={fee}
-          />
-          <PopUpInfoLine />
-          <PopUpInfo
-            textSize={19}
-            label={'Balance:'}
-            sign={balance < 0 ? '-' : ''}
-            currency={currency}
-            value={balance}
-          /> */}
           <View style={viewStyleFooter}>
             <View>
-              <Text style={textStyleLeft}>
-                {moment(transaction.created).format('lll')}
-              </Text>
+              <Text>{moment(transaction.created).format('lll')}</Text>
             </View>
             <View>
-              <Text style={textStyleRight}>{transaction.status}</Text>
+              <Text>{transaction.status}</Text>
             </View>
           </View>
         </PopUpGeneral>
@@ -228,7 +226,9 @@ class TransactionList extends Component {
 const styles = {
   containerStyle: {
     flex: 1,
-    padding: 8,
+    paddingHorizontal: 8,
+    zIndex: 2,
+    backgroundColor: 'white',
   },
   textStyleHeader: {
     fontSize: 20,
@@ -236,11 +236,6 @@ const styles = {
     paddingVertical: 8,
     fontWeight: 'bold',
     // alignSelf: 'flex-start',
-    color: Colors.black,
-  },
-  textStyleFooter: {
-    fontSize: 14,
-    // alignSelf: 'flex-end',
     color: Colors.black,
   },
   viewStyleFooter: {
@@ -252,4 +247,14 @@ const styles = {
   },
 };
 
-export default TransactionList;
+const mapStateToProps = state => {
+  return {
+    transactions: state.accounts.transactions,
+    loading: state.accounts.loading,
+  };
+};
+
+export default connect(mapStateToProps, {
+  fetchAccounts,
+  fetchTransactions,
+})(TransactionList);

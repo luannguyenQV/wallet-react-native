@@ -5,12 +5,16 @@ import {
   View,
   TouchableWithoutFeedback,
   TouchableHighlight,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { HeaderButton } from './HeaderButton';
 import { Spinner } from './Spinner';
+import context from './context';
+
 import Colors from './../../config/colors';
 
-const PopUpGeneral = props => {
+const _PopUpGeneral = props => {
   const {
     backgroundStyle,
     containerStyle,
@@ -52,109 +56,114 @@ const PopUpGeneral = props => {
       animationType="fade"
       onRequestClose={() => {}}
       transparent>
-      <TouchableHighlight
-        style={backgroundStyle}
-        onPress={onDismiss}
-        underlayColor={'transparent'}>
-        <View style={containerStyle}>
-          <TouchableWithoutFeedback
-            // style={containerStyle}
-            onPress={() => {}}
-            underlayColor={'transparent'}>
-            <View>
-              {title || iconTitleRight ? (
-                <View
-                  resizeMode="cover"
-                  style={[
-                    viewStyleTitleContainer,
-                    // {
-                    //   backgroundColor: titleStyle
-                    //     ? Colors[titleStyle]
-                    //     : Colors.primary,
-                    // },
-                  ]}>
-                  <View style={viewStyleTitle}>
-                    <Text
-                      style={[
-                        textStyleTitle,
-                        {
-                          fontSize: title ? (title.length < 15 ? 24 : 18) : 24,
-                          // color: titleStyle
-                          //   ? Colors[titleStyle + 'Contrast']
-                          //   : Colors.primaryContrast,
-                        },
-                      ]}>
-                      {title}
-                    </Text>
-                    <Text
-                      style={[
-                        textStyleSubtitle,
-                        {
-                          color: titleStyle
-                            ? Colors[titleStyle + 'Contrast']
-                            : Colors.primaryContrast,
-                          opacity: 0.8,
-                        },
-                      ]}>
-                      {subtitle}
-                    </Text>
-                  </View>
-                  {iconTitleRight ? (
-                    <View style={iconStyleTitleRight}>
-                      <HeaderButton
-                        icon={iconTitleRight}
-                        onPress={onPressTitleRight}
-                        color={
-                          Colors.lightGray
-                          // titleStyle
-                          //   ? Colors[titleStyle + 'Contrast']
-                          //   : Colors.primaryContrast
-                        }
-                      />
+      <KeyboardAvoidingView
+        keyboardShouldPersistTaps={'always'}
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'android' ? 'height' : 'padding'}>
+        <TouchableHighlight
+          style={backgroundStyle}
+          onPress={onDismiss}
+          underlayColor={'transparent'}>
+          <View style={containerStyle}>
+            <TouchableWithoutFeedback
+              // style={containerStyle}
+              onPress={() => {}}
+              underlayColor={'transparent'}>
+              <View>
+                {title || iconTitleRight ? (
+                  <View
+                    resizeMode="cover"
+                    style={[
+                      viewStyleTitleContainer,
+                      // {
+                      //   backgroundColor: titleStyle
+                      //     ? Colors[titleStyle]
+                      //     : Colors.primary,
+                      // },
+                    ]}>
+                    <View style={viewStyleTitle}>
+                      <Text
+                        style={[
+                          textStyleTitle,
+                          {
+                            fontSize: title
+                              ? title.length < 15 ? 24 : 18
+                              : 24,
+                            // color: titleStyle
+                            //   ? Colors[titleStyle + 'Contrast']
+                            //   : Colors.primaryContrast,
+                          },
+                        ]}>
+                        {title}
+                      </Text>
+                      <Text
+                        style={[
+                          textStyleSubtitle,
+                          {
+                            color: titleStyle
+                              ? Colors[titleStyle + 'Contrast']
+                              : Colors.primaryContrast,
+                            opacity: 0.8,
+                          },
+                        ]}>
+                        {subtitle}
+                      </Text>
                     </View>
+                    {iconTitleRight ? (
+                      <View style={iconStyleTitleRight}>
+                        <HeaderButton
+                          icon={iconTitleRight}
+                          onPress={onPressTitleRight}
+                          color="lightgrey"
+                        />
+                      </View>
+                    ) : null}
+                  </View>
+                ) : null}
+                <View style={viewStyleContent}>
+                  {contentText ? (
+                    <Text style={textStyleContent}>{contentText}</Text>
+                  ) : null}
+                  {children}
+                  {errorText ? (
+                    <Text style={textStyleError}>{errorText}</Text>
                   ) : null}
                 </View>
-              ) : null}
-              <View style={viewStyleContent}>
-                {contentText ? (
-                  <Text style={textStyleContent}>{contentText}</Text>
-                ) : null}
-                {children}
-                {errorText ? (
-                  <Text style={textStyleError}>{errorText}</Text>
+
+                {textActionOne || textActionTwo ? (
+                  <View style={viewStyleFooter}>
+                    {loading ? (
+                      <Spinner
+                        size="small"
+                        containerStyle={{ width: '100%' }}
+                      />
+                    ) : (
+                      <View style={viewStyleActionContainer}>
+                        {textActionTwo ? (
+                          <TouchableHighlight
+                            onPress={onPressActionTwo}
+                            underlayColor="lightgrey"
+                            style={buttonStyleAction}>
+                            <Text style={textStyleAction}>{textActionTwo}</Text>
+                          </TouchableHighlight>
+                        ) : null}
+                        {textActionOne ? (
+                          <TouchableHighlight
+                            onPress={onPressActionOne}
+                            underlayColor="lightgrey"
+                            style={buttonStyleAction}>
+                            <Text style={textStyleAction}>{textActionOne}</Text>
+                          </TouchableHighlight>
+                        ) : null}
+                      </View>
+                    )}
+                  </View>
                 ) : null}
               </View>
-
-              {textActionOne || textActionTwo ? (
-                <View style={viewStyleFooter}>
-                  {loading ? (
-                    <Spinner size="small" />
-                  ) : (
-                    <View style={viewStyleActionContainer}>
-                      {textActionTwo ? (
-                        <TouchableHighlight
-                          onPress={onPressActionTwo}
-                          underlayColor={Colors.lightGray}
-                          style={buttonStyleAction}>
-                          <Text style={textStyleAction}>{textActionTwo}</Text>
-                        </TouchableHighlight>
-                      ) : null}
-                      {textActionOne ? (
-                        <TouchableHighlight
-                          onPress={onPressActionOne}
-                          underlayColor={Colors.lightGray}
-                          style={buttonStyleAction}>
-                          <Text style={textStyleAction}>{textActionOne}</Text>
-                        </TouchableHighlight>
-                      ) : null}
-                    </View>
-                  )}
-                </View>
-              ) : null}
-            </View>
-          </TouchableWithoutFeedback>
-        </View>
-      </TouchableHighlight>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableHighlight>
+      </KeyboardAvoidingView>
     </Modal>
   );
 };
@@ -208,7 +217,8 @@ const styles = {
     padding: 8,
   },
   textStyleError: {
-    paddingTop: 8,
+    padding: 8,
+    paddingBottom: 0,
     fontSize: 14,
     color: Colors.error,
   },
@@ -222,7 +232,7 @@ const styles = {
   },
   viewStyleFooter: {
     flexDirection: 'row',
-    // height: 52,
+    height: 52,
     width: '100%',
     alignItems: 'center',
   },
@@ -230,7 +240,7 @@ const styles = {
     flexDirection: 'row',
     justifyContent: 'flex-end',
     width: '100%',
-    height: 52,
+    // height: 52,
     padding: 8,
   },
   textStyleAction: {
@@ -248,5 +258,7 @@ const styles = {
     borderRadius: 3,
   },
 };
+
+const PopUpGeneral = context(_PopUpGeneral);
 
 export { PopUpGeneral };

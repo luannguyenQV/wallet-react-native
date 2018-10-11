@@ -1,12 +1,5 @@
-import Big from 'big.js';
-
 import * as Rehive from '../../util/rehive';
 import { createAsyncTypes } from '../store/Utilities';
-import {
-  validateEmail,
-  validateMobile,
-  validateCrypto,
-} from '../../util/validation';
 
 export const ACCOUNT_FIELD_CHANGED = 'account_field_changed';
 export const ACCOUNT_FIELD_ERROR = 'account_field_error';
@@ -22,133 +15,73 @@ export const fetchAccounts = () => {
   return { type: FETCH_ACCOUNTS_ASYNC.pending };
 };
 
-// TODO: REPLACE
-export const UPDATE_CURRENT_INDEX = 'update_current_index';
-export const setActiveWalletIndex = index => {
+export const FETCH_TRANSACTIONS_ASYNC = createAsyncTypes('fetch_transactions');
+export const fetchTransactions = filters => {
+  return { type: FETCH_TRANSACTIONS_ASYNC.pending, payload: filters };
+};
+
+// export const SET_HOME_ACCOUNT = 'set_home_account';
+// export const setHomeAccount = account => {
+//   return {
+//     type: SET_HOME_ACCOUNT,
+//     payload: account,
+//   };
+// };
+
+export const SET_HOME_CURRENCY = 'set_home_currency';
+export const setHomeCurrency = currency => {
   return {
-    type: UPDATE_CURRENT_INDEX,
-    payload: index,
+    type: SET_HOME_CURRENCY,
+    payload: currency,
   };
 };
 
-export const SET_SEND_TYPE = 'set_send_type';
-export const SET_SEND_WALLET = 'set_send_wallet';
-export const setSendWallet = wallet => {
-  if (wallet) {
-    return {
-      type: SET_SEND_WALLET,
-      payload: wallet,
-    };
-  } else {
-    // Return fail?
-  }
-};
-
-export const validateSendAmount = (wallet, amount) => {
-  for (let i = 0; i < wallet.currency.currency.divisibility; i++) {
-    amount = amount * 10;
-  }
-  if (amount <= wallet.currency.available_balance && amount) {
-    return setSendState('recipient');
-  } else {
-    return {
-      type: ACCOUNT_FIELD_ERROR,
-      payload: 'Invalid send amount',
-    };
-  }
-};
-
-export const validateSendRecipient = (sendType, contactsType, recipient) => {
-  let error = '';
-  if (recipient) {
-    if (contactsType == 'email') {
-      error = validateEmail(recipient);
-    } else if (contactsType == 'mobile') {
-      error = validateMobile(recipient);
-    } else if (contactsType == 'crypto') {
-      error = validateCrypto(recipient, sendType);
-    }
-    console.log(sendType);
-    if (!error) {
-      if (sendType === 'stellar' && contactsType === 'crypto') {
-        return setSendState('memo');
-      }
-      return setSendState('note');
-    }
-  } else {
-    error = 'Recipient cannot be blank';
-  }
+export const SET_TRANSACTION_TYPE = 'set_transaction_type';
+export const setTransactionType = type => {
   return {
-    type: ACCOUNT_FIELD_ERROR,
-    payload: error,
+    type: SET_TRANSACTION_TYPE,
+    payload: type,
   };
 };
 
-export const validateSendMemo = memo => {
-  return setSendState('note');
-};
-
-export const validateSendNote = note => {
-  return setSendState('confirm');
-};
-
-export const SET_SEND_STATE = 'set_send_state';
-export const setSendState = state => {
-  if (state) {
-    return {
-      type: SET_SEND_STATE,
-      payload: state,
-    };
-  } else {
-    // Return fail?
-  }
-};
-
-export const RESET_SEND = 'reset_send';
-export const resetSend = () => {
+export const SET_TRANSACTION_CURRENCY = 'set_transaction_currency';
+export const setTransactionCurrency = currency => {
   return {
-    type: RESET_SEND,
+    type: SET_TRANSACTION_CURRENCY,
+    payload: currency,
   };
 };
 
+export const SET_TRANSACTION_STATE = 'set_transaction_state';
+export const setTransactionState = state => {
+  return {
+    type: SET_TRANSACTION_STATE,
+    payload: state,
+  };
+};
+
+export const VALIDATE_TRANSACTION = createAsyncTypes('validate_transaction');
+export const validateTransaction = type => {
+  return {
+    type: VALIDATE_TRANSACTION.pending,
+    payload: type,
+  };
+};
+
+export const RESET_TRANSACTION = 'reset_transaction';
+export const resetTransaction = () => {
+  return {
+    type: RESET_TRANSACTION,
+  };
+};
+
+export const SET_RECEIVE_ADDRESS = 'set_receive_address';
 export const SEND_ASYNC = createAsyncTypes('send');
-export const send = sendData => async dispatch => {
-  let amount = new Big(sendData.amount);
-  for (let i = 0; i < sendData.currency.divisibility; i++) {
-    amount = amount.times(10);
-  }
-  let data = {
-    amount: parseInt(amount, 0),
-    recipient: sendData.recipient,
-    note: sendData.note,
-    currency: sendData.currency.code,
-    debit_account: sendData.reference,
+export const send = sendData => {
+  return {
+    type: SEND_ASYNC.pending,
+    payload: sendData,
   };
-  dispatch({ type: SEND_ASYNC.pending });
-  let response = '';
-  try {
-    switch (sendData.type) {
-      case 'rehive':
-        response = await Rehive.createTransfer(data);
-        break;
-      case 'stellar':
-        data['to_reference'] = data.recipient;
-        delete data.debit_account;
-        delete data.recipient;
-        console.log(data);
-        response = await Rehive.createTransferStellar(data);
-        break;
-    }
-    console.log('response', response);
-    dispatch({
-      type: SEND_ASYNC.success,
-    });
-  } catch (error) {
-    dispatch({
-      type: SEND_ASYNC.error,
-      payload: error,
-    });
-  }
 };
 
 export const SET_WITHDRAW_WALLET = 'set_withdraw_wallet';
@@ -228,7 +161,7 @@ export const withdraw = data => async dispatch => {
     console.log(error);
     dispatch({
       type: WITHDRAW_ASYNC.error,
-      payload: error,
+      payload: error.message,
     });
   }
 };
@@ -255,5 +188,28 @@ export const HIDE_WALLET = 'hide_wallet';
 export const hideWallet = () => {
   return {
     type: HIDE_WALLET,
+  };
+};
+
+export const TOGGLE_ACCOUNT_FIELD = 'toggle_account_field';
+export const toggleAccountField = field => {
+  return {
+    type: TOGGLE_ACCOUNT_FIELD,
+    payload: field,
+  };
+};
+
+export const RESET_RECEIVE = 'reset_receive';
+export const resetReceive = () => {
+  return {
+    type: RESET_RECEIVE,
+  };
+};
+
+export const SET_RECEIVE_TYPE = 'set_receive_type';
+export const setReceiveType = type => {
+  return {
+    type: SET_RECEIVE_TYPE,
+    payload: type,
   };
 };

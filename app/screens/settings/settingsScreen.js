@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
-import {} from './../../redux/actions';
+import { changeTheme } from './../../redux/actions';
 import Header from './../../components/header';
-import AppConfig from './../../../app.json';
-// import HeaderVerified from './../../../components/HeaderVerified';
+import App from './../../../app.json';
+import Picker from 'react-native-picker-select';
 
 import {
   SettingsContainer,
   SettingsOption,
   InputContainer,
+  Text,
 } from './../../components/common';
+import { themeStateSelector } from '../../redux/sagas/selectors';
 
 class SettingsScreen extends Component {
   static navigationOptions = {
@@ -94,26 +96,26 @@ class SettingsScreen extends Component {
 
   renderAddresses() {
     const { address } = this.props;
-
     let value = '';
-    if (address) {
-      if (address.line_1) {
-        value = value + address.line_1 + ', ';
+    if (address.length > 0) {
+      const tempAddress = address[0];
+      if (tempAddress.line_1) {
+        value = value + tempAddress.line_1;
       }
-      if (address.line_2) {
-        value = value + address.line_2 + ', ';
+      if (tempAddress.line_2) {
+        value = value + (value ? ', ' : '') + tempAddress.line_2;
       }
-      if (address.city) {
-        value = value + address.city + ', ';
+      if (tempAddress.city) {
+        value = value + (value ? ', ' : '') + tempAddress.city;
       }
-      if (address.state_province) {
-        value = value + address.state_province + ', ';
+      if (tempAddress.state_province) {
+        value = value + (value ? ', ' : '') + tempAddress.state_province;
       }
-      if (address.country) {
-        value = value + address.country + ', ';
+      if (tempAddress.country) {
+        value = value + (value ? ', ' : '') + tempAddress.country;
       }
-      if (address.postal_code) {
-        value = value + address.postal_code;
+      if (tempAddress.postal_code) {
+        value = value + (value ? ', ' : '') + tempAddress.postal_code;
       }
     }
     if (!value) {
@@ -122,9 +124,9 @@ class SettingsScreen extends Component {
 
     return (
       <SettingsOption
-        label="Address"
+        label="Addresses"
         value={value}
-        gotoAddress="SettingsAddress"
+        gotoAddress="SettingsAddresses"
         onPress={this.goTo}
       />
     );
@@ -211,15 +213,36 @@ class SettingsScreen extends Component {
     );
   }
 
+  renderAppearance() {
+    let themes = [
+      { label: 'Theme: Default', value: 'default' },
+      { label: 'Theme: Light', value: 'light' },
+    ];
+    return (
+      <Picker
+        value={this.props.theme}
+        placeholder={{}}
+        items={themes}
+        onValueChange={value => {
+          this.props.changeTheme(value);
+        }}
+        style={{ ...styles }}
+        hideIcon
+        // underline={{
+        //   borderTopWidth: 0,
+        //   height: 0,
+        // }}
+        // ref={el => {
+        //   this.inputRefs.picker = el;
+        // }}
+      />
+    );
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <Header
-          navigation={this.props.navigation}
-          colors={this.props.company_config.colors}
-          drawer
-          title="Settings"
-        />
+        <Header navigation={this.props.navigation} drawer title="Settings" />
         <InputContainer>
           <SettingsContainer label="Personal details">
             {this.renderBasicInfo()}
@@ -232,9 +255,13 @@ class SettingsScreen extends Component {
             {/* {this.renderCards()} */}
             {/* {this.renderCryptoAccounts()} */}
           </SettingsContainer>
+          <SettingsContainer label="Appearance">
+            {this.renderAppearance()}
+          </SettingsContainer>
           <SettingsContainer label="Security">
             {this.renderSecurity()}
           </SettingsContainer>
+          <Text>Version: {App.expo.version}</Text>
         </InputContainer>
       </View>
     );
@@ -246,21 +273,23 @@ const styles = {
     flex: 1,
     backgroundColor: 'white',
   },
-  // mainContainer: {
-  //   flex: 1,
-  // },
+  inputIOS: {
+    fontSize: 16,
+    padding: 8,
+    backgroundColor: 'white',
+    color: 'black',
+  },
 };
 
-const mapStateToProps = ({ user, auth }) => {
-  const { company_config } = auth;
-  const { profile, address, mobile, email } = user;
+const mapStateToProps = state => {
+  const { profile, address, mobile, email } = state.user;
   return {
     profile,
     address,
     mobile,
     email,
-    company_config,
+    theme: themeStateSelector(state),
   };
 };
 
-export default connect(mapStateToProps, {})(SettingsScreen);
+export default connect(mapStateToProps, { changeTheme })(SettingsScreen);

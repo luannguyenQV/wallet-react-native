@@ -1,14 +1,15 @@
 import React from 'react';
 import { TouchableOpacity, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import context from './context';
 
-const HeaderButton = ({ onPress, icon, text, color, size }) => (
+const _HeaderButton = ({ onPress, icon, text, color, colors, size }) => (
   <TouchableOpacity onPress={onPress} style={styles.containerStyle}>
     {icon ? (
       <Icon
         name={icon}
         size={size ? size : 24}
-        color={color ? color : 'white'}
+        color={color ? color : colors.headerContrast}
       />
     ) : (
       <Text
@@ -27,5 +28,7 @@ styles = {
     justifyContent: 'center',
   },
 };
+
+const HeaderButton = context(_HeaderButton);
 
 export { HeaderButton };

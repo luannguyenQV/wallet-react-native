@@ -6,15 +6,16 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import context from './context';
 
-import Colors from './../../config/colors';
 import { Spinner } from './Spinner';
 import { HeaderButton } from './HeaderButton';
 import TouchableCircle from './../touchableCircle';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { MaterialIcons as Icon } from '@expo/vector-icons';
 import Swipeable from 'react-native-swipeable';
+import Colors from './../../config/colors';
 
-const Card = props => {
+const _Card = props => {
   const {
     viewStyleCardContainer,
     viewStyleTitleContainer,
@@ -25,6 +26,7 @@ const Card = props => {
     buttonStyleAction,
     textStyleAction,
     textStyleError,
+    iconStyleTitleLeft,
     iconStyleTitleRight,
     viewStyleFooter,
     viewStyleContent,
@@ -59,6 +61,8 @@ const Card = props => {
     disableActionTwo,
     loading,
     swipeableContent,
+    colors,
+    canEdit,
   } = props;
 
   return (
@@ -70,18 +74,21 @@ const Card = props => {
           resizeMode="cover"
           style={[viewStyleTitleContainer, { backgroundColor: 'white' }]}>
           {textTitleLeft ? (
-            <TouchableCircle
-              text={textTitleLeft}
-              active={itemActive}
-              onPress={onPressTitleLeft}
-              radius={24}
-            />
+            <View style={iconStyleTitleLeft}>
+              <TouchableCircle
+                colors={colors}
+                text={textTitleLeft}
+                active={itemActive}
+                onPress={onPressTitleLeft}
+                radius={24}
+              />
+            </View>
           ) : null}
           {iconTitleLeft ? (
             <HeaderButton
               name={iconTitleLeft}
               onPress={onPressTitleLeft}
-              color={colorTitle ? colorTitle : Colors.primaryContrast}
+              color={colorTitle ? colorTitle : colors.primaryContrast}
             />
           ) : null}
           <TouchableWithoutFeedback onPress={onPressTitle}>
@@ -108,7 +115,7 @@ const Card = props => {
               <HeaderButton
                 icon={iconTitleRight}
                 onPress={onPressTitleRight}
-                color={colorTitle ? colorTitle : Colors.primaryContrast}
+                color={colorTitle ? colorTitle : colors.primaryContrast}
               />
             </View>
           ) : null}
@@ -116,6 +123,12 @@ const Card = props => {
       ) : null}
       <TouchableWithoutFeedback onPress={onPressContent}>
         <View style={[viewStyleContent, { backgroundColor }]}>
+          {canEdit ? (
+            <View
+              style={{ position: 'absolute', right: 8, top: 8, padding: 8 }}>
+              <Icon name={'edit'} size={22} color={'lightgray'} />
+            </View>
+          ) : null}
           {props.children}
           {errorText ? <Text style={textStyleError}>{errorText}</Text> : null}
         </View>
@@ -132,13 +145,13 @@ const Card = props => {
                   name={iconFooter}
                   size={22}
                   onPress={onPressFooter}
-                  color={colorIcon ? colorIcon : Colors.gray}
+                  color={colorIcon ? colorIcon : colors.gray}
                 />
               ) : null}
               {textActionTwo ? (
                 <TouchableHighlight
                   disabled={disableActionTwo}
-                  underlayColor={Colors.lightGray}
+                  underlayColor="lightgrey"
                   style={buttonStyleAction}
                   onPress={onPressActionTwo}>
                   <Text style={textStyleAction}>{textActionTwo}</Text>
@@ -147,7 +160,7 @@ const Card = props => {
               {textActionOne ? (
                 <TouchableHighlight
                   disabled={disableActionOne}
-                  underlayColor={Colors.lightGray}
+                  underlayColor="lightgrey"
                   style={buttonStyleAction}
                   onPress={onPressActionOne}>
                   <Text style={textStyleAction}>{textActionOne}</Text>
@@ -165,7 +178,7 @@ const Card = props => {
   }
 };
 
-Card.defaultProps = {
+_Card.defaultProps = {
   title: '',
   subtitle: '',
   renderHeader: null,
@@ -180,7 +193,7 @@ Card.defaultProps = {
   backgroundColor: 'white',
 };
 
-Card.propTypes = {
+_Card.propTypes = {
   title: PropTypes.string,
   subtitle: PropTypes.string,
   renderHeader: PropTypes.object,
@@ -217,6 +230,7 @@ const styles = {
   viewStyleTitle: {
     flexDirection: 'column',
     paddingHorizontal: 8,
+    paddingTop: 4,
     flexGrow: 1,
     flex: 1,
     width: 0,
@@ -236,9 +250,7 @@ const styles = {
   },
   iconStyleTitleLeft: {
     paddingHorizontal: 8,
-    alignSelf: 'flex-start',
-    color: 'black',
-    opacity: 0.87,
+    paddingTop: 8,
   },
   iconStyleTitleRight: {
     right: 0,
@@ -268,10 +280,10 @@ const styles = {
     flexDirection: 'row',
     justifyContent: 'flex-end',
     width: '100%',
+    height: 52,
     padding: 8,
   },
   textStyleAction: {
-    color: Colors.primary,
     fontSize: 14,
     fontWeight: 'bold',
   },
@@ -291,5 +303,7 @@ const styles = {
 // };
 
 // connect(mapStateToProps, {})(props => Card(props));
+
+const Card = context(_Card);
 
 export { Card };

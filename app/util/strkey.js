@@ -198,7 +198,6 @@ function isValid(versionByteName, encoded) {
   if (encoded && encoded.length != 56) {
     return false;
   }
-
   try {
     var decoded = decodeCheck(versionByteName, encoded);
     if (decoded.length !== 32) {

@@ -31,7 +31,7 @@ const styles = {
     backgroundColor: '#00000000',
     // paddingVertical: 10,
     justifyContent: 'flex-start',
-    padding: 8,
+    paddingHorizontal: 8,
   },
 };
 

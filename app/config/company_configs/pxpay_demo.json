@@ -1,0 +1,141 @@
+{
+  "company": {
+    "id": "pxpay_demo",
+    "name": "PXPay Demo",
+    "description": "A PXPay demo company"
+  },
+  "services": {
+    "bitcoin": false,
+    "stellar": true,
+    "ethereum": false,
+    "rewards": false
+  },
+
+  "auth": {
+    "identifier": "email",
+    "email": "optional",
+    "mobile": "",
+    "terms": [
+      {
+        "id": 0,
+        "title": "Privacy Policy",
+        "link": "https://www.google.co.za/",
+        "description": "Click here to read more on the privacy policy"
+      },
+      {
+        "id": 1,
+        "title": "User Agreement",
+        "link": "https://www.rehive.com/",
+        "description": "Click here to read more on the user agreement"
+      }
+    ],
+    "first_name": true,
+    "last_name": true,
+    "username": true,
+    "country": false,
+    "pin": "required",
+    "mfa": "optional"
+  },
+  "pin": {
+    "appLoad": true,
+    "security": false,
+    "send": true,
+    "withdraw": false,
+    "updateDetails": false
+  },
+  "home": {
+    "header": "wallet",
+    "detail": [
+      {
+        "order": 0,
+        "type": "cards"
+      },
+      {
+        "order": 1,
+        "type": "transactions"
+      }
+    ]
+  },
+  "verification": {
+    "requirePersonal": true,
+    "requireAddress": true,
+    "requireMobile": true,
+    "requireEmail": true,
+    "requireDocumentID": true,
+    "requireDocumentAddress": true,
+    "requireDocumentAdvID": true
+  },
+  "colors": {
+    "primary": "#051627",
+    "secondary": "#005970",
+    "tertiary": "#2BB8C2",
+    "focus": "#2BB8C2",
+
+    "primaryContrast": "#F1F2F2",
+    "secondaryContrast": "#ffffff",
+    "tertiaryContrast": "#000000",
+    "focusContrast": "#000000",
+
+    "warning": "#FC8755",
+    "error": "#f44336",
+    "success": "#4CAF50",
+    "positive": "#4CAF50",
+    "negative": "#f44336"
+  },
+  "cards": {
+    "home": {
+      "general": {
+        "welcome": true,
+        "verify": true
+      },
+      "custom": [
+        {
+          "id": "0",
+          "title": "PX Pay 1",
+          "description": "This is the demo PX Pay card 1",
+          "image": "pxpay",
+          "dismiss": true
+        },
+        {
+          "id": "1",
+          "title": "PX Pay 2",
+          "description": "This is the demo PX Pay card 2",
+          "image": "pxpay",
+          "dismiss": true
+        }
+      ]
+    }
+  },
+  "sliders": {
+    "landing": [
+      {
+        "id": "0",
+        "title": "PX Pay",
+        "description": "This is the demo account - PX Pay",
+        "image": "pxpay"
+      },
+      {
+        "id": "1",
+        "title": "PX Pay 2",
+        "description": "This is the demo account - PX Pay",
+        "image": "pxpay"
+      },
+      {
+        "id": "2",
+        "title": "PX Pay 3",
+        "description": "This is the demo account - PX Pay",
+        "image": "pxpay"
+      }
+    ]
+  },
+  "screens": {
+    "login": [
+      {
+        "id": "0",
+        "title": "PX Pay 1",
+        "description": "This is the demo account - PX Pay",
+        "image": "pxpay"
+      }
+    ]
+  }
+}

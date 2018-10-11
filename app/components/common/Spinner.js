@@ -1,23 +1,57 @@
 // import lib for making component
 import React from 'react';
-import { View, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator, Image } from 'react-native';
+import context from './context';
 
 // make component
-const Spinner = ({ size }) => {
+const _Spinner = ({
+  size,
+  type,
+  colors,
+  color,
+  backgroundColor,
+  theme,
+  containerStyle,
+}) => {
   return (
-    <View style={styles.containerStyle}>
-      <ActivityIndicator size={size || 'large'} />
+    <View
+      style={[
+        styles._containerStyle,
+        {
+          backgroundColor: colors[backgroundColor]
+            ? colors[backgroundColor]
+            : 'white',
+        },
+        containerStyle,
+      ]}>
+      {theme[type + 'Spinner'] === 'rehive' ? (
+        <Image
+          style={{
+            height: size === 'large' ? 150 : 50,
+            width: size === 'large' ? 150 : 50,
+          }}
+          source={require('./../../../assets/icons/rehive_spinner.gif')}
+        />
+      ) : (
+        <ActivityIndicator
+          size={size || 'small'}
+          color={colors[color ? color : 'primary']}
+        />
+      )}
     </View>
   );
 };
 
 const styles = {
-  containerStyle: {
-    flex: 1,
+  _containerStyle: {
+    // flex: 1,
     justifyContent: 'center',
+    padding: 8,
     alignItems: 'center',
+    width: '100%',
   },
 };
 
-// make component available to other parts of app
+const Spinner = context(_Spinner);
+
 export { Spinner };

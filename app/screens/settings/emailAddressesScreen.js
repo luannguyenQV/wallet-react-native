@@ -12,6 +12,7 @@ import {
 import Header from './../../components/header';
 import { Input, Output } from './../../components/common';
 import CardList from './../../components/CardList';
+import { userEmailsSelector } from '../../redux/reducers/UserReducer';
 
 class EmailAddressesScreen extends Component {
   static navigationOptions = {
@@ -29,13 +30,7 @@ class EmailAddressesScreen extends Component {
   };
 
   renderDetail = () => {
-    const {
-      tempItem,
-      updateError,
-      updateInputField,
-      company_config,
-    } = this.props;
-    const { colors } = company_config;
+    const { tempItem, updateError, updateInputField } = this.props;
     const { email } = tempItem;
 
     return (
@@ -46,20 +41,12 @@ class EmailAddressesScreen extends Component {
         value={email}
         inputError={updateError}
         onChangeText={input => updateInputField('email', 'email', input)}
-        colors={colors}
       />
     );
   };
 
   render() {
-    const {
-      email,
-      tempItem,
-      newItem,
-      updateItem,
-      showDetail,
-      company_config,
-    } = this.props;
+    const { email, tempItem, newItem, updateItem, showDetail } = this.props;
     return (
       <View style={styles.container}>
         <Header
@@ -72,7 +59,6 @@ class EmailAddressesScreen extends Component {
               ? () => updateItem('email', tempItem)
               : () => newItem('email')
           }
-          colors={company_config.colors}
         />
         <CardList
           type="email"
@@ -102,15 +88,13 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user, auth }) => {
-  const { company_config } = auth;
-  const { email, tempItem, updateError, showDetail } = user;
+const mapStateToProps = state => {
+  const { email, tempItem, updateError, showDetail } = state.user;
   return {
-    email,
+    email: userEmailsSelector(state),
     tempItem,
     updateError,
     showDetail,
-    company_config,
   };
 };
 

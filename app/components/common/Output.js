@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { View, Text, TouchableHighlight, Clipboard } from 'react-native';
 import { Toast } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import context from './context';
 
-class Output extends Component {
+class _Output extends Component {
   renderOutput() {
-    const { label, value, copy } = this.props;
+    const { label, value, copy, onPress } = this.props;
 
     const {
       viewStyleContent,
@@ -27,13 +28,14 @@ class Output extends Component {
             <Text style={textStyleValue}>{value ? value : label}</Text>
           </View>
         </View>
-        {copy ? <Icon name="content-copy" size={24} color={'black'} /> : null}
+        {copy ? <Icon name="content-copy" size={20} color={'black'} /> : null}
+        {onPress ? <Icon name="open-in-new" size={20} color={'black'} /> : null}
       </View>
     );
   }
 
   render() {
-    const { goTo, gotoAddress, label, value, copy } = this.props;
+    const { goTo, gotoAddress, label, value, copy, onPress } = this.props;
 
     const { viewStyleContainer } = styles;
 
@@ -54,6 +56,13 @@ class Output extends Component {
               Clipboard.setString(value);
               Toast.show({ text: 'Copied' });
             }}>
+            {this.renderOutput()}
+          </TouchableHighlight>
+        ) : onPress ? (
+          <TouchableHighlight
+            underlayColor={'white'}
+            activeOpacity={0.2}
+            onPress={() => onPress()}>
             {this.renderOutput()}
           </TouchableHighlight>
         ) : (
@@ -98,5 +107,7 @@ const styles = {
     fontSize: 16,
   },
 };
+
+const Output = context(_Output);
 
 export { Output };

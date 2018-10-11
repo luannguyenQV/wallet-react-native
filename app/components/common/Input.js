@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, FlatList } from 'react-native';
+import { View, Text, TextInput, FlatList, Platform } from 'react-native';
 import PropTypes from 'prop-types';
 import Colors from './../../config/colors';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { MaterialIcons as Icon } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import CountryPicker from 'react-native-country-picker-modal';
-import { ListItem } from './ListItem';
+import { ListItem, ListSeparator } from './ListItem';
+import context from './context';
+import { TextInputMask } from 'react-native-masked-text';
 
-class Input extends Component {
+class _Input extends Component {
   state = {
     focused: false,
     iconNameVisibility: 'visibility',
@@ -19,6 +22,7 @@ class Input extends Component {
     this.setState({
       focused: false,
     });
+    this.props.onBlur();
   }
 
   _OnFocus() {
@@ -60,6 +64,8 @@ class Input extends Component {
       autoCorrect,
       multiline,
       colors,
+      precision,
+      unit,
     } = this.props;
 
     const {
@@ -70,6 +76,35 @@ class Input extends Component {
     } = styles;
 
     const { focused, secureTextEntry, cca2 } = this.state;
+
+    // if (type === 'money') {
+    //   return (
+    //     <TextInputMask
+    //       type={'money'}
+    //       options={{
+    //         precision: precision,
+    //         unit: unit,
+    //       }}
+    //       style={textStyleInput}
+    //       onFocus={() => this._OnFocus()}
+    //       onBlur={() => this._OnBlur()}
+    //       underlineColorAndroid="transparent"
+    //       autoCapitalize={autoCapitalize ? autoCapitalize : 'none'}
+    //       autoCorrect={autoCorrect ? autoCorrect : false}
+    //       placeholder={focused ? placeholder : label}
+    //       value={value ? value : '0'}
+    //       onChangeText={onChangeText}
+    //       refInput={reference}
+    //       selectTextOnFocus
+    //       secureTextEntry={secureTextEntry}
+    //       keyboardType={keyboardType}
+    //       returnKeyType={returnKeyType}
+    //       onSubmitEditing={onSubmitEditing}
+    //       autoFocus={autoFocus}
+    //       blurOnSubmit={false}
+    //     />
+    //   );
+    // }
 
     return (
       <View
@@ -113,6 +148,27 @@ class Input extends Component {
     );
   }
 
+  viewStyleContainer() {
+    const { focused } = this.state;
+    if (focused) {
+      if (Platform.OS === 'ios') {
+        return {
+          shadowColor: 'rgba(0, 0, 0, 0.6)',
+          shadowOpacity: 0.3,
+          shadowRadius: 3,
+          shadowOffset: {
+            width: 1,
+            height: 2,
+          },
+        };
+      } else {
+        return { elevation: 10 };
+      }
+      //
+    }
+    return { elevation: 1 };
+  }
+
   render() {
     const {
       label,
@@ -127,6 +183,8 @@ class Input extends Component {
       type,
       onPressListItem,
       colors,
+      checked,
+      toggleCheck,
     } = this.props;
 
     const {
@@ -136,14 +194,14 @@ class Input extends Component {
       textStyleLabel,
       textStyleFooter,
       viewStyleContent,
-      viewStylePopUp,
+      viewStyleCheckbox,
       iconStyleVisibility,
     } = styles;
 
     const { borderColor, focused, iconNameVisibility } = this.state;
 
     return (
-      <View>
+      <View style={this.viewStyleContainer()}>
         <View
           style={[
             viewStyleContainer,
@@ -151,18 +209,25 @@ class Input extends Component {
               backgroundColor: colors.primaryContrast,
             },
           ]}>
-          <View style={{ flexDirection: 'row' }}>
-            <View
-              style={[
-                viewStyleContent,
-                {
-                  borderColor: inputError
-                    ? colors.error
-                    : focused ? colors.focus : colors.lightGray,
-                  borderBottomWidth: inputError || focused ? 2 : 2,
-                  width: '100%',
-                },
-              ]}>
+          <View
+            style={{
+              flexDirection: 'row',
+              borderColor: inputError
+                ? colors.error
+                : focused ? colors.focus : 'lightgrey',
+              borderBottomWidth: inputError || focused ? 2 : 2,
+            }}>
+            {toggleCheck ? (
+              <View style={viewStyleCheckbox}>
+                <MaterialIcons
+                  onPress={toggleCheck} //value ? {this.setState({ value })} : 'square-outline'}
+                  name={checked ? 'check-box' : 'check-box-outline-blank'}
+                  size={32}
+                  color={checked ? colors.primary : 'lightgrey'}
+                />
+              </View>
+            ) : null}
+            <View style={[viewStyleContent, { width: '100%' }]}>
               {focused || value ? (
                 <View style={viewStyleLabel}>
                   <Text
@@ -209,12 +274,12 @@ class Input extends Component {
                   textStyleFooter,
                   { color: inputError ? colors.error : colors.primaryContrast },
                 ]}>
-                {inputError ? 'Error: ' + inputError : helperText}
+                {inputError ? inputError : helperText}
               </Text>
             </View>
           ) : null}
 
-          {data ? (
+          {data && focused ? (
             <FlatList
               // refreshControl={
               //   <RefreshControl
@@ -245,12 +310,13 @@ class Input extends Component {
               renderItem={({ item }) => (
                 <ListItem
                   onPress={() => onPressListItem(item)}
-                  title={item[title]}
+                  title={title ? item[title] : item}
                   subtitle={item[subtitle]}
-                  // image={item.image ? item.image : null}
+                  image={item.image ? item.image : null}
                 />
               )}
-              keyExtractor={item => (item.id ? item.id.toString() : '')}
+              keyExtractor={item => (item.id ? item.id.toString() : item)}
+              ItemSeparatorComponent={ListSeparator}
               // ListEmptyComponent={<ListItem title="No data" />}
             />
           ) : null}
@@ -258,9 +324,13 @@ class Input extends Component {
       </View>
     );
   }
+
+  // _renderSeparator = () => (
+
+  // );
 }
 
-Input.propTypes = {
+_Input.propTypes = {
   label: PropTypes.string, // Text displayed on button
   reference: PropTypes.func, // For animations
   animation: PropTypes.string, // Animation type
@@ -270,9 +340,10 @@ Input.propTypes = {
   size: PropTypes.string, // Size of button (small / default or '' / large)
   type: PropTypes.string, // Type of button (text, contained, TODO: outlined)
   colors: PropTypes.object, // Button color
+  onBlur: PropTypes.func, // Function to execute on press
 };
 
-Input.defaultProps = {
+_Input.defaultProps = {
   label: '',
   reference: () => {},
   animation: '',
@@ -282,13 +353,12 @@ Input.defaultProps = {
   size: '',
   type: 'contained',
   colors: Colors,
-  // backgroundColor: colors.primary,
-  // textColor: colors.primaryContrast,
+  onBlur: () => {},
 };
 
 const styles = {
   viewStyleContainer: {
-    minHeight: 56,
+    minHeight: 60,
     borderTopRightRadius: 5,
     borderTopLeftRadius: 5,
     overflow: 'hidden',
@@ -296,7 +366,7 @@ const styles = {
   },
   viewStyleContent: {
     paddingHorizontal: 12,
-    minHeight: 56,
+    minHeight: 60,
     justifyContent: 'center',
   },
   viewStylePopUp: {
@@ -322,6 +392,7 @@ const styles = {
     paddingTop: 6,
   },
   textStyleInput: {
+    paddingTop: 4,
     fontWeight: 'normal',
     flex: 1,
     fontSize: 16,
@@ -346,7 +417,16 @@ const styles = {
     right: 12,
     position: 'absolute',
   },
+  viewStyleCheckbox: {
+    padding: 4,
+    paddingRight: 0,
+    paddingLeft: 8,
+    justifyContent: 'center',
+    // marginVertical: 12,
+  },
 };
+
+const Input = context(_Input);
 
 export { Input };
 

@@ -1,15 +1,10 @@
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
-import {
-  FETCH_CRYPTO_ASYNC,
-  CLAIM_REWARD_ASYNC,
-  VIEW_REWARD,
-  HIDE_REWARD,
-} from '../actions/';
+import { FETCH_CRYPTO_ASYNC, SET_RECEIVE_ADDRESS } from '../actions/';
 
 const INITIAL_STATE = {
-  stellar: [],
-  ethereum: [],
-  bitcoin: [],
+  stellar: { currencies: [], address: '', memo: '' },
+  ethereum: { currencies: [], address: '' },
+  bitcoin: { currencies: [], address: '' },
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -24,10 +19,12 @@ export default (state = INITIAL_STATE, action) => {
         loading: true,
       };
     case FETCH_CRYPTO_ASYNC.success:
-      const { type, assets } = action.payload;
       return {
         ...state,
-        [type]: ['XLM'].concat(assets),
+        [action.payload.type]: {
+          ...state[action.payload.type],
+          currencies: action.payload.assets,
+        },
         loading: false,
         error: '',
       };
@@ -38,51 +35,17 @@ export default (state = INITIAL_STATE, action) => {
         error: action.payload,
       };
 
-    // case VIEW_REWARD:
-    //   return {
-    //     ...state,
-    //     tempReward: action.payload,
-    //     showDetail: true,
-    //   };
-    // case HIDE_REWARD:
-    //   return {
-    //     ...state,
-    //     tempReward: null,
-    //     showDetail: false,
-    //   };
-
-    // case CLAIM_REWARD_ASYNC.pending:
-    //   return {
-    //     ...state,
-    //     claimError: '',
-    //     claimLoading: true,
-    //   };
-    // case CLAIM_REWARD_ASYNC.success:
-    //   return {
-    //     ...state,
-    //     claimError: '',
-    //     claimLoading: false,
-    //   };
-    // case CLAIM_REWARD_ASYNC.error:
-    //   return {
-    //     ...state,
-    //     claimError: action.payload,
-    //     claimLoading: false,
-    //   };
+    case SET_RECEIVE_ADDRESS:
+      return {
+        ...state,
+        [action.payload.type]: {
+          ...state[action.payload.type],
+          address: action.payload.address,
+          memo: action.payload.memo ? action.payload.memo : '',
+        },
+      };
 
     default:
       return state;
   }
 };
-
-export function getRewards(store) {
-  const rewards = {
-    data: store.rewards.rewards,
-    loading: store.rewards.rewardsLoading,
-    error: store.rewards.rewardsError,
-    tempItem: store.rewards.tempReward,
-    detail: store.rewards.showDetail,
-    loadingDetail: store.rewards.claimLoading,
-  };
-  return rewards;
-}

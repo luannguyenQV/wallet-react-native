@@ -1,0 +1,128 @@
+{
+  "company": {
+    "id": "xbt01",
+    "name": "Bitcoin Demo Company 1",
+    "description":
+      "A demo company on the Rehive platform with the Bitcoin service"
+  },
+  "services": {
+    "bitcoin": true,
+    "stellar": false,
+    "ethereum": false,
+    "rewards": false
+  },
+  "auth": {
+    "identifier": "email",
+    "email": "optional",
+    "mobile": "",
+    "terms": [],
+    "first_name": false,
+    "last_name": false,
+    "username": false,
+    "country": false,
+    "pin": "optional",
+    "mfa": "optional"
+  },
+  "pin": {
+    "appLoad": true,
+    "security": false,
+    "send": true,
+    "withdraw": true,
+    "updateDetails": false
+  },
+  "home": {
+    "header": "wallet",
+    "detail": [
+      {
+        "order": 0,
+        "type": "cards"
+      },
+      {
+        "order": 1,
+        "type": "transactions"
+      }
+    ]
+  },
+  "verification": {
+    "requirePersonal": true,
+    "requireAddress": true,
+    "requireMobile": true,
+    "requireEmail": true,
+    "requireDocumentID": true,
+    "requireDocumentAddress": true,
+    "requireDocumentAdvID": true
+  },
+  "colors": {
+    "primary": "#4d4d4d",
+    "secondary": "#a6a6a6",
+    "tertiary": "#c4c4c4",
+    "focus": "#9797F0",
+
+    "primaryContrast": "#f3f3f3",
+    "secondaryContrast": "#2d2d2d",
+    "tertiaryContrast": "#000000",
+    "focusContrast": "#2d2d2d",
+
+    "warning": "#FC8755",
+    "error": "#f44336",
+    "success": "#4CAF50",
+    "positive": "#4CAF50",
+    "negative": "#f44336"
+  },
+  "cards": {
+    "home": {
+      "general": {
+        "welcome": true,
+        "verify": true
+      },
+      "custom": [
+        {
+          "id": 0,
+          "title": "Card 1",
+          "description": "This is your custom text for card 1",
+          "image": "card1",
+          "dismiss": true
+        },
+        {
+          "id": 1,
+          "title": "Card 2",
+          "description": "This is your custom text for card 2",
+          "image": "card2",
+          "dismiss": false
+        }
+      ]
+    }
+  },
+  "sliders": {
+    "landing": [
+      {
+        "id": 0,
+        "title": "Slide 1",
+        "description": "This is your custom text for slide 1",
+        "image": "card1"
+      },
+      {
+        "id": 1,
+        "title": "Slide 2",
+        "description": "This is your custom text for slide 2",
+        "image": "card1"
+      },
+      {
+        "id": 2,
+        "title": "Slide 3",
+        "description": "This is your custom text for slide 3",
+        "image": "card1"
+      }
+    ]
+  },
+  "screens": {
+    "login": [
+      {
+        "id": "0",
+        "title": "Login 1",
+        "description": "This is your custom text for login screen 1",
+        "image": "card1"
+      }
+    ]
+  }
+}

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Text, View, Dimensions, TouchableHighlight } from 'react-native';
-// import { Icon } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { MaterialIcons as Icon } from '@expo/vector-icons';
 import moment from 'moment';
 import { performDivisibility } from './../util/general';
 
@@ -29,21 +28,21 @@ class TransactionListItem extends Component {
         // console.log('Debit');
         iconName = 'call-made';
         headerTextOne = 'Sent';
-        if (item.destination_transaction) {
-          headerTextOne = headerTextOne + ' to ';
-          headerTextTwo = item.destination_transaction.user.email;
-        }
-        color = Colors.positive;
+        // if (item.destination_transaction) {
+        //   headerTextOne = headerTextOne + ' to ';
+        //   headerTextTwo = item.destination_transaction.user.email;
+        // }
+        color = Colors.negative;
         break;
       case 'credit':
         // console.log('Credit');
         iconName = 'call-received';
         headerTextOne = 'Received';
-        if (item.source_transaction) {
-          headerTextOne = headerTextOne + ' from ';
-          headerTextTwo = item.source_transaction.user.email;
-        }
-        color = Colors.negative;
+        // if (item.source_transaction) {
+        //   headerTextOne = headerTextOne + ' from ';
+        //   headerTextTwo = item.source_transaction.user.email;
+        // }
+        color = Colors.positive;
         break;
       default:
         iconName = 'question';
@@ -53,14 +52,14 @@ class TransactionListItem extends Component {
 
     return (
       <TouchableHighlight
-        underlayColor={Colors.lightGray}
+        underlayColor="lightgrey"
         style={{ flex: 1 }}
         // activeOpacity={0.2}
         onPress={() => onPress(item)}>
         <View style={viewStyleContainer}>
           <Icon name={iconName} size={24} color={color ? color : 'black'} />
           <View style={{ paddingLeft: 8, paddingRight: 2 }}>
-            {SCREEN_WIDTH < 350 ? (
+            {SCREEN_WIDTH < 400 ? (
               <View>
                 <Text style={textStyleHeader}>{headerTextOne}</Text>
                 {headerTextTwo ? (
@@ -97,12 +96,11 @@ const styles = {
   viewStyleContainer: {
     flex: 1,
     flexDirection: 'row',
-    borderBottomColor: 'lightgrey',
-    borderBottomWidth: 1,
     paddingVertical: 8,
     paddingRight: 8,
     paddingLeft: 4,
     justifyContent: 'flex-start',
+    backgroundColor: 'white',
   },
   viewStyleAmount: {
     // right: 0,

@@ -9,11 +9,12 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { cardDismiss, cardRestoreAll } from './../redux/actions';
+import { standardizeString } from './../util/general';
 
 // import { AreaChart, Grid } from 'react-native-svg-charts';
 // import * as shape from 'd3-shape';
 
-import { CardContainer, Card, Button } from './common';
+import { CardContainer, Card, Button, CustomImage } from './common';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -49,41 +50,50 @@ class HomeCards extends Component {
   //   );
   // }
 
-  renderImage(image) {
-    return <Image style={styles.imageStylePhoto} source={image} />;
-  }
-
   renderCards() {
     const { profile, company_config, dismissedCards } = this.props;
+    const cardConfig = company_config.cards ? company_config.cards.home : null;
     // add welcome card
     let cards = [];
     let i = 0;
-    if (!dismissedCards || !dismissedCards.includes('welcome')) {
-      cards[i++] = {
-        id: 'welcome',
-        title: 'Welcome to Rehive',
-        description: 'A multi-currency wallet built on the Rehive platform.',
-        image: 'card1',
-        dismiss: true,
-      };
-    }
+    const company = company_config.company ? company_config.company : null;
+    // console.log(company);
+    if (cardConfig) {
+      if (
+        cardConfig.general.welcome &&
+        (!dismissedCards || !dismissedCards.includes('welcome'))
+      ) {
+        cards[i++] = {
+          id: 'welcome',
+          title:
+            'Welcome to ' + (company && company.name ? company.name : 'Rehive'),
+          // description: 'A multi-currency wallet built on the Rehive platform.',
+          image:
+            company.id.includes('pxpay') || company.id.includes('plue')
+              ? ''
+              : 'card1',
+          dismiss: true,
+        };
+      }
 
-    if (profile.verified) {
-      cards[i++] = {
-        id: 'verify',
-        description: 'Please verify your account',
-        image: 'card2',
-        actionLabel: 'GET VERIFIED',
-        navigate: 'GetVerified',
-      };
-    }
-    if (company_config && company_config.cards) {
-      for (let j = 0; j < company_config.cards.length; j++) {
-        if (
-          !dismissedCards ||
-          !dismissedCards.includes(company_config.cards[j].id)
-        ) {
-          cards[i++] = company_config.cards[j];
+      if (cardConfig.general.verified && profile.verified) {
+        cards[i++] = {
+          id: 'verify',
+          description: 'Please verify your account',
+          image:
+            company_config.company && company_config.company === 'pxpay_demo'
+              ? 'pxpay'
+              : 'card2',
+          actionLabel: 'GET VERIFIED',
+          navigate: 'GetVerified',
+        };
+      }
+      const customCards = cardConfig.custom;
+      if (customCards) {
+        for (let j = 0; j < customCards.length; j++) {
+          if (!dismissedCards || !dismissedCards.includes(customCards[j].id)) {
+            cards[i++] = customCards[j];
+          }
         }
       }
     }
@@ -107,19 +117,13 @@ class HomeCards extends Component {
 
   renderCard(item) {
     const { textStyleContent } = styles;
-    const { company_config } = this.props;
-    let imageString = './../../assets/icons/' + item.image + '.png';
     return (
       <Card
         key={item.id}
         title={item.title}
-        renderHeader={this.renderImage(
-          item.image === 'pxpay'
-            ? require('./../../assets/icons/pxpay1.png')
-            : require('./../../assets/icons/card1.png'),
-        )}
-        colorTitleBackground={company_config.colors.primary}
-        colorTitleText={company_config.colors.primaryContrast}
+        renderHeader={
+          <CustomImage name={item.image} backgroundColor={'header'} />
+        }
         onPressActionOne={() =>
           item.navigate
             ? this.props.navigation.navigate(item.navigate)
@@ -136,17 +140,17 @@ class HomeCards extends Component {
   }
 
   renderFooter() {
-    const { dismissedCards, cardRestoreAll, company_config } = this.props;
+    const { dismissedCards, cardRestoreAll } = this.props;
     const { viewStyleFooter } = styles;
     if (dismissedCards && dismissedCards.length > 0) {
       return (
         <View style={viewStyleFooter}>
           <Button
             label="RESTORE ALL"
-            textColor={colors.primaryContrast}
-            backgroundColor={colors.primary}
+            color="secondary"
             type="text"
             onPress={cardRestoreAll}
+            backgroundColor="transparent"
           />
         </View>
       );
@@ -161,15 +165,17 @@ class HomeCards extends Component {
 const styles = {
   containerStyle: {
     flex: 1,
+    zIndex: 2,
   },
   imageStylePhoto: {
     width: SCREEN_WIDTH - 16,
-    height: 150,
+    height: 120,
   },
   textStyleContent: {
     fontSize: 16,
     padding: 8,
     paddingHorizontal: 16,
+    color: '#707070',
   },
   viewStyleFooter: {
     width: '100%',

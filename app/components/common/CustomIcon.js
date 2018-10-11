@@ -1,23 +1,31 @@
 import React, { Component } from 'react';
 import { Font } from 'expo';
 import { createIconSet } from '@expo/vector-icons';
+import context from './context';
 const glyphMap = {
-  send: 'B',
-  receive: 'A',
-  more: 'z',
-  deposit: 'z',
-  withdraw: 'D',
-  loading: 'C',
+  send: 'A',
+  receive: 'C',
+  more: 'n',
+  deposit: 'B',
+  withdraw: 'z',
+  warning: 'C',
+  yes: 'd',
+  cancel: 'j',
+  up: 'f',
+  down: 'k',
+  left: 'i',
+  right: 'l',
+  add: 'g',
 };
 const CustomIconSet = createIconSet(glyphMap, 'FontName');
 
-class CustomIcon extends Component {
+class _CustomIcon extends Component {
   state = {
     fontLoaded: false,
   };
   async componentDidMount() {
     await Font.loadAsync({
-      FontName: require('./../../../assets/fonts/rehive-icon-font.ttf'),
+      FontName: require('./../../../assets/fonts/rehive-font.ttf'),
     });
 
     this.setState({ fontLoaded: true });
@@ -33,5 +41,6 @@ class CustomIcon extends Component {
     );
   }
 }
+const CustomIcon = context(_CustomIcon);
 
 export { CustomIcon };

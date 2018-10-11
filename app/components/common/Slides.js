@@ -7,14 +7,15 @@ import {
   Image,
   Animated,
 } from 'react-native';
+import context from './context';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
-class Slides extends Component {
+class _Slides extends Component {
   scrollX = new Animated.Value(0);
 
   renderSlides() {
-    const { width, height, data } = this.props;
+    const { width, height, data, colors } = this.props;
     const {
       viewStyleSlide,
       imageStylePhoto,
@@ -36,19 +37,28 @@ class Slides extends Component {
             style={[imageStylePhoto, { width, height }]}
             source={
               slide.image === 'pxpay'
-                ? require('./../../../assets/icons/pxpay1.png')
-                : require('./../../../assets/icons/card1.png')
+                ? require('./../../../assets/icons/pxpay.png')
+                : require('./../../../assets/icons/card1_transparent.png')
             }
           />
-          <Text style={textStyleTitle}>{slide.title}</Text>
-          <Text style={textStyleDescription}>{slide.description}</Text>
+          <Text
+            style={[textStyleTitle, { color: colors['authScreenContrast'] }]}>
+            {slide.title}
+          </Text>
+          <Text
+            style={[
+              textStyleDescription,
+              { color: colors['authScreenContrast'] },
+            ]}>
+            {slide.description}
+          </Text>
         </Animated.View>
       );
     });
   }
 
   render() {
-    const { width, height, data } = this.props;
+    const { width, height, data, colors } = this.props;
     let position = Animated.divide(this.scrollX, width);
     return (
       <View
@@ -84,7 +94,7 @@ class Slides extends Component {
                   opacity,
                   height: 10,
                   width: 10,
-                  backgroundColor: '#f3f3f3',
+                  backgroundColor: colors['authScreenContrast'],
                   margin: 8,
                   borderRadius: 5,
                 }}
@@ -111,15 +121,15 @@ const styles = {
   },
   textStyleTitle: {
     fontSize: 30,
-    color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
   },
   textStyleDescription: {
     fontSize: 14,
-    color: 'white',
     textAlign: 'center',
   },
 };
+
+const Slides = context(_Slides);
 
 export { Slides };

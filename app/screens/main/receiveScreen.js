@@ -1,11 +1,36 @@
 import React, { Component } from 'react';
-import { View, Text, Image } from 'react-native';
+import {
+  View,
+  Platform,
+  Image,
+  Dimensions,
+  TouchableHighlight,
+  Clipboard,
+  KeyboardAvoidingView,
+  ScrollView,
+} from 'react-native';
 import { connect } from 'react-redux';
+import {
+  setTransactionType,
+  setTransactionCurrency,
+  setTransactionState,
+  updateAccountField,
+  setReceiveType,
+  toggleAccountField,
+  resetReceive,
+} from '../../redux/actions';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Colors from './../../config/colors';
+import { Toast } from 'native-base';
 import Header from './../../components/header';
-import { Output, Button } from './../../components/common';
+import { Output, Input, Button, Checkbox } from './../../components/common';
+import {
+  currenciesSelector,
+  receiveSelector,
+} from './../../redux/reducers/AccountsReducer';
+import { CurrencySelector } from '../../components/CurrencySelector';
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class ReceiveScreen extends Component {
   static navigationOptions = {
@@ -14,100 +39,223 @@ class ReceiveScreen extends Component {
 
   state = {
     imageURI:
-      'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=undefined&choe=UTF-8',
-    email: '',
-    type: 'email',
+      'https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=undefined&choe=UTF-8',
+    crypto: false,
   };
 
   componentDidMount() {
-    this.switchToEmail();
+    const { currency } = this.props.navigation.state.params;
+
+    this.props.resetReceive();
+    this.props.updateAccountField({
+      prop: 'receiveCurrency',
+      value: currency,
+    });
+    if (currency.crypto === 'stellar') {
+      this.props.updateAccountField({
+        prop: 'receiveMemo',
+        value: this.props.crypto.stellar.memo,
+      });
+      this.props.toggleAccountField('receiveCurrency');
+    }
   }
 
-  switchToEmail() {
-    const user = this.props.profile;
-    const imageURI =
-      'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=' +
-      encodeURIComponent('rehive:' + user.email) +
-      '&choe=UTF-8';
-    this.setState({ imageURI, email: user.email, type: 'email' });
+  _copyQR(receive) {
+    Clipboard.setString(receive.value);
+    Toast.show({
+      text:
+        receive.value +
+        ' copied.' +
+        (receive.type === 'stellar'
+          ? ' Please remember to include your memo when sending to this address.'
+          : ''),
+      duration: 3000,
+    });
   }
 
-  switchToCrypto() {
-    const user = this.props.profile;
-    const imageURI =
-      'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=' +
-      encodeURIComponent(
-        'stellar:GANOZF7TIDYZ7MGRVVMAJHBQ7JCWRNRDHPY6N4W5OWU2JWNMQ2D67NVQ?memo=' +
-          user.username,
-      ) +
-      '&choe=UTF-8';
-    this.setState({ imageURI, type: 'crypto' });
+  renderContent() {
+    const {
+      receive,
+      updateAccountField,
+      setReceiveType,
+      currencies,
+    } = this.props;
+    return (
+      <View style={{ flex: 1 }}>
+        <Output label={''} value={receive.value} copy />
+        <TouchableHighlight
+          underlayColor={'white'}
+          activeOpacity={0.2}
+          onPress={() => this._copyQR(receive)}>
+          <Image
+            style={{
+              width: 220,
+              height: 220,
+              alignSelf: 'center',
+            }}
+            source={{
+              uri:
+                'https://chart.googleapis.com/chart?chs=220x220&cht=qr&choe=UTF-8&chl=' +
+                encodeURIComponent(receive.value),
+            }}
+            resizeMode={'contain'}
+          />
+        </TouchableHighlight>
+        {receive.buttons ? (
+          <View style={{ flexDirection: 'row' }}>
+            {receive.email ? (
+              <View style={{ flex: 1 }}>
+                <Button
+                  color={receive.type === 'email' ? 'primary' : 'secondary'}
+                  onPress={() => setReceiveType('email')}
+                  label="EMAIL"
+                  size="small"
+                  round
+                  containerStyle={{ marginBottom: 0 }}
+                />
+              </View>
+            ) : null}
+            {receive.mobile ? (
+              <View style={{ flex: 1 }}>
+                <Button
+                  color={receive.type === 'mobile' ? 'primary' : 'secondary'}
+                  onPress={() => setReceiveType('mobile')}
+                  label="MOBILE"
+                  size="small"
+                  round
+                  containerStyle={{ marginBottom: 0 }}
+                />
+              </View>
+            ) : null}
+            {receive.crypto ? (
+              <View style={{ flex: 1 }}>
+                <Button
+                  color={receive.type === 'crypto' ? 'primary' : 'secondary'}
+                  onPress={() => setReceiveType('crypto')}
+                  label="CRYPTO"
+                  size="small"
+                  round
+                  containerStyle={{ marginBottom: 0 }}
+                />
+              </View>
+            ) : null}
+          </View>
+        ) : null}
+        <Input
+          key="amount"
+          placeholder="e.g. 10"
+          label={
+            'Amount' +
+            (receive && receive.currency && receive.currency.currency
+              ? ' [' + receive.currency.currency.symbol + ']'
+              : '')
+          }
+          reference={input => (this.amountInput = input)}
+          keyboardType={Platform.OS === 'ios' ? 'decimal-pad' : 'phone-pad'}
+          value={receive.amount}
+          onChangeText={value =>
+            updateAccountField({ prop: 'receiveAmount', value })
+          }
+          returnKeyType="next"
+          onSubmitEditing={() =>
+            receive.type === 'crypto' &&
+            receive.currency &&
+            receive.currency.crypto === 'stellar'
+              ? this.memoInput.focus()
+              : this.noteInput.focus()
+          }
+          type={'money'}
+          // precision={transaction.currency.currency.divisibility}
+          // unit={transaction.currency.currency.symbol + ' '}
+          toggleCheck={() => this.props.toggleAccountField('receiveAmount')}
+          checked={receive.amountSelected}
+        />
+        {receive.type === 'crypto' &&
+        receive.currency &&
+        receive.currency.crypto === 'stellar' ? (
+          <Input
+            key="memo"
+            placeholder="Memo"
+            label="Memo"
+            value={receive.memo}
+            onChangeText={value =>
+              updateAccountField({ prop: 'receiveMemo', value })
+            }
+            reference={input => (this.memoInput = input)}
+            returnKeyType="next"
+            // autoFocus
+            onSubmitEditing={() => this.noteInput.focus()}
+            toggleCheck={() => this.props.toggleAccountField('receiveMemo')}
+            checked={receive.memoSelected}
+          />
+        ) : null}
+        <Input
+          key="note"
+          placeholder="e.g. Rent"
+          label="Note"
+          value={receive.note}
+          onChangeText={value =>
+            updateAccountField({ prop: 'receiveNote', value })
+          }
+          // inputError={sendError}
+          reference={input => (this.noteInput = input)}
+          multiline
+          returnKeyType="next"
+          toggleCheck={() => this.props.toggleAccountField('receiveNote')}
+          checked={receive.noteSelected}
+        />
+        {receive.currency ? (
+          <View style={{ flexDirection: 'row' }}>
+            <Checkbox
+              // title={'Currency: ' + receive.currency.currency.code}
+              toggleCheck={() =>
+                this.props.toggleAccountField('receiveCurrency')
+              }
+              value={receive.currencySelected}
+            />
+
+            <CurrencySelector
+              currency={receive.currency}
+              currencies={currencies}
+              updateCurrency={currency => {
+                updateAccountField({
+                  prop: 'receiveCurrency',
+                  value: currency,
+                });
+              }}
+            />
+          </View>
+        ) : null}
+      </View>
+    );
   }
 
   render() {
-    const { type } = this.state;
-    const { colors } = this.props.company_config;
+    console.log('SCREEN_WIDTH', SCREEN_WIDTH);
     return (
       <View style={styles.container}>
-        <Header
-          navigation={this.props.navigation}
-          colors={this.props.company_config.colors}
-          back
-          title="Receive"
-        />
-        <View>
-          <View
-            style={{
-              flexDirection: 'row',
-              // alignItems: 'center',
-              // justifyContent: 'center',
-            }}>
-            <View style={{ flex: 1 }}>
-              <Button
-                backgroundColor={
-                  type === 'email' ? colors.focusContrast : colors.secondary
-                }
-                textColor={
-                  type === 'email' ? colors.focus : colors.secondaryContrast
-                }
-                onPress={() => this.switchToEmail()}
-                label="EMAIL"
-                size="small"
-                round
-                containerStyle={{ margin: 16 }}
-              />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Button
-                backgroundColor={
-                  type === 'crypto' ? colors.focusContrast : colors.secondary
-                }
-                textColor={
-                  type === 'crypto' ? colors.focus : colors.secondaryContrast
-                }
-                onPress={() => this.switchToCrypto()}
-                label="CRYPTO"
-                size="small"
-                round
-                containerStyle={{ margin: 16 }}
-              />
-            </View>
-          </View>
-          <Text style={styles.text}>
-            {type === 'crypto'
-              ? 'This QR code is your public address for accepting payments.'
-              : 'This QR code is your Rehive account for use with another Rehive app'}
-          </Text>
-          <Image
-            style={{ width: 300, height: 300 }}
-            source={{ uri: this.state.imageURI }}
-          />
-        </View>
-        {type === 'email' ? (
-          <View style={{ padding: 8, width: '100%' }}>
-            <Output label="Email" value={this.state.email} copy />
-          </View>
-        ) : null}
+        <Header navigation={this.props.navigation} back title="Receive" />
+        {/* {Platform.OS === 'android' ? ( */}
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={'position'}
+          keyboardVerticalOffset={0}>
+          <ScrollView
+            keyboardDismissMode={'interactive'}
+            contentContainerStyle={{ padding: 8 }}
+            keyboardShouldPersistTaps="always">
+            {this.renderContent()}
+          </ScrollView>
+        </KeyboardAvoidingView>
+        {/* ) : (
+          <KeyboardAwareScrollView
+            resetScrollToCoords={{ x: 0, y: 0 }}
+            contentContainerStyle={{ padding: 8 }}
+            extraScrollHeight={80}
+            keyboardOpeningTime={150}>
+            {this.renderContent()}
+          </KeyboardAwareScrollView>
+        )} */}
       </View>
     );
   }
@@ -116,23 +264,31 @@ class ReceiveScreen extends Component {
 const styles = {
   container: {
     flex: 1,
-    flexDirection: 'column',
     backgroundColor: 'white',
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
   },
   text: {
     fontSize: 16,
     textAlign: 'center',
-    color: Colors.black,
+    color: 'black',
     paddingHorizontal: 8,
   },
 };
 
-const mapStateToProps = ({ user, auth }) => {
-  const { company_config } = auth;
-  const { profile } = user;
-  return { profile, company_config };
+const mapStateToProps = state => {
+  return {
+    currencies: currenciesSelector(state),
+    receive: receiveSelector(state),
+    profile: state.user.profile,
+    crypto: state.crypto,
+  };
 };
 
-export default connect(mapStateToProps, {})(ReceiveScreen);
+export default connect(mapStateToProps, {
+  setTransactionType,
+  setTransactionCurrency,
+  setTransactionState,
+  updateAccountField,
+  setReceiveType,
+  toggleAccountField,
+  resetReceive,
+})(ReceiveScreen);

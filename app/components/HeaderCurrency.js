@@ -21,9 +21,6 @@ class HeaderCurrency extends Component {
         currency.currency.code.length,
       20,
     );
-    console.log('diff', diff);
-    console.log('length', length);
-    console.log('divisibility', currency.currency.divisibility);
     let fontSize = Math.min(Math.floor(SCREEN_WIDTH / (0.8 * length)), 42);
     return [styles.textStyleAmount, { fontSize, color: colors.focus }];
   }
@@ -44,7 +41,6 @@ class HeaderCurrency extends Component {
       textStyleAccount,
       iconStyleTitleRight,
     } = styles;
-    console.log();
     return (
       <View
         style={[
@@ -55,22 +51,22 @@ class HeaderCurrency extends Component {
                 width: SCREEN_WIDTH - 16,
               }
             : { width: SCREEN_WIDTH },
-          { backgroundColor: colors.primary },
+          { backgroundColor: colors.header },
         ]}>
         {showClose ? (
           <View style={iconStyleTitleRight}>
             <HeaderButton
               icon="close"
               onPress={closeWallet}
-              color={Colors.lightGray}
+              color="lightgrey"
             />
           </View>
         ) : null}
-        <Text style={[textStyleCode, { color: colors.primaryContrast }]}>
+        <Text style={[textStyleCode, { color: colors.headerContrast }]}>
           {currency.currency.code}
         </Text>
         {showAccountLabel ? (
-          <Text style={[textStyleAccount, { color: colors.primaryContrast }]}>
+          <Text style={[textStyleAccount, { color: colors.headerContrast }]}>
             {account_name}
           </Text>
         ) : null}
@@ -91,7 +87,6 @@ class HeaderCurrency extends Component {
             {currency.currency.symbol}
           </Text>
           <Text style={this.getAmountTextStyle(currency)}>
-            {' '}
             {performDivisibility(
               currency.available_balance,
               currency.currency.divisibility,
@@ -117,13 +112,13 @@ const styles = {
     alignItems: 'center',
   },
   textStyleCode: {
-    color: Colors.onPrimary,
+    color: Colors.primaryContrast,
     fontSize: 20,
     fontWeight: 'bold',
     paddingBottom: 0,
   },
   textStyleAccount: {
-    color: Colors.onPrimary,
+    color: Colors.primaryContrast,
     fontSize: 16,
     // fontWeight: 'bold',
     paddingBottom: 8,

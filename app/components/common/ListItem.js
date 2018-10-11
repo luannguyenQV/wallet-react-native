@@ -6,7 +6,7 @@ import {
   Image,
   TouchableHighlight,
 } from 'react-native';
-import Colors from './../../config/colors';
+import PropTypes from 'prop-types';
 
 class ListItem extends Component {
   render() {
@@ -17,32 +17,36 @@ class ListItem extends Component {
       textStyleTitle,
       textStyleSubtitle,
     } = styles;
-    const { image, title, subtitle } = this.props;
-    console.log(title);
+    const { image, title, subtitle, onPress, noImage } = this.props;
+    console.log('title', title);
     return (
       <TouchableHighlight
         underlayColor={'white'}
-        onPress={item => this.props.onPress(item)}>
+        onPress={item => onPress(item)}>
         <View style={viewStyleContainer}>
-          <View style={viewStyleImage}>
-            {image ? (
-              <Image
-                style={{ height: 32, width: 32, borderRadius: 16 }}
-                source={{
-                  uri: image,
-                  cache: 'only-if-cached',
-                }}
-              />
-            ) : (
-              <Image
-                source={require('./../../../assets/icons/profile.png')}
-                style={{ height: 32, width: 32 }}
-              />
-            )}
-          </View>
+          {!noImage ? (
+            <View style={viewStyleImage}>
+              {image ? (
+                <Image
+                  style={{ height: 32, width: 32, borderRadius: 16 }}
+                  source={{
+                    uri: image,
+                    cache: 'only-if-cached',
+                  }}
+                />
+              ) : (
+                <Image
+                  source={require('./../../../assets/icons/profile.png')}
+                  style={{ height: 32, width: 32 }}
+                />
+              )}
+            </View>
+          ) : null}
           <View style={viewStyleTitle}>
-            <Text style={textStyleTitle}>{title}</Text>
-            <Text style={textStyleSubtitle}>{subtitle}</Text>
+            <Text style={textStyleTitle}>{title ? title : subtitle}</Text>
+            {subtitle ? (
+              <Text style={textStyleSubtitle}>{title ? subtitle : ''}</Text>
+            ) : null}
           </View>
         </View>
       </TouchableHighlight>
@@ -50,15 +54,42 @@ class ListItem extends Component {
   }
 }
 
+ListItem.propTypes = {
+  image: PropTypes.string, // Text displayed on button
+  title: PropTypes.string, // Animation type
+  subtitle: PropTypes.string, // Animation type
+  onPress: PropTypes.func, // Function to execute on press
+  noImage: PropTypes.bool,
+};
+
+ListItem.defaultProps = {
+  image: '',
+  title: '',
+  subtitle: '',
+  onPress: () => {},
+  noImage: false,
+};
+
+const ListSeparator = () => (
+  <View
+    style={{
+      backgroundColor: 'lightgrey',
+      height: 0.5,
+    }}
+  />
+);
+
 const styles = {
   viewStyleContainer: {
     // flex: 1,
     flexDirection: 'row',
-    height: 40,
+    height: 48,
+    // borderBottomWidth: 0.5,
+    // borderBottomColor: 'lightgrey',
   },
   viewStyleImage: {
     width: 56,
-    paddingVertical: 4,
+    paddingVertical: 8,
     paddingHorizontal: 12,
     justifyContent: 'center',
   },
@@ -67,12 +98,12 @@ const styles = {
   },
   textStyleTitle: {
     fontSize: 18,
-    color: Colors.black,
+    color: 'black',
   },
   textStyleSubtitle: {
     fontSize: 12,
-    color: Colors.black,
+    color: 'black',
   },
 };
 
-export { ListItem };
+export { ListItem, ListSeparator };

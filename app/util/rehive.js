@@ -1,10 +1,11 @@
 import Rehive from 'rehive';
-import * as companyConfig from './../config/company_configs.json';
+import company_configs from './../config/company_configs';
 import defaultCompanyConfig from './../config/default_company_config.json';
 
 const stellar_service_url = 'https://stellar.services.rehive.io/api/1';
-const bitcoin_service_url = 'https://reward.s.services.rehive.io/api';
-const ethereum_service_url = 'https://reward.s.services.rehive.io/api';
+const bitcoin_service_url = 'https://bitcoin.s.services.rehive.io/api/1';
+const ethereum_service_url = 'https://ethereum.s.services.rehive.io/api/1';
+const rewards_service_url = 'https://reward.services.rehive.io/api';
 
 // SDK initialization
 export let r;
@@ -71,13 +72,17 @@ export const updateProfile = data => r.user.update(data);
 export const updateProfileImage = file => {
   let formData = new FormData();
   formData.append('profile', file);
-  r.user.update(formData);
+  return r.user.update(formData);
 };
 
 // Address
-export const getAddress = () => r.user.address.get();
+export const getAddresses = () => r.user.addresses.get();
 
-export const updateAddress = data => r.user.address.update(data);
+export const createAddress = data => r.user.addresses.create(data);
+
+export const updateAddress = data => r.user.addresses.update(data);
+
+export const deleteAddress = id => r.user.addresses.delete(id);
 
 // Bank Accounts
 export const getBankAccounts = () => r.user.bankAccounts.get();
@@ -130,8 +135,7 @@ export const createMobile = data => r.user.mobiles.create(data);
 export const deleteMobile = id => r.user.mobiles.delete(id);
 
 /* TRANSACTIONS */
-export const getTransactions = currency =>
-  r.transactions.get({ filters: { currency: currency } });
+export const getTransactions = filters => r.transactions.get({ filters });
 
 export const createCredit = (amount, currency) =>
   r.transactions.createCredit({
@@ -148,20 +152,7 @@ export const createDebit = (amount, currency, reference, note, metadata) =>
     note,
   });
 
-export const createTransfer = (
-  amount,
-  recipient,
-  note,
-  currency,
-  debit_account,
-) =>
-  r.transactions.createTransfer({
-    amount: parseInt(amount, 0),
-    recipient,
-    note,
-    currency,
-    debit_account,
-  });
+export const createTransfer = data => r.transactions.createTransfer(data);
 
 /* ACCOUNTS */
 export const getAccounts = () => r.accounts.get();
@@ -179,9 +170,8 @@ export const getCompanyCurrencies = () => r.company.currencies.get();
 export const getCompanyBankAccounts = () => r.company.bankAccounts.get();
 
 export const getCompanyConfig = company => {
-  let configs = companyConfig.data.filter(item => item.company === company);
-  if (configs.length > 0) {
-    return configs[0].config;
+  if (company_configs[company]) {
+    return company_configs[company];
   }
   return defaultCompanyConfig;
 };
@@ -190,12 +180,11 @@ export const getCompanyConfig = company => {
 export const getStellarAssets = () =>
   callApi('GET', stellar_service_url + '/company/assets/');
 
-// export const createTransferStellar = data =>
-//   Promise.resolve(
-//     callApi('POST', stellar_service_url + '/transactions/send/', data)
-//       .then(response => response)
-//       .catch(err => err),
-//   );
+export const setStellarUsername = data =>
+  callApi('POST', stellar_service_url + '/user/username/set/', data);
+
+export const getStellarUser = () =>
+  callApi('GET', stellar_service_url + '/user/');
 
 export const createTransferStellar = data =>
   new Promise((resolve, reject) =>
@@ -203,6 +192,36 @@ export const createTransferStellar = data =>
       .then(response => resolve(response))
       .catch(err => reject(err)),
   );
+
+export const getBitcoinUser = () =>
+  callApi('GET', bitcoin_service_url + '/user/');
+
+export const createTransferBitcoin = data =>
+  new Promise((resolve, reject) =>
+    callApi('POST', bitcoin_service_url + '/transactions/send/', data)
+      .then(response => resolve(response))
+      .catch(err => reject(err)),
+  );
+
+export const getEthereumUser = () =>
+  callApi('GET', ethereum_service_url + '/user/');
+
+export const createTransferEthereum = data =>
+  new Promise((resolve, reject) =>
+    callApi('POST', ethereum_service_url + '/wallet/send/', data)
+      .then(response => resolve(response))
+      .catch(err => reject(err)),
+  );
+
+/* REWARDS */
+export const getRewards = () =>
+  callApi('GET', rewards_service_url + '/user/rewards/');
+
+export const claimReward = data =>
+  callApi('POST', rewards_service_url + '/user/rewards/', data);
+
+export const getCampaigns = () =>
+  callApi('GET', rewards_service_url + '/user/campaigns/');
 
 /* GENERAL */
 export const callApi = (method, route, data) => {
@@ -220,7 +239,6 @@ export const callApi = (method, route, data) => {
     mode: 'cors',
     headers,
   };
-  console.log(data);
   if (data) {
     config['body'] = JSON.stringify(data);
   }
@@ -228,12 +246,11 @@ export const callApi = (method, route, data) => {
   return Promise.resolve(
     fetch(route, config)
       .then(response => {
-        console.log('RESPONSE', response);
-        // if (response.ok) {
-        return response.json();
-        // } else {
-        //   return response;
-        // }
+        if (response.ok) {
+          return response.json();
+        } else {
+          return response;
+        }
       })
       .catch(err => err),
   );

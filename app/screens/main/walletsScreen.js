@@ -10,12 +10,14 @@ import {
   showModal,
   setActiveCurrency,
 } from './../../redux/actions';
+import { currenciesSelector } from './../../redux/reducers/AccountsReducer';
 
 import Header from './../../components/header';
 // import Wallet from './../../components/wallet';
-import { Output, PopUpGeneral } from '../../components/common';
+import { Output, MyView } from '../../components/common';
 import { standardizeString, performDivisibility } from './../../util/general';
-import HeaderWallet from './../../components/HeaderWallet';
+import WalletBalance from '../../components/WalletBalance';
+import WalletActionList from '../../components/WalletActionList';
 import TransactionList from './../../components/TransactionList';
 import CardList from './../../components/CardList';
 
@@ -30,13 +32,9 @@ class WalletsScreen extends Component {
   };
 
   componentDidMount() {
-    let wallet = null;
     if (this.props.navigation.state.params) {
-      wallet = this.props.navigation.state.params.wallet;
-      this.props.navigation.state.params.wallet = null;
-    }
-    if (wallet) {
-      this.props.viewWallet(wallet);
+      const currency = this.props.navigation.state.params.currency;
+      this.props.viewWallet(currency);
     } else {
       this.props.hideWallet();
     }
@@ -50,49 +48,32 @@ class WalletsScreen extends Component {
     this.setState({ showModal: false, wallet: null });
   };
 
-  // showDetails(wallet) {
-  //   this.setState({
-  //     showDetails: true,
-  //     wallet: wallet,
-  //   });
-  // }
-
-  // hideDetails = () => {
-  //   this.setState({
-  //     showDetails: false,
-  //     wallet: null,
-  //     headerRightIcon: '',
-  //     headerRightOnPress: () => {},
-  //   });
-  // };
-
   send = item => {
-    this.props.resetSend();
-    this.props.setSendWallet(item);
-    this.props.navigation.navigate('Send');
+    this.props.navigation.navigate('Send', {
+      currency: item,
+    });
   };
 
   renderContent(item) {
     const balance =
-      item.currency.currency.symbol +
+      item.currency.symbol +
       ' ' +
-      performDivisibility(
-        item.currency.balance,
-        item.currency.currency.divisibility,
-      ).toFixed(item.currency.currency.divisibility);
+      performDivisibility(item.balance, item.currency.divisibility).toFixed(
+        item.currency.divisibility,
+      );
     const available =
-      item.currency.currency.symbol +
+      item.currency.symbol +
       ' ' +
       performDivisibility(
-        item.currency.available_balance,
-        item.currency.currency.divisibility,
-      ).toFixed(item.currency.currency.divisibility);
+        item.available_balance,
+        item.currency.divisibility,
+      ).toFixed(item.currency.divisibility);
 
     return (
-      <View style={styles.viewStyleContainer}>
+      <MyView p={0.5}>
         <Output label="Balance" value={balance} />
         <Output label="Available" value={available} />
-      </View>
+      </MyView>
     );
   }
 
@@ -107,20 +88,14 @@ class WalletsScreen extends Component {
     buttons[i] = { id: i++, type: 'receive' };
     buttons[i] = { id: i++, type: 'send' };
     return (
-      <View style={styles.viewStyleDetailCard}>
-        <HeaderWallet
-          wallets={[item]}
+      <View>
+        <WalletBalance detail currency={item} onClose={this.props.hideWallet} />
+        <WalletActionList
           buttons={buttons}
-          navigation={navigation}
-          showClose
-          colors={this.props.company_config.colors}
+          navigation={this.props.navigation}
+          currency={item}
         />
-        <TransactionList
-          // updateBalance={this.getBalanceInfo}
-          currencyCode={item.currency.currency.code}
-          // showDialog={this.showDialog}
-          // logout={this.logout}
-        />
+        <TransactionList currency={item} />
       </View>
     );
   }
@@ -129,28 +104,20 @@ class WalletsScreen extends Component {
     const {
       fetchAccounts,
       loading_accounts,
-      wallets,
-      hideWallet,
+      currencies,
       viewWallet,
       showModal,
-      setActiveCurrency,
       tempWallet,
-      company_config,
     } = this.props;
     return (
-      <View style={styles.container}>
-        <Header
-          navigation={this.props.navigation}
-          colors={company_config.colors}
-          drawer
-          title="Wallets"
-        />
+      <MyView f>
+        <Header navigation={this.props.navigation} drawer title="Wallets" />
         <CardList
           type="wallet"
           navigation={this.props.navigation}
-          data={wallets}
+          data={currencies.data}
           tempItem={tempWallet}
-          loadingData={loading_accounts}
+          loadingData={currencies.loading}
           identifier="reference"
           onRefresh={fetchAccounts}
           activeItem={item => showModal('wallet', item, 'active')}
@@ -159,63 +126,42 @@ class WalletsScreen extends Component {
           renderDetail={(item, navigation) =>
             this.renderDetail(item, navigation)
           }
-          itemActive={item => (item ? item.currency.active : false)}
-          textTitleLeft={item => (item ? item.currency.currency.code : '')}
+          itemActive={item => (item ? item.active : false)}
+          textTitleLeft={item =>
+            item && item.currency ? item.currency.code : ''
+          }
           // onPressTitleLeft={item => this.showModal(item)}
-          title={item => (item ? item.currency.currency.description : '')}
+          title={item => (item ? item.currency.description : '')}
           subtitle={item => (item ? standardizeString(item.account_name) : '')}
           onPressTitle={item => viewWallet(item)}
           onPressContent={item => viewWallet(item)}
-          emptyListMessage="No wallets added yet"
+          emptyListMessage="No currencies added yet"
           titleStyle="secondary"
-          keyExtractor={item => item.index + item.currency.currency.code}
+          keyExtractor={item => item.account + item.currency.code}
           textActionOne="SEND"
-          onPressActionOne={item => this.send(item)}
+          onPressActionOne={item =>
+            this.props.navigation.navigate('Send', { currency: item })
+          }
           textActionTwo="RECEIVE"
-          onPressActionTwo={() => this.props.navigation.navigate('Receive')}
+          onPressActionTwo={item =>
+            this.props.navigation.navigate('Receive', { currency: item })
+          }
           canActive
         />
-      </View>
+      </MyView>
     );
   }
 }
 
-const styles = {
-  viewStyleContainer: {
-    paddingLeft: 8,
-  },
-  viewStyleDetailCard: {
-    flex: 1,
-    backgroundColor: '#ffffff',
-    // borderRadius: 2,
-    // borderColor: '#ffffff',
-    // borderWidth: 1,
-    shadowColor: 'rgba(0, 0, 0, 0.6)',
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 2,
-    shadowOffset: {
-      height: 1,
-      width: 2,
-    },
-  },
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-  },
-};
-
-const mapStateToProps = ({ accounts, user, auth }) => {
-  const { wallets, loading_accounts, tempWallet, showWallet } = accounts;
-  const { company_bank_account } = user;
-  const { company_config } = auth;
+const mapStateToProps = state => {
+  const { loading_accounts, tempWallet, showWallet } = state.accounts;
+  const { company_bank_account } = state.user;
   return {
-    wallets,
+    currencies: currenciesSelector(state),
     loading_accounts,
     tempWallet,
     showWallet,
     company_bank_account,
-    company_config,
   };
 };
 

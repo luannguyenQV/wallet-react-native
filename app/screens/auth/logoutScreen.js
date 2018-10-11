@@ -16,11 +16,7 @@ class LogoutScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <Header
-          navigation={this.props.navigation}
-          colors={this.props.company_config.colors}
-          title="Log out"
-        />
+        <Header navigation={this.props.navigation} title="Log out" />
         <View style={styles.container}>
           <Text style={{ fontSize: 30 }}>Logging Out</Text>
         </View>
@@ -38,9 +34,8 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({ auth }) => {
-  const { company_config } = auth;
-  return { company_config };
+const mapStateToProps = () => {
+  return {};
 };
 
 export default connect(mapStateToProps, { logoutUser })(LogoutScreen);

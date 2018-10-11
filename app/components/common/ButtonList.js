@@ -3,16 +3,16 @@ import { View } from 'react-native';
 
 class ButtonList extends Component {
   render() {
-    const { children } = this.props;
+    const { children, containerStyle } = this.props;
 
-    const { containerStyle } = styles;
+    const { _containerStyle } = styles;
 
-    return <View style={containerStyle}>{children}</View>;
+    return <View style={[_containerStyle, containerStyle]}>{children}</View>;
   }
 }
 
 const styles = {
-  containerStyle: {
+  _containerStyle: {
     // justifyContent: 'flex-start',
   },
 };

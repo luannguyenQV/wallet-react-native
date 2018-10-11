@@ -1,18 +1,10 @@
 import React, { Component } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Alert,
-  TouchableHighlight,
-  Clipboard,
-} from 'react-native';
+import { View, Text, Alert, TouchableHighlight, Clipboard } from 'react-native';
 import { connect } from 'react-redux';
 import { fetchData } from './../../redux/actions';
 
-import Colors from './../../config/colors';
 import Header from './../../components/header';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 
 import { Output } from './../../components/common';
 import CardList from './../../components/CardList';
@@ -77,7 +69,6 @@ class DepositScreen extends Component {
       company_bank_account,
       loading_company_bank_account,
       tempWallet,
-      company_config,
     } = this.props;
     const {
       containerStyle,
@@ -88,12 +79,7 @@ class DepositScreen extends Component {
     } = styles;
     return (
       <View style={containerStyle}>
-        <Header
-          navigation={this.props.navigation}
-          colors={company_config.colors}
-          back
-          title="Deposit"
-        />
+        <Header navigation={this.props.navigation} back title="Deposit" />
         <View style={containerStyleComment}>
           <Text style={textStyleComment}>
             Fund your account by transferring one of the listed currencies with
@@ -110,7 +96,7 @@ class DepositScreen extends Component {
               Clipboard.setString(tempWallet.account_reference);
               Alert.alert(null, 'Copied');
             }}>
-            <Icon name="content-copy" size={24} color={Colors.black} />
+            <Icon name="content-copy" size={24} color={'black'} />
           </TouchableHighlight>
         </View>
         <CardList
@@ -135,7 +121,7 @@ const styles = {
   },
   containerStyleComment: {
     // flex: 2,
-    backgroundColor: Colors.lightgray,
+    backgroundColor: 'lightgrey',
     alignItems: 'center',
     justifyContent: 'center',
     // paddingHorizontal: 16,
@@ -144,10 +130,10 @@ const styles = {
   textStyleComment: {
     fontSize: 16,
     textAlign: 'center',
-    color: Colors.black,
+    color: 'black',
   },
   containerStyleReference: {
-    backgroundColor: Colors.green,
+    backgroundColor: 'green',
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
@@ -162,15 +148,13 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ auth, user, accounts }) => {
-  const { company_config } = auth;
+const mapStateToProps = ({ user, accounts }) => {
   const { company_bank_account, loading_company_bank_account } = user;
   const { tempWallet } = accounts;
   return {
     company_bank_account,
     loading_company_bank_account,
     tempWallet,
-    company_config,
   };
 };
 

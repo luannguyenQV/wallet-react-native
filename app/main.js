@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
+import { Image } from 'react-native';
 import { connect } from 'react-redux';
-import { AppLoading, Asset, Font } from 'expo';
+import { AppLoading, Asset } from 'expo';
 import { init } from './redux/actions';
 import { Root } from 'native-base';
 
 import NavigationService from './util/navigation';
 import MainNavigator from './routes/mainNavigator';
+
+import { ThemeContext } from './util/config';
+import { colorSelector, themeSelector } from './redux/reducers/ConfigReducer';
 
 // const _XHR = GLOBAL.originalXMLHttpRequest
 //   ? GLOBAL.originalXMLHttpRequest
@@ -23,9 +27,9 @@ function cacheImages(images) {
   });
 }
 
-// function cacheFonts(fonts) {
-//   return fonts.map(font => Font.loadAsync(font));
-// }
+function cacheFonts(fonts) {
+  return fonts.map(font => Font.loadAsync(font));
+}
 
 class Main extends Component {
   state = {
@@ -34,35 +38,39 @@ class Main extends Component {
   };
 
   componentDidMount() {
+    // SplashScreen.preventAutoHide();
     this.props.init();
     this.setState({ initStarted: true });
   }
 
   async _loadAssetsAsync() {
     const imageAssets = cacheImages([
-      require('./../assets/icons/card1.png'),
-      require('./../assets/icons/card2.png'),
-      require('./../assets/icons/card3.png'),
+      require('./../assets/icons/card1_transparent.png'),
+      require('./../assets/icons/card2_transparent.png'),
     ]);
 
-    // const fontAssets = cacheFonts([FontAwesome.font]);
+    const fontAssets = Expo.Font.loadAsync({
+      'rehive-font': require('./../assets/fonts/rehive-font.ttf'),
+    });
 
-    await Promise.all([...imageAssets]); //, ...fontAssets
+    await Promise.all([...imageAssets, ...fontAssets]);
   }
 
   render() {
     console.disableYellowBox = true;
     const { isReady, initStarted } = this.state;
-    const { appLoading } = this.props;
-
-    if (isReady && initStarted && !appLoading) {
+    const { colors, theme } = this.props;
+    // console.log(isReady, initStarted);
+    if (true && (isReady && initStarted)) {
       return (
         <Root>
-          <MainNavigator
-            ref={navigatorRef => {
-              NavigationService.setTopLevelNavigator(navigatorRef);
-            }}
-          />
+          <ThemeContext.Provider value={{ colors, theme }}>
+            <MainNavigator
+              ref={navigatorRef => {
+                NavigationService.setTopLevelNavigator(navigatorRef);
+              }}
+            />
+          </ThemeContext.Provider>
         </Root>
       );
     } else {
@@ -71,15 +79,18 @@ class Main extends Component {
           startAsync={this._loadAssetsAsync}
           onFinish={() => this.setState({ isReady: true })}
           onError={console.warn}
+          // autoHideSplash={false}
         />
       );
     }
   }
 }
 
-const mapStateToProps = ({ auth }) => {
-  const { appLoading } = auth;
-  return { appLoading };
+const mapStateToProps = state => {
+  return {
+    colors: colorSelector(state),
+    theme: themeSelector(state),
+  };
 };
 
 export default connect(mapStateToProps, { init })(Main);

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Constants } from 'expo';
-import { View, Text, StyleSheet, NetInfo } from 'react-native';
-// import colors from './../config/colors';
+import { View, Text, NetInfo } from 'react-native';
 import { HeaderButton } from './common';
+import context from './common/context';
 
-export default class Header extends Component {
+class _Header extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -62,27 +62,26 @@ export default class Header extends Component {
       headerRightOnPress,
       headerRightIcon,
       colors,
+      noShadow,
     } = this.props;
     return (
       <View
-        style={{
-          paddingTop: Constants.statusBarHeight,
-          backgroundColor: colors.primary,
-        }}>
-        {/* {noAccounts === true && (
-          <View
-            style={{
-              paddingVertical: 4,
-              paddingHorizontal: 20,
-              backgroundColor: colors.gold,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Text style={{ color: 'white', textAlign: 'center' }}>
-              No accounts added yet.
-            </Text>
-          </View>
-        )} */}
+        style={[
+          {
+            elevation: 10,
+            zIndex: 11,
+            paddingTop: Constants.statusBarHeight,
+            backgroundColor: colors.header,
+          },
+          noShadow
+            ? null
+            : {
+                shadowColor: '#000',
+                shadowOffset: { width: 2, height: 2 },
+                shadowRadius: 5,
+                shadowOpacity: 0.3,
+              },
+        ]}>
         {creditSwitch === false &&
           debitSwitch === true && (
             <View
@@ -169,7 +168,13 @@ export default class Header extends Component {
           <View style={styles.title}>
             {title ? (
               <Text
-                style={[styles.titleText, { fontSize: smallTitle ? 16 : 20 }]}>
+                style={[
+                  styles.titleText,
+                  {
+                    fontSize: smallTitle ? 16 : 20,
+                    color: colors.headerContrast,
+                  },
+                ]}>
                 {title}
               </Text>
             ) : null}
@@ -217,8 +222,11 @@ const styles = {
     justifyContent: 'center',
   },
   titleText: {
-    color: 'white',
     fontSize: 20,
     paddingLeft: 0,
   },
 };
+
+const Header = context(_Header);
+
+export default Header;

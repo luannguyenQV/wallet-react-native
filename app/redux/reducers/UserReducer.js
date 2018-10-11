@@ -19,9 +19,12 @@ import {
   LOGOUT_USER,
   VIEW_WALLET,
   HIDE_WALLET,
+  RESET_USER_ERRORS,
 } from '../actions';
 
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
+import { userSelector } from './../sagas/selectors';
+import { createSelector } from '../../../node_modules/reselect';
 
 const EMPTY_BANK_ACCOUNT = {
   name: '',
@@ -86,12 +89,14 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action) => {
+  // console.log(action);
   switch (action.type) {
     case PERSIST_REHYDRATE:
       return action.payload.auth || INITIAL_STATE;
     case INPUT_FIELD_CHANGED:
       return {
         ...state,
+        updateError: '',
         tempItem: {
           ...state.tempItem,
           [action.payload.prop]: action.payload.value,
@@ -102,6 +107,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         // [action.payload.type]: {},
+        updateError: '',
         tempItem: {},
         showDetail: true,
         editing: false,
@@ -200,6 +206,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         modalVisible: false,
         loading: false,
+        tempItem: null,
         updateError: '',
         modalType: '',
       };
@@ -215,11 +222,13 @@ export default (state = INITIAL_STATE, action) => {
 
     case SET_ACTIVE_CURRENCY_ASYNC.pending:
       return {
+        ...state,
         loading: true,
       };
     case SET_ACTIVE_CURRENCY_ASYNC.success:
     case SET_ACTIVE_CURRENCY_ASYNC.fail:
       return {
+        ...state,
         loading: false,
       };
 
@@ -256,12 +265,13 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         [action.payload.prop]: action.payload.data,
         loading: false,
+        updateError: '',
       };
     case FETCH_DATA_ASYNC.error:
       return {
         ...state,
         loading: false,
-        fetchError: error,
+        fetchError: action.payload,
       };
 
     case UPLOAD_DOCUMENT_ASYNC.pending:
@@ -282,6 +292,11 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         updateError: action.payload,
         loading: false,
+      };
+    case RESET_USER_ERRORS:
+      return {
+        ...state,
+        updateError: '',
       };
 
     case VIEW_WALLET:
@@ -316,3 +331,7 @@ export default (state = INITIAL_STATE, action) => {
       return state;
   }
 };
+
+export const userEmailsSelector = createSelector(userSelector, user => {
+  return user.email;
+});

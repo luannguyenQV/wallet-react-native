@@ -1,40 +1,69 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, Linking } from 'react-native';
 import Colors from './../../config/colors';
-import Icon from 'react-native-vector-icons/Ionicons';
+import { MaterialIcons } from '@expo/vector-icons';
+import { WebBrowser } from 'expo';
+import context from './context';
 
-class Checkbox extends Component {
+class _Checkbox extends Component {
   render() {
     const {
-      onPress,
+      toggleCheck,
       value,
-      label,
+      title,
       link,
-      linkLabel,
-      requiredError,
+      description,
+      error,
+      colors,
     } = this.props;
     const {
       textStyle,
+      textStyleRequired,
       viewStyleContainer,
       viewStyleContainerCheckbox,
       textStyleLink,
-      textStyleRequired,
+      viewStyleTextLink,
+      viewStyleText,
+      viewStyleCheckbox,
     } = styles;
     return (
-      <View style={viewStyleContainer}>
+      <View
+        style={[
+          viewStyleContainer,
+          { backgroundColor: colors.primaryContrast },
+        ]}>
         <View style={viewStyleContainerCheckbox}>
-          <Icon
-            onPress={onPress} //value ? {this.setState({ value })} : 'square-outline'}
-            name={value ? 'checkbox' : 'square-outline'}
-            size={30}
-            color={value ? Colors.primary : Colors.lightgray}
-          />
-          <Text style={textStyle}>{label}</Text>
-          <TouchableOpacity onPress={() => Linking.openURL({ link })}>
-            <Text style={textStyleLink}>{linkLabel}</Text>
-          </TouchableOpacity>
-          <Text style={textStyleRequired}>{requiredError}</Text>
+          <View style={viewStyleCheckbox}>
+            <MaterialIcons
+              onPress={toggleCheck} //value ? {this.setState({ value })} : 'square-outline'}
+              name={value ? 'check-box' : 'check-box-outline-blank'}
+              size={32}
+              color={value ? colors.primary : 'lightgrey'}
+            />
+          </View>
+          {title ? (
+            <View style={viewStyleText}>
+              <Text style={textStyle}>{title}</Text>
+              {description ? (
+                link ? (
+                  <TouchableOpacity
+                    onPress={() => WebBrowser.openBrowserAsync(link)}>
+                    <View style={viewStyleTextLink}>
+                      <Text style={textStyleLink}>{description}</Text>
+                    </View>
+                  </TouchableOpacity>
+                ) : (
+                  <Text style={textStyleLink}>{description}</Text>
+                )
+              ) : null}
+            </View>
+          ) : null}
         </View>
+        {error ? (
+          <View>
+            <Text style={textStyleRequired}>{error}</Text>
+          </View>
+        ) : null}
       </View>
     );
   }
@@ -42,31 +71,60 @@ class Checkbox extends Component {
 
 const styles = {
   viewStyleContainer: {
-    flex: 1,
-    alignItems: 'flex-start',
+    // alignItems: 'flex-start',
+    // justifyContent: 'flex-start',
+    // minHeight: 72,
+    margin: 8,
+    padding: 8,
+    borderRadius: 5,
+    // width: '100%',
+    // overflow: 'hidden',
   },
   viewStyleContainerCheckbox: {
+    // flex: 1,
     flexDirection: 'row',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    alignItems: 'center',
+    // minHeight: 72,
+  },
+  viewStyleCheckbox: {
+    margin: 4,
+    justifyContent: 'center',
+    // marginVertical: 12,
+  },
+  viewStyleText: {
+    // flexDirection: 'column',
+    paddingLeft: 8,
+    paddingRight: 16,
+    justifyContent: 'center',
+    // flexWrap: 'wrap',
+  },
+  viewStyleTextLink: {
+    // flexDirection: 'column',
+    flexWrap: 'wrap',
+    marginRight: 16,
   },
   textStyle: {
-    color: Colors.black,
-    paddingLeft: 8,
-    paddingRight: 4,
+    color: 'black',
     fontSize: 16,
+    // paddingBottom: 2,
   },
   textStyleLink: {
-    color: Colors.lightblue,
-    fontSize: 16,
+    color: 'blue',
+    fontSize: 12,
+    paddingTop: 2,
+    // flex: 1,
+    marginRight: 8,
   },
   textStyleRequired: {
-    color: Colors.red,
-    paddingRight: 5,
-    flexWrap: 'wrap',
+    color: 'red',
+    padding: 8,
+    paddingTop: 4,
+    // paddingRight: 5,
+    // minHeight: 72,
   },
 };
 
 // make component available to other parts of app
+
+const Checkbox = context(_Checkbox);
+
 export { Checkbox };

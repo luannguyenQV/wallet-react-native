@@ -2,27 +2,34 @@
   "expo": {
     "name": "Rehive Wallet",
     "description": "A multi-currency wallet built on the Rehive platform.",
-    "version": "0.6.0",
-    "slug": "rehive-wallet",
+    "version": "1.1.4",
+    "slug": "rehive-wallet-staging",
     "privacy": "public",
-    "sdkVersion": "28.0.0",
+    "sdkVersion": "30.0.0",
     "orientation": "portrait",
-    "primaryColor": "#ffffff",
-    "icon": "./assets/icons/Rehive_icon_primary.png",
-    "loading": {
-      "icon": "./assets/icons/Rehive_icon_primary.png",
-      "hideExponentText": false
+    "primaryColor": "#4d4d4d",
+    "icon": "./assets/icons/icon.png",
+    "splash": {
+      "image": "./assets/icons/splash-full.png",
+      "primaryColor": "#ffffff",
+      "resizeMode": "contain"
     },
-    "packagerOpts": {
-      "assetExts": ["ttf", "mp4"]
-    },
-    "assetBundlePatterns": ["assets/icons/*"],
+    "assetBundlePatterns": ["./assets/icons/*"],
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.rehive.wallet"
+      "supportsTablet": false,
+      "bundleIdentifier": "com.rehive.wallet-staging",
+      "infoPlist": {
+        "NSContactsUsageDescription":
+          "Allow access if you would like to easily add recipients from your device",
+        "NSCameraUsageDescription":
+          "All access to upload an image using your device camera",
+        "NSPhotoLibraryUsageDescription":
+          "All access to upload an image from your device storage"
+      }
     },
     "android": {
-      "package": "com.rehive_wallet"
+      "package": "com.rehivewallet_staging",
+      "icon": "./assets/icons/icon-1024.png"
     }
   }
 }
