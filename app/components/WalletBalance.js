@@ -74,7 +74,7 @@ const styles = {
     // shadowColor: '#000',
     // shadowOffset: { width: 2, height: 2 },
     // shadowRadius: 5,
-    // shadowOpacity: 0.3,
+    // shadowOpacity: 0.15,
     zIndex: 2,
   },
   textStyleCode: {

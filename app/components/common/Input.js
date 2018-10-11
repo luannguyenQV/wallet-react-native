@@ -154,7 +154,7 @@ class _Input extends Component {
       if (Platform.OS === 'ios') {
         return {
           shadowColor: 'rgba(0, 0, 0, 0.6)',
-          shadowOpacity: 0.3,
+          shadowOpacity: 0.15,
           shadowRadius: 3,
           shadowOffset: {
             width: 1,

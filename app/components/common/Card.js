@@ -97,7 +97,7 @@ const _Card = props => {
                   textStyleTitle,
                   {
                     fontSize: title ? (title.length < 18 ? 24 : 18) : 24,
-                    color: colors.text,
+                    color: colorTitleText ? colorTitleText : colors.font,
                   },
                 ]}>
                 {title}
@@ -106,7 +106,7 @@ const _Card = props => {
                 <Text
                   style={[
                     textStyleSubtitle,
-                    { color: colorTitleText ? colorTitleText : colors.text },
+                    { color: colorTitleText ? colorTitleText : colors.font },
                   ]}>
                   {subtitle}
                 </Text>
@@ -118,7 +118,7 @@ const _Card = props => {
               <HeaderButton
                 icon={iconTitleRight}
                 onPress={onPressTitleRight}
-                color={colorTitle ? colorTitle : colors.text}
+                color={colorTitle ? colorTitle : colors.font}
               />
             </View>
           ) : null}
@@ -195,8 +195,8 @@ _Card.defaultProps = {
   icon: '',
   size: '',
   type: 'contained',
-  colorTitleBackground: Colors.secondary,
-  colorTitleText: Colors.secondaryContrast,
+  colorTitleBackground: '',
+  colorTitleText: '',
   backgroundColor: 'white',
 };
 
@@ -245,11 +245,10 @@ const styles = {
   textStyleTitle: {
     flexShrink: 1,
     flexWrap: 'wrap',
-    color: 'blue',
     fontWeight: 'bold',
   },
   textStyleSubtitle: {
-    opacity: 0.6,
+    opacity: 0.8,
     fontSize: 12,
   },
   viewStyleContent: {

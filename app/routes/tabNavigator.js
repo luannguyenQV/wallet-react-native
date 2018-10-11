@@ -48,6 +48,18 @@ const tabNavigator = createBottomTabNavigator(Stack, {
     // activeBackgroundColor: colors.header,
     // inactiveBackgroundColor: colors.headerContrast,
     // labelStyle: { color: colors.primary },
+    style: {
+      paddingVertical: 8,
+      height: 64,
+      // borderTopColor: 'transparent',
+      borderTopWidth: 0,
+      elevation: 2,
+      zIndex: 2,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 0 },
+      shadowRadius: 2,
+      shadowOpacity: 0.15,
+    },
   },
 });
 
