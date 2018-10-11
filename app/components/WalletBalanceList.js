@@ -84,12 +84,8 @@ class WalletBalanceList extends Component {
 const styles = {
   viewStyleContainer: {
     flexDirection: 'column',
-    elevation: 10,
-    // shadowColor: '#000',
-    // shadowOffset: { width: 2, height: 2 },
-    // shadowRadius: 5,
-    // shadowOpacity: 0.3,
-    zIndex: 11,
+    elevation: 2,
+    zIndex: 2,
   },
   viewStyleButtons: {
     flexDirection: 'row',

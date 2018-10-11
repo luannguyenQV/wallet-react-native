@@ -68,8 +68,8 @@ class _Header extends Component {
       <View
         style={[
           {
-            elevation: 10,
-            zIndex: 11,
+            elevation: 2,
+            zIndex: 2,
             paddingTop: Constants.statusBarHeight,
             backgroundColor: colors.header,
           },
@@ -77,8 +77,8 @@ class _Header extends Component {
             ? null
             : {
                 shadowColor: '#000',
-                shadowOffset: { width: 2, height: 2 },
-                shadowRadius: 5,
+                shadowOffset: { width: 0, height: 2 },
+                shadowRadius: 2,
                 shadowOpacity: 0.3,
               },
         ]}>
@@ -213,7 +213,7 @@ const styles = {
   },
   title: {
     flex: 3,
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'center',
   },
   rightIcon: {
