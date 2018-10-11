@@ -118,6 +118,7 @@ class HomeCards extends Component {
   }
 
   renderCard(item) {
+    const { colors } = this.props;
     const { textStyleContent } = styles;
     return (
       <Card
@@ -135,7 +136,9 @@ class HomeCards extends Component {
           item.actionLabel ? item.actionLabel : item.dismiss ? 'DISMISS' : ''
         }>
         {item.description ? (
-          <Text style={textStyleContent}>{item.description}</Text>
+          <Text style={[textStyleContent, { color: colors.font }]}>
+            {item.description}
+          </Text>
         ) : null}
       </Card>
     );
