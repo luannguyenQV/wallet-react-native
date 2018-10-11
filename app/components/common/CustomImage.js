@@ -17,13 +17,6 @@ class _CustomImage extends Component {
   }
   render() {
     switch (this.props.name) {
-      case 'card1':
-        return (
-          <Image
-            style={this.imageStylePhoto()}
-            source={require('./../../../assets/icons/card1_transparent.png')}
-          />
-        );
       case 'card2':
         return (
           <Image
@@ -43,6 +36,14 @@ class _CustomImage extends Component {
           <Image
             style={this.imageStylePhoto()}
             source={require('./../../../assets/icons/pxpay.png')}
+          />
+        );
+      case 'card1':
+      default:
+        return (
+          <Image
+            style={this.imageStylePhoto()}
+            source={require('./../../../assets/icons/card1_transparent.png')}
           />
         );
     }

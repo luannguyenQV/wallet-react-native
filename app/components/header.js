@@ -151,12 +151,12 @@ class _Header extends Component {
         )}
         <View style={styles.options}>
           <View style={styles.left}>
-            {drawer ? (
+            {/* {drawer ? (
               <HeaderButton
                 onPress={() => this.props.navigation.openDrawer()}
                 icon="menu"
               />
-            ) : null}
+            ) : null} */}
             {back ? (
               <HeaderButton
                 onPress={() => navigation.goBack()}
