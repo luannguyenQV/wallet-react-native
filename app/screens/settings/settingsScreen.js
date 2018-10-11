@@ -275,7 +275,7 @@ class SettingsScreen extends Component {
           <SettingsContainer label="Security">
             {this.renderSecurity()}
           </SettingsContainer>
-          <Text>Version: {App.expo.version}</Text>
+          <Text>Version: {App.expo.version} (staging)</Text>
         </InputContainer>
       </View>
     );
