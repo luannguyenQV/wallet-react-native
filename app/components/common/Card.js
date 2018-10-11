@@ -64,7 +64,6 @@ const _Card = props => {
     colors,
     canEdit,
   } = props;
-
   return (
     <View style={viewStyleCardContainer}>
       {/* <Swipeable rightContent={swipeableContent}> */}
@@ -98,13 +97,17 @@ const _Card = props => {
                   textStyleTitle,
                   {
                     fontSize: title ? (title.length < 18 ? 24 : 18) : 24,
-                    // color: colorTitleText,
+                    color: colors.text,
                   },
                 ]}>
                 {title}
               </Text>
               {subtitle ? (
-                <Text style={[textStyleSubtitle, { color: colorTitleText }]}>
+                <Text
+                  style={[
+                    textStyleSubtitle,
+                    { color: colorTitleText ? colorTitleText : colors.text },
+                  ]}>
                   {subtitle}
                 </Text>
               ) : null}
@@ -115,7 +118,7 @@ const _Card = props => {
               <HeaderButton
                 icon={iconTitleRight}
                 onPress={onPressTitleRight}
-                color={colorTitle ? colorTitle : colors.primaryContrast}
+                color={colorTitle ? colorTitle : colors.text}
               />
             </View>
           ) : null}
@@ -145,7 +148,7 @@ const _Card = props => {
                   name={iconFooter}
                   size={22}
                   onPress={onPressFooter}
-                  color={colorIcon ? colorIcon : colors.gray}
+                  color={colorIcon ? colorIcon : colors.grey1}
                 />
               ) : null}
               {textActionTwo ? (
@@ -154,7 +157,9 @@ const _Card = props => {
                   underlayColor="lightgrey"
                   style={buttonStyleAction}
                   onPress={onPressActionTwo}>
-                  <Text style={textStyleAction}>{textActionTwo}</Text>
+                  <Text style={[textStyleAction, { color: colors.font }]}>
+                    {textActionTwo}
+                  </Text>
                 </TouchableHighlight>
               ) : null}
               {textActionOne ? (
@@ -163,7 +168,9 @@ const _Card = props => {
                   underlayColor="lightgrey"
                   style={buttonStyleAction}
                   onPress={onPressActionOne}>
-                  <Text style={textStyleAction}>{textActionOne}</Text>
+                  <Text style={[textStyleAction, { color: colors.font }]}>
+                    {textActionOne}
+                  </Text>
                 </TouchableHighlight>
               ) : null}
             </View>
@@ -238,6 +245,7 @@ const styles = {
   textStyleTitle: {
     flexShrink: 1,
     flexWrap: 'wrap',
+    color: 'blue',
     fontWeight: 'bold',
   },
   textStyleSubtitle: {
