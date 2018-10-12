@@ -1,40 +1,89 @@
 import React, { Component } from 'react';
+import { View, Text } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import context from './context';
 
 class _TabBarIcon extends Component {
-  render() {
-    const { routeName, focused, tintColor } = this.props;
+  renderIcon() {
+    const { routeName, focused, tintColor, colors } = this.props;
 
     let iconName;
-    if (routeName === 'Home') {
-      iconName = `ios-home${focused ? '' : ''}`;
-    } else if (routeName === 'Wallets') {
-      iconName = `wallet${focused ? '' : ''}`;
-    } else if (routeName === 'Rewards') {
-      iconName = `gift${focused ? '' : ''}`;
-      // iconName = `star-box`;
-    } else if (routeName === 'GetVerified') {
-      iconName = `ios-person${focused ? '' : ''}`;
-    } else if (routeName === 'Settings') {
-      iconName = 'ios-settings';
-      // iconName = `settings${focused ? '' : '-outline'}`;
+    switch (routeName) {
+      case 'Home':
+        iconName = `ios-home${focused ? '' : ''}`;
+        break;
+      case 'Wallets':
+        iconName = `wallet${focused ? '' : ''}`;
+        break;
+      case 'Rewards':
+        iconName = `gift${focused ? '' : ''}`;
+        break;
+      case 'GetVerified':
+        iconName = `ios-person${focused ? '' : ''}`;
+        break;
+      case 'Settings':
+        iconName = 'ios-settings';
+        break;
     }
-    // const color = focused ? colors.primary : colors.grey3;
 
-    // You can return any component that you like here! We usually use an
-    // icon component from react-native-vector-icons
     switch (routeName) {
       case 'Wallets':
       case 'Rewards':
         return (
-          <MaterialCommunityIcons name={iconName} size={25} color={tintColor} />
+          <MaterialCommunityIcons
+            name={iconName}
+            size={25}
+            color={colors[tintColor]}
+          />
         );
       default:
-        return <Ionicons name={iconName} size={25} color={tintColor} />;
+        return <Ionicons name={iconName} size={25} color={colors[tintColor]} />;
     }
   }
+  renderText() {
+    const { routeName, tintColor, colors } = this.props;
+
+    let iconLabel = '';
+    switch (routeName) {
+      case 'GetVerified':
+        iconLabel = 'Get verified';
+        break;
+      default:
+        iconLabel = routeName;
+        break;
+    }
+
+    return (
+      <Text style={[styles._textStyle, { color: colors[tintColor] }]}>
+        {iconLabel.toUpperCase()}
+      </Text>
+    );
+  }
+
+  render() {
+    return (
+      <View style={styles._containerStyle}>
+        {this.renderIcon()}
+        {this.renderText()}
+      </View>
+    );
+  }
 }
+
+const styles = {
+  _containerStyle: {
+    // flex: 1,
+    // minWidth: 64,
+    // padding: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  _textStyle: {
+    textAlign: 'center',
+    fontSize: 9,
+  },
+};
+
 const TabBarIcon = context(_TabBarIcon);
 
 export { TabBarIcon };

@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
 import { Image, Dimensions } from 'react-native';
+import PropTypes from 'prop-types';
 import context from './context';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class _CustomImage extends Component {
   imageStylePhoto() {
-    const { backgroundColor, width, height, colors } = this.props;
+    const { backgroundColor, width, height, colors, padding } = this.props;
 
-    return [
-      styles.imageStylePhoto,
-      {
-        backgroundColor: backgroundColor ? colors[backgroundColor] : 'white',
-      },
-    ];
+    return {
+      backgroundColor: backgroundColor ? colors[backgroundColor] : 'white',
+      width: width - 2 * padding,
+      height,
+    };
   }
   render() {
     switch (this.props.name) {
@@ -71,11 +71,20 @@ class _CustomImage extends Component {
   }
 }
 
-const styles = {
-  imageStylePhoto: {
-    width: SCREEN_WIDTH - 16,
-    height: 120,
-  },
+_CustomImage.propTypes = {
+  backgroundColor: PropTypes.string,
+  width: PropTypes.number,
+  height: PropTypes.number,
+  padding: PropTypes.number,
+  colors: PropTypes.object,
+};
+
+_CustomImage.defaultProps = {
+  backgroundColor: 'white',
+  width: SCREEN_WIDTH,
+  height: 120,
+  padding: 0,
+  colors: {},
 };
 
 const CustomImage = context(_CustomImage);

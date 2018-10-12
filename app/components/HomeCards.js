@@ -125,7 +125,11 @@ class HomeCards extends Component {
         key={item.id}
         title={item.title}
         renderHeader={
-          <CustomImage name={item.image} backgroundColor={'header'} />
+          <CustomImage
+            name={item.image}
+            backgroundColor={'header'}
+            padding={8}
+          />
         }
         onPressActionOne={() =>
           item.navigate

@@ -231,7 +231,6 @@ class ReceiveScreen extends Component {
   }
 
   render() {
-    console.log('SCREEN_WIDTH', SCREEN_WIDTH);
     return (
       <View style={styles.container}>
         <Header navigation={this.props.navigation} back title="Receive" />

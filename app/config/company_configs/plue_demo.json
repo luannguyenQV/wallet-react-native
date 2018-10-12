@@ -28,8 +28,8 @@
         "link": "https://www.google.co.za/"
       }
     ],
-    "first_name": true,
-    "last_name": true,
+    "first_name": false,
+    "last_name": false,
     "username": true,
     "country": false,
     "pin": "",
