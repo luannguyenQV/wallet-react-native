@@ -25,3 +25,4 @@ export * from './Text';
 export * from './Tabs';
 export * from './CustomImage';
 export * from './TabBarIcon';
+export * from './View';

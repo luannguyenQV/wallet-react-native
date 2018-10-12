@@ -23,7 +23,13 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 import { Toast } from 'native-base';
 import Header from './../../components/header';
-import { Output, Input, Button, Checkbox } from './../../components/common';
+import {
+  Output,
+  Input,
+  Button,
+  Checkbox,
+  View as MyView,
+} from './../../components/common';
 import {
   currenciesSelector,
   receiveSelector,
@@ -235,17 +241,19 @@ class ReceiveScreen extends Component {
       <View style={styles.container}>
         <Header navigation={this.props.navigation} back title="Receive" />
         {/* {Platform.OS === 'android' ? ( */}
-        <KeyboardAvoidingView
+        {/* <KeyboardAvoidingView
           style={{ flex: 1 }}
           behavior={'position'}
           keyboardVerticalOffset={0}>
           <ScrollView
             keyboardDismissMode={'interactive'}
             contentContainerStyle={{ padding: 8 }}
-            keyboardShouldPersistTaps="always">
-            {this.renderContent()}
-          </ScrollView>
-        </KeyboardAvoidingView>
+            keyboardShouldPersistTaps="always"> */}
+        <MyView keyboardAvoiding behavior={'position'}>
+          {this.renderContent()}
+        </MyView>
+        {/* </ScrollView>
+        </KeyboardAvoidingView> */}
         {/* ) : (
           <KeyboardAwareScrollView
             resetScrollToCoords={{ x: 0, y: 0 }}
