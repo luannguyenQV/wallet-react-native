@@ -78,7 +78,6 @@ export const RESEND_VERIFICATION_ASYNC = createAsyncTypes(
   'resend_verification',
 );
 export const resendVerification = (type, data, company) => {
-  // console.log(type, value);
   return {
     type: RESEND_VERIFICATION_ASYNC.pending,
     payload: {

@@ -26,6 +26,7 @@ import {
   verifyMFA,
   toggleTerms,
   logoutUser,
+  resendVerification,
 } from '../../redux/actions';
 
 import { colorSelector } from './../../redux/reducers/ConfigReducer';
@@ -316,12 +317,12 @@ class AuthScreen extends Component {
               /> */}
                 {/* <Button
                   label="Resend email"
-                  textColor={company_config.colors.primaryContrast}
-                  backgroundColor="transparent"
-                  // size="large"
-                  reference={input => { this.login = input; }}
-                  onPress={() => nextAuthFormState('register')}
-                  animation="fadeInUpBig"
+                  color="secondary"
+                  reference={input => {
+                    this.email = input;
+                  }}
+                  onPress={() => resendVerification()}
+                  animation="slideInRight"
                 /> */}
               </View>
             );
@@ -674,6 +675,7 @@ export default connect(mapStateToProps, {
   verifyMFA,
   toggleTerms,
   logoutUser,
+  resendVerification,
 })(AuthScreen);
 
 //727

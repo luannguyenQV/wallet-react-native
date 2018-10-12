@@ -23,6 +23,7 @@ const CardContainer = props => {
 const styles = {
   containerStyle: {
     flex: 1,
+    backgroundColor: '#EAEAEF',
     // alignItems: 'stretch',
     // paddingVertical: 16,
     // padding: 8,
