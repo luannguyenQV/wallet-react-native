@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, FlatList, Image } from 'react-native';
+import { View, FlatList, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { uploadDocument, resetUserErrors } from './../../../redux/actions';
 import Header from './../../../components/header';
 
-import { ImageUpload, Button, Spinner } from '../../../components/common';
+import { ImageUpload, Button, Spinner, Text } from '../../../components/common';
 import document_categories from './../../../config/document_types.json';
 
 class DocumentScreen extends Component {
@@ -60,7 +60,6 @@ class DocumentScreen extends Component {
     if (category) {
       options = document_category[0].document_types;
     }
-    console.log(options);
 
     switch (state) {
       case 'document_type':

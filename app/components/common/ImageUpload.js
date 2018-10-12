@@ -47,6 +47,7 @@ class ImageUpload extends Component {
         <ButtonList>
           <Button label="Use camera" onPress={this.launchCamera} />
           <Button
+            color="secondary"
             label="Choose from gallery"
             onPress={this.launchImageLibrary}
           />
