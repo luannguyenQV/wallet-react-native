@@ -84,31 +84,25 @@
   "cards": {
     "home": {
       "general": {
-        "welcome": true,
-        "verify": true
+        "welcome": false,
+        "verify": false
       },
       "custom": [
         {
           "id": "0",
-          "title": "Card 1",
-          "description": "This is your custom text for card 1",
-          "image": "card1",
-          "dismiss": true
+          "title": "Welcome to Rehive:Luuun",
+          "description":
+            "The new home of Luuun; a stellar wallet built on the Rehive platform",
+          "dismiss": true,
+          "image": "card1-luuun"
         },
         {
           "id": "1",
-          "title": "Card 2",
-          "description": "This is your custom text for card 2",
-          "image": "card2",
-          "dismiss": false
-        },
-        {
-          "id": "2",
-          "title": "Card 3",
-          "description": "This is your custom text for card 3",
-          "image": "card3",
+          "title": "What's new",
+          "description":
+            "• Improved 2FA \n• Working biometric/pin local authentication\n• Light/dark theme\n• Support for custom stellar assets",
           "dismiss": true,
-          "actionLabel": "CUSTOM DISMISS"
+          "image": "card2-luuun"
         }
       ]
     }
@@ -117,21 +111,9 @@
     "landing": [
       {
         "id": "0",
-        "title": "Slide 1",
-        "description": "This is your custom text for slide 1",
-        "image": "card1"
-      },
-      {
-        "id": "1",
-        "title": "Slide 2",
-        "description": "This is your custom text for slide 2",
-        "image": "card2"
-      },
-      {
-        "id": "2",
-        "title": "Slide 3",
-        "description": "This is your custom text for slide 3",
-        "image": "card3"
+        "title": "Rehive:Luuun",
+        "description": "A stellar wallet built on the Rehive platform",
+        "image": "card1-luuun"
       }
     ]
   },

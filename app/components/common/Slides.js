@@ -8,6 +8,7 @@ import {
   Animated,
 } from 'react-native';
 import context from './context';
+import { CustomImage } from './CustomImage';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -30,17 +31,9 @@ class _Slides extends Component {
         outputRange: [0.05, 1, 0.05],
         extrapolate: 'clamp',
       });
-      let image = ``;
       return (
         <Animated.View key={slide.id} style={{ opacity, width }}>
-          <Image
-            style={[imageStylePhoto, { width, height }]}
-            source={
-              slide.image === 'pxpay'
-                ? require('./../../../assets/icons/pxpay.png')
-                : require('./../../../assets/icons/card1_transparent.png')
-            }
-          />
+          <CustomImage name={slide.image} backgroundColor={'authScreen'} />
           <Text
             style={[textStyleTitle, { color: colors['authScreenContrast'] }]}>
             {slide.title}
@@ -77,31 +70,33 @@ class _Slides extends Component {
           scrollEventThrottle={16}>
           {this.renderSlides()}
         </ScrollView>
-        <View
-          style={{
-            flexDirection: 'row',
-          }}>
-          {data.map((_, i) => {
-            let opacity = position.interpolate({
-              inputRange: [i - 1, i, i + 1],
-              outputRange: [0.3, 1, 0.3],
-              extrapolate: 'clamp',
-            });
-            return (
-              <Animated.View
-                key={i}
-                style={{
-                  opacity,
-                  height: 10,
-                  width: 10,
-                  backgroundColor: colors['authScreenContrast'],
-                  margin: 8,
-                  borderRadius: 5,
-                }}
-              />
-            );
-          })}
-        </View>
+        {data && data.length > 1 ? (
+          <View
+            style={{
+              flexDirection: 'row',
+            }}>
+            {data.map((_, i) => {
+              let opacity = position.interpolate({
+                inputRange: [i - 1, i, i + 1],
+                outputRange: [0.3, 1, 0.3],
+                extrapolate: 'clamp',
+              });
+              return (
+                <Animated.View
+                  key={i}
+                  style={{
+                    opacity,
+                    height: 10,
+                    width: 10,
+                    backgroundColor: colors['authScreenContrast'],
+                    margin: 8,
+                    borderRadius: 5,
+                  }}
+                />
+              );
+            })}
+          </View>
+        ) : null}
       </View>
     );
   }

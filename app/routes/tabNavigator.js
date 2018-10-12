@@ -20,6 +20,7 @@ import { TabBarIcon } from './../components/common';
 import { store } from './../redux/store';
 
 const colors = colorSelector(store.getState());
+console.log(colors);
 
 const Stack = {
   GetVerified: GetVerifiedScreen,

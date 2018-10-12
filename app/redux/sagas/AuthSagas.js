@@ -558,7 +558,8 @@ function* postAuthFlow() {
                     });
                     yield put({ type: AUTH_STORE_USER, payload: resp });
                   } catch (error) {
-                    authError = resp.message;
+                    console.log(error);
+                    authError = error.message;
                   }
                 }
               } else {

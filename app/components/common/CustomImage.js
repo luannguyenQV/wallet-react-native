@@ -21,7 +21,7 @@ class _CustomImage extends Component {
         return (
           <Image
             style={this.imageStylePhoto()}
-            source={require('./../../../assets/icons/card2_transparent.png')}
+            source={require('./../../../assets/icons/card2.png')}
           />
         );
       case 'pxpay':
@@ -31,11 +31,32 @@ class _CustomImage extends Component {
             source={require('./../../../assets/icons/pxpay.png')}
           />
         );
-      case 'plue':
+      case 'card1-plue':
         return (
           <Image
             style={this.imageStylePhoto()}
-            source={require('./../../../assets/icons/pxpay.png')}
+            source={require('./../../../assets/icons/card1-plue.png')}
+          />
+        );
+      case 'card2-plue':
+        return (
+          <Image
+            style={this.imageStylePhoto()}
+            source={require('./../../../assets/icons/card2-plue.png')}
+          />
+        );
+      case 'card1-luuun':
+        return (
+          <Image
+            style={this.imageStylePhoto()}
+            source={require('./../../../assets/icons/card1-luuun.png')}
+          />
+        );
+      case 'card2-luuun':
+        return (
+          <Image
+            style={this.imageStylePhoto()}
+            source={require('./../../../assets/icons/card2-luuun.png')}
           />
         );
       case 'card1':
@@ -43,7 +64,7 @@ class _CustomImage extends Component {
         return (
           <Image
             style={this.imageStylePhoto()}
-            source={require('./../../../assets/icons/card1_transparent.png')}
+            source={require('./../../../assets/icons/card1.png')}
           />
         );
     }
