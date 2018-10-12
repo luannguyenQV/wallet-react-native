@@ -53,7 +53,7 @@ class WalletBalanceList extends Component {
       );
     } else {
       return (
-        <Text style={[styles.textStyle, { color: colors.primaryContrast }]}>
+        <Text style={[styles.textStyle, { color: colors.headerContrast }]}>
           No accounts available
         </Text>
       );
@@ -99,8 +99,9 @@ const styles = {
     alignItems: 'center',
   },
   textStyle: {
-    fontSize: 18,
-    fontWeight: 'normal',
+    fontSize: 20,
+    textAlign: 'center',
+    padding: 16,
   },
 };
 

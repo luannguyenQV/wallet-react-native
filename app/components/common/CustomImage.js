@@ -59,6 +59,20 @@ class _CustomImage extends Component {
             source={require('./../../../assets/icons/card2-luuun.png')}
           />
         );
+      case 'slider1-luuun':
+        return (
+          <Image
+            style={this.imageStylePhoto()}
+            source={require('./../../../assets/icons/slider1-luuun.png')}
+          />
+        );
+      case 'slider2-luuun':
+        return (
+          <Image
+            style={this.imageStylePhoto()}
+            source={require('./../../../assets/icons/slider2-luuun.png')}
+          />
+        );
       case 'card1':
       default:
         return (

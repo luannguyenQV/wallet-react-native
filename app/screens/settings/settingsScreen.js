@@ -275,7 +275,11 @@ class SettingsScreen extends Component {
           <SettingsContainer label="Security">
             {this.renderSecurity()}
           </SettingsContainer>
-          <Text>Version: {App.expo.version} (staging)</Text>
+          <Text>
+            {'Version: ' +
+              App.expo.version +
+              (App.expo.slug === 'rehive-wallet-staging' ? ' (staging)' : '')}
+          </Text>
         </InputContainer>
       </View>
     );

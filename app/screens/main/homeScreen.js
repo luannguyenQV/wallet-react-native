@@ -18,6 +18,7 @@ import TransactionList from './../../components/TransactionList';
 import HomeCards from './../../components/HomeCards';
 import WalletBalanceList from '../../components/WalletBalanceList';
 import WalletActionList from '../../components/WalletActionList';
+import { EmptyListMessage } from '../../components/common';
 
 const renderPagination = (index, total, context) => {
   return (
@@ -42,15 +43,17 @@ class HomeScreen extends Component {
           activeCurrency={home.currency}
           setHomeCurrency={setHomeCurrency}
         />
-        <WalletActionList
-          buttons={[
-            { id: 0, type: 'receive' },
-            { id: 1, type: 'send' },
-            { id: 2, type: 'more' },
-          ]}
-          navigation={this.props.navigation}
-          currency={home.currency}
-        />
+        {currencies.data && currencies.data.length > 0 ? (
+          <WalletActionList
+            buttons={[
+              { id: 0, type: 'receive' },
+              { id: 1, type: 'send' },
+              { id: 2, type: 'more' },
+            ]}
+            navigation={this.props.navigation}
+            currency={home.currency}
+          />
+        ) : null}
         <Swiper renderPagination={renderPagination} loop={false}>
           <HomeCards navigation={this.props.navigation} />
           <TransactionList currency={home.currency} />

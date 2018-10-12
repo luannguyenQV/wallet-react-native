@@ -32,8 +32,20 @@ class _Slides extends Component {
         extrapolate: 'clamp',
       });
       return (
-        <Animated.View key={slide.id} style={{ opacity, width }}>
-          <CustomImage name={slide.image} backgroundColor={'authScreen'} />
+        <Animated.View
+          key={slide.id}
+          style={{
+            opacity,
+            width,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <CustomImage
+            name={slide.image}
+            backgroundColor={'authScreen'}
+            height={200}
+            width={200}
+          />
           <Text
             style={[textStyleTitle, { color: colors['authScreenContrast'] }]}>
             {slide.title}

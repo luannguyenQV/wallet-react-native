@@ -187,7 +187,7 @@ class AuthScreen extends Component {
             <View style={buttonsContainer}>
               <Button
                 label="LOG IN"
-                color="secondary"
+                color="focus"
                 size="large"
                 reference={input => {
                   this.login = input;

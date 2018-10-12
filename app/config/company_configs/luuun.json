@@ -65,10 +65,10 @@
     "requireDocumentAdvID": true
   },
   "colors": {
-    "primary": "#0B4C20",
-    "secondary": "#2DFF5F",
-    "tertiary": "#9CFFAD",
-    "focus": "#03DBBB",
+    "primary": "#15335E",
+    "secondary": "#5E9AF0",
+    "tertiary": "#31578F",
+    "focus": "#28FFB0",
 
     "primaryContrast": "#f0f0f0",
     "secondaryContrast": "#2d2d2d",
@@ -113,7 +113,13 @@
         "id": "0",
         "title": "Rehive:Luuun",
         "description": "A stellar wallet built on the Rehive platform",
-        "image": "card1-luuun"
+        "image": "slider1-luuun"
+      },
+      {
+        "id": "1",
+        "title": "Rehive:Luuun",
+        "description": "A stellar wallet built on the Rehive platform",
+        "image": "slider2-luuun"
       }
     ]
   },

@@ -46,8 +46,12 @@ class Main extends Component {
 
   async _loadAssetsAsync() {
     const imageAssets = cacheImages([
-      require('./../assets/icons/card1_transparent.png'),
-      require('./../assets/icons/card2_transparent.png'),
+      require('./../assets/icons/card1.png'),
+      require('./../assets/icons/card2.png'),
+      require('./../assets/icons/card1-luuun.png'),
+      require('./../assets/icons/card2-luuun.png'),
+      require('./../assets/icons/card1-plue.png'),
+      require('./../assets/icons/card2-plue.png'),
     ]);
 
     const fontAssets = Expo.Font.loadAsync({
