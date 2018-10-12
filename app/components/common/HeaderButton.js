@@ -13,7 +13,10 @@ const _HeaderButton = ({ onPress, icon, text, color, colors, size }) => (
       />
     ) : (
       <Text
-        style={{ fontSize: size ? size : 16, color: color ? color : 'white' }}>
+        style={{
+          fontSize: size ? size : 16,
+          color: color ? color : colors.headerContrast,
+        }}>
         {text}
       </Text>
     )}

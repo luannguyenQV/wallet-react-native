@@ -87,7 +87,7 @@ class ReceiveScreen extends Component {
       currencies,
     } = this.props;
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, margin: 8 }}>
         <Output label={''} value={receive.value} copy />
         <TouchableHighlight
           underlayColor={'white'}
@@ -240,29 +240,9 @@ class ReceiveScreen extends Component {
     return (
       <View style={styles.container}>
         <Header navigation={this.props.navigation} back title="Receive" />
-        {/* {Platform.OS === 'android' ? ( */}
-        {/* <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          behavior={'position'}
-          keyboardVerticalOffset={0}>
-          <ScrollView
-            keyboardDismissMode={'interactive'}
-            contentContainerStyle={{ padding: 8 }}
-            keyboardShouldPersistTaps="always"> */}
         <MyView keyboardAvoiding behavior={'position'}>
           {this.renderContent()}
         </MyView>
-        {/* </ScrollView>
-        </KeyboardAvoidingView> */}
-        {/* ) : (
-          <KeyboardAwareScrollView
-            resetScrollToCoords={{ x: 0, y: 0 }}
-            contentContainerStyle={{ padding: 8 }}
-            extraScrollHeight={80}
-            keyboardOpeningTime={150}>
-            {this.renderContent()}
-          </KeyboardAwareScrollView>
-        )} */}
       </View>
     );
   }

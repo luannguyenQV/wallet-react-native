@@ -65,4 +65,5 @@ const Stack = {
 
 export default createStackNavigator(Stack, {
   headerMode: 'none',
+  cardStyle: { backgroundColor: '#FFFFFF' },
 });

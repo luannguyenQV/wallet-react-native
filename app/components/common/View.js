@@ -20,27 +20,28 @@ class _View extends Component {
 
     if (keyboardAvoiding) {
       return (
-        <KeyboardAvoidingView
-          keyboardShouldPersistTaps={'always'}
-          style={[_containerStyle, { backgroundColor: 'white' }]}
-          behavior={
-            behavior
-              ? behavior
-              : Platform.OS === 'android' ? 'height' : 'padding'
-          }
-          // keyboardVerticalOffset={10}
-        >
-          <ScrollView
-            keyboardDismissMode={'interactive'}
-            contentContainerStyle={{ padding: 8 }}
-            keyboardShouldPersistTaps="always">
-            <TouchableWithoutFeedback
-              onPress={() => Keyboard.dismiss()}
-              accessible={false}>
-              {children}
-            </TouchableWithoutFeedback>
-          </ScrollView>
-        </KeyboardAvoidingView>
+        <View style={{ flex: 1 }}>
+          <KeyboardAvoidingView
+            // keyboardShouldPersistTaps={'always'}
+            style={[_containerStyle, { backgroundColor: 'white' }]}
+            behavior={
+              behavior
+                ? behavior
+                : Platform.OS === 'android' ? 'height' : 'padding'
+            }
+            // keyboardVerticalOffset={10}
+          >
+            <ScrollView
+              keyboardDismissMode={'interactive'}
+              keyboardShouldPersistTaps="always">
+              <TouchableWithoutFeedback
+                onPress={() => Keyboard.dismiss()}
+                accessible={false}>
+                {children}
+              </TouchableWithoutFeedback>
+            </ScrollView>
+          </KeyboardAvoidingView>
+        </View>
       );
     } else {
       return (
@@ -65,7 +66,7 @@ class _View extends Component {
 const styles = {
   _containerStyle: {
     flex: 1,
-    margin: 8,
+    // margin: 8,
   },
 };
 

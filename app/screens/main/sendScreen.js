@@ -33,6 +33,7 @@ import {
   Output,
   Button,
   ButtonList,
+  View as MyView,
 } from './../../components/common';
 import Header from './../../components/header';
 import LocalAuthentication from '../../components/LocalAuthentication';
@@ -455,25 +456,20 @@ class SendScreen extends Component {
           headerRightText={textHeader}
           headerRightOnPress={onPressHeader}
         />
-        <KeyboardAvoidingView
-          keyboardShouldPersistTaps={'always'}
-          style={styles.viewStyleContainer}
-          behavior={'padding'}>
-          {pinVisible ? (
-            <LocalAuthentication
-              modal
-              pin={pin}
-              fingerprint={fingerprint}
-              modalVisible={pinVisible}
-              onSuccess={() => {
-                hidePin();
-                this.performSend();
-              }}
-              onDismiss={() => hidePin()}
-            />
-          ) : null}
-          {this.renderMainContainer()}
-        </KeyboardAvoidingView>
+        <MyView keyboardAvoiding>{this.renderMainContainer()}</MyView>
+        {pinVisible ? (
+          <LocalAuthentication
+            modal
+            pin={pin}
+            fingerprint={fingerprint}
+            modalVisible={pinVisible}
+            onSuccess={() => {
+              hidePin();
+              this.performSend();
+            }}
+            onDismiss={() => hidePin()}
+          />
+        ) : null}
       </View>
     );
   }

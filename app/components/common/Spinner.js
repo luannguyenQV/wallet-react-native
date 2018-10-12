@@ -24,7 +24,7 @@ const _Spinner = ({
         },
         containerStyle,
       ]}>
-      {theme[type + 'Spinner'] === 'rehive' ? (
+      {/* {theme[type + 'Spinner'] === 'rehive' ? (
         <Image
           style={{
             height: size === 'large' ? 150 : 50,
@@ -32,12 +32,12 @@ const _Spinner = ({
           }}
           source={require('./../../../assets/icons/rehive_spinner.gif')}
         />
-      ) : (
-        <ActivityIndicator
-          size={size || 'small'}
-          color={colors[color ? color : 'primary']}
-        />
-      )}
+      ) : ( */}
+      <ActivityIndicator
+        size={size || 'small'}
+        color={colors[color ? color : 'primary']}
+      />
+      {/* )} */}
     </View>
   );
 };

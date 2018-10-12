@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native';
 import { Spinner } from './Spinner';
 import { HeaderButton } from './HeaderButton';
 import context from './context';
@@ -77,7 +83,12 @@ const _FullScreenForm = props => {
               )}
             </View>
           ) : null}
-          <View style={viewStyleContent}>{props.children}</View>
+          <TouchableWithoutFeedback
+            onPress={() => Keyboard.dismiss()}
+            accessible={false}>
+            <View style={viewStyleContent}>{props.children}</View>
+          </TouchableWithoutFeedback>
+
           {textFooterRight || textFooterLeft ? (
             <View style={viewStyleFooter}>
               {textFooterLeft ? (
