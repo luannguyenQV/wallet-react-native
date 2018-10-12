@@ -16,8 +16,8 @@ class _Tabs extends Component {
         tabBarTextStyle={{ fontSize: 16, color: colors.headerContrast }}
         tabBarBackgroundColor={colors.header}
         style={{
-          elevation: 1,
-          zIndex: 1,
+          elevation: 5,
+          zIndex: 5,
           shadowColor: '#000',
           shadowOffset: { width: 0, height: 2 },
           shadowRadius: 2,
