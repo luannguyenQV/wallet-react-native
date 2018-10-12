@@ -110,15 +110,9 @@
     "landing": [
       {
         "id": 0,
-        "title": "Plue",
+        "title": "",
         "description": "",
-        "image": "slider1-plue"
-      },
-      {
-        "id": 1,
-        "title": "Plue",
-        "description": "",
-        "image": "slider2-plue"
+        "image": "spinner-plue"
       }
     ]
   },

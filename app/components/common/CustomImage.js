@@ -16,74 +16,95 @@ class _CustomImage extends Component {
     };
   }
   render() {
+    const imageStyle = this.imageStylePhoto();
     switch (this.props.name) {
       case 'card2':
         return (
           <Image
-            style={this.imageStylePhoto()}
+            style={imageStyle}
             source={require('./../../../assets/icons/card2.png')}
           />
         );
       case 'pxpay':
         return (
           <Image
-            style={this.imageStylePhoto()}
+            style={imageStyle}
             source={require('./../../../assets/icons/pxpay.png')}
           />
         );
       case 'card1-plue':
         return (
           <Image
-            style={this.imageStylePhoto()}
+            style={imageStyle}
             source={require('./../../../assets/icons/card1-plue.png')}
           />
         );
       case 'card2-plue':
         return (
           <Image
-            style={this.imageStylePhoto()}
+            style={imageStyle}
             source={require('./../../../assets/icons/card2-plue.png')}
           />
         );
       case 'slider1-plue':
         return (
           <Image
-            style={this.imageStylePhoto()}
+            style={imageStyle}
             source={require('./../../../assets/icons/slider1-plue.png')}
           />
         );
       case 'slider2-plue':
         return (
           <Image
-            style={this.imageStylePhoto()}
+            style={imageStyle}
             source={require('./../../../assets/icons/slider2-plue.png')}
           />
         );
+      case 'spinner-plue':
+        console.log(imageStyle.backgroundColor);
+        if (
+          imageStyle.backgroundColor === 'white' ||
+          imageStyle.backgroundColor === '#FFFFFF'
+        ) {
+          return (
+            <Image
+              style={[imageStyle, { width: 250 }]}
+              source={require('./../../../assets/icons/spinner-plue.gif')}
+            />
+          );
+        } else {
+          return (
+            <Image
+              style={imageStyle}
+              source={require('./../../../assets/icons/slider1-plue.png')}
+            />
+          );
+        }
       case 'card1-luuun':
         return (
           <Image
-            style={this.imageStylePhoto()}
+            style={imageStyle}
             source={require('./../../../assets/icons/card1-luuun.png')}
           />
         );
       case 'card2-luuun':
         return (
           <Image
-            style={this.imageStylePhoto()}
+            style={imageStyle}
             source={require('./../../../assets/icons/card2-luuun.png')}
           />
         );
       case 'slider1-luuun':
         return (
           <Image
-            style={this.imageStylePhoto()}
+            style={imageStyle}
             source={require('./../../../assets/icons/slider1-luuun.png')}
           />
         );
       case 'slider2-luuun':
         return (
           <Image
-            style={this.imageStylePhoto()}
+            style={imageStyle}
             source={require('./../../../assets/icons/slider2-luuun.png')}
           />
         );
@@ -91,7 +112,7 @@ class _CustomImage extends Component {
       default:
         return (
           <Image
-            style={this.imageStylePhoto()}
+            style={imageStyle}
             source={require('./../../../assets/icons/card1.png')}
           />
         );
