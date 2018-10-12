@@ -1,8 +1,8 @@
 {
   "company": {
-    "id": "plue_demo",
-    "name": "Demo Plue Company",
-    "description": "A demo Plue company on the Rehive platform"
+    "id": "plue",
+    "name": "Plue",
+    "description": "Plue company on the Rehive platform"
   },
   "services": {
     "bitcoin": true,
