@@ -1,20 +1,12 @@
 import React, { Component } from 'react';
-import {
-  View,
-  FlatList,
-  Text,
-  RefreshControl,
-  Image,
-  Dimensions,
-} from 'react-native';
+import { View, FlatList, Text, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import { cardDismiss, cardRestoreAll } from './../redux/actions';
-import { standardizeString } from './../util/general';
 
 // import { AreaChart, Grid } from 'react-native-svg-charts';
 // import * as shape from 'd3-shape';
 
-import { CardContainer, Card, Button, CustomImage } from './common';
+import { Card, Button, CustomImage, View as MyView } from './common';
 import { colorSelector } from '../redux/reducers/ConfigReducer';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -69,10 +61,7 @@ class HomeCards extends Component {
           title:
             'Welcome to ' + (company && company.name ? company.name : 'Rehive'),
           // description: 'A multi-currency wallet built on the Rehive platform.',
-          image:
-            company.id.includes('pxpay') || company.id.includes('plue')
-              ? ''
-              : 'card1',
+          image: 'card1',
           dismiss: true,
         };
       }
@@ -81,10 +70,7 @@ class HomeCards extends Component {
         cards[i++] = {
           id: 'verify',
           description: 'Please verify your account',
-          image:
-            company_config.company && company_config.company === 'pxpay_demo'
-              ? 'pxpay'
-              : 'card2',
+          image: 'card2',
           actionLabel: 'GET VERIFIED',
           navigate: 'GetVerified',
         };
@@ -167,13 +153,14 @@ class HomeCards extends Component {
   }
 
   render() {
-    return <CardContainer>{this.renderCards()}</CardContainer>;
+    return <MyView>{this.renderCards()}</MyView>;
   }
 }
 
 const styles = {
   containerStyle: {
     flex: 1,
+    backgroundColor: 'white',
     zIndex: 2,
   },
   imageStylePhoto: {
