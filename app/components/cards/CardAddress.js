@@ -15,9 +15,10 @@ class CardAddress extends Component {
       state_province,
       postal_code,
     } = this.props.item;
-    const detail = false;
 
-    if (detail) {
+    console.log(this.props.detail);
+
+    if (this.props.detail) {
       return (
         <View>
           <Input
@@ -26,7 +27,7 @@ class CardAddress extends Component {
             label="Address line 1"
             placeholder="e.g. 158 Kloof Street"
             autoCapitalize="none"
-            value={tempItem.line_1}
+            value={line_1}
             onChangeText={input => updateInputField('address', 'line_1', input)}
             returnKeyType="next"
           />
@@ -37,7 +38,7 @@ class CardAddress extends Component {
             label="Address line 2"
             placeholder="e.g. Gardens"
             autoCapitalize="none"
-            value={tempItem.line_2}
+            value={line_2}
             onChangeText={input => updateInputField('address', 'line_2', input)}
             returnKeyType="next"
           />
@@ -48,7 +49,7 @@ class CardAddress extends Component {
             label="City"
             placeholder="e.g. Cape Town"
             autoCapitalize="none"
-            value={tempItem.city}
+            value={city}
             onChangeText={input => updateInputField('address', 'city', input)}
             returnKeyType="next"
           />
@@ -60,7 +61,7 @@ class CardAddress extends Component {
             label="State or province"
             placeholder="e.g. Western Cape"
             autoCapitalize="none"
-            value={tempItem.state_province}
+            value={state_province}
             onChangeText={input =>
               updateInputField('address', 'state_province', input)
             }
@@ -73,11 +74,11 @@ class CardAddress extends Component {
             keyboardType={'numeric'}
             placeholder="e.g. 9001"
             autoCapitalize="none"
-            value={tempItem.postal_code}
+            value={postal_code}
             onChangeText={input =>
               updateInputField('address', 'postal_code', input)
             }
-            onSubmitEditing={() => updateItem('address', tempItem)}
+            onSubmitEditing={() => updateItem('address', item)}
           />
         </View>
       );

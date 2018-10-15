@@ -53,7 +53,13 @@ class _View extends Component {
       );
     } else {
       return (
-        <_view {...this.props} style={[_containerStyle, style]}>
+        <_view
+          {...this.props}
+          style={[
+            _containerStyle,
+            { backgroundColor: color ? colors[color] : 'white' },
+            style,
+          ]}>
           {children}
         </_view>
       );

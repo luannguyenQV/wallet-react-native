@@ -14,6 +14,7 @@ import Header from './../../components/header';
 import { CardList, Text } from './../../components/common';
 import { CardAddress } from './../../components/cards';
 import { userAddressesSelector } from '../../redux/reducers/UserReducer';
+import CardListUserSettings from '../../components/cards/CardListUserSettings';
 
 class AddressesScreen extends Component {
   static navigationOptions = {
@@ -22,7 +23,6 @@ class AddressesScreen extends Component {
 
   render() {
     const { addresses } = this.props;
-    console.log(addresses);
     return (
       <View style={styles.container}>
         <Header
@@ -36,14 +36,16 @@ class AddressesScreen extends Component {
               : () => newItem('address')
           }
         />
-        <CardList
-          onRefresh={() => console.log('refreshing')}
+        <CardListUserSettings
+          // onRefresh={() => console.log('refreshing')}
           type="address"
           data={addresses}
           // tempItem={tempItem}
           identifier="line_1"
           // renderItem={<Text>Hello World </Text>}
-          renderItem={item => <CardAddress item={item} />}
+          renderItem={(item, detail) => (
+            <CardAddress item={item} detail={detail} />
+          )}
           emptyListMessage="No addresses added yet"
           // canDelete
           // canEdit

@@ -27,7 +27,7 @@ class _CardList extends Component {
     }
   }
 
-  renderItem = item => {
+  renderItem = (item, index) => {
     const {
       headerComponent,
       onPressHeader,
@@ -47,7 +47,9 @@ class _CardList extends Component {
       loadingDetail,
       onPressFooter,
       iconFooter,
+      data,
     } = this.props;
+    console.log(data);
     return (
       <Card
         headerComponent={headerComponent}
@@ -66,11 +68,11 @@ class _CardList extends Component {
         textActionTwo={textActionTwo}
         // disableActionTwo={canVerify}
         onPressActionTwo={() => onPressActionTwo(item)}
-        textActionOne={textActionOne}
+        textActionOne={textActionOne(index === data.index && data.showDetail)}
         // disableActionOne={canPrimary ? (!item.primary ? false : true) : false}
         onPressActionOne={() => onPressActionOne(item)}
         loading={loadingDetail}>
-        {this.props.renderItem(item)}
+        {this.props.renderItem(item, index === data.index && data.showDetail)}
       </Card>
     );
   };
@@ -195,21 +197,15 @@ class _CardList extends Component {
   //   );
   // }
 
-  // renderItem(item, index) {
-  //   console.log('item', item);
-  //   // return <CardAddress item={item} />;
-  //   return this.props.renderItem(item);
-  // }
-
   render() {
     const { type, data, keyExtractor, onRefresh } = this.props;
     return (
-      <View keyboardAvoiding color="grey2">
+      <View color="grey2">
         <FlatList
           refreshControl={
             <RefreshControl
-              refreshing={data.loading}
-              onRefresh={() => onRefresh()}
+              refreshing={false} //data.loading}
+              onRefresh={onRefresh}
             />
           }
           data={data.data}

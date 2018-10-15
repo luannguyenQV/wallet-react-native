@@ -2,162 +2,74 @@
 /* Component | Stateless | Styled */
 /* This is the main button component. Takes props to adjust it's size, type, color etc */
 import React, { Component } from 'react';
-import { View, TouchableOpacity } from 'react-native';
-import PropTypes from 'prop-types';
-import { Input, Output, Text } from '../common';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import {
+  fetchData,
+  newItem,
+  editItem,
+  updateItem,
+  deleteItem,
+  updateInputField,
+} from './../../redux/actions';
+import { CardList } from '../common';
+import { userAddressesSelector } from '../../redux/reducers/UserReducer';
 
-class CardAddress extends Component {
-  render() {
-    const {
-      line_1,
-      line_2,
-      city,
-      state_province,
-      postal_code,
-    } = this.props.item;
-    const detail = false;
+// This function takes a component...
+function withRedux(CardList, selectData) {
+  // ...and returns another component...
+  return class extends React.Component {
+    // fetch data
 
-    if (detail) {
+    componentDidMount() {
+      // ... that takes care of the subscription...
+      // DataSource.addChangeListener(this.handleChange);
+      console.log('mounted');
+    }
+
+    fetchData(type) {
+      this.props.fetchData(type);
+    }
+
+    // componentWillUnmount() {
+    //   DataSource.removeChangeListener(this.handleChange);
+    // }
+
+    // handleChange() {
+    //   this.setState({
+    //     data: selectData(DataSource, this.props)
+    //   });
+    // }
+
+    render() {
+      console.log('props', this.props);
+      const { data, type } = this.props.data;
+      // ... and renders the wrapped component with the fresh data!
+      // Notice that we pass through any additional props
       return (
-        <View>
-          <Input
-            reference={r => (this.line_1 = r)}
-            onSubmitEditing={() => this.line_2.focus()}
-            label="Address line 1"
-            placeholder="e.g. 158 Kloof Street"
-            autoCapitalize="none"
-            value={tempItem.line_1}
-            onChangeText={input => updateInputField('address', 'line_1', input)}
-            returnKeyType="next"
-          />
-
-          <Input
-            reference={r => (this.line_2 = r)}
-            onSubmitEditing={() => this.city.focus()}
-            label="Address line 2"
-            placeholder="e.g. Gardens"
-            autoCapitalize="none"
-            value={tempItem.line_2}
-            onChangeText={input => updateInputField('address', 'line_2', input)}
-            returnKeyType="next"
-          />
-
-          <Input
-            reference={r => (this.city = r)}
-            onSubmitEditing={() => this.state_province.focus()}
-            label="City"
-            placeholder="e.g. Cape Town"
-            autoCapitalize="none"
-            value={tempItem.city}
-            onChangeText={input => updateInputField('address', 'city', input)}
-            returnKeyType="next"
-          />
-
-          <Input
-            reference={r => (this.state_province = r)}
-            onSubmitEditing={() => this.postal_code.focus()}
-            returnKeyType="next"
-            label="State or province"
-            placeholder="e.g. Western Cape"
-            autoCapitalize="none"
-            value={tempItem.state_province}
-            onChangeText={input =>
-              updateInputField('address', 'state_province', input)
-            }
-          />
-
-          <Input
-            reference={r => (this.postal_code = r)}
-            // onSubmitEditing={() => this.recipientInput.focus()}
-            label="Postal or ZIP code"
-            keyboardType={'numeric'}
-            placeholder="e.g. 9001"
-            autoCapitalize="none"
-            value={tempItem.postal_code}
-            onChangeText={input =>
-              updateInputField('address', 'postal_code', input)
-            }
-            onSubmitEditing={() => updateItem('address', tempItem)}
-          />
-        </View>
-      );
-    } else {
-      return (
-        <View style={{ padding: 8 }}>
-          {line_1 ? <Output label="Address line 1" value={line_1} /> : null}
-          {line_2 ? <Output label="Address line 2" value={line_2} /> : null}
-          {city ? <Output label="City" value={city} /> : null}
-          {state_province ? (
-            <Output label="State or province" value={state_province} />
-          ) : null}
-          {postal_code ? (
-            <Output label="Postal or ZIP code" value={postal_code} />
-          ) : null}
-          {!(line_1 && line_2 && city && state_province && postal_code) ? (
-            <Output label="Incomplete" />
-          ) : null}
-        </View>
+        <CardList
+          data={data}
+          {...this.props}
+          onRefresh={() => this.fetchData(type)}
+          textActionOne={show => (show ? 'World' : '')}
+          textActionTwo={'Hello'}
+        />
       );
     }
-  }
+  };
 }
 
-// _Button.propTypes = {
-//   label: PropTypes.string, // Text displayed on button
-//   reference: PropTypes.func, // For animations
-//   animation: PropTypes.string, // Animation type
-//   disabled: PropTypes.bool, // Disable touchable component
-//   onPress: PropTypes.func, // Function to execute on press
-//   icon: PropTypes.string, // Icon displayed on left of button
-//   size: PropTypes.string, // Size of button (small / default or '' / large)
-//   type: PropTypes.string, // Type of button (text, contained, TODO: outlined)
-//   backgroundColor: PropTypes.string, // Button color
-//   textColor: PropTypes.string, // Text color
-//   round: PropTypes.bool, // Rounded corners
-//   buttonStyle: PropTypes.object, // override button style
-//   containerStyle: PropTypes.object, // override container style
-//   textStyle: PropTypes.object, // override text style
-//   color: PropTypes.string, // main color
-//   colors: PropTypes.object, // colors from context
-// };
+const mapStateToProps = state => {
+  return {
+    // addresses: userAddressesSelector(state),
+  };
+};
 
-// _Button.defaultProps = {
-//   label: '',
-//   reference: () => {},
-//   animation: '',
-//   disabled: false,
-//   onPress: () => {},
-//   icon: '',
-//   size: '',
-//   type: 'contained',
-//   round: false,
-//   buttonStyle: {},
-//   containerStyle: {},
-//   color: 'primary',
-// };
-
-// const styles = {
-//   _containerStyle: {
-//     flexDirection: 'row',
-//     margin: 8,
-//   },
-//   _buttonStyle: {
-//     flex: 1,
-//     flexDirection: 'row',
-//     borderRadius: 2.5,
-//     minWidth: 64,
-//     padding: 8,
-//     shadowColor: '#000',
-//     shadowOffset: { width: 2, height: 2 },
-//     shadowRadius: 5,
-//     shadowOpacity: 0.2,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   _textStyle: {
-//     textAlign: 'center',
-//     fontWeight: 'bold',
-//   },
-// };
-
-export { CardAddress };
+export default connect(mapStateToProps, {
+  fetchData,
+  newItem,
+  editItem,
+  updateItem,
+  deleteItem,
+  updateInputField,
+})(withRedux(CardList));

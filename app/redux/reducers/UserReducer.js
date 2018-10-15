@@ -66,7 +66,6 @@ const INITIAL_STATE = {
   profile: {},
   email_address: [],
   mobile_number: [],
-  address: null,
   document: {},
   bank_account: [],
   crypto_account: [],
@@ -86,6 +85,11 @@ const INITIAL_STATE = {
   fetchError: '',
 
   dismissedCards: [],
+
+  address: null,
+  addressLoading: false,
+  addressDetail: false,
+  addressIndex: 0,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -339,8 +343,9 @@ export const userEmailsSelector = createSelector(userSelector, user => {
 export const userAddressesSelector = createSelector(userSelector, user => {
   return {
     data: user.address,
-    loading: false, //user.emailLoading ,
-    index: 0,
-    detail: false,
+    loading: user.addressLoading,
+    index: 0, //user.addressIndex,
+    showDetail: true, //user.addressDetail,
+    indexLoading: false,
   };
 });
