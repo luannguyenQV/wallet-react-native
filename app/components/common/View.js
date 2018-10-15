@@ -15,7 +15,14 @@ import context from './context';
 
 class _View extends Component {
   render() {
-    const { style, children, keyboardAvoiding, behavior } = this.props;
+    const {
+      style,
+      children,
+      keyboardAvoiding,
+      behavior,
+      colors,
+      color,
+    } = this.props;
     const { _containerStyle } = styles;
 
     if (keyboardAvoiding) {
@@ -23,14 +30,15 @@ class _View extends Component {
         <View style={{ flex: 1 }}>
           <KeyboardAvoidingView
             // keyboardShouldPersistTaps={'always'}
-            style={[_containerStyle, { backgroundColor: 'white' }]}
+            style={[
+              _containerStyle,
+              { backgroundColor: color ? colors[color] : 'white' },
+            ]}
             behavior={
               behavior
                 ? behavior
                 : Platform.OS === 'android' ? 'height' : 'padding'
-            }
-            // keyboardVerticalOffset={10}
-          >
+            }>
             <ScrollView
               keyboardDismissMode={'interactive'}
               keyboardShouldPersistTaps="always">

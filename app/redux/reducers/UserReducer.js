@@ -335,3 +335,12 @@ export default (state = INITIAL_STATE, action) => {
 export const userEmailsSelector = createSelector(userSelector, user => {
   return user.email;
 });
+
+export const userAddressesSelector = createSelector(userSelector, user => {
+  return {
+    data: user.address,
+    loading: false, //user.emailLoading ,
+    index: 0,
+    detail: false,
+  };
+});

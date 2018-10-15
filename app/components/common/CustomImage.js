@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Image, Dimensions } from 'react-native';
 import PropTypes from 'prop-types';
 import context from './context';
+import { Svg } from 'expo';
+import { View } from './View';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -15,7 +17,58 @@ class _CustomImage extends Component {
       height,
     };
   }
+
+  renderPlaceholder1() {
+    const w = 477;
+    const h = 178;
+    const w2 = SCREEN_WIDTH - 16;
+
+    return (
+      <View
+        style={{
+          backgroundColor: 'white',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Svg height={h * (w2 / w)} width={w2}>
+          <Svg.Circle
+            cx={238.5}
+            cy={89}
+            r={160.83}
+            opacity={0.05}
+            fill="#aaf"
+          />
+          <Svg.Circle
+            cx={238.5}
+            cy={89}
+            r={123.75}
+            opacity={0.17}
+            fill="#aaf"
+          />
+          <Svg.Circle cx={238.5} cy={89} r={87.5} opacity={0.47} fill="#fff" />
+          <Svg.Circle cx={238.5} cy={89} r={57} fill="#fff" />
+          <Svg.Path
+            fill="#8024fa"
+            d="M265.73 104.78l-27.23 15.69-27.23-15.69 27.23-15.84 27.23 15.84z"
+          />
+          <Svg.Path
+            fill="#fa8380"
+            d="M265.73 73.37L238.5 89.06l-27.23-15.69 27.23-15.84 27.23 15.84z"
+          />
+          <Svg.Path
+            fill="#ff29bf"
+            d="M265.73 104.75l-27.23 15.7V89.06l27.23-15.69v31.38z"
+          />
+          <Svg.Path
+            fill="#5969f6"
+            d="M211.27 104.75l27.23 15.7V89.06l-27.23-15.69v31.38z"
+          />
+        </Svg>
+      </View>
+    );
+  }
   render() {
+    // return this.renderPlaceholder1();
     const imageStyle = this.imageStylePhoto();
     switch (this.props.name) {
       case 'card2':
