@@ -3,8 +3,8 @@ import company_configs from './../config/company_configs';
 import defaultCompanyConfig from './../config/default_company_config.json';
 
 const stellar_service_url = 'https://stellar.services.rehive.io/api/1';
-const bitcoin_service_url = 'https://bitcoin.s.services.rehive.io/api/1';
-const ethereum_service_url = 'https://ethereum.s.services.rehive.io/api/1';
+const bitcoin_service_url = 'https://bitcoin.services.rehive.io/api/1';
+const ethereum_service_url = 'https://ethereum.services.rehive.io/api/1';
 const rewards_service_url = 'https://reward.services.rehive.io/api';
 
 // SDK initialization
