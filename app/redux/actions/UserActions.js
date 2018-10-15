@@ -174,3 +174,19 @@ export const cardRestoreAll = () => {
     type: CARD_RESTORE_ALL,
   };
 };
+
+export const SHOW_DETAIL = 'show_detail';
+export const showDetail = (type, index) => {
+  return {
+    type: SHOW_DETAIL,
+    payload: { type, index },
+  };
+};
+
+export const HIDE_DETAIL = 'hide_detail';
+export const hideDetail = type => {
+  return {
+    type: HIDE_DETAIL,
+    payload: { type },
+  };
+};

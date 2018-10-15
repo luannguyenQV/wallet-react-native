@@ -20,6 +20,8 @@ import {
   VIEW_WALLET,
   HIDE_WALLET,
   RESET_USER_ERRORS,
+  SHOW_DETAIL,
+  HIDE_DETAIL,
 } from '../actions';
 
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
@@ -329,6 +331,19 @@ export default (state = INITIAL_STATE, action) => {
         dismissedCards: [],
       };
 
+    case SHOW_DETAIL:
+      return {
+        ...state,
+        [action.payload.type + 'Detail']: true,
+        [action.payload.type + 'Index']: action.payload.index,
+      };
+
+    case HIDE_DETAIL:
+      return {
+        ...state,
+        [action.payload.type + 'Detail']: false,
+      };
+
     case LOGOUT_USER:
       return INITIAL_STATE;
     default:
@@ -344,8 +359,8 @@ export const userAddressesSelector = createSelector(userSelector, user => {
   return {
     data: user.address,
     loading: user.addressLoading,
-    index: 0, //user.addressIndex,
-    showDetail: true, //user.addressDetail,
+    index: user.addressIndex,
+    showDetail: user.addressDetail,
     indexLoading: false,
   };
 });

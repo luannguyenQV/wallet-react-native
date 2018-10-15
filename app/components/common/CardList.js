@@ -61,8 +61,8 @@ class _CardList extends Component {
         title={title}
         subtitle={subtitle}
         colorTitleBackground="white"
-        onPressTitle={() => onPressTitle(item)}
-        onPressContent={() => onPressContent(item)}
+        onPressTitle={() => onPressTitle(index)}
+        onPressContent={() => onPressContent(index)}
         iconFooter={iconFooter}
         onPressFooter={() => onPressFooter()}
         textActionTwo={textActionTwo}

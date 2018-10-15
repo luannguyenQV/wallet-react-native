@@ -11,6 +11,8 @@ import {
   updateItem,
   deleteItem,
   updateInputField,
+  showDetail,
+  hideDetail,
 } from './../../redux/actions';
 import { CardList } from '../common';
 import { userAddressesSelector } from '../../redux/reducers/UserReducer';
@@ -27,9 +29,14 @@ function withRedux(CardList, selectData) {
       console.log('mounted');
     }
 
-    fetchData(type) {
-      this.props.fetchData(type);
-    }
+    // fetchData(type) {
+    //   this.props.fetchData(type);
+    // }
+
+    // showDetail(type, item) {
+    //   console.log('detail', type, item);
+    //   this.props.showDetail(type, item);
+    // }
 
     // componentWillUnmount() {
     //   DataSource.removeChangeListener(this.handleChange);
@@ -43,16 +50,19 @@ function withRedux(CardList, selectData) {
 
     render() {
       console.log('props', this.props);
-      const { data, type } = this.props.data;
+      const { data, type } = this.props;
       // ... and renders the wrapped component with the fresh data!
       // Notice that we pass through any additional props
       return (
         <CardList
           data={data}
           {...this.props}
-          onRefresh={() => this.fetchData(type)}
+          onRefresh={() => this.props.fetchData(type)}
+          onPressContent={item => this.props.showDetail(type, item)}
+          onPressHeader={item => this.props.showDetail(type, item)}
           textActionOne={show => (show ? 'World' : '')}
-          textActionTwo={'Hello'}
+          textActionTwo={'CANCEL'}
+          onPressActionTwo={() => this.props.hideDetail(type)}
         />
       );
     }
@@ -72,4 +82,6 @@ export default connect(mapStateToProps, {
   updateItem,
   deleteItem,
   updateInputField,
+  showDetail,
+  hideDetail,
 })(withRedux(CardList));
