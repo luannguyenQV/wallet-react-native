@@ -2,7 +2,7 @@
   "expo": {
     "name": "Rehive Wallet",
     "description": "A multi-currency wallet built on the Rehive platform.",
-    "version": "1.2.5",
+    "version": "1.2.6",
     "slug": "rehive-wallet-staging",
     "privacy": "public",
     "sdkVersion": "30.0.0",
@@ -22,15 +22,15 @@
         "NSContactsUsageDescription":
           "Allow access if you would like to easily add recipients from your device",
         "NSCameraUsageDescription":
-          "All access to upload an image using your device camera",
+          "Allow access to upload an image using your device camera",
         "NSPhotoLibraryUsageDescription":
-          "All access to upload an image from your device storage"
+          "Allow access to upload an image from your device storage"
       }
     },
     "android": {
       "package": "com.rehivewallet_staging",
       "icon": "./assets/icons/icon-1024.png",
-      "versionCode": 2,
+      "versionCode": 3,
       "splash": {
         "backgroundColor": "#ffffff",
         "resizeMode": "contain",
