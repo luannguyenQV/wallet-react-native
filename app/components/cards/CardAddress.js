@@ -8,15 +8,8 @@ import { Input, Output, Text } from '../common';
 
 class CardAddress extends Component {
   render() {
-    const {
-      line_1,
-      line_2,
-      city,
-      state_province,
-      postal_code,
-    } = this.props.item;
-
-    console.log(this.props.detail);
+    const { item, updateInputField, updateItem } = this.props;
+    const { line_1, line_2, city, state_province, postal_code } = item;
 
     if (this.props.detail) {
       return (

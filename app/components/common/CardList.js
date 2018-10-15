@@ -49,7 +49,6 @@ class _CardList extends Component {
       iconFooter,
       data,
     } = this.props;
-    console.log(data);
     return (
       <Card
         headerComponent={headerComponent}
@@ -65,10 +64,11 @@ class _CardList extends Component {
         onPressContent={() => onPressContent(index)}
         iconFooter={iconFooter}
         onPressFooter={() => onPressFooter()}
-        textActionTwo={textActionTwo}
+        // textActionTwo={textActionTwo}
         // disableActionTwo={canVerify}
         onPressActionTwo={() => onPressActionTwo(item)}
         textActionOne={textActionOne(index === data.index && data.showDetail)}
+        textActionTwo={textActionTwo(index === data.index && data.showDetail)}
         // disableActionOne={canPrimary ? (!item.primary ? false : true) : false}
         onPressActionOne={() => onPressActionOne(item)}
         loading={loadingDetail}>
@@ -208,6 +208,7 @@ class _CardList extends Component {
               onRefresh={onRefresh}
             />
           }
+          keyboardShouldPersistTaps={'handled'}
           data={data.data}
           renderItem={({ item, index }) => this.renderItem(item, index)}
           keyExtractor={

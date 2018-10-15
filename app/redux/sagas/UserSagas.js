@@ -127,7 +127,7 @@ function* refreshProfile() {
 function* updateItem(action) {
   try {
     const { data, type } = action.payload;
-    // console.log(data);
+    console.log(data, type);
     let response = null;
     switch (type) {
       case 'mobile':
@@ -139,7 +139,7 @@ function* updateItem(action) {
         break;
       case 'address':
         if (data.id) {
-          response = yield call(Rehive.updateAddress, data.id, data);
+          response = yield call(Rehive.updateAddress, data);
         } else {
           response = yield call(Rehive.createAddress, data);
         }

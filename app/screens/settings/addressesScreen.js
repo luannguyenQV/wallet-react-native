@@ -43,9 +43,6 @@ class AddressesScreen extends Component {
           // tempItem={tempItem}
           identifier="line_1"
           // renderItem={<Text>Hello World </Text>}
-          renderItem={(item, detail) => (
-            <CardAddress item={item} detail={detail} />
-          )}
           emptyListMessage="No addresses added yet"
           // canDelete
           // canEdit

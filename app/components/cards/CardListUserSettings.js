@@ -15,6 +15,7 @@ import {
   hideDetail,
 } from './../../redux/actions';
 import { CardList } from '../common';
+import { CardAddress } from './CardAddress';
 import { userAddressesSelector } from '../../redux/reducers/UserReducer';
 
 // This function takes a component...
@@ -26,7 +27,7 @@ function withRedux(CardList, selectData) {
     componentDidMount() {
       // ... that takes care of the subscription...
       // DataSource.addChangeListener(this.handleChange);
-      console.log('mounted');
+      // console.log('mounted');
     }
 
     // fetchData(type) {
@@ -49,7 +50,7 @@ function withRedux(CardList, selectData) {
     // }
 
     render() {
-      console.log('props', this.props);
+      // console.log('props', this.props);
       const { data, type } = this.props;
       // ... and renders the wrapped component with the fresh data!
       // Notice that we pass through any additional props
@@ -60,9 +61,17 @@ function withRedux(CardList, selectData) {
           onRefresh={() => this.props.fetchData(type)}
           onPressContent={item => this.props.showDetail(type, item)}
           onPressHeader={item => this.props.showDetail(type, item)}
-          textActionOne={show => (show ? 'World' : '')}
-          textActionTwo={'CANCEL'}
+          textActionOne={show => (show ? 'SAVE' : '')}
+          onPressActionOne={item => this.props.updateItem(type, item)}
+          textActionTwo={show => (show ? 'CANCEL' : '')}
           onPressActionTwo={() => this.props.hideDetail(type)}
+          renderItem={(item, detail) => (
+            <CardAddress
+              item={item}
+              detail={detail}
+              updateInputField={this.props.updateInputField}
+            />
+          )}
         />
       );
     }
