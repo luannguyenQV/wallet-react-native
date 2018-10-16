@@ -3,8 +3,14 @@ import company_configs from './../config/company_configs';
 import defaultCompanyConfig from './../config/default_company_config.json';
 
 const stellar_service_url = 'https://stellar.services.rehive.io/api/1';
+const stellar_testnet_service_url =
+  'https://stellar-testnet.services.rehive.io/api/1';
 const bitcoin_service_url = 'https://bitcoin.services.rehive.io/api/1';
+const bitcoin_testnet_service_url =
+  'https://bitcoin-testnet.services.rehive.io/api/1';
 const ethereum_service_url = 'https://ethereum.services.rehive.io/api/1';
+const ethereum_testnet_service_url =
+  'https://ethereum-testnet.services.rehive.io/api/1';
 const rewards_service_url = 'https://reward.services.rehive.io/api';
 
 // SDK initialization
@@ -176,35 +182,68 @@ export const getStellarAssets = () =>
 export const setStellarUsername = data =>
   callApi('POST', stellar_service_url + '/user/username/set/', data);
 
-export const getStellarUser = () =>
-  callApi('GET', stellar_service_url + '/user/');
+export const getCryptoUser = type => {
+  let url = '';
+  switch (type) {
+    case 'TXBT':
+      url = bitcoin_testnet_service_url;
+      break;
+    case 'XBT':
+      url = bitcoin_service_url;
+      break;
+    case 'TETH':
+      url = ethereum_testnet_service_url;
+      break;
+    case 'ETH':
+      url = ethereum_service_url;
+      break;
+    case 'TXLM':
+      url = stellar_testnet_service_url;
+      break;
+    default:
+      url = stellar_service_url;
+      break;
+  }
+  return callApi('GET', url + '/user/');
+};
 
-export const createTransferStellar = data =>
-  new Promise((resolve, reject) =>
-    callApi('POST', stellar_service_url + '/transactions/send/', data)
-      .then(response => resolve(response))
+export const createCryptoTransfer = data => {
+  let url = '';
+  console.log(data);
+  switch (data.currency) {
+    case 'TXBT':
+      url = bitcoin_testnet_service_url + '/wallet/send/';
+      break;
+    case 'XBT':
+      url = bitcoin_service_url + '/wallet/send/';
+      break;
+    case 'TETH':
+      url = ethereum_testnet_service_url + '/wallet/send/';
+      break;
+    case 'ETH':
+      url = ethereum_service_url + '/wallet/send/';
+      break;
+    case 'TXLM':
+      url = stellar_testnet_service_url + '/transactions/send/';
+      break;
+    default:
+      url = stellar_service_url + '/transactions/send/';
+      break;
+  }
+
+  delete data.currency;
+  return new Promise((resolve, reject) =>
+    callApi('POST', url, data)
+      .then(response => {
+        if (response.ok || response.status === 'success') {
+          resolve(response);
+        } else {
+          reject(response);
+        }
+      })
       .catch(err => reject(err)),
   );
-
-export const getBitcoinUser = () =>
-  callApi('GET', bitcoin_service_url + '/user/');
-
-export const createTransferBitcoin = data =>
-  new Promise((resolve, reject) =>
-    callApi('POST', bitcoin_service_url + '/transactions/send/', data)
-      .then(response => resolve(response))
-      .catch(err => reject(err)),
-  );
-
-export const getEthereumUser = () =>
-  callApi('GET', ethereum_service_url + '/user/');
-
-export const createTransferEthereum = data =>
-  new Promise((resolve, reject) =>
-    callApi('POST', ethereum_service_url + '/wallet/send/', data)
-      .then(response => resolve(response))
-      .catch(err => reject(err)),
-  );
+};
 
 /* REWARDS */
 export const getRewards = () =>

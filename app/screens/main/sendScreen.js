@@ -199,7 +199,7 @@ class SendScreen extends Component {
         {transaction.state === 'fail' ? (
           <View style={viewStyleError}>
             <Text style={textStyleError}>Send failed</Text>
-            <Text style={textStyleError}>{transaction.state}</Text>
+            <Text style={textStyleError}>{transaction.error}</Text>
           </View>
         ) : null}
       </View>
@@ -229,8 +229,8 @@ class SendScreen extends Component {
       case 'crypto':
         label =
           label +
-          (transaction.currency ? transaction.currency.crypto : '') +
-          ' address';
+          (transaction.currency ? transaction.currency.crypto + ' ' : '') +
+          'address';
         placeholder = 'GAQGVZYIZ2DX56EB6TZYGBD...';
         break;
     }

@@ -119,11 +119,6 @@ export default (state = INITIAL_STATE, action) => {
         transactionsLoading: false,
       };
 
-    // case SET_HOME_ACCOUNT:
-    //   return {
-    //     ...state,
-    //     homeAccount: action.payload,
-    //   };
     case SET_HOME_CURRENCY:
       return {
         ...state,
@@ -287,7 +282,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         receiveType: action.payload,
-        receiveCurrencySelected: action.payload === 'crypto' ? false : true,
+        receiveCurrencySelected: !(action.payload === 'crypto'),
       };
     case RESET_RECEIVE:
       return {
@@ -321,10 +316,14 @@ export const currenciesSelector = createSelector(
     const { accounts, loading, error } = accountsState;
 
     let activeCurrency = '';
+    let primaryAccount = '';
 
     let currencies = [];
     let tempCurrencies = [];
     for (i = 0; i < accounts.length; i++) {
+      if (!primaryAccount && accounts[i].primary) {
+        primaryAccount = accounts[i].reference;
+      }
       tempCurrencies = accounts[i].currencies.map(currency => {
         currency.account = accounts[i].reference;
         currency.account_name = accounts[i].name;
@@ -342,6 +341,7 @@ export const currenciesSelector = createSelector(
         } else {
           currency.crypto = '';
         }
+
         if (currency.active) {
           activeCurrency = currency.currency.code;
         }
@@ -351,12 +351,13 @@ export const currenciesSelector = createSelector(
       });
       currencies = currencies.concat(tempCurrencies);
     }
-
     const activeIndex = currencies.findIndex(
-      item => item.currency.code === activeCurrency,
+      item =>
+        item.account === primaryAccount &&
+        item.currency.code === activeCurrency,
     );
 
-    if (currencies.length > 0) {
+    if (currencies.length > 0 && activeIndex !== -1) {
       const activeItem = currencies[activeIndex];
       currencies[activeIndex] = currencies[0];
       currencies[0] = activeItem;

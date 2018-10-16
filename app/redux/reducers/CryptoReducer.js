@@ -21,13 +21,14 @@ export default (state = INITIAL_STATE, action) => {
     case FETCH_CRYPTO_ASYNC.success:
       return {
         ...state,
+        loading: false,
+        error: '',
         [action.payload.type]: {
           ...state[action.payload.type],
           address: action.payload.address,
+          memo: action.payload.memo,
           currencies: action.payload.assets,
         },
-        loading: false,
-        error: '',
       };
     case FETCH_CRYPTO_ASYNC.error:
       return {
@@ -39,11 +40,6 @@ export default (state = INITIAL_STATE, action) => {
     case SET_RECEIVE_ADDRESS:
       return {
         ...state,
-        [action.payload.type]: {
-          ...state[action.payload.type],
-          address: action.payload.address,
-          memo: action.payload.memo ? action.payload.memo : '',
-        },
       };
 
     default:
