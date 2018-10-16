@@ -65,3 +65,26 @@ export const decodeQR = string => {
   }
   return '';
 };
+
+export const concatAddress = address => {
+  let value = '';
+  if (address.line_1) {
+    value = value + address.line_1;
+  }
+  if (address.line_2) {
+    value = value + (value ? ', ' : '') + address.line_2;
+  }
+  if (address.city) {
+    value = value + (value ? ', ' : '') + address.city;
+  }
+  if (address.state_province) {
+    value = value + (value ? ', ' : '') + address.state_province;
+  }
+  if (address.country) {
+    value = value + (value ? ', ' : '') + address.country;
+  }
+  if (address.postal_code) {
+    value = value + (value ? ', ' : '') + address.postal_code;
+  }
+  return value;
+};

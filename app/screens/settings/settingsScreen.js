@@ -13,6 +13,7 @@ import {
   Text,
 } from './../../components/common';
 import { themeStateSelector } from '../../redux/sagas/selectors';
+import { concatAddress } from '../../util/general';
 
 class SettingsScreen extends Component {
   static navigationOptions = {
@@ -99,24 +100,7 @@ class SettingsScreen extends Component {
     let value = '';
     if (address.length > 0) {
       const tempAddress = address[0];
-      if (tempAddress.line_1) {
-        value = value + tempAddress.line_1;
-      }
-      if (tempAddress.line_2) {
-        value = value + (value ? ', ' : '') + tempAddress.line_2;
-      }
-      if (tempAddress.city) {
-        value = value + (value ? ', ' : '') + tempAddress.city;
-      }
-      if (tempAddress.state_province) {
-        value = value + (value ? ', ' : '') + tempAddress.state_province;
-      }
-      if (tempAddress.country) {
-        value = value + (value ? ', ' : '') + tempAddress.country;
-      }
-      if (tempAddress.postal_code) {
-        value = value + (value ? ', ' : '') + tempAddress.postal_code;
-      }
+      value = concatAddress(tempAddress);
     }
     if (!value) {
       value = 'Not yet provided';

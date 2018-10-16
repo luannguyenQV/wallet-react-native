@@ -212,11 +212,11 @@ export default (state = INITIAL_STATE, action) => {
     case SHOW_MODAL:
       return {
         ...state,
-        tempItem: action.payload.item,
         modalType: action.payload.modalType,
         modalVisible: true,
         loading: false,
         updateError: '',
+        [action.payload.type + 'Index']: action.payload.index,
       };
 
     case SET_ACTIVE_CURRENCY_ASYNC.pending:

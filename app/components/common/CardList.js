@@ -39,10 +39,6 @@ class _CardList extends Component {
       subtitle,
       onPressTitle,
       onPressContent,
-      textActionOne,
-      onPressActionOne,
-      textActionTwo,
-      onPressActionTwo,
       renderContent,
       loadingDetail,
       onPressFooter,
@@ -67,13 +63,12 @@ class _CardList extends Component {
         onPressContent={() => onPressContent(index)}
         iconFooter={iconFooter ? iconFooter(item) : ''}
         onPressFooter={() => onPressFooter(index)}
-        // textActionTwo={textActionTwo}
-        // disableActionTwo={canVerify}
-        textActionOne={actionOne ? actionOne.text : ''}
-        onPressActionOne={actionOne ? actionOne.onPress : () => {}}
-        disableActionOne={actionOne ? actionOne.disabled : false}
-        textActionTwo={actionTwo ? actionTwo.text : ''}
-        onPressActionTwo={actionTwo ? actionTwo.onPress : () => {}}
+        textActionOne={actionOne ? actionOne(item, index).text : ''}
+        onPressActionOne={actionOne ? actionOne(item, index).onPress : () => {}}
+        disableActionOne={actionOne ? actionOne(item, index).disabled : false}
+        textActionTwo={actionTwo ? actionTwo(item, index).text : ''}
+        onPressActionTwo={actionTwo ? actionTwo(item, index).onPress : () => {}}
+        disableActionTwo={actionTwo ? actionTwo(item, index).disabled : false}
         loading={loadingDetail}>
         {this.props.renderItem(item, data.showDetail)}
       </Card>
@@ -88,121 +83,36 @@ class _CardList extends Component {
     return;
   }
 
-  // renderModal() {
-  //   const {
-  //     modalVisible,
-  //     modalType,
-  //     hideModal,
-  //     loading,
-  //     type,
-  //     tempItem,
-  //     identifier,
-  //     updateError,
-  //     temp_otp,
-  //     otp,
-  //     // redux actions
-  //     setActiveCurrency,
-  //     updateInputField,
-  //     updateItem,
-  //     confirmDeleteItem,
-  //     verifyItem,
-  //     company_config,
-  //   } = this.props;
+  renderModal() {
+    const {
+      modalVisible,
+      modalOnDismiss,
+      modalLoading,
+      modalError,
+      modalContent,
+      modalContentText,
+      modalActionOne,
+      modalActionTwo,
+    } = this.props;
 
-  //   let contentText = '';
-  //   let textActionOne = '';
-  //   let onPressActionOne = null;
-  //   let textActionTwo = 'CANCEL';
-  //   let onPressActionTwo = hideModal;
-  //   let content = null;
-  //   if (identifier && tempItem) {
-  //     switch (modalType) {
-  //       case 'delete':
-  //         contentText = 'Delete ' + tempItem[identifier] + '?';
-  //         textActionOne = 'DELETE';
-  //         onPressActionOne = () => confirmDeleteItem(type, tempItem);
-  //         break;
-  //       case 'primary':
-  //         contentText =
-  //           'You are about to set ' +
-  //           tempItem[identifier] +
-  //           ' as your primary ' +
-  //           type +
-  //           ' for this account';
-  //         textActionOne = 'MAKE PRIMARY';
-  //         onPressActionOne = () => updateItem(type, tempItem);
-  //         break;
-  //       case 'active':
-  //         contentText =
-  //           'Set ' +
-  //           tempItem.currency.code +
-  //           ' as your active wallet so that it will be shown first on the home screen and the top of this list';
-  //         textActionOne = 'MAKE ACTIVE';
-  //         onPressActionOne = () => setActiveCurrency(tempItem);
-  //         break;
-  //       case 'verify':
-  //         textActionTwo = 'CLOSE';
-  //         if (type === 'email') {
-  //           contentText =
-  //             'Instructions on how to verify your email have been sent to ' +
-  //             tempItem;
-  //           // content = ( //TODO:
-  //           //   <Button
-  //           //     label="Open email app"
-  //           //     textColor={company_config.colors.primaryContrast}
-  //           //     backgroundColor={company_config.colors.primary}
-  //           //     onPress={() =>
-  //           //       maybeOpenURL('mailto:', {}).catch(err => {
-  //           //         console.log(err);
-  //           //       })
-  //           //     }
-  //           //   />
-  //           // );
-  //         } else if (type === 'mobile') {
-  //           // textActionOne = 'VERIFY';
-  //           contentText =
-  //             'An SMS containing a OTP to verify your mobile has been sent to ' +
-  //             tempItem;
-  //           content = (
-  //             <CodeInput
-  //               ref={component => (this._pinInput = component)}
-  //               secureTextEntry={false}
-  //               activeColor="gray"
-  //               autoFocus
-  //               inactiveColor="lightgray"
-  //               className="border-b"
-  //               codeLength={5}
-  //               space={7}
-  //               size={30}
-  //               inputPosition="center"
-  //               containerStyle={{ marginTop: 0, paddingBottom: 24 }}
-  //               onFulfill={code => verifyItem('mobile', code)}
-  //             />
-  //           );
-  //         }
-  //         break;
-  //     }
-  //   }
-
-  //   return (
-  //     <PopUpGeneral
-  //       visible={modalVisible}
-  //       contentText={standardizeString(contentText)}
-  //       textActionOne={textActionOne}
-  //       onPressActionOne={onPressActionOne}
-  //       onDismiss={hideModal}
-  //       textActionTwo={textActionTwo}
-  //       onPressActionTwo={onPressActionTwo}
-  //       loading={loading}
-  //       errorText={updateError}>
-  //       {content}
-  //     </PopUpGeneral>
-  //   );
-  // }
+    return (
+      <PopUpGeneral
+        visible={modalVisible}
+        textActionOne={modalActionOne.text}
+        onPressActionOne={modalActionOne.onPress}
+        textActionTwo={modalActionTwo.text}
+        onPressActionTwo={modalActionTwo.onPress}
+        onDismiss={modalOnDismiss}
+        loading={modalLoading}
+        errorText={modalError}
+        contentText={modalContentText}>
+        {modalContent}
+      </PopUpGeneral>
+    );
+  }
 
   render() {
-    const { type, data, keyExtractor, onRefresh } = this.props;
-    console.log(data);
+    const { data, keyExtractor, onRefresh } = this.props;
     return (
       <View color="grey2">
         <FlatList
@@ -222,6 +132,7 @@ class _CardList extends Component {
           }
           ListEmptyComponent={this.renderEmptyList()}
         />
+        {this.renderModal()}
       </View>
     );
   }
