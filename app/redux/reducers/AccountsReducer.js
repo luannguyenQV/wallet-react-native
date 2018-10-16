@@ -287,6 +287,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         receiveType: action.payload,
+        receiveCurrencySelected: action.payload === 'crypto' ? false : true,
       };
     case RESET_RECEIVE:
       return {

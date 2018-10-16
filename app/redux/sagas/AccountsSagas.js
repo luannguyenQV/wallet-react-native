@@ -209,6 +209,7 @@ function* send(action) {
     };
     let response = '';
     console.log('data', data);
+    console.log('transaction.currency', transaction.currency);
     switch (transaction.currency.crypto) {
       case 'stellar':
         data['to_reference'] = data.recipient;
@@ -221,6 +222,10 @@ function* send(action) {
         response = yield call(Rehive.createTransferBitcoin, data);
         break;
       case 'ethereum':
+        data['to_reference'] = data.recipient;
+        delete data.recipient;
+        delete data.debit_account;
+        delete data.note;
         response = yield call(Rehive.createTransferEthereum, data);
         break;
       default:
