@@ -19,8 +19,6 @@ class _CurrencySelector extends Component {
       textStyleValue,
     } = styles;
 
-    console.log(currency, currencies);
-
     const code = currency && currency.currency ? currency.currency.code : '---';
 
     const value = currency ? currency.account + ':' + code : '---';
@@ -48,9 +46,6 @@ class _CurrencySelector extends Component {
         key: 'none',
       };
     }
-    console.log('items', items);
-    console.log('code', code);
-    console.log('value', value);
 
     return (
       <Picker

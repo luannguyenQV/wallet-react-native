@@ -143,14 +143,7 @@ export const createCredit = (amount, currency) =>
     currency,
   });
 
-export const createDebit = (amount, currency, reference, note, metadata) =>
-  r.transactions.createDebit({
-    amount: parseInt(amount, 0),
-    currency,
-    metadata,
-    reference,
-    note,
-  });
+export const createDebit = data => r.transactions.createDebit(data);
 
 export const createTransfer = data => r.transactions.createTransfer(data);
 

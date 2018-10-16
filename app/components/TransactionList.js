@@ -116,7 +116,16 @@ class TransactionList extends Component {
     let userLabel = '';
 
     if (transaction) {
-      const { amount, label, currency, fee, balance, metadata } = transaction;
+      const {
+        amount,
+        label,
+        currency,
+        fee,
+        balance,
+        metadata,
+        note,
+      } = transaction;
+      console.log('transaction', transaction);
       switch (transaction.tx_type) {
         case 'debit':
           // console.log('Debit');
@@ -160,6 +169,7 @@ class TransactionList extends Component {
           onDismiss={() => this.hideModal()}>
           {/* <Text style={textStyleHeader}>{headerText}</Text> */}
           {user ? <Output label={userLabel} value={user} /> : null}
+          {note ? <Output label="Note" value={note} /> : null}
           <Output label="Transaction type" value={label} />
           {/* <Output label="Total amount" value={transaction.label} /> */}
           <Output

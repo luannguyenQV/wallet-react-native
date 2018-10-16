@@ -147,13 +147,10 @@ export const withdraw = data => async dispatch => {
   }
   dispatch({ type: WITHDRAW_ASYNC.pending });
   try {
-    await Rehive.createDebit(
-      amount,
-      data.currency.code,
-      data.reference,
-      data.note,
-      data.metadata,
-    );
+    await Rehive.createDebit({
+      ...data,
+      amount: parseInt(amount, 0),
+    });
     dispatch({
       type: WITHDRAW_ASYNC.success,
     });

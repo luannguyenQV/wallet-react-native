@@ -224,7 +224,7 @@ function* send(action) {
         response = yield call(Rehive.createTransferEthereum, data);
         break;
       default:
-        response = yield call(Rehive.createTransfer, data);
+        response = yield call(Rehive.createDebit, data);
         break;
     }
     console.log('response', response);
