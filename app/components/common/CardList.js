@@ -48,7 +48,10 @@ class _CardList extends Component {
       onPressFooter,
       iconFooter,
       data,
+      actionOne,
+      actionTwo,
     } = this.props;
+
     return (
       <Card
         headerComponent={headerComponent}
@@ -66,11 +69,11 @@ class _CardList extends Component {
         onPressFooter={() => onPressFooter()}
         // textActionTwo={textActionTwo}
         // disableActionTwo={canVerify}
-        onPressActionTwo={() => onPressActionTwo(index)}
-        textActionOne={textActionOne} //index === data.index &&  data.showDetail
-        textActionTwo={textActionTwo}
-        // disableActionOne={canPrimary ? (!item.primary ? false : true) : false}
-        onPressActionOne={() => onPressActionOne(index)}
+        textActionOne={actionOne ? actionOne.text : ''}
+        onPressActionOne={actionOne ? actionOne.onPress : () => {}}
+        disableActionOne={actionOne ? actionOne.disabled : false}
+        textActionTwo={actionTwo ? actionTwo.text : ''}
+        onPressActionTwo={actionTwo ? actionTwo.onPress : () => {}}
         loading={loadingDetail}>
         {this.props.renderItem(item, data.showDetail)}
       </Card>

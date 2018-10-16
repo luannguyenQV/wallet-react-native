@@ -101,6 +101,42 @@ function withRedux(CardList, selectData) {
       }
     }
 
+    actionOne(item, detail) {
+      const { data, type } = this.props;
+      switch (type) {
+        case 'address':
+        case 'mobile':
+        case 'email':
+        case 'bank_account':
+        case 'crypto_address':
+          return {
+            text: data.showDetail ? 'SAVE' : '',
+            onPress: index => console.log('SAVE ', index), //this.props.updateItem(type, index),
+            disabled: false,
+          };
+        default:
+          return <View />;
+      }
+    }
+
+    actionTwo(item, detail) {
+      const { data, type } = this.props;
+      switch (type) {
+        case 'address':
+        case 'mobile':
+        case 'email':
+        case 'bank_account':
+        case 'crypto_address':
+          return {
+            text: data.showDetail ? 'CANCEL' : '',
+            onPress: () => this.props.hideDetail(type),
+            disabled: false,
+          };
+        default:
+          return <View />;
+      }
+    }
+
     render() {
       console.log('props', this.props);
       const { data, type } = this.props;
@@ -111,10 +147,8 @@ function withRedux(CardList, selectData) {
           onRefresh={() => this.props.fetchData(type)}
           onPressContent={index => this.props.showDetail(type, index)}
           onPressHeader={index => this.props.showDetail(type, index)}
-          textActionOne={data.showDetail ? 'SAVE' : ''}
-          onPressActionOne={index => this.props.updateItem(type, index)}
-          textActionTwo={data.showDetail ? 'CANCEL' : ''}
-          onPressActionTwo={() => this.props.hideDetail(type)}
+          actionOne={this.actionOne()}
+          actionTwo={this.actionTwo()}
           showModal={data.showModal}
           typeModal={data.modalType}
           canDelete
