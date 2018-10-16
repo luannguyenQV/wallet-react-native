@@ -29,6 +29,8 @@ function withRedux(CardList, selectData) {
     // fetch data
 
     componentDidMount() {
+      const { type } = this.props;
+      this.props.hideDetail(type);
       // ... that takes care of the subscription...
       // DataSource.addChangeListener(this.handleChange);
       // console.log('mounted');
