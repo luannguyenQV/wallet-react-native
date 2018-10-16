@@ -88,10 +88,30 @@ const INITIAL_STATE = {
 
   dismissedCards: [],
 
+  email: null,
+  emailLoading: false,
+  emailDetail: false,
+  emailIndex: 0,
+
+  mobile: null,
+  mobileLoading: false,
+  mobileDetail: false,
+  mobileIndex: 0,
+
   address: null,
   addressLoading: false,
   addressDetail: false,
   addressIndex: 0,
+
+  bankAccount: null,
+  bankAccountLoading: false,
+  bankAccountDetail: false,
+  bankAccountIndex: 0,
+
+  cryptoAddress: null,
+  cryptoAddressLoading: false,
+  cryptoAddressDetail: false,
+  cryptoAddressIndex: 0,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -351,16 +371,64 @@ export default (state = INITIAL_STATE, action) => {
   }
 };
 
-export const userEmailsSelector = createSelector(userSelector, user => {
-  return user.email;
-});
-
 export const userAddressesSelector = createSelector(userSelector, user => {
   return {
     data: user.address,
     loading: user.addressLoading,
     index: user.addressIndex,
     showDetail: user.addressDetail,
+    showModal: user.showModal,
+    typeModal: user.typeModal,
     indexLoading: false,
   };
 });
+
+export const userEmailsSelector = createSelector(userSelector, user => {
+  return {
+    data: user.email,
+    loading: user.emailLoading,
+    index: user.emailIndex,
+    showDetail: user.emailDetail,
+    showModal: user.showModal,
+    typeModal: user.typeModal,
+    indexLoading: false,
+  };
+});
+
+export const userMobilesSelector = createSelector(userSelector, user => {
+  return {
+    data: user.mobile,
+    loading: user.mobileLoading,
+    index: user.mobileIndex,
+    showDetail: user.mobileDetail,
+    showModal: user.showModal,
+    typeModal: user.typeModal,
+    indexLoading: false,
+  };
+});
+
+export const userBankAccountsSelector = createSelector(userSelector, user => {
+  return {
+    data: user.bankAccount,
+    loading: user.bankAccountLoading,
+    index: user.bankAccountIndex,
+    showDetail: user.bankAccountDetail,
+    showModal: user.showModal,
+    typeModal: user.typeModal,
+    indexLoading: false,
+  };
+});
+export const userCryptoAddressesSelector = createSelector(
+  userSelector,
+  user => {
+    return {
+      data: user.cryptoAddress,
+      loading: user.cryptoAddressLoading,
+      index: user.cryptoAddressIndex,
+      showDetail: user.cryptoAddressDetail,
+      showModal: user.showModal,
+      typeModal: user.typeModal,
+      indexLoading: false,
+    };
+  },
+);

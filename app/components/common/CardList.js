@@ -56,7 +56,7 @@ class _CardList extends Component {
         textTitleLeft={textTitleLeft}
         iconTitleLeft={iconTitleLeft}
         itemActive={itemActive}
-        onPressTitleLeft={() => onPressTitleLeft(item)}
+        onPressTitleLeft={() => onPressTitleLeft(index)}
         title={title}
         subtitle={subtitle}
         colorTitleBackground="white"
@@ -66,13 +66,13 @@ class _CardList extends Component {
         onPressFooter={() => onPressFooter()}
         // textActionTwo={textActionTwo}
         // disableActionTwo={canVerify}
-        onPressActionTwo={() => onPressActionTwo(item)}
-        textActionOne={textActionOne(index === data.index && data.showDetail)}
-        textActionTwo={textActionTwo(index === data.index && data.showDetail)}
+        onPressActionTwo={() => onPressActionTwo(index)}
+        textActionOne={textActionOne} //index === data.index &&  data.showDetail
+        textActionTwo={textActionTwo}
         // disableActionOne={canPrimary ? (!item.primary ? false : true) : false}
-        onPressActionOne={() => onPressActionOne(item)}
+        onPressActionOne={() => onPressActionOne(index)}
         loading={loadingDetail}>
-        {this.props.renderItem(item, index === data.index && data.showDetail)}
+        {this.props.renderItem(item, data.showDetail)}
       </Card>
     );
   };
@@ -199,6 +199,7 @@ class _CardList extends Component {
 
   render() {
     const { type, data, keyExtractor, onRefresh } = this.props;
+    console.log(data);
     return (
       <View color="grey2">
         <FlatList
@@ -209,7 +210,7 @@ class _CardList extends Component {
             />
           }
           keyboardShouldPersistTaps={'handled'}
-          data={data.data}
+          data={data.showDetail ? [data.data[data.index]] : data.data}
           renderItem={({ item, index }) => this.renderItem(item, index)}
           keyExtractor={
             keyExtractor

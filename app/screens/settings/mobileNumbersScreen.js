@@ -1,76 +1,42 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { connect } from 'react-redux';
-import {
-  fetchData,
-  newItem,
-  editItem,
-  updateItem,
-  deleteItem,
-  updateInputField,
-} from './../../redux/actions';
+import { newItem, updateItem } from './../../redux/actions';
 
 import Header from './../../components/header';
-import { Input, Output } from './../../components/common';
-import CardList from './../../components/CardList';
+import CardListUserSettings from './../../components/cards/CardListUserSettings';
+import { userMobilesSelector } from '../../redux/reducers/UserReducer';
 
 class MobileNumbersScreen extends Component {
   static navigationOptions = {
     title: 'Mobile numbers',
   };
 
-  renderContent = item => {
-    const { viewStyleContent } = styles;
-    const { number } = item;
-    return (
-      <View style={viewStyleContent}>
-        {number ? <Output label="" value={number} /> : null}
-      </View>
-    );
-  };
-
-  renderDetail = () => {
-    const { tempItem, updateError, updateInputField } = this.props;
-    const { number } = tempItem;
-
-    return (
-      <Input
-        label="Mobile number"
-        placeholder="e.g. +278412345687"
-        autoCapitalize="none"
-        value={number}
-        inputError={updateError}
-        onChangeText={input => updateInputField('mobile', 'number', input)}
-      />
-    );
-  };
-
   render() {
-    const { mobile, tempItem, newItem, updateItem, showDetail } = this.props;
+    const { mobiles, tempItem, newItem, updateItem } = this.props;
     return (
       <View style={styles.container}>
         <Header
           navigation={this.props.navigation}
           back
           title="Mobile numbers"
-          headerRightIcon={showDetail ? 'done' : 'add'}
+          headerRightIcon={mobiles.showDetail ? 'done' : 'add'}
           headerRightOnPress={
-            showDetail
+            mobiles.showDetail
               ? () => updateItem('mobile', tempItem)
               : () => newItem('mobile')
           }
         />
-        <CardList
+        <CardListUserSettings
           type="mobile"
-          data={mobile}
-          tempItem={tempItem}
+          data={mobiles}
           identifier="number"
-          renderContent={this.renderContent}
-          renderDetail={this.renderDetail}
+          // renderItem={<Text>Hello World </Text>}
           emptyListMessage="No mobile numbers added yet"
-          canDelete
-          canVerify
-          canPrimary
+          // canDelete
+          // canEdit
+          // canVerify
+          // canPrimary
         />
       </View>
     );
@@ -87,22 +53,13 @@ const styles = {
     padding: 8,
   },
 };
-
-const mapStateToProps = ({ user }) => {
-  const { mobile, tempItem, updateError, showDetail } = user;
+const mapStateToProps = state => {
   return {
-    mobile,
-    showDetail,
-    tempItem,
-    updateError,
+    mobiles: userMobilesSelector(state),
   };
 };
 
 export default connect(mapStateToProps, {
-  fetchData,
   newItem,
-  editItem,
   updateItem,
-  deleteItem,
-  updateInputField,
 })(MobileNumbersScreen);

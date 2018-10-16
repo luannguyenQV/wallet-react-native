@@ -1,17 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
-import {
-  newItem,
-  editItem,
-  updateItem,
-  deleteItem,
-  updateInputField,
-} from './../../redux/actions';
+import { newItem, updateItem } from './../../redux/actions';
 
 import Header from './../../components/header';
-import { Input, Output } from './../../components/common';
-import CardList from './../../components/CardList';
+import CardListUserSettings from './../../components/cards/CardListUserSettings';
 import { userEmailsSelector } from '../../redux/reducers/UserReducer';
 
 class EmailAddressesScreen extends Component {
@@ -19,58 +12,32 @@ class EmailAddressesScreen extends Component {
     title: 'Email addresses',
   };
 
-  renderContent = item => {
-    const { viewStyleContent } = styles;
-    const { email } = item;
-    return (
-      <View style={viewStyleContent}>
-        {email ? <Output label="" value={email} /> : null}
-      </View>
-    );
-  };
-
-  renderDetail = () => {
-    const { tempItem, updateError, updateInputField } = this.props;
-    const { email } = tempItem;
-
-    return (
-      <Input
-        label="Email address"
-        placeholder="e.g. user@rehive.com"
-        autoCapitalize="none"
-        value={email}
-        inputError={updateError}
-        onChangeText={input => updateInputField('email', 'email', input)}
-      />
-    );
-  };
-
   render() {
-    const { email, tempItem, newItem, updateItem, showDetail } = this.props;
+    const { emails, tempItem, newItem, updateItem } = this.props;
     return (
       <View style={styles.container}>
         <Header
           navigation={this.props.navigation}
           back
           title="Email addresses"
-          headerRightIcon={showDetail ? 'done' : 'add'}
+          headerRightIcon={emails.showDetail ? 'done' : 'add'}
           headerRightOnPress={
-            showDetail
+            emails.showDetail
               ? () => updateItem('email', tempItem)
               : () => newItem('email')
           }
         />
-        <CardList
+        <CardListUserSettings
+          // onRefresh={() => console.log('refreshing')}
           type="email"
-          data={email}
-          tempItem={tempItem}
+          data={emails}
           identifier="email"
-          renderContent={this.renderContent}
-          renderDetail={this.renderDetail}
+          // renderItem={<Text>Hello World </Text>}
           emptyListMessage="No email addresses added yet"
-          canDelete
-          canVerify
-          canPrimary
+          // canDelete
+          // canEdit
+          // canVerify
+          // canPrimary
         />
       </View>
     );
@@ -89,19 +56,12 @@ const styles = {
 };
 
 const mapStateToProps = state => {
-  const { email, tempItem, updateError, showDetail } = state.user;
   return {
-    email: userEmailsSelector(state),
-    tempItem,
-    updateError,
-    showDetail,
+    emails: userEmailsSelector(state),
   };
 };
 
 export default connect(mapStateToProps, {
   newItem,
-  editItem,
   updateItem,
-  deleteItem,
-  updateInputField,
 })(EmailAddressesScreen);

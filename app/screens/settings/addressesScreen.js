@@ -1,18 +1,9 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { connect } from 'react-redux';
-import {
-  fetchData,
-  newItem,
-  editItem,
-  updateItem,
-  deleteItem,
-  updateInputField,
-} from './../../redux/actions';
+import { newItem, updateItem } from './../../redux/actions';
 
 import Header from './../../components/header';
-import { CardList, Text } from './../../components/common';
-import { CardAddress } from './../../components/cards';
 import { userAddressesSelector } from '../../redux/reducers/UserReducer';
 import CardListUserSettings from '../../components/cards/CardListUserSettings';
 
@@ -72,10 +63,6 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, {
-  fetchData,
   newItem,
-  editItem,
   updateItem,
-  deleteItem,
-  updateInputField,
 })(AddressesScreen);

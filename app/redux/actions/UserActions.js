@@ -101,13 +101,13 @@ export const verifyItem = (type, otp) => {
 };
 
 export const SHOW_MODAL = 'show_modal';
-export const showModal = (type, item, modalType) => {
+export const showModal = (type, index, modalType) => {
   console.log('type', type);
-  console.log('item', item);
+  console.log('index', index);
   console.log('modalType', modalType);
   return {
     type: SHOW_MODAL,
-    payload: { type, item, modalType },
+    payload: { type, index, modalType },
   };
 };
 
