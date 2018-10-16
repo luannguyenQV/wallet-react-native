@@ -112,6 +112,8 @@ const INITIAL_STATE = {
   cryptoAddressLoading: false,
   cryptoAddressDetail: false,
   cryptoAddressIndex: 0,
+
+  newItem: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -127,35 +129,6 @@ export default (state = INITIAL_STATE, action) => {
           ...state.tempItem,
           [action.payload.prop]: action.payload.value,
         },
-      };
-
-    case NEW_ITEM:
-      return {
-        ...state,
-        // [action.payload.type]: {},
-        updateError: '',
-        tempItem: {},
-        showDetail: true,
-        editing: false,
-      };
-    case EDIT_ITEM:
-      return {
-        ...state,
-        tempItem: action.payload.data,
-        showDetail: true,
-        editing: true,
-        wallet: false,
-        modalType: '',
-        updateError: '',
-      };
-    case PRIMARY_ITEM:
-      return {
-        ...state,
-        tempItem: action.payload.data,
-        loading: false,
-        updateError: '',
-        modalType: 'primary',
-        modalVisible: true,
       };
     case UPDATE_ASYNC.pending:
       return {
@@ -351,17 +324,47 @@ export default (state = INITIAL_STATE, action) => {
         dismissedCards: [],
       };
 
+    case NEW_ITEM:
+      return {
+        ...state,
+        updateError: '',
+        showDetail: true,
+        newItem: true,
+        editing: false,
+        mobileIndex: 0,
+      };
+    case EDIT_ITEM:
+      return {
+        ...state,
+        tempItem: action.payload.data,
+        showDetail: true,
+        editing: true,
+        wallet: false,
+        modalType: '',
+        updateError: '',
+      };
+    case PRIMARY_ITEM:
+      return {
+        ...state,
+        tempItem: action.payload.data,
+        loading: false,
+        updateError: '',
+        modalType: 'primary',
+        modalVisible: true,
+      };
+
     case SHOW_DETAIL:
       return {
         ...state,
-        [action.payload.type + 'Detail']: true,
+        showDetail: true,
         [action.payload.type + 'Index']: action.payload.index,
       };
-
     case HIDE_DETAIL:
       return {
         ...state,
-        [action.payload.type + 'Detail']: false,
+        showDetail: false,
+        // [action.payload.type + 'Detail']: false,
+        newItem: false,
       };
 
     case LOGOUT_USER:
@@ -373,48 +376,48 @@ export default (state = INITIAL_STATE, action) => {
 
 export const userAddressesSelector = createSelector(userSelector, user => {
   return {
-    data: user.address,
+    data: user.newItem ? [EMPTY_ADDRESS] : user.address,
     loading: user.addressLoading,
     index: user.addressIndex,
-    showDetail: user.addressDetail,
-    showModal: user.showModal,
-    typeModal: user.typeModal,
+    showDetail: user.showDetail,
+    modalVisible: user.modalVisible,
+    modalType: user.modalType,
     indexLoading: false,
   };
 });
 
 export const userEmailsSelector = createSelector(userSelector, user => {
   return {
-    data: user.email,
+    data: user.newItem ? [EMPTY_EMAIL] : user.email,
     loading: user.emailLoading,
     index: user.emailIndex,
-    showDetail: user.emailDetail,
-    showModal: user.showModal,
-    typeModal: user.typeModal,
+    showDetail: user.showDetail,
+    modalVisible: user.modalVisible,
+    modalType: user.modalType,
     indexLoading: false,
   };
 });
 
 export const userMobilesSelector = createSelector(userSelector, user => {
   return {
-    data: user.mobile,
+    data: user.newItem ? [EMPTY_MOBILE] : user.mobile,
     loading: user.mobileLoading,
     index: user.mobileIndex,
-    showDetail: user.mobileDetail,
-    showModal: user.showModal,
-    typeModal: user.typeModal,
+    showDetail: user.showDetail,
+    modalVisible: user.modalVisible,
+    modalType: user.modalType,
     indexLoading: false,
   };
 });
 
 export const userBankAccountsSelector = createSelector(userSelector, user => {
   return {
-    data: user.bankAccount,
+    data: user.newItem ? [EMPTY_BANK_ACCOUNT] : user.bankAccount,
     loading: user.bankAccountLoading,
     index: user.bankAccountIndex,
-    showDetail: user.bankAccountDetail,
-    showModal: user.showModal,
-    typeModal: user.typeModal,
+    showDetail: user.showDetail,
+    modalVisible: user.modalVisible,
+    modalType: user.modalType,
     indexLoading: false,
   };
 });
@@ -422,12 +425,12 @@ export const userCryptoAddressesSelector = createSelector(
   userSelector,
   user => {
     return {
-      data: user.cryptoAddress,
+      data: user.newItem ? [EMPTY_CRYPTO] : user.cryptoAddress,
       loading: user.cryptoAddressLoading,
       index: user.cryptoAddressIndex,
-      showDetail: user.cryptoAddressDetail,
-      showModal: user.showModal,
-      typeModal: user.typeModal,
+      showDetail: user.showDetail,
+      modalVisible: user.modalVisible,
+      modalType: user.modalType,
       indexLoading: false,
     };
   },

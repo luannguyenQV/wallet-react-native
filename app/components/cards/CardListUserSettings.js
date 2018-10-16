@@ -13,6 +13,7 @@ import {
   updateInputField,
   showDetail,
   hideDetail,
+  showModal,
 } from './../../redux/actions';
 import { CardList, View } from '../common';
 import { CardAddress } from './CardAddress';
@@ -117,7 +118,6 @@ function withRedux(CardList, selectData) {
             disabled: false,
           };
         default:
-          return <View />;
       }
     }
 
@@ -135,8 +135,89 @@ function withRedux(CardList, selectData) {
             disabled: false,
           };
         default:
+      }
+    }
+
+    onPressCard(type, index) {
+      switch (type) {
+        case 'mobile':
+        case 'email':
+          console.log('Uneditable');
+          break;
+        case 'address':
+        case 'bank_account':
+        case 'crypto_address':
+          this.props.showDetail(type, index);
+          break;
+        default:
+          return;
+      }
+    }
+
+    renderModalContent(item, detail) {
+      const { type } = this.props;
+      switch (type) {
+        case 'address':
+          return (
+            <CardAddress
+              item={item}
+              detail={detail}
+              updateInputField={this.props.updateInputField}
+            />
+          );
+        case 'mobile':
+          return (
+            <CardMobile
+              item={item}
+              detail={detail}
+              updateInputField={this.props.updateInputField}
+            />
+          );
+        case 'email':
+          return (
+            <CardEmail
+              item={item}
+              detail={detail}
+              updateInputField={this.props.updateInputField}
+            />
+          );
+        case 'bank_account':
+          return (
+            <CardBankAccount
+              item={item}
+              detail={detail}
+              updateInputField={this.props.updateInputField}
+            />
+          );
+        case 'crypto_address':
+          return (
+            <CardCryptoAddress
+              item={item}
+              detail={detail}
+              updateInputField={this.props.updateInputField}
+            />
+          );
+        default:
           return <View />;
       }
+    }
+
+    iconFooter(item) {
+      console.log('hi ', item);
+      const { type } = this.props;
+      switch (type) {
+        case 'mobile':
+        case 'email':
+          if (item.primary) {
+            return '';
+          }
+        case 'address':
+        case 'bank_account':
+        case 'crypto_address':
+        default:
+          return 'delete';
+      }
+      return '';
     }
 
     render() {
@@ -147,14 +228,16 @@ function withRedux(CardList, selectData) {
           data={data}
           {...this.props}
           onRefresh={() => this.props.fetchData(type)}
-          onPressContent={index => this.props.showDetail(type, index)}
-          onPressHeader={index => this.props.showDetail(type, index)}
+          onPressContent={index => this.onPressCard(type, index)}
+          onPressHeader={index => this.onPressCard(type, index)}
           actionOne={this.actionOne()}
           actionTwo={this.actionTwo()}
-          showModal={data.showModal}
-          typeModal={data.modalType}
-          canDelete
+          modalVisible={data.modalVisible}
+          modalType={data.modalType}
+          modalContent={this.renderModalContent()}
           renderItem={(item, detail) => this.renderItem(item, detail)}
+          iconFooter={item => this.iconFooter(item)}
+          onPressFooter={index => this.props.showModal(type, index, 'delete')}
         />
       );
     }
@@ -176,4 +259,5 @@ export default connect(mapStateToProps, {
   updateInputField,
   showDetail,
   hideDetail,
+  showModal,
 })(withRedux(CardList));

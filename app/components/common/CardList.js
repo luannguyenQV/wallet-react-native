@@ -65,8 +65,8 @@ class _CardList extends Component {
         colorTitleBackground="white"
         onPressTitle={() => onPressTitle(index)}
         onPressContent={() => onPressContent(index)}
-        iconFooter={iconFooter}
-        onPressFooter={() => onPressFooter()}
+        iconFooter={iconFooter ? iconFooter(item) : ''}
+        onPressFooter={() => onPressFooter(index)}
         // textActionTwo={textActionTwo}
         // disableActionTwo={canVerify}
         textActionOne={actionOne ? actionOne.text : ''}

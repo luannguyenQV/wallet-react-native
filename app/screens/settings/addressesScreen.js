@@ -13,17 +13,17 @@ class AddressesScreen extends Component {
   };
 
   render() {
-    const { addresses } = this.props;
+    const { addresses, newItem, updateItem } = this.props;
     return (
       <View style={styles.container}>
         <Header
           navigation={this.props.navigation}
           back
           title="Addresses"
-          headerRightIcon={addresses.detail ? 'done' : 'add'}
+          headerRightIcon={addresses.showDetail ? 'done' : 'add'}
           headerRightOnPress={
-            addresses.detail
-              ? () => updateItem('address', tempItem)
+            addresses.showDetail
+              ? () => updateItem('address')
               : () => newItem('address')
           }
         />

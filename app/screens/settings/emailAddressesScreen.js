@@ -13,7 +13,7 @@ class EmailAddressesScreen extends Component {
   };
 
   render() {
-    const { emails, tempItem, newItem, updateItem } = this.props;
+    const { emails, newItem, updateItem } = this.props;
     return (
       <View style={styles.container}>
         <Header
@@ -23,7 +23,7 @@ class EmailAddressesScreen extends Component {
           headerRightIcon={emails.showDetail ? 'done' : 'add'}
           headerRightOnPress={
             emails.showDetail
-              ? () => updateItem('email', tempItem)
+              ? () => updateItem('email')
               : () => newItem('email')
           }
         />
