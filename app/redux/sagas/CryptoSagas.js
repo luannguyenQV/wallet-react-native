@@ -7,6 +7,7 @@ function* fetchCrypto(action) {
   try {
     const type = action.payload;
     let response;
+    let address = '';
     let assets = [];
     switch (type) {
       case 'stellar':
@@ -21,19 +22,22 @@ function* fetchCrypto(action) {
         response = yield call(Rehive.getBitcoinUser);
         if (response.status === 'success') {
           assets = ['XBT', 'TXBT'];
+          // address= response.data.crypto.address;
         }
         break;
       case 'ethereum':
         response = yield call(Rehive.getEthereumUser);
         if (response.status === 'success') {
           assets = ['ETH'];
+          address = response.data.crypto.address;
         }
         break;
     }
+    console.log(response);
 
     yield put({
       type: FETCH_CRYPTO_ASYNC.success,
-      payload: { assets, type },
+      payload: { assets, type, address },
     });
   } catch (error) {
     console.log(error);

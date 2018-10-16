@@ -23,6 +23,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         [action.payload.type]: {
           ...state[action.payload.type],
+          address: action.payload.address,
           currencies: action.payload.assets,
         },
         loading: false,
