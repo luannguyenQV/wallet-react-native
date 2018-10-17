@@ -422,7 +422,7 @@ export const userCryptoAddressesSelector = createSelector(
 
 export const userProfileSelector = createSelector(userSelector, user => {
   return {
-    data: user.showDetail ? [user.tempItem] : [user.profile],
+    data: user.showDetail ? [user.tempItem] : user.profile,
     loading: user.profileLoading,
     // index: user.crypto_addressIndex,
     showDetail: user.showDetail,

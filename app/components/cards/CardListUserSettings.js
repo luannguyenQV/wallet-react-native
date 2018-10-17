@@ -25,6 +25,7 @@ import { CardMobile } from './CardMobile';
 import { CardEmail } from './CardEmail';
 import { CardBankAccount } from './CardBankAccount';
 import { CardCryptoAddress } from './CardCryptoAddress';
+import { CardPersonalDetails } from './CardPersonalDetails';
 import { concatAddress, standardizeString } from '../../util/general';
 
 // This function takes a component...
@@ -108,6 +109,15 @@ function withRedux(CardList, selectData) {
               updateItem={this.props.updateItem}
             />
           );
+        case 'profile':
+          return (
+            <CardPersonalDetails
+              item={item}
+              detail={detail}
+              updateInputField={this.props.updateInputField}
+              updateItem={this.props.updateItem}
+            />
+          );
         default:
           return <View />;
       }
@@ -175,6 +185,7 @@ function withRedux(CardList, selectData) {
           case 'address':
           case 'bank_account':
           case 'crypto_address':
+          case 'profile':
             this.props.showDetail(type, index);
             break;
           default:
@@ -329,6 +340,8 @@ function withRedux(CardList, selectData) {
             if (item.primary) {
               return '';
             }
+          case 'profile':
+            return '';
           case 'address':
           case 'bank_account':
           case 'crypto_address':

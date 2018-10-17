@@ -47,7 +47,7 @@ function* fetchData(action) {
         response = yield call(Rehive.getBankAccounts);
         break;
       case 'profile':
-        response = yield call(Rehive.getProfile);
+        response = [yield call(Rehive.getProfile)];
         break;
       case 'address':
         response = yield call(Rehive.getAddresses);
@@ -142,7 +142,6 @@ function* updateItem(action) {
     } else {
       data = userState.tempItem;
     }
-
     switch (type) {
       case 'mobile':
         if (data.id) {
@@ -180,7 +179,11 @@ function* updateItem(action) {
         }
         break;
       case 'profile':
-        response = yield call(Rehive.updateProfile, data);
+        response = yield call(Rehive.updateProfile, {
+          first_name: data.first_name,
+          last_name: data.last_name,
+          id_number: data.id_number,
+        });
         break;
       case 'address':
         response = yield call(Rehive.updateAddress, data);
