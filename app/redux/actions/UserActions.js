@@ -60,7 +60,7 @@ export const confirmDeleteItem = type => {
 export const CONFIRM_PRIMARY_ASYNC = createAsyncTypes('confirm_primary');
 export const confirmPrimaryItem = type => {
   return {
-    type: CONFIRM_PRIMARY_ASYNC,
+    type: CONFIRM_PRIMARY_ASYNC.pending,
     payload: type,
   };
 };

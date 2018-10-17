@@ -12,7 +12,7 @@
   },
   "auth": {
     "identifier": "email",
-    "email": "required",
+    "email": "",
     "mobile": "",
     "terms": [
       {

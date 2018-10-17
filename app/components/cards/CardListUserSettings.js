@@ -299,15 +299,12 @@ function withRedux(CardList, selectData) {
     }
 
     modalActionTwo() {
-      const { data, hideModal } = this.props;
+      const { type, data, hideModal } = this.props;
       let text = 'CANCEL';
       let onPress = () => hideModal();
       let disabled = false;
-      switch (data.modalType) {
-        case 'verify':
-          text = 'CLOSE';
-          break;
-        default:
+      if (type === 'email' && data.modalType === 'verify') {
+        text = 'CLOSE';
       }
       return {
         text,
