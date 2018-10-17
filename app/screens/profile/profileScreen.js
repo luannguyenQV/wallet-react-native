@@ -8,7 +8,12 @@ import GetVerifiedOption from '../../components/getVerifiedOption';
 import HeaderProfile from '../../components/HeaderProfile';
 
 import { Spinner, InputContainer } from '../../components/common';
-import { userEmailsSelector } from '../../redux/reducers/UserReducer';
+import {
+  userEmailsSelector,
+  userMobilesSelector,
+  userAddressesSelector,
+  userProfileSelector,
+} from '../../redux/reducers/UserReducer';
 
 class ProfileScreen extends Component {
   static navigationOptions = {
@@ -28,7 +33,7 @@ class ProfileScreen extends Component {
   };
 
   renderBasicInfo() {
-    const { profile } = this.props;
+    const profile = this.props.profile.data;
 
     let value = profile.first_name + ' ' + profile.last_name;
     let status = profile.status ? profile.status.toUpperCase() : 'INCOMPLETE';
@@ -45,7 +50,7 @@ class ProfileScreen extends Component {
   }
 
   renderEmailAddresses() {
-    const { email } = this.props;
+    const email = this.props.email.data;
 
     let value = 'Not yet provided';
     let status = 'INCOMPLETE';
@@ -72,7 +77,7 @@ class ProfileScreen extends Component {
   }
 
   renderMobileNumbers() {
-    const { mobile } = this.props;
+    const mobile = this.props.mobile.data;
 
     let value = 'Not yet provided';
     let status = 'INCOMPLETE';
@@ -99,7 +104,7 @@ class ProfileScreen extends Component {
   }
 
   renderAddresses() {
-    const { address } = this.props;
+    const address = this.props.address.data;
     let value = '';
     let status = 'INCOMPLETE';
     if (address.length > 0) {
@@ -249,18 +254,9 @@ class ProfileScreen extends Component {
   }
 
   render() {
-    const {
-      profile,
-      loading_profile,
-      company_config,
-      uploadProfilePhoto,
-    } = this.props;
+    const { profile, company_config, uploadProfilePhoto } = this.props;
     const { container, mainContainer } = styles;
     const {
-      requirePersonal,
-      requireEmail,
-      requireMobile,
-      requireAddress,
       requireDocumentID,
       requireDocumentAddress,
       requireDocumentAdvID,
@@ -275,20 +271,20 @@ class ProfileScreen extends Component {
         />
         <HeaderProfile
           uploadProfilePhoto={uploadProfilePhoto}
-          photoLink={profile.profile}
+          photoLink={profile.data.profile}
           name={
-            profile.first_name
-              ? profile.first_name + ' ' + profile.last_name
-              : profile.username
+            profile.data.first_name
+              ? profile.data.first_name + ' ' + profile.data.last_name
+              : profile.data.username
           }
         />
         <View style={mainContainer}>
-          {loading_profile ? <Spinner /> : null}
+          {profile.loading ? <Spinner /> : null}
           <InputContainer>
-            {!requirePersonal ? null : this.renderBasicInfo()}
-            {!requireEmail ? null : this.renderEmailAddresses()}
-            {!requireMobile ? null : this.renderMobileNumbers()}
-            {!requireAddress ? null : this.renderAddresses()}
+            {this.renderBasicInfo()}
+            {this.renderEmailAddresses()}
+            {this.renderMobileNumbers()}
+            {this.renderAddresses()}
             {!requireDocumentID ? null : this.renderDocumentID()}
             {!requireDocumentAddress ? null : this.renderDocumentAddress()}
             {!requireDocumentAdvID ? null : this.renderDocumentAdvID()}
@@ -310,16 +306,13 @@ const styles = {
 };
 
 const mapStateToProps = state => {
-  const { profile, address, mobile, document, loading_profile } = state.user;
-  const { company_config } = state.auth;
   return {
-    profile,
-    address,
-    mobile,
+    profile: userProfileSelector(state),
+    address: userAddressesSelector(state),
+    mobile: userMobilesSelector(state),
     email: userEmailsSelector(state),
-    document,
-    loading_profile,
-    company_config,
+    document: state.user.document,
+    company_config: state.auth.company_config,
   };
 };
 

@@ -243,7 +243,11 @@ function* deleteItem(action) {
 
 function* resendVerification(action) {
   try {
-    const { type, data, company } = action.payload;
+    const { type, index } = action.payload;
+    const userState = yield select(userSelector);
+    const data = userState[type][index][type];
+    const company = userState.company.id;
+
     switch (type) {
       case 'mobile':
         yield call(Rehive.resendMobileVerification, data, company);

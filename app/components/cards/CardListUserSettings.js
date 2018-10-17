@@ -17,6 +17,7 @@ import {
   hideDetail,
   showModal,
   hideModal,
+  resendVerification,
 } from './../../redux/actions';
 import { CardList, View, CodeInput } from '../common';
 import { CardAddress } from './CardAddress';
@@ -120,7 +121,16 @@ function withRedux(CardList, selectData) {
       if (data.showDetail) {
         text = 'SAVE';
         onPress = () => this.props.updateItem(type);
-        disabled = false;
+      } else {
+        switch (type) {
+          case 'mobile':
+          case 'email':
+            text = item.primary ? 'Primary' : 'MAKE PRIMARY';
+            onPress = () => this.props.showModal(type, index, 'primary');
+            disabled = item.primary ? true : false;
+            break;
+          default:
+        }
       }
       return {
         text,
@@ -141,9 +151,9 @@ function withRedux(CardList, selectData) {
         switch (type) {
           case 'mobile':
           case 'email':
-            text = item.primary ? 'Primary' : 'MAKE PRIMARY';
-            onPress = () => this.props.showModal(type, index, 'primary');
-            disabled = item.primary ? true : false;
+            text = item.verified ? 'Verified' : 'VERIFY';
+            onPress = () => this.props.resendVerification(type, index);
+            disabled = item.verified ? true : false;
             break;
           default:
         }
@@ -224,7 +234,6 @@ function withRedux(CardList, selectData) {
 
     modalContentText() {
       const { data, type } = this.props;
-      console.log(data);
       let text = '';
       switch (data.modalType) {
         case 'verify':
@@ -244,6 +253,7 @@ function withRedux(CardList, selectData) {
             case 'crypto_address':
             default:
           }
+          break;
         case 'delete':
           text =
             'You are about to delete ' +
@@ -289,10 +299,20 @@ function withRedux(CardList, selectData) {
     }
 
     modalActionTwo() {
+      const { data, hideModal } = this.props;
+      let text = 'CANCEL';
+      let onPress = () => hideModal();
+      let disabled = false;
+      switch (data.modalType) {
+        case 'verify':
+          text = 'CLOSE';
+          break;
+        default:
+      }
       return {
-        text: 'CANCEL',
-        onPress: () => this.props.hideModal(),
-        disabled: false,
+        text,
+        onPress,
+        disabled,
       };
     }
 
@@ -385,4 +405,5 @@ export default connect(mapStateToProps, {
   hideModal,
   confirmDeleteItem,
   confirmPrimaryItem,
+  resendVerification,
 })(withRedux(CardList));

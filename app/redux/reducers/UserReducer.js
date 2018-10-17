@@ -419,3 +419,15 @@ export const userCryptoAddressesSelector = createSelector(
     };
   },
 );
+
+export const userProfileSelector = createSelector(userSelector, user => {
+  return {
+    data: user.showDetail ? [user.tempItem] : user.profile,
+    loading: user.profileLoading,
+    // index: user.cryptoAddressIndex,
+    showDetail: user.showDetail,
+    modalVisible: user.modalVisible,
+    modalType: user.modalType,
+    indexLoading: false,
+  };
+});

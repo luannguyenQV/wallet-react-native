@@ -65,17 +65,15 @@ export const confirmPrimaryItem = type => {
   };
 };
 
-
 export const RESEND_VERIFICATION_ASYNC = createAsyncTypes(
   'resend_verification',
 );
-export const resendVerification = (type, data, company) => {
+export const resendVerification = (type, index) => {
   return {
     type: RESEND_VERIFICATION_ASYNC.pending,
     payload: {
       type,
-      data,
-      company,
+      index,
     },
   };
 };
