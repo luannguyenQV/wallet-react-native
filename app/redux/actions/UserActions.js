@@ -41,28 +41,11 @@ export const editItem = (type, item) => {
     payload: { type, data: item },
   };
 };
-
-export const CONFIRM_PRIMARY_ASYNC = 'confirm_primary_async';
-export const confirmPrimaryItem = type => {
-  return {
-    type: CONFIRM_PRIMARY_ASYNC,
-    payload: type,
-  };
-};
-
 export const UPDATE_ASYNC = createAsyncTypes('update');
-export const updateItem = (type, data) => {
+export const updateItem = type => {
   return {
     type: UPDATE_ASYNC.pending,
-    payload: { type, data },
-  };
-};
-
-export const DELETE_ITEM = 'delete_item';
-export const deleteItem = (type, item) => {
-  return {
-    type: DELETE_ITEM,
-    payload: { type, data: item },
+    payload: type,
   };
 };
 
@@ -73,6 +56,15 @@ export const confirmDeleteItem = type => {
     payload: type,
   };
 };
+
+export const CONFIRM_PRIMARY_ASYNC = createAsyncTypes('confirm_primary');
+export const confirmPrimaryItem = type => {
+  return {
+    type: CONFIRM_PRIMARY_ASYNC,
+    payload: type,
+  };
+};
+
 
 export const RESEND_VERIFICATION_ASYNC = createAsyncTypes(
   'resend_verification',

@@ -19,6 +19,7 @@ import {
   CONFIRM_DELETE_ASYNC,
   UPLOAD_PROFILE_PHOTO_ASYNC,
   UPLOAD_DOCUMENT_ASYNC,
+  CONFIRM_PRIMARY_ASYNC,
 } from '../actions/UserActions';
 
 import NavigationService from '../../util/navigation';
@@ -129,13 +130,15 @@ function* refreshProfile() {
 }
 
 function* updateItem(action) {
-  // get data from store
-  // use type + index to get item
-  // temp stuff? update
   try {
-    const { data, type } = action.payload;
-    console.log(data, type);
-    let response = null;
+    const type = action.payload;
+    const { tempItem } = yield select(userSelector);
+
+    const data = {
+      ...tempItem,
+      primary:
+        action.type === CONFIRM_PRIMARY_ASYNC.pending ? true : tempItem.primary,
+    };
     switch (type) {
       case 'mobile':
         if (data.id) {
@@ -182,6 +185,12 @@ function* updateItem(action) {
       //   response = yield call(Rehive.getAllDocuments, data);
       //   break;
     }
+
+    if (data.id) {
+      Toast.show({ text: standardizeString(type) + ' updated' });
+    } else {
+      Toast.show({ text: standardizeString(type) + ' added' });
+    }
     yield put({ type: UPDATE_ASYNC.success });
     if (type === 'mobile') {
       yield put({
@@ -202,7 +211,6 @@ function* deleteItem(action) {
     const type = action.payload;
     const userState = yield select(userSelector);
     const id = userState[type][userState[type + 'Index']].id;
-    console.log(id);
 
     let response = null;
     switch (type) {
@@ -314,7 +322,7 @@ export const userSagas = all([
   takeEvery(REFRESH_PROFILE_ASYNC.pending, refreshProfile),
   takeEvery(UPDATE_ASYNC.pending, updateItem),
   takeEvery(CONFIRM_DELETE_ASYNC.pending, deleteItem),
-  // takeEvery(CONFIRM_PRIMARY_ASYNC.pending, primaryItem),
+  // takeEvery(CONFIRM_PRIMARY_ASYNC.pending, updateItem),
   takeEvery(RESEND_VERIFICATION_ASYNC.pending, resendVerification),
   takeEvery(VERIFY_ASYNC.pending, verifyItem),
   takeEvery(UPLOAD_PROFILE_PHOTO_ASYNC.pending, uploadProfilePhoto),

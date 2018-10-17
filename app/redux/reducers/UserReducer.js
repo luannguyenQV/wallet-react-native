@@ -372,7 +372,7 @@ export const userAddressesSelector = createSelector(userSelector, user => {
 
 export const userEmailsSelector = createSelector(userSelector, user => {
   return {
-    data: user.newItem ? [user.tempItem] : user.email,
+    data: user.showDetail ? [user.tempItem] : user.email,
     loading: user.emailLoading,
     index: user.emailIndex,
     showDetail: user.showDetail,
@@ -384,7 +384,7 @@ export const userEmailsSelector = createSelector(userSelector, user => {
 
 export const userMobilesSelector = createSelector(userSelector, user => {
   return {
-    data: user.newItem ? [user.tempItem] : user.mobile,
+    data: user.showDetail ? [user.tempItem] : user.mobile,
     loading: user.mobileLoading,
     index: user.mobileIndex,
     showDetail: user.showDetail,
@@ -396,7 +396,7 @@ export const userMobilesSelector = createSelector(userSelector, user => {
 
 export const userBankAccountsSelector = createSelector(userSelector, user => {
   return {
-    data: user.newItem ? [user.tempItem] : user.bankAccount,
+    data: user.showDetail ? [user.tempItem] : user.bankAccount,
     loading: user.bankAccountLoading,
     index: user.bankAccountIndex,
     showDetail: user.showDetail,
@@ -409,7 +409,7 @@ export const userCryptoAddressesSelector = createSelector(
   userSelector,
   user => {
     return {
-      data: user.newItem ? [user.tempItem] : user.cryptoAddress,
+      data: user.showDetail ? [user.tempItem] : user.cryptoAddress,
       loading: user.cryptoAddressLoading,
       index: user.cryptoAddressIndex,
       showDetail: user.showDetail,

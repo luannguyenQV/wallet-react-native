@@ -68,6 +68,7 @@ function withRedux(CardList, selectData) {
               item={item}
               detail={detail}
               updateInputField={this.props.updateInputField}
+              updateItem={this.props.updateItem}
             />
           );
         case 'mobile':
@@ -76,6 +77,7 @@ function withRedux(CardList, selectData) {
               item={item}
               detail={detail}
               updateInputField={this.props.updateInputField}
+              updateItem={this.props.updateItem}
             />
           );
         case 'email':
@@ -84,6 +86,7 @@ function withRedux(CardList, selectData) {
               item={item}
               detail={detail}
               updateInputField={this.props.updateInputField}
+              updateItem={this.props.updateItem}
             />
           );
         case 'bank_account':
@@ -92,6 +95,7 @@ function withRedux(CardList, selectData) {
               item={item}
               detail={detail}
               updateInputField={this.props.updateInputField}
+              updateItem={this.props.updateItem}
             />
           );
         case 'crypto_address':
@@ -100,6 +104,7 @@ function withRedux(CardList, selectData) {
               item={item}
               detail={detail}
               updateInputField={this.props.updateInputField}
+              updateItem={this.props.updateItem}
             />
           );
         default:
@@ -109,19 +114,19 @@ function withRedux(CardList, selectData) {
 
     actionOne(item, index) {
       const { data, type } = this.props;
-      switch (type) {
-        case 'address':
-        case 'mobile':
-        case 'email':
-        case 'bank_account':
-        case 'crypto_address':
-          return {
-            text: data.showDetail ? 'SAVE' : '',
-            onPress: index => console.log('SAVE ', index), //this.props.updateItem(type, index),
-            disabled: false,
-          };
-        default:
+      let text = '';
+      let onPress = () => {};
+      let disabled = false;
+      if (data.showDetail) {
+        text = 'SAVE';
+        onPress = () => this.props.updateItem(type);
+        disabled = false;
       }
+      return {
+        text,
+        onPress,
+        disabled,
+      };
     }
 
     actionTwo(item, index) {

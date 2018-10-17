@@ -71,7 +71,7 @@ class CardAddress extends Component {
             onChangeText={input =>
               updateInputField('address', 'postal_code', input)
             }
-            onSubmitEditing={() => updateItem('address', item)}
+            onSubmitEditing={() => updateItem('address')}
           />
         </View>
       );
