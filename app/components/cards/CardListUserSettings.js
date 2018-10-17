@@ -9,6 +9,7 @@ import {
   newItem,
   editItem,
   updateItem,
+  confirmDeleteItem,
   confirmPrimaryItem,
   deleteItem,
   updateInputField,
@@ -19,7 +20,6 @@ import {
 } from './../../redux/actions';
 import { CardList, View, CodeInput } from '../common';
 import { CardAddress } from './CardAddress';
-import { userAddressesSelector } from '../../redux/reducers/UserReducer';
 import { CardMobile } from './CardMobile';
 import { CardEmail } from './CardEmail';
 import { CardBankAccount } from './CardBankAccount';
@@ -129,20 +129,19 @@ function withRedux(CardList, selectData) {
       let text = '';
       let onPress = () => {};
       let disabled = false;
-      switch (type) {
-        case 'mobile':
-        case 'email':
-          text = item.primary ? 'Primary' : 'MAKE PRIMARY';
-          onPress = () => this.props.showModal(type, index, 'primary');
-          disabled = item.primary ? true : false;
-
-          break;
-        case 'address':
-        case 'bank_account':
-        case 'crypto_address':
-          text = data.showDetail ? 'CANCEL' : '';
-          onPress = () => this.props.hideDetail(type);
-        default:
+      if (data.showDetail) {
+        text = data.showDetail ? 'CANCEL' : '';
+        onPress = () => this.props.hideDetail(type);
+      } else {
+        switch (type) {
+          case 'mobile':
+          case 'email':
+            text = item.primary ? 'Primary' : 'MAKE PRIMARY';
+            onPress = () => this.props.showModal(type, index, 'primary');
+            disabled = item.primary ? true : false;
+            break;
+          default:
+        }
       }
       return {
         text,
@@ -251,18 +250,17 @@ function withRedux(CardList, selectData) {
           break;
         case 'primary':
           text =
-            'You are about to set ' +
-            data.data[data.index][type] +
-            ' as your primary ' +
+            'You are about to set your primary ' +
             type +
-            '';
+            ' to:\n' +
+            data.data[data.index][type];
           break;
       }
       return text;
     }
 
     modalActionOne() {
-      const { type, data } = this.props;
+      const { type, data, confirmDeleteItem, confirmPrimaryItem } = this.props;
       let text = '';
       let onPress = () => {};
       let disabled = false;
@@ -298,18 +296,20 @@ function withRedux(CardList, selectData) {
     //   onPressActionOne = () => setActiveCurrency(tempItem);
 
     iconFooter(item) {
-      const { type } = this.props;
-      switch (type) {
-        case 'mobile':
-        case 'email':
-          if (item.primary) {
-            return '';
-          }
-        case 'address':
-        case 'bank_account':
-        case 'crypto_address':
-        default:
-          return 'delete';
+      const { type, data } = this.props;
+      if (!data.showDetail) {
+        switch (type) {
+          case 'mobile':
+          case 'email':
+            if (item.primary) {
+              return '';
+            }
+          case 'address':
+          case 'bank_account':
+          case 'crypto_address':
+          default:
+            return 'delete';
+        }
       }
       return '';
     }
@@ -378,5 +378,6 @@ export default connect(mapStateToProps, {
   hideDetail,
   showModal,
   hideModal,
+  confirmDeleteItem,
   confirmPrimaryItem,
 })(withRedux(CardList));

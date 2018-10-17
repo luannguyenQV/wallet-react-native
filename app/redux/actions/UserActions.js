@@ -67,10 +67,10 @@ export const deleteItem = (type, item) => {
 };
 
 export const CONFIRM_DELETE_ASYNC = createAsyncTypes('confirm_delete');
-export const confirmDeleteItem = (type, item) => {
+export const confirmDeleteItem = type => {
   return {
     type: CONFIRM_DELETE_ASYNC.pending,
-    payload: { type, data: item },
+    payload: type,
   };
 };
 
@@ -90,7 +90,6 @@ export const resendVerification = (type, data, company) => {
 
 export const VERIFY_ASYNC = createAsyncTypes('verify');
 export const verifyItem = (type, otp) => {
-  console.log(type, otp);
   return {
     type: VERIFY_ASYNC.pending,
     payload: {
@@ -102,9 +101,6 @@ export const verifyItem = (type, otp) => {
 
 export const SHOW_MODAL = 'show_modal';
 export const showModal = (type, index, modalType) => {
-  console.log('type', type);
-  console.log('index', index);
-  console.log('modalType', modalType);
   return {
     type: SHOW_MODAL,
     payload: { type, index, modalType },
@@ -127,7 +123,6 @@ export const uploadProfilePhoto = image => {
     name: 'profile',
     type: 'image/jpg',
   };
-  console.log('uploadPP', file);
   return {
     type: UPLOAD_PROFILE_PHOTO_ASYNC.pending,
     payload: file,

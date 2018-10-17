@@ -324,7 +324,7 @@ export default (state = INITIAL_STATE, action) => {
         showDetail: true,
         newItem: true,
         editing: false,
-        mobileIndex: 0,
+        [action.payload.type + 'Index']: 0,
       };
     case EDIT_ITEM:
       return {
@@ -340,6 +340,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         showDetail: true,
+        tempItem: state[action.payload.type][action.payload.index],
         [action.payload.type + 'Index']: action.payload.index,
       };
     case HIDE_DETAIL:

@@ -113,6 +113,7 @@ class _CardList extends Component {
 
   render() {
     const { data, keyExtractor, onRefresh } = this.props;
+    console.log('data', data);
     return (
       <View color="grey2">
         <FlatList
@@ -123,7 +124,7 @@ class _CardList extends Component {
             />
           }
           keyboardShouldPersistTaps={'handled'}
-          data={data.showDetail ? [data.data[data.index]] : data.data}
+          data={data.data}
           renderItem={({ item, index }) => this.renderItem(item, index)}
           keyExtractor={item =>
             keyExtractor
