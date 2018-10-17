@@ -165,18 +165,21 @@ function withRedux(CardList, selectData) {
       };
     }
 
-    onPressCard(type, index) {
-      switch (type) {
-        case 'mobile':
-        case 'email':
-          break;
-        case 'address':
-        case 'bank_account':
-        case 'crypto_address':
-          this.props.showDetail(type, index);
-          break;
-        default:
-          return;
+    onPressCard(index) {
+      const { type, data } = this.props;
+      if (!data.showDetail) {
+        switch (type) {
+          case 'mobile':
+          case 'email':
+            break;
+          case 'address':
+          case 'bank_account':
+          case 'crypto_address':
+            this.props.showDetail(type, index);
+            break;
+          default:
+            return;
+        }
       }
     }
 
@@ -360,8 +363,8 @@ function withRedux(CardList, selectData) {
         <CardList
           data={data}
           onRefresh={() => this.props.fetchData(type)}
-          onPressContent={index => this.onPressCard(type, index)}
-          onPressHeader={index => this.onPressCard(type, index)}
+          onPressContent={index => this.onPressCard(index)}
+          onPressHeader={index => this.onPressCard(index)}
           actionOne={(item, index) => this.actionOne(item, index)}
           actionTwo={(item, index) => this.actionTwo(item, index)}
           modalVisible={data.modalVisible}

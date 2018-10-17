@@ -46,7 +46,7 @@ class CardBankAccount extends Component {
               updateInputField('bank_account', 'number', input)
             }
             reference={r => (this.number = r)}
-            onSubmitEditing={() => this.type.focus()}
+            onSubmitEditing={() => this.acc_type.focus()}
             returnKeyType="next"
             keyboardType={'numeric'}
           />
@@ -58,7 +58,7 @@ class CardBankAccount extends Component {
             onChangeText={input =>
               updateInputField('bank_account', 'type', input)
             }
-            reference={r => (this.type = r)}
+            reference={r => (this.acc_type = r)}
             onSubmitEditing={() => this.bank_name.focus()}
             returnKeyType="next"
           />

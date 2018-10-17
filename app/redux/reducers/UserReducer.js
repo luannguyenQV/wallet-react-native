@@ -95,15 +95,15 @@ const INITIAL_STATE = {
   addressDetail: false,
   addressIndex: 0,
 
-  bankAccount: null,
-  bankAccountLoading: false,
-  bankAccountDetail: false,
-  bankAccountIndex: 0,
+  bank_account: null,
+  bank_accountLoading: false,
+  bank_accountDetail: false,
+  bank_accountIndex: 0,
 
-  cryptoAddress: null,
-  cryptoAddressLoading: false,
-  cryptoAddressDetail: false,
-  cryptoAddressIndex: 0,
+  crypto_address: null,
+  crypto_addressLoading: false,
+  crypto_addressDetail: false,
+  crypto_addressIndex: 0,
 
   newItem: false,
 };
@@ -396,9 +396,9 @@ export const userMobilesSelector = createSelector(userSelector, user => {
 
 export const userBankAccountsSelector = createSelector(userSelector, user => {
   return {
-    data: user.showDetail ? [user.tempItem] : user.bankAccount,
-    loading: user.bankAccountLoading,
-    index: user.bankAccountIndex,
+    data: user.showDetail ? [user.tempItem] : user.bank_account,
+    loading: user.bank_accountLoading,
+    index: user.bank_accountIndex,
     showDetail: user.showDetail,
     modalVisible: user.modalVisible,
     modalType: user.modalType,
@@ -409,9 +409,9 @@ export const userCryptoAddressesSelector = createSelector(
   userSelector,
   user => {
     return {
-      data: user.showDetail ? [user.tempItem] : user.cryptoAddress,
-      loading: user.cryptoAddressLoading,
-      index: user.cryptoAddressIndex,
+      data: user.showDetail ? [user.tempItem] : user.crypto_address,
+      loading: user.crypto_addressLoading,
+      index: user.crypto_addressIndex,
       showDetail: user.showDetail,
       modalVisible: user.modalVisible,
       modalType: user.modalType,
@@ -422,9 +422,9 @@ export const userCryptoAddressesSelector = createSelector(
 
 export const userProfileSelector = createSelector(userSelector, user => {
   return {
-    data: user.showDetail ? [user.tempItem] : user.profile,
+    data: user.showDetail ? [user.tempItem] : [user.profile],
     loading: user.profileLoading,
-    // index: user.cryptoAddressIndex,
+    // index: user.crypto_addressIndex,
     showDetail: user.showDetail,
     modalVisible: user.modalVisible,
     modalType: user.modalType,
