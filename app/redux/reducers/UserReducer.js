@@ -143,15 +143,6 @@ export default (state = INITIAL_STATE, action) => {
         updateError: action.payload,
       };
 
-    case DELETE_ITEM:
-      return {
-        ...state,
-        tempItem: action.payload.data,
-        loading: false,
-        updateError: '',
-        modalType: 'delete',
-        modalVisible: true,
-      };
     case CONFIRM_DELETE_ASYNC.pending:
       return {
         ...state,
@@ -338,21 +329,11 @@ export default (state = INITIAL_STATE, action) => {
     case EDIT_ITEM:
       return {
         ...state,
-        tempItem: action.payload.data,
+        tempItem: state[action.payload.type][action.payload.index],
         showDetail: true,
         editing: true,
-        wallet: false,
         modalType: '',
         updateError: '',
-      };
-    case PRIMARY_ITEM:
-      return {
-        ...state,
-        tempItem: action.payload.data,
-        loading: false,
-        updateError: '',
-        modalType: 'primary',
-        modalVisible: true,
       };
 
     case SHOW_DETAIL:

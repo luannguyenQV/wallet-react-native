@@ -18,7 +18,7 @@ import SettingsMobileNumbers from '../screens/settings/mobileNumbersScreen';
 import SettingsBankAccounts from '../screens/settings/bankAccountsScreen';
 import SettingsCryptoAddresses from '../screens/settings/cryptoAddressesScreen';
 
-import SettingsGetVerified from '../screens/settings/getVerified/getVerifiedScreen';
+import Profile from '../screens/settings/getVerified/profileScreen';
 import Document from '../screens/settings/getVerified/documentScreen';
 
 // import SettingsNotifications from './../screens/settings/notifications/notificationsScreen';
@@ -45,7 +45,7 @@ const Stack = {
   SettingsPersonalDetails: SettingsPersonalDetails,
   SettingsMobileNumbers: SettingsMobileNumbers,
   SettingsEmailAddresses: SettingsEmailAddresses,
-  SettingsGetVerified: SettingsGetVerified,
+  Profile: Profile,
   SettingsAddresses: SettingsAddresses,
   SettingsBankAccounts: SettingsBankAccounts,
   SettingsCryptoAddresses: SettingsCryptoAddresses,

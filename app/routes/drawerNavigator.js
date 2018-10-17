@@ -7,7 +7,7 @@ import HomeScreen from './../screens/main/homeScreen';
 import WalletsScreen from '../screens/main/walletsScreen';
 import RewardsScreen from '../screens/main/rewardsScreen';
 
-import GetVerifiedScreen from './../screens/settings/getVerified/getVerifiedScreen';
+import GetVerifiedScreen from '../screens/settings/getVerified/profileScreen';
 import SettingsScreen from './../screens/settings/settingsScreen';
 import About from './../screens/main/aboutScreen';
 import LogoutScreen from './../screens/auth/logoutScreen';

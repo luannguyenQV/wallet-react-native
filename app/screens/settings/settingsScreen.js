@@ -24,98 +24,6 @@ class SettingsScreen extends Component {
     this.props.navigation.navigate(path, { name });
   };
 
-  renderBasicInfo() {
-    const { profile } = this.props;
-
-    let value =
-      (profile.first_name ? profile.first_name : '') +
-      (profile.last_name ? ' ' + profile.last_name : '');
-
-    return (
-      <SettingsOption
-        label="Basic info"
-        value={value}
-        gotoAddress="SettingsPersonalDetails"
-        onPress={this.goTo}
-      />
-    );
-  }
-
-  renderEmailAddresses() {
-    const { email } = this.props;
-
-    let value = 'Not yet provided';
-
-    if (email) {
-      for (let i = 0; i < email.length; i++) {
-        if (email[i].verified === true) {
-          value = email[i].email;
-        }
-        if (email[i].primary === true) {
-          value = email[i].email;
-          break;
-        }
-      }
-    }
-
-    return (
-      <SettingsOption
-        label="Email address"
-        value={value}
-        gotoAddress="SettingsEmailAddresses"
-        onPress={this.goTo}
-      />
-    );
-  }
-
-  renderMobileNumbers() {
-    const { mobile } = this.props;
-
-    let value = 'Not yet provided';
-
-    if (mobile) {
-      for (let i = 0; i < mobile.length; i++) {
-        if (mobile[i].verified) {
-          value = mobile[i].number;
-        }
-        if (mobile[i].primary) {
-          value = mobile[i].number;
-          break;
-        }
-      }
-    }
-
-    return (
-      <SettingsOption
-        label="Mobile number"
-        value={value}
-        gotoAddress="SettingsMobileNumbers"
-        onPress={this.goTo}
-      />
-    );
-  }
-
-  renderAddresses() {
-    const { address } = this.props;
-    let value = '';
-    if (address.length > 0) {
-      const tempAddress = address[0];
-      value = concatAddress(tempAddress);
-    }
-    if (!value) {
-      value = 'Not yet provided';
-    }
-
-    return (
-      <SettingsOption
-        label="Addresses"
-        value={value}
-        gotoAddress="SettingsAddresses"
-        onPress={this.goTo}
-      />
-    );
-  }
-
   renderDocuments() {
     return (
       <View>
@@ -242,12 +150,6 @@ class SettingsScreen extends Component {
       <View style={styles.container}>
         <Header navigation={this.props.navigation} drawer title="Settings" />
         <InputContainer>
-          <SettingsContainer label="Personal details">
-            {this.renderBasicInfo()}
-            {this.renderEmailAddresses()}
-            {this.renderMobileNumbers()}
-            {this.renderAddresses()}
-          </SettingsContainer>
           <SettingsContainer label="External accounts">
             {this.renderBankAccounts()}
             {/* {this.renderCards()} */}
@@ -259,12 +161,12 @@ class SettingsScreen extends Component {
           <SettingsContainer label="Security">
             {this.renderSecurity()}
           </SettingsContainer>
-          <Text>
-            {'Version: ' +
-              App.expo.version +
-              (App.expo.slug === 'rehive-wallet-staging' ? ' (staging)' : '')}
-          </Text>
         </InputContainer>
+        <Text>
+          {'Version: ' +
+            App.expo.version +
+            (App.expo.slug === 'rehive-wallet-staging' ? ' (staging)' : '')}
+        </Text>
       </View>
     );
   }

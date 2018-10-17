@@ -6,11 +6,11 @@ import { TabBarIcon } from './../components/common';
 import HomeScreen from './../screens/main/homeScreen';
 import WalletsScreen from '../screens/main/walletsScreen';
 import RewardsScreen from '../screens/main/rewardsScreen';
-import GetVerifiedScreen from './../screens/settings/getVerified/getVerifiedScreen';
+import ProfileScreen from '../screens/settings/getVerified/profileScreen';
 import SettingsScreen from './../screens/settings/settingsScreen';
 
 const Stack = {
-  GetVerified: GetVerifiedScreen,
+  Profile: ProfileScreen,
   Rewards: RewardsScreen,
   Home: HomeScreen,
   Wallets: WalletsScreen,

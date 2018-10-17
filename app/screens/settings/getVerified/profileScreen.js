@@ -1,21 +1,18 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { connect } from 'react-redux';
-import {
-  refreshGetVerified,
-  uploadProfilePhoto,
-} from './../../../redux/actions';
+import { refreshGetVerified, uploadProfilePhoto } from '../../../redux/actions';
 
-import Header from './../../../components/header';
-import GetVerifiedOption from './../../../components/getVerifiedOption';
+import Header from '../../../components/header';
+import GetVerifiedOption from '../../../components/getVerifiedOption';
 import HeaderProfile from '../../../components/HeaderProfile';
 
-import { Spinner, InputContainer } from './../../../components/common';
+import { Spinner, InputContainer } from '../../../components/common';
 import { userEmailsSelector } from '../../../redux/reducers/UserReducer';
 
-class GetVerifiedScreen extends Component {
+class ProfileScreen extends Component {
   static navigationOptions = {
-    title: 'Get verified',
+    title: 'Profile',
   };
 
   state = {
@@ -38,7 +35,7 @@ class GetVerifiedScreen extends Component {
 
     return (
       <GetVerifiedOption
-        label="Basic Info"
+        label="Personal details"
         value={value ? value : 'Not yet provided'}
         status={status}
         gotoAddress="SettingsPersonalDetails"
@@ -65,7 +62,7 @@ class GetVerifiedScreen extends Component {
 
     return (
       <GetVerifiedOption
-        label="Email address"
+        label="Email"
         value={value}
         status={status}
         gotoAddress="SettingsEmailAddresses"
@@ -92,7 +89,7 @@ class GetVerifiedScreen extends Component {
 
     return (
       <GetVerifiedOption
-        label="Mobile number"
+        label="Mobile"
         value={value}
         status={status}
         gotoAddress="SettingsMobileNumbers"
@@ -273,7 +270,7 @@ class GetVerifiedScreen extends Component {
         <Header
           navigation={this.props.navigation}
           drawer
-          title="Get verified"
+          title="Profile"
           noShadow
         />
         <HeaderProfile
@@ -329,4 +326,4 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps, {
   refreshGetVerified,
   uploadProfilePhoto,
-})(GetVerifiedScreen);
+})(ProfileScreen);
