@@ -125,6 +125,9 @@ function* refreshProfile() {
 }
 
 function* updateItem(action) {
+  // get data from store
+  // use type + index to get item
+  // temp stuff? update
   try {
     const { data, type } = action.payload;
     console.log(data, type);
@@ -302,6 +305,7 @@ export const userSagas = all([
   takeEvery(REFRESH_PROFILE_ASYNC.pending, refreshProfile),
   takeEvery(UPDATE_ASYNC.pending, updateItem),
   takeEvery(CONFIRM_DELETE_ASYNC.pending, deleteItem),
+  // takeEvery(CONFIRM_PRIMARY_ASYNC.pending, primaryItem),
   takeEvery(RESEND_VERIFICATION_ASYNC.pending, resendVerification),
   takeEvery(VERIFY_ASYNC.pending, verifyItem),
   takeEvery(UPLOAD_PROFILE_PHOTO_ASYNC.pending, uploadProfilePhoto),

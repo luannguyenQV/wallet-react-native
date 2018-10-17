@@ -13,7 +13,7 @@ class MobileNumbersScreen extends Component {
   };
 
   render() {
-    const { mobiles, tempItem, newItem, updateItem } = this.props;
+    const { mobiles, newItem, updateItem } = this.props;
     return (
       <View style={styles.container}>
         <Header
@@ -23,21 +23,11 @@ class MobileNumbersScreen extends Component {
           headerRightIcon={mobiles.showDetail ? 'done' : 'add'}
           headerRightOnPress={
             mobiles.showDetail
-              ? () => updateItem('mobile', tempItem)
+              ? () => updateItem('mobile')
               : () => newItem('mobile')
           }
         />
-        <CardListUserSettings
-          type="mobile"
-          data={mobiles}
-          identifier="number"
-          // renderItem={<Text>Hello World </Text>}
-          emptyListMessage="No mobile numbers added yet"
-          // canDelete
-          // canEdit
-          // canVerify
-          // canPrimary
-        />
+        <CardListUserSettings type="mobile" data={mobiles} />
       </View>
     );
   }

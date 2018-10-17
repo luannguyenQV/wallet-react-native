@@ -23,21 +23,11 @@ class CryptoAddressesScreen extends Component {
           headerRightIcon={cryptoAddresses.showDetail ? 'done' : 'add'}
           headerRightOnPress={
             cryptoAddresses.showDetail
-              ? () => updateItem('crypto_account', tempItem)
+              ? () => updateItem('crypto_account')
               : () => newItem('crypto_account')
           }
         />
-        <CardListUserSettings
-          type="crypto_account"
-          data={cryptoAddresses}
-          identifier="address"
-          // renderItem={<Text>Hello World </Text>}
-          emptyListMessage="No addresses added yet"
-          // canDelete
-          // canEdit
-          // canVerify
-          // canPrimary
-        />
+        <CardListUserSettings type="crypto_account" data={cryptoAddresses} />
       </View>
     );
   }

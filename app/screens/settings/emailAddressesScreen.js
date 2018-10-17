@@ -27,18 +27,7 @@ class EmailAddressesScreen extends Component {
               : () => newItem('email')
           }
         />
-        <CardListUserSettings
-          // onRefresh={() => console.log('refreshing')}
-          type="email"
-          data={emails}
-          identifier="email"
-          // renderItem={<Text>Hello World </Text>}
-          emptyListMessage="No email addresses added yet"
-          // canDelete
-          // canEdit
-          // canVerify
-          // canPrimary
-        />
+        <CardListUserSettings type="email" data={emails} />
       </View>
     );
   }

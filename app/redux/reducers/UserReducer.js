@@ -40,14 +40,6 @@ const EMPTY_BANK_ACCOUNT = {
   bic: '',
 };
 
-const EMPTY_PROFILE = {
-  first_name: '',
-  last_name: '',
-  id_number: '',
-  nationality: '',
-  profile: '',
-};
-
 const EMPTY_MOBILE = { number: '', primary: false };
 
 const EMPTY_EMAIL = { email: '', primary: false };
@@ -327,6 +319,16 @@ export default (state = INITIAL_STATE, action) => {
     case NEW_ITEM:
       return {
         ...state,
+        tempItem:
+          action.payload.type === 'email'
+            ? EMPTY_EMAIL
+            : action.payload.type === 'mobile'
+              ? EMPTY_MOBILE
+              : action.payload.type === 'bank_account'
+                ? EMPTY_BANK_ACCOUNT
+                : action.payload.type === 'address'
+                  ? EMPTY_ADDRESS
+                  : EMPTY_CRYPTO,
         updateError: '',
         showDetail: true,
         newItem: true,
@@ -376,7 +378,7 @@ export default (state = INITIAL_STATE, action) => {
 
 export const userAddressesSelector = createSelector(userSelector, user => {
   return {
-    data: user.newItem ? [EMPTY_ADDRESS] : user.address,
+    data: user.showDetail ? [user.tempItem] : user.address,
     loading: user.addressLoading,
     index: user.addressIndex,
     showDetail: user.showDetail,
@@ -388,7 +390,7 @@ export const userAddressesSelector = createSelector(userSelector, user => {
 
 export const userEmailsSelector = createSelector(userSelector, user => {
   return {
-    data: user.newItem ? [EMPTY_EMAIL] : user.email,
+    data: user.newItem ? [user.tempItem] : user.email,
     loading: user.emailLoading,
     index: user.emailIndex,
     showDetail: user.showDetail,
@@ -400,7 +402,7 @@ export const userEmailsSelector = createSelector(userSelector, user => {
 
 export const userMobilesSelector = createSelector(userSelector, user => {
   return {
-    data: user.newItem ? [EMPTY_MOBILE] : user.mobile,
+    data: user.newItem ? [user.tempItem] : user.mobile,
     loading: user.mobileLoading,
     index: user.mobileIndex,
     showDetail: user.showDetail,
@@ -412,7 +414,7 @@ export const userMobilesSelector = createSelector(userSelector, user => {
 
 export const userBankAccountsSelector = createSelector(userSelector, user => {
   return {
-    data: user.newItem ? [EMPTY_BANK_ACCOUNT] : user.bankAccount,
+    data: user.newItem ? [user.tempItem] : user.bankAccount,
     loading: user.bankAccountLoading,
     index: user.bankAccountIndex,
     showDetail: user.showDetail,
@@ -425,7 +427,7 @@ export const userCryptoAddressesSelector = createSelector(
   userSelector,
   user => {
     return {
-      data: user.newItem ? [EMPTY_CRYPTO] : user.cryptoAddress,
+      data: user.newItem ? [user.tempItem] : user.cryptoAddress,
       loading: user.cryptoAddressLoading,
       index: user.cryptoAddressIndex,
       showDetail: user.showDetail,

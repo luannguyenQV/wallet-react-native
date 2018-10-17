@@ -42,11 +42,11 @@ export const editItem = (type, item) => {
   };
 };
 
-export const PRIMARY_ITEM = 'primary_item';
-export const primaryItem = (type, item) => {
+export const CONFIRM_PRIMARY_ASYNC = 'confirm_primary_async';
+export const confirmPrimaryItem = type => {
   return {
-    type: PRIMARY_ITEM,
-    payload: { type, data: { ...item, primary: true } },
+    type: CONFIRM_PRIMARY_ASYNC,
+    payload: type,
   };
 };
 

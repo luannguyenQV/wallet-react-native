@@ -9,6 +9,7 @@ import {
   newItem,
   editItem,
   updateItem,
+  confirmPrimaryItem,
   deleteItem,
   updateInputField,
   showDetail,
@@ -23,7 +24,7 @@ import { CardMobile } from './CardMobile';
 import { CardEmail } from './CardEmail';
 import { CardBankAccount } from './CardBankAccount';
 import { CardCryptoAddress } from './CardCryptoAddress';
-import { concatAddress } from '../../util/general';
+import { concatAddress, standardizeString } from '../../util/general';
 
 // This function takes a component...
 function withRedux(CardList, selectData) {
@@ -268,11 +269,11 @@ function withRedux(CardList, selectData) {
       switch (data.modalType) {
         case 'delete':
           text = 'DELETE';
-          onPress = () => confirmDeleteItem(type, tempItem);
+          onPress = () => confirmDeleteItem(type);
           break;
         case 'primary':
           text = 'MAKE PRIMARY';
-          onPress = () => updateItem(type, tempItem);
+          onPress = () => confirmPrimaryItem(type);
           disabled = false;
           break;
         default:
@@ -313,13 +314,29 @@ function withRedux(CardList, selectData) {
       return '';
     }
 
+    emptyListMessage() {
+      const { type } = this.props;
+      switch (type) {
+        case 'mobile':
+          return 'No mobiles added yet';
+        case 'email':
+          return 'No emails added yet';
+        case 'address':
+          return 'No addresses added yet';
+        case 'bank_account':
+          return 'No bank accounts added yet';
+        case 'crypto_address':
+          return 'No crypto addresses added yet';
+        default:
+          return 'No ' + standardizeString(type) + ' added yet';
+      }
+    }
+
     render() {
-      console.log('props', this.props);
       const { data, type } = this.props;
       return (
         <CardList
           data={data}
-          {...this.props}
           onRefresh={() => this.props.fetchData(type)}
           onPressContent={index => this.onPressCard(type, index)}
           onPressHeader={index => this.onPressCard(type, index)}
@@ -337,6 +354,7 @@ function withRedux(CardList, selectData) {
           modalOnDismiss={this.modalActionTwo().onPress}
           modalLoading={false}
           modalError={''}
+          emptyListMessage={this.emptyListMessage()}
         />
       );
     }
@@ -360,4 +378,5 @@ export default connect(mapStateToProps, {
   hideDetail,
   showModal,
   hideModal,
+  confirmPrimaryItem,
 })(withRedux(CardList));

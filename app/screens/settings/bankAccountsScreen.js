@@ -16,7 +16,7 @@ class BankAccountsScreen extends Component {
   };
 
   render() {
-    const { bankAccounts, tempItem, newItem, updateItem } = this.props;
+    const { bankAccounts, newItem, updateItem } = this.props;
     return (
       <View style={styles.container}>
         <Header
@@ -26,23 +26,11 @@ class BankAccountsScreen extends Component {
           headerRightIcon={bankAccounts.showDetail ? 'done' : 'add'}
           headerRightOnPress={
             bankAccounts.showDetail
-              ? () => updateItem('bank_account', tempItem)
+              ? () => updateItem('bank_account')
               : () => newItem('bank_account')
           }
         />
-        <CardListUserSettings
-          // onRefresh={() => console.log('refreshing')}
-          type="bank_account"
-          data={bankAccounts}
-          // tempItem={tempItem}
-          identifier="bank_name"
-          // renderItem={<Text>Hello World </Text>}
-          emptyListMessage="No bank accounts added yet"
-          // canDelete
-          // canEdit
-          // canVerify
-          // canPrimary
-        />
+        <CardListUserSettings type="bank_account" data={bankAccounts} />
       </View>
     );
   }

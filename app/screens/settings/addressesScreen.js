@@ -27,19 +27,7 @@ class AddressesScreen extends Component {
               : () => newItem('address')
           }
         />
-        <CardListUserSettings
-          // onRefresh={() => console.log('refreshing')}
-          type="address"
-          data={addresses}
-          // tempItem={tempItem}
-          identifier="line_1"
-          // renderItem={<Text>Hello World </Text>}
-          emptyListMessage="No addresses added yet"
-          // canDelete
-          // canEdit
-          // canVerify
-          // canPrimary
-        />
+        <CardListUserSettings type="address" data={addresses} />
       </View>
     );
   }
