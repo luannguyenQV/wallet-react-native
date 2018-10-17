@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { connect } from 'react-redux';
-import { refreshGetVerified, uploadProfilePhoto } from '../../../redux/actions';
+import { refreshGetVerified, uploadProfilePhoto } from '../../redux/actions';
 
-import Header from '../../../components/header';
-import GetVerifiedOption from '../../../components/getVerifiedOption';
-import HeaderProfile from '../../../components/HeaderProfile';
+import Header from '../../components/header';
+import GetVerifiedOption from '../../components/getVerifiedOption';
+import HeaderProfile from '../../components/HeaderProfile';
 
-import { Spinner, InputContainer } from '../../../components/common';
-import { userEmailsSelector } from '../../../redux/reducers/UserReducer';
+import { Spinner, InputContainer } from '../../components/common';
+import { userEmailsSelector } from '../../redux/reducers/UserReducer';
 
 class ProfileScreen extends Component {
   static navigationOptions = {
@@ -38,7 +38,7 @@ class ProfileScreen extends Component {
         label="Personal details"
         value={value ? value : 'Not yet provided'}
         status={status}
-        gotoAddress="SettingsPersonalDetails"
+        gotoAddress="PersonalDetails"
         goTo={this.goTo}
       />
     );
@@ -65,7 +65,7 @@ class ProfileScreen extends Component {
         label="Email"
         value={value}
         status={status}
-        gotoAddress="SettingsEmailAddresses"
+        gotoAddress="EmailAddresses"
         goTo={this.goTo}
       />
     );
@@ -92,7 +92,7 @@ class ProfileScreen extends Component {
         label="Mobile"
         value={value}
         status={status}
-        gotoAddress="SettingsMobileNumbers"
+        gotoAddress="MobileNumbers"
         goTo={this.goTo}
       />
     );
@@ -133,7 +133,7 @@ class ProfileScreen extends Component {
         label="Address"
         value={value ? value : 'Not yet provided'}
         status={status}
-        gotoAddress="SettingsAddresses"
+        gotoAddress="Addresses"
         goTo={this.goTo}
       />
     );

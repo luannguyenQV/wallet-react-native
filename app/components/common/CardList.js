@@ -125,10 +125,10 @@ class _CardList extends Component {
           keyboardShouldPersistTaps={'handled'}
           data={data.showDetail ? [data.data[data.index]] : data.data}
           renderItem={({ item, index }) => this.renderItem(item, index)}
-          keyExtractor={
+          keyExtractor={item =>
             keyExtractor
-              ? keyExtractor
-              : item => (item.id ? item.id.toString() : null)
+              ? keyExtractor(item)
+              : item.id ? item.id.toString() : '0'
           }
           ListEmptyComponent={this.renderEmptyList()}
         />
