@@ -128,6 +128,7 @@ function withRedux(CardList) {
               detail={detail}
               updateInputField={this.props.updateInputField}
               updateItem={this.props.updateItem}
+              hideDetail={() => this.props.hideDetail('wallet')}
             />
           );
         case 'reward':
@@ -460,6 +461,7 @@ function withRedux(CardList) {
       const { data, type, navigation } = this.props;
       const isFocused = navigation.isFocused();
       if (isFocused) {
+        console.log('in CardListUserSettings:render');
         return (
           <CardList
             ref={c => (this[type + 'CardList'] = c)}

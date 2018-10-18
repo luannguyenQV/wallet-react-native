@@ -23,6 +23,7 @@ class CardWallet extends Component {
       // buttons[i] = { id: i++, type: 'withdraw' };
       buttons[i] = { id: i++, type: 'receive' };
       buttons[i] = { id: i++, type: 'send' };
+      console.log('in CardWallet:render()');
       return (
         <View>
           <WalletBalance

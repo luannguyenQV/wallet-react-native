@@ -6,3 +6,4 @@ export * from './CardEmail';
 export * from './CardPersonalDetails';
 export * from './CardWallet';
 export * from './CardReward';
+export * from './CardCampaign';

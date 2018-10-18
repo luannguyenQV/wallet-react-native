@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
 import { connect } from 'react-redux';
 import {
   fetchAccounts,
@@ -14,12 +13,7 @@ import { currenciesSelector } from './../../redux/reducers/AccountsReducer';
 
 import Header from './../../components/header';
 // import Wallet from './../../components/wallet';
-import { Output, MyView } from '../../components/common';
-import { standardizeString, performDivisibility } from './../../util/general';
-import WalletBalance from '../../components/WalletBalance';
-import WalletActionList from '../../components/WalletActionList';
-import TransactionList from './../../components/TransactionList';
-import CardList from './../../components/CardList';
+import { Output, View } from '../../components/common';
 import CardListUserSettings from '../../components/cards/CardListUserSettings';
 
 class WalletsScreen extends Component {
@@ -41,27 +35,11 @@ class WalletsScreen extends Component {
     }
   }
 
-  showModal = item => {
-    this.setState({ showModal: true, wallet: item });
-  };
-
-  hideModal = () => {
-    this.setState({ showModal: false, wallet: null });
-  };
-
-  send = item => {};
-
   render() {
-    const {
-      fetchAccounts,
-      loading_accounts,
-      currencies,
-      viewWallet,
-      showModal,
-      tempWallet,
-    } = this.props;
+    const { currencies } = this.props;
+    console.log('in wallletsScreen:render');
     return (
-      <MyView f>
+      <View>
         <Header navigation={this.props.navigation} drawer title="Wallets" />
         <CardListUserSettings
           type="wallet"
@@ -69,19 +47,9 @@ class WalletsScreen extends Component {
           navigation={this.props.navigation}
         />
         {/* <CardList
-          type="wallet"
-          navigation={this.props.navigation}
-          data={currencies.data}
-          tempItem={tempWallet}
-          loadingData={currencies.loading}
-          identifier="reference"
-          onRefresh={fetchAccounts}
+
           activeItem={item => showModal('wallet', item, 'active')}
-          // showDetail={showWallet}
-          renderContent={this.renderContent}
-          renderDetail={(item, navigation) =>
-            this.renderDetail(item, navigation)
-          }
+
           itemActive={item => (item ? item.active : false)}
           textTitleLeft={item =>
             item && item.currency ? item.currency.code : ''
@@ -92,7 +60,7 @@ class WalletsScreen extends Component {
           
           canActive
         /> */}
-      </MyView>
+      </View>
     );
   }
 }
