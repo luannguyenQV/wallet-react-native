@@ -27,7 +27,11 @@ class EmailAddressesScreen extends Component {
               : () => newItem('email')
           }
         />
-        <CardListUserSettings type="email" data={emails} />
+        <CardListUserSettings
+          type="email"
+          data={emails}
+          navigation={this.props.navigation}
+        />
       </View>
     );
   }

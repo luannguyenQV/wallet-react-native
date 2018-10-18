@@ -20,6 +20,7 @@ import WalletBalance from '../../components/WalletBalance';
 import WalletActionList from '../../components/WalletActionList';
 import TransactionList from './../../components/TransactionList';
 import CardList from './../../components/CardList';
+import CardListUserSettings from '../../components/cards/CardListUserSettings';
 
 class WalletsScreen extends Component {
   static navigationOptions = {
@@ -48,57 +49,7 @@ class WalletsScreen extends Component {
     this.setState({ showModal: false, wallet: null });
   };
 
-  send = item => {
-    this.props.navigation.navigate('Send', {
-      currency: item,
-    });
-  };
-
-  renderContent(item) {
-    const balance =
-      item.currency.symbol +
-      ' ' +
-      performDivisibility(item.balance, item.currency.divisibility).toFixed(
-        item.currency.divisibility,
-      );
-    const available =
-      item.currency.symbol +
-      ' ' +
-      performDivisibility(
-        item.available_balance,
-        item.currency.divisibility,
-      ).toFixed(item.currency.divisibility);
-
-    return (
-      <MyView p={0.5}>
-        <Output label="Balance" value={balance} />
-        <Output label="Available" value={available} />
-      </MyView>
-    );
-  }
-
-  renderDetail(item, navigation) {
-    // const { wallet } = this.state;
-    let i = 0;
-    let buttons = [];
-    if (this.props.company_bank_account.length > 0) {
-      buttons[i] = { id: i++, type: 'deposit' };
-    }
-    // buttons[i] = { id: i++, type: 'withdraw' };
-    buttons[i] = { id: i++, type: 'receive' };
-    buttons[i] = { id: i++, type: 'send' };
-    return (
-      <View>
-        <WalletBalance detail currency={item} onClose={this.props.hideWallet} />
-        <WalletActionList
-          buttons={buttons}
-          navigation={this.props.navigation}
-          currency={item}
-        />
-        <TransactionList currency={item} />
-      </View>
-    );
-  }
+  send = item => {};
 
   render() {
     const {
@@ -112,7 +63,12 @@ class WalletsScreen extends Component {
     return (
       <MyView f>
         <Header navigation={this.props.navigation} drawer title="Wallets" />
-        <CardList
+        <CardListUserSettings
+          type="wallet"
+          data={currencies}
+          navigation={this.props.navigation}
+        />
+        {/* <CardList
           type="wallet"
           navigation={this.props.navigation}
           data={currencies.data}
@@ -131,23 +87,11 @@ class WalletsScreen extends Component {
             item && item.currency ? item.currency.code : ''
           }
           // onPressTitleLeft={item => this.showModal(item)}
-          title={item => (item ? item.currency.description : '')}
-          subtitle={item => (item ? standardizeString(item.account_name) : '')}
-          onPressTitle={item => viewWallet(item)}
-          onPressContent={item => viewWallet(item)}
-          emptyListMessage="No currencies added yet"
           titleStyle="secondary"
           keyExtractor={item => item.account + item.currency.code}
-          textActionOne="SEND"
-          onPressActionOne={item =>
-            this.props.navigation.navigate('Send', { currency: item })
-          }
-          textActionTwo="RECEIVE"
-          onPressActionTwo={item =>
-            this.props.navigation.navigate('Receive', { currency: item })
-          }
+          
           canActive
-        />
+        /> */}
       </MyView>
     );
   }

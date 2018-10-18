@@ -30,7 +30,11 @@ class BankAccountsScreen extends Component {
               : () => newItem('bank_account')
           }
         />
-        <CardListUserSettings type="bank_account" data={bankAccounts} />
+        <CardListUserSettings
+          type="bank_account"
+          data={bankAccounts}
+          navigation={this.props.navigation}
+        />
       </View>
     );
   }

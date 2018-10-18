@@ -27,7 +27,11 @@ class AddressesScreen extends Component {
               : () => newItem('address')
           }
         />
-        <CardListUserSettings type="address" data={addresses} />
+        <CardListUserSettings
+          type="address"
+          data={addresses}
+          navigation={this.props.navigation}
+        />
       </View>
     );
   }

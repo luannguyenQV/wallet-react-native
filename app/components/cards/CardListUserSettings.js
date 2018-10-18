@@ -26,10 +26,13 @@ import { CardEmail } from './CardEmail';
 import { CardBankAccount } from './CardBankAccount';
 import { CardCryptoAddress } from './CardCryptoAddress';
 import { CardPersonalDetails } from './CardPersonalDetails';
+import { CardWallet } from './CardWallet';
+import { CardReward } from './CardReward';
 import { concatAddress, standardizeString } from '../../util/general';
+import { withNavigation } from 'react-navigation';
 
 // This function takes a component...
-function withRedux(CardList, selectData) {
+function withRedux(CardList) {
   // ...and returns another component...
   return class extends React.Component {
     // fetch data
@@ -118,6 +121,24 @@ function withRedux(CardList, selectData) {
               updateItem={this.props.updateItem}
             />
           );
+        case 'wallet':
+          return (
+            <CardWallet
+              item={item}
+              detail={detail}
+              updateInputField={this.props.updateInputField}
+              updateItem={this.props.updateItem}
+            />
+          );
+        case 'reward':
+          return (
+            <CardReward
+              item={item}
+              detail={detail}
+              updateInputField={this.props.updateInputField}
+              updateItem={this.props.updateItem}
+            />
+          );
         default:
           return <View />;
       }
@@ -129,8 +150,13 @@ function withRedux(CardList, selectData) {
       let onPress = () => {};
       let disabled = false;
       if (data.showDetail) {
-        text = 'SAVE';
-        onPress = () => this.props.updateItem(type);
+        switch (type) {
+          case 'wallet':
+            break;
+          default:
+            text = 'SAVE';
+            onPress = () => this.props.updateItem(type);
+        }
       } else {
         switch (type) {
           case 'mobile':
@@ -138,6 +164,13 @@ function withRedux(CardList, selectData) {
             text = item.primary ? 'Primary' : 'MAKE PRIMARY';
             onPress = () => this.props.showModal(type, index, 'primary');
             disabled = item.primary ? true : false;
+            break;
+          case 'wallet':
+            text = 'SEND';
+            onPress = () =>
+              this.props.navigation.navigate('Send', {
+                currency: item,
+              });
             break;
           default:
         }
@@ -155,8 +188,13 @@ function withRedux(CardList, selectData) {
       let onPress = () => {};
       let disabled = false;
       if (data.showDetail) {
-        text = data.showDetail ? 'CANCEL' : '';
-        onPress = () => this.props.hideDetail(type);
+        switch (type) {
+          case 'wallet':
+            break;
+          default:
+            text = data.showDetail ? 'CANCEL' : '';
+            onPress = () => this.props.hideDetail(type);
+        }
       } else {
         switch (type) {
           case 'mobile':
@@ -164,6 +202,13 @@ function withRedux(CardList, selectData) {
             text = item.verified ? 'Verified' : 'VERIFY';
             onPress = () => this.props.resendVerification(type, index);
             disabled = item.verified ? true : false;
+            break;
+          case 'wallet':
+            text = 'RECEIVE';
+            onPress = () =>
+              this.props.navigation.navigate('Receive', {
+                currency: item,
+              });
             break;
           default:
         }
@@ -182,14 +227,8 @@ function withRedux(CardList, selectData) {
           case 'mobile':
           case 'email':
             break;
-          case 'address':
-          case 'bank_account':
-          case 'crypto_address':
-          case 'profile':
-            this.props.showDetail(type, index);
-            break;
           default:
-            return;
+            this.props.showDetail(type, index);
         }
       }
     }
@@ -341,6 +380,9 @@ function withRedux(CardList, selectData) {
               return '';
             }
           case 'profile':
+          case 'wallet':
+
+          case 'reward':
             return '';
           case 'address':
           case 'bank_account':
@@ -365,36 +407,88 @@ function withRedux(CardList, selectData) {
           return 'No bank accounts added yet';
         case 'crypto_address':
           return 'No crypto addresses added yet';
+        case 'wallet':
+          return 'No currencies added yet';
         default:
           return 'No ' + standardizeString(type) + ' added yet';
       }
     }
 
+    title(item) {
+      const { type, data } = this.props;
+      if (!data.showDetail) {
+        switch (type) {
+          case 'wallet':
+            return item.currency.description;
+          case 'reward':
+            return '';
+          default:
+            return '';
+        }
+      }
+      return '';
+    }
+
+    subtitle(item) {
+      const { type, data } = this.props;
+      if (!data.showDetail) {
+        switch (type) {
+          case 'wallet':
+            return standardizeString(item.account_name);
+          case 'reward':
+            return '';
+          default:
+            return '';
+        }
+      }
+      return '';
+    }
+
+    keyExtractor(item) {
+      const { type, data } = this.props;
+      switch (type) {
+        case 'wallet':
+          return (item.account + item.currency.code).toString();
+        case 'reward':
+        // return '';
+        default:
+          return item.id ? item.id.toString() : '0';
+      }
+    }
+
     render() {
-      const { data, type } = this.props;
-      return (
-        <CardList
-          data={data}
-          onRefresh={() => this.props.fetchData(type)}
-          onPressContent={index => this.onPressCard(index)}
-          onPressHeader={index => this.onPressCard(index)}
-          actionOne={(item, index) => this.actionOne(item, index)}
-          actionTwo={(item, index) => this.actionTwo(item, index)}
-          modalVisible={data.modalVisible}
-          modalType={data.modalType}
-          modalContent={this.renderModalContent()}
-          renderItem={(item, index) => this.renderItem(item, index)}
-          iconFooter={item => this.iconFooter(item)}
-          onPressFooter={index => this.props.showModal(type, index, 'delete')}
-          modalContentText={this.modalContentText()}
-          modalActionOne={this.modalActionOne()}
-          modalActionTwo={this.modalActionTwo()}
-          modalOnDismiss={this.modalActionTwo().onPress}
-          modalLoading={false}
-          modalError={''}
-          emptyListMessage={this.emptyListMessage()}
-        />
-      );
+      const { data, type, navigation } = this.props;
+      const isFocused = navigation.isFocused();
+      if (isFocused) {
+        return (
+          <CardList
+            ref={c => (this[type + 'CardList'] = c)}
+            data={data}
+            type={type}
+            onRefresh={() => this.props.fetchData(type)}
+            onPressContent={index => this.onPressCard(index)}
+            onPressHeader={index => this.onPressCard(index)}
+            actionOne={(item, index) => this.actionOne(item, index)}
+            actionTwo={(item, index) => this.actionTwo(item, index)}
+            modalVisible={data.modalVisible}
+            modalType={data.modalType}
+            modalContent={this.renderModalContent()}
+            renderItem={(item, index) => this.renderItem(item, index)}
+            iconFooter={item => this.iconFooter(item)}
+            onPressFooter={index => this.props.showModal(type, index, 'delete')}
+            modalContentText={this.modalContentText()}
+            modalActionOne={this.modalActionOne()}
+            modalActionTwo={this.modalActionTwo()}
+            modalOnDismiss={this.modalActionTwo().onPress}
+            modalLoading={false}
+            modalError={''}
+            emptyListMessage={this.emptyListMessage()}
+            title={item => this.title(item)}
+            subtitle={item => this.subtitle(item)}
+            keyExtractor={item => this.keyExtractor(item)}
+          />
+        );
+      } else return <View />;
     }
   };
 }

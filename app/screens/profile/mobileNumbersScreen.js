@@ -27,7 +27,11 @@ class MobileNumbersScreen extends Component {
               : () => newItem('mobile')
           }
         />
-        <CardListUserSettings type="mobile" data={mobiles} />
+        <CardListUserSettings
+          type="mobile"
+          data={mobiles}
+          navigation={this.props.navigation}
+        />
       </View>
     );
   }

@@ -281,19 +281,6 @@ export default (state = INITIAL_STATE, action) => {
         updateError: '',
       };
 
-    case VIEW_WALLET:
-      return {
-        ...state,
-        showDetail: true,
-        wallet: true,
-      };
-    case HIDE_WALLET:
-      return {
-        ...state,
-        wallet: false,
-        showDetail: false,
-      };
-
     case CARD_DISMISS:
       return {
         ...state,

@@ -27,7 +27,11 @@ class CryptoAddressesScreen extends Component {
               : () => newItem('crypto_account')
           }
         />
-        <CardListUserSettings type="crypto_account" data={cryptoAddresses} />
+        <CardListUserSettings
+          type="crypto_account"
+          data={cryptoAddresses}
+          navigation={this.props.navigation}
+        />
       </View>
     );
   }

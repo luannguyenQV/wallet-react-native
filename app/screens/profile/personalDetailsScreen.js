@@ -108,7 +108,11 @@ class PersonalDetailsScreen extends Component {
           username={profile.username}
           uploadProfilePhoto={uploadProfilePhoto}
         />
-        <CardListUserSettings type="profile" data={profile} />
+        <CardListUserSettings
+          type="profile"
+          data={profile}
+          navigation={this.props.navigation}
+        />
       </View>
     );
   }

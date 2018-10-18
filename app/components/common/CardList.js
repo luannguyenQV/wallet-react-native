@@ -56,8 +56,8 @@ class _CardList extends Component {
         iconTitleLeft={iconTitleLeft}
         itemActive={itemActive}
         onPressTitleLeft={() => onPressTitleLeft(index)}
-        title={title}
-        subtitle={subtitle}
+        title={title(item)}
+        subtitle={subtitle(item)}
         colorTitleBackground="white"
         onPressTitle={() => onPressTitle(index)}
         onPressContent={() => onPressContent(index)}
@@ -112,11 +112,12 @@ class _CardList extends Component {
   }
 
   render() {
-    const { data, keyExtractor, onRefresh } = this.props;
-    console.log('data', data);
+    const { data, keyExtractor, onRefresh, type } = this.props;
+    console.log(data);
     return (
       <View color="grey2">
         <FlatList
+          ref={component => (this[type + 'FlatList'] = component)}
           refreshControl={
             <RefreshControl
               refreshing={false} //data.loading}

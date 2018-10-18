@@ -315,9 +315,9 @@ export default (state = INITIAL_STATE, action) => {
 };
 
 export const currenciesSelector = createSelector(
-  [accountsSelector, cryptoSelector],
-  (accountsState, cryptoState) => {
-    const { accounts, loading, error } = accountsState;
+  [accountsSelector, cryptoSelector, userSelector],
+  (accountsState, cryptoState, userState) => {
+    const { accounts } = accountsState;
 
     let activeCurrency = '';
 
@@ -363,9 +363,14 @@ export const currenciesSelector = createSelector(
 
     return {
       data: currencies,
+      index: userState.walletIndex,
       multipleAccounts: accounts.length > 1,
-      loading,
-      error,
+      loading: userState.walletLoading,
+      error: accountsState.error,
+      showDetail: userState.showDetail,
+      modalVisible: userState.modalVisible,
+      modalType: userState.modalType,
+      indexLoading: false,
     };
   },
 );
