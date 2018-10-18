@@ -328,11 +328,14 @@ export default (state = INITIAL_STATE, action) => {
 
     case CACHE_COMPANY:
       let companies = state.companies ? state.companies : [];
-      if (
-        companies.filter(company => company.id === action.payload.id).length ===
-        0
-      ) {
+      var foundIndex = companies.findIndex(
+        company => company.id === action.payload.id,
+      );
+      console.log(foundIndex);
+      if (foundIndex === -1) {
         companies.push(action.payload);
+      } else {
+        companies[foundIndex] = action.payload;
       }
       return {
         ...state,
@@ -348,4 +351,8 @@ export default (state = INITIAL_STATE, action) => {
 
 export const userEmailsSelector = createSelector(userSelector, user => {
   return user.email;
+});
+
+export const companiesSelector = createSelector(userSelector, user => {
+  return user.companies ? user.companies : [];
 });

@@ -164,6 +164,8 @@ export const setActiveCurrency = (reference, currencyCode) =>
 /* COMPANY */
 export const getCompany = () => r.company.get();
 
+export const getPublicCompanies = () => []; //r.public.companies.get();
+
 export const getCompanyCurrencies = () => r.company.currencies.get();
 
 export const getCompanyBankAccounts = () => r.company.bankAccounts.get();

@@ -58,6 +58,9 @@ function* fetchData(action) {
           payload: response,
         });
         break;
+      case 'public_companies':
+        response = yield call(Rehive.getPublicCompanies);
+        break;
       case 'company_bank_account':
         response = yield call(Rehive.getCompanyBankAccounts);
         break;
@@ -75,7 +78,7 @@ function* fetchData(action) {
     }
     // console.log(action.payload);
     let data = response;
-    if (data && data.length > 0 && action.payload === ('email' || 'mobile')) {
+    if (action.payload === ('email' || 'mobile') && data && data.length > 0) {
       const primaryIndex = data.findIndex(item => item.primary === true);
       const primaryItem = data[primaryIndex];
       data[primaryIndex] = data[0];

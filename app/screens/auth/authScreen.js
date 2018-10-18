@@ -46,6 +46,7 @@ import {
 import { standardizeString } from './../../util/general';
 import client from './../../config/client';
 import LocalAuthentication from '../../components/LocalAuthentication';
+import { companiesSelector } from '../../redux/reducers/UserReducer';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -638,14 +639,13 @@ const mapStateToProps = state => {
     terms,
     termsChecked,
   } = state.auth;
-  const { companies } = state.user;
   return {
     detailState,
     countryCode,
     mainState,
     tempCompany,
     company,
-    companies,
+    companies: companiesSelector(state),
     authError,
     email,
     emailError,

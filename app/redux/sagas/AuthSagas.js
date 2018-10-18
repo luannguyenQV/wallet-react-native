@@ -79,6 +79,7 @@ function* init() {
   let company_config;
   try {
     Rehive.initWithoutToken();
+    yield put({ type: FETCH_DATA_ASYNC.pending, payload: 'public_companies' });
     try {
       const company = client.company
         ? client.company
