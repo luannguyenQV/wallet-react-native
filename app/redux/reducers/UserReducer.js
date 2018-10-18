@@ -20,6 +20,7 @@ import {
   VIEW_WALLET,
   HIDE_WALLET,
   RESET_USER_ERRORS,
+  CACHE_COMPANY,
 } from '../actions';
 
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
@@ -323,6 +324,19 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         dismissedCards: [],
+      };
+
+    case CACHE_COMPANY:
+      let companies = state.companies ? state.companies : [];
+      if (
+        companies.filter(company => company.id === action.payload.id).length ===
+        0
+      ) {
+        companies.push(action.payload);
+      }
+      return {
+        ...state,
+        companies,
       };
 
     case LOGOUT_USER:

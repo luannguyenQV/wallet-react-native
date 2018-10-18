@@ -185,6 +185,7 @@ class _Input extends Component {
       colors,
       checked,
       toggleCheck,
+      icon,
     } = this.props;
 
     const {
@@ -312,7 +313,7 @@ class _Input extends Component {
                   onPress={() => onPressListItem(item)}
                   title={title ? item[title] : item}
                   subtitle={item[subtitle]}
-                  image={item.image ? item.image : null}
+                  image={icon ? item[icon] : item.image ? item.image : null}
                 />
               )}
               keyExtractor={item => (item.id ? item.id.toString() : item)}

@@ -404,6 +404,9 @@ class AuthScreen extends Component {
     let onSubmitEditing = () => nextAuthFormState('');
     let keyboardType = 'default';
     let autoCapitalize = 'none';
+    let title = '';
+    let subtitle = '';
+    let icon = '';
 
     switch (detailState) {
       case 'company':
@@ -411,12 +414,19 @@ class AuthScreen extends Component {
         value = tempCompany;
         onChangeText = value => authFieldChange({ prop: 'tempCompany', value });
         data = tempCompany
-          ? companies.filter(item => item.toLowerCase().includes(tempCompany))
+          ? companies.filter(
+              item =>
+                item.id.toLowerCase().includes(tempCompany.toLowerCase()) ||
+                item.name.toLowerCase().includes(tempCompany.toLowerCase()),
+            )
           : [];
         onPressListItem = item => {
-          authFieldChange({ prop: 'tempCompany', value: item });
+          authFieldChange({ prop: 'tempCompany', value: item.id });
           nextAuthFormState('');
         };
+        title = 'name';
+        subtitle = 'description';
+        icon = 'logo';
         break;
       case 'email':
         value = email;
@@ -478,6 +488,9 @@ class AuthScreen extends Component {
         onChangeText={onChangeText}
         returnKeyType={returnKeyType}
         onSubmitEditing={onSubmitEditing}
+        title={title}
+        subtitle={subtitle}
+        icon={icon}
       />
     );
   }
@@ -624,8 +637,8 @@ const mapStateToProps = state => {
     user,
     terms,
     termsChecked,
-    companies,
   } = state.auth;
+  const { companies } = state.user;
   return {
     detailState,
     countryCode,

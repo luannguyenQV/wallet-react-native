@@ -18,7 +18,8 @@ import {
   CONFIRM_DELETE_ASYNC,
   UPLOAD_PROFILE_PHOTO_ASYNC,
   UPLOAD_DOCUMENT_ASYNC,
-} from '../actions/UserActions';
+  CACHE_COMPANY,
+} from '../actions';
 
 import NavigationService from '../../util/navigation';
 
@@ -52,6 +53,10 @@ function* fetchData(action) {
         break;
       case 'company':
         response = yield call(Rehive.getCompany);
+        yield put({
+          type: CACHE_COMPANY,
+          payload: response,
+        });
         break;
       case 'company_bank_account':
         response = yield call(Rehive.getCompanyBankAccounts);
