@@ -5,31 +5,31 @@ import { newItem, updateItem } from './../../redux/actions';
 
 import Header from './../../components/header';
 import CardListUserSettings from './../../components/cards/CardListUserSettings';
-import { userCryptoAddressesSelector } from '../../redux/reducers/UserReducer';
+import { userMobilesSelector } from '../../redux/reducers/UserReducer';
 
-class CryptoAddressesScreen extends Component {
+class MobileNumbersScreen extends Component {
   static navigationOptions = {
-    title: 'Crypto accounts',
+    title: 'Mobile numbers',
   };
 
   render() {
-    const { cryptoAddresses, tempItem, newItem, updateItem } = this.props;
+    const { mobiles, newItem, updateItem } = this.props;
     return (
       <View style={styles.container}>
         <Header
           navigation={this.props.navigation}
           back
-          title="Crypto accounts"
-          headerRightIcon={cryptoAddresses.showDetail ? 'done' : 'add'}
+          title="Mobile numbers"
+          headerRightIcon={mobiles.showDetail ? 'done' : 'add'}
           headerRightOnPress={
-            cryptoAddresses.showDetail
-              ? () => updateItem('crypto_account')
-              : () => newItem('crypto_account')
+            mobiles.showDetail
+              ? () => updateItem('mobile')
+              : () => newItem('mobile')
           }
         />
         <CardListUserSettings
-          type="crypto_account"
-          data={cryptoAddresses}
+          type="mobile"
+          data={mobiles}
           navigation={this.props.navigation}
         />
       </View>
@@ -38,23 +38,22 @@ class CryptoAddressesScreen extends Component {
 }
 
 const styles = {
-  viewStyleContent: {
-    padding: 8,
-  },
   container: {
     flex: 1,
     flexDirection: 'column',
     backgroundColor: 'white',
   },
+  viewStyleContent: {
+    padding: 8,
+  },
 };
-
 const mapStateToProps = state => {
   return {
-    cryptoAddresses: userCryptoAddressesSelector(state),
+    mobiles: userMobilesSelector(state),
   };
 };
 
 export default connect(mapStateToProps, {
   newItem,
   updateItem,
-})(CryptoAddressesScreen);
+})(MobileNumbersScreen);

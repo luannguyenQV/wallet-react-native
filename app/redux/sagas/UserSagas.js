@@ -5,6 +5,7 @@ import {
   takeEvery,
   take,
   takeLatest,
+  select,
 } from 'redux-saga/effects';
 
 import { LOGOUT_USER_ASYNC } from '../actions/AuthActions';
@@ -19,12 +20,16 @@ import {
   UPLOAD_PROFILE_PHOTO_ASYNC,
   UPLOAD_DOCUMENT_ASYNC,
   CACHE_COMPANY,
+  CONFIRM_PRIMARY_ASYNC,
 } from '../actions';
 
 import NavigationService from '../../util/navigation';
 
 import * as Rehive from '../../util/rehive';
 import { validateMobile } from '../../util/validation';
+import { userSelector } from './selectors';
+import { Toast } from 'native-base';
+import { standardizeString } from '../../util/general';
 
 function* fetchData(action) {
   try {
@@ -43,7 +48,7 @@ function* fetchData(action) {
         response = yield call(Rehive.getBankAccounts);
         break;
       case 'profile':
-        response = yield call(Rehive.getProfile);
+        response = [yield call(Rehive.getProfile)];
         break;
       case 'address':
         response = yield call(Rehive.getAddresses);
@@ -134,9 +139,17 @@ function* refreshProfile() {
 
 function* updateItem(action) {
   try {
-    const { data, type } = action.payload;
-    // console.log(data);
-    let response = null;
+    const type = action.payload;
+    const userState = yield select(userSelector);
+    let data = {};
+    if (action.type === CONFIRM_PRIMARY_ASYNC.pending) {
+      data = {
+        id: userState[type][userState[type + 'Index']].id,
+        primary: true,
+      };
+    } else {
+      data = userState.tempItem;
+    }
     switch (type) {
       case 'mobile':
         if (data.id) {
@@ -147,7 +160,7 @@ function* updateItem(action) {
         break;
       case 'address':
         if (data.id) {
-          response = yield call(Rehive.updateAddress, data.id, data);
+          response = yield call(Rehive.updateAddress, data);
         } else {
           response = yield call(Rehive.createAddress, data);
         }
@@ -174,7 +187,11 @@ function* updateItem(action) {
         }
         break;
       case 'profile':
-        response = yield call(Rehive.updateProfile, data);
+        response = yield call(Rehive.updateProfile, {
+          first_name: data.first_name,
+          last_name: data.last_name,
+          id_number: data.id_number,
+        });
         break;
       case 'address':
         response = yield call(Rehive.updateAddress, data);
@@ -182,6 +199,12 @@ function* updateItem(action) {
       // case 'documents':
       //   response = yield call(Rehive.getAllDocuments, data);
       //   break;
+    }
+
+    if (data.id) {
+      Toast.show({ text: standardizeString(type) + ' updated' });
+    } else {
+      Toast.show({ text: standardizeString(type) + ' added' });
     }
     yield put({ type: UPDATE_ASYNC.success });
     if (type === 'mobile') {
@@ -200,25 +223,29 @@ function* updateItem(action) {
 
 function* deleteItem(action) {
   try {
-    const { data, type } = action.payload;
+    const type = action.payload;
+    const userState = yield select(userSelector);
+    const id = userState[type][userState[type + 'Index']].id;
+
     let response = null;
     switch (type) {
       case 'mobile':
-        response = yield call(Rehive.deleteMobile, data.id);
+        response = yield call(Rehive.deleteMobile, id);
         break;
       case 'address':
-        response = yield call(Rehive.deleteAddress, data.id);
+        response = yield call(Rehive.deleteAddress, id);
         break;
       case 'email':
-        response = yield call(Rehive.deleteEmail, data.id);
+        response = yield call(Rehive.deleteEmail, id);
         break;
       case 'crypto_account':
-        response = yield call(Rehive.deleteCryptoAccount, data.id);
+        response = yield call(Rehive.deleteCryptoAccount, id);
         break;
       case 'bank_account':
-        response = yield call(Rehive.deleteBankAccount, data.id);
+        response = yield call(Rehive.deleteBankAccount, id);
         break;
     }
+    Toast.show({ text: standardizeString(type) + ' deleted' });
     yield all([
       put({ type: CONFIRM_DELETE_ASYNC.success }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: type }),
@@ -231,13 +258,17 @@ function* deleteItem(action) {
 
 function* resendVerification(action) {
   try {
-    const { type, data, company } = action.payload;
+    const { type, index } = action.payload;
+    const userState = yield select(userSelector);
+    const data = userState[type][index];
+    const company = userState.company.id;
+
     switch (type) {
       case 'mobile':
-        yield call(Rehive.resendMobileVerification, data, company);
+        yield call(Rehive.resendMobileVerification, data.number, company);
         break;
       case 'email':
-        yield call(Rehive.resendEmailVerification, data, company);
+        yield call(Rehive.resendEmailVerification, data.email, company);
         break;
     }
     yield all([
@@ -256,13 +287,13 @@ function* resendVerification(action) {
 function* verifyItem(action) {
   try {
     const { type, otp } = action.payload;
-    let response = null;
-    // console.log()
     switch (type) {
       case 'mobile':
         response = yield call(Rehive.submitOTP, otp);
         break;
     }
+
+    Toast.show({ text: 'Mobile verified' });
     yield all([
       put({ type: VERIFY_ASYNC.success }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: type }),
@@ -310,6 +341,7 @@ export const userSagas = all([
   takeEvery(REFRESH_PROFILE_ASYNC.pending, refreshProfile),
   takeEvery(UPDATE_ASYNC.pending, updateItem),
   takeEvery(CONFIRM_DELETE_ASYNC.pending, deleteItem),
+  takeEvery(CONFIRM_PRIMARY_ASYNC.pending, updateItem),
   takeEvery(RESEND_VERIFICATION_ASYNC.pending, resendVerification),
   takeEvery(VERIFY_ASYNC.pending, verifyItem),
   takeEvery(UPLOAD_PROFILE_PHOTO_ASYNC.pending, uploadProfilePhoto),

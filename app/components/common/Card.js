@@ -129,7 +129,11 @@ const _Card = props => {
           {canEdit ? (
             <View
               style={{ position: 'absolute', right: 8, top: 8, padding: 8 }}>
-              <Icon name={'edit'} size={22} color={'lightgray'} />
+              <Icon
+                name={'edit'}
+                size={22}
+                color={colorIcon ? colorIcon : colors.grey2}
+              />
             </View>
           ) : null}
           {props.children}
@@ -148,7 +152,7 @@ const _Card = props => {
                   name={iconFooter}
                   size={22}
                   onPress={onPressFooter}
-                  color={colorIcon ? colorIcon : colors.grey1}
+                  color={colorIcon ? colorIcon : colors.grey2}
                 />
               ) : null}
               {textActionTwo ? (

@@ -1,7 +1,6 @@
 // import lib for making component
 import React from 'react';
 import { ScrollView, KeyboardAvoidingView } from 'react-native';
-import { View } from 'react-native';
 
 // make component
 const CardContainer = props => {

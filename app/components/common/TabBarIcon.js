@@ -18,7 +18,7 @@ class _TabBarIcon extends Component {
       case 'Rewards':
         iconName = `gift${focused ? '' : ''}`;
         break;
-      case 'GetVerified':
+      case 'Profile':
         iconName = `ios-person${focused ? '' : ''}`;
         break;
       case 'Settings':
@@ -43,19 +43,9 @@ class _TabBarIcon extends Component {
   renderText() {
     const { routeName, tintColor, colors } = this.props;
 
-    let iconLabel = '';
-    switch (routeName) {
-      case 'GetVerified':
-        iconLabel = 'Get verified';
-        break;
-      default:
-        iconLabel = routeName;
-        break;
-    }
-
     return (
       <Text style={[styles._textStyle, { color: colors[tintColor] }]}>
-        {iconLabel.toUpperCase()}
+        {routeName.toUpperCase()}
       </Text>
     );
   }
@@ -72,9 +62,6 @@ class _TabBarIcon extends Component {
 
 const styles = {
   _containerStyle: {
-    // flex: 1,
-    // minWidth: 64,
-    // padding: 8,
     justifyContent: 'center',
     alignItems: 'center',
   },

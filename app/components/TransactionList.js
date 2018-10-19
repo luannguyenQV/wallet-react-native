@@ -23,19 +23,21 @@ class TransactionList extends Component {
     transaction: null,
   };
   async componentDidMount() {
-    const { currency } = this.props;
+    const { currency, detailLoaded } = this.props;
     const accountRef = currency.account ? currency.account : '';
     const currencyCode =
       currency.currency && currency.currency.code ? currency.currency.code : '';
-    this.getTransactions(accountRef, currencyCode);
+    this.getTransactions(accountRef, currencyCode, !detailLoaded);
   }
 
-  async getTransactions(accountRef, currencyCode) {
+  async getTransactions(accountRef, currencyCode, force) {
     const filters = {
       account: accountRef,
       currency: currencyCode,
     };
-    this.props.fetchTransactions(filters);
+    if (force) {
+      this.props.fetchTransactions(filters);
+    }
   }
 
   renderTransactions() {
@@ -55,7 +57,8 @@ class TransactionList extends Component {
           <RefreshControl
             refreshing={loading}
             onRefresh={() => {
-              this.getTransactions(accountRef, currencyCode);
+              console.log('onRefresh');
+              this.getTransactions(accountRef, currencyCode, true);
             }}
           />
         }

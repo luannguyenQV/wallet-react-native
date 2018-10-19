@@ -10,6 +10,8 @@ import {
 } from '../actions/RewardsActions';
 
 const INITIAL_STATE = {};
+import { userSelector, rewardsSelector } from './../sagas/selectors';
+import { createSelector } from '../../../node_modules/reselect';
 
 export default (state = INITIAL_STATE, action) => {
   // console.log(action);
@@ -37,19 +39,6 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         rewardsLoading: false,
         rewardsError: action.payload,
-      };
-
-    case VIEW_REWARD:
-      return {
-        ...state,
-        tempReward: action.payload,
-        showRewardDetail: true,
-      };
-    case HIDE_REWARD:
-      return {
-        ...state,
-        tempReward: null,
-        showRewardDetail: false,
       };
 
     case CLAIM_REWARD_ASYNC.pending:
@@ -111,25 +100,43 @@ export default (state = INITIAL_STATE, action) => {
   }
 };
 
-export function getRewards(store) {
-  const rewards = {
-    data: store.rewards.rewards,
-    loading: store.rewards.rewardsLoading,
-    error: store.rewards.rewardsError,
-    tempItem: store.rewards.tempReward,
-    detail: store.rewards.showRewardDetail,
-  };
-  return rewards;
-}
+export const userRewardsSelector = createSelector(
+  [rewardsSelector, userSelector],
+  (rewardsState, userState) => {
+    const { rewards, rewardsLoading, rewardsError } = rewardsState;
+    const { rewardIndex, showDetail, type } = userState;
+    return {
+      data:
+        showDetail && type === 'reward'
+          ? [rewards[rewardIndex]]
+          : rewards ? rewards : [],
+      index: rewardIndex ? rewardIndex : 0,
+      loading: rewardsLoading ? rewardsLoading : false,
+      indexLoading: false,
+      error: rewardsError ? rewardsError : '',
+    };
+  },
+);
 
-export function getCampaigns(store) {
-  const campaigns = {
-    data: store.rewards.campaigns,
-    loading: store.rewards.campaignsLoading,
-    error: store.rewards.campaignsError,
-    tempItem: store.rewards.tempCampaign,
-    detail: store.rewards.showCampaignDetail,
-    loadingDetail: store.rewards.claimRewardLoading,
-  };
-  return campaigns;
-}
+export const userCampaignsSelector = createSelector(
+  [rewardsSelector, userSelector],
+  (rewardsState, userState) => {
+    const {
+      campaigns,
+      campaignsLoading,
+      campaignsError,
+      claimRewardLoading,
+    } = rewardsState;
+    const { campaignIndex, showDetail, type } = userState;
+    return {
+      data:
+        showDetail && type === 'campaign'
+          ? [campaigns[campaignIndex]]
+          : campaigns ? campaigns : [],
+      index: campaignIndex ? campaignIndex : 0,
+      loading: campaignsLoading ? campaignsLoading : false,
+      indexLoading: claimRewardLoading ? claimRewardLoading : false,
+      error: campaignsError ? campaignsError : '',
+    };
+  },
+);

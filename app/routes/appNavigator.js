@@ -13,24 +13,19 @@ import QRCodeScanner from '../screens/main/qrScannerScreen';
 import Deposit from '../screens/main/depositScreen';
 import Withdraw from '../screens/main/withdrawScreen';
 
-import SettingsEmailAddresses from '../screens/settings/emailAddressesScreen';
-import SettingsMobileNumbers from '../screens/settings/mobileNumbersScreen';
-import SettingsBankAccounts from '../screens/settings/bankAccountsScreen';
-import SettingsCryptoAddresses from '../screens/settings/cryptoAddressesScreen';
+import Profile from '../screens/profile/profileScreen';
+import EmailAddresses from '../screens/profile/emailAddressesScreen';
+import MobileNumbers from '../screens/profile/mobileNumbersScreen';
+import Addresses from '../screens/profile/addressesScreen';
+import PersonalDetails from '../screens/profile/personalDetailsScreen';
+import Document from '../screens/profile/documentScreen';
 
-import SettingsGetVerified from '../screens/settings/getVerified/getVerifiedScreen';
-import Document from '../screens/settings/getVerified/documentScreen';
-
-// import SettingsNotifications from './../screens/settings/notifications/notificationsScreen';
-// import EmailNotifications from './../screens/settings/notifications/emailNotificationsScreen';
-// import MobileNotifications from './../screens/settings/notifications/mobileNotificationsScreen';
+import BankAccounts from '../screens/settings/bankAccountsScreen';
+import CryptoAddresses from '../screens/settings/cryptoAddressesScreen';
 
 import ChangePassword from '../screens/settings/security/changePasswordScreen';
 import TwoFactor from '../screens/settings/security/twoFactorScreen';
 import Pin from '../screens/settings/security/pinScreen';
-
-import SettingsAddresses from '../screens/settings/addressesScreen';
-import SettingsPersonalDetails from '../screens/settings/personalDetailsScreen';
 
 const Stack = {
   Home: Home,
@@ -42,13 +37,13 @@ const Stack = {
   Deposit: Deposit,
   Withdraw: Withdraw,
   Document: Document,
-  SettingsPersonalDetails: SettingsPersonalDetails,
-  SettingsMobileNumbers: SettingsMobileNumbers,
-  SettingsEmailAddresses: SettingsEmailAddresses,
-  SettingsGetVerified: SettingsGetVerified,
-  SettingsAddresses: SettingsAddresses,
-  SettingsBankAccounts: SettingsBankAccounts,
-  SettingsCryptoAddresses: SettingsCryptoAddresses,
+  PersonalDetails: PersonalDetails,
+  MobileNumbers: MobileNumbers,
+  EmailAddresses: EmailAddresses,
+  Profile: Profile,
+  Addresses: Addresses,
+  SettingsBankAccounts: BankAccounts,
+  CryptoAddresses: CryptoAddresses,
   ChangePassword: ChangePassword,
   TwoFactor: TwoFactor,
   Pin: Pin,

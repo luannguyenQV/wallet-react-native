@@ -4,32 +4,32 @@ import { connect } from 'react-redux';
 import { newItem, updateItem } from './../../redux/actions';
 
 import Header from './../../components/header';
-import CardListUserSettings from './../../components/cards/CardListUserSettings';
-import { userCryptoAddressesSelector } from '../../redux/reducers/UserReducer';
+import { userAddressesSelector } from '../../redux/reducers/UserReducer';
+import CardListUserSettings from '../../components/cards/CardListUserSettings';
 
-class CryptoAddressesScreen extends Component {
+class AddressesScreen extends Component {
   static navigationOptions = {
-    title: 'Crypto accounts',
+    title: 'Addresses',
   };
 
   render() {
-    const { cryptoAddresses, tempItem, newItem, updateItem } = this.props;
+    const { addresses, newItem, updateItem } = this.props;
     return (
       <View style={styles.container}>
         <Header
           navigation={this.props.navigation}
           back
-          title="Crypto accounts"
-          headerRightIcon={cryptoAddresses.showDetail ? 'done' : 'add'}
+          title="Addresses"
+          headerRightIcon={addresses.showDetail ? 'done' : 'add'}
           headerRightOnPress={
-            cryptoAddresses.showDetail
-              ? () => updateItem('crypto_account')
-              : () => newItem('crypto_account')
+            addresses.showDetail
+              ? () => updateItem('address')
+              : () => newItem('address')
           }
         />
         <CardListUserSettings
-          type="crypto_account"
-          data={cryptoAddresses}
+          type="address"
+          data={addresses}
           navigation={this.props.navigation}
         />
       </View>
@@ -38,23 +38,23 @@ class CryptoAddressesScreen extends Component {
 }
 
 const styles = {
-  viewStyleContent: {
-    padding: 8,
-  },
   container: {
     flex: 1,
     flexDirection: 'column',
     backgroundColor: 'white',
   },
+  viewStyleContent: {
+    padding: 8,
+  },
 };
 
 const mapStateToProps = state => {
   return {
-    cryptoAddresses: userCryptoAddressesSelector(state),
+    addresses: userAddressesSelector(state),
   };
 };
 
 export default connect(mapStateToProps, {
   newItem,
   updateItem,
-})(CryptoAddressesScreen);
+})(AddressesScreen);

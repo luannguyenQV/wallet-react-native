@@ -15,12 +15,17 @@ import {
   UPLOAD_DOCUMENT_ASYNC,
   SHOW_MODAL,
   HIDE_MODAL,
-  SET_ACTIVE_CURRENCY_ASYNC,
+  CONFIRM_ACTIVE_CURRENCY_ASYNC,
   LOGOUT_USER,
   VIEW_WALLET,
   HIDE_WALLET,
   RESET_USER_ERRORS,
   CACHE_COMPANY,
+  SHOW_DETAIL,
+  HIDE_DETAIL,
+  FETCH_ACCOUNTS_ASYNC,
+  FETCH_TRANSACTIONS_ASYNC,
+  CLAIM_REWARD_ASYNC,
 } from '../actions';
 
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
@@ -37,14 +42,6 @@ const EMPTY_BANK_ACCOUNT = {
   swift: '',
   iban: '',
   bic: '',
-};
-
-const EMPTY_PROFILE = {
-  first_name: '',
-  last_name: '',
-  id_number: '',
-  nationality: '',
-  profile: '',
 };
 
 const EMPTY_MOBILE = { number: '', primary: false };
@@ -67,7 +64,6 @@ const INITIAL_STATE = {
   profile: {},
   email_address: [],
   mobile_number: [],
-  address: null,
   document: {},
   bank_account: [],
   crypto_account: [],
@@ -87,6 +83,33 @@ const INITIAL_STATE = {
   fetchError: '',
 
   dismissedCards: [],
+
+  email: null,
+  emailLoading: false,
+  emailDetail: false,
+  emailIndex: 0,
+
+  mobile: null,
+  mobileLoading: false,
+  mobileDetail: false,
+  mobileIndex: 0,
+
+  address: null,
+  addressLoading: false,
+  addressDetail: false,
+  addressIndex: 0,
+
+  bank_account: null,
+  bank_accountLoading: false,
+  bank_accountDetail: false,
+  bank_accountIndex: 0,
+
+  crypto_address: null,
+  crypto_addressLoading: false,
+  crypto_addressDetail: false,
+  crypto_addressIndex: 0,
+
+  newItem: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -102,35 +125,6 @@ export default (state = INITIAL_STATE, action) => {
           ...state.tempItem,
           [action.payload.prop]: action.payload.value,
         },
-      };
-
-    case NEW_ITEM:
-      return {
-        ...state,
-        // [action.payload.type]: {},
-        updateError: '',
-        tempItem: {},
-        showDetail: true,
-        editing: false,
-      };
-    case EDIT_ITEM:
-      return {
-        ...state,
-        tempItem: action.payload.data,
-        showDetail: true,
-        editing: true,
-        wallet: false,
-        modalType: '',
-        updateError: '',
-      };
-    case PRIMARY_ITEM:
-      return {
-        ...state,
-        tempItem: action.payload.data,
-        loading: false,
-        updateError: '',
-        modalType: 'primary',
-        modalVisible: true,
       };
     case UPDATE_ASYNC.pending:
       return {
@@ -153,15 +147,6 @@ export default (state = INITIAL_STATE, action) => {
         updateError: action.payload,
       };
 
-    case DELETE_ITEM:
-      return {
-        ...state,
-        tempItem: action.payload.data,
-        loading: false,
-        updateError: '',
-        modalType: 'delete',
-        modalVisible: true,
-      };
     case CONFIRM_DELETE_ASYNC.pending:
       return {
         ...state,
@@ -205,6 +190,7 @@ export default (state = INITIAL_STATE, action) => {
     case HIDE_MODAL:
       return {
         ...state,
+        showDetail: false,
         modalVisible: false,
         loading: false,
         tempItem: null,
@@ -214,20 +200,20 @@ export default (state = INITIAL_STATE, action) => {
     case SHOW_MODAL:
       return {
         ...state,
-        tempItem: action.payload.item,
         modalType: action.payload.modalType,
         modalVisible: true,
         loading: false,
         updateError: '',
+        [action.payload.type + 'Index']: action.payload.index,
       };
 
-    case SET_ACTIVE_CURRENCY_ASYNC.pending:
+    case CONFIRM_ACTIVE_CURRENCY_ASYNC.pending:
       return {
         ...state,
         loading: true,
       };
-    case SET_ACTIVE_CURRENCY_ASYNC.success:
-    case SET_ACTIVE_CURRENCY_ASYNC.fail:
+    case CONFIRM_ACTIVE_CURRENCY_ASYNC.success:
+    case CONFIRM_ACTIVE_CURRENCY_ASYNC.fail:
       return {
         ...state,
         loading: false,
@@ -300,19 +286,6 @@ export default (state = INITIAL_STATE, action) => {
         updateError: '',
       };
 
-    case VIEW_WALLET:
-      return {
-        ...state,
-        showDetail: true,
-        wallet: true,
-      };
-    case HIDE_WALLET:
-      return {
-        ...state,
-        wallet: false,
-        showDetail: false,
-      };
-
     case CARD_DISMISS:
       return {
         ...state,
@@ -324,6 +297,68 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         dismissedCards: [],
+      };
+
+    case NEW_ITEM:
+      return {
+        ...state,
+        tempItem:
+          action.payload.type === 'email'
+            ? EMPTY_EMAIL
+            : action.payload.type === 'mobile'
+              ? EMPTY_MOBILE
+              : action.payload.type === 'bank_account'
+                ? EMPTY_BANK_ACCOUNT
+                : action.payload.type === 'address'
+                  ? EMPTY_ADDRESS
+                  : EMPTY_CRYPTO,
+        updateError: '',
+        type: action.payload.type,
+        showDetail: true,
+        newItem: true,
+        editing: false,
+        [action.payload.type + 'Index']: 0,
+      };
+    case EDIT_ITEM:
+      return {
+        ...state,
+        tempItem: state[action.payload.type][action.payload.index],
+        showDetail: true,
+        editing: true,
+        modalType: '',
+        updateError: '',
+      };
+
+    case SHOW_DETAIL:
+      let tempItem = {};
+      if (state[action.payload.type] && state[action.payload.type].length > 0) {
+        tempItem = state[action.payload.type][action.payload.index];
+      }
+      return {
+        ...state,
+        showDetail: true,
+        type: action.payload.type,
+        tempItem,
+        [action.payload.type + 'Index']: action.payload.index,
+      };
+    case HIDE_DETAIL:
+      return {
+        ...state,
+        showDetail: false,
+        // [action.payload.type + 'Detail']: false,
+        newItem: false,
+        detailLoaded: false,
+      };
+    case FETCH_TRANSACTIONS_ASYNC.pending:
+      return {
+        ...state,
+        detailLoaded: true,
+      };
+
+    case CLAIM_REWARD_ASYNC.pending:
+      return {
+        ...state,
+        campaignIndex: action.payload,
       };
 
     case CACHE_COMPANY:
@@ -349,8 +384,77 @@ export default (state = INITIAL_STATE, action) => {
   }
 };
 
+export const userAddressesSelector = createSelector(userSelector, user => {
+  return {
+    data:
+      user.showDetail && user.type === 'address'
+        ? [user.tempItem]
+        : user.address,
+    loading: user.addressLoading ? user.addressLoading : false,
+    index: user.addressIndex ? user.addressIndex : 0,
+  };
+});
+
 export const userEmailsSelector = createSelector(userSelector, user => {
-  return user.email;
+  return {
+    data:
+      user.showDetail && user.type === 'email' ? [user.tempItem] : user.email,
+    loading: user.emailLoading ? user.emailLoading : false,
+    index: user.emailIndex ? user.emailIndex : 0,
+  };
+});
+
+export const userMobilesSelector = createSelector(userSelector, user => {
+  return {
+    data:
+      user.showDetail && user.type === 'mobile' ? [user.tempItem] : user.mobile,
+    loading: user.mobileLoading ? user.mobileLoading : false,
+    index: user.mobileIndex ? user.mobileIndex : 0,
+  };
+});
+
+export const userBankAccountsSelector = createSelector(userSelector, user => {
+  return {
+    data:
+      user.showDetail && user.type === 'bank_account'
+        ? [user.tempItem]
+        : user.bank_account,
+    loading: user.bank_accountLoading ? user.bank_accountLoading : false,
+    index: user.bank_accountIndex ? user.bank_accountIndex : 0,
+  };
+});
+export const userCryptoAddressesSelector = createSelector(
+  userSelector,
+  user => {
+    return {
+      data:
+        user.showDetail && user.type === 'crypto_address'
+          ? [user.tempItem]
+          : user.crypto_address,
+      loading: user.crypto_addressLoading ? user.crypto_addressLoading : false,
+      index: user.crypto_addressIndex ? user.crypto_addressIndex : 0,
+    };
+  },
+);
+
+export const userProfileSelector = createSelector(userSelector, user => {
+  return {
+    data:
+      user.showDetail && user.type === 'profile'
+        ? [user.tempItem]
+        : user.profile,
+    loading: user.profileLoading ? user.profileLoading : false,
+  };
+});
+
+export const cardListOptionsSelector = createSelector(userSelector, user => {
+  return {
+    showDetail: user.showDetail ? user.showDetail : false,
+    modalVisible: user.modalVisible ? user.modalVisible : false,
+    modalType: user.modalType ? user.modalType : '',
+    detailLoaded: user.detailLoaded ? user.detailLoaded : false,
+    noScroll: user.type === 'wallet' && user.showDetail,
+  };
 });
 
 export const companiesSelector = createSelector(userSelector, user => {

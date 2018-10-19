@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { View, FlatList, Image } from 'react-native';
 import { connect } from 'react-redux';
-import { uploadDocument, resetUserErrors } from './../../../redux/actions';
-import Header from './../../../components/header';
+import { uploadDocument, resetUserErrors } from '../../redux/actions';
+import Header from '../../components/header';
 
-import { ImageUpload, Button, Spinner, Text } from '../../../components/common';
-import document_categories from './../../../config/document_types.json';
+import { ImageUpload, Button, Spinner, Text } from '../../components/common';
+import document_categories from '../../config/document_types.json';
 
 class DocumentScreen extends Component {
   static navigationOptions = {

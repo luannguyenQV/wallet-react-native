@@ -280,11 +280,7 @@ export const callApi = (method, route, data) => {
   return Promise.resolve(
     fetch(route, config)
       .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          return response;
-        }
+        return response.json();
       })
       .catch(err => err),
   );

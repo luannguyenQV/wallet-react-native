@@ -311,15 +311,32 @@ export default (state = INITIAL_STATE, action) => {
 };
 
 export const currenciesSelector = createSelector(
-  [accountsSelector, cryptoSelector],
-  (accountsState, cryptoState) => {
-    const { accounts, loading, error } = accountsState;
+  [accountsSelector, cryptoSelector, userSelector],
+  (accountsState, cryptoState, userState) => {
+    const { accounts } = accountsState;
 
     let activeCurrency = '';
     let primaryAccount = '';
+    let currencyCode = '';
 
     let currencies = [];
     let tempCurrencies = [];
+    // if (userState.showDetail) {
+    //   let currency = serState.walletIndex;
+    //   currency.account = accounts[userState.walletIndex].reference;
+    //   currency.account_name = accounts[serState.walletIndex].name;
+    //   currencyCode = currency.currency.code;
+    //   if (cryptoState.stellar.currencies.indexOf(currencyCode) !== -1) {
+    //     currency.crypto = 'stellar';
+    //   } else if (cryptoState.bitcoin.currencies.indexOf(currencyCode) !== -1) {
+    //     currency.crypto = 'bitcoin';
+    //   } else if (cryptoState.ethereum.currencies.indexOf(currencyCode) !== -1) {
+    //     currency.crypto = 'ethereum';
+    //   } else {
+    //     currency.crypto = '';
+    //   }
+    //   currencies = [currency];
+    // } else {
     for (i = 0; i < accounts.length; i++) {
       if (!primaryAccount && accounts[i].primary) {
         primaryAccount = accounts[i].reference;
@@ -327,7 +344,7 @@ export const currenciesSelector = createSelector(
       tempCurrencies = accounts[i].currencies.map(currency => {
         currency.account = accounts[i].reference;
         currency.account_name = accounts[i].name;
-        const currencyCode = currency.currency.code;
+        currencyCode = currency.currency.code;
         if (cryptoState.stellar.currencies.indexOf(currencyCode) !== -1) {
           currency.crypto = 'stellar';
         } else if (
@@ -350,6 +367,7 @@ export const currenciesSelector = createSelector(
         return currency;
       });
       currencies = currencies.concat(tempCurrencies);
+      // }
     }
     const activeIndex = currencies.findIndex(
       item =>
@@ -362,12 +380,20 @@ export const currenciesSelector = createSelector(
       currencies[activeIndex] = currencies[0];
       currencies[0] = activeItem;
     }
-
     return {
-      data: currencies,
+      data:
+        userState.showDetail && userState.type === 'wallet'
+          ? [currencies[userState.walletIndex]]
+          : currencies,
+      index: userState.walletIndex,
       multipleAccounts: accounts.length > 1,
-      loading,
-      error,
+      loading: userState.walletLoading ? userState.walletLoading : false,
+      error: accountsState.error,
+      showDetail: userState.showDetail,
+      modalVisible: userState.modalVisible,
+      modalType: userState.modalType,
+      indexLoading: false,
+      detailLoaded: userState.detailLoaded,
     };
   },
 );

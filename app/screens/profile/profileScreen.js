@@ -1,21 +1,23 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { connect } from 'react-redux';
+import { refreshGetVerified, uploadProfilePhoto } from '../../redux/actions';
+
+import Header from '../../components/header';
+import GetVerifiedOption from '../../components/getVerifiedOption';
+import HeaderProfile from '../../components/HeaderProfile';
+
+import { Spinner, InputContainer } from '../../components/common';
 import {
-  refreshGetVerified,
-  uploadProfilePhoto,
-} from './../../../redux/actions';
+  userEmailsSelector,
+  userMobilesSelector,
+  userAddressesSelector,
+  userProfileSelector,
+} from '../../redux/reducers/UserReducer';
 
-import Header from './../../../components/header';
-import GetVerifiedOption from './../../../components/getVerifiedOption';
-import HeaderProfile from '../../../components/HeaderProfile';
-
-import { Spinner, InputContainer } from './../../../components/common';
-import { userEmailsSelector } from '../../../redux/reducers/UserReducer';
-
-class GetVerifiedScreen extends Component {
+class ProfileScreen extends Component {
   static navigationOptions = {
-    title: 'Get verified',
+    title: 'Profile',
   };
 
   state = {
@@ -31,24 +33,24 @@ class GetVerifiedScreen extends Component {
   };
 
   renderBasicInfo() {
-    const { profile } = this.props;
+    const profile = this.props.profile.data[0];
 
     let value = profile.first_name + ' ' + profile.last_name;
     let status = profile.status ? profile.status.toUpperCase() : 'INCOMPLETE';
 
     return (
       <GetVerifiedOption
-        label="Basic Info"
+        label="Personal details"
         value={value ? value : 'Not yet provided'}
         status={status}
-        gotoAddress="SettingsPersonalDetails"
+        gotoAddress="PersonalDetails"
         goTo={this.goTo}
       />
     );
   }
 
   renderEmailAddresses() {
-    const { email } = this.props;
+    const email = this.props.email.data;
 
     let value = 'Not yet provided';
     let status = 'INCOMPLETE';
@@ -65,17 +67,17 @@ class GetVerifiedScreen extends Component {
 
     return (
       <GetVerifiedOption
-        label="Email address"
+        label="Email"
         value={value}
         status={status}
-        gotoAddress="SettingsEmailAddresses"
+        gotoAddress="EmailAddresses"
         goTo={this.goTo}
       />
     );
   }
 
   renderMobileNumbers() {
-    const { mobile } = this.props;
+    const mobile = this.props.mobile.data;
 
     let value = 'Not yet provided';
     let status = 'INCOMPLETE';
@@ -92,17 +94,17 @@ class GetVerifiedScreen extends Component {
 
     return (
       <GetVerifiedOption
-        label="Mobile number"
+        label="Mobile"
         value={value}
         status={status}
-        gotoAddress="SettingsMobileNumbers"
+        gotoAddress="MobileNumbers"
         goTo={this.goTo}
       />
     );
   }
 
   renderAddresses() {
-    const { address } = this.props;
+    const address = this.props.address.data;
     let value = '';
     let status = 'INCOMPLETE';
     if (address.length > 0) {
@@ -136,7 +138,7 @@ class GetVerifiedScreen extends Component {
         label="Address"
         value={value ? value : 'Not yet provided'}
         status={status}
-        gotoAddress="SettingsAddresses"
+        gotoAddress="Addresses"
         goTo={this.goTo}
       />
     );
@@ -252,18 +254,9 @@ class GetVerifiedScreen extends Component {
   }
 
   render() {
-    const {
-      profile,
-      loading_profile,
-      company_config,
-      uploadProfilePhoto,
-    } = this.props;
+    const { profile, company_config, uploadProfilePhoto } = this.props;
     const { container, mainContainer } = styles;
     const {
-      requirePersonal,
-      requireEmail,
-      requireMobile,
-      requireAddress,
       requireDocumentID,
       requireDocumentAddress,
       requireDocumentAdvID,
@@ -273,30 +266,32 @@ class GetVerifiedScreen extends Component {
         <Header
           navigation={this.props.navigation}
           drawer
-          title="Get verified"
+          title="Profile"
           noShadow
         />
-        <HeaderProfile
-          uploadProfilePhoto={uploadProfilePhoto}
-          photoLink={profile.profile}
-          name={
-            profile.first_name
-              ? profile.first_name + ' ' + profile.last_name
-              : profile.username
-          }
-        />
+        {/* {this.props.navigation.isFocused() ? ( */}
         <View style={mainContainer}>
-          {loading_profile ? <Spinner /> : null}
+          <HeaderProfile
+            uploadProfilePhoto={uploadProfilePhoto}
+            photoLink={profile.data.profile}
+            name={
+              profile.data.first_name
+                ? profile.data.first_name + ' ' + profile.data.last_name
+                : profile.data.username
+            }
+          />
+          {profile.loading ? <Spinner /> : null}
           <InputContainer>
-            {!requirePersonal ? null : this.renderBasicInfo()}
-            {!requireEmail ? null : this.renderEmailAddresses()}
-            {!requireMobile ? null : this.renderMobileNumbers()}
-            {!requireAddress ? null : this.renderAddresses()}
+            {this.renderBasicInfo()}
+            {this.renderEmailAddresses()}
+            {this.renderMobileNumbers()}
+            {this.renderAddresses()}
             {!requireDocumentID ? null : this.renderDocumentID()}
             {!requireDocumentAddress ? null : this.renderDocumentAddress()}
             {!requireDocumentAdvID ? null : this.renderDocumentAdvID()}
           </InputContainer>
         </View>
+        {/* ) : null} */}
       </View>
     );
   }
@@ -313,20 +308,17 @@ const styles = {
 };
 
 const mapStateToProps = state => {
-  const { profile, address, mobile, document, loading_profile } = state.user;
-  const { company_config } = state.auth;
   return {
-    profile,
-    address,
-    mobile,
+    profile: userProfileSelector(state),
+    address: userAddressesSelector(state),
+    mobile: userMobilesSelector(state),
     email: userEmailsSelector(state),
-    document,
-    loading_profile,
-    company_config,
+    document: state.user.document,
+    company_config: state.auth.company_config,
   };
 };
 
 export default connect(mapStateToProps, {
   refreshGetVerified,
   uploadProfilePhoto,
-})(GetVerifiedScreen);
+})(ProfileScreen);

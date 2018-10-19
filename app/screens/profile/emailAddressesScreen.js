@@ -5,31 +5,31 @@ import { newItem, updateItem } from './../../redux/actions';
 
 import Header from './../../components/header';
 import CardListUserSettings from './../../components/cards/CardListUserSettings';
-import { userCryptoAddressesSelector } from '../../redux/reducers/UserReducer';
+import { userEmailsSelector } from '../../redux/reducers/UserReducer';
 
-class CryptoAddressesScreen extends Component {
+class EmailAddressesScreen extends Component {
   static navigationOptions = {
-    title: 'Crypto accounts',
+    title: 'Email addresses',
   };
 
   render() {
-    const { cryptoAddresses, tempItem, newItem, updateItem } = this.props;
+    const { emails, newItem, updateItem } = this.props;
     return (
       <View style={styles.container}>
         <Header
           navigation={this.props.navigation}
           back
-          title="Crypto accounts"
-          headerRightIcon={cryptoAddresses.showDetail ? 'done' : 'add'}
+          title="Email addresses"
+          headerRightIcon={emails.showDetail ? 'done' : 'add'}
           headerRightOnPress={
-            cryptoAddresses.showDetail
-              ? () => updateItem('crypto_account')
-              : () => newItem('crypto_account')
+            emails.showDetail
+              ? () => updateItem('email')
+              : () => newItem('email')
           }
         />
         <CardListUserSettings
-          type="crypto_account"
-          data={cryptoAddresses}
+          type="email"
+          data={emails}
           navigation={this.props.navigation}
         />
       </View>
@@ -50,11 +50,11 @@ const styles = {
 
 const mapStateToProps = state => {
   return {
-    cryptoAddresses: userCryptoAddressesSelector(state),
+    emails: userEmailsSelector(state),
   };
 };
 
 export default connect(mapStateToProps, {
   newItem,
   updateItem,
-})(CryptoAddressesScreen);
+})(EmailAddressesScreen);
