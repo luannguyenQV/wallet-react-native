@@ -21,6 +21,7 @@ import {
   fetchAccounts,
   fetchRewards,
   fetchCampaigns,
+  claimReward,
 } from './../../redux/actions';
 import { CardList, View, CodeInput } from '../common';
 import { CardAddress } from './CardAddress';
@@ -156,12 +157,7 @@ function withRedux(CardList) {
       if (cardListOptions.showDetail) {
         switch (type) {
           case 'wallet':
-          case 'rewards':
-            break;
-          case 'campaigns':
-            text = 'CLAIM';
-            onPress = () => this.props.claimReward(item);
-            disabled = cardListOptions.indexLoading;
+          case 'reward':
             break;
           default:
             text = 'SAVE';
@@ -189,13 +185,16 @@ function withRedux(CardList) {
           //       currency: item,
           //     });
           //   break;
-          case 'campaign':
-            text = 'CLAIM';
-            onPress = () => this.props.claimReward(item);
-            disabled = cardListOptions.indexLoading;
-            break;
           default:
         }
+      }
+      switch (type) {
+        case 'campaign':
+          text = 'CLAIM';
+          onPress = () => this.props.claimReward(index);
+          disabled = cardListOptions.indexLoading;
+          break;
+        default:
       }
       return {
         text,
@@ -449,11 +448,11 @@ function withRedux(CardList) {
             return item.currency.description;
           case 'reward':
             return item.campaign.name;
-          case 'campaign':
-            return item.name;
-          default:
-            return '';
         }
+      }
+      switch (type) {
+        case 'campaign':
+          return item.name;
       }
       return '';
     }
@@ -489,10 +488,10 @@ function withRedux(CardList) {
         case 'wallet':
           this.props.fetchAccounts();
           break;
-        case 'rewards':
+        case 'reward':
           this.props.fetchRewards();
           break;
-        case 'campaigns':
+        case 'campaign':
           this.props.fetchCampaigns();
           break;
         default:
@@ -560,4 +559,5 @@ export default connect(mapStateToProps, {
   fetchAccounts,
   fetchRewards,
   fetchCampaigns,
+  claimReward,
 })(withNavigationFocus(withRedux(CardList)));

@@ -55,6 +55,7 @@ export default (state = INITIAL_STATE, action) => {
     case CLAIM_REWARD_ASYNC.pending:
       return {
         ...state,
+        campaignsIndex: action.payload,
         claimRewardError: '',
         claimRewardLoading: true,
       };
@@ -131,12 +132,14 @@ export function getCampaigns(store) {
     campaigns,
     campaignsLoading,
     campaignsError,
-    tempReward,
-    showRewardDetail,
+    campaignsIndex,
+    claimRewardLoading,
   } = store.rewards;
   return {
     data: campaigns ? campaigns : [],
+    index: campaignsIndex ? campaignsIndex : 0,
     loading: campaignsLoading ? campaignsLoading : false,
+    indexLoading: claimRewardLoading ? claimRewardLoading : false,
     error: campaignsError ? campaignsError : '',
   };
 }

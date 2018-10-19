@@ -6,6 +6,7 @@ import { View, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import { Input, Output, Text } from '../common';
 import { performDivisibility } from '../../util/general';
+import moment from 'moment';
 
 class CardCampaign extends Component {
   render() {
@@ -29,8 +30,8 @@ class CardCampaign extends Component {
               performDivisibility(reward_amount, currency.divisibility)
             }
           />
-          <Output label="Start date" value={start_date} />
-          <Output label="End date" value={end_date} />
+          <Output label="Start date" value={moment(start_date).format('lll')} />
+          <Output label="End date" value={moment(end_date).format('lll')} />
         </View>
       );
     } else {

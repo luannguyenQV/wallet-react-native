@@ -411,7 +411,6 @@ export const cardListOptionsSelector = createSelector(userSelector, user => {
     showDetail: user.showDetail,
     modalVisible: user.modalVisible,
     modalType: user.modalType,
-    indexLoading: false,
     detailLoaded: user.detailLoaded ? user.detailLoaded : false,
   };
 });

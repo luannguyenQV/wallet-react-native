@@ -18,13 +18,7 @@ import {
 import { companyConfigSelector } from './../../redux/sagas/selectors';
 
 import Header from './../../components/header';
-import { Output, Tabs } from '../../components/common';
-import CardList from './../../components/CardList';
-import { performDivisibility, standardizeString } from './../../util/general';
-
-import ScrollableTabView, {
-  ScrollableTabBar,
-} from 'react-native-scrollable-tab-view';
+import { Tabs } from '../../components/common';
 import CardListUserSettings from '../../components/cards/CardListUserSettings';
 
 class RewardsScreen extends Component {

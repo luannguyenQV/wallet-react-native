@@ -46,7 +46,9 @@ class _CardList extends Component {
       data,
       actionOne,
       actionTwo,
+      cardListOptions,
     } = this.props;
+    console.log(data);
 
     return (
       <Card
@@ -69,7 +71,7 @@ class _CardList extends Component {
         textActionTwo={actionTwo ? actionTwo(item, index).text : ''}
         onPressActionTwo={actionTwo ? actionTwo(item, index).onPress : () => {}}
         disableActionTwo={actionTwo ? actionTwo(item, index).disabled : false}
-        loading={loadingDetail}>
+        loading={data.indexLoading && data.index === index}>
         {this.props.renderItem(item, data.showDetail)}
       </Card>
     );
