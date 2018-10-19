@@ -252,15 +252,15 @@ function* resendVerification(action) {
   try {
     const { type, index } = action.payload;
     const userState = yield select(userSelector);
-    const data = userState[type][index][type];
+    const data = userState[type][index];
     const company = userState.company.id;
 
     switch (type) {
       case 'mobile':
-        yield call(Rehive.resendMobileVerification, data, company);
+        yield call(Rehive.resendMobileVerification, data.number, company);
         break;
       case 'email':
-        yield call(Rehive.resendEmailVerification, data, company);
+        yield call(Rehive.resendEmailVerification, data.email, company);
         break;
     }
     yield all([
@@ -279,13 +279,13 @@ function* resendVerification(action) {
 function* verifyItem(action) {
   try {
     const { type, otp } = action.payload;
-    let response = null;
-    // console.log()
     switch (type) {
       case 'mobile':
         response = yield call(Rehive.submitOTP, otp);
         break;
     }
+
+    Toast.show({ text: 'Mobile verified' });
     yield all([
       put({ type: VERIFY_ASYNC.success }),
       put({ type: FETCH_DATA_ASYNC.pending, payload: type }),

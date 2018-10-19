@@ -4,6 +4,7 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { View } from 'react-native';
 import {
   fetchData,
   newItem,
@@ -23,8 +24,9 @@ import {
   fetchCampaigns,
   confirmActiveItem,
   claimReward,
+  verifyItem,
 } from './../../redux/actions';
-import { CardList, View, CodeInput, Text } from '../common';
+import { CardList, CodeInput, Text } from '../common';
 import { CardAddress } from './CardAddress';
 import { CardMobile } from './CardMobile';
 import { CardEmail } from './CardEmail';
@@ -255,7 +257,7 @@ function withRedux(CardList) {
     }
 
     renderModalContent() {
-      const { type, cardListOptions, data } = this.props;
+      const { type, cardListOptions, data, verifyItem } = this.props;
       let content = null;
 
       switch (cardListOptions.modalType) {
@@ -265,7 +267,7 @@ function withRedux(CardList) {
               content = (
                 <View>
                   <Text style={{ margin: 0 }}>
-                    {data.data[data.index].email}
+                    {data.data[data.index].number}
                   </Text>
                   <CodeInput
                     ref={component => (this._pinInput = component)}
@@ -278,7 +280,6 @@ function withRedux(CardList) {
                     space={7}
                     size={30}
                     inputPosition="center"
-                    containerStyle={{ marginTop: 0, paddingBottom: 24 }}
                     onFulfill={code => verifyItem('mobile', code)}
                   />
                 </View>
@@ -308,13 +309,16 @@ function withRedux(CardList) {
           }
           break;
         case 'delete':
-          content = (
-            <Text style={{ margin: 0 }}>
-              {type === 'address'
-                ? concatAddress(data.data[data.index])
-                : data.data[data.index][type]}
-            </Text>
-          );
+          switch (type) {
+            case 'mobile':
+              text = data.data[data.index].number;
+              break;
+            case 'address':
+              text = concatAddress(data.data[data.index]);
+            default:
+              text = data.data[data.index][type];
+          }
+          content = <Text style={{ margin: 0 }}>{text}</Text>;
           break;
         case 'primary':
           content = (
@@ -614,4 +618,5 @@ export default connect(mapStateToProps, {
   fetchRewards,
   fetchCampaigns,
   claimReward,
+  verifyItem,
 })(withNavigationFocus(withRedux(CardList)));

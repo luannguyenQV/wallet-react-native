@@ -188,6 +188,7 @@ export default (state = INITIAL_STATE, action) => {
     case HIDE_MODAL:
       return {
         ...state,
+        showDetail: false,
         modalVisible: false,
         loading: false,
         tempItem: null,
