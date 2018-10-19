@@ -4,7 +4,7 @@ import {
   FlatList,
   RefreshControl,
   KeyboardAvoidingView,
-  ScrollView,
+  Platform,
 } from 'react-native';
 import context from './context';
 // import { maybeOpenURL } from 'react-native-app-link';
@@ -14,8 +14,6 @@ import { Card } from './Card';
 import { PopUpGeneral } from './PopUpGeneral';
 import { EmptyListMessage } from './EmptyListMessage';
 import { View } from './View';
-import { Text } from './Text';
-import { CardAddress } from '../cards';
 
 // make component
 class _CardList extends Component {
@@ -120,24 +118,28 @@ class _CardList extends Component {
     //   return <View color="grey2">{this.renderItem(data.data[0], 0)}</View>;
     // }
     return (
-      <View color="grey2">
-        <FlatList
-          ref={component => (this[type + 'FlatList'] = component)}
-          refreshControl={
-            <RefreshControl refreshing={data.loading} onRefresh={onRefresh} />
-          }
-          keyboardShouldPersistTaps={'handled'}
-          data={data.data}
-          renderItem={({ item, index }) => this.renderItem(item, index)}
-          keyExtractor={item =>
-            keyExtractor
-              ? keyExtractor(item)
-              : item.id ? item.id.toString() : '0'
-          }
-          ListEmptyComponent={this.renderEmptyList()}
-        />
-        {this.renderModal()}
-      </View>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'android' ? 'height' : 'padding'}>
+        <View color="grey2">
+          <FlatList
+            ref={component => (this[type + 'FlatList'] = component)}
+            refreshControl={
+              <RefreshControl refreshing={data.loading} onRefresh={onRefresh} />
+            }
+            keyboardShouldPersistTaps={'handled'}
+            data={data.data}
+            renderItem={({ item, index }) => this.renderItem(item, index)}
+            keyExtractor={item =>
+              keyExtractor
+                ? keyExtractor(item)
+                : item.id ? item.id.toString() : '0'
+            }
+            ListEmptyComponent={this.renderEmptyList()}
+          />
+          {this.renderModal()}
+        </View>
+      </KeyboardAvoidingView>
     );
   }
 }

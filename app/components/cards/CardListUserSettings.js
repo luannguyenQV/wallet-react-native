@@ -309,33 +309,23 @@ function withRedux(CardList) {
           }
           break;
         case 'delete':
+        case 'primary':
+        case 'active':
           switch (type) {
             case 'mobile':
               text = data.data[data.index].number;
               break;
             case 'address':
               text = concatAddress(data.data[data.index]);
+            case 'wallet':
+              text =
+                standardizeString(data.data[data.index].account_name) +
+                ': ' +
+                data.data[data.index].currency.code;
             default:
               text = data.data[data.index][type];
           }
           content = <Text style={{ margin: 0 }}>{text}</Text>;
-          break;
-        case 'primary':
-          content = (
-            <Text style={{ margin: 0 }}>
-              {type === 'address'
-                ? concatAddress(data.data[data.index])
-                : data.data[data.index][type]}
-            </Text>
-          );
-        case 'active':
-          content = (
-            <Text style={{ margin: 0 }}>
-              {standardizeString(data.data[data.index].account_name) +
-                ': ' +
-                data.data[data.index].currency.code}
-            </Text>
-          );
           break;
       }
 

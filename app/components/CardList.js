@@ -305,8 +305,7 @@ class CardList extends Component {
           flex: 1,
           backgroundColor: colors.grey2,
         }}
-        behavior={'padding'}
-        enabled>
+        behavior={Platform.OS === 'android' ? 'height' : 'padding'}>
         {showDetail || showReward ? (
           <ScrollView
             keyboardDismissMode={'interactive'}

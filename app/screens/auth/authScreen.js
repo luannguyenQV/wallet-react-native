@@ -417,8 +417,13 @@ class AuthScreen extends Component {
         data = tempCompany
           ? companies.filter(
               item =>
-                item.id.toLowerCase().includes(tempCompany.toLowerCase()) ||
-                item.name.toLowerCase().includes(tempCompany.toLowerCase()),
+                item.id
+                  ? item.id.toLowerCase().includes(tempCompany.toLowerCase())
+                  : false || item.name
+                    ? item.name
+                        .toLowerCase()
+                        .includes(tempCompany.toLowerCase())
+                    : false,
             )
           : [];
         onPressListItem = item => {
