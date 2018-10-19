@@ -15,6 +15,7 @@ import plue from './plue.json';
 import bcx_token from './bcx_token.json';
 import demo_company from './demo_company.json';
 import crypto_full_suite from './crypto_full_suite.json';
+import dnar_demo from './dnar_demo.json';
 
 export default {
   luuun,
@@ -34,4 +35,5 @@ export default {
   bcx_token,
   demo_company,
   crypto_full_suite,
+  dnar_demo,
 };

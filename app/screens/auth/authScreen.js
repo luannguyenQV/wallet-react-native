@@ -431,7 +431,7 @@ class AuthScreen extends Component {
           nextAuthFormState('');
         };
         title = 'name';
-        subtitle = 'description';
+        subtitle = 'id';
         icon = 'logo';
         break;
       case 'email':

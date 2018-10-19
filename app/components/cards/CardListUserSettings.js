@@ -140,6 +140,7 @@ function withRedux(CardList) {
               updateItem={this.props.updateItem}
               hideDetail={() => this.props.hideDetail('wallet')}
               detailLoaded={this.props.cardListOptions.detailLoaded}
+              navigation={this.props.navigation}
             />
           );
         case 'reward':
