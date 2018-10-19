@@ -30,6 +30,7 @@ import { CardWallet } from './CardWallet';
 import { CardReward } from './CardReward';
 import { concatAddress, standardizeString } from '../../util/general';
 import { withNavigation } from 'react-navigation';
+import { cardListOptionsSelector } from '../../redux/reducers/UserReducer';
 
 // This function takes a component...
 function withRedux(CardList) {
@@ -129,6 +130,7 @@ function withRedux(CardList) {
               updateInputField={this.props.updateInputField}
               updateItem={this.props.updateItem}
               hideDetail={() => this.props.hideDetail('wallet')}
+              detailLoaded={this.props.cardListOptions.detailLoaded}
             />
           );
         case 'reward':
@@ -146,11 +148,11 @@ function withRedux(CardList) {
     }
 
     actionOne(item, index) {
-      const { data, type } = this.props;
+      const { cardListOptions, type } = this.props;
       let text = '';
       let onPress = () => {};
       let disabled = false;
-      if (data.showDetail) {
+      if (cardListOptions.showDetail) {
         switch (type) {
           case 'wallet':
             break;
@@ -184,16 +186,16 @@ function withRedux(CardList) {
     }
 
     actionTwo(item, index) {
-      const { data, type } = this.props;
+      const { cardListOptions, type } = this.props;
       let text = '';
       let onPress = () => {};
       let disabled = false;
-      if (data.showDetail) {
+      if (cardListOptions.showDetail) {
         switch (type) {
           case 'wallet':
             break;
           default:
-            text = data.showDetail ? 'CANCEL' : '';
+            text = cardListOptions.showDetail ? 'CANCEL' : '';
             onPress = () => this.props.hideDetail(type);
         }
       } else {
@@ -222,8 +224,8 @@ function withRedux(CardList) {
     }
 
     onPressCard(index) {
-      const { type, data } = this.props;
-      if (!data.showDetail) {
+      const { type, cardListOptions } = this.props;
+      if (!cardListOptions.showDetail) {
         switch (type) {
           case 'mobile':
           case 'email':
@@ -235,9 +237,9 @@ function withRedux(CardList) {
     }
 
     renderModalContent() {
-      const { type, data } = this.props;
+      const { type, cardListOptions } = this.props;
       let content = null;
-      switch (data.modalType) {
+      switch (cardListOptions.modalType) {
         case 'verify':
           switch (type) {
             case 'mobile':
@@ -287,9 +289,9 @@ function withRedux(CardList) {
     //           ' as your active wallet so that it will be shown first on the home screen and the top of this list';
 
     modalContentText() {
-      const { data, type } = this.props;
+      const { data, cardListOptions, type } = this.props;
       let text = '';
-      switch (data.modalType) {
+      switch (cardListOptions.modalType) {
         case 'verify':
           switch (type) {
             case 'mobile':
@@ -329,11 +331,16 @@ function withRedux(CardList) {
     }
 
     modalActionOne() {
-      const { type, data, confirmDeleteItem, confirmPrimaryItem } = this.props;
+      const {
+        type,
+        cardListOptions,
+        confirmDeleteItem,
+        confirmPrimaryItem,
+      } = this.props;
       let text = '';
       let onPress = () => {};
       let disabled = false;
-      switch (data.modalType) {
+      switch (cardListOptions.modalType) {
         case 'delete':
           text = 'DELETE';
           onPress = () => confirmDeleteItem(type);
@@ -353,11 +360,11 @@ function withRedux(CardList) {
     }
 
     modalActionTwo() {
-      const { type, data, hideModal } = this.props;
+      const { type, cardListOptions, hideModal } = this.props;
       let text = 'CANCEL';
       let onPress = () => hideModal();
       let disabled = false;
-      if (type === 'email' && data.modalType === 'verify') {
+      if (type === 'email' && cardListOptions.modalType === 'verify') {
         text = 'CLOSE';
       }
       return {
@@ -372,8 +379,8 @@ function withRedux(CardList) {
     //   onPressActionOne = () => setActiveCurrency(tempItem);
 
     iconFooter(item) {
-      const { type, data } = this.props;
-      if (!data.showDetail) {
+      const { type, cardListOptions } = this.props;
+      if (!cardListOptions.showDetail) {
         switch (type) {
           case 'mobile':
           case 'email':
@@ -416,8 +423,8 @@ function withRedux(CardList) {
     }
 
     title(item) {
-      const { type, data } = this.props;
-      if (!data.showDetail) {
+      const { type, cardListOptions } = this.props;
+      if (!cardListOptions.showDetail) {
         switch (type) {
           case 'wallet':
             return item.currency.description;
@@ -431,8 +438,8 @@ function withRedux(CardList) {
     }
 
     subtitle(item) {
-      const { type, data } = this.props;
-      if (!data.showDetail) {
+      const { type, cardListOptions } = this.props;
+      if (!cardListOptions.showDetail) {
         switch (type) {
           case 'wallet':
             return standardizeString(item.account_name);
@@ -446,7 +453,7 @@ function withRedux(CardList) {
     }
 
     keyExtractor(item) {
-      const { type, data } = this.props;
+      const { type } = this.props;
       switch (type) {
         case 'wallet':
           return (item.account + item.currency.code).toString();
@@ -460,8 +467,9 @@ function withRedux(CardList) {
     render() {
       const { data, type, navigation } = this.props;
       const isFocused = navigation.isFocused();
+      // console.log('in CardListUserSettings:render', data);
       if (isFocused) {
-        console.log('in CardListUserSettings:render');
+        // console.log('in CardListUserSettings:render:isFocused', isFocused);
         return (
           <CardList
             ref={c => (this[type + 'CardList'] = c)}
@@ -497,6 +505,7 @@ function withRedux(CardList) {
 
 const mapStateToProps = state => {
   return {
+    cardListOptions: cardListOptionsSelector(state),
     // addresses: userAddressesSelector(state),
   };
 };

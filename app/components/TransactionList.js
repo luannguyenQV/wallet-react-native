@@ -23,21 +23,23 @@ class TransactionList extends Component {
     transaction: null,
   };
   async componentDidMount() {
-    const { currency } = this.props;
+    const { currency, detailLoaded } = this.props;
     const accountRef = currency.account ? currency.account : '';
     const currencyCode =
       currency.currency && currency.currency.code ? currency.currency.code : '';
-    // console.log('in CardWallet:componentDidMount');
-    this.getTransactions(accountRef, currencyCode);
+    console.log('in CardWallet:componentDidMount', currencyCode);
+    this.getTransactions(accountRef, currencyCode, !detailLoaded);
   }
 
-  async getTransactions(accountRef, currencyCode) {
+  async getTransactions(accountRef, currencyCode, force) {
     const filters = {
       account: accountRef,
       currency: currencyCode,
     };
-    // console.log('in CardWallet:getTransactions');
-    this.props.fetchTransactions(filters);
+    console.log('in CardWallet:getTransactions', force, filters);
+    if (force) {
+      this.props.fetchTransactions(filters);
+    }
   }
 
   renderTransactions() {
@@ -57,7 +59,8 @@ class TransactionList extends Component {
           <RefreshControl
             refreshing={loading}
             onRefresh={() => {
-              this.getTransactions(accountRef, currencyCode);
+              console.log('onRefresh');
+              this.getTransactions(accountRef, currencyCode, true);
             }}
           />
         }

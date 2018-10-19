@@ -22,6 +22,8 @@ import {
   RESET_USER_ERRORS,
   SHOW_DETAIL,
   HIDE_DETAIL,
+  FETCH_ACCOUNTS_ASYNC,
+  FETCH_TRANSACTIONS_ASYNC,
 } from '../actions';
 
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
@@ -336,6 +338,12 @@ export default (state = INITIAL_STATE, action) => {
         showDetail: false,
         // [action.payload.type + 'Detail']: false,
         newItem: false,
+        detailLoaded: false,
+      };
+    case FETCH_TRANSACTIONS_ASYNC.pending:
+      return {
+        ...state,
+        detailLoaded: true,
       };
 
     case LOGOUT_USER:
@@ -350,10 +358,6 @@ export const userAddressesSelector = createSelector(userSelector, user => {
     data: user.showDetail ? [user.tempItem] : user.address,
     loading: user.addressLoading,
     index: user.addressIndex,
-    showDetail: user.showDetail,
-    modalVisible: user.modalVisible,
-    modalType: user.modalType,
-    indexLoading: false,
   };
 });
 
@@ -362,10 +366,6 @@ export const userEmailsSelector = createSelector(userSelector, user => {
     data: user.showDetail ? [user.tempItem] : user.email,
     loading: user.emailLoading,
     index: user.emailIndex,
-    showDetail: user.showDetail,
-    modalVisible: user.modalVisible,
-    modalType: user.modalType,
-    indexLoading: false,
   };
 });
 
@@ -374,10 +374,6 @@ export const userMobilesSelector = createSelector(userSelector, user => {
     data: user.showDetail ? [user.tempItem] : user.mobile,
     loading: user.mobileLoading,
     index: user.mobileIndex,
-    showDetail: user.showDetail,
-    modalVisible: user.modalVisible,
-    modalType: user.modalType,
-    indexLoading: false,
   };
 });
 
@@ -386,10 +382,6 @@ export const userBankAccountsSelector = createSelector(userSelector, user => {
     data: user.showDetail ? [user.tempItem] : user.bank_account,
     loading: user.bank_accountLoading,
     index: user.bank_accountIndex,
-    showDetail: user.showDetail,
-    modalVisible: user.modalVisible,
-    modalType: user.modalType,
-    indexLoading: false,
   };
 });
 export const userCryptoAddressesSelector = createSelector(
@@ -399,10 +391,6 @@ export const userCryptoAddressesSelector = createSelector(
       data: user.showDetail ? [user.tempItem] : user.crypto_address,
       loading: user.crypto_addressLoading,
       index: user.crypto_addressIndex,
-      showDetail: user.showDetail,
-      modalVisible: user.modalVisible,
-      modalType: user.modalType,
-      indexLoading: false,
     };
   },
 );
@@ -411,10 +399,15 @@ export const userProfileSelector = createSelector(userSelector, user => {
   return {
     data: user.showDetail ? [user.tempItem] : user.profile,
     loading: user.profileLoading,
-    // index: user.crypto_addressIndex,
+  };
+});
+
+export const cardListOptionsSelector = createSelector(userSelector, user => {
+  return {
     showDetail: user.showDetail,
     modalVisible: user.modalVisible,
     modalType: user.modalType,
     indexLoading: false,
+    detailLoaded: user.detailLoaded ? user.detailLoaded : false,
   };
 });

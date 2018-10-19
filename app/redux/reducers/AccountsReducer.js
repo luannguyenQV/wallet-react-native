@@ -320,14 +320,31 @@ export const currenciesSelector = createSelector(
     const { accounts } = accountsState;
 
     let activeCurrency = '';
+    let currencyCode = '';
 
     let currencies = [];
     let tempCurrencies = [];
+    // if (userState.showDetail) {
+    //   let currency = serState.walletIndex;
+    //   currency.account = accounts[userState.walletIndex].reference;
+    //   currency.account_name = accounts[serState.walletIndex].name;
+    //   currencyCode = currency.currency.code;
+    //   if (cryptoState.stellar.currencies.indexOf(currencyCode) !== -1) {
+    //     currency.crypto = 'stellar';
+    //   } else if (cryptoState.bitcoin.currencies.indexOf(currencyCode) !== -1) {
+    //     currency.crypto = 'bitcoin';
+    //   } else if (cryptoState.ethereum.currencies.indexOf(currencyCode) !== -1) {
+    //     currency.crypto = 'ethereum';
+    //   } else {
+    //     currency.crypto = '';
+    //   }
+    //   currencies = [currency];
+    // } else {
     for (i = 0; i < accounts.length; i++) {
       tempCurrencies = accounts[i].currencies.map(currency => {
         currency.account = accounts[i].reference;
         currency.account_name = accounts[i].name;
-        const currencyCode = currency.currency.code;
+        currencyCode = currency.currency.code;
         if (cryptoState.stellar.currencies.indexOf(currencyCode) !== -1) {
           currency.crypto = 'stellar';
         } else if (
@@ -349,6 +366,7 @@ export const currenciesSelector = createSelector(
         return currency;
       });
       currencies = currencies.concat(tempCurrencies);
+      // }
     }
 
     const activeIndex = currencies.findIndex(
@@ -362,7 +380,9 @@ export const currenciesSelector = createSelector(
     }
 
     return {
-      data: currencies,
+      data: userState.showDetail
+        ? [currencies[userState.walletIndex]]
+        : currencies,
       index: userState.walletIndex,
       multipleAccounts: accounts.length > 1,
       loading: userState.walletLoading,
@@ -371,6 +391,7 @@ export const currenciesSelector = createSelector(
       modalVisible: userState.modalVisible,
       modalType: userState.modalType,
       indexLoading: false,
+      detailLoaded: userState.detailLoaded,
     };
   },
 );

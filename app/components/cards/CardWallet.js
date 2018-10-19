@@ -12,7 +12,7 @@ import { performDivisibility } from '../../util/general';
 
 class CardWallet extends Component {
   render() {
-    const { item } = this.props;
+    const { item, detailLoaded } = this.props;
 
     if (this.props.detail) {
       let i = 0;
@@ -23,7 +23,7 @@ class CardWallet extends Component {
       // buttons[i] = { id: i++, type: 'withdraw' };
       buttons[i] = { id: i++, type: 'receive' };
       buttons[i] = { id: i++, type: 'send' };
-      console.log('in CardWallet:render()');
+      // console.log('in CardWallet:render()');
       return (
         <View>
           <WalletBalance
@@ -36,7 +36,7 @@ class CardWallet extends Component {
             navigation={this.props.navigation}
             currency={item}
           />
-          <TransactionList currency={item} />
+          <TransactionList currency={item} detailLoaded={detailLoaded} />
         </View>
       );
     } else {
