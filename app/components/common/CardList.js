@@ -47,16 +47,17 @@ class _CardList extends Component {
       actionOne,
       actionTwo,
       cardListOptions,
+      activeAction,
     } = this.props;
 
     return (
       <Card
         headerComponent={headerComponent}
         onPressHeader={onPressHeader}
-        textTitleLeft={textTitleLeft}
+        textTitleLeft={activeAction ? activeAction(item, index).text : false}
         iconTitleLeft={iconTitleLeft}
-        itemActive={itemActive}
-        onPressTitleLeft={() => onPressTitleLeft(index)}
+        itemActive={activeAction ? activeAction(item, index).active : false}
+        onPressTitleLeft={activeAction ? activeAction(item, index).onPress : {}}
         title={title(item)}
         subtitle={subtitle(item)}
         colorTitleBackground="white"

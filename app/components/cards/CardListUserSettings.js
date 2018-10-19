@@ -21,9 +21,10 @@ import {
   fetchAccounts,
   fetchRewards,
   fetchCampaigns,
+  confirmActiveItem,
   claimReward,
 } from './../../redux/actions';
-import { CardList, View, CodeInput } from '../common';
+import { CardList, View, CodeInput, Text } from '../common';
 import { CardAddress } from './CardAddress';
 import { CardMobile } from './CardMobile';
 import { CardEmail } from './CardEmail';
@@ -254,30 +255,39 @@ function withRedux(CardList) {
     }
 
     renderModalContent() {
-      const { type, cardListOptions } = this.props;
+      const { type, cardListOptions, data } = this.props;
       let content = null;
+
       switch (cardListOptions.modalType) {
         case 'verify':
           switch (type) {
             case 'mobile':
               content = (
-                <CodeInput
-                  ref={component => (this._pinInput = component)}
-                  secureTextEntry={false}
-                  activeColor="gray"
-                  autoFocus
-                  inactiveColor="lightgray"
-                  className="border-b"
-                  codeLength={5}
-                  space={7}
-                  size={30}
-                  inputPosition="center"
-                  containerStyle={{ marginTop: 0, paddingBottom: 24 }}
-                  onFulfill={code => verifyItem('mobile', code)}
-                />
+                <View>
+                  <Text style={{ margin: 0 }}>
+                    {data.data[data.index].email}
+                  </Text>
+                  <CodeInput
+                    ref={component => (this._pinInput = component)}
+                    secureTextEntry={false}
+                    activeColor="gray"
+                    autoFocus
+                    inactiveColor="lightgray"
+                    className="border-b"
+                    codeLength={5}
+                    space={7}
+                    size={30}
+                    inputPosition="center"
+                    containerStyle={{ marginTop: 0, paddingBottom: 24 }}
+                    onFulfill={code => verifyItem('mobile', code)}
+                  />
+                </View>
               );
               break;
             case 'email':
+              content = (
+                <Text style={{ margin: 0 }}>{data.data[data.index].email}</Text>
+              );
               // content = ( //TODO:
               //   <Button
               //     label="Open email app"
@@ -296,7 +306,35 @@ function withRedux(CardList) {
             case 'crypto_address':
             default:
           }
+          break;
+        case 'delete':
+          content = (
+            <Text style={{ margin: 0 }}>
+              {type === 'address'
+                ? concatAddress(data.data[data.index])
+                : data.data[data.index][type]}
+            </Text>
+          );
+          break;
+        case 'primary':
+          content = (
+            <Text style={{ margin: 0 }}>
+              {type === 'address'
+                ? concatAddress(data.data[data.index])
+                : data.data[data.index][type]}
+            </Text>
+          );
+        case 'active':
+          content = (
+            <Text style={{ margin: 0 }}>
+              {standardizeString(data.data[data.index].account_name) +
+                ': ' +
+                data.data[data.index].currency.code}
+            </Text>
+          );
+          break;
       }
+
       return content;
     }
 
@@ -313,13 +351,11 @@ function withRedux(CardList) {
           switch (type) {
             case 'mobile':
               text =
-                'An SMS containing a OTP to verify your mobile has been sent to ' +
-                data.data[data.index].mobile;
+                'An SMS containing a OTP to verify your mobile has been sent to ';
               break;
             case 'email':
               text =
-                'Instructions on how to verify your email have been sent to ' +
-                data.data[data.index].email;
+                'Instructions on how to verify your email have been sent to ';
               break;
             case 'address':
             case 'bank_account':
@@ -328,20 +364,13 @@ function withRedux(CardList) {
           }
           break;
         case 'delete':
-          text =
-            'You are about to delete ' +
-            type +
-            ':\n' +
-            (type === 'address'
-              ? concatAddress(data.data[data.index])
-              : data.data[data.index][type]);
+          text = 'You are about to delete ' + type;
           break;
         case 'primary':
-          text =
-            'You are about to set your primary ' +
-            type +
-            ' to:\n' +
-            data.data[data.index][type];
+          text = 'You are about to set your primary ' + type + ' to';
+          break;
+        case 'active':
+          text = 'You are about to set your active currency to';
           break;
       }
       return text;
@@ -353,6 +382,7 @@ function withRedux(CardList) {
         cardListOptions,
         confirmDeleteItem,
         confirmPrimaryItem,
+        confirmActiveItem,
       } = this.props;
       let text = '';
       let onPress = () => {};
@@ -365,6 +395,11 @@ function withRedux(CardList) {
         case 'primary':
           text = 'MAKE PRIMARY';
           onPress = () => confirmPrimaryItem(type);
+          disabled = false;
+          break;
+        case 'active':
+          text = 'MAKE ACTIVE';
+          onPress = () => confirmActiveItem(type);
           disabled = false;
           break;
         default:
@@ -400,6 +435,7 @@ function withRedux(CardList) {
             if (item.primary) {
               return '';
             }
+            return 'delete';
           case 'profile':
           case 'wallet':
           case 'reward':
@@ -499,6 +535,23 @@ function withRedux(CardList) {
       }
     }
 
+    activeAction(item, index) {
+      const { type, cardListOptions, showModal } = this.props;
+      let text = '';
+      let onPress = () => {};
+      let active = false;
+      if (type === 'wallet') {
+        text = item && item.currency ? item.currency.code : '';
+        onPress = () => showModal('wallet', index, 'active');
+        active = item && item.active ? item.active : false;
+      }
+      return {
+        text,
+        onPress,
+        active,
+      };
+    }
+
     render() {
       const { data, type, isFocused, cardListOptions } = this.props;
       // console.log(data);
@@ -509,6 +562,7 @@ function withRedux(CardList) {
             data={data}
             cardListOptions={cardListOptions}
             type={type}
+            activeAction={(item, index) => this.activeAction(item, index)}
             onRefresh={() => this.onRefresh()}
             onPressContent={index => this.onPressCard(index)}
             onPressHeader={index => this.onPressCard(index)}
@@ -554,6 +608,7 @@ export default connect(mapStateToProps, {
   hideModal,
   confirmDeleteItem,
   confirmPrimaryItem,
+  confirmActiveItem,
   resendVerification,
   fetchAccounts,
   fetchRewards,

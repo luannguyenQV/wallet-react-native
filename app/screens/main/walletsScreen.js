@@ -37,7 +37,6 @@ class WalletsScreen extends Component {
 
   render() {
     const { currencies } = this.props;
-    console.log('in wallletsScreen:render');
     return (
       <View>
         <Header navigation={this.props.navigation} drawer title="Wallets" />

@@ -15,7 +15,7 @@ import {
   UPLOAD_DOCUMENT_ASYNC,
   SHOW_MODAL,
   HIDE_MODAL,
-  SET_ACTIVE_CURRENCY_ASYNC,
+  CONFIRM_ACTIVE_CURRENCY_ASYNC,
   LOGOUT_USER,
   VIEW_WALLET,
   HIDE_WALLET,
@@ -204,13 +204,13 @@ export default (state = INITIAL_STATE, action) => {
         [action.payload.type + 'Index']: action.payload.index,
       };
 
-    case SET_ACTIVE_CURRENCY_ASYNC.pending:
+    case CONFIRM_ACTIVE_CURRENCY_ASYNC.pending:
       return {
         ...state,
         loading: true,
       };
-    case SET_ACTIVE_CURRENCY_ASYNC.success:
-    case SET_ACTIVE_CURRENCY_ASYNC.fail:
+    case CONFIRM_ACTIVE_CURRENCY_ASYNC.success:
+    case CONFIRM_ACTIVE_CURRENCY_ASYNC.fail:
       return {
         ...state,
         loading: false,
