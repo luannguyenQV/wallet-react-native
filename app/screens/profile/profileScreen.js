@@ -13,6 +13,7 @@ import {
   userMobilesSelector,
   userAddressesSelector,
   userProfileSelector,
+  userDocumentsSelector,
 } from '../../redux/reducers/UserReducer';
 
 class ProfileScreen extends Component {
@@ -35,8 +36,9 @@ class ProfileScreen extends Component {
   renderBasicInfo() {
     const profile = this.props.profile.data[0];
 
-    let value = profile.first_name + ' ' + profile.last_name;
-    let status = profile.status ? profile.status.toUpperCase() : 'INCOMPLETE';
+    let value = profile ? profile.first_name + ' ' + profile.last_name : '';
+    let status =
+      profile && profile.status ? profile.status.toUpperCase() : 'INCOMPLETE';
 
     return (
       <GetVerifiedOption
@@ -313,7 +315,7 @@ const mapStateToProps = state => {
     address: userAddressesSelector(state),
     mobile: userMobilesSelector(state),
     email: userEmailsSelector(state),
-    document: state.user.document,
+    document: userDocumentsSelector(state),
     company_config: state.auth.company_config,
   };
 };

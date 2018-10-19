@@ -1,4 +1,4 @@
-import { all, call, put, takeEvery } from 'redux-saga/effects';
+import { all, call, put, takeEvery, select } from 'redux-saga/effects';
 import { FETCH_CRYPTO_ASYNC } from '../actions';
 
 import * as Rehive from '../../util/rehive';

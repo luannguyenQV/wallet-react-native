@@ -43,6 +43,11 @@ const EMPTY_BANK_ACCOUNT = {
   iban: '',
   bic: '',
 };
+const EMPTY_PROFILE = {
+  first_name: '',
+  last_name: '',
+  id_number: '',
+};
 
 const EMPTY_MOBILE = { number: '', primary: false };
 
@@ -61,10 +66,10 @@ const EMPTY_ADDRESS = {
 
 const INITIAL_STATE = {
   refreshing_profile: false,
-  profile: {},
+  profile: EMPTY_PROFILE,
   email_address: [],
   mobile_number: [],
-  document: {},
+  document: [],
   bank_account: [],
   crypto_account: [],
   company: [],
@@ -389,7 +394,7 @@ export const userAddressesSelector = createSelector(userSelector, user => {
     data:
       user.showDetail && user.type === 'address'
         ? [user.tempItem]
-        : user.address,
+        : user.address ? user.address : [],
     loading: user.addressLoading ? user.addressLoading : false,
     index: user.addressIndex ? user.addressIndex : 0,
   };
@@ -398,7 +403,9 @@ export const userAddressesSelector = createSelector(userSelector, user => {
 export const userEmailsSelector = createSelector(userSelector, user => {
   return {
     data:
-      user.showDetail && user.type === 'email' ? [user.tempItem] : user.email,
+      user.showDetail && user.type === 'email'
+        ? [user.tempItem]
+        : user.email ? user.email : [],
     loading: user.emailLoading ? user.emailLoading : false,
     index: user.emailIndex ? user.emailIndex : 0,
   };
@@ -407,7 +414,9 @@ export const userEmailsSelector = createSelector(userSelector, user => {
 export const userMobilesSelector = createSelector(userSelector, user => {
   return {
     data:
-      user.showDetail && user.type === 'mobile' ? [user.tempItem] : user.mobile,
+      user.showDetail && user.type === 'mobile'
+        ? [user.tempItem]
+        : user.mobile ? user.mobile : [],
     loading: user.mobileLoading ? user.mobileLoading : false,
     index: user.mobileIndex ? user.mobileIndex : 0,
   };
@@ -418,7 +427,7 @@ export const userBankAccountsSelector = createSelector(userSelector, user => {
     data:
       user.showDetail && user.type === 'bank_account'
         ? [user.tempItem]
-        : user.bank_account,
+        : user.bank_account ? user.bank_account : [],
     loading: user.bank_accountLoading ? user.bank_accountLoading : false,
     index: user.bank_accountIndex ? user.bank_accountIndex : 0,
   };
@@ -430,7 +439,7 @@ export const userCryptoAddressesSelector = createSelector(
       data:
         user.showDetail && user.type === 'crypto_address'
           ? [user.tempItem]
-          : user.crypto_address,
+          : user.crypto_address ? user.crypto_address : [],
       loading: user.crypto_addressLoading ? user.crypto_addressLoading : false,
       index: user.crypto_addressIndex ? user.crypto_addressIndex : 0,
     };
@@ -442,7 +451,7 @@ export const userProfileSelector = createSelector(userSelector, user => {
     data:
       user.showDetail && user.type === 'profile'
         ? [user.tempItem]
-        : user.profile,
+        : user.profile ? user.profile : [],
     loading: user.profileLoading ? user.profileLoading : false,
   };
 });
@@ -459,4 +468,8 @@ export const cardListOptionsSelector = createSelector(userSelector, user => {
 
 export const companiesSelector = createSelector(userSelector, user => {
   return user.companies ? user.companies : [];
+});
+
+export const userDocumentsSelector = createSelector(userSelector, user => {
+  return user.document ? user.document : [];
 });
