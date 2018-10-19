@@ -73,7 +73,6 @@ function withRedux(CardList) {
     renderItem(item, index) {
       const { type, cardListOptions } = this.props;
       const detail = cardListOptions.showDetail;
-      console.log(cardListOptions);
       switch (type) {
         case 'address':
           return (
@@ -502,7 +501,7 @@ function withRedux(CardList) {
 
     render() {
       const { data, type, isFocused, cardListOptions } = this.props;
-      console.log(data);
+      // console.log(data);
       if (isFocused) {
         return (
           <CardList

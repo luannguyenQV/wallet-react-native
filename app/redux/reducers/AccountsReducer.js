@@ -379,9 +379,7 @@ export const currenciesSelector = createSelector(
       currencies[0] = activeItem;
     }
     return {
-      data: userState.showDetail
-        ? [currencies[userState.walletIndex]]
-        : currencies,
+      data: currencies,
       index: userState.walletIndex,
       multipleAccounts: accounts.length > 1,
       loading: userState.walletLoading ? userState.walletLoading : false,

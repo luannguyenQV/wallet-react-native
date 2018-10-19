@@ -48,10 +48,12 @@ class CardReward extends Component {
           />
           <View style={styles.viewStyleFooter}>
             <View>
-              <Text>{moment(created).format('lll')}</Text>
+              <Text style={{ margin: 0, padding: 0 }}>
+                {moment(created).format('lll')}
+              </Text>
             </View>
             <View>
-              <Text>{status}</Text>
+              <Text style={{ margin: 0, padding: 0 }}>{status}</Text>
             </View>
           </View>
         </View>
@@ -94,28 +96,33 @@ class CardReward extends Component {
 //   color: 'primary',
 // };
 
-// const styles = {
-//   _containerStyle: {
-//     flexDirection: 'row',
-//     margin: 8,
-//   },
-//   _buttonStyle: {
-//     flex: 1,
-//     flexDirection: 'row',
-//     borderRadius: 2.5,
-//     minWidth: 64,
-//     padding: 8,
-//     shadowColor: '#000',
-//     shadowOffset: { width: 2, height: 2 },
-//     shadowRadius: 5,
-//     shadowOpacity: 0.2,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   _textStyle: {
-//     textAlign: 'center',
-//     fontWeight: 'bold',
-//   },
-// };
+const styles = {
+  viewStyleDetailCard: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+    // borderRadius: 2,
+    // borderColor: '#ffffff',
+    // borderWidth: 1,
+    shadowColor: 'rgba(0, 0, 0, 0.6)',
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 2,
+    shadowOffset: {
+      height: 1,
+      width: 2,
+    },
+  },
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  viewStyleFooter: {
+    // flex: 2,
+    padding: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+  },
+};
 
 export { CardReward };

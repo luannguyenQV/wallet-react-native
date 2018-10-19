@@ -242,11 +242,11 @@ export const callApi = (method, route, data) => {
   if (data) {
     config['body'] = JSON.stringify(data);
   }
-  console.log(config);
+  // console.log(config);
   return Promise.resolve(
     fetch(route, config)
       .then(response => {
-        console.log('response', response);
+        // console.log('response', response);
         if (response.ok) {
           return response.json();
         } else {

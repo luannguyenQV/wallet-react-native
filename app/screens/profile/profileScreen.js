@@ -269,29 +269,29 @@ class ProfileScreen extends Component {
           title="Profile"
           noShadow
         />
-        {this.props.navigation.isFocused() ? (
-          <View style={mainContainer}>
-            <HeaderProfile
-              uploadProfilePhoto={uploadProfilePhoto}
-              photoLink={profile.data.profile}
-              name={
-                profile.data.first_name
-                  ? profile.data.first_name + ' ' + profile.data.last_name
-                  : profile.data.username
-              }
-            />
-            {profile.loading ? <Spinner /> : null}
-            <InputContainer>
-              {this.renderBasicInfo()}
-              {this.renderEmailAddresses()}
-              {this.renderMobileNumbers()}
-              {this.renderAddresses()}
-              {!requireDocumentID ? null : this.renderDocumentID()}
-              {!requireDocumentAddress ? null : this.renderDocumentAddress()}
-              {!requireDocumentAdvID ? null : this.renderDocumentAdvID()}
-            </InputContainer>
-          </View>
-        ) : null}
+        {/* {this.props.navigation.isFocused() ? ( */}
+        <View style={mainContainer}>
+          <HeaderProfile
+            uploadProfilePhoto={uploadProfilePhoto}
+            photoLink={profile.data.profile}
+            name={
+              profile.data.first_name
+                ? profile.data.first_name + ' ' + profile.data.last_name
+                : profile.data.username
+            }
+          />
+          {profile.loading ? <Spinner /> : null}
+          <InputContainer>
+            {this.renderBasicInfo()}
+            {this.renderEmailAddresses()}
+            {this.renderMobileNumbers()}
+            {this.renderAddresses()}
+            {!requireDocumentID ? null : this.renderDocumentID()}
+            {!requireDocumentAddress ? null : this.renderDocumentAddress()}
+            {!requireDocumentAdvID ? null : this.renderDocumentAdvID()}
+          </InputContainer>
+        </View>
+        {/* ) : null} */}
       </View>
     );
   }

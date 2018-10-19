@@ -27,7 +27,6 @@ class TransactionList extends Component {
     const accountRef = currency.account ? currency.account : '';
     const currencyCode =
       currency.currency && currency.currency.code ? currency.currency.code : '';
-    console.log('in CardWallet:componentDidMount', currencyCode);
     this.getTransactions(accountRef, currencyCode, !detailLoaded);
   }
 
@@ -36,7 +35,6 @@ class TransactionList extends Component {
       account: accountRef,
       currency: currencyCode,
     };
-    console.log('in CardWallet:getTransactions', force, filters);
     if (force) {
       this.props.fetchTransactions(filters);
     }

@@ -8,7 +8,7 @@ import { Toast } from 'native-base';
 // import Big from 'big.js';
 
 import * as Rehive from '../../util/rehive';
-import { userSelector, rewardSelector } from './selectors';
+import { rewardsSelector } from './selectors';
 
 function* fetchRewards() {
   try {
@@ -33,7 +33,7 @@ function* fetchRewards() {
 function* claimReward(action) {
   try {
     console.log(action);
-    const rewardState = yield select(rewardSelector);
+    const rewardState = yield select(rewardsSelector);
     const campaign = rewardState.campaigns[action.payload];
     console.log('campaign', campaign);
     const response = yield call(Rehive.claimReward, {
@@ -53,7 +53,9 @@ function* claimReward(action) {
         payload: response.message,
       });
       Toast.show({
-        text: 'Error posting reward claim',
+        text:
+          'Unable to request reward' +
+          (response.message ? ': ' + response.message : ''),
         duration: 3000,
       });
     }

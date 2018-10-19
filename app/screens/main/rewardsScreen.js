@@ -12,8 +12,8 @@ import {
   hideCampaign,
 } from './../../redux/actions';
 import {
-  getRewards,
-  getCampaigns,
+  userCampaignsSelector,
+  userRewardsSelector,
 } from './../../redux/reducers/RewardsReducer';
 import { companyConfigSelector } from './../../redux/sagas/selectors';
 
@@ -139,8 +139,8 @@ const styles = {
 const mapStateToProps = store => {
   return {
     company_config: companyConfigSelector(store),
-    campaigns: getCampaigns(store),
-    rewards: getRewards(store),
+    campaigns: userCampaignsSelector(store),
+    rewards: userRewardsSelector(store),
   };
 };
 

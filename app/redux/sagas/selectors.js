@@ -8,7 +8,7 @@ export const companyConfigSelector = state => state.config.company_config;
 export const themeStateSelector = state => state.config.theme;
 
 export const userSelector = state => state.user;
-export const rewardSelector = state => state.rewards;
+export const rewardsSelector = state => state.rewards;
 
 export const accountsSelector = state => state.accounts;
 export const cryptoSelector = state => state.crypto;
