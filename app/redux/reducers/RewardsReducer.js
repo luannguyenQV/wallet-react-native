@@ -44,7 +44,6 @@ export default (state = INITIAL_STATE, action) => {
     case CLAIM_REWARD_ASYNC.pending:
       return {
         ...state,
-        campaignsIndex: action.payload,
         claimRewardError: '',
         claimRewardLoading: true,
       };
@@ -129,6 +128,7 @@ export const userCampaignsSelector = createSelector(
       claimRewardLoading,
     } = rewardsState;
     const { campaignIndex, showDetail, type } = userState;
+    console.log('campaignIndex', campaignIndex);
     return {
       data:
         showDetail && type === 'campaign'

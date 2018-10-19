@@ -8,7 +8,7 @@ import { Toast } from 'native-base';
 // import Big from 'big.js';
 
 import * as Rehive from '../../util/rehive';
-import { rewardsSelector } from './selectors';
+import { rewardsSelector, userSelector } from './selectors';
 
 function* fetchRewards() {
   try {
@@ -34,7 +34,11 @@ function* claimReward(action) {
   try {
     console.log(action);
     const rewardState = yield select(rewardsSelector);
-    const campaign = rewardState.campaigns[action.payload];
+    const userState = yield select(userSelector);
+    const campaign =
+      rewardState.campaigns[
+        userState.showDetail ? userState.campaignIndex : action.payload
+      ];
     console.log('campaign', campaign);
     const response = yield call(Rehive.claimReward, {
       campaign: campaign.id,

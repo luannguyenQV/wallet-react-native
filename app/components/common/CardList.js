@@ -49,6 +49,7 @@ class _CardList extends Component {
       cardListOptions,
       activeAction,
     } = this.props;
+    // console.log(index, data);
 
     return (
       <Card
@@ -114,8 +115,10 @@ class _CardList extends Component {
   }
 
   render() {
-    const { data, keyExtractor, onRefresh, type } = this.props;
-    console.log(data);
+    const { data, keyExtractor, onRefresh, type, cardListOptions } = this.props;
+    // if (cardListOptions.noScroll) {
+    //   return <View color="grey2">{this.renderItem(data.data[0], 0)}</View>;
+    // }
     return (
       <View color="grey2">
         <FlatList

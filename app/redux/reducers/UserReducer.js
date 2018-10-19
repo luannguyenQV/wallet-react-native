@@ -24,6 +24,7 @@ import {
   HIDE_DETAIL,
   FETCH_ACCOUNTS_ASYNC,
   FETCH_TRANSACTIONS_ASYNC,
+  CLAIM_REWARD_ASYNC,
 } from '../actions';
 
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
@@ -353,6 +354,12 @@ export default (state = INITIAL_STATE, action) => {
         detailLoaded: true,
       };
 
+    case CLAIM_REWARD_ASYNC.pending:
+      return {
+        ...state,
+        campaignIndex: action.payload,
+      };
+
     case LOGOUT_USER:
       return INITIAL_STATE;
     default:
@@ -429,5 +436,6 @@ export const cardListOptionsSelector = createSelector(userSelector, user => {
     modalVisible: user.modalVisible,
     modalType: user.modalType,
     detailLoaded: user.detailLoaded ? user.detailLoaded : false,
+    noScroll: user.type === 'wallet' && user.showDetail,
   };
 });
