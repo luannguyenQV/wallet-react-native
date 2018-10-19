@@ -85,7 +85,6 @@ class _CardList extends Component {
 
   renderModal() {
     const {
-      modalVisible,
       modalOnDismiss,
       modalLoading,
       modalError,
@@ -93,8 +92,9 @@ class _CardList extends Component {
       modalContentText,
       modalActionOne,
       modalActionTwo,
+      cardListOptions,
     } = this.props;
-
+    const { modalVisible } = cardListOptions;
     return (
       <PopUpGeneral
         visible={modalVisible}
@@ -113,13 +113,12 @@ class _CardList extends Component {
 
   render() {
     const { data, keyExtractor, onRefresh, type } = this.props;
-    console.log('in CardList:render', data);
     return (
       <View color="grey2">
         <FlatList
           ref={component => (this[type + 'FlatList'] = component)}
           refreshControl={
-            <RefreshControl refreshing={false} onRefresh={onRefresh} />
+            <RefreshControl refreshing={data.loading} onRefresh={onRefresh} />
           }
           keyboardShouldPersistTaps={'handled'}
           data={data.data}

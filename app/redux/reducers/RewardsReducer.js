@@ -112,24 +112,31 @@ export default (state = INITIAL_STATE, action) => {
 };
 
 export function getRewards(store) {
-  const rewards = {
-    data: store.rewards.rewards,
-    loading: store.rewards.rewardsLoading,
-    error: store.rewards.rewardsError,
-    tempItem: store.rewards.tempReward,
-    detail: store.rewards.showRewardDetail,
+  const {
+    rewards,
+    rewardsLoading,
+    rewardsError,
+    tempReward,
+    showRewardDetail,
+  } = store.rewards;
+  return {
+    data: rewards ? rewards : [],
+    loading: rewardsLoading ? rewardsLoading : false,
+    error: rewardsError ? rewardsError : '',
   };
-  return rewards;
 }
 
 export function getCampaigns(store) {
-  const campaigns = {
-    data: store.rewards.campaigns,
-    loading: store.rewards.campaignsLoading,
-    error: store.rewards.campaignsError,
-    tempItem: store.rewards.tempCampaign,
-    detail: store.rewards.showCampaignDetail,
-    loadingDetail: store.rewards.claimRewardLoading,
+  const {
+    campaigns,
+    campaignsLoading,
+    campaignsError,
+    tempReward,
+    showRewardDetail,
+  } = store.rewards;
+  return {
+    data: campaigns ? campaigns : [],
+    loading: campaignsLoading ? campaignsLoading : false,
+    error: campaignsError ? campaignsError : '',
   };
-  return campaigns;
 }

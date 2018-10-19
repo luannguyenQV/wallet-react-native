@@ -326,10 +326,14 @@ export default (state = INITIAL_STATE, action) => {
       };
 
     case SHOW_DETAIL:
+      let tempItem = {};
+      if (state[action.payload.type] && state[action.payload.type].length > 0) {
+        tempItem = state[action.payload.type][action.payload.index];
+      }
       return {
         ...state,
         showDetail: true,
-        tempItem: state[action.payload.type][action.payload.index],
+        tempItem,
         [action.payload.type + 'Index']: action.payload.index,
       };
     case HIDE_DETAIL:

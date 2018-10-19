@@ -18,6 +18,9 @@ import {
   showModal,
   hideModal,
   resendVerification,
+  fetchAccounts,
+  fetchRewards,
+  fetchCampaigns,
 } from './../../redux/actions';
 import { CardList, View, CodeInput } from '../common';
 import { CardAddress } from './CardAddress';
@@ -28,8 +31,9 @@ import { CardCryptoAddress } from './CardCryptoAddress';
 import { CardPersonalDetails } from './CardPersonalDetails';
 import { CardWallet } from './CardWallet';
 import { CardReward } from './CardReward';
+import { CardCampaign } from './CardCampaign';
 import { concatAddress, standardizeString } from '../../util/general';
-import { withNavigation } from 'react-navigation';
+import { withNavigationFocus } from 'react-navigation';
 import { cardListOptionsSelector } from '../../redux/reducers/UserReducer';
 
 // This function takes a component...
@@ -65,8 +69,10 @@ function withRedux(CardList) {
     //   });
     // }
 
-    renderItem(item, detail) {
-      const { type } = this.props;
+    renderItem(item, index) {
+      const { type, cardListOptions } = this.props;
+      const detail = cardListOptions.showDetail;
+      console.log(cardListOptions);
       switch (type) {
         case 'address':
           return (
@@ -134,14 +140,9 @@ function withRedux(CardList) {
             />
           );
         case 'reward':
-          return (
-            <CardReward
-              item={item}
-              detail={detail}
-              updateInputField={this.props.updateInputField}
-              updateItem={this.props.updateItem}
-            />
-          );
+          return <CardReward item={item} detail={detail} />;
+        case 'campaign':
+          return <CardCampaign item={item} detail={detail} />;
         default:
           return <View />;
       }
@@ -155,6 +156,12 @@ function withRedux(CardList) {
       if (cardListOptions.showDetail) {
         switch (type) {
           case 'wallet':
+          case 'rewards':
+            break;
+          case 'campaigns':
+            text = 'CLAIM';
+            onPress = () => this.props.claimReward(item);
+            disabled = cardListOptions.indexLoading;
             break;
           default:
             text = 'SAVE';
@@ -174,6 +181,18 @@ function withRedux(CardList) {
               this.props.navigation.navigate('Send', {
                 currency: item,
               });
+            break;
+          // case 'reward':
+          //   text = 'SEND';
+          //   onPress = () =>
+          //     this.props.navigation.navigate('Send', {
+          //       currency: item,
+          //     });
+          //   break;
+          case 'campaign':
+            text = 'CLAIM';
+            onPress = () => this.props.claimReward(item);
+            disabled = cardListOptions.indexLoading;
             break;
           default:
         }
@@ -374,10 +393,6 @@ function withRedux(CardList) {
       };
     }
 
-    // case 'active':
-    //   textActionOne = 'MAKE ACTIVE';
-    //   onPressActionOne = () => setActiveCurrency(tempItem);
-
     iconFooter(item) {
       const { type, cardListOptions } = this.props;
       if (!cardListOptions.showDetail) {
@@ -389,8 +404,8 @@ function withRedux(CardList) {
             }
           case 'profile':
           case 'wallet':
-
           case 'reward':
+          case 'campaign':
             return '';
           case 'address':
           case 'bank_account':
@@ -417,6 +432,10 @@ function withRedux(CardList) {
           return 'No crypto addresses added yet';
         case 'wallet':
           return 'No currencies added yet';
+        case 'campaign':
+          return 'No campaigns added yet';
+        case 'reward':
+          return 'No rewards claimed yet';
         default:
           return 'No ' + standardizeString(type) + ' added yet';
       }
@@ -429,7 +448,9 @@ function withRedux(CardList) {
           case 'wallet':
             return item.currency.description;
           case 'reward':
-            return '';
+            return item.campaign.name;
+          case 'campaign':
+            return item.name;
           default:
             return '';
         }
@@ -443,8 +464,6 @@ function withRedux(CardList) {
         switch (type) {
           case 'wallet':
             return standardizeString(item.account_name);
-          case 'reward':
-            return '';
           default:
             return '';
         }
@@ -464,24 +483,39 @@ function withRedux(CardList) {
       }
     }
 
+    onRefresh() {
+      const { type } = this.props;
+      switch (type) {
+        case 'wallet':
+          this.props.fetchAccounts();
+          break;
+        case 'rewards':
+          this.props.fetchRewards();
+          break;
+        case 'campaigns':
+          this.props.fetchCampaigns();
+          break;
+        default:
+          this.props.fetchData(type);
+          break;
+      }
+    }
+
     render() {
-      const { data, type, navigation } = this.props;
-      const isFocused = navigation.isFocused();
-      // console.log('in CardListUserSettings:render', data);
+      const { data, type, isFocused, cardListOptions } = this.props;
+      console.log(data);
       if (isFocused) {
-        // console.log('in CardListUserSettings:render:isFocused', isFocused);
         return (
           <CardList
             ref={c => (this[type + 'CardList'] = c)}
             data={data}
+            cardListOptions={cardListOptions}
             type={type}
-            onRefresh={() => this.props.fetchData(type)}
+            onRefresh={() => this.onRefresh()}
             onPressContent={index => this.onPressCard(index)}
             onPressHeader={index => this.onPressCard(index)}
             actionOne={(item, index) => this.actionOne(item, index)}
             actionTwo={(item, index) => this.actionTwo(item, index)}
-            modalVisible={data.modalVisible}
-            modalType={data.modalType}
             modalContent={this.renderModalContent()}
             renderItem={(item, index) => this.renderItem(item, index)}
             iconFooter={item => this.iconFooter(item)}
@@ -506,7 +540,6 @@ function withRedux(CardList) {
 const mapStateToProps = state => {
   return {
     cardListOptions: cardListOptionsSelector(state),
-    // addresses: userAddressesSelector(state),
   };
 };
 
@@ -524,4 +557,7 @@ export default connect(mapStateToProps, {
   confirmDeleteItem,
   confirmPrimaryItem,
   resendVerification,
-})(withRedux(CardList));
+  fetchAccounts,
+  fetchRewards,
+  fetchCampaigns,
+})(withNavigationFocus(withRedux(CardList)));
