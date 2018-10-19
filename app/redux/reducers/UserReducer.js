@@ -373,8 +373,8 @@ export const userAddressesSelector = createSelector(userSelector, user => {
       user.showDetail && user.type === 'address'
         ? [user.tempItem]
         : user.address,
-    loading: user.addressLoading,
-    index: user.addressIndex,
+    loading: user.addressLoading ? user.addressLoading : false,
+    index: user.addressIndex ? user.addressIndex : 0,
   };
 });
 
@@ -382,8 +382,8 @@ export const userEmailsSelector = createSelector(userSelector, user => {
   return {
     data:
       user.showDetail && user.type === 'email' ? [user.tempItem] : user.email,
-    loading: user.emailLoading,
-    index: user.emailIndex,
+    loading: user.emailLoading ? user.emailLoading : false,
+    index: user.emailIndex ? user.emailIndex : 0,
   };
 });
 
@@ -391,8 +391,8 @@ export const userMobilesSelector = createSelector(userSelector, user => {
   return {
     data:
       user.showDetail && user.type === 'mobile' ? [user.tempItem] : user.mobile,
-    loading: user.mobileLoading,
-    index: user.mobileIndex,
+    loading: user.mobileLoading ? user.mobileLoading : false,
+    index: user.mobileIndex ? user.mobileIndex : 0,
   };
 });
 
@@ -402,8 +402,8 @@ export const userBankAccountsSelector = createSelector(userSelector, user => {
       user.showDetail && user.type === 'bank_account'
         ? [user.tempItem]
         : user.bank_account,
-    loading: user.bank_accountLoading,
-    index: user.bank_accountIndex,
+    loading: user.bank_accountLoading ? user.bank_accountLoading : false,
+    index: user.bank_accountIndex ? user.bank_accountIndex : 0,
   };
 });
 export const userCryptoAddressesSelector = createSelector(
@@ -414,8 +414,8 @@ export const userCryptoAddressesSelector = createSelector(
         user.showDetail && user.type === 'crypto_address'
           ? [user.tempItem]
           : user.crypto_address,
-      loading: user.crypto_addressLoading,
-      index: user.crypto_addressIndex,
+      loading: user.crypto_addressLoading ? user.crypto_addressLoading : false,
+      index: user.crypto_addressIndex ? user.crypto_addressIndex : 0,
     };
   },
 );
@@ -426,15 +426,15 @@ export const userProfileSelector = createSelector(userSelector, user => {
       user.showDetail && user.type === 'profile'
         ? [user.tempItem]
         : user.profile,
-    loading: user.profileLoading,
+    loading: user.profileLoading ? user.profileLoading : false,
   };
 });
 
 export const cardListOptionsSelector = createSelector(userSelector, user => {
   return {
-    showDetail: user.showDetail,
-    modalVisible: user.modalVisible,
-    modalType: user.modalType,
+    showDetail: user.showDetail ? user.showDetail : false,
+    modalVisible: user.modalVisible ? user.modalVisible : false,
+    modalType: user.modalType ? user.modalType : '',
     detailLoaded: user.detailLoaded ? user.detailLoaded : false,
     noScroll: user.type === 'wallet' && user.showDetail,
   };

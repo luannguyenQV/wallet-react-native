@@ -128,7 +128,6 @@ export const userCampaignsSelector = createSelector(
       claimRewardLoading,
     } = rewardsState;
     const { campaignIndex, showDetail, type } = userState;
-    console.log('campaignIndex', campaignIndex);
     return {
       data:
         showDetail && type === 'campaign'
