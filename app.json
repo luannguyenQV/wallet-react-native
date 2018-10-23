@@ -2,15 +2,15 @@
   "expo": {
     "name": "Rehive Wallet",
     "description": "A multi-currency wallet built on the Rehive platform.",
-    "version": "1.4.0",
+    "version": "1.4.2",
     "slug": "rehive-wallet",
     "privacy": "public",
     "sdkVersion": "30.0.0",
     "orientation": "portrait",
     "primaryColor": "#4d4d4d",
-    "icon": "./assets/icons/icon-gray.png",
+    "icon": "./assets/icons/icon.png",
     "splash": {
-      "image": "./assets/icons/splash-full.png",
+      "image": "./assets/icons/splash.png",
       "primaryColor": "#ffffff",
       "resizeMode": "contain"
     },
@@ -30,17 +30,17 @@
     },
     "android": {
       "package": "com.rehivewallet",
-      "icon": "./assets/icons/icon-1024.png",
+      "icon": "./assets/icons/icon.png",
       "versionCode": 4,
       "splash": {
         "backgroundColor": "#ffffff",
         "resizeMode": "contain",
-        "ldpi": "./assets/icons/splash-full.png",
-        "mdpi": "./assets/icons/splash-full.png",
-        "hdpi": "./assets/icons/splash-full.png",
-        "xhdpi": "./assets/icons/splash-full.png",
-        "xxhdpi": "./assets/icons/splash-full.png",
-        "xxxhdpi": "./assets/icons/splash-full.png"
+        "ldpi": "./assets/icons/splash.png",
+        "mdpi": "./assets/icons/splash.png",
+        "hdpi": "./assets/icons/splash.png",
+        "xhdpi": "./assets/icons/splash.png",
+        "xxhdpi": "./assets/icons/splash.png",
+        "xxxhdpi": "./assets/icons/splash.png"
       }
     }
   }
