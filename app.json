@@ -31,7 +31,7 @@
     "android": {
       "package": "com.rehivewallet_staging",
       "icon": "./assets/icons/icon-1024.png",
-      "versionCode": 3,
+      "versionCode": 4,
       "splash": {
         "backgroundColor": "#ffffff",
         "resizeMode": "contain",
