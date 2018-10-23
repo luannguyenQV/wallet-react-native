@@ -88,12 +88,12 @@ class DepositScreen extends Component {
         </View>
         <View style={containerStyleReference}>
           <Text style={textStyleCommentReference}>
-            {tempWallet.account_reference}
+            {tempWallet.account}
           </Text>
           <TouchableHighlight
             underlayColor={'white'}
             onPress={() => {
-              Clipboard.setString(tempWallet.account_reference);
+              Clipboard.setString(tempWallet.account);
               Alert.alert(null, 'Copied');
             }}>
             <Icon name="content-copy" size={24} color={'black'} />
@@ -120,11 +120,8 @@ const styles = {
     padding: 8,
   },
   containerStyleComment: {
-    // flex: 2,
-    backgroundColor: 'lightgrey',
     alignItems: 'center',
     justifyContent: 'center',
-    // paddingHorizontal: 16,
     padding: 16,
   },
   textStyleComment: {

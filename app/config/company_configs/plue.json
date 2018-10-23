@@ -1,0 +1,135 @@
+{
+  "company": {
+    "id": "plue",
+    "name": "Plue",
+    "description": "Plue company on the Rehive platform"
+  },
+  "services": {
+    "bitcoin": true,
+    "stellar": true,
+    "ethereum": true,
+    "rewards": true
+  },
+  "auth": {
+    "identifier": "email",
+    "email": "",
+    "mobile": "",
+    "terms": [
+      {
+        "id": 0,
+        "title": "Privacy Policy",
+        "description": "Click here to read more on the privacy policy",
+        "link": "https://www.google.co.za/"
+      },
+      {
+        "id": 1,
+        "title": "User Agreement",
+        "description": "Click here to read more on the user agreement",
+        "link": "https://www.google.co.za/"
+      }
+    ],
+    "first_name": false,
+    "last_name": false,
+    "username": true,
+    "country": false,
+    "pin": "",
+    "mfa": ""
+  },
+  "pin": {
+    "appLoad": true,
+    "security": false,
+    "send": true,
+    "withdraw": true,
+    "updateDetails": false
+  },
+  "home": {
+    "header": "wallet",
+    "detail": [
+      {
+        "order": 0,
+        "type": "cards"
+      },
+      {
+        "order": 1,
+        "type": "transactions"
+      }
+    ]
+  },
+  "verification": {
+    "requirePersonal": true,
+    "requireAddress": true,
+    "requireMobile": true,
+    "requireEmail": true,
+    "requireDocumentID": true,
+    "requireDocumentAddress": true,
+    "requireDocumentAdvID": true
+  },
+  "colors": {
+    "primary": "#102C62",
+    "secondary": "#2353AF",
+    "tertiary": "#c4c4c4",
+    "focus": "#FFBC2A",
+
+    "primaryContrast": "#f6f6f6",
+    "secondaryContrast": "#f6f6f6",
+    "tertiaryContrast": "#000000",
+    "focusContrast": "#000000",
+
+    "warning": "#FC8755",
+    "error": "#f44336",
+    "success": "#4CAF50",
+    "positive": "#4CAF50",
+    "negative": "#f44336"
+  },
+  "cards": {
+    "home": {
+      "general": {
+        "welcome": false,
+        "verify": false
+      },
+      "custom": [
+        {
+          "id": 0,
+          "title": "Welcome to Plue",
+          "description": "",
+          "dismiss": true,
+          "image": "card1-plue"
+        },
+        {
+          "id": 1,
+          "title": "What's new",
+          "description":
+            "• Improved 2FA \n• Working biometric/pin local authentication\n• Light/dark theme\n• Support for custom stellar assets",
+          "dismiss": true,
+          "image": "card2-plue"
+        }
+      ]
+    }
+  },
+  "sliders": {
+    "landing": [
+      {
+        "id": 0,
+        "title": "Plue",
+        "description": "",
+        "image": "slider1-plue"
+      },
+      {
+        "id": 1,
+        "title": "Plue",
+        "description": "",
+        "image": "slider2-plue"
+      }
+    ]
+  },
+  "screens": {
+    "login": [
+      {
+        "id": "0",
+        "title": "Login 1",
+        "description": "This is your custom text for login screen 1",
+        "image": "card1"
+      }
+    ]
+  }
+}

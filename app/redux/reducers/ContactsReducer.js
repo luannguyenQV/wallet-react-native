@@ -16,6 +16,7 @@ const INITIAL_STATE = {
   contactsSearch: '',
   contactsLoading: false,
   contactsType: 'email',
+  error: '',
 };
 
 export default (state = INITIAL_STATE, action) => {

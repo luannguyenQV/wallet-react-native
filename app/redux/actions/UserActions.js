@@ -41,57 +41,45 @@ export const editItem = (type, item) => {
     payload: { type, data: item },
   };
 };
-
-export const PRIMARY_ITEM = 'primary_item';
-export const primaryItem = (type, item) => {
-  return {
-    type: PRIMARY_ITEM,
-    payload: { type, data: { ...item, primary: true } },
-  };
-};
-
 export const UPDATE_ASYNC = createAsyncTypes('update');
-export const updateItem = (type, data) => {
+export const updateItem = type => {
   return {
     type: UPDATE_ASYNC.pending,
-    payload: { type, data },
-  };
-};
-
-export const DELETE_ITEM = 'delete_item';
-export const deleteItem = (type, item) => {
-  return {
-    type: DELETE_ITEM,
-    payload: { type, data: item },
+    payload: type,
   };
 };
 
 export const CONFIRM_DELETE_ASYNC = createAsyncTypes('confirm_delete');
-export const confirmDeleteItem = (type, item) => {
+export const confirmDeleteItem = type => {
   return {
     type: CONFIRM_DELETE_ASYNC.pending,
-    payload: { type, data: item },
+    payload: type,
+  };
+};
+
+export const CONFIRM_PRIMARY_ASYNC = createAsyncTypes('confirm_primary');
+export const confirmPrimaryItem = type => {
+  return {
+    type: CONFIRM_PRIMARY_ASYNC.pending,
+    payload: type,
   };
 };
 
 export const RESEND_VERIFICATION_ASYNC = createAsyncTypes(
   'resend_verification',
 );
-export const resendVerification = (type, data, company) => {
-  // console.log(type, value);
+export const resendVerification = (type, index) => {
   return {
     type: RESEND_VERIFICATION_ASYNC.pending,
     payload: {
       type,
-      data,
-      company,
+      index,
     },
   };
 };
 
 export const VERIFY_ASYNC = createAsyncTypes('verify');
 export const verifyItem = (type, otp) => {
-  console.log(type, otp);
   return {
     type: VERIFY_ASYNC.pending,
     payload: {
@@ -102,13 +90,10 @@ export const verifyItem = (type, otp) => {
 };
 
 export const SHOW_MODAL = 'show_modal';
-export const showModal = (type, item, modalType) => {
-  console.log('type', type);
-  console.log('item', item);
-  console.log('modalType', modalType);
+export const showModal = (type, index, modalType) => {
   return {
     type: SHOW_MODAL,
-    payload: { type, item, modalType },
+    payload: { type, index, modalType },
   };
 };
 
@@ -128,7 +113,6 @@ export const uploadProfilePhoto = image => {
     name: 'profile',
     type: 'image/jpg',
   };
-  console.log('uploadPP', file);
   return {
     type: UPLOAD_PROFILE_PHOTO_ASYNC.pending,
     payload: file,
@@ -173,5 +157,21 @@ export const CARD_RESTORE_ALL = 'card_restore_all';
 export const cardRestoreAll = () => {
   return {
     type: CARD_RESTORE_ALL,
+  };
+};
+
+export const SHOW_DETAIL = 'show_detail';
+export const showDetail = (type, index) => {
+  return {
+    type: SHOW_DETAIL,
+    payload: { type, index },
+  };
+};
+
+export const HIDE_DETAIL = 'hide_detail';
+export const hideDetail = type => {
+  return {
+    type: HIDE_DETAIL,
+    payload: { type },
   };
 };

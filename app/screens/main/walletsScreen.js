@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
 import { connect } from 'react-redux';
 import {
   fetchAccounts,
@@ -14,12 +13,8 @@ import { currenciesSelector } from './../../redux/reducers/AccountsReducer';
 
 import Header from './../../components/header';
 // import Wallet from './../../components/wallet';
-import { Output, MyView } from '../../components/common';
-import { standardizeString, performDivisibility } from './../../util/general';
-import WalletBalance from '../../components/WalletBalance';
-import WalletActionList from '../../components/WalletActionList';
-import TransactionList from './../../components/TransactionList';
-import CardList from './../../components/CardList';
+import { Output, View } from '../../components/common';
+import CardListUserSettings from '../../components/cards/CardListUserSettings';
 
 class WalletsScreen extends Component {
   static navigationOptions = {
@@ -40,115 +35,31 @@ class WalletsScreen extends Component {
     }
   }
 
-  showModal = item => {
-    this.setState({ showModal: true, wallet: item });
-  };
-
-  hideModal = () => {
-    this.setState({ showModal: false, wallet: null });
-  };
-
-  send = item => {
-    this.props.navigation.navigate('Send', {
-      currency: item,
-    });
-  };
-
-  renderContent(item) {
-    const balance =
-      item.currency.symbol +
-      ' ' +
-      performDivisibility(item.balance, item.currency.divisibility).toFixed(
-        item.currency.divisibility,
-      );
-    const available =
-      item.currency.symbol +
-      ' ' +
-      performDivisibility(
-        item.available_balance,
-        item.currency.divisibility,
-      ).toFixed(item.currency.divisibility);
-
-    return (
-      <MyView p={0.5}>
-        <Output label="Balance" value={balance} />
-        <Output label="Available" value={available} />
-      </MyView>
-    );
-  }
-
-  renderDetail(item, navigation) {
-    // const { wallet } = this.state;
-    let i = 0;
-    let buttons = [];
-    if (this.props.company_bank_account.length > 0) {
-      buttons[i] = { id: i++, type: 'deposit' };
-    }
-    // buttons[i] = { id: i++, type: 'withdraw' };
-    buttons[i] = { id: i++, type: 'receive' };
-    buttons[i] = { id: i++, type: 'send' };
+  render() {
+    const { currencies } = this.props;
     return (
       <View>
-        <WalletBalance detail currency={item} onClose={this.props.hideWallet} />
-        <WalletActionList
-          buttons={buttons}
-          navigation={this.props.navigation}
-          currency={item}
-        />
-        <TransactionList currency={item} />
-      </View>
-    );
-  }
-
-  render() {
-    const {
-      fetchAccounts,
-      loading_accounts,
-      currencies,
-      viewWallet,
-      showModal,
-      tempWallet,
-    } = this.props;
-    return (
-      <MyView f>
         <Header navigation={this.props.navigation} drawer title="Wallets" />
-        <CardList
+        <CardListUserSettings
           type="wallet"
+          data={currencies}
           navigation={this.props.navigation}
-          data={currencies.data}
-          tempItem={tempWallet}
-          loadingData={currencies.loading}
-          identifier="reference"
-          onRefresh={fetchAccounts}
+        />
+        {/* <CardList
+
           activeItem={item => showModal('wallet', item, 'active')}
-          // showDetail={showWallet}
-          renderContent={this.renderContent}
-          renderDetail={(item, navigation) =>
-            this.renderDetail(item, navigation)
-          }
+
           itemActive={item => (item ? item.active : false)}
           textTitleLeft={item =>
             item && item.currency ? item.currency.code : ''
           }
           // onPressTitleLeft={item => this.showModal(item)}
-          title={item => (item ? item.currency.description : '')}
-          subtitle={item => (item ? standardizeString(item.account_name) : '')}
-          onPressTitle={item => viewWallet(item)}
-          onPressContent={item => viewWallet(item)}
-          emptyListMessage="No currencies added yet"
           titleStyle="secondary"
           keyExtractor={item => item.account + item.currency.code}
-          textActionOne="SEND"
-          onPressActionOne={item =>
-            this.props.navigation.navigate('Send', { currency: item })
-          }
-          textActionTwo="RECEIVE"
-          onPressActionTwo={item =>
-            this.props.navigation.navigate('Receive', { currency: item })
-          }
+          
           canActive
-        />
-      </MyView>
+        /> */}
+      </View>
     );
   }
 }

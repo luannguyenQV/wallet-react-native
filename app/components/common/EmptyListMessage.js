@@ -1,12 +1,13 @@
 import React from 'react';
 import { View, Text } from 'react-native';
+import context from './context';
 
-const EmptyListMessage = ({ text }) => {
+const _EmptyListMessage = ({ text, colors }) => {
   const { viewStyleContainer, viewStyleBox, textStyle } = styles;
   return (
     <View style={viewStyleContainer}>
       <View style={viewStyleBox}>
-        <Text style={textStyle}>{text}</Text>
+        <Text style={[textStyle, { color: colors.font }]}>{text}</Text>
       </View>
     </View>
   );
@@ -28,5 +29,7 @@ const styles = {
     fontWeight: 'normal',
   },
 };
+
+const EmptyListMessage = context(_EmptyListMessage);
 
 export { EmptyListMessage };

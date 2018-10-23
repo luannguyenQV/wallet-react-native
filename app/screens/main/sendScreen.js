@@ -33,6 +33,7 @@ import {
   Output,
   Button,
   ButtonList,
+  View as MyView,
 } from './../../components/common';
 import Header from './../../components/header';
 import LocalAuthentication from '../../components/LocalAuthentication';
@@ -190,7 +191,7 @@ class SendScreen extends Component {
             />
             <Button
               type="text"
-              label="CANCEL"
+              label="BACK"
               onPress={() => setTransactionState('')}
             />
           </ButtonList>
@@ -198,7 +199,7 @@ class SendScreen extends Component {
         {transaction.state === 'fail' ? (
           <View style={viewStyleError}>
             <Text style={textStyleError}>Send failed</Text>
-            <Text style={textStyleError}>{transaction.state}</Text>
+            <Text style={textStyleError}>{transaction.error}</Text>
           </View>
         ) : null}
       </View>
@@ -226,7 +227,10 @@ class SendScreen extends Component {
         placeholder = 'e.g. user@rehive.com';
         break;
       case 'crypto':
-        label = label + transaction.currency.crypto + ' address';
+        label =
+          label +
+          (transaction.currency ? transaction.currency.crypto + ' ' : '') +
+          'address';
         placeholder = 'GAQGVZYIZ2DX56EB6TZYGBD...';
         break;
     }
@@ -279,6 +283,13 @@ class SendScreen extends Component {
           reference={input => {
             this.recipientInput = input;
           }}
+          keyboardType={
+            contacts.type === 'email'
+              ? 'email-address'
+              : contacts.type === 'mobile'
+                ? Platform.OS === 'ios' ? 'decimal-pad' : 'phone-pad'
+                : 'default'
+          }
           returnKeyType="next"
           // autoFocus
           onSubmitEditing={() => {
@@ -452,25 +463,20 @@ class SendScreen extends Component {
           headerRightText={textHeader}
           headerRightOnPress={onPressHeader}
         />
-        <KeyboardAvoidingView
-          keyboardShouldPersistTaps={'always'}
-          style={styles.viewStyleContainer}
-          behavior={'padding'}>
-          {pinVisible ? (
-            <LocalAuthentication
-              modal
-              pin={pin}
-              fingerprint={fingerprint}
-              modalVisible={pinVisible}
-              onSuccess={() => {
-                hidePin();
-                this.performSend();
-              }}
-              onDismiss={() => hidePin()}
-            />
-          ) : null}
-          {this.renderMainContainer()}
-        </KeyboardAvoidingView>
+        <MyView keyboardAvoiding>{this.renderMainContainer()}</MyView>
+        {pinVisible ? (
+          <LocalAuthentication
+            modal
+            pin={pin}
+            fingerprint={fingerprint}
+            modalVisible={pinVisible}
+            onSuccess={() => {
+              hidePin();
+              this.performSend();
+            }}
+            onDismiss={() => hidePin()}
+          />
+        ) : null}
       </View>
     );
   }

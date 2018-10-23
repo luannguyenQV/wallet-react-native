@@ -8,7 +8,7 @@ import {
 } from 'redux-saga/effects';
 import {
   FETCH_ACCOUNTS_ASYNC,
-  SET_ACTIVE_CURRENCY_ASYNC,
+  CONFIRM_ACTIVE_CURRENCY_ASYNC,
   SEND_ASYNC,
   HIDE_MODAL,
   LOGOUT_USER_ASYNC,
@@ -22,8 +22,11 @@ import {
 import { Toast } from 'native-base';
 import Big from 'big.js';
 import * as Rehive from '../../util/rehive';
-import { cryptoSelector } from './selectors';
-import { transactionSelector } from '../reducers/AccountsReducer';
+import { cryptoSelector, userSelector } from './selectors';
+import {
+  transactionSelector,
+  currenciesSelector,
+} from '../reducers/AccountsReducer';
 import { contactsSelector } from '../reducers/ContactsReducer';
 
 import {
@@ -31,6 +34,7 @@ import {
   validateMobile,
   validateCrypto,
 } from '../../util/validation';
+import { standardizeString } from '../../util/general';
 
 function* fetchAccounts() {
   try {
@@ -69,26 +73,31 @@ function* fetchTransactions(action) {
   }
 }
 
-function* setActiveCurrency(action) {
+function* confirmActiveCurrency() {
   try {
-    // console.log(action);
+    const currencies = yield select(currenciesSelector);
+    const currency = currencies.data[currencies.index];
     yield call(
       Rehive.setActiveCurrency,
-      action.payload.account,
-      action.payload.currency.code,
+      currency.account,
+      currency.currency.code,
     );
     Toast.show({
-      text: action.payload.currency.code + ' set as active currency',
+      text:
+        standardizeString(currency.account_name) +
+        ': ' +
+        currency.currency.code +
+        ' set as active currency',
     });
     yield all([
-      put({ type: SET_ACTIVE_CURRENCY_ASYNC.success }),
+      put({ type: CONFIRM_ACTIVE_CURRENCY_ASYNC.success }),
       put({ type: HIDE_MODAL }),
       put({ type: FETCH_ACCOUNTS_ASYNC.pending }),
     ]);
   } catch (error) {
     console.log(error);
     yield put({
-      type: SET_ACTIVE_CURRENCY_ASYNC.error,
+      type: CONFIRM_ACTIVE_CURRENCY_ASYNC.error,
       payload: error.message,
     });
   }
@@ -202,28 +211,28 @@ function* send(action) {
     }
     let data = {
       amount: parseInt(amount, 0),
-      recipient: transaction.recipient,
-      note: transaction.note,
+      to_reference: transaction.recipient,
       currency: transaction.currency.currency.code,
-      debit_account: transaction.currency.account,
     };
     let response = '';
     console.log('data', data);
+    console.log('transaction.currency', transaction.currency);
     switch (transaction.currency.crypto) {
       case 'stellar':
-        data['to_reference'] = data.recipient;
         data['memo'] = transaction.memo;
-        delete data.debit_account;
-        delete data.recipient;
-        response = yield call(Rehive.createTransferStellar, data);
+        response = yield call(Rehive.createCryptoTransfer, data);
         break;
       case 'bitcoin':
-        response = yield call(Rehive.createTransferBitcoin, data);
+        response = yield call(Rehive.createCryptoTransfer, data);
         break;
       case 'ethereum':
-        response = yield call(Rehive.createTransferEthereum, data);
+        response = yield call(Rehive.createCryptoTransfer, data);
         break;
       default:
+        data['note'] = transaction.note;
+        data['debit_account'] = transaction.currency.account;
+        data['recipient'] = transaction.recipient;
+        delete data.to_reference;
         response = yield call(Rehive.createTransfer, data);
         break;
     }
@@ -242,7 +251,7 @@ export const accountsSagas = all([
   takeEvery(FETCH_ACCOUNTS_ASYNC.pending, fetchAccounts),
   takeEvery(SEND_ASYNC.success, fetchAccounts),
   takeEvery(FETCH_TRANSACTIONS_ASYNC.pending, fetchTransactions),
-  takeEvery(SET_ACTIVE_CURRENCY_ASYNC.pending, setActiveCurrency),
+  takeEvery(CONFIRM_ACTIVE_CURRENCY_ASYNC.pending, confirmActiveCurrency),
   takeEvery(SET_TRANSACTION_CURRENCY, checkSendServices),
   takeLatest(VALIDATE_TRANSACTION.pending, validateTransaction),
   takeEvery(SEND_ASYNC.pending, send),

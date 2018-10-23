@@ -16,12 +16,12 @@ class _Tabs extends Component {
         tabBarTextStyle={{ fontSize: 16, color: colors.headerContrast }}
         tabBarBackgroundColor={colors.header}
         style={{
-          elevation: 10,
-          zIndex: 10,
+          elevation: 5,
+          zIndex: 5,
           shadowColor: '#000',
-          shadowOffset: { width: 0, height: 3 },
-          shadowRadius: 5,
-          shadowOpacity: 0.3,
+          shadowOffset: { width: 0, height: 2 },
+          shadowRadius: 2,
+          shadowOpacity: 0.15,
         }}
         tabBarUnderlineStyle={{ backgroundColor: colors.headerContrast }}
         renderTabBar={() => <ScrollableTabBar />}>

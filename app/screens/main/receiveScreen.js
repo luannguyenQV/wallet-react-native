@@ -23,7 +23,13 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 import { Toast } from 'native-base';
 import Header from './../../components/header';
-import { Output, Input, Button, Checkbox } from './../../components/common';
+import {
+  Output,
+  Input,
+  Button,
+  Checkbox,
+  View as MyView,
+} from './../../components/common';
 import {
   currenciesSelector,
   receiveSelector,
@@ -81,7 +87,7 @@ class ReceiveScreen extends Component {
       currencies,
     } = this.props;
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, margin: 8 }}>
         <Output label={''} value={receive.value} copy />
         <TouchableHighlight
           underlayColor={'white'}
@@ -231,31 +237,12 @@ class ReceiveScreen extends Component {
   }
 
   render() {
-    console.log('SCREEN_WIDTH', SCREEN_WIDTH);
     return (
       <View style={styles.container}>
         <Header navigation={this.props.navigation} back title="Receive" />
-        {/* {Platform.OS === 'android' ? ( */}
-        <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          behavior={'position'}
-          keyboardVerticalOffset={0}>
-          <ScrollView
-            keyboardDismissMode={'interactive'}
-            contentContainerStyle={{ padding: 8 }}
-            keyboardShouldPersistTaps="always">
-            {this.renderContent()}
-          </ScrollView>
-        </KeyboardAvoidingView>
-        {/* ) : (
-          <KeyboardAwareScrollView
-            resetScrollToCoords={{ x: 0, y: 0 }}
-            contentContainerStyle={{ padding: 8 }}
-            extraScrollHeight={80}
-            keyboardOpeningTime={150}>
-            {this.renderContent()}
-          </KeyboardAwareScrollView>
-        )} */}
+        <MyView keyboardAvoiding behavior={'position'}>
+          {this.renderContent()}
+        </MyView>
       </View>
     );
   }

@@ -18,7 +18,7 @@ class ListItem extends Component {
       textStyleSubtitle,
     } = styles;
     const { image, title, subtitle, onPress, noImage } = this.props;
-    console.log('title', title);
+    console.log(image);
     return (
       <TouchableHighlight
         underlayColor={'white'}
@@ -31,7 +31,7 @@ class ListItem extends Component {
                   style={{ height: 32, width: 32, borderRadius: 16 }}
                   source={{
                     uri: image,
-                    cache: 'only-if-cached',
+                    // cache: 'only-if-cached',
                   }}
                 />
               ) : (

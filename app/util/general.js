@@ -5,9 +5,16 @@ export const performDivisibility = (balance, divisibility) => {
   return balance;
 };
 
-export const standardizeString = string => {
+export const standardizeString = (string, capitalise = true) => {
   if (string) {
-    return (string.charAt(0).toUpperCase() + string.slice(1)).replace('_', ' ');
+    if (capitalise) {
+      return (string.charAt(0).toUpperCase() + string.slice(1)).replace(
+        '_',
+        ' ',
+      );
+    } else {
+      return string.replace('_', ' ');
+    }
   }
   return '';
 };
@@ -64,4 +71,44 @@ export const decodeQR = string => {
     return { type, recipient, amount, note, currency, account, memo };
   }
   return '';
+};
+
+export const concatAddress = address => {
+  let value = '';
+  if (address.line_1) {
+    value = value + address.line_1;
+  }
+  if (address.line_2) {
+    value = value + (value ? ', ' : '') + address.line_2;
+  }
+  if (address.city) {
+    value = value + (value ? ', ' : '') + address.city;
+  }
+  if (address.state_province) {
+    value = value + (value ? ', ' : '') + address.state_province;
+  }
+  if (address.country) {
+    value = value + (value ? ', ' : '') + address.country;
+  }
+  if (address.postal_code) {
+    value = value + (value ? ', ' : '') + address.postal_code;
+  }
+  return value;
+};
+
+export const concatBankAccount = account => {
+  let value = '';
+  if (account.name) {
+    value = value + account.name;
+  }
+  if (account.bank_name) {
+    value = value + (value ? ': ' : '') + account.bank_name;
+  }
+  if (account.number) {
+    value = value + (value ? ', ' : '') + account.number;
+  }
+  if (account.type) {
+    value = value + (value ? ', ' : '') + account.type;
+  }
+  return value;
 };

@@ -15,11 +15,17 @@ import {
   UPLOAD_DOCUMENT_ASYNC,
   SHOW_MODAL,
   HIDE_MODAL,
-  SET_ACTIVE_CURRENCY_ASYNC,
+  CONFIRM_ACTIVE_CURRENCY_ASYNC,
   LOGOUT_USER,
   VIEW_WALLET,
   HIDE_WALLET,
   RESET_USER_ERRORS,
+  CACHE_COMPANY,
+  SHOW_DETAIL,
+  HIDE_DETAIL,
+  FETCH_ACCOUNTS_ASYNC,
+  FETCH_TRANSACTIONS_ASYNC,
+  CLAIM_REWARD_ASYNC,
 } from '../actions';
 
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
@@ -37,13 +43,10 @@ const EMPTY_BANK_ACCOUNT = {
   iban: '',
   bic: '',
 };
-
 const EMPTY_PROFILE = {
   first_name: '',
   last_name: '',
   id_number: '',
-  nationality: '',
-  profile: '',
 };
 
 const EMPTY_MOBILE = { number: '', primary: false };
@@ -63,11 +66,10 @@ const EMPTY_ADDRESS = {
 
 const INITIAL_STATE = {
   refreshing_profile: false,
-  profile: {},
+  profile: EMPTY_PROFILE,
   email_address: [],
   mobile_number: [],
-  address: null,
-  document: {},
+  document: [],
   bank_account: [],
   crypto_account: [],
   company: [],
@@ -86,6 +88,33 @@ const INITIAL_STATE = {
   fetchError: '',
 
   dismissedCards: [],
+
+  email: null,
+  emailLoading: false,
+  emailDetail: false,
+  emailIndex: 0,
+
+  mobile: null,
+  mobileLoading: false,
+  mobileDetail: false,
+  mobileIndex: 0,
+
+  address: null,
+  addressLoading: false,
+  addressDetail: false,
+  addressIndex: 0,
+
+  bank_account: null,
+  bank_accountLoading: false,
+  bank_accountDetail: false,
+  bank_accountIndex: 0,
+
+  crypto_address: null,
+  crypto_addressLoading: false,
+  crypto_addressDetail: false,
+  crypto_addressIndex: 0,
+
+  newItem: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -102,35 +131,28 @@ export default (state = INITIAL_STATE, action) => {
           [action.payload.prop]: action.payload.value,
         },
       };
-
-    case NEW_ITEM:
+    case FETCH_DATA_ASYNC.pending:
       return {
         ...state,
-        // [action.payload.type]: {},
-        updateError: '',
-        tempItem: {},
-        showDetail: true,
-        editing: false,
-      };
-    case EDIT_ITEM:
-      return {
-        ...state,
-        tempItem: action.payload.data,
-        showDetail: true,
-        editing: true,
-        wallet: false,
+        [action.payload + 'Loading']: true,
+        showDetail: false,
+        modalVisible: false,
         modalType: '',
-        updateError: '',
       };
-    case PRIMARY_ITEM:
+    case FETCH_DATA_ASYNC.success:
       return {
         ...state,
-        tempItem: action.payload.data,
-        loading: false,
+        [action.payload.prop]: action.payload.data,
+        [action.payload.prop + 'Loading']: false,
         updateError: '',
-        modalType: 'primary',
-        modalVisible: true,
       };
+    case FETCH_DATA_ASYNC.error:
+      return {
+        ...state,
+        [action.payload.prop + 'Loading']: false,
+        fetchError: action.payload.message,
+      };
+
     case UPDATE_ASYNC.pending:
       return {
         ...state,
@@ -148,19 +170,10 @@ export default (state = INITIAL_STATE, action) => {
     case UPDATE_ASYNC.error:
       return {
         ...state,
-        loading: false,
         updateError: action.payload,
+        loading: false,
       };
 
-    case DELETE_ITEM:
-      return {
-        ...state,
-        tempItem: action.payload.data,
-        loading: false,
-        updateError: '',
-        modalType: 'delete',
-        modalVisible: true,
-      };
     case CONFIRM_DELETE_ASYNC.pending:
       return {
         ...state,
@@ -204,6 +217,7 @@ export default (state = INITIAL_STATE, action) => {
     case HIDE_MODAL:
       return {
         ...state,
+        showDetail: false,
         modalVisible: false,
         loading: false,
         tempItem: null,
@@ -213,20 +227,20 @@ export default (state = INITIAL_STATE, action) => {
     case SHOW_MODAL:
       return {
         ...state,
-        tempItem: action.payload.item,
         modalType: action.payload.modalType,
         modalVisible: true,
         loading: false,
         updateError: '',
+        [action.payload.type + 'Index']: action.payload.index,
       };
 
-    case SET_ACTIVE_CURRENCY_ASYNC.pending:
+    case CONFIRM_ACTIVE_CURRENCY_ASYNC.pending:
       return {
         ...state,
         loading: true,
       };
-    case SET_ACTIVE_CURRENCY_ASYNC.success:
-    case SET_ACTIVE_CURRENCY_ASYNC.fail:
+    case CONFIRM_ACTIVE_CURRENCY_ASYNC.success:
+    case CONFIRM_ACTIVE_CURRENCY_ASYNC.fail:
       return {
         ...state,
         loading: false,
@@ -250,28 +264,6 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         updateError: action.payload,
         loading: false,
-      };
-
-    case FETCH_DATA_ASYNC.pending:
-      return {
-        ...state,
-        loading: true,
-        showDetail: false,
-        modalVisible: false,
-        modalType: '',
-      };
-    case FETCH_DATA_ASYNC.success:
-      return {
-        ...state,
-        [action.payload.prop]: action.payload.data,
-        loading: false,
-        updateError: '',
-      };
-    case FETCH_DATA_ASYNC.error:
-      return {
-        ...state,
-        loading: false,
-        fetchError: action.payload,
       };
 
     case UPLOAD_DOCUMENT_ASYNC.pending:
@@ -299,19 +291,6 @@ export default (state = INITIAL_STATE, action) => {
         updateError: '',
       };
 
-    case VIEW_WALLET:
-      return {
-        ...state,
-        showDetail: true,
-        wallet: true,
-      };
-    case HIDE_WALLET:
-      return {
-        ...state,
-        wallet: false,
-        showDetail: false,
-      };
-
     case CARD_DISMISS:
       return {
         ...state,
@@ -325,6 +304,86 @@ export default (state = INITIAL_STATE, action) => {
         dismissedCards: [],
       };
 
+    case NEW_ITEM:
+      return {
+        ...state,
+        tempItem:
+          action.payload.type === 'email'
+            ? EMPTY_EMAIL
+            : action.payload.type === 'mobile'
+              ? EMPTY_MOBILE
+              : action.payload.type === 'bank_account'
+                ? EMPTY_BANK_ACCOUNT
+                : action.payload.type === 'address'
+                  ? EMPTY_ADDRESS
+                  : EMPTY_CRYPTO,
+        updateError: '',
+        type: action.payload.type,
+        showDetail: true,
+        newItem: true,
+        editing: false,
+        [action.payload.type + 'Index']: 0,
+      };
+    case EDIT_ITEM:
+      return {
+        ...state,
+        tempItem: state[action.payload.type][action.payload.index],
+        showDetail: true,
+        editing: true,
+        modalType: '',
+        updateError: '',
+      };
+
+    case SHOW_DETAIL:
+      let tempItem = {};
+      if (state[action.payload.type] && state[action.payload.type].length > 0) {
+        tempItem = state[action.payload.type][action.payload.index];
+      }
+      return {
+        ...state,
+        showDetail: true,
+        type: action.payload.type,
+        tempItem,
+        [action.payload.type + 'Index']: action.payload.index,
+        updateError: '',
+      };
+    case HIDE_DETAIL:
+      return {
+        ...state,
+        showDetail: false,
+        // [action.payload.type + 'Detail']: false,
+        updateError: '',
+        newItem: false,
+        detailLoaded: false,
+      };
+    case FETCH_TRANSACTIONS_ASYNC.pending:
+      return {
+        ...state,
+        detailLoaded: true,
+      };
+
+    case CLAIM_REWARD_ASYNC.pending:
+      return {
+        ...state,
+        campaignIndex: action.payload,
+      };
+
+    case CACHE_COMPANY:
+      let companies = state.companies ? state.companies : [];
+      var foundIndex = companies.findIndex(
+        company => company.id === action.payload.id,
+      );
+      console.log(foundIndex);
+      if (foundIndex === -1) {
+        companies.push(action.payload);
+      } else {
+        companies[foundIndex] = action.payload;
+      }
+      return {
+        ...state,
+        companies,
+      };
+
     case LOGOUT_USER:
       return INITIAL_STATE;
     default:
@@ -332,6 +391,95 @@ export default (state = INITIAL_STATE, action) => {
   }
 };
 
+export const userAddressesSelector = createSelector(userSelector, user => {
+  return {
+    data:
+      user.showDetail && user.type === 'address'
+        ? [user.tempItem]
+        : user.address ? user.address : [],
+    loading: user.addressLoading ? user.addressLoading : false,
+    index: user.addressIndex ? user.addressIndex : 0,
+    showDetail: user.showDetail ? user.showDetail : false,
+  };
+});
+
 export const userEmailsSelector = createSelector(userSelector, user => {
-  return user.email;
+  return {
+    data:
+      user.showDetail && user.type === 'email'
+        ? [user.tempItem]
+        : user.email ? user.email : [],
+    loading: user.emailLoading ? user.emailLoading : false,
+    index: user.emailIndex ? user.emailIndex : 0,
+    showDetail: user.showDetail ? user.showDetail : false,
+  };
+});
+
+export const userMobilesSelector = createSelector(userSelector, user => {
+  return {
+    data:
+      user.showDetail && user.type === 'mobile'
+        ? [user.tempItem]
+        : user.mobile ? user.mobile : [],
+    loading: user.mobileLoading ? user.mobileLoading : false,
+    index: user.mobileIndex ? user.mobileIndex : 0,
+    showDetail: user.showDetail ? user.showDetail : false,
+  };
+});
+
+export const userBankAccountsSelector = createSelector(userSelector, user => {
+  return {
+    data:
+      user.showDetail && user.type === 'bank_account'
+        ? [user.tempItem]
+        : user.bank_account ? user.bank_account : [],
+    loading: user.bank_accountLoading ? user.bank_accountLoading : false,
+    index: user.bank_accountIndex ? user.bank_accountIndex : 0,
+    showDetail: user.showDetail ? user.showDetail : false,
+  };
+});
+export const userCryptoAddressesSelector = createSelector(
+  userSelector,
+  user => {
+    return {
+      data:
+        user.showDetail && user.type === 'crypto_address'
+          ? [user.tempItem]
+          : user.crypto_address ? user.crypto_address : [],
+      loading: user.crypto_addressLoading ? user.crypto_addressLoading : false,
+      index: user.crypto_addressIndex ? user.crypto_addressIndex : 0,
+      showDetail: user.showDetail ? user.showDetail : false,
+    };
+  },
+);
+
+export const userProfileSelector = createSelector(userSelector, user => {
+  return {
+    data:
+      user.showDetail && user.type === 'profile'
+        ? [user.tempItem]
+        : user.profile ? user.profile : [],
+    loading: user.profileLoading ? user.profileLoading : false,
+    showDetail: user.showDetail ? user.showDetail : false,
+  };
+});
+
+export const cardListOptionsSelector = createSelector(userSelector, user => {
+  return {
+    showDetail: user.showDetail ? user.showDetail : false,
+    modalVisible: user.modalVisible ? user.modalVisible : false,
+    modalType: user.modalType ? user.modalType : '',
+    detailLoaded: user.detailLoaded ? user.detailLoaded : false,
+    noScroll: user.type === 'wallet' && user.showDetail,
+    updateError: user.updateError ? user.updateError : '',
+    loading: user.loading ? user.loading : false,
+  };
+});
+
+export const companiesSelector = createSelector(userSelector, user => {
+  return user.companies ? user.companies : [];
+});
+
+export const userDocumentsSelector = createSelector(userSelector, user => {
+  return user.document ? user.document : [];
 });

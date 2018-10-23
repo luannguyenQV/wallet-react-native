@@ -36,6 +36,7 @@ import {
 } from '../actions/AuthActions';
 import { HIDE_MODAL } from '../actions/UserActions';
 import { SET_TRANSACTION_TYPE } from '../actions';
+import { authStateSelector, userStateSelector } from '../sagas/selectors';
 
 const INITIAL_STATE = {
   mainState: '',
@@ -351,6 +352,12 @@ export default (state = INITIAL_STATE, action) => {
         pinVisible: false,
       };
 
+    case LOGOUT_USER_ASYNC.pending:
+      return {
+        ...state,
+        loggingOut: true,
+      };
+
     case LOGOUT_USER_ASYNC.success:
       return {
         token: '',
@@ -362,11 +369,26 @@ export default (state = INITIAL_STATE, action) => {
         appLoading: false,
         company: state.company,
         company_config: state.company_config,
+        companies: state.companies,
         email: state.email,
         modalVisible: false,
+        loggingOut: false,
       };
 
     default:
       return state;
   }
 };
+
+export const settingsSelector = createSelector(
+  [authStateSelector, userStateSelector],
+  (authState, userState) => {
+    const { modalType, modalVisible } = userState;
+    const { loggingOut } = authState;
+    return {
+      modalVisible: modalVisible ? modalVisible : false,
+      modalType: modalType ? modalType : '',
+      loggingOut: loggingOut ? loggingOut : false,
+    };
+  },
+);

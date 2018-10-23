@@ -67,7 +67,7 @@ import client from './../../config/client';
 import {
   getToken,
   getCompany,
-  getAuth,
+  authStateSelector,
   companyConfigSelector,
   getAuthUser,
 } from './selectors';
@@ -79,6 +79,7 @@ function* init() {
   let company_config;
   try {
     Rehive.initWithoutToken();
+    yield put({ type: FETCH_DATA_ASYNC.pending, payload: 'public_companies' });
     try {
       const company = client.company
         ? client.company
@@ -95,7 +96,7 @@ function* init() {
             yield call(Rehive.verifyToken, token);
             yield call(Rehive.initWithToken, token);
             if (company_config.pin.appLoad) {
-              const { pin, fingerprint } = yield select(getAuth);
+              const { pin, fingerprint } = yield select(authStateSelector);
               if (pin || fingerprint) {
                 if (fingerprint) {
                   yield call(initialAuthState, 'pin', 'fingerprint');
@@ -106,7 +107,7 @@ function* init() {
               }
             }
             // successful app start while logged in
-            yield call(appLoad);
+            yield call(appLoad, false);
           } else {
             yield call(initialAuthState, 'landing', 'landing');
           }
@@ -168,7 +169,7 @@ function* authFlow() {
         mobile,
         password,
         company_config,
-      } = yield select(getAuth);
+      } = yield select(authStateSelector);
       // if no state changes are made stay in current state
       let nextMainState = mainState;
       let nextDetailState = detailState;
@@ -301,7 +302,7 @@ function* authFlow() {
                       data,
                     ));
                   } else {
-                    const tempAuth = yield select(getAuth);
+                    const tempAuth = yield select(authStateSelector);
                     nextMainState = tempAuth.mainState;
                     nextDetailState = tempAuth.detailState;
                   }
@@ -343,7 +344,7 @@ function* termsFlow() {
   console.log('termsFlow');
   let authError = '';
   try {
-    const { company_config } = yield select(getAuth);
+    const { company_config } = yield select(authStateSelector);
     const length = company_config.auth.terms.length;
     for (let i = 0; i < length; i) {
       yield put({
@@ -358,7 +359,7 @@ function* termsFlow() {
       const resp = yield take([NEXT_AUTH_FORM_STATE, UPDATE_AUTH_FORM_STATE]);
       console.log('resp', resp);
       if (resp.type === NEXT_AUTH_FORM_STATE) {
-        const { termsChecked } = yield select(getAuth);
+        const { termsChecked } = yield select(authStateSelector);
         if (termsChecked) {
           i++;
         } else {
@@ -397,7 +398,7 @@ function* registerFlow(data) {
     // return { success: true };
   } catch (error) {
     console.log('registerFlow', error);
-    const { company_config } = yield select(getAuth);
+    const { company_config } = yield select(authStateSelector);
     authError = error.message;
     nextDetailState = company_config.auth.identifier;
   }
@@ -414,7 +415,9 @@ function* postAuthFlow() {
   try {
     let run = true;
     while (run) {
-      const { mainState, detailState, company_config } = yield select(getAuth);
+      const { mainState, detailState, company_config } = yield select(
+        authStateSelector,
+      );
       let nextMainState = mainState;
       let nextDetailState = detailState;
       let authError = '';
@@ -521,7 +524,7 @@ function* postAuthFlow() {
                 yield put({ type: POST_NOT_LOADING });
                 yield take(NEXT_AUTH_FORM_STATE);
                 yield put({ type: POST_LOADING });
-                const { first_name } = yield select(getAuth);
+                const { first_name } = yield select(authStateSelector);
                 if (first_name) {
                   user = yield call(Rehive.updateProfile, { first_name });
                   yield put({ type: AUTH_STORE_USER, payload: user });
@@ -535,7 +538,7 @@ function* postAuthFlow() {
                 yield put({ type: POST_NOT_LOADING });
                 yield take(NEXT_AUTH_FORM_STATE);
                 yield put({ type: POST_LOADING });
-                const { last_name } = yield select(getAuth);
+                const { last_name } = yield select(authStateSelector);
                 if (last_name) {
                   user = yield call(Rehive.updateProfile, { last_name });
                   yield put({ type: AUTH_STORE_USER, payload: user });
@@ -549,7 +552,7 @@ function* postAuthFlow() {
                 yield put({ type: POST_NOT_LOADING });
                 yield take(NEXT_AUTH_FORM_STATE);
                 yield put({ type: POST_LOADING });
-                const { username } = yield select(getAuth);
+                const { username } = yield select(authStateSelector);
                 if (username) {
                   try {
                     let resp = yield call(Rehive.updateProfile, { username });
@@ -558,7 +561,8 @@ function* postAuthFlow() {
                     });
                     yield put({ type: AUTH_STORE_USER, payload: resp });
                   } catch (error) {
-                    authError = resp.message;
+                    console.log(error);
+                    authError = error.message;
                   }
                 }
               } else {
@@ -580,7 +584,7 @@ function* postAuthFlow() {
                 yield put({ type: POST_NOT_LOADING });
                 yield take(NEXT_AUTH_FORM_STATE);
                 yield put({ type: POST_LOADING });
-                const { country } = yield select(getAuth);
+                const { country } = yield select(authStateSelector);
                 if (country) {
                   yield call(Rehive.updateProfile, { country });
                 }
@@ -658,81 +662,47 @@ function* postAuthFlow() {
 }
 
 /* fetches data to ensure redux state contains latest version of information */
-function* appLoad() {
+function* appLoad(login = true) {
   console.log('appLoad');
   try {
     yield put({ type: APP_LOAD.pending });
-    let count = 10;
+    let count = 1;
     const { services } = yield select(companyConfigSelector);
-    // console.log(services);
-    if (services.rewards) {
-      count++;
-    }
-    if (services.stellar) {
-      let resp = yield call(Rehive.getStellarUser);
-      // console.log('resp', resp);
-      const data = resp.data;
-      if (data && !data.username) {
-        const { user } = yield select(getAuth);
-        yield call(Rehive.setStellarUsername, {
-          username: user.username,
-        });
-      }
-      // console.log('data', data);
-      yield put({
-        type: SET_RECEIVE_ADDRESS,
-        payload: {
-          type: 'stellar',
-          address: data && data.crypto ? data.crypto.public_address : '',
-          memo: data && data.crypto ? data.crypto.memo : '',
-        },
-      });
 
-      // count++;
-    }
-    // if (services.bitcoin) {
-    //   count++;
-    // }
-    // if (services.ethereum) {
-    //   count++;
-    // }
-
-    yield all([
-      // put({ type: POST_LOADING }),
-      put({ type: FETCH_ACCOUNTS_ASYNC.pending }),
-      put({ type: FETCH_DATA_ASYNC.pending, payload: 'profile' }),
-      put({ type: FETCH_DATA_ASYNC.pending, payload: 'mobile' }),
-      put({ type: FETCH_DATA_ASYNC.pending, payload: 'email' }),
-      // put({ type: FETCH_DATA_ASYNC.pending, payload: 'crypto_account' }),
-      put({ type: FETCH_DATA_ASYNC.pending, payload: 'bank_account' }),
-      put({ type: FETCH_DATA_ASYNC.pending, payload: 'address' }),
-      put({ type: FETCH_DATA_ASYNC.pending, payload: 'document' }),
-      put({ type: FETCH_DATA_ASYNC.pending, payload: 'company' }),
-      put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_bank_account' }),
-      put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_currency' }),
-      services.rewards ? put({ type: FETCH_REWARDS_ASYNC.pending }) : null,
-      services.stellar
-        ? put({ type: FETCH_CRYPTO_ASYNC.pending, payload: 'stellar' })
-        : null,
-      services.bitcoin
-        ? put({ type: FETCH_CRYPTO_ASYNC.pending, payload: 'bitcoin' })
-        : null,
-      services.ethereum
-        ? put({ type: FETCH_CRYPTO_ASYNC.pending, payload: 'ethereum' })
-        : null,
-    ]);
-
-    // TODO: add timeout and re=fetch any failed api calls
-    for (let i = 0; i < count; i++) {
-      yield take([
-        FETCH_ACCOUNTS_ASYNC.success,
-        FETCH_DATA_ASYNC.success,
-        FETCH_PHONE_CONTACTS_ASYNC.success,
-        FETCH_REWARDS_ASYNC.success,
-        // FETCH_CRYPTO_ASYNC.success,
+    yield put({ type: FETCH_ACCOUNTS_ASYNC.pending });
+    if (login) {
+      yield all([
+        // put({ type: POST_LOADING }),
+        put({ type: FETCH_ACCOUNTS_ASYNC.pending }),
+        put({ type: FETCH_DATA_ASYNC.pending, payload: 'profile' }),
+        put({ type: FETCH_DATA_ASYNC.pending, payload: 'mobile' }),
+        put({ type: FETCH_DATA_ASYNC.pending, payload: 'email' }),
+        // put({ type: FETCH_DATA_ASYNC.pending, payload: 'crypto_account' }),
+        put({ type: FETCH_DATA_ASYNC.pending, payload: 'bank_account' }),
+        put({ type: FETCH_DATA_ASYNC.pending, payload: 'address' }),
+        put({ type: FETCH_DATA_ASYNC.pending, payload: 'document' }),
+        put({ type: FETCH_DATA_ASYNC.pending, payload: 'company' }),
+        put({
+          type: FETCH_DATA_ASYNC.pending,
+          payload: 'company_bank_account',
+        }),
+        put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_currency' }),
+        services.rewards ? put({ type: FETCH_REWARDS_ASYNC.pending }) : null,
+        services.stellar
+          ? put({ type: FETCH_CRYPTO_ASYNC.pending, payload: 'stellar' })
+          : null,
+        services.bitcoin
+          ? put({ type: FETCH_CRYPTO_ASYNC.pending, payload: 'bitcoin' })
+          : null,
+        services.ethereum
+          ? put({ type: FETCH_CRYPTO_ASYNC.pending, payload: 'ethereum' })
+          : null,
       ]);
-      // console.log(i, count);
     }
+    // TODO: add timeout and re=fetch any failed api calls
+    // for (let i = 0; i < count; i++) {
+    yield take(FETCH_ACCOUNTS_ASYNC.success);
+    // }
     yield put({ type: APP_LOAD.success });
     yield call(NavigationService.navigate, 'App');
   } catch (error) {
@@ -750,7 +720,7 @@ function* appLoad() {
 
 function* logoutUser() {
   try {
-    const { mainState } = yield select(getAuth);
+    const { mainState } = yield select(authStateSelector);
     if (mainState !== 'mfa') {
       yield call(Rehive.logout);
     }
@@ -862,7 +832,7 @@ function* mfaFlow() {
         if (action.payload === 'back') {
           yield put({ type: UPDATE_MFA_STATE, payload: 'landing' });
         } else {
-          const { mfaMobile } = yield select(getAuth);
+          const { mfaMobile } = yield select(authStateSelector);
           console.log(mfaMobile);
           yield call(Rehive.enableAuthSMS, mfaMobile);
           yield put({ type: UPDATE_MFA_STATE, payload: 'verifySMS' });

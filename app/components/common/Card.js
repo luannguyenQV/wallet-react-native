@@ -64,7 +64,6 @@ const _Card = props => {
     colors,
     canEdit,
   } = props;
-
   return (
     <View style={viewStyleCardContainer}>
       {/* <Swipeable rightContent={swipeableContent}> */}
@@ -97,14 +96,18 @@ const _Card = props => {
                 style={[
                   textStyleTitle,
                   {
-                    fontSize: title ? (title.length < 18 ? 24 : 18) : 24,
-                    // color: colorTitleText,
+                    fontSize: 22, //title ? (title.length < 18 ? 24 : 18) : 24,
+                    color: colorTitleText ? colorTitleText : colors.font,
                   },
                 ]}>
                 {title}
               </Text>
               {subtitle ? (
-                <Text style={[textStyleSubtitle, { color: colorTitleText }]}>
+                <Text
+                  style={[
+                    textStyleSubtitle,
+                    { color: colorTitleText ? colorTitleText : colors.font },
+                  ]}>
                   {subtitle}
                 </Text>
               ) : null}
@@ -115,7 +118,7 @@ const _Card = props => {
               <HeaderButton
                 icon={iconTitleRight}
                 onPress={onPressTitleRight}
-                color={colorTitle ? colorTitle : colors.primaryContrast}
+                color={colorTitle ? colorTitle : colors.font}
               />
             </View>
           ) : null}
@@ -126,7 +129,11 @@ const _Card = props => {
           {canEdit ? (
             <View
               style={{ position: 'absolute', right: 8, top: 8, padding: 8 }}>
-              <Icon name={'edit'} size={22} color={'lightgray'} />
+              <Icon
+                name={'edit'}
+                size={22}
+                color={colorIcon ? colorIcon : colors.grey2}
+              />
             </View>
           ) : null}
           {props.children}
@@ -145,7 +152,7 @@ const _Card = props => {
                   name={iconFooter}
                   size={22}
                   onPress={onPressFooter}
-                  color={colorIcon ? colorIcon : colors.gray}
+                  color={colorIcon ? colorIcon : colors.grey2}
                 />
               ) : null}
               {textActionTwo ? (
@@ -154,7 +161,9 @@ const _Card = props => {
                   underlayColor="lightgrey"
                   style={buttonStyleAction}
                   onPress={onPressActionTwo}>
-                  <Text style={textStyleAction}>{textActionTwo}</Text>
+                  <Text style={[textStyleAction, { color: colors.font }]}>
+                    {textActionTwo}
+                  </Text>
                 </TouchableHighlight>
               ) : null}
               {textActionOne ? (
@@ -163,7 +172,9 @@ const _Card = props => {
                   underlayColor="lightgrey"
                   style={buttonStyleAction}
                   onPress={onPressActionOne}>
-                  <Text style={textStyleAction}>{textActionOne}</Text>
+                  <Text style={[textStyleAction, { color: colors.font }]}>
+                    {textActionOne}
+                  </Text>
                 </TouchableHighlight>
               ) : null}
             </View>
@@ -188,8 +199,8 @@ _Card.defaultProps = {
   icon: '',
   size: '',
   type: 'contained',
-  colorTitleBackground: Colors.secondary,
-  colorTitleText: Colors.secondaryContrast,
+  colorTitleBackground: '',
+  colorTitleText: '',
   backgroundColor: 'white',
 };
 
@@ -241,7 +252,7 @@ const styles = {
     fontWeight: 'bold',
   },
   textStyleSubtitle: {
-    opacity: 0.6,
+    opacity: 0.8,
     fontSize: 12,
   },
   viewStyleContent: {

@@ -12,7 +12,7 @@
   },
   "auth": {
     "identifier": "email",
-    "email": "required",
+    "email": "",
     "mobile": "",
     "terms": [
       {
@@ -68,13 +68,13 @@
     "requireDocumentAdvID": true
   },
   "colors": {
-    "primary": "#5336FF",
+    "primary": "#5969F6",
     "secondary": "#A4A5F5",
     "tertiary": "#FBFB8B",
-    "focus": "#F45DEB",
+    "focus": "#FC4F96",
 
     "primaryContrast": "#f6f6f6",
-    "secondaryContrast": "#1b1b1b",
+    "secondaryContrast": "#303030",
     "tertiaryContrast": "#000000",
     "focusContrast": "#ffffff",
 

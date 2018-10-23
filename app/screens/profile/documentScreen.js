@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, FlatList, Image } from 'react-native';
+import { View, FlatList, Image } from 'react-native';
 import { connect } from 'react-redux';
-import { uploadDocument, resetUserErrors } from './../../../redux/actions';
-import Header from './../../../components/header';
+import { uploadDocument, resetUserErrors } from '../../redux/actions';
+import Header from '../../components/header';
 
-import { ImageUpload, Button, Spinner } from '../../../components/common';
-import document_categories from './../../../config/document_types.json';
+import { ImageUpload, Button, Spinner, Text } from '../../components/common';
+import document_categories from '../../config/document_types.json';
 
 class DocumentScreen extends Component {
   static navigationOptions = {
@@ -60,7 +60,6 @@ class DocumentScreen extends Component {
     if (category) {
       options = document_category[0].document_types;
     }
-    console.log(options);
 
     switch (state) {
       case 'document_type':
@@ -111,7 +110,6 @@ class DocumentScreen extends Component {
                 onPress={() => this.resetState()}
               />
             </View>
-            }
           </View>
         );
     }
@@ -129,6 +127,7 @@ class DocumentScreen extends Component {
 
   render() {
     const { category } = this.state;
+    console.log('category', category);
     const { textStyleHeader, viewStyleContent } = styles;
     return (
       <View style={styles.container}>

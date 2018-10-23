@@ -13,7 +13,7 @@
   },
   "auth": {
     "identifier": "email",
-    "email": "optional",
+    "email": "",
     "mobile": "",
     "terms": [
       {
@@ -27,8 +27,8 @@
     "last_name": false,
     "username": true,
     "country": false,
-    "pin": "optional",
-    "mfa": "optional"
+    "pin": "",
+    "mfa": ""
   },
   "pin": {
     "appLoad": true,

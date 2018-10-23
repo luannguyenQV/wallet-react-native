@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
-import Colors from './../../config/colors';
+import context from './context';
 
-class SettingsContainer extends Component {
+class _SettingsContainer extends Component {
   render() {
-    const { label, children } = this.props;
+    const { label, children, colors } = this.props;
 
     const {
       viewStyleContainer,
@@ -16,7 +16,7 @@ class SettingsContainer extends Component {
     return (
       <View style={viewStyleContainer}>
         <View style={viewStyleLabel}>
-          <Text style={textStyleLabel}>{label}</Text>
+          <Text style={[textStyleLabel, { color: colors.font }]}>{label}</Text>
         </View>
         {/* {children} */}
         <View style={viewStyleChildren}>{children}</View>
@@ -43,10 +43,10 @@ const styles = {
   textStyleLabel: {
     fontSize: 22,
     paddingTop: 8,
-    color: 'black',
     paddingLeft: 8,
-    opacity: 0.86,
   },
 };
+
+const SettingsContainer = context(_SettingsContainer);
 
 export { SettingsContainer };

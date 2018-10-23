@@ -1,4 +1,4 @@
-import { all, call, put, takeEvery } from 'redux-saga/effects';
+import { all, call, put, takeEvery, select } from 'redux-saga/effects';
 import {
   FETCH_REWARDS_ASYNC,
   CLAIM_REWARD_ASYNC,
@@ -8,6 +8,7 @@ import { Toast } from 'native-base';
 // import Big from 'big.js';
 
 import * as Rehive from '../../util/rehive';
+import { rewardsSelector, userSelector } from './selectors';
 
 function* fetchRewards() {
   try {
@@ -32,8 +33,15 @@ function* fetchRewards() {
 function* claimReward(action) {
   try {
     console.log(action);
+    const rewardState = yield select(rewardsSelector);
+    const userState = yield select(userSelector);
+    const campaign =
+      rewardState.campaigns[
+        userState.showDetail ? userState.campaignIndex : action.payload
+      ];
+    console.log('campaign', campaign);
     const response = yield call(Rehive.claimReward, {
-      campaign: action.payload.identifier,
+      campaign: campaign.id,
     });
     console.log(response);
     if (response.status === 'success') {
@@ -49,7 +57,9 @@ function* claimReward(action) {
         payload: response.message,
       });
       Toast.show({
-        text: 'Error posting reward claim',
+        text:
+          'Unable to request reward' +
+          (response.message ? ': ' + response.message : ''),
         duration: 3000,
       });
     }

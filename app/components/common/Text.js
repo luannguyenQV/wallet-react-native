@@ -10,6 +10,7 @@ class _Text extends Component {
   textStyle() {
     const {
       textStyle,
+      style,
       color,
       colors,
       margin,
@@ -28,6 +29,7 @@ class _Text extends Component {
         fontSize,
       },
       textStyle,
+      style,
     ];
   }
 
@@ -41,11 +43,12 @@ class _Text extends Component {
 }
 
 _Text.propTypes = {
-  children: PropTypes.array, // Text displayed on button
+  children: PropTypes.oneOfType([PropTypes.string, PropTypes.array]), // Text displayed on button
   fontSize: PropTypes.number,
   margin: PropTypes.number,
   padding: PropTypes.number,
   textAlign: PropTypes.string,
+  color: PropTypes.string,
 };
 
 _Text.defaultProps = {
@@ -54,6 +57,7 @@ _Text.defaultProps = {
   margin: 8,
   padding: 8,
   textAlign: 'center',
+  color: 'font',
 };
 
 const Text = context(_Text);

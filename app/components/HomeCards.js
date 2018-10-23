@@ -1,20 +1,15 @@
 import React, { Component } from 'react';
-import {
-  View,
-  FlatList,
-  Text,
-  RefreshControl,
-  Image,
-  Dimensions,
-} from 'react-native';
+import { View, FlatList, Text, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import { cardDismiss, cardRestoreAll } from './../redux/actions';
-import { standardizeString } from './../util/general';
 
 // import { AreaChart, Grid } from 'react-native-svg-charts';
 // import * as shape from 'd3-shape';
 
-import { CardContainer, Card, Button } from './common';
+import { Card, Button, CustomImage, View as MyView } from './common';
+import { colorSelector } from '../redux/reducers/ConfigReducer';
+import { companyConfigSelector } from '../redux/sagas/selectors';
+import { userProfileSelector } from '../redux/reducers/UserReducer';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -50,40 +45,8 @@ class HomeCards extends Component {
   //   );
   // }
 
-  renderImage(image) {
-    const { company_config } = this.props;
-    const { imageStylePhoto } = styles;
-    if (image === 'pxpay' || company_config.company.id.includes('pxpay')) {
-      return (
-        <Image
-          style={imageStylePhoto}
-          source={require('./../../assets/icons/pxpay.png')}
-        />
-      );
-    } else if (image === 'card1') {
-      return (
-        <Image
-          style={[
-            imageStylePhoto,
-            { backgroundColor: this.props.company_config.colors.primary },
-          ]}
-          source={require('./../../assets/icons/card1_transparent.png')}
-        />
-      );
-    }
-
-    return (
-      <View
-        style={[
-          imageStylePhoto,
-          { backgroundColor: this.props.company_config.colors.primary },
-        ]}
-      />
-    );
-  }
-
   renderCards() {
-    const { profile, company_config, dismissedCards } = this.props;
+    const { profile, company_config, dismissedCards, colors } = this.props;
     const cardConfig = company_config.cards ? company_config.cards.home : null;
     // add welcome card
     let cards = [];
@@ -100,22 +63,16 @@ class HomeCards extends Component {
           title:
             'Welcome to ' + (company && company.name ? company.name : 'Rehive'),
           // description: 'A multi-currency wallet built on the Rehive platform.',
-          image:
-            company.id.includes('pxpay') || company.id.includes('plue')
-              ? ''
-              : 'card1',
+          image: 'card1',
           dismiss: true,
         };
       }
 
-      if (cardConfig.general.verified && profile.verified) {
+      if (cardConfig.general.verified && profile.data.verified) {
         cards[i++] = {
           id: 'verify',
           description: 'Please verify your account',
-          image:
-            company_config.company && company_config.company === 'pxpay_demo'
-              ? 'pxpay'
-              : 'card2',
+          image: 'card2',
           actionLabel: 'GET VERIFIED',
           navigate: 'GetVerified',
         };
@@ -138,6 +95,7 @@ class HomeCards extends Component {
         //     onRefresh={() => fetchData(type)}
         //   />
         // }
+        contentContainerStyle={{ backgroundColor: colors.grey2 }}
         keyboardShouldPersistTaps="always"
         data={cards}
         renderItem={({ item }) => this.renderCard(item)}
@@ -148,13 +106,19 @@ class HomeCards extends Component {
   }
 
   renderCard(item) {
+    const { colors } = this.props;
     const { textStyleContent } = styles;
-    let imageString = './../../assets/icons/' + item.image + '.png';
     return (
       <Card
         key={item.id}
         title={item.title}
-        renderHeader={this.renderImage(item.image)}
+        renderHeader={
+          <CustomImage
+            name={item.image}
+            backgroundColor={'header'}
+            padding={8}
+          />
+        }
         onPressActionOne={() =>
           item.navigate
             ? this.props.navigation.navigate(item.navigate)
@@ -164,7 +128,9 @@ class HomeCards extends Component {
           item.actionLabel ? item.actionLabel : item.dismiss ? 'DISMISS' : ''
         }>
         {item.description ? (
-          <Text style={textStyleContent}>{item.description}</Text>
+          <Text style={[textStyleContent, { color: colors.font }]}>
+            {item.description}
+          </Text>
         ) : null}
       </Card>
     );
@@ -189,13 +155,14 @@ class HomeCards extends Component {
   }
 
   render() {
-    return <CardContainer>{this.renderCards()}</CardContainer>;
+    return <MyView>{this.renderCards()}</MyView>;
   }
 }
 
 const styles = {
   containerStyle: {
     flex: 1,
+    backgroundColor: 'white',
     zIndex: 2,
   },
   imageStylePhoto: {
@@ -206,6 +173,7 @@ const styles = {
     fontSize: 16,
     padding: 8,
     paddingHorizontal: 16,
+    lineHeight: 22,
   },
   viewStyleFooter: {
     width: '100%',
@@ -215,10 +183,14 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ auth, user }) => {
-  const { company_config } = auth;
-  const { profile, dismissedCards } = user;
-  return { company_config, profile, dismissedCards };
+const mapStateToProps = state => {
+  const { dismissedCards } = state.user;
+  return {
+    company_config: companyConfigSelector(state),
+    profile: userProfileSelector(state),
+    dismissedCards,
+    colors: colorSelector(state),
+  };
 };
 
 export default connect(mapStateToProps, { cardDismiss, cardRestoreAll })(

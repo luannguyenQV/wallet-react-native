@@ -1,83 +1,36 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { connect } from 'react-redux';
-import {
-  fetchData,
-  newItem,
-  editItem,
-  updateItem,
-  deleteItem,
-  updateInputField,
-} from './../../redux/actions';
+import { newItem, updateItem } from './../../redux/actions';
 
 import Header from './../../components/header';
-import { Input, Output } from './../../components/common';
-import CardList from './../../components/CardList';
+import CardListUserSettings from './../../components/cards/CardListUserSettings';
+import { userCryptoAddressesSelector } from '../../redux/reducers/UserReducer';
 
 class CryptoAddressesScreen extends Component {
   static navigationOptions = {
     title: 'Crypto accounts',
   };
 
-  renderContent = item => {
-    const { viewStyleContent } = styles;
-    const { address } = item;
-    return (
-      <View style={viewStyleContent}>
-        {address ? <Output label="Address" value={address} /> : null}
-      </View>
-    );
-  };
-
-  renderDetail = () => {
-    const { tempItem, updateError, updateInputField } = this.props;
-    const { address } = tempItem;
-
-    return (
-      <Input
-        label="Address"
-        placeholder="e.g. 78weiytuyiw3begnf3i4uheyrt43"
-        autoCapitalize="none"
-        value={address}
-        inputError={updateError}
-        onChangeText={input =>
-          updateInputField('crypto_account', 'address', input)
-        }
-      />
-    );
-  };
-
   render() {
-    const {
-      crypto_account,
-      tempItem,
-      newItem,
-      updateItem,
-      showDetail,
-    } = this.props;
+    const { cryptoAddresses, tempItem, newItem, updateItem } = this.props;
     return (
       <View style={styles.container}>
         <Header
           navigation={this.props.navigation}
           back
           title="Crypto accounts"
-          headerRightIcon={showDetail ? 'done' : 'add'}
+          headerRightIcon={cryptoAddresses.showDetail ? 'done' : 'add'}
           headerRightOnPress={
-            showDetail
-              ? () => updateItem('crypto_account', tempItem)
+            cryptoAddresses.showDetail
+              ? () => updateItem('crypto_account')
               : () => newItem('crypto_account')
           }
         />
-        <CardList
+        <CardListUserSettings
           type="crypto_account"
-          data={crypto_account}
-          tempItem={tempItem}
-          identifier="address"
-          renderContent={this.renderContent}
-          renderDetail={this.renderDetail}
-          emptyListMessage="No crypto accounts added yet"
-          canDelete
-          canEdit
+          data={cryptoAddresses}
+          navigation={this.props.navigation}
         />
       </View>
     );
@@ -95,27 +48,13 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user }) => {
-  const {
-    crypto_account,
-    loading_crypto_account,
-    tempItem,
-    showDetail,
-    updateError,
-  } = user;
+const mapStateToProps = state => {
   return {
-    crypto_account,
-    loading_crypto_account,
-    tempItem,
-    showDetail,
-    updateError,
+    cryptoAddresses: userCryptoAddressesSelector(state),
   };
 };
 
 export default connect(mapStateToProps, {
   newItem,
-  editItem,
   updateItem,
-  deleteItem,
-  updateInputField,
 })(CryptoAddressesScreen);

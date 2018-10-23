@@ -26,6 +26,7 @@ import {
   verifyMFA,
   toggleTerms,
   logoutUser,
+  resendVerification,
 } from '../../redux/actions';
 
 import { colorSelector } from './../../redux/reducers/ConfigReducer';
@@ -45,6 +46,7 @@ import {
 import { standardizeString } from './../../util/general';
 import client from './../../config/client';
 import LocalAuthentication from '../../components/LocalAuthentication';
+import { companiesSelector } from '../../redux/reducers/UserReducer';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -187,7 +189,7 @@ class AuthScreen extends Component {
             <View style={buttonsContainer}>
               <Button
                 label="LOG IN"
-                color="secondary"
+                color="focus"
                 size="large"
                 reference={input => {
                   this.login = input;
@@ -316,12 +318,12 @@ class AuthScreen extends Component {
               /> */}
                 {/* <Button
                   label="Resend email"
-                  textColor={company_config.colors.primaryContrast}
-                  backgroundColor="transparent"
-                  // size="large"
-                  reference={input => { this.login = input; }}
-                  onPress={() => nextAuthFormState('register')}
-                  animation="fadeInUpBig"
+                  color="secondary"
+                  reference={input => {
+                    this.email = input;
+                  }}
+                  onPress={() => resendVerification()}
+                  animation="slideInRight"
                 /> */}
               </View>
             );
@@ -403,6 +405,9 @@ class AuthScreen extends Component {
     let onSubmitEditing = () => nextAuthFormState('');
     let keyboardType = 'default';
     let autoCapitalize = 'none';
+    let title = '';
+    let subtitle = '';
+    let icon = '';
 
     switch (detailState) {
       case 'company':
@@ -410,12 +415,24 @@ class AuthScreen extends Component {
         value = tempCompany;
         onChangeText = value => authFieldChange({ prop: 'tempCompany', value });
         data = tempCompany
-          ? companies.filter(item => item.toLowerCase().includes(tempCompany))
+          ? companies.filter(
+              item =>
+                item.id
+                  ? item.id.toLowerCase().includes(tempCompany.toLowerCase())
+                  : false || item.name
+                    ? item.name
+                        .toLowerCase()
+                        .includes(tempCompany.toLowerCase())
+                    : false,
+            )
           : [];
         onPressListItem = item => {
-          authFieldChange({ prop: 'tempCompany', value: item });
+          authFieldChange({ prop: 'tempCompany', value: item.id });
           nextAuthFormState('');
         };
+        title = 'name';
+        subtitle = 'id';
+        icon = 'logo';
         break;
       case 'email':
         value = email;
@@ -477,6 +494,9 @@ class AuthScreen extends Component {
         onChangeText={onChangeText}
         returnKeyType={returnKeyType}
         onSubmitEditing={onSubmitEditing}
+        title={title}
+        subtitle={subtitle}
+        icon={icon}
       />
     );
   }
@@ -623,7 +643,6 @@ const mapStateToProps = state => {
     user,
     terms,
     termsChecked,
-    companies,
   } = state.auth;
   return {
     detailState,
@@ -631,7 +650,7 @@ const mapStateToProps = state => {
     mainState,
     tempCompany,
     company,
-    companies,
+    companies: companiesSelector(state),
     authError,
     email,
     emailError,
@@ -674,6 +693,7 @@ export default connect(mapStateToProps, {
   verifyMFA,
   toggleTerms,
   logoutUser,
+  resendVerification,
 })(AuthScreen);
 
 //727

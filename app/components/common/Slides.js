@@ -8,6 +8,7 @@ import {
   Animated,
 } from 'react-native';
 import context from './context';
+import { CustomImage } from './CustomImage';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -15,7 +16,7 @@ class _Slides extends Component {
   scrollX = new Animated.Value(0);
 
   renderSlides() {
-    const { width, height, data } = this.props;
+    const { width, height, data, colors } = this.props;
     const {
       viewStyleSlide,
       imageStylePhoto,
@@ -30,26 +31,39 @@ class _Slides extends Component {
         outputRange: [0.05, 1, 0.05],
         extrapolate: 'clamp',
       });
-      let image = ``;
       return (
-        <Animated.View key={slide.id} style={{ opacity, width }}>
-          <Image
-            style={[imageStylePhoto, { width, height }]}
-            source={
-              slide.image === 'pxpay'
-                ? require('./../../../assets/icons/pxpay.png')
-                : require('./../../../assets/icons/card1_transparent.png')
-            }
+        <Animated.View
+          key={slide.id}
+          style={{
+            opacity,
+            width,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <CustomImage
+            name={slide.image}
+            backgroundColor={'authScreen'}
+            height={200}
+            width={200}
           />
-          <Text style={textStyleTitle}>{slide.title}</Text>
-          <Text style={textStyleDescription}>{slide.description}</Text>
+          <Text
+            style={[textStyleTitle, { color: colors['authScreenContrast'] }]}>
+            {slide.title}
+          </Text>
+          <Text
+            style={[
+              textStyleDescription,
+              { color: colors['authScreenContrast'] },
+            ]}>
+            {slide.description}
+          </Text>
         </Animated.View>
       );
     });
   }
 
   render() {
-    const { width, height, data } = this.props;
+    const { width, height, data, colors } = this.props;
     let position = Animated.divide(this.scrollX, width);
     return (
       <View
@@ -68,31 +82,33 @@ class _Slides extends Component {
           scrollEventThrottle={16}>
           {this.renderSlides()}
         </ScrollView>
-        <View
-          style={{
-            flexDirection: 'row',
-          }}>
-          {data.map((_, i) => {
-            let opacity = position.interpolate({
-              inputRange: [i - 1, i, i + 1],
-              outputRange: [0.3, 1, 0.3],
-              extrapolate: 'clamp',
-            });
-            return (
-              <Animated.View
-                key={i}
-                style={{
-                  opacity,
-                  height: 10,
-                  width: 10,
-                  backgroundColor: '#f3f3f3',
-                  margin: 8,
-                  borderRadius: 5,
-                }}
-              />
-            );
-          })}
-        </View>
+        {data && data.length > 1 ? (
+          <View
+            style={{
+              flexDirection: 'row',
+            }}>
+            {data.map((_, i) => {
+              let opacity = position.interpolate({
+                inputRange: [i - 1, i, i + 1],
+                outputRange: [0.3, 1, 0.3],
+                extrapolate: 'clamp',
+              });
+              return (
+                <Animated.View
+                  key={i}
+                  style={{
+                    opacity,
+                    height: 10,
+                    width: 10,
+                    backgroundColor: colors['authScreenContrast'],
+                    margin: 8,
+                    borderRadius: 5,
+                  }}
+                />
+              );
+            })}
+          </View>
+        ) : null}
       </View>
     );
   }
@@ -112,13 +128,11 @@ const styles = {
   },
   textStyleTitle: {
     fontSize: 30,
-    color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
   },
   textStyleDescription: {
     fontSize: 14,
-    color: 'white',
     textAlign: 'center',
   },
 };

@@ -1,27 +1,28 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableWithoutFeedback } from 'react-native';
-import Colors from './../config/colors';
 import { Output } from './common';
+import context from './common/context';
 
 class GetVerifiedOption extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      color: Colors.black,
+      color: '#707070',
     };
   }
 
   componentDidMount() {
+    const { colors } = this.props;
     let color;
     if (this.props.status === 'PENDING') {
-      color = 'black';
+      color = colors.font;
     } else if (this.props.status === 'VERIFIED') {
-      color = Colors.positive;
+      color = colors.positive;
     } else if (
       this.props.status === 'INCOMPLETE' ||
       this.props.status === 'DENIED'
     ) {
-      color = Colors.negative;
+      color = colors.negative;
     }
 
     this.setState({
@@ -70,7 +71,6 @@ const styles = {
   },
   optionsText: {
     fontSize: 8,
-    color: Colors.black,
   },
   submit: {
     // padding: 4,
@@ -83,4 +83,4 @@ const styles = {
   },
 };
 
-export default GetVerifiedOption;
+export default context(GetVerifiedOption);

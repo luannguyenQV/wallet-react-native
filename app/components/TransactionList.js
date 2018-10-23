@@ -23,19 +23,21 @@ class TransactionList extends Component {
     transaction: null,
   };
   async componentDidMount() {
-    const { currency } = this.props;
+    const { currency, detailLoaded } = this.props;
     const accountRef = currency.account ? currency.account : '';
     const currencyCode =
       currency.currency && currency.currency.code ? currency.currency.code : '';
-    this.getTransactions(accountRef, currencyCode);
+    this.getTransactions(accountRef, currencyCode, !detailLoaded);
   }
 
-  async getTransactions(accountRef, currencyCode) {
+  async getTransactions(accountRef, currencyCode, force) {
     const filters = {
       account: accountRef,
       currency: currencyCode,
     };
-    this.props.fetchTransactions(filters);
+    if (force) {
+      this.props.fetchTransactions(filters);
+    }
   }
 
   renderTransactions() {
@@ -55,7 +57,8 @@ class TransactionList extends Component {
           <RefreshControl
             refreshing={loading}
             onRefresh={() => {
-              this.getTransactions(accountRef, currencyCode);
+              console.log('onRefresh');
+              this.getTransactions(accountRef, currencyCode, true);
             }}
           />
         }
@@ -92,12 +95,32 @@ class TransactionList extends Component {
 
   async openBrowser(transaction) {
     const metadata = transaction.metadata;
-    if (metadata && metadata.type === 'stellar') {
-      this.hideModal();
-      await WebBrowser.openBrowserAsync(
-        'http://stellarchain.io/tx/' + metadata.hash,
-      );
-      this.showModal(transaction);
+    console.log(metadata);
+    if (metadata && metadata.type) {
+      switch (metadata.type) {
+        case 'stellar':
+          this.hideModal();
+          await WebBrowser.openBrowserAsync(
+            'http://stellarchain.io/tx/' + metadata.hash,
+          );
+          this.showModal(transaction);
+          break;
+        case 'bitcoin':
+          this.hideModal();
+          await WebBrowser.openBrowserAsync(
+            'https://live.blockcypher.com/btc-testnet/tx/' + metadata.hash,
+            // 'https://live.blockcypher.com/btc/tx/' + metadata.hash,
+          );
+          this.showModal(transaction);
+          break;
+        case 'ethereum':
+          this.hideModal();
+          await WebBrowser.openBrowserAsync(
+            'https://etherscan.io/tx/' + metadata.hash,
+          );
+          this.showModal(transaction);
+          break;
+      }
     }
   }
 
@@ -116,7 +139,16 @@ class TransactionList extends Component {
     let userLabel = '';
 
     if (transaction) {
-      const { amount, label, currency, fee, balance, metadata } = transaction;
+      const {
+        amount,
+        label,
+        currency,
+        fee,
+        balance,
+        metadata,
+        note,
+      } = transaction;
+      console.log('transaction', transaction);
       switch (transaction.tx_type) {
         case 'debit':
           // console.log('Debit');
@@ -160,6 +192,7 @@ class TransactionList extends Component {
           onDismiss={() => this.hideModal()}>
           {/* <Text style={textStyleHeader}>{headerText}</Text> */}
           {user ? <Output label={userLabel} value={user} /> : null}
+          {note ? <Output label="Note" value={note} /> : null}
           <Output label="Transaction type" value={label} />
           {/* <Output label="Total amount" value={transaction.label} /> */}
           <Output

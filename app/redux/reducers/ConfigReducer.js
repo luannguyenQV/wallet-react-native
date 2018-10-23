@@ -11,7 +11,7 @@ import default_company_config from './../../config/default_company_config.json';
 
 const INITIAL_STATE = {
   company_config: {},
-  theme: 'default',
+  theme: 'light',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -81,6 +81,10 @@ export const colorSelector = createSelector(
         _colors,
         'focusContrast',
       ),
+      grey1: '#F8F8FA',
+      grey2: '#EAEAEF',
+      grey3: '#B8B7C6',
+      font: '#707070',
     };
     return colors;
   },
