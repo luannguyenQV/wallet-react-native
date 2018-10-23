@@ -147,13 +147,10 @@ export const withdraw = data => async dispatch => {
   }
   dispatch({ type: WITHDRAW_ASYNC.pending });
   try {
-    await Rehive.createDebit(
-      amount,
-      data.currency.code,
-      data.reference,
-      data.note,
-      data.metadata,
-    );
+    await Rehive.createDebit({
+      ...data,
+      amount: parseInt(amount, 0),
+    });
     dispatch({
       type: WITHDRAW_ASYNC.success,
     });
@@ -166,13 +163,12 @@ export const withdraw = data => async dispatch => {
   }
 };
 
-export const SET_ACTIVE_CURRENCY_ASYNC = createAsyncTypes(
-  'set_active_currency',
+export const CONFIRM_ACTIVE_CURRENCY_ASYNC = createAsyncTypes(
+  'confirm_active_currency',
 );
-export const setActiveCurrency = wallet => {
+export const confirmActiveItem = () => {
   return {
-    type: SET_ACTIVE_CURRENCY_ASYNC.pending,
-    payload: wallet,
+    type: CONFIRM_ACTIVE_CURRENCY_ASYNC.pending,
   };
 };
 

@@ -21,10 +21,10 @@ export const hideReward = () => {
 };
 
 export const CLAIM_REWARD_ASYNC = createAsyncTypes('claim_reward');
-export const claimReward = reward => {
+export const claimReward = index => {
   return {
     type: CLAIM_REWARD_ASYNC.pending,
-    payload: reward,
+    payload: index,
   };
 };
 

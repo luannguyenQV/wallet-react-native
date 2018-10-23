@@ -2,18 +2,68 @@
 /* Component | Stateless | Styled */
 /* This is the main button component. Takes props to adjust it's size, type, color etc */
 import React, { Component } from 'react';
-import { View as _view } from 'react-native';
+import {
+  View as _view,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Platform,
+  ScrollView,
+} from 'react-native';
+import context from './context';
 // import PropTypes from 'prop-types';
 
-class View extends Component {
+class _View extends Component {
   render() {
-    const { style, children } = this.props;
+    const {
+      style,
+      children,
+      keyboardAvoiding,
+      behavior,
+      colors,
+      color,
+    } = this.props;
     const { _containerStyle } = styles;
-    return (
-      <_view {...this.props} style={[_containerStyle, style]}>
-        {children}
-      </_view>
-    );
+
+    if (keyboardAvoiding) {
+      return (
+        <View style={{ flex: 1 }}>
+          <KeyboardAvoidingView
+            // keyboardShouldPersistTaps={'always'}
+            style={[
+              _containerStyle,
+              { backgroundColor: color ? colors[color] : 'white' },
+            ]}
+            behavior={
+              behavior
+                ? behavior
+                : Platform.OS === 'android' ? 'height' : 'padding'
+            }>
+            <ScrollView
+              keyboardDismissMode={'interactive'}
+              keyboardShouldPersistTaps="always">
+              <TouchableWithoutFeedback
+                onPress={() => Keyboard.dismiss()}
+                accessible={false}>
+                {children}
+              </TouchableWithoutFeedback>
+            </ScrollView>
+          </KeyboardAvoidingView>
+        </View>
+      );
+    } else {
+      return (
+        <_view
+          {...this.props}
+          style={[
+            _containerStyle,
+            { backgroundColor: color ? colors[color] : 'white' },
+            style,
+          ]}>
+          {children}
+        </_view>
+      );
+    }
   }
 }
 
@@ -27,13 +77,11 @@ class View extends Component {
 
 // TODO: add custom shortcuts for alignment, flex, padding, margin, defaults (rem?)
 
-const styles = props => {
-  return {
-    _containerStyle: {
-      flex: 1,
-      margin: 8,
-    },
-  };
+const styles = {
+  _containerStyle: {
+    flex: 1,
+    // margin: 8,
+  },
 };
 
 const View = context(_View);

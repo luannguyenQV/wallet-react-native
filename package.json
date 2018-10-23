@@ -18,8 +18,9 @@
   "dependencies": {
     "base32.js": "^0.1.0",
     "big.js": "^5.0.3",
-    "buffer": "^5.1.0",
+    "buffer": "^5.2.1",
     "crc": "^3.8.0",
+    "ethereum-address": "0.0.4",
     "expo": "^30.0.0",
     "google-libphonenumber": "^3.1.12",
     "hoist-non-react-statics": "^3.0.1",
@@ -29,8 +30,7 @@
     "native-base": "^2.7.1",
     "prop-types": "^15.6.0",
     "react": "16.3.1",
-    "react-native":
-      "https://github.com/expo/react-native/archive/sdk-30.0.0.tar.gz",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-30.0.0.tar.gz",
     "react-native-animatable": "^1.2.4",
     "react-native-app-link": "^0.4.1",
     "react-native-country-picker-modal": "^0.6.0",
@@ -51,7 +51,7 @@
     "redux-persist": "^5.9.1",
     "redux-saga": "^0.16.0",
     "redux-thunk": "^2.2.0",
-    "rehive": "^1.20.17",
+    "rehive": "^1.20.18",
     "reselect": "^3.0.1",
     "whatwg-fetch": "^2.0.4"
   },

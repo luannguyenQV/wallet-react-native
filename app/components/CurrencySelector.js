@@ -19,9 +19,9 @@ class _CurrencySelector extends Component {
       textStyleValue,
     } = styles;
 
-    const code = currency && currency.currency ? currency.currency.code : '';
+    const code = currency && currency.currency ? currency.currency.code : '---';
 
-    const value = currency ? currency.account + ':' + code : '';
+    const value = currency ? currency.account + ':' + code : '---';
 
     const items = currencies.data.map(item => {
       return {
@@ -39,6 +39,13 @@ class _CurrencySelector extends Component {
         key: item.account + ':' + item.currency.code,
       };
     });
+    if (items.length === 0) {
+      items[0] = {
+        label: '---',
+        value: 'none:none',
+        key: 'none',
+      };
+    }
 
     return (
       <Picker
@@ -82,13 +89,10 @@ class _CurrencySelector extends Component {
   _updateCurrency(currency) {
     let { currencies } = this.props;
     let temp = currency.split(':');
-    console.log('0', currencies);
     currencies = currencies.data.filter(item => item.currency.code === temp[1]);
-    console.log('1', currencies);
     if (currencies.length > 1) {
       currencies = currencies.filter(item => item.account === temp[0]);
     }
-    console.log('2', currencies);
     this.props.updateCurrency(currencies[0]);
   }
 

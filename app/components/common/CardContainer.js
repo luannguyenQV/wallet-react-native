@@ -1,7 +1,6 @@
 // import lib for making component
 import React from 'react';
 import { ScrollView, KeyboardAvoidingView } from 'react-native';
-import { View } from 'react-native';
 
 // make component
 const CardContainer = props => {
@@ -23,7 +22,7 @@ const CardContainer = props => {
 const styles = {
   containerStyle: {
     flex: 1,
-    backgroundColor: '#e2e2e2',
+    backgroundColor: '#EAEAEF',
     // alignItems: 'stretch',
     // paddingVertical: 16,
     // padding: 8,

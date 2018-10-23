@@ -68,8 +68,8 @@ class _Header extends Component {
       <View
         style={[
           {
-            elevation: 10,
-            zIndex: 11,
+            elevation: 2,
+            zIndex: 2,
             paddingTop: Constants.statusBarHeight,
             backgroundColor: colors.header,
           },
@@ -77,9 +77,9 @@ class _Header extends Component {
             ? null
             : {
                 shadowColor: '#000',
-                shadowOffset: { width: 2, height: 2 },
-                shadowRadius: 5,
-                shadowOpacity: 0.3,
+                shadowOffset: { width: 0, height: 2 },
+                shadowRadius: 2,
+                shadowOpacity: 0.15,
               },
         ]}>
         {creditSwitch === false &&
@@ -151,12 +151,12 @@ class _Header extends Component {
         )}
         <View style={styles.options}>
           <View style={styles.left}>
-            {drawer ? (
+            {/* {drawer ? (
               <HeaderButton
                 onPress={() => this.props.navigation.openDrawer()}
                 icon="menu"
               />
-            ) : null}
+            ) : null} */}
             {back ? (
               <HeaderButton
                 onPress={() => navigation.goBack()}
@@ -213,7 +213,7 @@ const styles = {
   },
   title: {
     flex: 3,
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'center',
   },
   rightIcon: {

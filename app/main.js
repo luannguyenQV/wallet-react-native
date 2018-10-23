@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Image } from 'react-native';
 import { connect } from 'react-redux';
 import { AppLoading, Asset } from 'expo';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { init } from './redux/actions';
 import { Root } from 'native-base';
 
@@ -27,9 +28,9 @@ function cacheImages(images) {
   });
 }
 
-// function cacheFonts(fonts) {
-//   return fonts.map(font => Font.loadAsync(font));
-// }
+function cacheFonts(fonts) {
+  return fonts.map(font => Font.loadAsync(font));
+}
 
 class Main extends Component {
   state = {
@@ -47,13 +48,19 @@ class Main extends Component {
     const imageAssets = cacheImages([
       require('./../assets/icons/card1.png'),
       require('./../assets/icons/card2.png'),
-      require('./../assets/icons/card3.png'),
+      require('./../assets/icons/card1-luuun.png'),
+      require('./../assets/icons/card2-luuun.png'),
+      require('./../assets/icons/card1-plue.png'),
+      require('./../assets/icons/card2-plue.png'),
     ]);
 
-    // const fontAssets = cacheFonts([FontAwesome.font]);
+    const fontAssets = Expo.Font.loadAsync({
+      ...Ionicons.font,
+      ...MaterialCommunityIcons.font,
+      'rehive-font': require('./../assets/fonts/rehive-font.ttf'),
+    });
 
-    await Promise.all([...imageAssets]); //, ...fontAssets
-    // this.setState({ isReady: true });
+    await Promise.all([...imageAssets, ...fontAssets]);
   }
 
   render() {

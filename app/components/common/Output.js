@@ -6,7 +6,7 @@ import context from './context';
 
 class _Output extends Component {
   renderOutput() {
-    const { label, value, copy, onPress } = this.props;
+    const { label, value, copy, onPress, colors } = this.props;
 
     const {
       viewStyleContent,
@@ -21,11 +21,15 @@ class _Output extends Component {
         <View style={{ flex: 1 }}>
           {value && label ? (
             <View style={viewStyleLabel}>
-              <Text style={[textStyleLabel]}>{label}</Text>
+              <Text style={[textStyleLabel, { color: colors.font }]}>
+                {label}
+              </Text>
             </View>
           ) : null}
           <View style={viewStyleValue}>
-            <Text style={textStyleValue}>{value ? value : label}</Text>
+            <Text style={[textStyleValue, { color: colors.font }]}>
+              {value ? value : label}
+            </Text>
           </View>
         </View>
         {copy ? <Icon name="content-copy" size={20} color={'black'} /> : null}
@@ -96,12 +100,11 @@ const styles = {
   textStyleLabel: {
     fontSize: 12,
     color: 'black',
-    opacity: 0.6,
+    opacity: 0.7,
   },
   textStyleValue: {
     paddingLeft: 0,
     paddingTop: 2,
-    color: 'black',
     fontWeight: 'normal',
     flex: 1,
     fontSize: 16,
