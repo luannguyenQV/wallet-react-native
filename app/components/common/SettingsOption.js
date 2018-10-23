@@ -19,7 +19,7 @@ class _SettingsOption extends Component {
         underlayColor="lightgrey"
         style={viewStyleContainer}
         // activeOpacity={0.2}
-        onPress={() => onPress(gotoAddress, label)}>
+        onPress={() => (gotoAddress ? onPress(gotoAddress, label) : onPress())}>
         <View>
           <View style={viewStyleLabel}>
             <Text style={[textStyleLabel, { color: colors.font }]}>

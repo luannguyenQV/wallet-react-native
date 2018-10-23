@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { connect } from 'react-redux';
-import { changeTheme } from './../../redux/actions';
+import {
+  changeTheme,
+  showModal,
+  hideModal,
+  logoutUser,
+} from './../../redux/actions';
 import Header from './../../components/header';
 import App from './../../../app.json';
 import Picker from 'react-native-picker-select';
@@ -11,9 +16,10 @@ import {
   SettingsOption,
   InputContainer,
   Text,
+  PopUpGeneral,
 } from './../../components/common';
 import { themeStateSelector } from '../../redux/sagas/selectors';
-import { concatAddress } from '../../util/general';
+import { settingsSelector } from '../../redux/reducers/AuthReducer';
 
 class SettingsScreen extends Component {
   static navigationOptions = {
@@ -98,8 +104,7 @@ class SettingsScreen extends Component {
         />
         <SettingsOption
           label="Log out"
-          gotoAddress="Logout"
-          onPress={this.goTo}
+          onPress={() => this.props.showModal('logout', 0, 'logout')}
         />
       </View>
     );
@@ -145,6 +150,37 @@ class SettingsScreen extends Component {
     );
   }
 
+  renderModal() {
+    const { modalVisible, modalType, loggingOut } = this.props.settings;
+    const modalOnDismiss = () => this.props.hideModal();
+    const modalActionOne = {
+      text: 'LOG OUT',
+      onPress: () => {
+        this.props.logoutUser();
+        // this.props.navigation.navigate('AuthScreen');
+      },
+    };
+    const modalActionTwo = {
+      text: 'CANCEL',
+      onPress: modalOnDismiss,
+    };
+    const contentText =
+      'You are about to log out. This will reset all local authentication and require you to sign in again.';
+    return (
+      <PopUpGeneral
+        visible={modalVisible && modalType === 'logout'}
+        textActionOne={modalActionOne.text}
+        onPressActionOne={modalActionOne.onPress}
+        textActionTwo={modalActionTwo.text}
+        onPressActionTwo={modalActionTwo.onPress}
+        onDismiss={modalOnDismiss}
+        loading={loggingOut}
+        errorText={''}
+        contentText={contentText}
+      />
+    );
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -162,6 +198,7 @@ class SettingsScreen extends Component {
             {this.renderSecurity()}
           </SettingsContainer>
         </InputContainer>
+        {this.renderModal()}
         <Text>
           {'Version: ' +
             App.expo.version +
@@ -180,14 +217,15 @@ const styles = {
 };
 
 const mapStateToProps = state => {
-  const { profile, address, mobile, email } = state.user;
   return {
-    profile,
-    address,
-    mobile,
-    email,
     theme: themeStateSelector(state),
+    settings: settingsSelector(state),
   };
 };
 
-export default connect(mapStateToProps, { changeTheme })(SettingsScreen);
+export default connect(mapStateToProps, {
+  changeTheme,
+  showModal,
+  hideModal,
+  logoutUser,
+})(SettingsScreen);

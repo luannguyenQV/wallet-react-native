@@ -8,6 +8,8 @@ import { cardDismiss, cardRestoreAll } from './../redux/actions';
 
 import { Card, Button, CustomImage, View as MyView } from './common';
 import { colorSelector } from '../redux/reducers/ConfigReducer';
+import { companyConfigSelector } from '../redux/sagas/selectors';
+import { userProfileSelector } from '../redux/reducers/UserReducer';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -66,7 +68,7 @@ class HomeCards extends Component {
         };
       }
 
-      if (cardConfig.general.verified && profile.verified) {
+      if (cardConfig.general.verified && profile.data.verified) {
         cards[i++] = {
           id: 'verify',
           description: 'Please verify your account',
@@ -181,11 +183,10 @@ const styles = {
 };
 
 const mapStateToProps = state => {
-  const { company_config } = state.auth;
-  const { profile, dismissedCards } = state.user;
+  const { dismissedCards } = state.user;
   return {
-    company_config,
-    profile,
+    company_config: companyConfigSelector(state),
+    profile: userProfileSelector(state),
     dismissedCards,
     colors: colorSelector(state),
   };

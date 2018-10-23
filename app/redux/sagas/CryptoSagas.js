@@ -2,7 +2,7 @@ import { all, call, put, takeEvery, select } from 'redux-saga/effects';
 import { FETCH_CRYPTO_ASYNC } from '../actions';
 
 import * as Rehive from '../../util/rehive';
-import { getAuth } from './selectors';
+import { authStateSelector } from './selectors';
 
 function* fetchCrypto(action) {
   try {
@@ -20,7 +20,7 @@ function* fetchCrypto(action) {
           address = data.crypto.public_address;
         }
         if (data && !data.username) {
-          const { user } = yield select(getAuth);
+          const { user } = yield select(authStateSelector);
           yield call(Rehive.setStellarUsername, {
             username: user.username,
           });
