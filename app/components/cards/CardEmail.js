@@ -22,7 +22,7 @@ class CardEmail extends Component {
             inputError={updateError}
             onChangeText={input => updateInputField('email', 'email', input)}
             onSubmitEditing={() => updateItem('email')}
-            keyboardType={'email'}
+            keyboardType={'email-address'}
           />
         </View>
       );

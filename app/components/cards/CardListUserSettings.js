@@ -51,35 +51,11 @@ function withRedux(CardList) {
     // fetch data
 
     componentDidMount() {
-      const { type } = this.props;
-      this.props.hideDetail(type);
-      // ... that takes care of the subscription...
-      // DataSource.addChangeListener(this.handleChange);
-      // console.log('mounted');
+      this.props.hideDetail(this.props.type);
     }
-
-    // fetchData(type) {
-    //   this.props.fetchData(type);
-    // }
-
-    // showDetail(type, item) {
-    //   console.log('detail', type, item);
-    //   this.props.showDetail(type, item);
-    // }
-
-    // componentWillUnmount() {
-    //   DataSource.removeChangeListener(this.handleChange);
-    // }
-
-    // handleChange() {
-    //   this.setState({
-    //     data: selectData(DataSource, this.props)
-    //   });
-    // }
 
     renderItem(item, index) {
       const { type, cardListOptions } = this.props;
-      const detail = cardListOptions.showDetail;
       switch (type) {
         case 'address':
           return (
@@ -272,7 +248,6 @@ function withRedux(CardList) {
     renderModalContent() {
       const { type, cardListOptions, data, verifyItem } = this.props;
       let content = null;
-      console.log('renderModalContent', data);
       switch (cardListOptions.modalType) {
         case 'verify':
           switch (type) {
@@ -569,7 +544,6 @@ function withRedux(CardList) {
 
     render() {
       const { data, type, isFocused, cardListOptions } = this.props;
-      // console.log(data);
       if (isFocused) {
         return (
           <CardList

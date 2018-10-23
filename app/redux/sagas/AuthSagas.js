@@ -107,7 +107,7 @@ function* init() {
               }
             }
             // successful app start while logged in
-            yield call(appLoad);
+            yield call(appLoad, false);
           } else {
             yield call(initialAuthState, 'landing', 'landing');
           }
@@ -662,47 +662,47 @@ function* postAuthFlow() {
 }
 
 /* fetches data to ensure redux state contains latest version of information */
-function* appLoad() {
+function* appLoad(login = true) {
   console.log('appLoad');
   try {
     yield put({ type: APP_LOAD.pending });
     let count = 1;
     const { services } = yield select(companyConfigSelector);
 
-    yield all([
-      // put({ type: POST_LOADING }),
-      put({ type: FETCH_ACCOUNTS_ASYNC.pending }),
-      // put({ type: FETCH_DATA_ASYNC.pending, payload: 'profile' }),
-      // put({ type: FETCH_DATA_ASYNC.pending, payload: 'mobile' }),
-      // put({ type: FETCH_DATA_ASYNC.pending, payload: 'email' }),
-      // // put({ type: FETCH_DATA_ASYNC.pending, payload: 'crypto_account' }),
-      // put({ type: FETCH_DATA_ASYNC.pending, payload: 'bank_account' }),
-      // put({ type: FETCH_DATA_ASYNC.pending, payload: 'address' }),
-      // put({ type: FETCH_DATA_ASYNC.pending, payload: 'document' }),
-      put({ type: FETCH_DATA_ASYNC.pending, payload: 'company' }),
-      // put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_bank_account' }),
-      // put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_currency' }),
-      services.rewards ? put({ type: FETCH_REWARDS_ASYNC.pending }) : null,
-      services.stellar
-        ? put({ type: FETCH_CRYPTO_ASYNC.pending, payload: 'stellar' })
-        : null,
-      services.bitcoin
-        ? put({ type: FETCH_CRYPTO_ASYNC.pending, payload: 'bitcoin' })
-        : null,
-      services.ethereum
-        ? put({ type: FETCH_CRYPTO_ASYNC.pending, payload: 'ethereum' })
-        : null,
-    ]);
-
-    // TODO: add timeout and re=fetch any failed api calls
-    for (let i = 0; i < count; i++) {
-      yield take([
-        FETCH_ACCOUNTS_ASYNC.success,
-        // FETCH_DATA_ASYNC.success,
-        // FETCH_REWARDS_ASYNC.success,
+    yield put({ type: FETCH_ACCOUNTS_ASYNC.pending });
+    if (login) {
+      yield all([
+        // put({ type: POST_LOADING }),
+        put({ type: FETCH_ACCOUNTS_ASYNC.pending }),
+        put({ type: FETCH_DATA_ASYNC.pending, payload: 'profile' }),
+        put({ type: FETCH_DATA_ASYNC.pending, payload: 'mobile' }),
+        put({ type: FETCH_DATA_ASYNC.pending, payload: 'email' }),
+        // put({ type: FETCH_DATA_ASYNC.pending, payload: 'crypto_account' }),
+        put({ type: FETCH_DATA_ASYNC.pending, payload: 'bank_account' }),
+        put({ type: FETCH_DATA_ASYNC.pending, payload: 'address' }),
+        put({ type: FETCH_DATA_ASYNC.pending, payload: 'document' }),
+        put({ type: FETCH_DATA_ASYNC.pending, payload: 'company' }),
+        put({
+          type: FETCH_DATA_ASYNC.pending,
+          payload: 'company_bank_account',
+        }),
+        put({ type: FETCH_DATA_ASYNC.pending, payload: 'company_currency' }),
+        services.rewards ? put({ type: FETCH_REWARDS_ASYNC.pending }) : null,
+        services.stellar
+          ? put({ type: FETCH_CRYPTO_ASYNC.pending, payload: 'stellar' })
+          : null,
+        services.bitcoin
+          ? put({ type: FETCH_CRYPTO_ASYNC.pending, payload: 'bitcoin' })
+          : null,
+        services.ethereum
+          ? put({ type: FETCH_CRYPTO_ASYNC.pending, payload: 'ethereum' })
+          : null,
       ]);
-      // console.log(i, count);
     }
+    // TODO: add timeout and re=fetch any failed api calls
+    // for (let i = 0; i < count; i++) {
+    yield take(FETCH_ACCOUNTS_ASYNC.success);
+    // }
     yield put({ type: APP_LOAD.success });
     yield call(NavigationService.navigate, 'App');
   } catch (error) {
