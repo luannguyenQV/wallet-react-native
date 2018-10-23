@@ -260,7 +260,7 @@ function withRedux(CardList) {
     renderModalContent() {
       const { type, cardListOptions, data, verifyItem } = this.props;
       let content = null;
-
+      console.log('renderModalContent', data);
       switch (cardListOptions.modalType) {
         case 'verify':
           switch (type) {
@@ -318,11 +318,13 @@ function withRedux(CardList) {
               break;
             case 'address':
               text = concatAddress(data.data[data.index]);
+              break;
             case 'wallet':
               text =
                 standardizeString(data.data[data.index].account_name) +
                 ': ' +
                 data.data[data.index].currency.code;
+              break;
             default:
               text = data.data[data.index][type];
           }
