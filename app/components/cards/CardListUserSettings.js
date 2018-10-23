@@ -562,6 +562,7 @@ function withRedux(CardList) {
             activeAction={(item, index) => this.activeAction(item, index)}
             onRefresh={() => this.onRefresh()}
             onPressContent={index => this.onPressCard(index)}
+            onPressTitle={index => this.onPressCard(index)}
             onPressHeader={index => this.onPressCard(index)}
             actionOne={(item, index) => this.actionOne(item, index)}
             actionTwo={(item, index) => this.actionTwo(item, index)}
