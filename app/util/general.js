@@ -5,9 +5,16 @@ export const performDivisibility = (balance, divisibility) => {
   return balance;
 };
 
-export const standardizeString = string => {
+export const standardizeString = (string, capitalise) => {
   if (string) {
-    return (string.charAt(0).toUpperCase() + string.slice(1)).replace('_', ' ');
+    if (capitalise) {
+      return (string.charAt(0).toUpperCase() + string.slice(1)).replace(
+        '_',
+        ' ',
+      );
+    } else {
+      return string.replace('_', ' ');
+    }
   }
   return '';
 };
@@ -85,6 +92,23 @@ export const concatAddress = address => {
   }
   if (address.postal_code) {
     value = value + (value ? ', ' : '') + address.postal_code;
+  }
+  return value;
+};
+
+export const concatBankAccount = account => {
+  let value = '';
+  if (account.name) {
+    value = value + account.name;
+  }
+  if (account.bank_name) {
+    value = value + (value ? ': ' : '') + account.bank_name;
+  }
+  if (account.number) {
+    value = value + (value ? ', ' : '') + account.number;
+  }
+  if (account.type) {
+    value = value + (value ? ', ' : '') + account.type;
   }
   return value;
 };

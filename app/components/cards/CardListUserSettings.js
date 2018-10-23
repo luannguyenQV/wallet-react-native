@@ -36,7 +36,11 @@ import { CardPersonalDetails } from './CardPersonalDetails';
 import { CardWallet } from './CardWallet';
 import { CardReward } from './CardReward';
 import { CardCampaign } from './CardCampaign';
-import { concatAddress, standardizeString } from '../../util/general';
+import {
+  concatAddress,
+  concatBankAccount,
+  standardizeString,
+} from '../../util/general';
 import { withNavigationFocus } from 'react-navigation';
 import { cardListOptionsSelector } from '../../redux/reducers/UserReducer';
 
@@ -319,6 +323,9 @@ function withRedux(CardList) {
             case 'address':
               text = concatAddress(data.data[data.index]);
               break;
+            case 'bank_account':
+              text = concatBankAccount(data.data[data.index]);
+              break;
             case 'wallet':
               text =
                 standardizeString(data.data[data.index].account_name) +
@@ -361,7 +368,7 @@ function withRedux(CardList) {
           }
           break;
         case 'delete':
-          text = 'You are about to delete ' + type;
+          text = 'You are about to delete ' + standardizeString(type);
           break;
         case 'primary':
           text = 'You are about to set your primary ' + type + ' to';
