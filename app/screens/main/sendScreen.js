@@ -283,6 +283,13 @@ class SendScreen extends Component {
           reference={input => {
             this.recipientInput = input;
           }}
+          keyboardType={
+            contacts.type === 'email'
+              ? 'email-address'
+              : contacts.type === 'mobile'
+                ? Platform.OS === 'ios' ? 'decimal-pad' : 'phone-pad'
+                : 'default'
+          }
           returnKeyType="next"
           // autoFocus
           onSubmitEditing={() => {
