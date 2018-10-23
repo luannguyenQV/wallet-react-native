@@ -110,7 +110,6 @@ class DocumentScreen extends Component {
                 onPress={() => this.resetState()}
               />
             </View>
-            }
           </View>
         );
     }
@@ -128,6 +127,7 @@ class DocumentScreen extends Component {
 
   render() {
     const { category } = this.state;
+    console.log('category', category);
     const { textStyleHeader, viewStyleContent } = styles;
     return (
       <View style={styles.container}>

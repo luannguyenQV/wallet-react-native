@@ -70,7 +70,11 @@ class _CardList extends Component {
         textActionTwo={actionTwo ? actionTwo(item, index).text : ''}
         onPressActionTwo={actionTwo ? actionTwo(item, index).onPress : () => {}}
         disableActionTwo={actionTwo ? actionTwo(item, index).disabled : false}
-        loading={data.indexLoading && data.index === index}>
+        loading={
+          (data.indexLoading && data.index === index) || cardListOptions.loading
+        }
+        // errorText={cardListOptions.updateError}
+      >
         {this.props.renderItem(item, data.showDetail)}
       </Card>
     );

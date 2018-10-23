@@ -103,7 +103,10 @@ function* fetchData(action) {
         type: LOGOUT_USER_ASYNC.success,
       });
     }
-    yield put({ type: FETCH_DATA_ASYNC.error, payload: error.message });
+    yield put({
+      type: FETCH_DATA_ASYNC.error,
+      payload: { prop: action.payload, message: error.message },
+    });
   }
 }
 
@@ -324,7 +327,7 @@ function* uploadDocument(action) {
     yield call(Rehive.createDocument, action.payload);
     yield put({ type: UPLOAD_DOCUMENT_ASYNC.success });
     yield put({ type: FETCH_DATA_ASYNC.pending, payload: 'document' });
-    NavigationService.navigate('GetVerified');
+    NavigationService.navigate('Profile');
   } catch (error) {
     console.log(error);
     const message = error

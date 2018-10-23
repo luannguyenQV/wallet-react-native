@@ -131,6 +131,28 @@ export default (state = INITIAL_STATE, action) => {
           [action.payload.prop]: action.payload.value,
         },
       };
+    case FETCH_DATA_ASYNC.pending:
+      return {
+        ...state,
+        [action.payload + 'Loading']: true,
+        showDetail: false,
+        modalVisible: false,
+        modalType: '',
+      };
+    case FETCH_DATA_ASYNC.success:
+      return {
+        ...state,
+        [action.payload.prop]: action.payload.data,
+        [action.payload.prop + 'Loading']: false,
+        updateError: '',
+      };
+    case FETCH_DATA_ASYNC.error:
+      return {
+        ...state,
+        [action.payload.prop + 'Loading']: false,
+        fetchError: action.payload.message,
+      };
+
     case UPDATE_ASYNC.pending:
       return {
         ...state,
@@ -148,8 +170,8 @@ export default (state = INITIAL_STATE, action) => {
     case UPDATE_ASYNC.error:
       return {
         ...state,
-        loading: false,
         updateError: action.payload,
+        loading: false,
       };
 
     case CONFIRM_DELETE_ASYNC.pending:
@@ -244,28 +266,6 @@ export default (state = INITIAL_STATE, action) => {
         loading: false,
       };
 
-    case FETCH_DATA_ASYNC.pending:
-      return {
-        ...state,
-        loading: true,
-        showDetail: false,
-        modalVisible: false,
-        modalType: '',
-      };
-    case FETCH_DATA_ASYNC.success:
-      return {
-        ...state,
-        [action.payload.prop]: action.payload.data,
-        loading: false,
-        updateError: '',
-      };
-    case FETCH_DATA_ASYNC.error:
-      return {
-        ...state,
-        loading: false,
-        fetchError: action.payload,
-      };
-
     case UPLOAD_DOCUMENT_ASYNC.pending:
       return {
         ...state,
@@ -345,12 +345,14 @@ export default (state = INITIAL_STATE, action) => {
         type: action.payload.type,
         tempItem,
         [action.payload.type + 'Index']: action.payload.index,
+        updateError: '',
       };
     case HIDE_DETAIL:
       return {
         ...state,
         showDetail: false,
         // [action.payload.type + 'Detail']: false,
+        updateError: '',
         newItem: false,
         detailLoaded: false,
       };
@@ -469,6 +471,8 @@ export const cardListOptionsSelector = createSelector(userSelector, user => {
     modalType: user.modalType ? user.modalType : '',
     detailLoaded: user.detailLoaded ? user.detailLoaded : false,
     noScroll: user.type === 'wallet' && user.showDetail,
+    updateError: user.updateError ? user.updateError : '',
+    loading: user.loading ? user.loading : false,
   };
 });
 

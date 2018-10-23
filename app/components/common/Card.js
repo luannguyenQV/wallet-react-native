@@ -96,7 +96,7 @@ const _Card = props => {
                 style={[
                   textStyleTitle,
                   {
-                    fontSize: title ? (title.length < 18 ? 24 : 18) : 24,
+                    fontSize: 22, //title ? (title.length < 18 ? 24 : 18) : 24,
                     color: colorTitleText ? colorTitleText : colors.font,
                   },
                 ]}>

@@ -30,6 +30,8 @@ const tabNavigator = createBottomTabNavigator(Stack, {
       );
     },
   }),
+  initialRouteName: 'Home',
+  backBehavior: 'initialRoute',
   tabBarOptions: {
     activeTintColor: 'primary',
     inactiveTintColor: 'font',

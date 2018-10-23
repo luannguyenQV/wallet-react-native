@@ -8,7 +8,7 @@ import { Input, Output, Text } from '../common';
 
 class CardEmail extends Component {
   render() {
-    const { item, updateInputField, updateItem } = this.props;
+    const { item, updateInputField, updateItem, updateError } = this.props;
     const { email } = item;
 
     if (this.props.detail) {
@@ -19,8 +19,9 @@ class CardEmail extends Component {
             placeholder="e.g. user@rehive.com"
             autoCapitalize="none"
             value={email}
-            // inputError={updateError}
+            inputError={updateError}
             onChangeText={input => updateInputField('email', 'email', input)}
+            onSubmitEditing={() => updateItem('email')}
           />
         </View>
       );

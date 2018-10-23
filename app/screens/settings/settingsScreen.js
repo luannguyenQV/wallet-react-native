@@ -131,7 +131,7 @@ class SettingsScreen extends Component {
             color: '#707070',
           },
           inputAndroid: {
-            fontSize: 16,
+            // fontSize: 16,
             padding: 8,
             backgroundColor: 'white',
             color: '#707070',

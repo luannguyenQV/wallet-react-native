@@ -8,7 +8,7 @@ import { Input, Output, Text } from '../common';
 
 class CardMobile extends Component {
   render() {
-    const { item, updateInputField, updateItem } = this.props;
+    const { item, updateInputField, updateItem, updateError } = this.props;
     const { number } = item;
 
     if (this.props.detail) {
@@ -19,8 +19,9 @@ class CardMobile extends Component {
             placeholder="e.g. +278412345687"
             autoCapitalize="none"
             value={number}
-            // inputError={updateError}
+            inputError={updateError}
             onChangeText={input => updateInputField('mobile', 'number', input)}
+            onSubmitEditing={() => updateItem('mobile')}
           />
         </View>
       );

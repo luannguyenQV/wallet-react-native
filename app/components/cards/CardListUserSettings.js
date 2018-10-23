@@ -85,61 +85,67 @@ function withRedux(CardList) {
           return (
             <CardAddress
               item={item}
-              detail={detail}
+              detail={cardListOptions.showDetail}
               updateInputField={this.props.updateInputField}
               updateItem={this.props.updateItem}
+              updateError={cardListOptions.updateError}
             />
           );
         case 'mobile':
           return (
             <CardMobile
               item={item}
-              detail={detail}
+              detail={cardListOptions.showDetail}
               updateInputField={this.props.updateInputField}
               updateItem={this.props.updateItem}
+              updateError={cardListOptions.updateError}
             />
           );
         case 'email':
           return (
             <CardEmail
               item={item}
-              detail={detail}
+              detail={cardListOptions.showDetail}
               updateInputField={this.props.updateInputField}
               updateItem={this.props.updateItem}
+              updateError={cardListOptions.updateError}
             />
           );
         case 'bank_account':
           return (
             <CardBankAccount
               item={item}
-              detail={detail}
+              detail={cardListOptions.showDetail}
               updateInputField={this.props.updateInputField}
               updateItem={this.props.updateItem}
+              updateError={cardListOptions.updateError}
             />
           );
         case 'crypto_address':
           return (
             <CardCryptoAddress
               item={item}
-              detail={detail}
+              detail={cardListOptions.showDetail}
               updateInputField={this.props.updateInputField}
               updateItem={this.props.updateItem}
+              updateError={cardListOptions.updateError}
             />
           );
         case 'profile':
           return (
             <CardPersonalDetails
               item={item}
-              detail={detail}
+              detail={cardListOptions.showDetail}
               updateInputField={this.props.updateInputField}
               updateItem={this.props.updateItem}
+              updateError={cardListOptions.updateError}
             />
           );
         case 'wallet':
           return (
             <CardWallet
               item={item}
-              detail={detail}
+              detail={cardListOptions.showDetail}
               updateInputField={this.props.updateInputField}
               updateItem={this.props.updateItem}
               hideDetail={() => this.props.hideDetail('wallet')}
@@ -148,9 +154,11 @@ function withRedux(CardList) {
             />
           );
         case 'reward':
-          return <CardReward item={item} detail={detail} />;
+          return <CardReward item={item} detail={cardListOptions.showDetail} />;
         case 'campaign':
-          return <CardCampaign item={item} detail={detail} />;
+          return (
+            <CardCampaign item={item} detail={cardListOptions.showDetail} />
+          );
         default:
           return <View />;
       }
@@ -590,6 +598,7 @@ function withRedux(CardList) {
             title={item => this.title(item)}
             subtitle={item => this.subtitle(item)}
             keyExtractor={item => this.keyExtractor(item)}
+            updateError={cardListOptions.updateError}
           />
         );
       } else return <View />;

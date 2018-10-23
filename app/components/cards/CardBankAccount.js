@@ -130,7 +130,7 @@ class CardBankAccount extends Component {
             onChangeText={input =>
               updateInputField('bank_account', 'bic', input)
             }
-            onSubmitEditing={() => updateItem('bank_account', tempItem)}
+            onSubmitEditing={() => updateItem('bank_account')}
             reference={r => (this.bic = r)}
           />
         </View>

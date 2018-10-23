@@ -36,7 +36,10 @@ class ProfileScreen extends Component {
   renderBasicInfo() {
     const profile = this.props.profile.data[0];
 
-    let value = profile ? profile.first_name + ' ' + profile.last_name : '';
+    let value =
+      profile && profile.first_name && profile.last_name
+        ? profile.first_name + ' ' + profile.last_name
+        : 'Not yet provided';
     let status =
       profile && profile.status ? profile.status.toUpperCase() : 'INCOMPLETE';
 
@@ -271,7 +274,6 @@ class ProfileScreen extends Component {
           title="Profile"
           noShadow
         />
-        {/* {this.props.navigation.isFocused() ? ( */}
         <View style={mainContainer}>
           <HeaderProfile
             uploadProfilePhoto={uploadProfilePhoto}
@@ -293,7 +295,6 @@ class ProfileScreen extends Component {
             {!requireDocumentAdvID ? null : this.renderDocumentAdvID()}
           </InputContainer>
         </View>
-        {/* ) : null} */}
       </View>
     );
   }
