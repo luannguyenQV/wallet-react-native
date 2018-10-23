@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "Rehive Wallet",
+    "name": "Plue Wallet",
     "description": "A multi-currency wallet built on the Rehive platform.",
     "version": "1.4.0",
-    "slug": "rehive-wallet",
+    "slug": "plue-wallet",
     "privacy": "public",
     "sdkVersion": "30.0.0",
     "orientation": "portrait",
     "primaryColor": "#4d4d4d",
-    "icon": "./assets/icons/icon-gray.png",
+    "icon": "./assets/icons/icon.png",
     "splash": {
       "image": "./assets/icons/splash-full.png",
       "primaryColor": "#ffffff",
@@ -17,7 +17,7 @@
     "assetBundlePatterns": ["./assets/icons/*"],
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.rehive.wallet",
+      "bundleIdentifier": "com.plue.wallet",
       "icon": "./assets/icons/app.png",
       "infoPlist": {
         "NSContactsUsageDescription":
@@ -29,8 +29,8 @@
       }
     },
     "android": {
-      "package": "com.rehivewallet",
-      "icon": "./assets/icons/icon-1024.png",
+      "package": "com.plue_wallet",
+      "icon": "./assets/icons/icon.png",
       "versionCode": 4,
       "splash": {
         "backgroundColor": "#ffffff",

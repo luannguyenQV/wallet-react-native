@@ -1,3 +1,3 @@
 export default {
-  company: '',
+  company: 'plue_demo',
 };

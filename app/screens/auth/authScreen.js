@@ -180,7 +180,7 @@ class AuthScreen extends Component {
                 <Slides data={slides} height={200} width={SCREEN_WIDTH} />
               ) : (
                 <Image
-                  source={require('./../../../assets/icons/icon-1024.png')}
+                  source={require('./../../../assets/icons/icon.png')}
                   resizeMode="contain"
                   style={image}
                 />
