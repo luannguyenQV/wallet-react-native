@@ -173,6 +173,7 @@ const styles = {
     fontSize: 16,
     padding: 8,
     paddingHorizontal: 16,
+    lineHeight: 22,
   },
   viewStyleFooter: {
     width: '100%',
