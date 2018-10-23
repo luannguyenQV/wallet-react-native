@@ -12,7 +12,9 @@ class CardReward extends Component {
   render() {
     const { campaign, amount, currency, created, status } = this.props.item;
     const color =
-      status === 'accept' ? 'positive' : status === 'reject' ? 'negative' : '';
+      status === 'accept'
+        ? 'positive'
+        : status === 'reject' ? 'negative' : 'font';
 
     if (this.props.detail) {
       return (

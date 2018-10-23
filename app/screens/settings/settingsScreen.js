@@ -165,7 +165,8 @@ class SettingsScreen extends Component {
       onPress: modalOnDismiss,
     };
     const contentText =
-      'You are about to log out. This will reset all local authentication and require you to sign in again.';
+      'You are about to log out. You will need to provide your log in credentials when you open the app again.';
+    const titleText = 'Log out?';
     return (
       <PopUpGeneral
         visible={modalVisible && modalType === 'logout'}
@@ -176,6 +177,7 @@ class SettingsScreen extends Component {
         onDismiss={modalOnDismiss}
         loading={loggingOut}
         errorText={''}
+        title={titleText}
         contentText={contentText}
       />
     );

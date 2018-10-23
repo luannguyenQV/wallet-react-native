@@ -191,7 +191,7 @@ class SendScreen extends Component {
             />
             <Button
               type="text"
-              label="CANCEL"
+              label="BACK"
               onPress={() => setTransactionState('')}
             />
           </ButtonList>

@@ -9,8 +9,6 @@ import RewardsScreen from '../screens/main/rewardsScreen';
 
 import ProfileScreen from '../screens/settings/getVerified/profileScreen';
 import SettingsScreen from './../screens/settings/settingsScreen';
-import About from './../screens/main/aboutScreen';
-import LogoutScreen from './../screens/auth/logoutScreen';
 
 const Stack = {
   Home: HomeScreen,
@@ -18,7 +16,6 @@ const Stack = {
   Rewards: RewardsScreen,
   Profile: ProfileScreen,
   Settings: SettingsScreen,
-  Logout: LogoutScreen,
 };
 
 const drawerNavigator = createDrawerNavigator(Stack, {
