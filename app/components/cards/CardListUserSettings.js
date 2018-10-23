@@ -368,10 +368,13 @@ function withRedux(CardList) {
           }
           break;
         case 'delete':
-          text = 'You are about to delete ' + standardizeString(type);
+          text = 'You are about to delete ' + standardizeString(type, false);
           break;
         case 'primary':
-          text = 'You are about to set your primary ' + type + ' to';
+          text =
+            'You are about to set your primary ' +
+            standardizeString(type, false) +
+            ' to';
           break;
         case 'active':
           text = 'You are about to set your active currency to';
@@ -475,7 +478,7 @@ function withRedux(CardList) {
         case 'reward':
           return 'No rewards claimed yet';
         default:
-          return 'No ' + standardizeString(type) + ' added yet';
+          return 'No ' + standardizeString(type, false) + ' added yet';
       }
     }
 

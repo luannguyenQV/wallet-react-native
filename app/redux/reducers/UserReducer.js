@@ -397,6 +397,7 @@ export const userAddressesSelector = createSelector(userSelector, user => {
         : user.address ? user.address : [],
     loading: user.addressLoading ? user.addressLoading : false,
     index: user.addressIndex ? user.addressIndex : 0,
+    showDetail: user.showDetail ? user.showDetail : false,
   };
 });
 
@@ -408,6 +409,7 @@ export const userEmailsSelector = createSelector(userSelector, user => {
         : user.email ? user.email : [],
     loading: user.emailLoading ? user.emailLoading : false,
     index: user.emailIndex ? user.emailIndex : 0,
+    showDetail: user.showDetail ? user.showDetail : false,
   };
 });
 
@@ -419,6 +421,7 @@ export const userMobilesSelector = createSelector(userSelector, user => {
         : user.mobile ? user.mobile : [],
     loading: user.mobileLoading ? user.mobileLoading : false,
     index: user.mobileIndex ? user.mobileIndex : 0,
+    showDetail: user.showDetail ? user.showDetail : false,
   };
 });
 
@@ -430,6 +433,7 @@ export const userBankAccountsSelector = createSelector(userSelector, user => {
         : user.bank_account ? user.bank_account : [],
     loading: user.bank_accountLoading ? user.bank_accountLoading : false,
     index: user.bank_accountIndex ? user.bank_accountIndex : 0,
+    showDetail: user.showDetail ? user.showDetail : false,
   };
 });
 export const userCryptoAddressesSelector = createSelector(
@@ -442,6 +446,7 @@ export const userCryptoAddressesSelector = createSelector(
           : user.crypto_address ? user.crypto_address : [],
       loading: user.crypto_addressLoading ? user.crypto_addressLoading : false,
       index: user.crypto_addressIndex ? user.crypto_addressIndex : 0,
+      showDetail: user.showDetail ? user.showDetail : false,
     };
   },
 );
@@ -453,6 +458,7 @@ export const userProfileSelector = createSelector(userSelector, user => {
         ? [user.tempItem]
         : user.profile ? user.profile : [],
     loading: user.profileLoading ? user.profileLoading : false,
+    showDetail: user.showDetail ? user.showDetail : false,
   };
 });
 

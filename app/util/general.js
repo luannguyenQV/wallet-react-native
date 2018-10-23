@@ -5,7 +5,7 @@ export const performDivisibility = (balance, divisibility) => {
   return balance;
 };
 
-export const standardizeString = (string, capitalise) => {
+export const standardizeString = (string, capitalise = true) => {
   if (string) {
     if (capitalise) {
       return (string.charAt(0).toUpperCase() + string.slice(1)).replace(
