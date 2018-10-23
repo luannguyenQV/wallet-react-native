@@ -478,13 +478,13 @@ function withRedux(CardList) {
         switch (type) {
           case 'wallet':
             return item.currency.description;
-          case 'reward':
-            return item.campaign.name;
         }
       }
       switch (type) {
         case 'campaign':
           return item.name;
+        case 'reward':
+          return item.campaign.name;
       }
       return '';
     }

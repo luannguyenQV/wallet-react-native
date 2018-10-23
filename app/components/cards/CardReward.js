@@ -4,13 +4,15 @@
 import React, { Component } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
-import { Input, Output, Text } from '../common';
-import { performDivisibility } from '../../util/general';
+import { Output, Text } from '../common';
+import { performDivisibility, standardizeString } from '../../util/general';
 import moment from 'moment';
 
 class CardReward extends Component {
   render() {
     const { campaign, amount, currency, created, status } = this.props.item;
+    const color =
+      status === 'accept' ? 'positive' : status === 'reject' ? 'negative' : '';
 
     if (this.props.detail) {
       return (
@@ -26,10 +28,14 @@ class CardReward extends Component {
           />
           <View style={styles.viewStyleFooter}>
             <View>
-              <Text>{moment(created).format('lll')}</Text>
+              <Text style={{ margin: 0, padding: 0 }}>
+                {moment(created).format('lll')}
+              </Text>
             </View>
             <View>
-              <Text>{status}</Text>
+              <Text color={color} style={{ margin: 0, padding: 0 }}>
+                {standardizeString(status)}
+              </Text>
             </View>
           </View>
         </View>
@@ -53,7 +59,9 @@ class CardReward extends Component {
               </Text>
             </View>
             <View>
-              <Text style={{ margin: 0, padding: 0 }}>{status}</Text>
+              <Text color={color} style={{ margin: 0, padding: 0 }}>
+                {standardizeString(status)}
+              </Text>
             </View>
           </View>
         </View>
