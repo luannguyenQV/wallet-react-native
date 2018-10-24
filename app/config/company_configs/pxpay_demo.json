@@ -93,14 +93,14 @@
           "id": "0",
           "title": "PX Pay 1",
           "description": "This is the demo PX Pay card 1",
-          "image": "pxpay",
+          "image": "card1",
           "dismiss": true
         },
         {
           "id": "1",
           "title": "PX Pay 2",
           "description": "This is the demo PX Pay card 2",
-          "image": "pxpay",
+          "image": "card2",
           "dismiss": true
         }
       ]
@@ -112,19 +112,19 @@
         "id": "0",
         "title": "PX Pay",
         "description": "This is the demo account - PX Pay",
-        "image": "pxpay"
+        "image": "slider1"
       },
       {
         "id": "1",
         "title": "PX Pay 2",
         "description": "This is the demo account - PX Pay",
-        "image": "pxpay"
+        "image": "slider1"
       },
       {
         "id": "2",
         "title": "PX Pay 3",
         "description": "This is the demo account - PX Pay",
-        "image": "pxpay"
+        "image": "slider1"
       }
     ]
   },
@@ -134,7 +134,7 @@
         "id": "0",
         "title": "PX Pay 1",
         "description": "This is the demo account - PX Pay",
-        "image": "pxpay"
+        "image": "slider1"
       }
     ]
   }
