@@ -1,14 +1,14 @@
 {
-  "company": {
-    "id": "test_company_1",
-    "name": "Test Company 1",
-    "description": "A demo company on the Rehive platform"
-  },
   "services": {
     "bitcoin": true,
     "stellar": true,
     "ethereum": true,
     "rewards": true
+  },
+  "verification": {
+    "requireDocumentID": true,
+    "requireDocumentAddress": true,
+    "requireDocumentAdvID": true
   },
   "auth": {
     "identifier": "email",
@@ -19,18 +19,12 @@
         "id": 0,
         "title": "Privacy Policy",
         "description": "Click here to read more on the privacy policy",
-        "link": ""
-      },
-      {
-        "id": 1,
-        "title": "User Agreement",
-        "description": "Click here to read more on the user agreement",
-        "link": ""
+        "link": "https://www.iubenda.com/privacy-policy/83456137"
       }
     ],
-    "first_name": true,
-    "last_name": true,
-    "username": true,
+    "first_name": false,
+    "last_name": false,
+    "username": false,
     "country": false,
     "pin": "",
     "mfa": ""
@@ -43,46 +37,76 @@
     "updateDetails": false
   },
   "theme": {
-    "authSpinner": "rehive"
-  },
-  "home": {
-    "header": "wallet",
-    "detail": [
-      {
-        "order": 0,
-        "type": "cards"
+    "default": "dark",
+    "themes": {
+      "dark": {
+        "primary": "primary",
+        "primaryContrast": "white",
+        "header": "primary",
+        "headerContrast": "primaryContrast",
+        "drawerHeader": "primary",
+        "drawerHeaderContrast": "white",
+        "walletHeader": "primary",
+        "walletHeaderContrast": "white",
+        "authScreen": "primary",
+        "authScreenContrast": "white",
+        "sendScreen": "primary",
+        "sendScreenContrast": "white",
+        "surface": "grey1"
       },
-      {
-        "order": 1,
-        "type": "transactions"
+      "light": {
+        "primary": "white",
+        "primaryContrast": "primary",
+        "secondary": "lightgrey",
+        "header": "white",
+        "headerContrast": "primary",
+        "drawerHeader": "primaryContrast",
+        "drawerHeaderContrast": "primary",
+        "walletHeader": "white",
+        "walletHeaderContrast": "primary",
+        "authScreen": "white",
+        "authScreenContrast": "primary",
+        "sendScreen": "white",
+        "sendScreenContrast": "primary",
+        "surface": "grey1"
       }
-    ]
-  },
-  "verification": {
-    "requirePersonal": true,
-    "requireAddress": true,
-    "requireMobile": true,
-    "requireEmail": true,
-    "requireDocumentID": true,
-    "requireDocumentAddress": true,
-    "requireDocumentAdvID": true
-  },
-  "colors": {
-    "primary": "#5969F6",
-    "secondary": "#A4A5F5",
-    "tertiary": "#FBFB8B",
-    "focus": "#FC4F96",
+    },
+    "colors": {
+      "primary": "#5969F6",
+      "secondary": "#A4A5F5",
+      "tertiary": "#FBFB8B",
+      "focus": "#FC4F96",
 
-    "primaryContrast": "#f6f6f6",
-    "secondaryContrast": "#303030",
-    "tertiaryContrast": "#000000",
-    "focusContrast": "#ffffff",
+      "primaryContrast": "#f6f6f6",
+      "secondaryContrast": "#303030",
+      "tertiaryContrast": "#000000",
+      "focusContrast": "#ffffff",
 
-    "warning": "#FC8755",
-    "error": "#f44336",
-    "success": "#4CAF50",
-    "positive": "#4CAF50",
-    "negative": "#f44336"
+      "warning": "#FC8755",
+      "error": "#f44336",
+      "success": "#4CAF50",
+      "positive": "#4CAF50",
+      "negative": "#f44336"
+    },
+    "style": {
+      "cardCornerRadius": 2,
+      "roundButtons": false
+    },
+    "layout": {
+      "home": {
+        "header": "wallet",
+        "detail": [
+          {
+            "order": 0,
+            "type": "cards"
+          },
+          {
+            "order": 1,
+            "type": "transactions"
+          }
+        ]
+      }
+    }
   },
   "cards": {
     "home": {
