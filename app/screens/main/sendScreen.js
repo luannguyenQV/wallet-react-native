@@ -463,7 +463,9 @@ class SendScreen extends Component {
           headerRightText={textHeader}
           headerRightOnPress={onPressHeader}
         />
-        <MyView keyboardAvoiding>{this.renderMainContainer()}</MyView>
+        <MyView keyboardAvoiding scrollView>
+          {this.renderMainContainer()}
+        </MyView>
         {pinVisible ? (
           <LocalAuthentication
             modal

@@ -122,28 +122,24 @@ class _CardList extends Component {
     //   return <View color="grey2">{this.renderItem(data.data[0], 0)}</View>;
     // }
     return (
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === 'android' ? 'height' : 'padding'}>
-        <View color="grey2">
-          <FlatList
-            ref={component => (this[type + 'FlatList'] = component)}
-            refreshControl={
-              <RefreshControl refreshing={data.loading} onRefresh={onRefresh} />
-            }
-            keyboardShouldPersistTaps={'handled'}
-            data={data.data}
-            renderItem={({ item, index }) => this.renderItem(item, index)}
-            keyExtractor={item =>
-              keyExtractor
-                ? keyExtractor(item)
-                : item.id ? item.id.toString() : '0'
-            }
-            ListEmptyComponent={this.renderEmptyList()}
-          />
-          {this.renderModal()}
-        </View>
-      </KeyboardAvoidingView>
+      <View color="grey2" keyboardAvoiding>
+        <FlatList
+          style={{ height: '100%' }}
+          ref={component => (this[type + 'FlatList'] = component)}
+          refreshControl={
+            <RefreshControl refreshing={data.loading} onRefresh={onRefresh} />
+          }
+          keyboardShouldPersistTaps={'handled'}
+          data={data.data}
+          renderItem={({ item, index }) => this.renderItem(item, index)}
+          keyExtractor={item =>
+            keyExtractor
+              ? keyExtractor(item)
+              : item.id ? item.id.toString() : '0'
+          }
+          ListEmptyComponent={this.renderEmptyList()}
+        />
+      </View>
     );
   }
 }

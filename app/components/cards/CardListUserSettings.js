@@ -544,38 +544,38 @@ function withRedux(CardList) {
 
     render() {
       const { data, type, isFocused, cardListOptions } = this.props;
-      if (isFocused) {
-        return (
-          <CardList
-            ref={c => (this[type + 'CardList'] = c)}
-            data={data}
-            cardListOptions={cardListOptions}
-            type={type}
-            activeAction={(item, index) => this.activeAction(item, index)}
-            onRefresh={() => this.onRefresh()}
-            onPressContent={index => this.onPressCard(index)}
-            onPressTitle={index => this.onPressCard(index)}
-            onPressHeader={index => this.onPressCard(index)}
-            actionOne={(item, index) => this.actionOne(item, index)}
-            actionTwo={(item, index) => this.actionTwo(item, index)}
-            modalContent={this.renderModalContent()}
-            renderItem={(item, index) => this.renderItem(item, index)}
-            iconFooter={item => this.iconFooter(item)}
-            onPressFooter={index => this.props.showModal(type, index, 'delete')}
-            modalContentText={this.modalContentText()}
-            modalActionOne={this.modalActionOne()}
-            modalActionTwo={this.modalActionTwo()}
-            modalOnDismiss={this.modalActionTwo().onPress}
-            modalLoading={false}
-            modalError={''}
-            emptyListMessage={this.emptyListMessage()}
-            title={item => this.title(item)}
-            subtitle={item => this.subtitle(item)}
-            keyExtractor={item => this.keyExtractor(item)}
-            updateError={cardListOptions.updateError}
-          />
-        );
-      } else return <View />;
+      // if (isFocused) {
+      return (
+        <CardList
+          ref={c => (this[type + 'CardList'] = c)}
+          data={data}
+          cardListOptions={cardListOptions}
+          type={type}
+          activeAction={(item, index) => this.activeAction(item, index)}
+          onRefresh={() => this.onRefresh()}
+          onPressContent={index => this.onPressCard(index)}
+          onPressTitle={index => this.onPressCard(index)}
+          onPressHeader={index => this.onPressCard(index)}
+          actionOne={(item, index) => this.actionOne(item, index)}
+          actionTwo={(item, index) => this.actionTwo(item, index)}
+          modalContent={this.renderModalContent()}
+          renderItem={(item, index) => this.renderItem(item, index)}
+          iconFooter={item => this.iconFooter(item)}
+          onPressFooter={index => this.props.showModal(type, index, 'delete')}
+          modalContentText={this.modalContentText()}
+          modalActionOne={this.modalActionOne()}
+          modalActionTwo={this.modalActionTwo()}
+          modalOnDismiss={this.modalActionTwo().onPress}
+          modalLoading={false}
+          modalError={''}
+          emptyListMessage={this.emptyListMessage()}
+          title={item => this.title(item)}
+          subtitle={item => this.subtitle(item)}
+          keyExtractor={item => this.keyExtractor(item)}
+          updateError={cardListOptions.updateError}
+        />
+      );
+      // } else return <View />;
     }
   };
 }

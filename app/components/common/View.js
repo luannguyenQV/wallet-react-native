@@ -11,69 +11,97 @@ import {
   ScrollView,
 } from 'react-native';
 import context from './context';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 class _View extends Component {
+  renderContent() {
+    const { children, keyboardAvoiding } = this.props;
+    if (keyboardAvoiding) {
+      return (
+        <TouchableWithoutFeedback
+          onPress={() => Keyboard.dismiss()}
+          accessible={false}>
+          {children}
+        </TouchableWithoutFeedback>
+      );
+    } else {
+      return children;
+    }
+  }
+  renderScrollView() {
+    const {
+      style,
+      children,
+      keyboardAvoiding,
+      scrollView,
+      behavior,
+      colors,
+      color,
+    } = this.props;
+    console.log('renderScrollView');
+
+    return (
+      <ScrollView
+        keyboardDismissMode={'interactive'}
+        keyboardShouldPersistTaps="always">
+        {this.renderContent()}
+      </ScrollView>
+    );
+  }
+
   render() {
     const {
       style,
       children,
       keyboardAvoiding,
+      scrollView,
       behavior,
       colors,
       color,
     } = this.props;
-    const { _containerStyle } = styles;
 
+    console.log('render', this.props);
     if (keyboardAvoiding) {
       return (
-        <View style={{ flex: 1 }}>
-          <KeyboardAvoidingView
-            // keyboardShouldPersistTaps={'always'}
-            style={[
-              _containerStyle,
-              { backgroundColor: color ? colors[color] : 'white' },
-            ]}
-            behavior={
-              behavior
-                ? behavior
-                : Platform.OS === 'android' ? 'height' : 'padding'
-            }>
-            <ScrollView
-              keyboardDismissMode={'interactive'}
-              keyboardShouldPersistTaps="always">
-              <TouchableWithoutFeedback
-                onPress={() => Keyboard.dismiss()}
-                accessible={false}>
-                {children}
-              </TouchableWithoutFeedback>
-            </ScrollView>
-          </KeyboardAvoidingView>
-        </View>
-      );
-    } else {
-      return (
-        <_view
-          {...this.props}
+        <KeyboardAvoidingView
+          keyboardShouldPersistTaps={'handled'}
           style={[
-            _containerStyle,
+            styles._containerStyle,
             { backgroundColor: color ? colors[color] : 'white' },
-            style,
-          ]}>
-          {children}
-        </_view>
+          ]}
+          behavior={
+            'padding'
+            // behavior ? behavior :
+            // Platform.OS === 'android' ? '' : 'padding'
+          }>
+          {scrollView ? this.renderScrollView() : this.renderContent()}
+        </KeyboardAvoidingView>
       );
     }
+    return (
+      <_view
+        style={[
+          styles._containerStyle,
+          { backgroundColor: color ? colors[color] : 'white' },
+        ]}>
+        {scrollView ? this.renderScrollView() : this.renderContent()}
+      </_view>
+    );
   }
 }
 
-// Screen.propTypes = {
-//   label: PropTypes.string, // Text displayed on button
-// };
+_View.propTypes = {
+  keyboardAvoiding: PropTypes.bool,
+  scrollView: PropTypes.bool,
 
-// Screen.defaultProps = {
-//   label: '',
-// };
+  behavior: PropTypes.string,
+};
+
+_View.defaultProps = {
+  keyboardAvoiding: false,
+  scrollView: false,
+  behavior: '',
+};
 
 // TODO: add custom shortcuts for alignment, flex, padding, margin, defaults (rem?)
 
