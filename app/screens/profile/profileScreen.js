@@ -9,10 +9,9 @@ import {
 } from '../../redux/actions';
 
 import Header from '../../components/header';
-import GetVerifiedOption from '../../components/getVerifiedOption';
 import HeaderProfile from '../../components/HeaderProfile';
 
-import { Spinner, InputContainer } from '../../components/common';
+import { Spinner, InputContainer, OutputStatus } from '../../components/common';
 import {
   userEmailsSelector,
   userMobilesSelector,
@@ -36,10 +35,6 @@ class ProfileScreen extends Component {
     this.props.refreshGetVerified();
   }
 
-  goTo = (path, name) => {
-    this.props.navigation.navigate(path, { name });
-  };
-
   renderBasicInfo() {
     const profile = this.props.profile.data[0];
 
@@ -51,12 +46,11 @@ class ProfileScreen extends Component {
       profile && profile.status ? profile.status.toUpperCase() : 'INCOMPLETE';
 
     return (
-      <GetVerifiedOption
+      <OutputStatus
         label="Personal details"
-        value={value ? value : 'Not yet provided'}
+        value={value}
         status={status}
-        gotoAddress="PersonalDetails"
-        goTo={this.goTo}
+        onPress={() => this.props.navigation.navigate('PersonalDetails')}
       />
     );
   }
@@ -78,12 +72,11 @@ class ProfileScreen extends Component {
     }
 
     return (
-      <GetVerifiedOption
+      <OutputStatus
         label="Email"
         value={value}
         status={status}
-        gotoAddress="EmailAddresses"
-        goTo={this.goTo}
+        onPress={() => this.props.navigation.navigate('EmailAddresses')}
       />
     );
   }
@@ -105,12 +98,11 @@ class ProfileScreen extends Component {
     }
 
     return (
-      <GetVerifiedOption
+      <OutputStatus
         label="Mobile"
         value={value}
         status={status}
-        gotoAddress="MobileNumbers"
-        goTo={this.goTo}
+        onPress={() => this.props.navigation.navigate('MobileNumbers')}
       />
     );
   }
@@ -146,22 +138,21 @@ class ProfileScreen extends Component {
     }
 
     return (
-      <GetVerifiedOption
+      <OutputStatus
         label="Address"
         value={value ? value : 'Not yet provided'}
         status={status}
-        gotoAddress="Addresses"
-        goTo={this.goTo}
+        onPress={() => this.props.navigation.navigate('Addresses')}
       />
     );
   }
 
   renderDocumentID() {
-    const { document } = this.props;
+    const { documents } = this.props;
 
     let valueIdentity = 'Not yet provided';
     let statusIdentity = 'INCOMPLETE';
-    let idDocuments = document.filter(
+    let idDocuments = documents.data.filter(
       doc => doc.document_category === 'Proof Of Identity',
     );
     let idVerified = idDocuments.filter(doc => doc.status === 'verified');
@@ -179,22 +170,25 @@ class ProfileScreen extends Component {
     }
 
     return (
-      <GetVerifiedOption
+      <OutputStatus
         label="Proof of Identity"
         value={valueIdentity}
         status={statusIdentity}
-        gotoAddress="Document"
-        goTo={this.goTo}
+        onPress={() =>
+          this.props.navigation.navigate('Document', {
+            name: 'Proof Of Identity',
+          })
+        }
       />
     );
   }
 
   renderDocumentAddress() {
-    const { document } = this.props;
+    const { documents } = this.props;
 
     let valueAddress = 'Not yet provided';
     let statusAddress = 'INCOMPLETE';
-    let addressDocuments = document.filter(
+    let addressDocuments = documents.data.filter(
       doc => doc.document_category === 'Proof Of Address',
     );
     let addressVerified = addressDocuments.filter(
@@ -216,22 +210,25 @@ class ProfileScreen extends Component {
     }
 
     return (
-      <GetVerifiedOption
+      <OutputStatus
         label="Proof of Address"
         value={valueAddress}
         status={statusAddress}
-        gotoAddress="Document"
-        goTo={this.goTo}
+        onPress={() =>
+          this.props.navigation.navigate('Document', {
+            name: 'Proof Of Address',
+          })
+        }
       />
     );
   }
 
   renderDocumentAdvID() {
-    const { document } = this.props;
+    const { documents } = this.props;
 
     let valueAdvancedIdentity = 'Not yet provided';
     let statusAdvancedIdentity = 'INCOMPLETE';
-    let idSelfieDocuments = document.filter(
+    let idSelfieDocuments = documents.data.filter(
       doc => doc.document_category === 'Advanced Proof Of Identity',
     );
     let idSelfieVerified = idSelfieDocuments.filter(
@@ -255,12 +252,15 @@ class ProfileScreen extends Component {
     }
 
     return (
-      <GetVerifiedOption
+      <OutputStatus
         label="Advanced Proof of Identity"
         value={valueAdvancedIdentity}
         status={statusAdvancedIdentity}
-        gotoAddress="Document"
-        goTo={this.goTo}
+        onPress={() =>
+          this.props.navigation.navigate('Document', {
+            name: 'Advanced Proof Of Identity',
+          })
+        }
       />
     );
   }
@@ -336,7 +336,7 @@ const mapStateToProps = state => {
     address: userAddressesSelector(state),
     mobile: userMobilesSelector(state),
     email: userEmailsSelector(state),
-    document: userDocumentsSelector(state),
+    documents: userDocumentsSelector(state),
     company_config: state.auth.company_config,
     modalOptions: modalOptionsSelector(state),
   };

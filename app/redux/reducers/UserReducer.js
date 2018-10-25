@@ -491,6 +491,17 @@ export const userProfileSelector = createSelector(userSelector, user => {
   };
 });
 
+export const userDocumentsSelector = createSelector(userSelector, user => {
+  return {
+    data:
+      user.showDetail && user.type === 'document'
+        ? [user.tempItem]
+        : user.document ? user.document : [],
+    loading: user.documentLoading ? user.documentLoading : false,
+    showDetail: user.showDetail ? user.showDetail : false,
+  };
+});
+
 export const cardListOptionsSelector = createSelector(userSelector, user => {
   return {
     showDetail: user.showDetail ? user.showDetail : false,
@@ -514,8 +525,4 @@ export const modalOptionsSelector = createSelector(userSelector, user => {
 
 export const companiesSelector = createSelector(userSelector, user => {
   return user.companies ? user.companies : [];
-});
-
-export const userDocumentsSelector = createSelector(userSelector, user => {
-  return user.document ? user.document : [];
 });

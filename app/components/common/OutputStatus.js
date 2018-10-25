@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableWithoutFeedback } from 'react-native';
-import { Output } from './common';
-import context from './common/context';
+import { Output } from '.';
+import context from './context';
 
-class GetVerifiedOption extends Component {
+class _OutputStatus extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -20,7 +20,8 @@ class GetVerifiedOption extends Component {
       color = colors.positive;
     } else if (
       this.props.status === 'INCOMPLETE' ||
-      this.props.status === 'DENIED'
+      this.props.status === 'DENIED' ||
+      this.props.status === 'DECLINED'
     ) {
       color = colors.negative;
     }
@@ -31,11 +32,10 @@ class GetVerifiedOption extends Component {
   }
 
   render() {
-    const { label, value, status, gotoAddress } = this.props;
+    const { label, value, status, onPress, colors } = this.props;
     return (
-      <View style={styles.options}>
-        <TouchableWithoutFeedback
-          onPress={() => this.props.goTo(gotoAddress, label)}>
+      <View style={[styles.options, { backgroundColor: colors.grey1 }]}>
+        <TouchableWithoutFeedback onPress={() => onPress()}>
           <View style={styles.optionsElement}>
             <View style={{ flex: 1 }}>
               <Output label={label} value={value} />
@@ -60,6 +60,10 @@ const styles = {
   options: {
     paddingVertical: 4,
     paddingRight: 8,
+    // borderWidth: 1,
+    margin: 2,
+
+    borderRadius: 5,
     // height: 70,
   },
   optionsElement: {
@@ -83,4 +87,6 @@ const styles = {
   },
 };
 
-export default context(GetVerifiedOption);
+const OutputStatus = context(_OutputStatus);
+
+export { OutputStatus };

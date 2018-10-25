@@ -66,12 +66,18 @@ class _HeaderProfile extends Component {
           </Text>
         </View>
 
-        <ImageUpload
-          modalOptions={modalOptions}
-          onSave={image => uploadProfilePhoto(image)}
-          onDismiss={() => hideModal()}
-          resetLoading={resetLoading}
-        />
+        {/* {modalOptions.visible ? (
+          <ImageUpload
+            ref={ref => {
+              this.HeaderProfileImageUpload = ref;
+            }}
+            key="HeaderProfileImageUpload"
+            modalOptions={modalOptions}
+            onSave={image => uploadProfilePhoto(image)}
+            onDismiss={() => hideModal()}
+            resetLoading={resetLoading}
+          />
+        ) : null} */}
       </View>
     );
   }

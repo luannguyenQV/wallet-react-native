@@ -25,6 +25,10 @@ class ImageUpload extends Component {
     }
   }
 
+  componentWillUnmount() {
+    console.log('test');
+  }
+
   launchCamera = async () => {
     Permissions.askAsync(Permissions.CAMERA);
     Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -61,6 +65,7 @@ class ImageUpload extends Component {
   }
 
   renderLanding() {
+    const { onDismiss } = this.props;
     return (
       <View>
         <Button label="Use camera" onPress={this.launchCamera} />
@@ -128,7 +133,7 @@ class ImageUpload extends Component {
   render() {
     const { modalOptions, onDismiss } = this.props;
     const { state } = this.state;
-
+    console.log(this.props);
     return (
       <PopUpGeneral visible={modalOptions.visible} onDismiss={onDismiss}>
         {state === 'confirm' ? this.renderConfirm() : this.renderLanding()}
