@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { connect } from 'react-redux';
-import { refreshGetVerified, uploadProfilePhoto } from '../../redux/actions';
+import {
+  refreshGetVerified,
+  uploadProfilePhoto,
+  showModal,
+  hideModal,
+} from '../../redux/actions';
 
 import Header from '../../components/header';
 import GetVerifiedOption from '../../components/getVerifiedOption';
@@ -14,6 +19,8 @@ import {
   userAddressesSelector,
   userProfileSelector,
   userDocumentsSelector,
+  resetLoading,
+  modalOptionsSelector,
 } from '../../redux/reducers/UserReducer';
 
 class ProfileScreen extends Component {
@@ -259,7 +266,15 @@ class ProfileScreen extends Component {
   }
 
   render() {
-    const { profile, company_config, uploadProfilePhoto } = this.props;
+    const {
+      profile,
+      company_config,
+      uploadProfilePhoto,
+      modalOptions,
+      showModal,
+      hideModal,
+      resetLoading,
+    } = this.props;
     const { container, mainContainer } = styles;
     const {
       requireDocumentID,
@@ -277,12 +292,17 @@ class ProfileScreen extends Component {
         <View style={mainContainer}>
           <HeaderProfile
             uploadProfilePhoto={uploadProfilePhoto}
-            photoLink={profile.data.profile}
+            photoLink={profile.data[0].profile}
             name={
-              profile.data.first_name
-                ? profile.data.first_name + ' ' + profile.data.last_name
-                : profile.data.username
+              profile.data[0].first_name
+                ? profile.data[0].first_name + ' ' + profile.data[0].last_name
+                : ''
             }
+            username={profile.data[0].username}
+            modalOptions={modalOptions}
+            showModal={showModal}
+            hideModal={hideModal}
+            resetLoading={resetLoading}
           />
           {profile.loading ? <Spinner /> : null}
           <InputContainer>
@@ -318,10 +338,14 @@ const mapStateToProps = state => {
     email: userEmailsSelector(state),
     document: userDocumentsSelector(state),
     company_config: state.auth.company_config,
+    modalOptions: modalOptionsSelector(state),
   };
 };
 
 export default connect(mapStateToProps, {
   refreshGetVerified,
   uploadProfilePhoto,
+  showModal,
+  hideModal,
+  resetLoading,
 })(ProfileScreen);

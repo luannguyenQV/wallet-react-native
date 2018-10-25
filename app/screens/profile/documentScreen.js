@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
 import { View, FlatList, Image } from 'react-native';
 import { connect } from 'react-redux';
-import { uploadDocument, resetUserErrors } from '../../redux/actions';
+import {
+  uploadDocument,
+  resetUserErrors,
+  showModal,
+  hideModal,
+  resetLoading,
+} from '../../redux/actions';
 import Header from '../../components/header';
 
 import { ImageUpload, Button, Spinner, Text } from '../../components/common';
 import document_categories from '../../config/document_types.json';
+import { modalOptionsSelector } from '../../redux/reducers/UserReducer';
 
 class DocumentScreen extends Component {
   static navigationOptions = {
@@ -33,14 +40,14 @@ class DocumentScreen extends Component {
   }
 
   selectType = document_type => {
+    this.props.showModal('document', 0, document_type);
     this.setState({
-      showModal: true,
       document_type,
     });
   };
 
-  uploadDocument() {
-    const { image, category, document_type } = this.state;
+  uploadDocument(image) {
+    const { category, document_type } = this.state;
     this.props.uploadDocument(image, category, document_type);
   }
 
@@ -79,39 +86,6 @@ class DocumentScreen extends Component {
             />
           </View>
         );
-      case 'confirm':
-        return (
-          <View style={{ justifyContent: 'flex-start' }}>
-            <View style={viewStyleImageContainer}>
-              <Image
-                style={{ height: 300, width: 300 }}
-                source={{ uri: this.state.image }}
-              />
-            </View>
-            <View style={viewStyleButtonContainer}>
-              {updateError ? (
-                <Text style={[textStyleDescription, { color: '#f44336' }]}>
-                  {updateError}
-                </Text>
-              ) : null}
-              {this.props.loading ? (
-                <Spinner containerStyle={{ margin: 8 }} />
-              ) : (
-                <Button
-                  label="CONFIRM & UPLOAD"
-                  color="secondary"
-                  onPress={() => this.uploadDocument()}
-                />
-              )}
-              <Button
-                label="Cancel"
-                color="secondary"
-                type="text"
-                onPress={() => this.resetState()}
-              />
-            </View>
-          </View>
-        );
     }
   }
 
@@ -126,8 +100,8 @@ class DocumentScreen extends Component {
   };
 
   render() {
+    const { modalOptions, hideModal } = this.props;
     const { category } = this.state;
-    console.log('category', category);
     const { textStyleHeader, viewStyleContent } = styles;
     return (
       <View style={styles.container}>
@@ -140,14 +114,10 @@ class DocumentScreen extends Component {
         </View>
 
         <ImageUpload
-          visible={this.state.showModal}
-          onSave={image =>
-            this.setState({
-              image,
-              state: 'confirm',
-            })
-          }
-          onDismiss={() => this.setState({ showModal: false })}
+          modalOptions={modalOptions}
+          onSave={image => this.uploadDocument(image)}
+          onDismiss={() => hideModal()}
+          resetLoading={resetLoading}
         />
       </View>
     );
@@ -184,12 +154,14 @@ const styles = {
   },
 };
 
-const mapStateToProps = ({ user }) => {
-  const { loading, updateError } = user;
-  return { loading, updateError };
+const mapStateToProps = state => {
+  return { modalOptions: modalOptionsSelector(state) };
 };
 
 export default connect(mapStateToProps, {
   uploadDocument,
   resetUserErrors,
+  showModal,
+  hideModal,
+  resetLoading,
 })(DocumentScreen);

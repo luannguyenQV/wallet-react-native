@@ -4,6 +4,7 @@ import { Text, Image, View, TouchableHighlight } from 'react-native';
 import { ImageUpload } from './common';
 
 import context from './common/context';
+import { hideModal, showModal } from '../redux/actions';
 
 class _HeaderProfile extends Component {
   state = {
@@ -11,7 +12,17 @@ class _HeaderProfile extends Component {
   };
 
   render() {
-    const { photoLink, username, name, colors } = this.props;
+    const {
+      photoLink,
+      username,
+      name,
+      colors,
+      modalOptions,
+      showModal,
+      hideModal,
+      uploadProfilePhoto,
+      resetLoading,
+    } = this.props;
 
     const {
       viewStyleContainer,
@@ -21,8 +32,7 @@ class _HeaderProfile extends Component {
     } = styles;
     return (
       <View style={[viewStyleContainer, { backgroundColor: colors.header }]}>
-        <TouchableHighlight
-          onPress={() => this.setState({ imageUpload: true })}>
+        <TouchableHighlight onPress={() => showModal('profile', 0, 'photo')}>
           {photoLink ? (
             <Image
               style={[
@@ -57,9 +67,10 @@ class _HeaderProfile extends Component {
         </View>
 
         <ImageUpload
-          visible={this.state.imageUpload}
-          onSave={image => this.props.uploadProfilePhoto(image)}
-          onDismiss={() => this.setState({ imageUpload: false })}
+          modalOptions={modalOptions}
+          onSave={image => uploadProfilePhoto(image)}
+          onDismiss={() => hideModal()}
+          resetLoading={resetLoading}
         />
       </View>
     );

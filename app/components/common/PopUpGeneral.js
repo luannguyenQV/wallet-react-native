@@ -12,8 +12,6 @@ import { HeaderButton } from './HeaderButton';
 import { Spinner } from './Spinner';
 import context from './context';
 
-import Colors from './../../config/colors';
-
 const _PopUpGeneral = props => {
   const {
     backgroundStyle,
@@ -48,6 +46,8 @@ const _PopUpGeneral = props => {
     visible,
     onDismiss,
     errorText,
+    colorTitleText,
+    colors,
   } = props;
 
   return (
@@ -70,44 +70,35 @@ const _PopUpGeneral = props => {
               onPress={() => {}}
               underlayColor={'transparent'}>
               <View>
-                {title || iconTitleRight ? (
-                  <View
-                    resizeMode="cover"
-                    style={[
-                      viewStyleTitleContainer,
-                      // {
-                      //   backgroundColor: titleStyle
-                      //     ? Colors[titleStyle]
-                      //     : Colors.primary,
-                      // },
-                    ]}>
+                {title || subtitle || iconTitleRight ? (
+                  <View resizeMode="cover" style={[viewStyleTitleContainer]}>
                     <View style={viewStyleTitle}>
-                      <Text
-                        style={[
-                          textStyleTitle,
-                          {
-                            fontSize: title
-                              ? title.length < 15 ? 24 : 18
-                              : 24,
-                            // color: titleStyle
-                            //   ? Colors[titleStyle + 'Contrast']
-                            //   : Colors.primaryContrast,
-                          },
-                        ]}>
-                        {title}
-                      </Text>
-                      <Text
-                        style={[
-                          textStyleSubtitle,
-                          {
-                            color: titleStyle
-                              ? Colors[titleStyle + 'Contrast']
-                              : Colors.primaryContrast,
-                            opacity: 0.8,
-                          },
-                        ]}>
-                        {subtitle}
-                      </Text>
+                      {title ? (
+                        <Text
+                          style={[
+                            textStyleTitle,
+                            {
+                              color: colorTitleText
+                                ? colorTitleText
+                                : colors.font,
+                            },
+                          ]}>
+                          {title}
+                        </Text>
+                      ) : null}
+                      {subtitle ? (
+                        <Text
+                          style={[
+                            textStyleSubtitle,
+                            {
+                              color: colorTitleText
+                                ? colorTitleText
+                                : colors.font,
+                            },
+                          ]}>
+                          {subtitle}
+                        </Text>
+                      ) : null}
                     </View>
                     {iconTitleRight ? (
                       <View style={iconStyleTitleRight}>
@@ -122,11 +113,15 @@ const _PopUpGeneral = props => {
                 ) : null}
                 <View style={viewStyleContent}>
                   {contentText ? (
-                    <Text style={textStyleContent}>{contentText}</Text>
+                    <Text style={[textStyleContent, { color: colors.font }]}>
+                      {contentText}
+                    </Text>
                   ) : null}
                   {children}
                   {errorText ? (
-                    <Text style={textStyleError}>{errorText}</Text>
+                    <Text style={[textStyleError, { color: colors.error }]}>
+                      {errorText}
+                    </Text>
                   ) : null}
                 </View>
 
@@ -144,7 +139,10 @@ const _PopUpGeneral = props => {
                             onPress={onPressActionTwo}
                             underlayColor="lightgrey"
                             style={buttonStyleAction}>
-                            <Text style={textStyleAction}>{textActionTwo}</Text>
+                            <Text
+                              style={[textStyleAction, { color: colors.font }]}>
+                              {textActionTwo}
+                            </Text>
                           </TouchableHighlight>
                         ) : null}
                         {textActionOne ? (
@@ -152,7 +150,10 @@ const _PopUpGeneral = props => {
                             onPress={onPressActionOne}
                             underlayColor="lightgrey"
                             style={buttonStyleAction}>
-                            <Text style={textStyleAction}>{textActionOne}</Text>
+                            <Text
+                              style={[textStyleAction, { color: colors.font }]}>
+                              {textActionOne}
+                            </Text>
                           </TouchableHighlight>
                         ) : null}
                       </View>
@@ -172,7 +173,7 @@ const styles = {
   containerStyle: {
     backgroundColor: '#fff',
     margin: 16,
-    borderRadius: 4,
+    borderRadius: 6,
     overflow: 'hidden',
   },
   backgroundStyle: {
@@ -186,41 +187,36 @@ const styles = {
   viewStyleTitleContainer: {
     flexDirection: 'row',
     backgroundColor: 'white',
-    height: 48,
-    paddingTop: 8,
-    // paddingHorizontal: 8,
-    alignItems: 'center',
+    padding: 8,
+    alignItems: 'flex-start',
     justifyContent: 'center',
   },
   viewStyleTitle: {
-    alignItems: 'center',
-    justifyContent: 'center',
     flexDirection: 'column',
-    // color: 'black',
-    paddingHorizontal: 8,
-    // flexGrow: 1,
+    padding: 8,
+    flexGrow: 1,
     flex: 1,
     width: 0,
   },
   textStyleTitle: {
-    color: Colors.primary,
     flexShrink: 1,
     flexWrap: 'wrap',
     fontWeight: 'bold',
+    fontSize: 22,
   },
   textStyleSubtitle: {
+    opacity: 0.8,
     fontSize: 12,
-    color: Colors.secondary,
   },
   textStyleContent: {
     fontSize: 16,
-    padding: 8,
+    paddingHorizontal: 8,
   },
   textStyleError: {
     padding: 8,
     paddingBottom: 0,
     fontSize: 14,
-    color: Colors.error,
+    // color: Colors.error,
   },
   iconStyleTitleRight: {
     right: -8,
@@ -244,7 +240,7 @@ const styles = {
     padding: 8,
   },
   textStyleAction: {
-    color: Colors.primary,
+    // color: Colors.primary,
     fontSize: 14,
     fontWeight: 'bold',
     // padding: 8,

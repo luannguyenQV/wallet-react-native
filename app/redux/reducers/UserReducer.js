@@ -26,6 +26,8 @@ import {
   FETCH_ACCOUNTS_ASYNC,
   FETCH_TRANSACTIONS_ASYNC,
   CLAIM_REWARD_ASYNC,
+  UPLOAD_PROFILE_PHOTO_ASYNC,
+  RESET_LOADING,
 } from '../actions';
 
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
@@ -276,8 +278,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
-        // modalVisible: true,
-        // modalType: 'verify',
+        modalVisible: false,
       };
     case UPLOAD_DOCUMENT_ASYNC.error:
       return {
@@ -285,6 +286,26 @@ export default (state = INITIAL_STATE, action) => {
         updateError: action.payload,
         loading: false,
       };
+
+    case UPLOAD_PROFILE_PHOTO_ASYNC.pending:
+      return {
+        ...state,
+        loading: true,
+        updateError: '',
+      };
+    case UPLOAD_PROFILE_PHOTO_ASYNC.success:
+      return {
+        ...state,
+        loading: false,
+        modalVisible: false,
+      };
+    case UPLOAD_PROFILE_PHOTO_ASYNC.error:
+      return {
+        ...state,
+        updateError: action.payload,
+        loading: false,
+      };
+
     case RESET_USER_ERRORS:
       return {
         ...state,
@@ -384,6 +405,12 @@ export default (state = INITIAL_STATE, action) => {
         companies,
       };
 
+    case RESET_LOADING:
+      return {
+        ...state,
+        loading: false,
+      };
+
     case LOGOUT_USER:
       return INITIAL_STATE;
     default:
@@ -472,6 +499,15 @@ export const cardListOptionsSelector = createSelector(userSelector, user => {
     detailLoaded: user.detailLoaded ? user.detailLoaded : false,
     noScroll: user.type === 'wallet' && user.showDetail,
     updateError: user.updateError ? user.updateError : '',
+    loading: user.loading ? user.loading : false,
+  };
+});
+
+export const modalOptionsSelector = createSelector(userSelector, user => {
+  return {
+    visible: user.modalVisible ? user.modalVisible : false,
+    type: user.modalType ? user.modalType : '',
+    error: user.updateError ? user.updateError : '',
     loading: user.loading ? user.loading : false,
   };
 });

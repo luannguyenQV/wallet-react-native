@@ -175,3 +175,10 @@ export const hideDetail = type => {
     payload: { type },
   };
 };
+
+export const RESET_LOADING = 'reset_loading';
+export const resetLoading = () => {
+  return {
+    type: RESET_LOADING,
+  };
+};

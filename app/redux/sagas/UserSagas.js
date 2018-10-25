@@ -309,8 +309,8 @@ function* verifyItem(action) {
 
 function* uploadProfilePhoto(action) {
   try {
-    const resp = yield call(Rehive.updateProfileImage, action.payload);
-    console.log(resp);
+    yield call(Rehive.updateProfileImage, action.payload);
+    Toast.show({ text: 'Profile photo uploaded' });
     yield put({ type: UPLOAD_PROFILE_PHOTO_ASYNC.success });
     yield put({ type: FETCH_DATA_ASYNC.pending, payload: 'profile' });
   } catch (error) {
@@ -325,6 +325,7 @@ function* uploadProfilePhoto(action) {
 function* uploadDocument(action) {
   try {
     yield call(Rehive.createDocument, action.payload);
+    Toast.show({ text: 'Document uploaded' });
     yield put({ type: UPLOAD_DOCUMENT_ASYNC.success });
     yield put({ type: FETCH_DATA_ASYNC.pending, payload: 'document' });
     NavigationService.navigate('Profile');
