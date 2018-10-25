@@ -26,7 +26,7 @@ import {
   claimReward,
   verifyItem,
 } from './../../redux/actions';
-import { CardList, CodeInput, Text } from '../common';
+import { CardList, PopUpGeneral, CodeInput, Text } from '../common';
 import { CardAddress } from './CardAddress';
 import { CardMobile } from './CardMobile';
 import { CardEmail } from './CardEmail';
@@ -45,7 +45,7 @@ import { withNavigationFocus } from 'react-navigation';
 import { cardListOptionsSelector } from '../../redux/reducers/UserReducer';
 
 // This function takes a component...
-function withRedux(CardList) {
+function withRedux(CardList, PopUpGeneral) {
   // ...and returns another component...
   return class extends React.Component {
     // fetch data
@@ -558,11 +558,11 @@ function withRedux(CardList) {
           onPressHeader={index => this.onPressCard(index)}
           actionOne={(item, index) => this.actionOne(item, index)}
           actionTwo={(item, index) => this.actionTwo(item, index)}
-          modalContent={this.renderModalContent()}
           renderItem={(item, index) => this.renderItem(item, index)}
           iconFooter={item => this.iconFooter(item)}
           onPressFooter={index => this.props.showModal(type, index, 'delete')}
           modalContentText={this.modalContentText()}
+          modalContent={this.renderModalContent()}
           modalActionOne={this.modalActionOne()}
           modalActionTwo={this.modalActionTwo()}
           modalOnDismiss={this.modalActionTwo().onPress}
@@ -575,6 +575,24 @@ function withRedux(CardList) {
           updateError={cardListOptions.updateError}
         />
       );
+
+      // {
+      //   /* <PopUpGeneral
+      //       visible={cardListOptions.modalVisible}
+      //       textActionOne={this.modalActionOne().text}
+      //       onPressActionOne={this.modalActionOne().onPress}
+      //       textActionTwo={this.modalActionTwo().text}
+      //       onPressActionTwo={this.modalActionTwo().onPress}
+      //       onDismiss={this.modalActionTwo().onPress}
+      //       loading={false}
+      //       errorText={''}
+      //       contentText={this.modalContentText()}>
+      //       {this.renderModalContent()}
+      //     </PopUpGeneral> */
+      // }
+      // {
+      //   /* </View> */
+      // }
       // } else return <View />;
     }
   };

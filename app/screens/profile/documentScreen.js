@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, FlatList, Dimensions } from 'react-native';
+import { View, FlatList, Dimensions, Image } from 'react-native';
 import { connect } from 'react-redux';
 import {
   uploadDocument,
@@ -13,9 +13,10 @@ import Header from '../../components/header';
 import {
   ImageUpload,
   Button,
-  Spinner,
   Text,
   OutputStatus,
+  PopUpGeneral,
+  Output,
 } from '../../components/common';
 import document_categories from '../../config/document_types.json';
 import {
@@ -81,7 +82,6 @@ class DocumentScreen extends Component {
     if (category) {
       options = document_category[0].document_types;
     }
-    console.log(options, category);
     switch (state) {
       case 'landing':
         return (
@@ -156,21 +156,77 @@ class DocumentScreen extends Component {
         value={moment(item.created).format('lll')}
         status={item.status.toUpperCase()}
         onPress={() =>
-          this.props.showModal('document', index, item.document_type)
+          this.props.showModal('document', index, this.state.category)
         }
       />
     );
   };
 
+  renderModal() {
+    const { modalOptions, hideModal, documents } = this.props;
+    const item = documents.data[documents.index];
+    const { textStyleLeft, viewStyleImageContainer, viewStyleFooter } = styles;
+    // const {
+    //   modalOnDismiss,
+    //   modalLoading,
+    //   modalError,
+    //   modalContent,
+    //   modalContentText,
+    //   modalActionOne,
+    //   modalActionTwo,
+    //   cardListOptions,
+    // } = this.props;
+    const { visible, type } = modalOptions;
+    const width = SCREEN_WIDTH - 64;
+    // const height = Math.min(image.height * (width / image.width), width);
+    return (
+      <PopUpGeneral
+        visible={
+          visible &&
+          (type === 'Proof Of Identity' ||
+            type === 'Proof Of Address' ||
+            type === 'Advanced Proof Of Identity')
+        }
+        title={item.document_type}
+        onDismiss={hideModal}
+        iconTitleRight={'close'}
+        onPressTitleRight={() => hideModal()}
+        // contentText={modalContentText}
+      >
+        {/* <Output label="Document type" value={item.document_type} /> */}
+        <View style={viewStyleImageContainer}>
+          <Image
+            style={{ height: width, width, borderRadius: 4 }}
+            source={{ uri: item.file }}
+            resizeMode={'contain'}
+          />
+        </View>
+
+        <View style={viewStyleFooter}>
+          <View>
+            <Text style={{ padding: 0, margin: 0 }}>
+              {moment(item.created).format('lll')}
+            </Text>
+          </View>
+          <View>
+            <Text style={{ padding: 0, margin: 0 }}>{item.status}</Text>
+          </View>
+        </View>
+      </PopUpGeneral>
+    );
+  }
+
   render() {
     const { modalOptions, hideModal } = this.props;
     const { category } = this.state;
     const { textStyleHeader, viewStyleContent } = styles;
+    console.log(this.props.documents);
     return (
       <View style={styles.container}>
         <Header navigation={this.props.navigation} back title="Documents" />
         <Text style={textStyleHeader}>{category}</Text>
         {this.renderContent()}
+        {this.renderModal()}
 
         {/* {modalOptions.visible ? (
           <ImageUpload
@@ -215,6 +271,18 @@ const styles = {
     textAlign: 'center',
     marginTop: 0,
     paddingTop: 0,
+  },
+  viewStyleFooter: {
+    // flex: 2,
+    padding: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+  },
+  viewStyleImageContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 8,
   },
 };
 

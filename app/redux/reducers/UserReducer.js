@@ -497,6 +497,7 @@ export const userDocumentsSelector = createSelector(userSelector, user => {
       user.showDetail && user.type === 'document'
         ? [user.tempItem]
         : user.document ? user.document : [],
+    index: user.documentsIndex ? user.documentsIndex : 0,
     loading: user.documentLoading ? user.documentLoading : false,
     showDetail: user.showDetail ? user.showDetail : false,
   };

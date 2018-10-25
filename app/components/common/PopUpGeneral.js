@@ -210,7 +210,7 @@ const styles = {
   },
   textStyleContent: {
     fontSize: 16,
-    paddingHorizontal: 8,
+    padding: 8,
   },
   textStyleError: {
     padding: 8,
@@ -219,11 +219,9 @@ const styles = {
     // color: Colors.error,
   },
   iconStyleTitleRight: {
-    right: -8,
+    right: 0,
     top: -8,
     margin: 0,
-    // height: 48,
-    // width: 48,
     position: 'absolute',
   },
   viewStyleFooter: {

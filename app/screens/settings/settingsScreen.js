@@ -166,7 +166,7 @@ class SettingsScreen extends Component {
     };
     const contentText =
       'You are about to log out. You will need to provide your log in credentials when you open the app again.';
-    const titleText = 'Log out?';
+    const titleText = 'Log out';
     return (
       <PopUpGeneral
         visible={modalVisible && modalType === 'logout'}
