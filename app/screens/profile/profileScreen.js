@@ -299,10 +299,7 @@ class ProfileScreen extends Component {
                 : ''
             }
             username={profile.data[0].username}
-            modalOptions={modalOptions}
             showModal={showModal}
-            hideModal={hideModal}
-            resetLoading={resetLoading}
           />
           {profile.loading ? <Spinner /> : null}
           <InputContainer>

@@ -5,7 +5,6 @@ import {
   uploadDocument,
   resetUserErrors,
   showModal,
-  hideModal,
   resetLoading,
 } from '../../redux/actions';
 import Header from '../../components/header';
@@ -61,7 +60,6 @@ class DocumentScreen extends Component {
 
   uploadDocument(image) {
     const { category, document_type } = this.state;
-    console.log('uploadDocument');
     this.props.uploadDocument(image, category, document_type);
   }
 
@@ -166,16 +164,6 @@ class DocumentScreen extends Component {
     const { modalOptions, hideModal, documents } = this.props;
     const item = documents.data[documents.index];
     const { textStyleLeft, viewStyleImageContainer, viewStyleFooter } = styles;
-    // const {
-    //   modalOnDismiss,
-    //   modalLoading,
-    //   modalError,
-    //   modalContent,
-    //   modalContentText,
-    //   modalActionOne,
-    //   modalActionTwo,
-    //   cardListOptions,
-    // } = this.props;
     const { visible, type } = modalOptions;
     const width = SCREEN_WIDTH - 64;
     // const height = Math.min(image.height * (width / image.width), width);
@@ -217,10 +205,8 @@ class DocumentScreen extends Component {
   }
 
   render() {
-    const { modalOptions, hideModal } = this.props;
     const { category } = this.state;
     const { textStyleHeader, viewStyleContent } = styles;
-    console.log(this.props.documents);
     return (
       <View style={styles.container}>
         <Header navigation={this.props.navigation} back title="Documents" />
@@ -228,18 +214,10 @@ class DocumentScreen extends Component {
         {this.renderContent()}
         {this.renderModal()}
 
-        {/* {modalOptions.visible ? (
-          <ImageUpload
-            ref={ref => {
-              this.documentScreenImageUpload = ref;
-            }}
-            key="documentScreenImageUpload"
-            modalOptions={modalOptions}
-            onSave={image => this.uploadDocument(image)}
-            onDismiss={() => hideModal()}
-            resetLoading={resetLoading}
-          />
-        ) : null} */}
+        <ImageUpload
+          type="document"
+          uploadDocument={image => this.uploadDocument(image)}
+        />
       </View>
     );
   }
@@ -297,6 +275,4 @@ export default connect(mapStateToProps, {
   uploadDocument,
   resetUserErrors,
   showModal,
-  hideModal,
-  resetLoading,
 })(DocumentScreen);

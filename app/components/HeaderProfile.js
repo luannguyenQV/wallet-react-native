@@ -4,7 +4,6 @@ import { Text, Image, View, TouchableHighlight } from 'react-native';
 import { ImageUpload } from './common';
 
 import context from './common/context';
-import { hideModal, showModal } from '../redux/actions';
 
 class _HeaderProfile extends Component {
   state = {
@@ -66,18 +65,7 @@ class _HeaderProfile extends Component {
           </Text>
         </View>
 
-        {/* {modalOptions.visible ? (
-          <ImageUpload
-            ref={ref => {
-              this.HeaderProfileImageUpload = ref;
-            }}
-            key="HeaderProfileImageUpload"
-            modalOptions={modalOptions}
-            onSave={image => uploadProfilePhoto(image)}
-            onDismiss={() => hideModal()}
-            resetLoading={resetLoading}
-          />
-        ) : null} */}
+        <ImageUpload type="profile" />
       </View>
     );
   }

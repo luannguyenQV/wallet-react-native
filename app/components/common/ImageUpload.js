@@ -1,13 +1,20 @@
 import React, { Component } from 'react';
 import { Image, Dimensions, View } from 'react-native';
 import { ImagePicker, Permissions } from 'expo';
-import { Toast } from 'native-base';
+import { connect } from 'react-redux';
+import {
+  uploadProfilePhoto,
+  showModal,
+  hideModal,
+  resetLoading,
+} from '../../redux/actions';
 
 import { PopUpGeneral } from './PopUpGeneral';
 import { Button } from './Button';
 // import { View } from './View';
 import { Text } from './Text';
 import { Spinner } from './Spinner';
+import { modalOptionsSelector } from '../../redux/reducers/UserReducer';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -16,7 +23,7 @@ const initialState = {
   image: {},
 };
 
-class ImageUpload extends Component {
+class _ImageUpload extends Component {
   state = initialState;
 
   componentDidUpdate(prevProps) {
@@ -173,5 +180,47 @@ const styles = {
     textAlign: 'center',
   },
 };
+
+function withRedux(_ImageUpload) {
+  return class extends React.Component {
+    handleConfirm(image) {
+      const { type, uploadProfilePhoto, uploadDocument } = this.props;
+      switch (type) {
+        case 'profile':
+          uploadProfilePhoto(image);
+          break;
+        case 'document':
+          uploadDocument(image);
+          break;
+      }
+    }
+
+    render() {
+      const { type, modalOptions, hideModal } = this.props;
+      return (
+        <_ImageUpload
+          type={type}
+          modalOptions={modalOptions}
+          onSave={image => this.handleConfirm(image)}
+          onDismiss={() => hideModal()}
+          resetLoading={this.props.resetLoading}
+        />
+      );
+    }
+  };
+}
+
+const mapStateToProps = state => {
+  return {
+    modalOptions: modalOptionsSelector(state),
+  };
+};
+
+const ImageUpload = connect(mapStateToProps, {
+  showModal,
+  hideModal,
+  resetLoading,
+  uploadProfilePhoto,
+})(withRedux(_ImageUpload));
 
 export { ImageUpload };

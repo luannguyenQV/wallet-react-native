@@ -26,7 +26,7 @@ import {
   claimReward,
   verifyItem,
 } from './../../redux/actions';
-import { CardList, PopUpGeneral, CodeInput, Text } from '../common';
+import { CardList, CodeInput, Text } from '../common';
 import { CardAddress } from './CardAddress';
 import { CardMobile } from './CardMobile';
 import { CardEmail } from './CardEmail';
@@ -45,7 +45,7 @@ import { withNavigationFocus } from 'react-navigation';
 import { cardListOptionsSelector } from '../../redux/reducers/UserReducer';
 
 // This function takes a component...
-function withRedux(CardList, PopUpGeneral) {
+function withRedux(CardList) {
   // ...and returns another component...
   return class extends React.Component {
     // fetch data
