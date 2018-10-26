@@ -45,12 +45,12 @@ class ListItem extends Component {
           ) : null}
           <View style={viewStyleTitle}>
             <Text style={textStyleTitle}>{title ? title : subtitleID}</Text>
-            {subtitle ? (
+            {/* {subtitle ? (
               <Text style={textStyleSubtitle}>{title ? subtitle : ''}</Text>
             ) : null}{' '}
             {subtitleID && title !== null ? (
               <Text style={textStyleID}>{subtitleID ? subtitleID : ''}</Text>
-            ) : null}
+            ) : null} */}
           </View>
         </View>
       </TouchableHighlight>

@@ -431,30 +431,41 @@ class AuthScreen extends Component {
                   : false),
             )
           : companies;
-        const publicData = tempCompany
-          ? public_companies.filter(
-              item =>
-                item.id
-                  ? item.id.toLowerCase().includes(tempCompany.toLowerCase())
-                  : false || item.name
-                    ? item.name
-                        .toLowerCase()
-                        .includes(tempCompany.toLowerCase())
-                    : false,
-            )
-          : public_companies;
+        try {
+          const publicData = tempCompany
+            ? public_companies.filter(
+                item =>
+                  item.id
+                    ? item.id.toLowerCase().includes(tempCompany.toLowerCase())
+                    : false || item.name
+                      ? item.name
+                          .toLowerCase()
+                          .includes(tempCompany.toLowerCase())
+                      : false,
+              )
+            : public_companies;
+          console.log(publicData);
+          if (publicData.length > 0) {
+            sections.push({
+              title: 'Public',
+              data: publicData,
+            });
+          }
+        } catch (error) {
+          console.log(error);
+        }
         if (recentData.length > 0) {
           sections.push({
             title: 'Recent',
             data: recentData,
           });
         }
-        if (publicData.length > 0) {
-          sections.push({
-            title: 'Public',
-            data: publicData,
-          });
-        }
+        // sections = [
+        //   {
+        //     title: 'Recent',
+        //     data: [],
+        //   },
+        // ];
 
         console.log(sections);
         onPressListItem = item => {

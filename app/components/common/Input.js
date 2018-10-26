@@ -34,7 +34,6 @@ class _Input extends Component {
   }
 
   _OnFocus() {
-    console.log('focusing');
     this.setState({
       focused: true,
     });
@@ -210,172 +209,178 @@ class _Input extends Component {
     } = styles;
 
     const { borderColor, focused, iconNameVisibility } = this.state;
-
-    return (
-      <View style={this.viewStyleContainer()}>
-        <View
-          style={[
-            viewStyleContainer,
-            {
-              backgroundColor: colors.primaryContrast,
-            },
-          ]}>
+    try {
+      return (
+        <View style={this.viewStyleContainer()}>
           <View
-            style={{
-              flexDirection: 'row',
-              borderColor: inputError
-                ? colors.error
-                : focused ? colors.focus : 'lightgrey',
-              borderBottomWidth: inputError || focused ? 2 : 2,
-            }}>
-            {toggleCheck ? (
-              <View style={viewStyleCheckbox}>
-                <MaterialIcons
-                  onPress={toggleCheck} //value ? {this.setState({ value })} : 'square-outline'}
-                  name={checked ? 'check-box' : 'check-box-outline-blank'}
-                  size={32}
-                  color={checked ? colors.primary : 'lightgrey'}
-                />
+            style={[
+              viewStyleContainer,
+              {
+                backgroundColor: colors.primaryContrast,
+              },
+            ]}>
+            <View
+              style={{
+                flexDirection: 'row',
+                borderColor: inputError
+                  ? colors.error
+                  : focused ? colors.focus : 'lightgrey',
+                borderBottomWidth: inputError || focused ? 2 : 2,
+              }}>
+              {toggleCheck ? (
+                <View style={viewStyleCheckbox}>
+                  <MaterialIcons
+                    onPress={toggleCheck} //value ? {this.setState({ value })} : 'square-outline'}
+                    name={checked ? 'check-box' : 'check-box-outline-blank'}
+                    size={32}
+                    color={checked ? colors.primary : 'lightgrey'}
+                  />
+                </View>
+              ) : null}
+              <View style={[viewStyleContent, { width: '100%' }]}>
+                {focused || value ? (
+                  <View style={viewStyleLabel}>
+                    <Text
+                      style={[
+                        textStyleLabel,
+                        {
+                          color: inputError
+                            ? colors.error
+                            : focused ? colors.focus : 'rgba(0,0,0,0.6)',
+                        },
+                      ]}>
+                      {label}
+                      {required ? ' *' : ''}
+                    </Text>
+                  </View>
+                ) : null}
+                {this.renderInput()}
               </View>
-            ) : null}
-            <View style={[viewStyleContent, { width: '100%' }]}>
-              {focused || value ? (
-                <View style={viewStyleLabel}>
-                  <Text
+
+              {type === 'password' ? (
+                <View style={{ justifyContent: 'center' }}>
+                  <Icon
                     style={[
-                      textStyleLabel,
+                      iconStyleVisibility,
                       {
                         color: inputError
                           ? colors.error
                           : focused ? colors.focus : 'rgba(0,0,0,0.6)',
                       },
-                    ]}>
-                    {label}
-                    {required ? ' *' : ''}
-                  </Text>
+                    ]}
+                    name={iconNameVisibility}
+                    size={24}
+                    color={borderColor}
+                    onPress={this.togglePasswordVisibility}
+                  />
                 </View>
               ) : null}
-              {this.renderInput()}
             </View>
 
-            {type === 'password' ? (
-              <View style={{ justifyContent: 'center' }}>
-                <Icon
+            {inputError || helperText ? (
+              <View style={viewStyleHelper}>
+                <Text
                   style={[
-                    iconStyleVisibility,
+                    textStyleFooter,
                     {
-                      color: inputError
-                        ? colors.error
-                        : focused ? colors.focus : 'rgba(0,0,0,0.6)',
+                      color: inputError ? colors.error : colors.primaryContrast,
                     },
-                  ]}
-                  name={iconNameVisibility}
-                  size={24}
-                  color={borderColor}
-                  onPress={this.togglePasswordVisibility}
-                />
+                  ]}>
+                  {inputError ? inputError : helperText}
+                </Text>
               </View>
             ) : null}
-          </View>
 
-          {inputError || helperText ? (
-            <View style={viewStyleHelper}>
-              <Text
-                style={[
-                  textStyleFooter,
-                  { color: inputError ? colors.error : colors.primaryContrast },
-                ]}>
-                {inputError ? inputError : helperText}
-              </Text>
-            </View>
-          ) : null}
-
-          {data.length && focused ? (
-            <FlatList
-              keyboardShouldPersistTaps="always"
-              style={{
-                backgroundColor: colors.primaryContrast,
-                maxHeight: 180,
-                borderBottomLeftRadius: 5,
-                borderBottomRightRadius: 5,
-                overflow: 'hidden',
-              }}
-              contentContainerStyle={{
-                borderBottomLeftRadius: 5,
-                borderBottomRightRadius: 5,
-                overflow: 'hidden',
-              }}
-              data={data}
-              renderItem={({ item }) => (
-                <ListItem
-                  onPress={() => onPressListItem(item)}
-                  title={title ? item[title] : item}
-                  subtitle={item[subtitle]}
-                  image={icon ? item[icon] : item.image ? item.image : null}
-                />
-              )}
-              keyExtractor={item => (item.id ? item.id.toString() : item)}
-              ItemSeparatorComponent={ListSeparator}
-            />
-          ) : null}
-          {sections.length > 0 && focused ? (
-            <SectionList
-              keyboardShouldPersistTaps="always"
-              style={{
-                backgroundColor: colors.grey1,
-                maxHeight: 240,
-                borderBottomLeftRadius: 5,
-                borderBottomRightRadius: 5,
-                overflow: 'hidden',
-                paddingBottom: 4,
-              }}
-              contentContainerStyle={{
-                borderBottomLeftRadius: 5,
-                borderBottomRightRadius: 5,
-                overflow: 'hidden',
-              }}
-              sections={sections}
-              renderItem={({ item }) => (
-                <ListItem
-                  onPress={() => onPressListItem(item)}
-                  title={title ? item[title] : item}
-                  subtitle={item.description}
-                  subtitleID={item.id}
-                  image={icon ? item[icon] : item.image ? item.image : null}
-                />
-              )}
-              renderSectionHeader={({ section }) => (
-                <View
-                  style={{
-                    // paddingRight: 8,
-                    borderBottomWidth: 0.5,
-                    borderBottomColor: colors.font,
-                    // padding: 4,
-                    paddingTop: 8,
-                    paddingLeft: 16,
-                    backgroundColor: colors.grey1,
-                    borderBottomEndRadius: 8,
-                    borderBottomStartRadius: 8,
-                  }}>
-                  <Text
+            {data.length > 0 && focused ? (
+              <FlatList
+                keyboardShouldPersistTaps="always"
+                style={{
+                  backgroundColor: colors.primaryContrast,
+                  maxHeight: 180,
+                  borderBottomLeftRadius: 5,
+                  borderBottomRightRadius: 5,
+                  overflow: 'hidden',
+                }}
+                contentContainerStyle={{
+                  borderBottomLeftRadius: 5,
+                  borderBottomRightRadius: 5,
+                  overflow: 'hidden',
+                }}
+                data={data}
+                renderItem={({ item }) => (
+                  <ListItem
+                    onPress={() => onPressListItem(item)}
+                    title={title ? item[title] : item}
+                    subtitle={subtitle ? item[subtitle] : ''}
+                    image={icon ? item[icon] : item.image ? item.image : null}
+                  />
+                )}
+                keyExtractor={item => (item.id ? item.id.toString() : item)}
+                ItemSeparatorComponent={ListSeparator}
+              />
+            ) : null}
+            {sections.length > 0 && focused ? (
+              <SectionList
+                keyboardShouldPersistTaps="always"
+                style={{
+                  backgroundColor: colors.grey1,
+                  maxHeight: 240,
+                  borderBottomLeftRadius: 5,
+                  borderBottomRightRadius: 5,
+                  overflow: 'hidden',
+                  paddingBottom: 4,
+                }}
+                contentContainerStyle={{
+                  borderBottomLeftRadius: 5,
+                  borderBottomRightRadius: 5,
+                  overflow: 'hidden',
+                }}
+                sections={sections}
+                renderItem={({ item }) => (
+                  // <View style={{ height: 150 }} />
+                  <ListItem
+                    onPress={() => onPressListItem(item)}
+                    title={title ? item[title] : item}
+                    subtitle={subtitle ? item[subtitle] : ''}
+                    subtitleID={item.subtitleID ? item.subtitleID : ''}
+                    image={icon ? item[icon] : item.image ? item.image : null}
+                  />
+                )}
+                renderSectionHeader={({ section }) => (
+                  <View
                     style={{
-                      // backgroundColor: '#64B5F6',
-                      fontSize: 10,
-                      padding: 5,
-                      color: colors.font,
-                      fontWeight: 'bold',
+                      // paddingRight: 8,
+                      borderBottomWidth: 0.5,
+                      borderBottomColor: colors.font,
+                      // padding: 4,
+                      paddingTop: 8,
+                      paddingLeft: 16,
+                      backgroundColor: colors.grey1,
+                      borderBottomEndRadius: 8,
+                      borderBottomStartRadius: 8,
                     }}>
-                    {section.title}{' '}
-                  </Text>
-                </View>
-              )}
-              keyExtractor={item => (item.id ? item.id.toString() : item)}
-              ItemSeparatorComponent={ListSeparator}
-            />
-          ) : null}
+                    <Text
+                      style={{
+                        // backgroundColor: '#64B5F6',
+                        fontSize: 10,
+                        padding: 5,
+                        color: colors.font,
+                        fontWeight: 'bold',
+                      }}>
+                      {section.title}{' '}
+                    </Text>
+                  </View>
+                )}
+                keyExtractor={item => item.id.toString()}
+                ItemSeparatorComponent={ListSeparator}
+              />
+            ) : null}
+          </View>
         </View>
-      </View>
-    );
+      );
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   // _renderSeparator = () => (
