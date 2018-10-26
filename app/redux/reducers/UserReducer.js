@@ -290,20 +290,19 @@ export default (state = INITIAL_STATE, action) => {
     case UPLOAD_PROFILE_PHOTO_ASYNC.pending:
       return {
         ...state,
-        loading: true,
-        updateError: '',
+        profileLoading: true,
+        profileError: '',
       };
     case UPLOAD_PROFILE_PHOTO_ASYNC.success:
       return {
         ...state,
-        loading: false,
-        modalVisible: false,
+        profileLoading: false,
       };
     case UPLOAD_PROFILE_PHOTO_ASYNC.error:
       return {
         ...state,
-        updateError: action.payload,
-        loading: false,
+        profileError: action.payload,
+        profileLoading: false,
       };
 
     case RESET_USER_ERRORS:

@@ -11,19 +11,14 @@ class _HeaderProfile extends Component {
   };
 
   render() {
-    const {
-      photoLink,
-      username,
-      name,
-      colors,
-      modalOptions,
-      showModal,
-      hideModal,
-      uploadProfilePhoto,
-      resetLoading,
+    const { profile, colors, uploadProfilePhoto } = this.props;
 
-      navigation,
-    } = this.props;
+    const photoLink = profile.data[0].profile;
+    const name = profile.data[0].first_name
+      ? profile.data[0].first_name + ' ' + profile.data[0].last_name
+      : '';
+
+    const username = profile.data[0].username;
 
     const {
       viewStyleContainer,
@@ -31,9 +26,10 @@ class _HeaderProfile extends Component {
       viewStyleName,
       textStyleName,
     } = styles;
+    // console.log(this.ImageUploadProfile);
     return (
       <View style={[viewStyleContainer, { backgroundColor: colors.header }]}>
-        <TouchableHighlight onPress={() => showModal('profile', 0, 'photo')}>
+        <TouchableHighlight onPress={() => this.ImageUploadProfile.showModal()}>
           {photoLink ? (
             <Image
               style={[
@@ -67,7 +63,13 @@ class _HeaderProfile extends Component {
           </Text>
         </View>
 
-        <ImageUpload type="profile" />
+        <ImageUpload
+          ref={c => (this.ImageUploadProfile = c)}
+          type="profile"
+          onConfirm={image => uploadProfilePhoto(image)}
+          error={profile.error}
+          loading={profile.loading}
+        />
       </View>
     );
   }

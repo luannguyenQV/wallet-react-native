@@ -1,39 +1,32 @@
 import React, { Component } from 'react';
 import { Image, Dimensions, View } from 'react-native';
 import { ImagePicker, Permissions } from 'expo';
-import { connect } from 'react-redux';
-import {
-  uploadProfilePhoto,
-  showModal,
-  hideModal,
-  resetLoading,
-} from '../../redux/actions';
 
 import { PopUpGeneral } from './PopUpGeneral';
 import { Button } from './Button';
 // import { View } from './View';
 import { Text } from './Text';
 import { Spinner } from './Spinner';
-import { modalOptionsSelector } from '../../redux/reducers/UserReducer';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const initialState = {
   state: 'landing',
   image: {},
+  visible: false,
 };
 
-class _ImageUpload extends Component {
+class ImageUpload extends Component {
   state = initialState;
 
   componentDidUpdate(prevProps) {
-    if (!prevProps.modalOptions.visible && this.props.modalOptions.visible) {
+    if (prevProps.loading && !this.props.loading && !this.props.error) {
       this.setState(initialState);
     }
   }
 
   componentWillUnmount() {
-    console.log('test');
+    this.resetState();
   }
 
   launchCamera = async () => {
@@ -63,16 +56,14 @@ class _ImageUpload extends Component {
   }
 
   handleConfirm() {
-    this.props.onSave(this.state.image.uri);
+    this.props.onConfirm(this.state.image.uri);
   }
 
   resetState() {
     this.setState(initialState);
-    this.props.resetLoading();
   }
 
   renderLanding() {
-    const { onDismiss } = this.props;
     return (
       <View>
         <Button label="Use camera" onPress={this.launchCamera} />
@@ -81,13 +72,20 @@ class _ImageUpload extends Component {
           label="Choose from gallery"
           onPress={this.launchImageLibrary}
         />
-        <Button type="text" label="Cancel" onPress={() => onDismiss()} />
+        <Button type="text" label="Cancel" onPress={() => this.resetState()} />
       </View>
     );
   }
 
+  showModal = () => {
+    this.setState({
+      state: 'landing',
+      visible: true,
+    });
+  };
+
   renderConfirm() {
-    const { modalOptions, onDismiss } = this.props;
+    const { error, loading } = this.props;
     const { image } = this.state;
     const {
       viewStyleContent,
@@ -107,12 +105,12 @@ class _ImageUpload extends Component {
           />
         </View>
         <View style={viewStyleButtonContainer}>
-          {modalOptions.error ? (
+          {error ? (
             <Text style={[textStyleDescription, { color: '#f44336' }]}>
-              {modalOptions.error}
+              {error}
             </Text>
           ) : null}
-          {modalOptions.loading ? (
+          {loading ? (
             <Spinner containerStyle={{ margin: 8 }} />
           ) : (
             <Button
@@ -124,13 +122,13 @@ class _ImageUpload extends Component {
           <Button
             label="Choose new image"
             color="secondary"
-            onPress={() => this.resetState()}
+            onPress={() => this.showModal()}
           />
           <Button
             label="Cancel"
             color="secondary"
             type="text"
-            onPress={() => onDismiss()}
+            onPress={() => this.resetState()}
           />
         </View>
       </View>
@@ -138,11 +136,9 @@ class _ImageUpload extends Component {
   }
 
   render() {
-    const { modalOptions, onDismiss } = this.props;
-    const { state } = this.state;
-    console.log(this.props);
+    const { state, visible } = this.state;
     return (
-      <PopUpGeneral visible={modalOptions.visible} onDismiss={onDismiss}>
+      <PopUpGeneral visible={visible} onDismiss={this.resetState}>
         {state === 'confirm' ? this.renderConfirm() : this.renderLanding()}
       </PopUpGeneral>
     );
@@ -180,47 +176,5 @@ const styles = {
     textAlign: 'center',
   },
 };
-
-function withRedux(_ImageUpload) {
-  return class extends React.Component {
-    handleConfirm(image) {
-      const { type, uploadProfilePhoto, uploadDocument } = this.props;
-      switch (type) {
-        case 'profile':
-          uploadProfilePhoto(image);
-          break;
-        case 'document':
-          uploadDocument(image);
-          break;
-      }
-    }
-
-    render() {
-      const { type, modalOptions, hideModal } = this.props;
-      return (
-        <_ImageUpload
-          type={type}
-          modalOptions={modalOptions}
-          onSave={image => this.handleConfirm(image)}
-          onDismiss={() => hideModal()}
-          resetLoading={this.props.resetLoading}
-        />
-      );
-    }
-  };
-}
-
-const mapStateToProps = state => {
-  return {
-    modalOptions: modalOptionsSelector(state),
-  };
-};
-
-const ImageUpload = connect(mapStateToProps, {
-  showModal,
-  hideModal,
-  resetLoading,
-  uploadProfilePhoto,
-})(withRedux(_ImageUpload));
 
 export { ImageUpload };

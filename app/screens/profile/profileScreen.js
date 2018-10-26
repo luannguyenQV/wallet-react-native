@@ -292,15 +292,9 @@ class ProfileScreen extends Component {
         <View style={mainContainer}>
           <HeaderProfile
             uploadProfilePhoto={uploadProfilePhoto}
-            photoLink={profile.data[0].profile}
-            name={
-              profile.data[0].first_name
-                ? profile.data[0].first_name + ' ' + profile.data[0].last_name
-                : ''
-            }
-            username={profile.data[0].username}
             showModal={showModal}
             navigation={this.props.navigation}
+            profile={profile}
           />
           {profile.loading ? <Spinner /> : null}
           <InputContainer>
