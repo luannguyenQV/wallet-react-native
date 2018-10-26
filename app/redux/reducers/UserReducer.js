@@ -527,3 +527,7 @@ export const modalOptionsSelector = createSelector(userSelector, user => {
 export const companiesSelector = createSelector(userSelector, user => {
   return user.companies ? user.companies : [];
 });
+
+export const publicCompaniesSelector = createSelector(userSelector, user => {
+  return user.public_companies ? user.public_companies : [];
+});

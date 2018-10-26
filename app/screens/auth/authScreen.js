@@ -46,7 +46,10 @@ import {
 import { standardizeString } from './../../util/general';
 import client from './../../config/client';
 import LocalAuthentication from '../../components/LocalAuthentication';
-import { companiesSelector } from '../../redux/reducers/UserReducer';
+import {
+  companiesSelector,
+  publicCompaniesSelector,
+} from '../../redux/reducers/UserReducer';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -389,6 +392,7 @@ class AuthScreen extends Component {
       username,
       terms,
       termsChecked,
+      public_companies,
     } = this.props;
 
     const { authFieldChange, nextAuthFormState } = this.props;
@@ -408,14 +412,27 @@ class AuthScreen extends Component {
     let title = '';
     let subtitle = '';
     let icon = '';
+    let autoFocus = false;
+    let sections = [];
 
     switch (detailState) {
       case 'company':
         placeholder = 'e.g. Rehive';
         value = tempCompany;
         onChangeText = value => authFieldChange({ prop: 'tempCompany', value });
-        data = tempCompany
+        const recentData = tempCompany
           ? companies.filter(
+              item =>
+                (item.id
+                  ? item.id.toLowerCase().includes(tempCompany.toLowerCase())
+                  : false) ||
+                (item.name
+                  ? item.name.toLowerCase().includes(tempCompany.toLowerCase())
+                  : false),
+            )
+          : companies;
+        const publicData = tempCompany
+          ? public_companies.filter(
               item =>
                 item.id
                   ? item.id.toLowerCase().includes(tempCompany.toLowerCase())
@@ -425,7 +442,21 @@ class AuthScreen extends Component {
                         .includes(tempCompany.toLowerCase())
                     : false,
             )
-          : [];
+          : public_companies;
+        if (recentData.length > 0) {
+          sections.push({
+            title: 'Recent',
+            data: recentData,
+          });
+        }
+        if (publicData.length > 0) {
+          sections.push({
+            title: 'Public',
+            data: publicData,
+          });
+        }
+
+        console.log(sections);
         onPressListItem = item => {
           authFieldChange({ prop: 'tempCompany', value: item.id });
           nextAuthFormState('');
@@ -433,6 +464,7 @@ class AuthScreen extends Component {
         title = 'name';
         subtitle = 'id';
         icon = 'logo';
+        autoFocus = true;
         break;
       case 'email':
         value = email;
@@ -483,6 +515,7 @@ class AuthScreen extends Component {
         key={key}
         type={type}
         data={data}
+        sections={sections}
         placeholder={placeholder}
         label={label}
         value={value}
@@ -497,6 +530,7 @@ class AuthScreen extends Component {
         title={title}
         subtitle={subtitle}
         icon={icon}
+        autoFocus={autoFocus}
       />
     );
   }
@@ -651,6 +685,7 @@ const mapStateToProps = state => {
     tempCompany,
     company,
     companies: companiesSelector(state),
+    public_companies: publicCompaniesSelector(state),
     authError,
     email,
     emailError,

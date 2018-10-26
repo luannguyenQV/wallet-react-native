@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, FlatList, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  FlatList,
+  Platform,
+  SectionList,
+} from 'react-native';
 import PropTypes from 'prop-types';
 import Colors from './../../config/colors';
 import { MaterialIcons as Icon } from '@expo/vector-icons';
@@ -8,6 +15,7 @@ import CountryPicker from 'react-native-country-picker-modal';
 import { ListItem, ListSeparator } from './ListItem';
 import context from './context';
 import { TextInputMask } from 'react-native-masked-text';
+import { Tabs } from '../../components/common';
 
 class _Input extends Component {
   state = {
@@ -26,6 +34,7 @@ class _Input extends Component {
   }
 
   _OnFocus() {
+    console.log('focusing');
     this.setState({
       focused: true,
     });
@@ -186,6 +195,7 @@ class _Input extends Component {
       checked,
       toggleCheck,
       icon,
+      sections,
     } = this.props;
 
     const {
@@ -280,18 +290,12 @@ class _Input extends Component {
             </View>
           ) : null}
 
-          {data && focused ? (
+          {data.length && focused ? (
             <FlatList
-              // refreshControl={
-              //   <RefreshControl
-              //     refreshing={loadingData}
-              //     onRefresh={() => fetchData(type)}
-              //   />string.indexOf(substring) !== -1
-              // }
-              keyboardShouldPersistTaps="handled"
+              keyboardShouldPersistTaps="always"
               style={{
                 backgroundColor: colors.primaryContrast,
-                maxHeight: 150,
+                maxHeight: 180,
                 borderBottomLeftRadius: 5,
                 borderBottomRightRadius: 5,
                 overflow: 'hidden',
@@ -301,24 +305,73 @@ class _Input extends Component {
                 borderBottomRightRadius: 5,
                 overflow: 'hidden',
               }}
-              // data={data.filter(item => item[title] === value)}
-              data={
-                data
-                // value
-                //   ? data.filter(item => item[title].indexOf(value) !== -1)
-                //   : data
-              }
+              data={data}
               renderItem={({ item }) => (
                 <ListItem
                   onPress={() => onPressListItem(item)}
                   title={title ? item[title] : item}
-                  subtitle={item[subtitle]}
+                  subtitle={item.description}
+                  subtitleID={item.id}
                   image={icon ? item[icon] : item.image ? item.image : null}
                 />
               )}
               keyExtractor={item => (item.id ? item.id.toString() : item)}
               ItemSeparatorComponent={ListSeparator}
-              // ListEmptyComponent={<ListItem title="No data" />}
+            />
+          ) : null}
+          {sections.length > 0 && focused ? (
+            <SectionList
+              keyboardShouldPersistTaps="always"
+              style={{
+                backgroundColor: colors.grey1,
+                maxHeight: 240,
+                borderBottomLeftRadius: 5,
+                borderBottomRightRadius: 5,
+                overflow: 'hidden',
+                paddingBottom: 4,
+              }}
+              contentContainerStyle={{
+                borderBottomLeftRadius: 5,
+                borderBottomRightRadius: 5,
+                overflow: 'hidden',
+              }}
+              sections={sections}
+              renderItem={({ item }) => (
+                <ListItem
+                  onPress={() => onPressListItem(item)}
+                  title={title ? item[title] : item}
+                  subtitle={item.description}
+                  subtitleID={item.id}
+                  image={icon ? item[icon] : item.image ? item.image : null}
+                />
+              )}
+              renderSectionHeader={({ section }) => (
+                <View
+                  style={{
+                    // paddingRight: 8,
+                    borderBottomWidth: 0.5,
+                    borderBottomColor: colors.font,
+                    // padding: 4,
+                    paddingTop: 8,
+                    paddingLeft: 16,
+                    backgroundColor: colors.grey1,
+                    borderBottomEndRadius: 8,
+                    borderBottomStartRadius: 8,
+                  }}>
+                  <Text
+                    style={{
+                      // backgroundColor: '#64B5F6',
+                      fontSize: 10,
+                      padding: 5,
+                      color: colors.font,
+                      fontWeight: 'bold',
+                    }}>
+                    {section.title}{' '}
+                  </Text>
+                </View>
+              )}
+              keyExtractor={item => (item.id ? item.id.toString() : item)}
+              ItemSeparatorComponent={ListSeparator}
             />
           ) : null}
         </View>
