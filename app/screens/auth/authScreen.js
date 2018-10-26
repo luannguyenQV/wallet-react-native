@@ -449,6 +449,17 @@ class AuthScreen extends Component {
             sections.push({
               title: 'Public',
               data: publicData,
+              listItemTitle: item => (item && item.name ? item.name : ''),
+              listItemSubtitle: item =>
+                item
+                  ? (item.description ? item.description + '\n' : '') +
+                    (item.id ? item.id : '')
+                  : '',
+              listItemIcon: item => (item && item.logo ? item.logo : ''),
+              listItemOnPress: item => {
+                authFieldChange({ prop: 'tempCompany', value: item.id });
+                nextAuthFormState('');
+              },
             });
           }
         } catch (error) {
@@ -458,15 +469,19 @@ class AuthScreen extends Component {
           sections.push({
             title: 'Recent',
             data: recentData,
+            listItemTitle: item => (item && item.name ? item.name : ''),
+            listItemSubtitle: item =>
+              item
+                ? (item.description ? item.description + '\n' : '') +
+                  (item.id ? item.id : '')
+                : '',
+            listItemIcon: item => (item && item.logo ? item.logo : ''),
+            listItemOnPress: item => {
+              authFieldChange({ prop: 'tempCompany', value: item.id });
+              nextAuthFormState('');
+            },
           });
         }
-        onPressListItem = item => {
-          authFieldChange({ prop: 'tempCompany', value: item.id });
-          nextAuthFormState('');
-        };
-        title = 'name';
-        subtitle = 'id';
-        icon = 'logo';
         autoFocus = true;
         break;
       case 'email':
