@@ -311,7 +311,7 @@ class SendScreen extends Component {
           }}
           popUp
           multiline={contacts.type === 'crypto' ? true : false}
-          data={contacts.data}
+          data={contacts.phone}
           loadingData={contacts.loading}
           title="name"
           subtitle="contact"
@@ -453,7 +453,7 @@ class SendScreen extends Component {
       (transaction.recipient || contacts.search)
         ? 'Next'
         : '';
-
+    console.log('contacts', contacts);
     return (
       <View style={{ flex: 1 }}>
         <Header

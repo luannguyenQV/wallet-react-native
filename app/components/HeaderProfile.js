@@ -21,6 +21,8 @@ class _HeaderProfile extends Component {
       hideModal,
       uploadProfilePhoto,
       resetLoading,
+
+      navigation,
     } = this.props;
 
     const {

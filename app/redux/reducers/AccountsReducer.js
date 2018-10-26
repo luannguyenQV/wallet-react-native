@@ -537,3 +537,10 @@ export const receiveSelector = createSelector(
     };
   },
 );
+
+export const allTransactionsSelector = createSelector(
+  [accountsSelector],
+  accountsState => {
+    return accountsState.transactions ? accountsState.transactions : [];
+  },
+);

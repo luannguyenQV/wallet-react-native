@@ -19,7 +19,6 @@ class ListItem extends Component {
       textStyleID,
     } = styles;
     const { image, title, subtitle, onPress, noImage, subtitleID } = this.props;
-    console.log('title', title);
     return (
       <TouchableHighlight
         underlayColor={'white'}

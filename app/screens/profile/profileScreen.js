@@ -300,6 +300,7 @@ class ProfileScreen extends Component {
             }
             username={profile.data[0].username}
             showModal={showModal}
+            navigation={this.props.navigation}
           />
           {profile.loading ? <Spinner /> : null}
           <InputContainer>
