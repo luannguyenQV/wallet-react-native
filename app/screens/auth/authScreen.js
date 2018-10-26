@@ -460,14 +460,6 @@ class AuthScreen extends Component {
             data: recentData,
           });
         }
-        // sections = [
-        //   {
-        //     title: 'Recent',
-        //     data: [],
-        //   },
-        // ];
-
-        console.log(sections);
         onPressListItem = item => {
           authFieldChange({ prop: 'tempCompany', value: item.id });
           nextAuthFormState('');

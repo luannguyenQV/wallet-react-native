@@ -19,6 +19,8 @@ class ListItem extends Component {
       textStyleID,
     } = styles;
     const { image, title, subtitle, onPress, noImage, subtitleID } = this.props;
+    console.log('image', image);
+    // console.log('subtitle', subtitle);
     return (
       <TouchableHighlight
         underlayColor={'white'}
@@ -44,12 +46,9 @@ class ListItem extends Component {
           ) : null}
           <View style={viewStyleTitle}>
             <Text style={textStyleTitle}>{title ? title : subtitleID}</Text>
-            {/* {subtitle ? (
+            {subtitle ? (
               <Text style={textStyleSubtitle}>{title ? subtitle : ''}</Text>
-            ) : null}{' '}
-            {subtitleID && title !== null ? (
-              <Text style={textStyleID}>{subtitleID ? subtitleID : ''}</Text>
-            ) : null} */}
+            ) : null}
           </View>
         </View>
       </TouchableHighlight>

@@ -234,6 +234,35 @@ class SendScreen extends Component {
         placeholder = 'GAQGVZYIZ2DX56EB6TZYGBD...';
         break;
     }
+    let sections = [];
+
+    if (contacts.recent.length > 0) {
+      sections.push({
+        title: 'Recent',
+        data: contacts.recent,
+        listItemTitle: item =>
+          item
+            ? (item.first_name ? item.first_name + ' ' : '') +
+              (item.last_name ? item.last_name : '')
+            : '',
+        listItemSubtitle: item =>
+          item
+            ? (item.email ? item.email + (item.mobile ? '\n' : '') : '') +
+              (item.mobile ? item.mobile : '')
+            : '',
+        listItemIcon: item => (item ? item.profile : ''),
+      });
+    }
+    if (contacts.phone.length > 0) {
+      sections.push({
+        title: 'Device',
+        data: contacts.phone,
+        listItemTitle: item => (item && item.name ? item.name : ''),
+        listItemSubtitle: item => (item && item.contact ? item.contact : ''),
+        listItemIcon: item => (item && item.image ? item.image : ''),
+      });
+    }
+
     return (
       <View>
         <View style={{ flexDirection: 'row' }}>
@@ -311,10 +340,8 @@ class SendScreen extends Component {
           }}
           popUp
           multiline={contacts.type === 'crypto' ? true : false}
-          data={contacts.phone}
+          sections={sections}
           loadingData={contacts.loading}
-          title="name"
-          subtitle="contact"
           onPressListItem={item => {
             updateAccountField({
               prop: 'transactionRecipient',

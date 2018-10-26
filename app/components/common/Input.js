@@ -307,12 +307,16 @@ class _Input extends Component {
                   overflow: 'hidden',
                 }}
                 data={data}
-                renderItem={({ item }) => (
+                renderItem={({ item, section }) => (
                   <ListItem
                     onPress={() => onPressListItem(item)}
-                    title={title ? item[title] : item}
-                    subtitle={subtitle ? item[subtitle] : ''}
-                    image={icon ? item[icon] : item.image ? item.image : null}
+                    title={section.title ? section.title(item) : item}
+                    subtitle={section.subtitle ? section.subtitle(item) : ''}
+                    image={
+                      section.icon
+                        ? section.icon(item)
+                        : item.image ? item.image : null
+                    }
                   />
                 )}
                 keyExtractor={item => (item.id ? item.id.toString() : item)}
@@ -336,14 +340,23 @@ class _Input extends Component {
                   overflow: 'hidden',
                 }}
                 sections={sections}
-                renderItem={({ item }) => (
+                renderItem={({ item, section }) => (
                   // <View style={{ height: 150 }} />
                   <ListItem
                     onPress={() => onPressListItem(item)}
-                    title={title ? item[title] : item}
-                    subtitle={subtitle ? item[subtitle] : ''}
-                    subtitleID={item.subtitleID ? item.subtitleID : ''}
-                    image={icon ? item[icon] : item.image ? item.image : null}
+                    title={
+                      section.listItemTitle ? section.listItemTitle(item) : item
+                    }
+                    subtitle={
+                      section.listItemSubtitle
+                        ? section.listItemSubtitle(item)
+                        : ''
+                    }
+                    image={
+                      section.listItemIcon
+                        ? section.listItemIcon(item)
+                        : item.image ? item.image : null
+                    }
                   />
                 )}
                 renderSectionHeader={({ section }) => (
