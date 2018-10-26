@@ -6,6 +6,7 @@ import {
   resetUserErrors,
   showModal,
   hideModal,
+  resetLoading,
 } from '../../redux/actions';
 import Header from '../../components/header';
 
@@ -207,7 +208,7 @@ class DocumentScreen extends Component {
   }
 
   render() {
-    const { documents } = this.props;
+    const { documents, resetLoading } = this.props;
     const { category } = this.state;
     const { textStyleHeader } = styles;
     return (
@@ -220,7 +221,9 @@ class DocumentScreen extends Component {
         <ImageUpload
           ref={c => (this.ImageUploadDocument = c)}
           onConfirm={image => this.uploadDocument(image)}
+          resetLoading={resetLoading}
           error={documents.error}
+          success={documents.success}
           loading={documents.loading}
         />
       </View>
@@ -281,4 +284,5 @@ export default connect(mapStateToProps, {
   resetUserErrors,
   showModal,
   hideModal,
+  resetLoading,
 })(DocumentScreen);

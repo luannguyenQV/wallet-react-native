@@ -274,11 +274,13 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         documentLoading: true,
         documentError: '',
+        success: false,
       };
     case UPLOAD_DOCUMENT_ASYNC.success:
       return {
         ...state,
         documentLoading: false,
+        success: true,
       };
     case UPLOAD_DOCUMENT_ASYNC.error:
       return {
@@ -292,11 +294,13 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         profileLoading: true,
         profileError: '',
+        success: false,
       };
     case UPLOAD_PROFILE_PHOTO_ASYNC.success:
       return {
         ...state,
         profileLoading: false,
+        success: true,
       };
     case UPLOAD_PROFILE_PHOTO_ASYNC.error:
       return {
@@ -308,7 +312,8 @@ export default (state = INITIAL_STATE, action) => {
     case RESET_USER_ERRORS:
       return {
         ...state,
-        updateError: '',
+        documentError: '',
+        profileError: '',
       };
 
     case CARD_DISMISS:
@@ -407,7 +412,8 @@ export default (state = INITIAL_STATE, action) => {
     case RESET_LOADING:
       return {
         ...state,
-        loading: false,
+        profileLoading: false,
+        documentLoading: false,
       };
 
     case LOGOUT_USER:
@@ -487,6 +493,7 @@ export const userProfileSelector = createSelector(userSelector, user => {
         : user.profile ? user.profile : [],
     loading: user.profileLoading ? user.profileLoading : false,
     showDetail: user.showDetail ? user.showDetail : false,
+    success: user.success ? user.success : false,
   };
 });
 
@@ -503,6 +510,7 @@ export const userDocumentsSelector = createSelector(userSelector, user => {
     loading: user.documentLoading ? user.documentLoading : false,
     error: user.documentError ? user.documentError : false,
     showDetail: user.showDetail ? user.showDetail : false,
+    success: user.success ? user.success : false,
   };
 });
 

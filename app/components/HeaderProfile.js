@@ -68,6 +68,7 @@ class _HeaderProfile extends Component {
           onConfirm={image => uploadProfilePhoto(image)}
           resetLoading={resetLoading}
           error={profile.error}
+          success={profile.success}
           loading={profile.loading}
         />
       </View>

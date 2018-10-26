@@ -20,7 +20,7 @@ class ImageUpload extends Component {
   state = initialState;
 
   componentDidUpdate(prevProps) {
-    if (prevProps.loading && !this.props.loading && !this.props.error) {
+    if (prevProps.loading && !this.props.loading && this.props.success) {
       this.setState(initialState);
     }
   }
@@ -61,7 +61,7 @@ class ImageUpload extends Component {
 
   resetState() {
     this.setState(initialState);
-    // this.props.resetLoading
+    this.props.resetLoading();
   }
 
   renderLanding() {
@@ -124,7 +124,7 @@ class ImageUpload extends Component {
           <Button
             label="Choose new image"
             color="secondary"
-            onPress={() => this.showModal()}
+            onPress={() => this.show()}
           />
           <Button
             label="Cancel"

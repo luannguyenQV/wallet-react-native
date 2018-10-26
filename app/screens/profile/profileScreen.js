@@ -19,7 +19,6 @@ import {
   userAddressesSelector,
   userProfileSelector,
   userDocumentsSelector,
-  resetLoading,
   modalOptionsSelector,
 } from '../../redux/reducers/UserReducer';
 
@@ -336,6 +335,5 @@ export default connect(mapStateToProps, {
   uploadProfilePhoto,
   showModal,
   hideModal,
-  resetLoading,
   resetLoading,
 })(ProfileScreen);
