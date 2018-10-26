@@ -343,7 +343,11 @@ class _Input extends Component {
                 renderItem={({ item, section }) => (
                   // <View style={{ height: 150 }} />
                   <ListItem
-                    onPress={() => onPressListItem(item)}
+                    onPress={() =>
+                      section.listItemOnPress
+                        ? section.listItemOnPress(item)
+                        : {}
+                    }
                     title={
                       section.listItemTitle ? section.listItemTitle(item) : item
                     }

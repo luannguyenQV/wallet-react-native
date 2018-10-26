@@ -251,6 +251,20 @@ class SendScreen extends Component {
               (item.mobile ? item.mobile : '')
             : '',
         listItemIcon: item => (item ? item.profile : ''),
+        listItemOnPress: item => {
+          updateAccountField({
+            prop: 'transactionRecipient',
+            value: item.email ? item.email : item.mobile ? item.mobile : '',
+          });
+          updateContactField({
+            prop: 'contactsSearch',
+            value: item.email ? item.email : item.mobile ? item.mobile : '',
+          });
+          transaction.currency.crypto === 'stellar'
+            ? this.memoInput.focus()
+            : this.noteInput.focus();
+          validateTransaction();
+        },
       });
     }
     if (contacts.phone.length > 0) {
@@ -260,6 +274,17 @@ class SendScreen extends Component {
         listItemTitle: item => (item && item.name ? item.name : ''),
         listItemSubtitle: item => (item && item.contact ? item.contact : ''),
         listItemIcon: item => (item && item.image ? item.image : ''),
+        listItemOnPress: item => {
+          updateAccountField({
+            prop: 'transactionRecipient',
+            value: item.contact,
+          });
+          updateContactField({ prop: 'contactsSearch', value: item.contact });
+          transaction.currency.crypto === 'stellar'
+            ? this.memoInput.focus()
+            : this.noteInput.focus();
+          validateTransaction();
+        },
       });
     }
 
@@ -342,17 +367,6 @@ class SendScreen extends Component {
           multiline={contacts.type === 'crypto' ? true : false}
           sections={sections}
           loadingData={contacts.loading}
-          onPressListItem={item => {
-            updateAccountField({
-              prop: 'transactionRecipient',
-              value: item.contact,
-            });
-            updateContactField({ prop: 'contactsSearch', value: item.contact });
-            transaction.currency.crypto === 'stellar'
-              ? this.memoInput.focus()
-              : this.noteInput.focus();
-            validateTransaction();
-          }}
         />
       </View>
     );
