@@ -11,7 +11,7 @@ class _HeaderProfile extends Component {
   };
 
   render() {
-    const { profile, colors, uploadProfilePhoto } = this.props;
+    const { profile, colors, uploadProfilePhoto, resetLoading } = this.props;
 
     const photoLink = profile.data[0].profile;
     const name = profile.data[0].first_name
@@ -29,7 +29,7 @@ class _HeaderProfile extends Component {
     // console.log(this.ImageUploadProfile);
     return (
       <View style={[viewStyleContainer, { backgroundColor: colors.header }]}>
-        <TouchableHighlight onPress={() => this.ImageUploadProfile.showModal()}>
+        <TouchableHighlight onPress={() => this.ImageUploadProfile.show()}>
           {photoLink ? (
             <Image
               style={[
@@ -65,8 +65,8 @@ class _HeaderProfile extends Component {
 
         <ImageUpload
           ref={c => (this.ImageUploadProfile = c)}
-          type="profile"
           onConfirm={image => uploadProfilePhoto(image)}
+          resetLoading={resetLoading}
           error={profile.error}
           loading={profile.loading}
         />

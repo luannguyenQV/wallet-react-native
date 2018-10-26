@@ -5,7 +5,7 @@ import {
   uploadDocument,
   resetUserErrors,
   showModal,
-  resetLoading,
+  hideModal,
 } from '../../redux/actions';
 import Header from '../../components/header';
 
@@ -52,7 +52,7 @@ class DocumentScreen extends Component {
   }
 
   selectType = document_type => {
-    this.props.showModal('document', 0, document_type);
+    this.ImageUploadDocument.show();
     this.setState({
       document_type,
     });
@@ -163,7 +163,9 @@ class DocumentScreen extends Component {
   renderModal() {
     const { modalOptions, hideModal, documents } = this.props;
     const item = documents.data[documents.index];
-    const { textStyleLeft, viewStyleImageContainer, viewStyleFooter } = styles;
+    console.log('documents', documents);
+    console.log('item', item);
+    const { viewStyleImageContainer, viewStyleFooter } = styles;
     const { visible, type } = modalOptions;
     const width = SCREEN_WIDTH - 64;
     // const height = Math.min(image.height * (width / image.width), width);
@@ -205,8 +207,9 @@ class DocumentScreen extends Component {
   }
 
   render() {
+    const { documents } = this.props;
     const { category } = this.state;
-    const { textStyleHeader, viewStyleContent } = styles;
+    const { textStyleHeader } = styles;
     return (
       <View style={styles.container}>
         <Header navigation={this.props.navigation} back title="Documents" />
@@ -215,8 +218,10 @@ class DocumentScreen extends Component {
         {this.renderModal()}
 
         <ImageUpload
-          type="document"
-          uploadDocument={image => this.uploadDocument(image)}
+          ref={c => (this.ImageUploadDocument = c)}
+          onConfirm={image => this.uploadDocument(image)}
+          error={documents.error}
+          loading={documents.loading}
         />
       </View>
     );
@@ -275,4 +280,5 @@ export default connect(mapStateToProps, {
   uploadDocument,
   resetUserErrors,
   showModal,
+  hideModal,
 })(DocumentScreen);

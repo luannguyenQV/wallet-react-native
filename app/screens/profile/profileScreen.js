@@ -6,6 +6,7 @@ import {
   uploadProfilePhoto,
   showModal,
   hideModal,
+  resetLoading,
 } from '../../redux/actions';
 
 import Header from '../../components/header';
@@ -270,9 +271,6 @@ class ProfileScreen extends Component {
       profile,
       company_config,
       uploadProfilePhoto,
-      modalOptions,
-      showModal,
-      hideModal,
       resetLoading,
     } = this.props;
     const { container, mainContainer } = styles;
@@ -292,8 +290,7 @@ class ProfileScreen extends Component {
         <View style={mainContainer}>
           <HeaderProfile
             uploadProfilePhoto={uploadProfilePhoto}
-            showModal={showModal}
-            navigation={this.props.navigation}
+            resetLoading={resetLoading}
             profile={profile}
           />
           {profile.loading ? <Spinner /> : null}
@@ -339,5 +336,6 @@ export default connect(mapStateToProps, {
   uploadProfilePhoto,
   showModal,
   hideModal,
+  resetLoading,
   resetLoading,
 })(ProfileScreen);

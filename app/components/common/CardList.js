@@ -117,7 +117,8 @@ class _CardList extends Component {
   }
 
   render() {
-    const { data, keyExtractor, onRefresh, type, cardListOptions } = this.props;
+    const { data, keyExtractor, onRefresh, type, colors } = this.props;
+    console.log(colors.primary);
     // if (cardListOptions.noScroll) {
     //   return <View color="grey2">{this.renderItem(data.data[0], 0)}</View>;
     // }
@@ -128,7 +129,11 @@ class _CardList extends Component {
             style={{ height: '100%' }}
             ref={component => (this[type + 'FlatList'] = component)}
             refreshControl={
-              <RefreshControl refreshing={data.loading} onRefresh={onRefresh} />
+              <RefreshControl
+                refreshing={data.loading}
+                onRefresh={onRefresh}
+                colors={[colors.primary]}
+              />
             }
             keyboardShouldPersistTaps={'handled'}
             data={data.data}

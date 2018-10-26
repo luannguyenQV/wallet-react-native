@@ -229,6 +229,7 @@ export default (state = INITIAL_STATE, action) => {
     case SHOW_MODAL:
       return {
         ...state,
+        type: action.payload.type,
         modalType: action.payload.modalType,
         modalVisible: true,
         loading: false,
@@ -271,20 +272,19 @@ export default (state = INITIAL_STATE, action) => {
     case UPLOAD_DOCUMENT_ASYNC.pending:
       return {
         ...state,
-        loading: true,
-        updateError: '',
+        documentLoading: true,
+        documentError: '',
       };
     case UPLOAD_DOCUMENT_ASYNC.success:
       return {
         ...state,
-        loading: false,
-        modalVisible: false,
+        documentLoading: false,
       };
     case UPLOAD_DOCUMENT_ASYNC.error:
       return {
         ...state,
-        updateError: action.payload,
-        loading: false,
+        documentError: action.payload,
+        documentLoading: false,
       };
 
     case UPLOAD_PROFILE_PHOTO_ASYNC.pending:
@@ -493,11 +493,15 @@ export const userProfileSelector = createSelector(userSelector, user => {
 export const userDocumentsSelector = createSelector(userSelector, user => {
   return {
     data:
-      user.showDetail && user.type === 'document'
-        ? [user.tempItem]
+      user.modalVisible && user.type === 'document'
+        ? user.document.filter(
+            item =>
+              item.document_category === (user.modalType ? user.modalType : ''),
+          )
         : user.document ? user.document : [],
-    index: user.documentsIndex ? user.documentsIndex : 0,
+    index: user.documentIndex ? user.documentIndex : 0,
     loading: user.documentLoading ? user.documentLoading : false,
+    error: user.documentError ? user.documentError : false,
     showDetail: user.showDetail ? user.showDetail : false,
   };
 });

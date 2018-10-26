@@ -61,6 +61,7 @@ class ImageUpload extends Component {
 
   resetState() {
     this.setState(initialState);
+    // this.props.resetLoading
   }
 
   renderLanding() {
@@ -77,7 +78,8 @@ class ImageUpload extends Component {
     );
   }
 
-  showModal = () => {
+  // externally called function to show modal
+  show = () => {
     this.setState({
       state: 'landing',
       visible: true,
@@ -111,7 +113,7 @@ class ImageUpload extends Component {
             </Text>
           ) : null}
           {loading ? (
-            <Spinner containerStyle={{ margin: 8 }} />
+            <Spinner color={'font'} containerStyle={{ margin: 8 }} />
           ) : (
             <Button
               label="Confirm & upload"
