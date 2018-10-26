@@ -310,8 +310,7 @@ class _Input extends Component {
                 <ListItem
                   onPress={() => onPressListItem(item)}
                   title={title ? item[title] : item}
-                  subtitle={item.description}
-                  subtitleID={item.id}
+                  subtitle={item[subtitle]}
                   image={icon ? item[icon] : item.image ? item.image : null}
                 />
               )}
@@ -395,6 +394,8 @@ _Input.propTypes = {
   type: PropTypes.string, // Type of button (text, contained, TODO: outlined)
   colors: PropTypes.object, // Button color
   onBlur: PropTypes.func, // Function to execute on press
+  sections: PropTypes.array,
+  data: PropTypes.array,
 };
 
 _Input.defaultProps = {
@@ -408,6 +409,8 @@ _Input.defaultProps = {
   type: 'contained',
   colors: Colors,
   onBlur: () => {},
+  sections: [],
+  data: [],
 };
 
 const styles = {
