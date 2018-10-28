@@ -24,6 +24,7 @@ import {
   userDocumentsSelector,
 } from '../../redux/reducers/UserReducer';
 import moment from 'moment';
+import { safeString } from '../../util/general';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -149,10 +150,11 @@ class DocumentScreen extends Component {
   };
 
   renderUploadedDocument = (item, index) => {
+    console.log(item);
     return (
       <OutputStatus
-        label={item.document_type}
-        value={moment(item.created).format('lll')}
+        label={safeString(item, 'document_type')}
+        value={moment(safeString(item, 'created')).format('lll')}
         status={item.status.toUpperCase()}
         onPress={() =>
           this.props.showModal('document', index, this.state.category)
@@ -164,8 +166,6 @@ class DocumentScreen extends Component {
   renderModal() {
     const { modalOptions, hideModal, documents } = this.props;
     const item = documents.data[documents.index];
-    console.log('documents', documents);
-    console.log('item', item);
     const { viewStyleImageContainer, viewStyleFooter } = styles;
     const { visible, type } = modalOptions;
     const width = SCREEN_WIDTH - 64;
@@ -178,7 +178,7 @@ class DocumentScreen extends Component {
             type === 'Proof Of Address' ||
             type === 'Advanced Proof Of Identity')
         }
-        title={item.document_type}
+        title={safeString(item, 'document_type')}
         onDismiss={hideModal}
         iconTitleRight={'close'}
         onPressTitleRight={() => hideModal()}
@@ -188,7 +188,7 @@ class DocumentScreen extends Component {
         <View style={viewStyleImageContainer}>
           <Image
             style={{ height: width, width, borderRadius: 4 }}
-            source={{ uri: item.file }}
+            source={{ uri: safeString(item, 'file') }}
             resizeMode={'contain'}
           />
         </View>
@@ -196,11 +196,13 @@ class DocumentScreen extends Component {
         <View style={viewStyleFooter}>
           <View>
             <Text style={{ padding: 0, margin: 0 }}>
-              {moment(item.created).format('lll')}
+              {moment(safeString(item, 'created')).format('lll')}
             </Text>
           </View>
           <View>
-            <Text style={{ padding: 0, margin: 0 }}>{item.status}</Text>
+            <Text style={{ padding: 0, margin: 0 }}>
+              {safeString(item, 'status')}
+            </Text>
           </View>
         </View>
       </PopUpGeneral>
@@ -211,6 +213,7 @@ class DocumentScreen extends Component {
     const { documents, resetLoading } = this.props;
     const { category } = this.state;
     const { textStyleHeader } = styles;
+    console.log('documents', documents);
     return (
       <View style={styles.container}>
         <Header navigation={this.props.navigation} back title="Documents" />
