@@ -2,7 +2,7 @@
   "expo": {
     "name": "Rehive Wallet",
     "description": "A multi-currency wallet built on the Rehive platform.",
-    "version": "1.4.10",
+    "version": "1.4.11",
     "slug": "rehive-wallet-staging",
     "privacy": "public",
     "sdkVersion": "30.0.0",
@@ -30,8 +30,8 @@
     },
     "android": {
       "package": "com.rehivewallet_staging",
-      "icon": "./assets/icons/icon-1024.png",
-      "versionCode": 5
+      "icon": "./assets/icons/icon-gray.png",
+      "versionCode": 6
     }
   }
 }
