@@ -542,3 +542,9 @@ export const companiesSelector = createSelector(userSelector, user => {
 export const publicCompaniesSelector = createSelector(userSelector, user => {
   return user.public_companies ? user.public_companies : [];
 });
+
+export const profileSelector = createSelector(userSelector, user => {
+  return user && user.profile && user.profile.length > 0
+    ? user.profile[0]
+    : { ...EMPTY_PROFILE, profile: '' };
+});

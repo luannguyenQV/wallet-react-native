@@ -290,7 +290,7 @@ class ProfileScreen extends Component {
           <HeaderProfile
             uploadProfilePhoto={uploadProfilePhoto}
             resetLoading={resetLoading}
-            profile={profile}
+            // profile={profile}
           />
           {profile.loading ? <Spinner /> : null}
           <InputContainer>

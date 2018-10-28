@@ -13,12 +13,12 @@ class _HeaderProfile extends Component {
   render() {
     const { profile, colors, uploadProfilePhoto, resetLoading } = this.props;
 
-    const photoLink = profile.data[0].profile;
-    const name = profile.data[0].first_name
-      ? profile.data[0].first_name + ' ' + profile.data[0].last_name
+    const photoLink = profile.profile;
+    const name = profile.first_name
+      ? profile.first_name + ' ' + profile.last_name
       : '';
 
-    const username = profile.data[0].username;
+    const username = profile.username;
 
     const {
       viewStyleContainer,

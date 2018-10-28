@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import context from './context';
 
 class _TabBarIcon extends Component {
   renderIcon() {
-    const { routeName, focused, tintColor, colors } = this.props;
+    const { routeName, focused, tintColor, colors, profile } = this.props;
+    const { imageStylePhoto } = styles;
 
     let iconName;
     switch (routeName) {
@@ -36,8 +37,25 @@ class _TabBarIcon extends Component {
             color={colors[tintColor]}
           />
         );
+      case 'Profile':
+        if (profile.profile) {
+          return (
+            <Image
+              style={[
+                imageStylePhoto,
+                {
+                  borderColor: colors[tintColor],
+                },
+              ]}
+              source={{
+                uri: profile.profile,
+                // cache: 'only-if-cached',
+              }}
+            />
+          );
+        }
       default:
-        return <Ionicons name={iconName} size={25} color={colors[tintColor]} />;
+        return <Ionicons name={iconName} size={24} color={colors[tintColor]} />;
     }
   }
   renderText() {
@@ -68,6 +86,14 @@ const styles = {
   _textStyle: {
     textAlign: 'center',
     fontSize: 9,
+  },
+  imageStylePhoto: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    // padding: 2,
+    margin: 1,
   },
 };
 
