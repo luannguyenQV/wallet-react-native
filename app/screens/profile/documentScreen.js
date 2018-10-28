@@ -38,6 +38,8 @@ class DocumentScreen extends Component {
     state: '',
     category: '',
     showModal: false,
+    height: 0,
+    width: 0,
   };
 
   componentDidMount() {
@@ -165,11 +167,18 @@ class DocumentScreen extends Component {
 
   renderModal() {
     const { modalOptions, hideModal, documents } = this.props;
+    // const { modalOptions, hideModal, documents } = this.props;
     const item = documents.data[documents.index];
     const { viewStyleImageContainer, viewStyleFooter } = styles;
     const { visible, type } = modalOptions;
+    // const image = Image.getSize(safeString(item, 'file'), (width, height) => {
+    //   this.setState({ width, height });
+    // });
     const width = SCREEN_WIDTH - 64;
-    // const height = Math.min(image.height * (width / image.width), width);
+    const height = width;
+    // this.state.height > 0
+    //   ? Math.min(this.state.height * (width / this.state.width), width)
+    //   : width;
     return (
       <PopUpGeneral
         visible={
@@ -187,7 +196,7 @@ class DocumentScreen extends Component {
         {/* <Output label="Document type" value={item.document_type} /> */}
         <View style={viewStyleImageContainer}>
           <Image
-            style={{ height: width, width, borderRadius: 4 }}
+            style={{ height, width, borderRadius: 4 }}
             source={{ uri: safeString(item, 'file') }}
             resizeMode={'contain'}
           />
