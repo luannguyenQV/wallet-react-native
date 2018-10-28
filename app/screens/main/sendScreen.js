@@ -53,7 +53,6 @@ class SendScreen extends Component {
       memo,
       recipient,
     } = this.props.navigation.state.params;
-    console.log(this.props.navigation.state.params);
 
     const {
       setTransactionType,
@@ -344,6 +343,9 @@ class SendScreen extends Component {
                 ? Platform.OS === 'ios' ? 'decimal-pad' : 'phone-pad'
                 : 'default'
           }
+          prop="contactsSearch"
+          scannable={contacts.type === 'crypto'}
+          navigation={this.props.navigation}
           returnKeyType="next"
           // autoFocus
           onSubmitEditing={() => {
@@ -379,7 +381,6 @@ class SendScreen extends Component {
       validateTransaction,
       currencies,
     } = this.props;
-    console.log(transaction);
     return (
       <View style={{ flexDirection: 'row' }}>
         <CurrencySelector
@@ -494,7 +495,6 @@ class SendScreen extends Component {
       (transaction.recipient || contacts.search)
         ? 'Next'
         : '';
-    console.log('contacts', contacts);
     return (
       <View style={{ flex: 1 }}>
         <Header

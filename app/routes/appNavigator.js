@@ -9,6 +9,7 @@ import Rewards from '../screens/main/rewardsScreen';
 import Send from '../screens/main/sendScreen';
 import Receive from '../screens/main/receiveScreen';
 import QRCodeScanner from '../screens/main/qrScannerScreen';
+import InputScanner from '../screens/main/inputScannerScreen';
 
 import Deposit from '../screens/main/depositScreen';
 import Withdraw from '../screens/main/withdrawScreen';
@@ -47,15 +48,7 @@ const Stack = {
   ChangePassword: ChangePassword,
   TwoFactor: TwoFactor,
   Pin: Pin,
-  // SettingsNotifications: {
-  //   screen: SettingsNotifications,
-  // },
-  // EmailNotifications: {
-  //   screen: EmailNotifications,
-  // },
-  // MobileNotifications: {
-  //   screen: MobileNotifications,
-  // },
+  InputScanner: InputScanner,
 };
 
 export default createStackNavigator(Stack, {

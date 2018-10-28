@@ -9,13 +9,11 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import Colors from './../../config/colors';
-import { MaterialIcons as Icon } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import CountryPicker from 'react-native-country-picker-modal';
 import { ListItem, ListSeparator } from './ListItem';
 import context from './context';
 import { TextInputMask } from 'react-native-masked-text';
-import { Tabs } from '../../components/common';
 
 class _Input extends Component {
   state = {
@@ -195,6 +193,8 @@ class _Input extends Component {
       toggleCheck,
       icon,
       sections,
+      scannable,
+      prop,
     } = this.props;
 
     const {
@@ -226,6 +226,7 @@ class _Input extends Component {
                   ? colors.error
                   : focused ? colors.focus : 'lightgrey',
                 borderBottomWidth: inputError || focused ? 2 : 2,
+                justifyContent: 'space-around',
               }}>
               {toggleCheck ? (
                 <View style={viewStyleCheckbox}>
@@ -237,7 +238,7 @@ class _Input extends Component {
                   />
                 </View>
               ) : null}
-              <View style={[viewStyleContent, { width: '100%' }]}>
+              <View style={[viewStyleContent, { flex: 1 }]}>
                 {focused || value ? (
                   <View style={viewStyleLabel}>
                     <Text
@@ -259,7 +260,7 @@ class _Input extends Component {
 
               {type === 'password' ? (
                 <View style={{ justifyContent: 'center' }}>
-                  <Icon
+                  <MaterialIcons
                     style={[
                       iconStyleVisibility,
                       {
@@ -272,6 +273,25 @@ class _Input extends Component {
                     size={24}
                     color={borderColor}
                     onPress={this.togglePasswordVisibility}
+                  />
+                </View>
+              ) : null}
+
+              {scannable ? (
+                <View style={{ justifyContent: 'center' }}>
+                  <MaterialIcons
+                    style={[
+                      iconStyleVisibility,
+                      {
+                        color: focused ? colors.focus : 'rgba(0,0,0,0.6)',
+                      },
+                    ]}
+                    name={'camera'}
+                    size={24}
+                    color={focused ? colors.focus : 'rgba(0,0,0,0.6)'}
+                    onPress={() =>
+                      this.props.navigation.navigate('InputScanner', { prop })
+                    }
                   />
                 </View>
               ) : null}
@@ -418,6 +438,7 @@ _Input.propTypes = {
   onBlur: PropTypes.func, // Function to execute on press
   sections: PropTypes.array,
   data: PropTypes.array,
+  scannable: PropTypes.bool,
 };
 
 _Input.defaultProps = {
@@ -433,6 +454,7 @@ _Input.defaultProps = {
   onBlur: () => {},
   sections: [],
   data: [],
+  scannable: false,
 };
 
 const styles = {
@@ -491,10 +513,10 @@ const styles = {
     fontSize: 12,
   },
   iconStyleVisibility: {
-    width: 24,
-    height: 24,
+    // width: 24,
+    // height: 24,
     right: 12,
-    position: 'absolute',
+    // position: 'absolute',
   },
   viewStyleCheckbox: {
     padding: 4,
