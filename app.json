@@ -8,7 +8,7 @@
     "sdkVersion": "30.0.0",
     "orientation": "portrait",
     "primaryColor": "#4d4d4d",
-    "icon": "./assets/icons/icon-gray.png",
+    "icon": "./assets/icons/icon.png",
     "splash": {
       "image": "./assets/icons/splash.png",
       "primaryColor": "#ffffff",
@@ -17,7 +17,7 @@
     "assetBundlePatterns": ["./assets/icons/*"],
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.rehive.wallet-staging",
+      "bundleIdentifier": "com.rehive.wallet",
       "icon": "./assets/icons/app.png",
       "infoPlist": {
         "NSContactsUsageDescription":
