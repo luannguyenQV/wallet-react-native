@@ -26,6 +26,8 @@ import {
   FETCH_ACCOUNTS_ASYNC,
   FETCH_TRANSACTIONS_ASYNC,
   CLAIM_REWARD_ASYNC,
+  UPLOAD_PROFILE_PHOTO_ASYNC,
+  RESET_LOADING,
 } from '../actions';
 
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
@@ -227,6 +229,7 @@ export default (state = INITIAL_STATE, action) => {
     case SHOW_MODAL:
       return {
         ...state,
+        type: action.payload.type,
         modalType: action.payload.modalType,
         modalVisible: true,
         loading: false,
@@ -269,26 +272,48 @@ export default (state = INITIAL_STATE, action) => {
     case UPLOAD_DOCUMENT_ASYNC.pending:
       return {
         ...state,
-        loading: true,
-        updateError: '',
+        documentLoading: true,
+        documentError: '',
+        success: false,
       };
     case UPLOAD_DOCUMENT_ASYNC.success:
       return {
         ...state,
-        loading: false,
-        // modalVisible: true,
-        // modalType: 'verify',
+        documentLoading: false,
+        success: true,
       };
     case UPLOAD_DOCUMENT_ASYNC.error:
       return {
         ...state,
-        updateError: action.payload,
-        loading: false,
+        documentError: action.payload,
+        documentLoading: false,
       };
+
+    case UPLOAD_PROFILE_PHOTO_ASYNC.pending:
+      return {
+        ...state,
+        profileLoading: true,
+        profileError: '',
+        success: false,
+      };
+    case UPLOAD_PROFILE_PHOTO_ASYNC.success:
+      return {
+        ...state,
+        profileLoading: false,
+        success: true,
+      };
+    case UPLOAD_PROFILE_PHOTO_ASYNC.error:
+      return {
+        ...state,
+        profileError: action.payload,
+        profileLoading: false,
+      };
+
     case RESET_USER_ERRORS:
       return {
         ...state,
-        updateError: '',
+        documentError: '',
+        profileError: '',
       };
 
     case CARD_DISMISS:
@@ -384,6 +409,13 @@ export default (state = INITIAL_STATE, action) => {
         companies,
       };
 
+    case RESET_LOADING:
+      return {
+        ...state,
+        profileLoading: false,
+        documentLoading: false,
+      };
+
     case LOGOUT_USER:
       return INITIAL_STATE;
     default:
@@ -461,6 +493,24 @@ export const userProfileSelector = createSelector(userSelector, user => {
         : user.profile ? user.profile : [],
     loading: user.profileLoading ? user.profileLoading : false,
     showDetail: user.showDetail ? user.showDetail : false,
+    success: user.success ? user.success : false,
+  };
+});
+
+export const userDocumentsSelector = createSelector(userSelector, user => {
+  return {
+    data:
+      user.modalVisible && user.type === 'document'
+        ? user.document.filter(
+            item =>
+              item.document_category === (user.modalType ? user.modalType : ''),
+          )
+        : user.document ? user.document : [],
+    index: user.documentIndex ? user.documentIndex : 0,
+    loading: user.documentLoading ? user.documentLoading : false,
+    error: user.documentError ? user.documentError : false,
+    showDetail: user.showDetail ? user.showDetail : false,
+    success: user.success ? user.success : false,
   };
 });
 
@@ -476,10 +526,25 @@ export const cardListOptionsSelector = createSelector(userSelector, user => {
   };
 });
 
+export const modalOptionsSelector = createSelector(userSelector, user => {
+  return {
+    visible: user.modalVisible ? user.modalVisible : false,
+    type: user.modalType ? user.modalType : '',
+    error: user.updateError ? user.updateError : '',
+    loading: user.loading ? user.loading : false,
+  };
+});
+
 export const companiesSelector = createSelector(userSelector, user => {
   return user.companies ? user.companies : [];
 });
 
-export const userDocumentsSelector = createSelector(userSelector, user => {
-  return user.document ? user.document : [];
+export const publicCompaniesSelector = createSelector(userSelector, user => {
+  return user.public_companies ? user.public_companies : [];
+});
+
+export const profileSelector = createSelector(userSelector, user => {
+  return user && user.profile && user.profile.length > 0
+    ? user.profile[0]
+    : { ...EMPTY_PROFILE, profile: '' };
 });

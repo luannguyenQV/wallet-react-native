@@ -117,19 +117,23 @@ class _CardList extends Component {
   }
 
   render() {
-    const { data, keyExtractor, onRefresh, type, cardListOptions } = this.props;
+    const { data, keyExtractor, onRefresh, type, colors } = this.props;
+    console.log(colors.primary);
     // if (cardListOptions.noScroll) {
     //   return <View color="grey2">{this.renderItem(data.data[0], 0)}</View>;
     // }
     return (
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === 'android' ? 'height' : 'padding'}>
-        <View color="grey2">
+      <View color="grey2" keyboardAvoiding>
+        <View style={{ flex: 1 }} color="grey2">
           <FlatList
+            style={{ height: '100%' }}
             ref={component => (this[type + 'FlatList'] = component)}
             refreshControl={
-              <RefreshControl refreshing={data.loading} onRefresh={onRefresh} />
+              <RefreshControl
+                refreshing={data.loading}
+                onRefresh={onRefresh}
+                colors={[colors.primary]}
+              />
             }
             keyboardShouldPersistTaps={'handled'}
             data={data.data}
@@ -143,7 +147,7 @@ class _CardList extends Component {
           />
           {this.renderModal()}
         </View>
-      </KeyboardAvoidingView>
+      </View>
     );
   }
 }

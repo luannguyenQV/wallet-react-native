@@ -5,13 +5,14 @@ import {
   updateItem,
   updateInputField,
   showDetail,
-  uploadProfilePhoto,
 } from './../../redux/actions';
 
 import Header from './../../components/header';
-import HeaderProfile from './../../components/HeaderProfile';
 import CardListUserSettings from '../../components/cards/CardListUserSettings';
-import { userProfileSelector } from '../../redux/reducers/UserReducer';
+import {
+  userProfileSelector,
+  modalOptionsSelector,
+} from '../../redux/reducers/UserReducer';
 
 class PersonalDetailsScreen extends Component {
   static navigationOptions = {
@@ -19,7 +20,8 @@ class PersonalDetailsScreen extends Component {
   };
 
   render() {
-    const { profile, updateItem, showDetail, uploadProfilePhoto } = this.props;
+    const { profile, updateItem, showDetail } = this.props;
+
     return (
       <View style={{ flex: 1 }}>
         <Header
@@ -34,16 +36,6 @@ class PersonalDetailsScreen extends Component {
           }
           noShadow
         />
-        <HeaderProfile
-          photoLink={profile.profile}
-          name={
-            profile.first_name
-              ? profile.first_name + ' ' + profile.last_name
-              : ''
-          }
-          username={profile.username}
-          uploadProfilePhoto={uploadProfilePhoto}
-        />
         <CardListUserSettings
           type="profile"
           data={profile}
@@ -57,6 +49,7 @@ class PersonalDetailsScreen extends Component {
 const mapStateToProps = state => {
   return {
     profile: userProfileSelector(state),
+    modalOptions: modalOptionsSelector(state),
   };
 };
 
@@ -64,5 +57,4 @@ export default connect(mapStateToProps, {
   updateItem,
   showDetail,
   updateInputField,
-  uploadProfilePhoto,
 })(PersonalDetailsScreen);

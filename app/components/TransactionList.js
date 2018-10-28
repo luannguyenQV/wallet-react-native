@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, FlatList, Text, RefreshControl } from 'react-native';
+import { View, FlatList, RefreshControl } from 'react-native';
 import { WebBrowser } from 'expo';
 import { connect } from 'react-redux';
 import { fetchAccounts, fetchTransactions } from './../redux/actions';
@@ -12,6 +12,7 @@ import {
   EmptyListMessage,
   PopUpGeneral,
   Output,
+  Text,
 } from './common';
 import Colors from './../config/colors';
 import { performDivisibility } from './../util/general';
@@ -235,10 +236,14 @@ class TransactionList extends Component {
 
           <View style={viewStyleFooter}>
             <View>
-              <Text>{moment(transaction.created).format('lll')}</Text>
+              <Text style={{ padding: 0, margin: 0 }}>
+                {moment(transaction.created).format('lll')}
+              </Text>
             </View>
             <View>
-              <Text>{transaction.status}</Text>
+              <Text style={{ padding: 0, margin: 0 }}>
+                {transaction.status}
+              </Text>
             </View>
           </View>
         </PopUpGeneral>

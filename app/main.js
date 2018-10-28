@@ -11,6 +11,7 @@ import MainNavigator from './routes/mainNavigator';
 
 import { ThemeContext } from './util/config';
 import { colorSelector, themeSelector } from './redux/reducers/ConfigReducer';
+import { profileSelector } from './redux/reducers/UserReducer';
 
 // const _XHR = GLOBAL.originalXMLHttpRequest
 //   ? GLOBAL.originalXMLHttpRequest
@@ -45,14 +46,7 @@ class Main extends Component {
   }
 
   async _loadAssetsAsync() {
-    const imageAssets = cacheImages([
-      require('./../assets/icons/card1.png'),
-      require('./../assets/icons/card2.png'),
-      require('./../assets/icons/card1-luuun.png'),
-      require('./../assets/icons/card2-luuun.png'),
-      require('./../assets/icons/card1-plue.png'),
-      require('./../assets/icons/card2-plue.png'),
-    ]);
+    const imageAssets = cacheImages([require('./../assets/icons/profile.png')]);
 
     const fontAssets = Expo.Font.loadAsync({
       ...Ionicons.font,
@@ -66,12 +60,12 @@ class Main extends Component {
   render() {
     console.disableYellowBox = true;
     const { isReady, initStarted } = this.state;
-    const { colors, theme } = this.props;
+    const { colors, theme, profile } = this.props;
     // console.log(isReady, initStarted);
     if (true && (isReady && initStarted)) {
       return (
         <Root>
-          <ThemeContext.Provider value={{ colors, theme }}>
+          <ThemeContext.Provider value={{ colors, theme, profile }}>
             <MainNavigator
               ref={navigatorRef => {
                 NavigationService.setTopLevelNavigator(navigatorRef);
@@ -97,6 +91,7 @@ const mapStateToProps = state => {
   return {
     colors: colorSelector(state),
     theme: themeSelector(state),
+    profile: profileSelector(state),
   };
 };
 

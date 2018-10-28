@@ -93,7 +93,7 @@
           "title": "Welcome to Plue",
           "description": "",
           "dismiss": true,
-          "image": "card1-plue"
+          "image": "card1"
         },
         {
           "id": 1,
@@ -101,7 +101,7 @@
           "description":
             "• Improved 2FA \n• Working biometric/pin local authentication\n• Light/dark theme\n• Support for custom stellar assets",
           "dismiss": true,
-          "image": "card2-plue"
+          "image": "card2"
         }
       ]
     }
@@ -110,9 +110,9 @@
     "landing": [
       {
         "id": 0,
-        "title": "",
+        "title": "Plue Demo",
         "description": "",
-        "image": "spinner-plue"
+        "image": "slider1"
       }
     ]
   },

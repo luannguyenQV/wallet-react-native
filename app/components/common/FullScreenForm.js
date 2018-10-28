@@ -83,11 +83,11 @@ const _FullScreenForm = props => {
               )}
             </View>
           ) : null}
-          <TouchableWithoutFeedback
-            onPress={() => Keyboard.dismiss()}
-            accessible={false}>
-            <View style={viewStyleContent}>{props.children}</View>
-          </TouchableWithoutFeedback>
+          {/* <TouchableWithoutFeedback
+            onPress={() => {}} //Keyboard.dismiss()}
+            accessible={false}> */}
+          <View style={viewStyleContent}>{props.children}</View>
+          {/* </TouchableWithoutFeedback> */}
 
           {textFooterRight || textFooterLeft ? (
             <View style={viewStyleFooter}>

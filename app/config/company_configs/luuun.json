@@ -94,7 +94,7 @@
           "description":
             "The new home of Luuun; a stellar wallet built on the Rehive platform",
           "dismiss": true,
-          "image": "card1-luuun"
+          "image": "card1"
         },
         {
           "id": "1",
@@ -102,7 +102,7 @@
           "description":
             "• Improved 2FA \n• Working biometric/pin local authentication\n• Light/dark theme\n• Support for custom stellar assets",
           "dismiss": true,
-          "image": "card2-luuun"
+          "image": "card2"
         }
       ]
     }
@@ -113,13 +113,13 @@
         "id": "0",
         "title": "Rehive:Luuun",
         "description": "A stellar wallet built on the Rehive platform",
-        "image": "slider1-luuun"
+        "image": "slider1"
       },
       {
         "id": "1",
         "title": "Rehive:Luuun",
         "description": "A stellar wallet built on the Rehive platform",
-        "image": "slider2-luuun"
+        "image": "slider2"
       }
     ]
   },

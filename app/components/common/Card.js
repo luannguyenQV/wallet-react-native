@@ -12,8 +12,6 @@ import { Spinner } from './Spinner';
 import { HeaderButton } from './HeaderButton';
 import TouchableCircle from './../touchableCircle';
 import { MaterialIcons as Icon } from '@expo/vector-icons';
-import Swipeable from 'react-native-swipeable';
-import Colors from './../../config/colors';
 
 const _Card = props => {
   const {
@@ -96,7 +94,6 @@ const _Card = props => {
                 style={[
                   textStyleTitle,
                   {
-                    fontSize: 22, //title ? (title.length < 18 ? 24 : 18) : 24,
                     color: colorTitleText ? colorTitleText : colors.font,
                   },
                 ]}>
@@ -137,7 +134,11 @@ const _Card = props => {
             </View>
           ) : null}
           {props.children}
-          {errorText ? <Text style={textStyleError}>{errorText}</Text> : null}
+          {errorText ? (
+            <Text style={[textStyleError, { color: colors.error }]}>
+              {errorText}
+            </Text>
+          ) : null}
         </View>
       </TouchableWithoutFeedback>
       {textActionOne || textActionTwo || iconFooter ? (
@@ -250,6 +251,7 @@ const styles = {
     flexShrink: 1,
     flexWrap: 'wrap',
     fontWeight: 'bold',
+    fontSize: 22,
   },
   textStyleSubtitle: {
     opacity: 0.8,
@@ -279,7 +281,6 @@ const styles = {
     paddingTop: 8,
     paddingHorizontal: 16,
     fontSize: 14,
-    color: Colors.error,
   },
   viewStyleFooter: {
     flexDirection: 'row',
