@@ -1,0 +1,10 @@
+{
+  "landing": [
+    {
+      "id": 0,
+      "title": "Slide 1",
+      "description": "This is your custom text for slide 1",
+      "image": "slider1"
+    }
+  ]
+}

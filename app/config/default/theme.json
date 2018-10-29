@@ -1,0 +1,72 @@
+{
+  "default": "light",
+  "themes": {
+    "light": {
+      "header": "white",
+      "headerContrast": "primary",
+      "drawerHeader": "primaryContrast",
+      "drawerHeaderContrast": "primary",
+      "walletHeader": "white",
+      "walletHeaderContrast": "primary",
+      "authScreen": "white",
+      "authScreenContrast": "primary",
+      "sendScreen": "white",
+      "sendScreenContrast": "primary",
+      "surface": "grey1"
+    },
+    "dark": {
+      "header": "primary",
+      "headerContrast": "primaryContrast",
+      "drawerHeader": "primary",
+      "drawerHeaderContrast": "white",
+      "walletHeader": "primary",
+      "walletHeaderContrast": "white",
+      "authScreen": "primary",
+      "authScreenContrast": "white",
+      "sendScreen": "primary",
+      "sendScreenContrast": "white",
+      "surface": "grey1"
+    }
+  },
+  "colors": {
+    "primary": "#5969F6",
+    "secondary": "#A4A5F5",
+    "tertiary": "#FBFB8B",
+    "focus": "#FC4F96",
+
+    "primaryContrast": "#f6f6f6",
+    "secondaryContrast": "#ffffff",
+    "tertiaryContrast": "#404040",
+    "focusContrast": "#ffffff",
+
+    "success": "#4CAF50",
+    "warning": "#FC8755",
+    "error": "#f44336",
+    "positive": "#4CAF50",
+    "negative": "#f44336",
+
+    "grey1": "#F8F8FA",
+    "grey2": "#EAEAEF",
+    "grey3": "#B8B7C6",
+    "font": "#707070"
+  },
+  "style": {
+    "cardCornerRadius": 2,
+    "roundButtons": false
+  },
+  "layout": {
+    "home": {
+      "header": "wallet",
+      "detail": [
+        {
+          "order": 0,
+          "type": "cards"
+        },
+        {
+          "order": 1,
+          "type": "transactions"
+        }
+      ]
+    }
+  }
+}

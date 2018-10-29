@@ -1,0 +1,24 @@
+{
+  "home": {
+    "general": {
+      "welcome": true,
+      "verify": true
+    },
+    "custom": [
+      {
+        "id": 0,
+        "title": "Card 1",
+        "description": "This is your custom text for card 1",
+        "image": "card1",
+        "dismiss": true
+      },
+      {
+        "id": 1,
+        "title": "Card 2",
+        "description": "This is your custom text for card 2",
+        "image": "card2",
+        "dismiss": false
+      }
+    ]
+  }
+}

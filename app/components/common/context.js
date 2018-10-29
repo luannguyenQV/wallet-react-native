@@ -14,7 +14,7 @@ const context = ComposedComponent => {
             <ComposedComponent
               {...this.props}
               colors={theme.colors}
-              theme={theme.theme}
+              style={theme.style}
             />
           )}
         </ThemeContext.Consumer>

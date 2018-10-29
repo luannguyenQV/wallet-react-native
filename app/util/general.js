@@ -112,3 +112,6 @@ export const concatBankAccount = account => {
   }
   return value;
 };
+
+export const safe = (item, field, value = '') =>
+  item && item[field] ? item[field] : value;

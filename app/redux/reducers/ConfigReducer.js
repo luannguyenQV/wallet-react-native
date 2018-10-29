@@ -1,17 +1,27 @@
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 import { createSelector } from 'reselect';
 import { CHANGE_THEME, SET_COMPANY } from '../actions';
-import {
-  companyConfigSelector,
-  themeStateSelector,
-} from './../sagas/selectors';
 
-import themes from './../../config/themes.json';
-import default_company_config from './../../config/default_company_config.json';
+import default_auth from './../../config/default/auth.json';
+import default_cards from './../../config/default/cards.json';
+import default_pin from './../../config/default/pin.json';
+import default_services from './../../config/default/services.json';
+import default_sliders from './../../config/default/sliders.json';
+import default_theme from './../../config/default/theme.json';
+import default_verification from './../../config/default/verification.json';
+import { safe } from '../../util/general';
 
 const INITIAL_STATE = {
   company_config: {},
-  theme: 'light',
+  currentTheme: 'default',
+
+  auth: default_auth,
+  cards: default_cards,
+  pin: default_pin,
+  services: default_services,
+  sliders: default_sliders,
+  theme: default_theme,
+  verification: default_verification,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -22,13 +32,23 @@ export default (state = INITIAL_STATE, action) => {
     case CHANGE_THEME:
       return {
         ...state,
-        theme: action.payload,
+        currentTheme: action.payload,
       };
 
     case SET_COMPANY:
+      const { config } = action.payload;
       return {
         ...state,
-        company_config: action.payload.company_config,
+        company_config: config.company_config,
+        auth: config.auth ? config.auth : state.auth,
+        cards: config.cards ? config.cards : state.cards,
+        pin: config.pin ? config.pin : state.pin,
+        services: config.services ? config.services : state.services,
+        sliders: config.sliders ? config.sliders : state.sliders,
+        theme: config.theme ? config.theme : state.theme,
+        verification: config.verification
+          ? config.verification
+          : state.verification,
       };
 
     default:
@@ -36,73 +56,123 @@ export default (state = INITIAL_STATE, action) => {
   }
 };
 
-export const colorSelector = createSelector(
-  [companyConfigSelector, themeStateSelector],
-  (company_config, theme) => {
-    const _colors =
-      company_config && company_config.colors
-        ? company_config.colors
-        : default_company_config.colors;
+/* State selectors */
+export const configStateSelector = state => state.config;
 
-    let selectedTheme = themes[theme] ? themes[theme] : {};
+export const configAuthStateSelector = createSelector(
+  configStateSelector,
+  configState => safe(configState, 'auth', default_auth),
+);
 
+export const configCardsStateSelector = createSelector(
+  configStateSelector,
+  configState => safe(configState, 'cards', default_cards),
+);
+
+export const configPinStateSelector = createSelector(
+  configStateSelector,
+  configState => safe(configState, 'pin', default_pin),
+);
+
+export const configServicesStateSelector = createSelector(
+  configStateSelector,
+  configState => safe(configState, 'services', default_services),
+);
+
+export const configSlidersStateSelector = createSelector(
+  configStateSelector,
+  configState => safe(configState, 'sliders', default_sliders),
+);
+
+export const configThemeStateSelector = createSelector(
+  configStateSelector,
+  configState => safe(configState, 'theme', default_theme),
+);
+
+export const configThemeDefaultStateSelector = createSelector(
+  configThemeStateSelector,
+  configThemeState => safe(configThemeState, 'default', default_theme.default),
+);
+
+export const configThemeThemesStateSelector = createSelector(
+  configThemeStateSelector,
+  configThemeState => safe(configThemeState, 'themes', default_theme.themes),
+);
+
+export const configThemeColorsStateSelector = createSelector(
+  configThemeStateSelector,
+  configThemeState => safe(configThemeState, 'colors', default_theme.colors),
+);
+
+export const configThemeStyleStateSelector = createSelector(
+  configThemeStateSelector,
+  configThemeState => safe(configThemeState, 'style', default_theme.style),
+);
+
+export const configVerificationStateSelector = createSelector(
+  configStateSelector,
+  configState => safe(configState, 'verification', default_verification),
+);
+
+export const configCurrentThemeStateSelector = createSelector(
+  configStateSelector,
+  configState => safe(configState, 'verification', default_verification),
+);
+
+/* Other selectors */
+
+export const themeCurrentThemeSelector = createSelector(
+  [configCurrentThemeStateSelector, configThemeThemesStateSelector],
+  (configCurrentThemeState, themeThemes) =>
+    safe(themeThemes, configCurrentThemeState, defaultTheme),
+);
+
+export const defaultTheme = safe(
+  default_theme.themes,
+  default_theme.default,
+  {},
+);
+
+export const themeColorsSelector = createSelector(
+  [configCurrentThemeStateSelector, configThemeColorsStateSelector],
+  (currentTheme, themeColors) => {
     const colors = {
-      ..._colors,
-      header: selectColor('header', selectedTheme, _colors, 'primary'),
-      headerContrast: selectColor(
-        'headerContrast',
-        selectedTheme,
-        _colors,
-        'primaryContrast',
-      ),
-      drawerHeader: selectColor(
-        'drawerHeader',
-        selectedTheme,
-        _colors,
-        'primary',
-      ),
+      ...themeColors,
+      header: selectColor('header', currentTheme, themeColors),
+      headerContrast: selectColor('headerContrast', currentTheme, themeColors),
+      drawerHeader: selectColor('drawerHeader', currentTheme, themeColors),
       drawerHeaderContrast: selectColor(
         'drawerHeaderContrast',
-        selectedTheme,
-        _colors,
-        'primaryContrast',
+        currentTheme,
+        themeColors,
       ),
-      authScreen: selectColor('authScreen', selectedTheme, _colors, 'primary'),
+      authScreen: selectColor('authScreen', currentTheme, themeColors),
       authScreenContrast: selectColor(
         'authScreenContrast',
-        selectedTheme,
-        _colors,
-        'primaryContrast',
+        currentTheme,
+        themeColors,
       ),
-      sendScreen: selectColor('sendScreen', selectedTheme, _colors, 'focus'),
+      sendScreen: selectColor('sendScreen', currentTheme, themeColors),
       sendScreenContrast: selectColor(
         'sendScreenContrast',
-        selectedTheme,
-        _colors,
-        'focusContrast',
+        currentTheme,
+        themeColors,
       ),
-      grey1: '#F8F8FA',
-      grey2: '#EAEAEF',
-      grey3: '#B8B7C6',
-      font: '#707070',
     };
     return colors;
   },
 );
 
-export const getColor = auth => auth.company_config.colors;
-
-const selectColor = (component, theme, _colors, _default) => {
-  // console.log('in deep select', theme[component]);
-  let color = theme[component]
-    ? theme[component]
-    : theme[_default]
-      ? theme[_default]
-      : _colors[component]
-        ? _colors[component]
-        : _colors[_default]
-          ? _colors[_default]
-          : default_company_config.colors[_default];
+const selectColor = (component, theme, colors) => {
+  let color = safe(
+    theme,
+    component,
+    safe(
+      safe(default_theme.themes, configCurrentThemeStateSelector, defaultTheme),
+      component,
+      'black',
+    ),
+  );
 
   if (
     color === 'primary' ||
@@ -114,67 +184,22 @@ const selectColor = (component, theme, _colors, _default) => {
     color === 'tertiaryContrast' ||
     color === 'focusContrast'
   ) {
-    return _colors[color];
+    return colors[color];
   }
   return color;
 };
 
-export const themeSelector = createSelector(
-  [companyConfigSelector, themeStateSelector],
-  (company_config, theme) => {
-    // const _colors =
-    //   company_config && company_config.colors ? company_config.colors : Colors;
-
-    // let selectedTheme = themes[theme] ? themes[theme] : {};
-
-    // if(company_config.theme && company_config.theme.authSpinner){
-    //   return
-
-    // }
-
-    return {
-      authSpinner:
-        company_config.theme && company_config.theme.authSpinner
-          ? company_config.theme.authSpinner
-          : '',
+export const themeStyleSelector = createSelector(
+  [configThemeStyleStateSelector],
+  themeStyle => {
+    const style = {
+      cardCornerRadius: safe(
+        themeStyle,
+        'cardCornerRadius',
+        defaultTheme.cardCornerRadius,
+      ),
+      roundButtons: safe(themeStyle, 'roundButtons', defaultTheme.roundButtons),
     };
-
-    // const colors = {
-    //   ..._colors,
-    //   header: selectColor('header', selectedTheme, _colors, 'primary'),
-    //   headerContrast: selectColor(
-    //     'headerContrast',
-    //     selectedTheme,
-    //     _colors,
-    //     'primaryContrast',
-    //   ),
-    //   drawerHeader: selectColor(
-    //     'drawerHeader',
-    //     selectedTheme,
-    //     _colors,
-    //     'primary',
-    //   ),
-    //   drawerHeaderContrast: selectColor(
-    //     'drawerHeaderContrast',
-    //     selectedTheme,
-    //     _colors,
-    //     'primaryContrast',
-    //   ),
-    //   authScreen: selectColor('authScreen', selectedTheme, _colors, 'primary'),
-    //   authScreenContrast: selectColor(
-    //     'authScreenContrast',
-    //     selectedTheme,
-    //     _colors,
-    //     'primaryContrast',
-    //   ),
-    //   sendScreen: selectColor('sendScreen', selectedTheme, _colors, 'focus'),
-    //   sendScreenContrast: selectColor(
-    //     'sendScreenContrast',
-    //     selectedTheme,
-    //     _colors,
-    //     'focusContrast',
-    //   ),
-    // };
-    // return colors;
+    return style;
   },
 );

@@ -33,7 +33,7 @@ import {
   CodeInput,
   Button,
 } from './common';
-import { colorSelector } from '../redux/reducers/ConfigReducer';
+import { themeColorsSelector } from '../redux/reducers/ConfigReducer';
 
 // make component
 class CardList extends Component {
@@ -381,7 +381,7 @@ const mapStateToProps = state => {
     wallet,
     otp,
     company_config,
-    colors: colorSelector(state),
+    colors: themeColorsSelector(state),
   };
 };
 

@@ -7,7 +7,7 @@ import { cardDismiss, cardRestoreAll } from './../redux/actions';
 // import * as shape from 'd3-shape';
 
 import { Card, Button, CustomImage, View as MyView } from './common';
-import { colorSelector } from '../redux/reducers/ConfigReducer';
+import { themeColorsSelector } from '../redux/reducers/ConfigReducer';
 import { companyConfigSelector } from '../redux/sagas/selectors';
 import { userProfileSelector } from '../redux/reducers/UserReducer';
 
@@ -189,7 +189,7 @@ const mapStateToProps = state => {
     company_config: companyConfigSelector(state),
     profile: userProfileSelector(state),
     dismissedCards,
-    colors: colorSelector(state),
+    colors: themeColorsSelector(state),
   };
 };
 

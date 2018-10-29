@@ -29,7 +29,7 @@ import {
   resendVerification,
 } from '../../redux/actions';
 
-import { colorSelector } from './../../redux/reducers/ConfigReducer';
+import { themeColorsSelector } from './../../redux/reducers/ConfigReducer';
 
 import {
   Button,
@@ -673,7 +673,7 @@ const mapStateToProps = state => {
     user,
     terms,
     termsChecked,
-    colors: colorSelector(state),
+    colors: themeColorsSelector(state),
   };
 };
 
