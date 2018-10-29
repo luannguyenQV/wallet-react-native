@@ -2,12 +2,13 @@
 /* Component | Stateless | Styled */
 /* This is the main button component. Takes props to adjust it's size, type, color etc */
 import React, { Component } from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import context from './context';
 import { Text } from './Text';
+import { View } from './View';
 
 class _Button extends Component {
   _buttonStyle() {
@@ -25,18 +26,17 @@ class _Button extends Component {
     if (type === 'contained') {
       backgroundColor = colors[color];
     }
-    return [
-      styles._buttonStyle,
-      {
-        backgroundColor,
-        height: size === 'large' ? 40 : size === 'small' ? 30 : 36,
-        borderRadius:
-          design.roundButtons || round
-            ? size === 'large' ? 20 : size === 'small' ? 15 : 18
-            : 2.5,
-      },
-      buttonStyle,
-    ];
+    return {
+      ...styles._buttonStyle,
+      backgroundColor,
+      height: size === 'large' ? 40 : size === 'small' ? 30 : 36,
+      borderRadius:
+        design.roundButtons || round
+          ? size === 'large' ? 20 : size === 'small' ? 15 : 18
+          : 2.5,
+      shadowRadius: design.buttonShadow,
+      ...buttonStyle,
+    };
   }
 
   textStyle() {
@@ -47,13 +47,11 @@ class _Button extends Component {
       textColor = colors[color + 'Contrast'];
     }
 
-    return [
-      {
-        color: textColor,
-        fontSize: size === 'large' ? 18 : size === 'small' ? 12 : 14,
-      },
-      textStyle,
-    ];
+    return {
+      color: textColor,
+      fontSize: size === 'large' ? 18 : size === 'small' ? 12 : 14,
+      ...textStyle,
+    };
   }
 
   render() {
@@ -66,18 +64,23 @@ class _Button extends Component {
       size,
       icon,
       containerStyle,
+      design,
     } = this.props;
     const { _containerStyle } = styles;
     return (
       <Animatable.View
         ref={reference}
-        style={[_containerStyle, containerStyle]}
+        style={[
+          _containerStyle,
+          { elevation: design.buttonElevation },
+          containerStyle,
+        ]}
         animation={animation}>
         <TouchableOpacity
           onPress={onPress}
-          style={this._buttonStyle()}
-          disabled={disabled}>
-          <View style={{ flexDirection: 'row' }}>
+          disabled={disabled}
+          style={this._buttonStyle()}>
+          <View fD={'row'}>
             {icon ? (
               <Icon
                 name={icon}
@@ -144,7 +147,6 @@ const styles = {
     padding: 8,
     shadowColor: '#000',
     shadowOffset: { width: 2, height: 2 },
-    shadowRadius: 5,
     shadowOpacity: 0.2,
     justifyContent: 'center',
     alignItems: 'center',

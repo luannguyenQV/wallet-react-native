@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { View, FlatList, Text, Dimensions } from 'react-native';
+import { FlatList, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import { cardDismiss, cardRestoreAll } from './../redux/actions';
 
 // import { AreaChart, Grid } from 'react-native-svg-charts';
 // import * as shape from 'd3-shape';
 
-import { Card, Button, CustomImage, View as MyView } from './common';
+import { Card, Button, CustomImage, View, Text } from './common';
 import {
   themeColorsSelector,
   configCardsHomeSelector,
@@ -129,9 +129,9 @@ class HomeCards extends Component {
           item.actionLabel ? item.actionLabel : item.dismiss ? 'DISMISS' : ''
         }>
         {item.description ? (
-          <Text style={[textStyleContent, { color: colors.font }]}>
-            {item.description}
-          </Text>
+          <View p={0.5}>
+            <Text lh={22}>{item.description}</Text>
+          </View>
         ) : null}
       </Card>
     );
@@ -156,7 +156,7 @@ class HomeCards extends Component {
   }
 
   render() {
-    return <MyView>{this.renderCards()}</MyView>;
+    return <View>{this.renderCards()}</View>;
   }
 }
 
@@ -169,12 +169,6 @@ const styles = {
   imageStylePhoto: {
     width: SCREEN_WIDTH - 16,
     height: 120,
-  },
-  textStyleContent: {
-    fontSize: 16,
-    padding: 8,
-    paddingHorizontal: 16,
-    lineHeight: 22,
   },
   viewStyleFooter: {
     width: '100%',

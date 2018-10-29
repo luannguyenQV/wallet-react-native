@@ -16,7 +16,7 @@ const _Title = props => {
   } = props;
   return (
     <TouchableWithoutFeedback onPress={onPress}>
-      <View fD={'column'} p={0.25} f={1} style={viewStyleContainer}>
+      <View fD={'column'} p={0.5} f={1} style={viewStyleContainer}>
         <Text t="h5" style={textStyleTitle}>
           {title}
         </Text>
@@ -46,17 +46,6 @@ _Title.defaultProps = {
   textStyleTitle: null,
   textStyleSubtitle: null,
   viewStyleContainer: null,
-};
-
-const styles = {
-  // viewStyleContainer: {
-  //   flexDirection: 'column',
-  //   paddingHorizontal: 8,
-  //   paddingTop: 4,
-  //   flexGrow: 1,
-  //   flex: 1,
-  //   width: 0,
-  // },
 };
 
 const Title = context(_Title);

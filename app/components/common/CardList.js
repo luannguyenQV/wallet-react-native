@@ -124,7 +124,7 @@ class _CardList extends Component {
     // }
     return (
       <View color="grey2" keyboardAvoiding>
-        <View style={{ flex: 1 }} color="grey2">
+        <View f={1} color="grey2">
           <FlatList
             style={{ height: '100%' }}
             ref={component => (this[type + 'FlatList'] = component)}

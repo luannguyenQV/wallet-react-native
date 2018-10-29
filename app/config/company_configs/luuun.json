@@ -18,10 +18,12 @@
       "focusContrast": "#2d2d2d"
     },
     "design": {
-      "cardCornerRadius": 5,
+      "cardCornerRadius": 20,
       "cardShadow": 20,
+      "cardElevation": 4,
       "roundButtons": true,
-      "buttonShadow": 2
+      "buttonShadow": 20,
+      "buttonElevation": 4
     }
   },
   "cards": {

@@ -171,6 +171,11 @@ export const themeColorsSelector = createSelector(
         currentTheme,
         themeColors,
       ),
+      cardBackgroundColor: selectColor(
+        'cardBackgroundColor',
+        currentTheme,
+        themeColors,
+      ),
     };
   },
 );

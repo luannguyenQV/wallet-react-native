@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableHighlight,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import { View as _View, TouchableWithoutFeedback } from 'react-native';
 import PropTypes from 'prop-types';
 import context from './context';
 
@@ -14,23 +9,16 @@ import TouchableCircle from './../touchableCircle';
 import { MaterialIcons as Icon } from '@expo/vector-icons';
 import { MaterialActions } from './MaterialActions';
 import { Title } from './Title';
+import { View } from './View';
+import { Text } from './Text';
 
 const _Card = props => {
   const {
     viewStyleCardContainer,
     viewStyleTitleContainer,
-    viewStyleTitle,
-    textStyleTitle,
-    textStyleSubtitle,
-    viewStyleActionContainer,
-    buttonStyleAction,
-    textStyleAction,
     textStyleError,
     iconStyleTitleLeft,
     iconStyleTitleRight,
-    viewStyleFooter,
-    viewStyleContent,
-    iconStyleFooter,
   } = styles;
 
   const {
@@ -50,7 +38,7 @@ const _Card = props => {
     backgroundColor,
     onPressContent,
     colorIcon,
-    errorText,
+    // errorText,
     iconFooter,
     onPressFooter,
     textActionOne,
@@ -67,6 +55,8 @@ const _Card = props => {
   } = props;
   console.log(design);
 
+  const errorText =
+    'DUMMY ERROR TEXT = isdjhgiadshgjkhsdoiuhgdhgishghisdjkhgishdighsdiughshighgiuhdsiuhgihgisdg';
   const actionOne = {
     text: textActionOne,
     onPress: onPressActionOne,
@@ -79,32 +69,35 @@ const _Card = props => {
   };
   // const iconFooter = ;
   return (
-    // <View
+    // <_View
     //   style={[
     //     viewStyleCardContainer,
     //     {
     //       shadowRadius: design.cardShadow,
-    //       borderColor: 'transparent',
-    //       elevation: design.cardShadow,
+    //       // borderColor: 'transparent',
+    //       backgroundColor: 'transparent',
     //     },
     //   ]}>
-    <View
+    <_View
       style={[
         viewStyleCardContainer,
         {
           borderRadius: design.cardCornerRadius,
           overflow: 'hidden',
           backgroundColor: 'transparent',
+          shadowRadius: design.cardShadow,
+          // borderColor: 'transparent',
+          elevation: design.cardElevation,
         },
       ]}>
       {/* <Swipeable rightContent={swipeableContent}> */}
-      {renderHeader ? <View>{renderHeader}</View> : null}
+      {renderHeader ? <_View>{renderHeader}</_View> : null}
       {title || subtitle || iconTitleLeft || iconTitleRight ? (
-        <View
+        <_View
           resizeMode="cover"
           style={[viewStyleTitleContainer, { backgroundColor: 'white' }]}>
           {textTitleLeft ? (
-            <View style={iconStyleTitleLeft}>
+            <_View style={iconStyleTitleLeft}>
               <TouchableCircle
                 colors={colors}
                 text={textTitleLeft}
@@ -112,7 +105,7 @@ const _Card = props => {
                 onPress={onPressTitleLeft}
                 radius={24}
               />
-            </View>
+            </_View>
           ) : null}
           {iconTitleLeft ? (
             <HeaderButton
@@ -123,34 +116,30 @@ const _Card = props => {
           ) : null}
           <Title onPress={onPressTitle} title={title} subtitle={subtitle} />
           {iconTitleRight ? (
-            <View style={iconStyleTitleRight}>
+            <_View style={iconStyleTitleRight}>
               <HeaderButton
                 icon={iconTitleRight}
                 onPress={onPressTitleRight}
                 color={colorTitle ? colorTitle : colors.font}
               />
-            </View>
+            </_View>
           ) : null}
-        </View>
+        </_View>
       ) : null}
       <TouchableWithoutFeedback onPress={onPressContent}>
-        <View style={[viewStyleContent, { backgroundColor }]}>
+        <View bC={'cardBackgroundColor'}>
           {canEdit ? (
-            <View
+            <_View
               style={{ position: 'absolute', right: 8, top: 8, padding: 8 }}>
               <Icon
                 name={'edit'}
                 size={22}
                 color={colorIcon ? colorIcon : colors.grey2}
               />
-            </View>
+            </_View>
           ) : null}
           {props.children}
-          {errorText ? (
-            <Text style={[textStyleError, { color: colors.error }]}>
-              {errorText}
-            </Text>
-          ) : null}
+          {/* {errorText ? <Text c={'error'}>{errorText}</Text> : null} TODO: not used anywhere yet, not showing */}
         </View>
       </TouchableWithoutFeedback>
       {textActionOne || textActionTwo || iconFooter ? (
@@ -165,11 +154,11 @@ const _Card = props => {
         />
       ) : null}
       {/* </Swipeable> */}
-    </View>
-    // </View>
+    </_View>
+    // </_View>
   );
   {
-    /* <View style={styles.containerStyle}>{props.children}</View>; */
+    /* <_View style={styles.containerStyle}>{props.children}</_View>; */
   }
 };
 
@@ -216,30 +205,8 @@ const styles = {
     flex: 1,
     flexDirection: 'row',
     // height: 72,
-    padding: 8,
+    // padding: 8,
     alignItems: 'center',
-  },
-  viewStyleTitle: {
-    flexDirection: 'column',
-    paddingHorizontal: 8,
-    paddingTop: 4,
-    flexGrow: 1,
-    flex: 1,
-    width: 0,
-  },
-  textStyleTitle: {
-    flexShrink: 1,
-    flexWrap: 'wrap',
-    fontWeight: 'bold',
-    fontSize: 22,
-  },
-  textStyleSubtitle: {
-    opacity: 0.8,
-    fontSize: 12,
-  },
-  viewStyleContent: {
-    // paddingTop: 8,
-    // paddingHorizontal: 8,
   },
   iconStyleTitleLeft: {
     paddingHorizontal: 8,
@@ -251,41 +218,10 @@ const styles = {
     width: 64,
     position: 'absolute',
   },
-  iconStyleFooter: {
-    position: 'absolute',
-    left: 8,
-    bottom: 8,
-    padding: 8,
-  },
   textStyleError: {
     paddingTop: 8,
     paddingHorizontal: 16,
     fontSize: 14,
-  },
-  viewStyleFooter: {
-    flexDirection: 'row',
-    height: 52,
-    width: '100%',
-    alignItems: 'center',
-  },
-  viewStyleActionContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    width: '100%',
-    height: 52,
-    padding: 8,
-  },
-  textStyleAction: {
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  buttonStyleAction: {
-    padding: 8,
-    marginLeft: 8,
-    // marginHorizontal: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 3,
   },
 };
 

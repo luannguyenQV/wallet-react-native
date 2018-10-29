@@ -12,7 +12,8 @@
       "authScreenContrast": "primary",
       "sendScreen": "white",
       "sendScreenContrast": "primary",
-      "surface": "grey1"
+      "surface": "grey1",
+      "cardBackgroundColor": "white"
     },
     "dark": {
       "header": "primary",
@@ -25,7 +26,8 @@
       "authScreenContrast": "white",
       "sendScreen": "primary",
       "sendScreenContrast": "white",
-      "surface": "grey1"
+      "surface": "grey1",
+      "cardBackgroundColor": "white"
     }
   },
   "colors": {
@@ -52,9 +54,11 @@
   },
   "design": {
     "cardCornerRadius": 2,
-    "cardShadow": 5,
+    "cardShadow": 10,
+    "cardElevation": 3,
     "roundButtons": false,
-    "buttonShadow": 2
+    "buttonShadow": 10,
+    "buttonElevation": 3
   },
   "layout": {
     "home": {

@@ -85,7 +85,7 @@ class _Text extends Component {
   }
 
   textStyle() {
-    const { s, m, p, o, c, t, tA, colors, rem, style } = this.props;
+    const { s, m, p, o, c, t, tA, lH, colors, rem, style } = this.props;
 
     return [
       this.typography(t),
@@ -97,6 +97,7 @@ class _Text extends Component {
         textAlign: tA,
       },
       s ? { fontSize: s } : {},
+      lH ? { lineHeight: lH } : {},
       style,
     ];
   }
@@ -121,6 +122,7 @@ _Text.propTypes = {
   colors: PropTypes.object, // colors object from context
   rem: PropTypes.number, // rem value,
   tA: PropTypes.string, // textAlign
+  lH: PropTypes.number, // lineHeight
   style: PropTypes.object, // TODO: TextPropTypes.style, // override text style
 };
 
@@ -135,6 +137,7 @@ _Text.defaultProps = {
   colors: {}, // from context
   rem: 16, // rem value TODO: explain
   tA: 'auto',
+  lH: null,
   style: null,
 };
 
