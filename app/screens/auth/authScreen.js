@@ -29,7 +29,10 @@ import {
   resendVerification,
 } from '../../redux/actions';
 
-import { themeColorsSelector } from './../../redux/reducers/ConfigReducer';
+import {
+  themeColorsSelector,
+  configSlidesAuthSelector,
+} from './../../redux/reducers/ConfigReducer';
 
 import {
   Button,
@@ -167,9 +170,8 @@ class AuthScreen extends Component {
       authError,
       email,
       user,
+      slides,
     } = this.props;
-
-    const slides = company_config ? company_config.sliders.landing : null;
 
     switch (mainState) {
       case 'landing':
@@ -673,6 +675,7 @@ const mapStateToProps = state => {
     user,
     terms,
     termsChecked,
+    slides: configSlidesAuthSelector(state),
     colors: themeColorsSelector(state),
   };
 };

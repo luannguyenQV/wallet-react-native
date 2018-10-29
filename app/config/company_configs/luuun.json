@@ -45,18 +45,18 @@
     }
   },
   "sliders": {
-    "landing": [
+    "auth": [
       {
         "id": "0",
         "title": "Rehive: Luuun",
-        "description": "A stellar wallet built on the Rehive platform",
+        "description": "A Stellar wallet built on the Rehive platform",
         "image": "slider1"
       },
       {
         "id": "1",
         "title": "Rehive: Luuun",
-        "description": "A stellar wallet built on the Rehive platform",
-        "image": "slider2"
+        "description": "A Stellar wallet built on the Rehive platform",
+        "image": "slider1"
       }
     ]
   },

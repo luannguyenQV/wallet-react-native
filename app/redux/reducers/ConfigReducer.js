@@ -324,3 +324,8 @@ export const configVerificationSelector = createSelector(
     };
   },
 );
+
+export const configSlidesAuthSelector = createSelector(
+  configSlidersStateSelector,
+  configSlidersState => safe(configSlidersState, 'auth', default_sliders.auth),
+);
