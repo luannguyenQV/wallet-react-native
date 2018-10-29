@@ -68,10 +68,12 @@ import {
   getToken,
   getCompany,
   authStateSelector,
-  companyConfigSelector,
   getAuthUser,
 } from './selectors';
-import { configAuthSelector } from '../reducers/ConfigReducer';
+import {
+  configAuthSelector,
+  configServicesSelector,
+} from '../reducers/ConfigReducer';
 
 /* 
 Init function called when app starts up to see what state the app should be in
@@ -522,7 +524,7 @@ function* postAuthFlow() {
                 yield put({ type: POST_NOT_LOADING });
                 yield take(NEXT_AUTH_FORM_STATE);
                 yield put({ type: POST_LOADING });
-                const { first_name } = yield select(authStateSelector);
+                const { first_name } = yield select(configAuthSelector);
                 if (first_name) {
                   user = yield call(Rehive.updateProfile, { first_name });
                   yield put({ type: AUTH_STORE_USER, payload: user });
@@ -536,7 +538,7 @@ function* postAuthFlow() {
                 yield put({ type: POST_NOT_LOADING });
                 yield take(NEXT_AUTH_FORM_STATE);
                 yield put({ type: POST_LOADING });
-                const { last_name } = yield select(authStateSelector);
+                const { last_name } = yield select(configAuthSelector);
                 if (last_name) {
                   user = yield call(Rehive.updateProfile, { last_name });
                   yield put({ type: AUTH_STORE_USER, payload: user });
@@ -550,7 +552,7 @@ function* postAuthFlow() {
                 yield put({ type: POST_NOT_LOADING });
                 yield take(NEXT_AUTH_FORM_STATE);
                 yield put({ type: POST_LOADING });
-                const { username } = yield select(authStateSelector);
+                const { username } = yield select(configAuthSelector);
                 if (username) {
                   try {
                     let resp = yield call(Rehive.updateProfile, { username });
@@ -582,7 +584,7 @@ function* postAuthFlow() {
                 yield put({ type: POST_NOT_LOADING });
                 yield take(NEXT_AUTH_FORM_STATE);
                 yield put({ type: POST_LOADING });
-                const { country } = yield select(authStateSelector);
+                const { country } = yield select(configAuthSelector);
                 if (country) {
                   yield call(Rehive.updateProfile, { country });
                 }
@@ -664,8 +666,7 @@ function* appLoad(login = true) {
   console.log('appLoad');
   try {
     yield put({ type: APP_LOAD.pending });
-    let count = 1;
-    const { services } = yield select(companyConfigSelector);
+    const services = yield select(configServicesSelector);
 
     yield put({ type: FETCH_ACCOUNTS_ASYNC.pending });
     if (login) {

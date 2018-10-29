@@ -1,85 +1,22 @@
 {
-  "company": {
-    "id": "luuun",
-    "name": "Luuun",
-    "description": "A stellar wallet built on the Rehive platform"
-  },
   "services": {
-    "bitcoin": false,
-    "stellar": true,
-    "ethereum": false,
-    "rewards": false
+    "stellar": true
   },
   "auth": {
-    "identifier": "email",
-    "email": "",
-    "mobile": "",
-    "terms": [
-      {
-        "id": 0,
-        "title": "Privacy Policy",
-        "link": "",
-        "description": "Click here to read more on the privacy policy"
-      },
-      {
-        "id": 1,
-        "title": "User Agreement",
-        "link": "",
-        "description": "Click here to read more on the user agreement"
-      }
-    ],
-    "first_name": false,
-    "last_name": false,
-    "username": true,
-    "country": false,
-    "pin": "",
-    "mfa": ""
+    "username": true
   },
-  "pin": {
-    "appLoad": true,
-    "security": false,
-    "send": true,
-    "withdraw": true,
-    "updateDetails": false
-  },
-  "home": {
-    "header": "wallet",
-    "detail": [
-      {
-        "order": 0,
-        "type": "cards"
-      },
-      {
-        "order": 1,
-        "type": "transactions"
-      }
-    ]
-  },
-  "verification": {
-    "requirePersonal": true,
-    "requireAddress": true,
-    "requireMobile": true,
-    "requireEmail": true,
-    "requireDocumentID": true,
-    "requireDocumentAddress": true,
-    "requireDocumentAdvID": true
-  },
-  "colors": {
-    "primary": "#15335E",
-    "secondary": "#5E9AF0",
-    "tertiary": "#31578F",
-    "focus": "#28FFB0",
+  "theme": {
+    "colors": {
+      "primary": "#15335E",
+      "secondary": "#5E9AF0",
+      "tertiary": "#31578F",
+      "focus": "#28FFB0",
 
-    "primaryContrast": "#f0f0f0",
-    "secondaryContrast": "#2d2d2d",
-    "tertiaryContrast": "#000000",
-    "focusContrast": "#2d2d2d",
-
-    "warning": "#FC8755",
-    "error": "#f44336",
-    "success": "#4CAF50",
-    "positive": "#4CAF50",
-    "negative": "#f44336"
+      "primaryContrast": "#f0f0f0",
+      "secondaryContrast": "#2d2d2d",
+      "tertiaryContrast": "#000000",
+      "focusContrast": "#2d2d2d"
+    }
   },
   "cards": {
     "home": {
@@ -90,7 +27,7 @@
       "custom": [
         {
           "id": "0",
-          "title": "Welcome to Rehive:Luuun",
+          "title": "Welcome to Rehive: Luuun",
           "description":
             "The new home of Luuun; a stellar wallet built on the Rehive platform",
           "dismiss": true,
@@ -111,13 +48,13 @@
     "landing": [
       {
         "id": "0",
-        "title": "Rehive:Luuun",
+        "title": "Rehive: Luuun",
         "description": "A stellar wallet built on the Rehive platform",
         "image": "slider1"
       },
       {
         "id": "1",
-        "title": "Rehive:Luuun",
+        "title": "Rehive: Luuun",
         "description": "A stellar wallet built on the Rehive platform",
         "image": "slider2"
       }

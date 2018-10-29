@@ -69,6 +69,11 @@ export const configCardsStateSelector = createSelector(
   configState => safe(configState, 'cards', default_cards),
 );
 
+export const configCardsHomeStateSelector = createSelector(
+  configCardsStateSelector,
+  configCardsState => safe(configCardsState, 'home', default_cards.home),
+);
+
 export const configPinStateSelector = createSelector(
   configStateSelector,
   configState => safe(configState, 'pin', default_pin),
@@ -104,9 +109,9 @@ export const configThemeColorsStateSelector = createSelector(
   configThemeState => safe(configThemeState, 'colors', default_theme.colors),
 );
 
-export const configThemeStyleStateSelector = createSelector(
+export const configThemeDesignStateSelector = createSelector(
   configThemeStateSelector,
-  configThemeState => safe(configThemeState, 'style', default_theme.style),
+  configThemeState => safe(configThemeState, 'design', default_theme.design),
 );
 
 export const configVerificationStateSelector = createSelector(
@@ -189,18 +194,22 @@ const selectColor = (component, theme, colors) => {
   return color;
 };
 
-export const themeStyleSelector = createSelector(
-  [configThemeStyleStateSelector],
-  themeStyle => {
-    const style = {
+export const themeDesignSelector = createSelector(
+  [configThemeDesignStateSelector],
+  themeDesign => {
+    const design = {
       cardCornerRadius: safe(
-        themeStyle,
+        themeDesign,
         'cardCornerRadius',
         defaultTheme.cardCornerRadius,
       ),
-      roundButtons: safe(themeStyle, 'roundButtons', defaultTheme.roundButtons),
+      roundButtons: safe(
+        themeDesign,
+        'roundButtons',
+        defaultTheme.roundButtons,
+      ),
     };
-    return style;
+    return design;
   },
 );
 
@@ -220,5 +229,79 @@ export const configAuthSelector = createSelector(
       mfa: safe(configAuthState, 'mfa', default_auth.mfa),
     };
     return auth;
+  },
+);
+
+// export const configCardsSelector = createSelector(
+//   [configCardsStateSelector],
+//   configCardsState => {
+//     const cards = {
+//       home: {
+//         general: {
+//           welcome: safe(
+//             configCardsState,
+//             'identifier',
+//             default_auth.identifier,
+//           ),
+//           verify: true,
+//         },
+//         custom: [
+//           {
+//             id: 0,
+//             title: 'Card 1',
+//             description: 'This is your custom text for card 1',
+//             image: 'card1',
+//             dismiss: true,
+//           },
+//           {
+//             id: 1,
+//             title: 'Card 2',
+//             description: 'This is your custom text for card 2',
+//             image: 'card2',
+//             dismiss: false,
+//           },
+//         ],
+//       },
+//     };
+//     return cards;
+//   },
+// );
+
+export const configCardsHomeSelector = createSelector(
+  [configCardsHomeStateSelector],
+  configCardsHomeState => {
+    const homeCards = {
+      general: {
+        welcome: safe(
+          safe(configCardsHomeState, 'general', default_cards.home.general),
+          'welcome',
+          default_cards.home.general.welcome,
+        ),
+        verify: safe(
+          safe(configCardsHomeState, 'general', default_cards.home.general),
+          'verify',
+          default_cards.home.general.verify,
+        ),
+      },
+      custom: safe(configCardsHomeState, 'custom', default_cards.home.custom),
+    };
+    return homeCards;
+  },
+);
+
+export const configServicesSelector = createSelector(
+  [configServicesStateSelector],
+  configServicesState => {
+    const services = {
+      bitcoin: safe(configServicesState, 'bitcoin', default_services.bitcoin),
+      stellar: safe(configServicesState, 'stellar', default_services.stellar),
+      ethereum: safe(
+        configServicesState,
+        'ethereum',
+        default_services.ethereum,
+      ),
+      rewards: safe(configServicesState, 'rewards', default_services.rewards),
+    };
+    return services;
   },
 );

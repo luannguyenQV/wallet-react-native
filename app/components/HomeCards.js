@@ -7,8 +7,10 @@ import { cardDismiss, cardRestoreAll } from './../redux/actions';
 // import * as shape from 'd3-shape';
 
 import { Card, Button, CustomImage, View as MyView } from './common';
-import { themeColorsSelector } from '../redux/reducers/ConfigReducer';
-import { companyConfigSelector } from '../redux/sagas/selectors';
+import {
+  themeColorsSelector,
+  configCardsHomeSelector,
+} from '../redux/reducers/ConfigReducer';
 import { userProfileSelector } from '../redux/reducers/UserReducer';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -46,12 +48,11 @@ class HomeCards extends Component {
   // }
 
   renderCards() {
-    const { profile, company_config, dismissedCards, colors } = this.props;
-    const cardConfig = company_config.cards ? company_config.cards.home : null;
+    const { profile, cardConfig, dismissedCards, colors } = this.props;
     // add welcome card
     let cards = [];
     let i = 0;
-    const company = company_config.company ? company_config.company : null;
+    const company = 'DUMMY'; //company_config.company ? company_config.company : null; TODO:
     // console.log(company);
     if (cardConfig) {
       if (
@@ -186,7 +187,7 @@ const styles = {
 const mapStateToProps = state => {
   const { dismissedCards } = state.user;
   return {
-    company_config: companyConfigSelector(state),
+    cardConfig: configCardsHomeSelector(state),
     profile: userProfileSelector(state),
     dismissedCards,
     colors: themeColorsSelector(state),
