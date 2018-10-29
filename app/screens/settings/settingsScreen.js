@@ -18,8 +18,8 @@ import {
   Text,
   PopUpGeneral,
 } from './../../components/common';
-import { themeStateSelector } from '../../redux/sagas/selectors';
 import { settingsSelector } from '../../redux/reducers/AuthReducer';
+import { configCurrentThemeStateSelector } from '../../redux/reducers/ConfigReducer';
 
 class SettingsScreen extends Component {
   static navigationOptions = {
@@ -112,8 +112,8 @@ class SettingsScreen extends Component {
 
   renderAppearance() {
     let themes = [
-      { label: 'Theme: Default', value: 'default' },
-      { label: 'Theme: Light', value: 'light' },
+      { label: 'Theme: Light (default)', value: 'light' },
+      { label: 'Theme: Dark', value: 'dark' },
     ];
     return (
       <Picker
@@ -220,7 +220,7 @@ const styles = {
 
 const mapStateToProps = state => {
   return {
-    theme: themeStateSelector(state),
+    theme: configCurrentThemeStateSelector(state),
     settings: settingsSelector(state),
   };
 };

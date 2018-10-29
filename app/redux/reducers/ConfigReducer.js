@@ -125,16 +125,18 @@ export const configVerificationStateSelector = createSelector(
 );
 
 export const configCurrentThemeStateSelector = createSelector(
-  configStateSelector,
-  configState => safe(configState, 'verification', default_verification),
+  [configStateSelector, configThemeDefaultStateSelector],
+  (configState, configThemeDefaultState) =>
+    safe(configState, 'currentTheme', configThemeDefaultState),
 );
 
 /* Other selectors */
 
 export const themeCurrentThemeSelector = createSelector(
   [configCurrentThemeStateSelector, configThemeThemesStateSelector],
-  (configCurrentThemeState, themeThemes) =>
-    safe(themeThemes, configCurrentThemeState, defaultTheme),
+  (configCurrentThemeState, themeThemes) => {
+    return safe(themeThemes, configCurrentThemeState, defaultTheme);
+  },
 );
 
 export const defaultTheme = safe(
@@ -144,9 +146,10 @@ export const defaultTheme = safe(
 );
 
 export const themeColorsSelector = createSelector(
-  [configCurrentThemeStateSelector, configThemeColorsStateSelector],
+  [themeCurrentThemeSelector, configThemeColorsStateSelector],
   (currentTheme, themeColors) => {
-    const colors = {
+    // console.log(currentTheme, themeColors);
+    return {
       ...themeColors,
       header: selectColor('header', currentTheme, themeColors),
       headerContrast: selectColor('headerContrast', currentTheme, themeColors),
@@ -169,7 +172,6 @@ export const themeColorsSelector = createSelector(
         themeColors,
       ),
     };
-    return colors;
   },
 );
 
