@@ -2,11 +2,12 @@
 /* Component | Stateless | Styled */
 /* This is the main button component. Takes props to adjust it's size, type, color etc */
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import context from './context';
+import { Text } from './Text';
 
 class _Button extends Component {
   _buttonStyle() {
@@ -38,10 +39,10 @@ class _Button extends Component {
     }
 
     return [
-      styles._textStyle,
       {
         color: textColor,
         fontSize: size === 'large' ? 18 : size === 'small' ? 12 : 14,
+        textTransform: type === 'text' ? 'none' : 'uppercase',
       },
       textStyle,
     ];
@@ -76,7 +77,9 @@ class _Button extends Component {
                 color={textColor}
               />
             ) : null}
-            <Text style={this.textStyle()}>{label}</Text>
+            <Text t="bu" style={this.textStyle()}>
+              {label}
+            </Text>
           </View>
         </TouchableOpacity>
       </Animatable.View>
@@ -138,7 +141,7 @@ const styles = {
   },
   _textStyle: {
     textAlign: 'center',
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
   },
 };
 

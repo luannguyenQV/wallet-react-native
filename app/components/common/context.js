@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import hoistNonReactStatics from 'hoist-non-react-statics';
 
 import { ThemeContext } from './../../util/config';
@@ -10,12 +9,13 @@ const context = ComposedComponent => {
     render() {
       return (
         <ThemeContext.Consumer>
-          {theme => (
+          {context => (
             <ComposedComponent
               {...this.props}
-              colors={theme.colors}
-              design={theme.design}
-              profile={theme.profile}
+              colors={context.colors}
+              design={context.design}
+              profile={context.profile}
+              rem={context.rem}
             />
           )}
         </ThemeContext.Consumer>

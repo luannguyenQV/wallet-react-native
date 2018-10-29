@@ -446,7 +446,6 @@ class AuthScreen extends Component {
                       : false,
               )
             : public_companies;
-          console.log(publicData);
           if (publicData.length > 0) {
             sections.push({
               title: 'Public',

@@ -201,7 +201,7 @@ class SettingsScreen extends Component {
           </SettingsContainer>
         </InputContainer>
         {this.renderModal()}
-        <Text>
+        <Text tA={'center'} m={0.25}>
           {'Version: ' +
             App.expo.version +
             (App.expo.slug === 'rehive-wallet-staging' ? ' (staging)' : '')}
