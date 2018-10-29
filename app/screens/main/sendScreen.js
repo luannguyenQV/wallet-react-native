@@ -38,6 +38,7 @@ import {
 import Header from './../../components/header';
 import LocalAuthentication from '../../components/LocalAuthentication';
 import { CurrencySelector } from '../../components/CurrencySelector';
+import { configPinSelector } from '../../redux/reducers/ConfigReducer';
 
 class SendScreen extends Component {
   static navigationOptions = () => ({
@@ -130,7 +131,7 @@ class SendScreen extends Component {
   }
 
   renderTop() {
-    const { transaction, company_config, setTransactionState } = this.props;
+    const { transaction, configPin, setTransactionState } = this.props;
 
     const {
       viewStyleTopContainer,
@@ -184,9 +185,7 @@ class SendScreen extends Component {
             <Button
               label="CONFIRM"
               onPress={() =>
-                company_config.pin.send
-                  ? this.props.showPin()
-                  : this.performSend()
+                configPin.send ? this.props.showPin() : this.performSend()
               }
             />
             <Button
@@ -515,14 +514,14 @@ const styles = {
 };
 
 const mapStateToProps = state => {
-  const { pin, fingerprint, pinVisible, company_config } = state.auth;
+  const { pin, fingerprint, pinVisible } = state.auth;
   return {
     currencies: currenciesSelector(state),
     transaction: transactionSelector(state),
     pin,
     pinVisible,
     fingerprint,
-    company_config,
+    configPin: configPinSelector(state),
     contacts: contactsSelector(state),
   };
 };

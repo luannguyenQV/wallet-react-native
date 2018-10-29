@@ -329,3 +329,20 @@ export const configSlidesAuthSelector = createSelector(
   configSlidersStateSelector,
   configSlidersState => safe(configSlidersState, 'auth', default_sliders.auth),
 );
+
+export const configPinSelector = createSelector(
+  [configPinStateSelector],
+  configPinState => {
+    return {
+      appLoad: safe(configPinState, 'appLoad', default_pin.appLoad),
+      security: safe(configPinState, 'security', default_pin.security),
+      send: safe(configPinState, 'send', default_pin.send),
+      withdraw: safe(configPinState, 'withdraw', default_pin.withdraw),
+      updateDetails: safe(
+        configPinState,
+        'updateDetails',
+        default_pin.updateDetails,
+      ),
+    };
+  },
+);

@@ -1,17 +1,10 @@
 import React, { Component } from 'react';
-import {
-  View,
-  KeyboardAvoidingView,
-  TouchableOpacity,
-  Text,
-  Platform,
-} from 'react-native';
+import { View, Text, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import {
   setPin,
   resetPin,
   activateFingerprint,
-  newItem,
 } from './../../../redux/actions';
 
 import Header from './../../../components/header';
@@ -65,8 +58,7 @@ class PinScreen extends Component {
   };
 
   renderMainContainer() {
-    const { pin, fingerprint } = this.props;
-    const { hasFingerprintScanner, hasSavedFingerprints, showPin } = this.state;
+    const { showPin } = this.state;
     if (showPin) {
       return (
         <View>
@@ -110,7 +102,9 @@ class PinScreen extends Component {
         modalType: 'setFingerprint',
       });
     }
-    let result = await Expo.LocalAuthentication.authenticateAsync('Biometric scan');
+    let result = await Expo.LocalAuthentication.authenticateAsync(
+      'Biometric scan',
+    );
 
     if (result.success) {
       this.props.activateFingerprint();
@@ -124,7 +118,9 @@ class PinScreen extends Component {
   };
 
   iosScan = async () => {
-    let result = await Expo.LocalAuthentication.authenticateAsync('Biometric scan');
+    let result = await Expo.LocalAuthentication.authenticateAsync(
+      'Biometric scan',
+    );
 
     if (!result.success) {
       this.props.navigation.goBack();

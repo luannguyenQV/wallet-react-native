@@ -25,6 +25,7 @@ import { Input, FullScreenForm, Output } from './../../components/common';
 import Colors from './../../config/colors';
 import Header from './../../components/header';
 import LocalAuthentication from '../../components/LocalAuthentication';
+import { configPinSelector } from '../../redux/reducers/ConfigReducer';
 
 class WithdrawScreen extends Component {
   static navigationOptions = () => ({
@@ -72,9 +73,7 @@ class WithdrawScreen extends Component {
       withdrawAmount,
       validateWithdrawAccount,
       withdrawNote,
-      withdrawError,
-      setWithdrawState,
-      company_config,
+      configPin,
     } = this.props;
 
     const { viewStyleBottomContainer } = styles;
@@ -96,7 +95,7 @@ class WithdrawScreen extends Component {
       case 'confirm':
         textFooterRight = 'Confirm';
         onPressFooterRight = () => {
-          if (company_config.pin.withdraw) {
+          if (configPin.withdraw) {
             this.setState({ pinVisible: true });
           } else {
             this.performWithdraw();
@@ -117,8 +116,7 @@ class WithdrawScreen extends Component {
       <FullScreenForm
         textFooterRight={textFooterRight}
         onPressFooterRight={onPressFooterRight}
-        loading={withdrawing}
-        colors={company_config.colors}>
+        loading={withdrawing}>
         {this.renderTop()}
         <View style={viewStyleBottomContainer}>{this.renderBottom()}</View>
       </FullScreenForm>
@@ -206,9 +204,7 @@ class WithdrawScreen extends Component {
       bank_account,
       loading_bank_account,
       setWithdrawState,
-      company_config,
     } = this.props;
-    const { colors } = company_config;
 
     switch (withdrawState) {
       case 'amount':
@@ -232,7 +228,6 @@ class WithdrawScreen extends Component {
             onSubmitEditing={() =>
               validateWithdrawAmount(withdrawWallet, withdrawAmount)
             }
-            colors={colors}
           />
         );
       case 'account':
@@ -261,7 +256,6 @@ class WithdrawScreen extends Component {
               setWithdrawBankAccount(item);
               setWithdrawState('note');
             }}
-            colors={colors}
           />
         );
       case 'note':
@@ -281,7 +275,6 @@ class WithdrawScreen extends Component {
             returnKeyType="next"
             autoFocus
             onSubmitEditing={() => validateWithdrawNote(withdrawNote)}
-            colors={colors}
           />
         );
       default:
@@ -360,7 +353,7 @@ const styles = {
 };
 
 const mapStateToProps = ({ accounts, user, auth }) => {
-  const { pin, fingerprint, company_config } = auth;
+  const { pin, fingerprint } = auth;
   const {
     wallets,
     withdrawAmount,
@@ -391,7 +384,7 @@ const mapStateToProps = ({ accounts, user, auth }) => {
     loading_bank_account,
     pin,
     fingerprint,
-    company_config,
+    configPin: configPinSelector(state),
   };
 };
 
