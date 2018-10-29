@@ -2,7 +2,7 @@
 /* Component | Stateless | Styled */
 /* This is the main text component. Takes props to adjust it's size, type, padding, color etc */
 import React, { Component } from 'react';
-import { Text as _text } from 'react-native';
+import { Text as _text, TextPropTypes } from 'react-native';
 import context from './context';
 import PropTypes from 'prop-types';
 
@@ -83,6 +83,7 @@ class _Text extends Component {
       // textTransform,
     };
   }
+
   textStyle() {
     const { s, m, p, o, c, t, tA, colors, rem, style } = this.props;
 
@@ -102,11 +103,7 @@ class _Text extends Component {
 
   render() {
     const { children } = this.props;
-    return (
-      <_text {...this.props} style={this.textStyle()}>
-        {children}
-      </_text>
-    );
+    return <_text style={this.textStyle()}>{children}</_text>;
   }
 }
 
@@ -124,6 +121,7 @@ _Text.propTypes = {
   colors: PropTypes.object, // colors object from context
   rem: PropTypes.number, // rem value,
   tA: PropTypes.string, // textAlign
+  style: PropTypes.object, // TODO: TextPropTypes.style, // override text style
 };
 
 _Text.defaultProps = {
@@ -137,6 +135,7 @@ _Text.defaultProps = {
   colors: {}, // from context
   rem: 16, // rem value TODO: explain
   tA: 'auto',
+  style: null,
 };
 
 const Text = context(_Text);

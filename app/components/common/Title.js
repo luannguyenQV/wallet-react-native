@@ -1,16 +1,22 @@
 import React from 'react';
-import { View, TouchableWithoutFeedback } from 'react-native';
+import { TouchableWithoutFeedback } from 'react-native';
 import PropTypes from 'prop-types';
 import context from './context';
 import { Text } from './Text';
+import { View } from './View';
 
 const _Title = props => {
-  const { viewStyleContainer, textStyleTitle, textStyleSubtitle } = styles;
-
-  const { onPress, title, subtitle, colorTitleText, colors, design } = props;
+  const {
+    onPress,
+    title,
+    subtitle,
+    viewStyleContainer,
+    textStyleTitle,
+    textStyleSubtitle,
+  } = props;
   return (
     <TouchableWithoutFeedback onPress={onPress}>
-      <View style={viewStyleContainer}>
+      <View fD={'column'} p={0.25} f={1} style={viewStyleContainer}>
         <Text t="h5" style={textStyleTitle}>
           {title}
         </Text>
@@ -30,6 +36,7 @@ _Title.propTypes = {
   onPress: PropTypes.func,
   textStyleTitle: PropTypes.object,
   textStyleSubtitle: PropTypes.object,
+  viewStyleContainer: PropTypes.object,
 };
 
 _Title.defaultProps = {
@@ -38,27 +45,18 @@ _Title.defaultProps = {
   onPress: () => {},
   textStyleTitle: null,
   textStyleSubtitle: null,
+  viewStyleContainer: null,
 };
 
 const styles = {
-  viewStyleContainer: {
-    flexDirection: 'column',
-    paddingHorizontal: 8,
-    paddingTop: 4,
-    flexGrow: 1,
-    flex: 1,
-    width: 0,
-  },
-  textStyleTitle: {
-    flexShrink: 1,
-    flexWrap: 'wrap',
-    fontWeight: 'bold',
-    fontSize: 22,
-  },
-  textStyleSubtitle: {
-    opacity: 0.8,
-    fontSize: 12,
-  },
+  // viewStyleContainer: {
+  //   flexDirection: 'column',
+  //   paddingHorizontal: 8,
+  //   paddingTop: 4,
+  //   flexGrow: 1,
+  //   flex: 1,
+  //   width: 0,
+  // },
 };
 
 const Title = context(_Title);
