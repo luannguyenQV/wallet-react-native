@@ -12,6 +12,8 @@ import { Spinner } from './Spinner';
 import { HeaderButton } from './HeaderButton';
 import TouchableCircle from './../touchableCircle';
 import { MaterialIcons as Icon } from '@expo/vector-icons';
+import { MaterialActions } from './MaterialActions';
+import { Title } from './Title';
 
 const _Card = props => {
   const {
@@ -64,6 +66,18 @@ const _Card = props => {
     design,
   } = props;
   console.log(design);
+
+  const actionOne = {
+    text: textActionOne,
+    onPress: onPressActionOne,
+    disabled: disableActionOne,
+  };
+  const actionTwo = {
+    text: textActionTwo,
+    onPress: onPressActionTwo,
+    disabled: disableActionTwo,
+  };
+  // const iconFooter = ;
   return (
     // <View
     //   style={[
@@ -107,28 +121,7 @@ const _Card = props => {
               color={colorTitle ? colorTitle : colors.primaryContrast}
             />
           ) : null}
-          <TouchableWithoutFeedback onPress={onPressTitle}>
-            <View style={viewStyleTitle}>
-              <Text
-                style={[
-                  textStyleTitle,
-                  {
-                    color: colorTitleText ? colorTitleText : colors.font,
-                  },
-                ]}>
-                {title}
-              </Text>
-              {subtitle ? (
-                <Text
-                  style={[
-                    textStyleSubtitle,
-                    { color: colorTitleText ? colorTitleText : colors.font },
-                  ]}>
-                  {subtitle}
-                </Text>
-              ) : null}
-            </View>
-          </TouchableWithoutFeedback>
+          <Title onPress={onPressTitle} title={title} subtitle={subtitle} />
           {iconTitleRight ? (
             <View style={iconStyleTitleRight}>
               <HeaderButton
@@ -161,45 +154,15 @@ const _Card = props => {
         </View>
       </TouchableWithoutFeedback>
       {textActionOne || textActionTwo || iconFooter ? (
-        <View style={[viewStyleFooter, { backgroundColor }]}>
-          {loading ? (
-            <Spinner size="small" />
-          ) : (
-            <View style={viewStyleActionContainer}>
-              {iconFooter ? (
-                <Icon
-                  style={iconStyleFooter}
-                  name={iconFooter}
-                  size={22}
-                  onPress={onPressFooter}
-                  color={colorIcon ? colorIcon : colors.grey2}
-                />
-              ) : null}
-              {textActionTwo ? (
-                <TouchableHighlight
-                  disabled={disableActionTwo}
-                  underlayColor="lightgrey"
-                  style={buttonStyleAction}
-                  onPress={onPressActionTwo}>
-                  <Text style={[textStyleAction, { color: colors.font }]}>
-                    {textActionTwo}
-                  </Text>
-                </TouchableHighlight>
-              ) : null}
-              {textActionOne ? (
-                <TouchableHighlight
-                  disabled={disableActionOne}
-                  underlayColor="lightgrey"
-                  style={buttonStyleAction}
-                  onPress={onPressActionOne}>
-                  <Text style={[textStyleAction, { color: colors.font }]}>
-                    {textActionOne}
-                  </Text>
-                </TouchableHighlight>
-              ) : null}
-            </View>
-          )}
-        </View>
+        <MaterialActions
+          actionOne={actionOne}
+          actionTwo={actionTwo}
+          loading={loading}
+          iconFooter={{
+            name: iconFooter,
+            onPress: onPressFooter,
+          }}
+        />
       ) : null}
       {/* </Swipeable> */}
     </View>
@@ -325,13 +288,6 @@ const styles = {
     borderRadius: 3,
   },
 };
-
-// const mapStateToProps = ({ user }) => {
-//   const { company_config } = user;
-//   return { company_config };
-// };
-
-// connect(mapStateToProps, {})(props => Card(props));
 
 const Card = context(_Card);
 
