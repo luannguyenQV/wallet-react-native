@@ -133,10 +133,10 @@ export const themeSelector = createSelector(
     // }
 
     return {
-      authSpinner:
-        company_config.theme && company_config.theme.authSpinner
-          ? company_config.theme.authSpinner
-          : '',
+      // authSpinner:
+      //   company_config.theme && company_config.theme.authSpinner
+      //     ? company_config.theme.authSpinner
+      //     : '',
     };
 
     // const colors = {
