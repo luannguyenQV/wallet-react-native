@@ -24,7 +24,7 @@ import {
   userDocumentsSelector,
 } from '../../redux/reducers/UserReducer';
 import moment from 'moment';
-import { safeString } from '../../util/general';
+import { safe } from '../../util/general';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -155,8 +155,8 @@ class DocumentScreen extends Component {
     console.log(item);
     return (
       <OutputStatus
-        label={safeString(item, 'document_type')}
-        value={moment(safeString(item, 'created')).format('lll')}
+        label={safe(item, 'document_type')}
+        value={moment(safe(item, 'created')).format('lll')}
         status={item.status.toUpperCase()}
         onPress={() =>
           this.props.showModal('document', index, this.state.category)
@@ -171,7 +171,7 @@ class DocumentScreen extends Component {
     const item = documents.data[documents.index];
     const { viewStyleImageContainer, viewStyleFooter } = styles;
     const { visible, type } = modalOptions;
-    // const image = Image.getSize(safeString(item, 'file'), (width, height) => {
+    // const image = Image.getSize(safe(item, 'file'), (width, height) => {
     //   this.setState({ width, height });
     // });
     const width = SCREEN_WIDTH - 64;
@@ -187,7 +187,7 @@ class DocumentScreen extends Component {
             type === 'Proof Of Address' ||
             type === 'Advanced Proof Of Identity')
         }
-        title={safeString(item, 'document_type')}
+        title={safe(item, 'document_type')}
         onDismiss={hideModal}
         iconTitleRight={'close'}
         onPressTitleRight={() => hideModal()}
@@ -197,7 +197,7 @@ class DocumentScreen extends Component {
         <View style={viewStyleImageContainer}>
           <Image
             style={{ height, width, borderRadius: 4 }}
-            source={{ uri: safeString(item, 'file') }}
+            source={{ uri: safe(item, 'file') }}
             resizeMode={'contain'}
           />
         </View>
@@ -205,12 +205,12 @@ class DocumentScreen extends Component {
         <View style={viewStyleFooter}>
           <View>
             <Text style={{ padding: 0, margin: 0 }}>
-              {moment(safeString(item, 'created')).format('lll')}
+              {moment(safe(item, 'created')).format('lll')}
             </Text>
           </View>
           <View>
             <Text style={{ padding: 0, margin: 0 }}>
-              {safeString(item, 'status')}
+              {safe(item, 'status')}
             </Text>
           </View>
         </View>

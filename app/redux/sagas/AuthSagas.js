@@ -73,6 +73,7 @@ import {
 import {
   configAuthSelector,
   configServicesSelector,
+  configPinSelector,
 } from '../reducers/ConfigReducer';
 
 /* 
@@ -98,7 +99,8 @@ function* init() {
           if (token) {
             yield call(Rehive.verifyToken, token);
             yield call(Rehive.initWithToken, token);
-            if (config.pin.appLoad) {
+            const pinConfig = yield select(configPinSelector);
+            if (pinConfig.appLoad) {
               const { pin, fingerprint } = yield select(authStateSelector);
               if (pin || fingerprint) {
                 if (fingerprint) {

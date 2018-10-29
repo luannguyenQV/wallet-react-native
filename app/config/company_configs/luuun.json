@@ -16,6 +16,12 @@
       "secondaryContrast": "#2d2d2d",
       "tertiaryContrast": "#000000",
       "focusContrast": "#2d2d2d"
+    },
+    "design": {
+      "cardCornerRadius": 5,
+      "cardShadow": 20,
+      "roundButtons": true,
+      "buttonShadow": 2
     }
   },
   "cards": {

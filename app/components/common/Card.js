@@ -61,9 +61,28 @@ const _Card = props => {
     swipeableContent,
     colors,
     canEdit,
+    design,
   } = props;
+  console.log(design);
   return (
-    <View style={viewStyleCardContainer}>
+    // <View
+    //   style={[
+    //     viewStyleCardContainer,
+    //     {
+    //       shadowRadius: design.cardShadow,
+    //       borderColor: 'transparent',
+    //       elevation: design.cardShadow,
+    //     },
+    //   ]}>
+    <View
+      style={[
+        viewStyleCardContainer,
+        {
+          borderRadius: design.cardCornerRadius,
+          overflow: 'hidden',
+          backgroundColor: 'transparent',
+        },
+      ]}>
       {/* <Swipeable rightContent={swipeableContent}> */}
       {renderHeader ? <View>{renderHeader}</View> : null}
       {title || subtitle || iconTitleLeft || iconTitleRight ? (
@@ -184,6 +203,7 @@ const _Card = props => {
       ) : null}
       {/* </Swipeable> */}
     </View>
+    // </View>
   );
   {
     /* <View style={styles.containerStyle}>{props.children}</View>; */
@@ -221,16 +241,13 @@ _Card.propTypes = {
 
 const styles = {
   viewStyleCardContainer: {
-    borderRadius: 1,
     shadowColor: 'rgba(0, 0, 0, 0.6)',
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    margin: 8,
-    elevation: 2,
+    shadowOpacity: 0.3,
     shadowOffset: {
       height: 1,
       width: 2,
     },
+    margin: 8,
   },
   viewStyleTitleContainer: {
     flex: 1,

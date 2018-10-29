@@ -52,7 +52,9 @@
   },
   "design": {
     "cardCornerRadius": 2,
-    "roundButtons": false
+    "cardShadow": 5,
+    "roundButtons": false,
+    "buttonShadow": 2
   },
   "layout": {
     "home": {
