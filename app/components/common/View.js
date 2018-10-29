@@ -60,7 +60,7 @@ class _View extends Component {
       color,
     } = this.props;
 
-    console.log('render', this.props);
+    // console.log('render', this.props);
     if (keyboardAvoiding) {
       return (
         <KeyboardAvoidingView

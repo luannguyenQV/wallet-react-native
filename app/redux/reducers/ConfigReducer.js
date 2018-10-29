@@ -106,7 +106,12 @@ export const configThemeThemesStateSelector = createSelector(
 
 export const configThemeColorsStateSelector = createSelector(
   configThemeStateSelector,
-  configThemeState => safe(configThemeState, 'colors', default_theme.colors),
+  configThemeState => {
+    return {
+      ...default_theme.colors,
+      ...safe(configThemeState, 'colors', default_theme.colors),
+    };
+  },
 );
 
 export const configThemeDesignStateSelector = createSelector(
