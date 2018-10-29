@@ -10,7 +10,7 @@ import context from './context';
 
 class _Button extends Component {
   _buttonStyle() {
-    const { type, color, size, round, buttonStyle, colors } = this.props;
+    const { type, color, size, design, buttonStyle, colors } = this.props;
 
     let backgroundColor = 'transparent';
     if (type === 'contained') {
@@ -21,7 +21,7 @@ class _Button extends Component {
       {
         backgroundColor,
         height: size === 'large' ? 40 : size === 'small' ? 30 : 36,
-        borderRadius: round
+        borderRadius: design.roundButtons
           ? size === 'large' ? 20 : size === 'small' ? 15 : 18
           : 2.5,
       },
