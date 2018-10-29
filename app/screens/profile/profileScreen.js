@@ -15,6 +15,7 @@ import {
   userProfileSelector,
   userDocumentsSelector,
 } from '../../redux/reducers/UserReducer';
+import { configVerificationSelector } from '../../redux/reducers/ConfigReducer';
 
 class ProfileScreen extends Component {
   static navigationOptions = {
@@ -259,13 +260,13 @@ class ProfileScreen extends Component {
   }
 
   render() {
-    const { profile, company_config, uploadProfilePhoto } = this.props;
+    const { profile, verificationConfig, uploadProfilePhoto } = this.props;
     const { container, mainContainer } = styles;
     const {
       requireDocumentID,
       requireDocumentAddress,
       requireDocumentAdvID,
-    } = company_config.verification;
+    } = verificationConfig;
     return (
       <View style={container}>
         <Header
@@ -317,7 +318,7 @@ const mapStateToProps = state => {
     mobile: userMobilesSelector(state),
     email: userEmailsSelector(state),
     document: userDocumentsSelector(state),
-    company_config: state.auth.company_config,
+    verificationConfig: configVerificationSelector(state),
   };
 };
 

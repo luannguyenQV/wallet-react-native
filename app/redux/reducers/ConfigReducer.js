@@ -197,7 +197,7 @@ const selectColor = (component, theme, colors) => {
 export const themeDesignSelector = createSelector(
   [configThemeDesignStateSelector],
   themeDesign => {
-    const design = {
+    return {
       cardCornerRadius: safe(
         themeDesign,
         'cardCornerRadius',
@@ -209,14 +209,13 @@ export const themeDesignSelector = createSelector(
         defaultTheme.roundButtons,
       ),
     };
-    return design;
   },
 );
 
 export const configAuthSelector = createSelector(
   [configAuthStateSelector],
   configAuthState => {
-    const auth = {
+    return {
       identifier: safe(configAuthState, 'identifier', default_auth.identifier),
       email: safe(configAuthState, 'email', default_auth.email),
       mobile: safe(configAuthState, 'mobile', default_auth.mobile),
@@ -228,7 +227,6 @@ export const configAuthSelector = createSelector(
       pin: safe(configAuthState, 'pin', default_auth.pin),
       mfa: safe(configAuthState, 'mfa', default_auth.mfa),
     };
-    return auth;
   },
 );
 
@@ -270,7 +268,7 @@ export const configAuthSelector = createSelector(
 export const configCardsHomeSelector = createSelector(
   [configCardsHomeStateSelector],
   configCardsHomeState => {
-    const homeCards = {
+    return {
       general: {
         welcome: safe(
           safe(configCardsHomeState, 'general', default_cards.home.general),
@@ -285,14 +283,13 @@ export const configCardsHomeSelector = createSelector(
       },
       custom: safe(configCardsHomeState, 'custom', default_cards.home.custom),
     };
-    return homeCards;
   },
 );
 
 export const configServicesSelector = createSelector(
   [configServicesStateSelector],
   configServicesState => {
-    const services = {
+    return {
       bitcoin: safe(configServicesState, 'bitcoin', default_services.bitcoin),
       stellar: safe(configServicesState, 'stellar', default_services.stellar),
       ethereum: safe(
@@ -302,6 +299,28 @@ export const configServicesSelector = createSelector(
       ),
       rewards: safe(configServicesState, 'rewards', default_services.rewards),
     };
-    return services;
+  },
+);
+
+export const configVerificationSelector = createSelector(
+  [configVerificationStateSelector],
+  configVerificationState => {
+    return {
+      requireDocumentID: safe(
+        configVerificationState,
+        'requireDocumentID',
+        default_verification.requireDocumentID,
+      ),
+      requireDocumentAddress: safe(
+        configVerificationState,
+        'requireDocumentAddress',
+        default_verification.requireDocumentAddress,
+      ),
+      requireDocumentAdvID: safe(
+        configVerificationState,
+        'requireDocumentAdvID',
+        default_verification.requireDocumentAdvID,
+      ),
+    };
   },
 );
