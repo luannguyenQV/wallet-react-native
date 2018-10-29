@@ -19,12 +19,12 @@ class _Text extends Component {
     switch (typeScale) {
       case 'h1':
         fontSize = 96;
-        fontWeight = 300;
+        fontWeight = '300';
         letterSpacing = -1.5;
         break;
       case 'h2':
         fontSize = 60;
-        fontWeight = 300;
+        fontWeight = '300';
         letterSpacing = -0.5;
         break;
       case 'h3':
@@ -41,7 +41,7 @@ class _Text extends Component {
         break;
       case 'h6':
         fontSize = 20;
-        fontWeight = 700;
+        fontWeight = '700';
         letterSpacing = 0.15;
         break;
       case 's1':
@@ -51,6 +51,7 @@ class _Text extends Component {
       case 's2':
         fontSize = 14;
         letterSpacing = 0.1;
+        fontStyle = 'italic';
         break;
       case 'b2':
         fontSize = 14;
@@ -127,7 +128,7 @@ _Text.propTypes = {
 
 _Text.defaultProps = {
   children: [''], // empty
-  s: 16,
+  s: null,
   m: 0, // 0-8: 0|0.25|0.5|1|2|4|8|16|32 rem
   p: 0, // 0-8: 0|0.25|0.5|1|2|4|8|16|32 rem
   o: 1, // 0-1

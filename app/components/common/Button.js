@@ -11,7 +11,15 @@ import { Text } from './Text';
 
 class _Button extends Component {
   _buttonStyle() {
-    const { type, color, size, design, buttonStyle, colors } = this.props;
+    const {
+      type,
+      color,
+      size,
+      design,
+      round,
+      buttonStyle,
+      colors,
+    } = this.props;
 
     let backgroundColor = 'transparent';
     if (type === 'contained') {
@@ -22,9 +30,10 @@ class _Button extends Component {
       {
         backgroundColor,
         height: size === 'large' ? 40 : size === 'small' ? 30 : 36,
-        borderRadius: design.roundButtons
-          ? size === 'large' ? 20 : size === 'small' ? 15 : 18
-          : 2.5,
+        borderRadius:
+          design.roundButtons || round
+            ? size === 'large' ? 20 : size === 'small' ? 15 : 18
+            : 2.5,
       },
       buttonStyle,
     ];
@@ -42,7 +51,6 @@ class _Button extends Component {
       {
         color: textColor,
         fontSize: size === 'large' ? 18 : size === 'small' ? 12 : 14,
-        textTransform: type === 'text' ? 'none' : 'uppercase',
       },
       textStyle,
     ];
@@ -104,6 +112,7 @@ _Button.propTypes = {
   textStyle: PropTypes.object, // override text style
   color: PropTypes.string, // main color
   colors: PropTypes.object, // colors from context
+  design: PropTypes.object, // design from context
 };
 
 _Button.defaultProps = {
@@ -119,6 +128,7 @@ _Button.defaultProps = {
   buttonStyle: {},
   containerStyle: {},
   color: 'primary',
+  design: { roundButtons: false },
 };
 
 const styles = {

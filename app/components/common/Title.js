@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, TouchableWithoutFeedback } from 'react-native';
+import { View, TouchableWithoutFeedback } from 'react-native';
 import PropTypes from 'prop-types';
 import context from './context';
+import { Text } from './Text';
 
 const _Title = props => {
   const { viewStyleContainer, textStyleTitle, textStyleSubtitle } = styles;
@@ -10,21 +11,11 @@ const _Title = props => {
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={viewStyleContainer}>
-        <Text
-          style={[
-            textStyleTitle,
-            {
-              color: colorTitleText ? colorTitleText : colors.font,
-            },
-          ]}>
+        <Text t="h5" style={textStyleTitle}>
           {title}
         </Text>
         {subtitle ? (
-          <Text
-            style={[
-              textStyleSubtitle,
-              { color: colorTitleText ? colorTitleText : colors.font },
-            ]}>
+          <Text t="s2" o={0.8} style={textStyleSubtitle}>
             {subtitle}
           </Text>
         ) : null}
@@ -33,34 +24,21 @@ const _Title = props => {
   );
 };
 
-// _MaterialActions.defaultProps = {
-//   title: '',
-//   subtitle: '',
-//   renderHeader: null,
-//   animation: 'fadeInDownBig',
-//   disabled: false,
-//   onPress: () => {},
-//   icon: '',
-//   size: '',
-//   type: 'contained',
-//   colorTitleBackground: '',
-//   colorTitleText: '',
-//   backgroundColor: 'white',
-// };
+_Title.propTypes = {
+  title: PropTypes.string,
+  subtitle: PropTypes.string,
+  onPress: PropTypes.func,
+  textStyleTitle: PropTypes.object,
+  textStyleSubtitle: PropTypes.object,
+};
 
-// _MaterialActions.propTypes = {
-//   title: PropTypes.string,
-//   subtitle: PropTypes.string,
-//   renderHeader: PropTypes.object,
-//   animation: PropTypes.string,
-//   disabled: PropTypes.bool,
-//   onPress: PropTypes.func,
-//   icon: PropTypes.string,
-//   size: PropTypes.string,
-//   type: PropTypes.string,
-//   backgroundColor: PropTypes.string,
-//   textColor: PropTypes.string,
-// };
+_Title.defaultProps = {
+  title: '',
+  subtitle: '',
+  onPress: () => {},
+  textStyleTitle: null,
+  textStyleSubtitle: null,
+};
 
 const styles = {
   viewStyleContainer: {
