@@ -71,12 +71,13 @@ import {
   companyConfigSelector,
   getAuthUser,
 } from './selectors';
+import { configAuthSelector } from '../reducers/ConfigReducer';
 
 /* 
 Init function called when app starts up to see what state the app should be in
 */
 function* init() {
-  let company_config;
+  let config;
   try {
     Rehive.initWithoutToken();
     yield put({ type: FETCH_DATA_ASYNC.pending, payload: 'public_companies' });
@@ -85,17 +86,17 @@ function* init() {
         ? client.company
         : yield select(getCompany);
       if (company) {
-        company_config = yield call(Rehive.getCompanyConfig, company);
+        config = yield call(Rehive.getCompanyConfig, company);
         yield put({
           type: SET_COMPANY,
-          payload: { company, company_config },
+          payload: { company, config },
         });
         try {
           const token = yield select(getToken);
           if (token) {
             yield call(Rehive.verifyToken, token);
             yield call(Rehive.initWithToken, token);
-            if (company_config.pin.appLoad) {
+            if (config.pin.appLoad) {
               const { pin, fingerprint } = yield select(authStateSelector);
               if (pin || fingerprint) {
                 if (fingerprint) {
@@ -168,8 +169,8 @@ function* authFlow() {
         email,
         mobile,
         password,
-        company_config,
       } = yield select(authStateSelector);
+      const auth = yield select(configAuthSelector);
       // if no state changes are made stay in current state
       let nextMainState = mainState;
       let nextDetailState = detailState;
@@ -201,7 +202,7 @@ function* authFlow() {
               // stores company ID and config in redux state
               yield put({
                 type: SET_COMPANY,
-                payload: { company: tempCompany, company_config: temp_config },
+                payload: { company: tempCompany, config: temp_config },
               });
               // sets next state to landing
               nextMainState = 'landing';
@@ -211,9 +212,7 @@ function* authFlow() {
           break;
         case 'landing':
           nextMainState = nextFormState; // either register / login depending on button pressed
-          nextDetailState = company_config.auth.identifier
-            ? company_config.auth.identifier
-            : 'email'; // ensures user is prompted for the correct info
+          nextDetailState = auth.identifier ? auth.identifier : 'email'; // ensures user is prompted for the correct info
           break;
         case 'login':
           if (nextFormState === 'forgot') {
@@ -258,8 +257,8 @@ function* authFlow() {
                   } catch (error) {
                     console.log('login', error);
                     authError = error.message;
-                    nextDetailState = company_config.auth.identifier
-                      ? company_config.auth.identifier
+                    nextDetailState = auth.identifier
+                      ? auth.identifier
                       : 'email';
                   }
                 }
@@ -286,7 +285,7 @@ function* authFlow() {
             case 'password':
               authError = validatePassword(password);
               if (!authError) {
-                const terms = company_config.auth.terms;
+                const terms = auth.terms;
                 if (terms && terms.length > 0) {
                   if (yield call(termsFlow)) {
                     terms_and_conditions = true;
@@ -344,15 +343,15 @@ function* termsFlow() {
   console.log('termsFlow');
   let authError = '';
   try {
-    const { company_config } = yield select(authStateSelector);
-    const length = company_config.auth.terms.length;
+    const auth = yield select(configAuthSelector);
+    const length = auth.terms.length;
     for (let i = 0; i < length; i) {
       yield put({
         type: UPDATE_AUTH_FORM_STATE,
         payload: {
           mainState: 'register',
           detailState: 'terms',
-          terms: company_config.auth.terms[i],
+          terms: auth.terms[i],
           authError,
         },
       });
@@ -363,7 +362,7 @@ function* termsFlow() {
         if (termsChecked) {
           i++;
         } else {
-          authError = 'Please accept the ' + company_config.auth.terms[i].title;
+          authError = 'Please accept the ' + auth.terms[i].title;
         }
       } else {
         return false;
@@ -398,9 +397,9 @@ function* registerFlow(data) {
     // return { success: true };
   } catch (error) {
     console.log('registerFlow', error);
-    const { company_config } = yield select(authStateSelector);
+    const auth = yield select(configAuthSelector);
     authError = error.message;
-    nextDetailState = company_config.auth.identifier;
+    nextDetailState = auth.identifier;
   }
   return { authError, nextDetailState };
 }
@@ -415,9 +414,8 @@ function* postAuthFlow() {
   try {
     let run = true;
     while (run) {
-      const { mainState, detailState, company_config } = yield select(
-        authStateSelector,
-      );
+      const { mainState, detailState } = yield select(authStateSelector);
+      const auth = yield select(configAuthSelector);
       let nextMainState = mainState;
       let nextDetailState = detailState;
       let authError = '';
@@ -466,7 +464,7 @@ function* postAuthFlow() {
             default:
               nextMainState = 'verification';
               nextDetailState = 'mobile';
-              if (company_config.auth.mobile === 'optional') {
+              if (auth.mobile === 'optional') {
                 skip = true;
               }
           }
@@ -476,7 +474,7 @@ function* postAuthFlow() {
           switch (detailState) {
             case 'mobile':
               if (
-                company_config.auth.mobile &&
+                auth.mobile &&
                 (user.verification && !user.verification.mobile)
               ) {
                 yield put({ type: POST_NOT_LOADING });
@@ -484,7 +482,7 @@ function* postAuthFlow() {
                 yield put({ type: POST_LOADING });
                 if (action.payload.nextFormState === 'skip') {
                   nextDetailState = 'email';
-                  if (company_config.auth.email === 'optional') {
+                  if (auth.email === 'optional') {
                     skip = true;
                   }
                 } else if (action.payload.nextFormState) {
@@ -495,14 +493,14 @@ function* postAuthFlow() {
                 yield put({ type: AUTH_STORE_USER, payload: resp });
               } else {
                 nextDetailState = 'email';
-                if (company_config.auth.email === 'optional') {
+                if (auth.email === 'optional') {
                   skip = true;
                 }
               }
               break;
             case 'email':
               if (
-                company_config.auth.email &&
+                auth.email &&
                 (user.verification && !user.verification.email)
               ) {
                 yield put({ type: POST_NOT_LOADING });
@@ -520,7 +518,7 @@ function* postAuthFlow() {
               }
               break;
             case 'first_name':
-              if (company_config.auth.first_name && !user.first_name) {
+              if (auth.first_name && !user.first_name) {
                 yield put({ type: POST_NOT_LOADING });
                 yield take(NEXT_AUTH_FORM_STATE);
                 yield put({ type: POST_LOADING });
@@ -534,7 +532,7 @@ function* postAuthFlow() {
               }
               break;
             case 'last_name':
-              if (company_config.auth.last_name && !user.last_name) {
+              if (auth.last_name && !user.last_name) {
                 yield put({ type: POST_NOT_LOADING });
                 yield take(NEXT_AUTH_FORM_STATE);
                 yield put({ type: POST_LOADING });
@@ -548,7 +546,7 @@ function* postAuthFlow() {
               }
               break;
             case 'username':
-              if (company_config.auth.username && !user.username) {
+              if (auth.username && !user.username) {
                 yield put({ type: POST_NOT_LOADING });
                 yield take(NEXT_AUTH_FORM_STATE);
                 yield put({ type: POST_LOADING });
@@ -574,13 +572,13 @@ function* postAuthFlow() {
                     nextDetailState = 'set_fingerprint';
                   }
                 }
-                if (company_config.auth.pin === 'optional') {
+                if (auth.pin === 'optional') {
                   skip = true;
                 }
               }
               break;
             case 'country':
-              if (company_config.auth.country && !user.country) {
+              if (auth.country && !user.country) {
                 yield put({ type: POST_NOT_LOADING });
                 yield take(NEXT_AUTH_FORM_STATE);
                 yield put({ type: POST_LOADING });
@@ -596,7 +594,7 @@ function* postAuthFlow() {
                 //     nextDetailState = 'set_fingerprint';
                 //   }
                 // }
-                // if (company_config.auth.pin === 'optional') {
+                // if (auth.pin === 'optional') {
                 //   skip = true;
                 // }
               }
@@ -604,7 +602,7 @@ function* postAuthFlow() {
           }
           break;
         case 'pin':
-          if (company_config.auth.pin) {
+          if (auth.pin) {
             let response;
             yield put({ type: POST_NOT_LOADING });
             switch (detailState) {

@@ -203,3 +203,22 @@ export const themeStyleSelector = createSelector(
     return style;
   },
 );
+
+export const configAuthSelector = createSelector(
+  [configAuthStateSelector],
+  configAuthState => {
+    const auth = {
+      identifier: safe(configAuthState, 'identifier', default_auth.identifier),
+      email: safe(configAuthState, 'email', default_auth.email),
+      mobile: safe(configAuthState, 'mobile', default_auth.mobile),
+      terms: safe(configAuthState, 'terms', default_auth.terms),
+      first_name: safe(configAuthState, 'first_name', default_auth.first_name),
+      last_name: safe(configAuthState, 'last_name', default_auth.last_name),
+      username: safe(configAuthState, 'username', default_auth.username),
+      country: safe(configAuthState, 'country', default_auth.country),
+      pin: safe(configAuthState, 'pin', default_auth.pin),
+      mfa: safe(configAuthState, 'mfa', default_auth.mfa),
+    };
+    return auth;
+  },
+);
