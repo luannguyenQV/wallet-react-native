@@ -113,7 +113,9 @@ class SendScreen extends Component {
     return (
       <FullScreenForm loading={transaction.loading} color={'focus'}>
         {transaction.state ? (
-          this.renderTop()
+          {
+            /* this.renderTop() */
+          }
         ) : (
           <View style={viewStyleInputContainer}>
             {this.renderAmount()}
