@@ -1,7 +1,7 @@
 [
   {
     "id": 0,
-    "document_category": "Proof of Identity",
+    "document_category": "Proof Of Identity",
     "document_types": [
       {
         "id": 0,
@@ -25,7 +25,7 @@
   },
   {
     "id": 1,
-    "document_category": "Advanced Proof of Identity",
+    "document_category": "Advanced Proof Of Identity",
     "document_types": [
       {
         "id": 0,
@@ -37,7 +37,7 @@
   },
   {
     "id": 2,
-    "document_category": "Proof of Address",
+    "document_category": "Proof Of Address",
     "document_types": [
       {
         "id": 0,
@@ -83,6 +83,30 @@
       },
       {
         "id": 7,
+        "document_type": "retail_store",
+        "description": "Statement of Account (Retail Store)",
+        "require": [{ "id": 0, "type": "front" }]
+      },
+      {
+        "id": 8,
+        "document_type": "mortgage_statement",
+        "description": "Mortgage Statement",
+        "require": [{ "id": 0, "type": "front" }]
+      },
+      {
+        "id": 9,
+        "document_type": "telephone",
+        "description": "Telephone or Cellular Account",
+        "require": [{ "id": 0, "type": "front" }]
+      },
+      {
+        "id": 10,
+        "document_type": "insurance_policy",
+        "description": "Insurance Policy Document",
+        "require": [{ "id": 0, "type": "front" }]
+      },
+      {
+        "id": 11,
         "document_type": "retail_store",
         "description": "Statement of Account (Retail Store)",
         "require": [{ "id": 0, "type": "front" }]

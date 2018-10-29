@@ -117,28 +117,36 @@ class _CardList extends Component {
   }
 
   render() {
-    const { data, keyExtractor, onRefresh, type, cardListOptions } = this.props;
+    const { data, keyExtractor, onRefresh, type, colors } = this.props;
+    console.log(colors.primary);
     // if (cardListOptions.noScroll) {
     //   return <View color="grey2">{this.renderItem(data.data[0], 0)}</View>;
     // }
     return (
       <View color="grey2" keyboardAvoiding>
-        <FlatList
-          style={{ height: '100%' }}
-          ref={component => (this[type + 'FlatList'] = component)}
-          refreshControl={
-            <RefreshControl refreshing={data.loading} onRefresh={onRefresh} />
-          }
-          keyboardShouldPersistTaps={'handled'}
-          data={data.data}
-          renderItem={({ item, index }) => this.renderItem(item, index)}
-          keyExtractor={item =>
-            keyExtractor
-              ? keyExtractor(item)
-              : item.id ? item.id.toString() : '0'
-          }
-          ListEmptyComponent={this.renderEmptyList()}
-        />
+        <View style={{ flex: 1 }} color="grey2">
+          <FlatList
+            style={{ height: '100%' }}
+            ref={component => (this[type + 'FlatList'] = component)}
+            refreshControl={
+              <RefreshControl
+                refreshing={data.loading}
+                onRefresh={onRefresh}
+                colors={[colors.primary]}
+              />
+            }
+            keyboardShouldPersistTaps={'handled'}
+            data={data.data}
+            renderItem={({ item, index }) => this.renderItem(item, index)}
+            keyExtractor={item =>
+              keyExtractor
+                ? keyExtractor(item)
+                : item.id ? item.id.toString() : '0'
+            }
+            ListEmptyComponent={this.renderEmptyList()}
+          />
+          {this.renderModal()}
+        </View>
       </View>
     );
   }

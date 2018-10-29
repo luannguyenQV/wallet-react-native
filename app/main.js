@@ -14,6 +14,7 @@ import {
   themeColorsSelector,
   themeDesignSelector,
 } from './redux/reducers/ConfigReducer';
+import { profileSelector } from './redux/reducers/UserReducer';
 
 // const _XHR = GLOBAL.originalXMLHttpRequest
 //   ? GLOBAL.originalXMLHttpRequest
@@ -62,12 +63,12 @@ class Main extends Component {
   render() {
     console.disableYellowBox = true;
     const { isReady, initStarted } = this.state;
-    const { colors, design } = this.props;
+    const { colors, design, profile } = this.props;
     // console.log(isReady, initStarted);
     if (true && (isReady && initStarted)) {
       return (
         <Root>
-          <ThemeContext.Provider value={{ colors, design }}>
+          <ThemeContext.Provider value={{ colors, design, profile }}>
             <MainNavigator
               ref={navigatorRef => {
                 NavigationService.setTopLevelNavigator(navigatorRef);
@@ -93,6 +94,7 @@ const mapStateToProps = state => {
   return {
     colors: themeColorsSelector(state),
     design: themeDesignSelector(state),
+    profile: profileSelector(state),
   };
 };
 

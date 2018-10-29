@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, FlatList, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  FlatList,
+  Platform,
+  SectionList,
+} from 'react-native';
 import PropTypes from 'prop-types';
 import Colors from './../../config/colors';
-import { MaterialIcons as Icon } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import CountryPicker from 'react-native-country-picker-modal';
 import { ListItem, ListSeparator } from './ListItem';
@@ -186,6 +192,9 @@ class _Input extends Component {
       checked,
       toggleCheck,
       icon,
+      sections,
+      scannable,
+      prop,
     } = this.props;
 
     const {
@@ -200,130 +209,215 @@ class _Input extends Component {
     } = styles;
 
     const { borderColor, focused, iconNameVisibility } = this.state;
-
-    return (
-      <View style={this.viewStyleContainer()}>
-        <View
-          style={[
-            viewStyleContainer,
-            {
-              backgroundColor: colors.primaryContrast,
-            },
-          ]}>
+    try {
+      return (
+        <View style={this.viewStyleContainer()}>
           <View
-            style={{
-              flexDirection: 'row',
-              borderColor: inputError
-                ? colors.error
-                : focused ? colors.focus : 'lightgrey',
-              borderBottomWidth: inputError || focused ? 2 : 2,
-            }}>
-            {toggleCheck ? (
-              <View style={viewStyleCheckbox}>
-                <MaterialIcons
-                  onPress={toggleCheck} //value ? {this.setState({ value })} : 'square-outline'}
-                  name={checked ? 'check-box' : 'check-box-outline-blank'}
-                  size={32}
-                  color={checked ? colors.primary : 'lightgrey'}
-                />
+            style={[
+              viewStyleContainer,
+              {
+                backgroundColor: colors.primaryContrast,
+              },
+            ]}>
+            <View
+              style={{
+                flexDirection: 'row',
+                borderColor: inputError
+                  ? colors.error
+                  : focused ? colors.focus : 'lightgrey',
+                borderBottomWidth: inputError || focused ? 2 : 2,
+                justifyContent: 'space-around',
+              }}>
+              {toggleCheck ? (
+                <View style={viewStyleCheckbox}>
+                  <MaterialIcons
+                    onPress={toggleCheck} //value ? {this.setState({ value })} : 'square-outline'}
+                    name={checked ? 'check-box' : 'check-box-outline-blank'}
+                    size={32}
+                    color={checked ? colors.primary : 'lightgrey'}
+                  />
+                </View>
+              ) : null}
+              <View style={[viewStyleContent, { flex: 1 }]}>
+                {focused || value ? (
+                  <View style={viewStyleLabel}>
+                    <Text
+                      style={[
+                        textStyleLabel,
+                        {
+                          color: inputError
+                            ? colors.error
+                            : focused ? colors.focus : 'rgba(0,0,0,0.6)',
+                        },
+                      ]}>
+                      {label}
+                      {required ? ' *' : ''}
+                    </Text>
+                  </View>
+                ) : null}
+                {this.renderInput()}
               </View>
-            ) : null}
-            <View style={[viewStyleContent, { width: '100%' }]}>
-              {focused || value ? (
-                <View style={viewStyleLabel}>
-                  <Text
+
+              {type === 'password' ? (
+                <View style={{ justifyContent: 'center' }}>
+                  <MaterialIcons
                     style={[
-                      textStyleLabel,
+                      iconStyleVisibility,
                       {
                         color: inputError
                           ? colors.error
                           : focused ? colors.focus : 'rgba(0,0,0,0.6)',
                       },
-                    ]}>
-                    {label}
-                    {required ? ' *' : ''}
-                  </Text>
+                    ]}
+                    name={iconNameVisibility}
+                    size={24}
+                    color={borderColor}
+                    onPress={this.togglePasswordVisibility}
+                  />
                 </View>
               ) : null}
-              {this.renderInput()}
+
+              {scannable ? (
+                <View style={{ justifyContent: 'center' }}>
+                  <MaterialIcons
+                    style={[
+                      iconStyleVisibility,
+                      {
+                        color: focused ? colors.focus : 'rgba(0,0,0,0.6)',
+                      },
+                    ]}
+                    name={'camera'}
+                    size={24}
+                    color={focused ? colors.focus : 'rgba(0,0,0,0.6)'}
+                    onPress={() =>
+                      this.props.navigation.navigate('InputScanner', { prop })
+                    }
+                  />
+                </View>
+              ) : null}
             </View>
 
-            {type === 'password' ? (
-              <View style={{ justifyContent: 'center' }}>
-                <Icon
+            {inputError || helperText ? (
+              <View style={viewStyleHelper}>
+                <Text
                   style={[
-                    iconStyleVisibility,
+                    textStyleFooter,
                     {
-                      color: inputError
-                        ? colors.error
-                        : focused ? colors.focus : 'rgba(0,0,0,0.6)',
+                      color: inputError ? colors.error : colors.primaryContrast,
                     },
-                  ]}
-                  name={iconNameVisibility}
-                  size={24}
-                  color={borderColor}
-                  onPress={this.togglePasswordVisibility}
-                />
+                  ]}>
+                  {inputError ? inputError : helperText}
+                </Text>
               </View>
             ) : null}
+
+            {data.length > 0 && focused ? (
+              <FlatList
+                keyboardShouldPersistTaps="always"
+                style={{
+                  backgroundColor: colors.primaryContrast,
+                  maxHeight: 180,
+                  borderBottomLeftRadius: 5,
+                  borderBottomRightRadius: 5,
+                  overflow: 'hidden',
+                }}
+                contentContainerStyle={{
+                  borderBottomLeftRadius: 5,
+                  borderBottomRightRadius: 5,
+                  overflow: 'hidden',
+                }}
+                data={data}
+                renderItem={({ item, section }) => (
+                  <ListItem
+                    onPress={() => onPressListItem(item)}
+                    title={section.title ? section.title(item) : item}
+                    subtitle={section.subtitle ? section.subtitle(item) : ''}
+                    image={
+                      section.icon
+                        ? section.icon(item)
+                        : item.image ? item.image : null
+                    }
+                  />
+                )}
+                keyExtractor={item => (item.id ? item.id.toString() : item)}
+                ItemSeparatorComponent={ListSeparator}
+              />
+            ) : null}
+            {sections.length > 0 && focused ? (
+              <SectionList
+                keyboardShouldPersistTaps="always"
+                style={{
+                  backgroundColor: colors.grey1,
+                  maxHeight: 240,
+                  borderBottomLeftRadius: 5,
+                  borderBottomRightRadius: 5,
+                  overflow: 'hidden',
+                  paddingBottom: 4,
+                }}
+                contentContainerStyle={{
+                  borderBottomLeftRadius: 5,
+                  borderBottomRightRadius: 5,
+                  overflow: 'hidden',
+                }}
+                sections={sections}
+                renderItem={({ item, section }) => (
+                  // <View style={{ height: 150 }} />
+                  <ListItem
+                    onPress={() =>
+                      section.listItemOnPress
+                        ? section.listItemOnPress(item)
+                        : {}
+                    }
+                    title={
+                      section.listItemTitle ? section.listItemTitle(item) : item
+                    }
+                    subtitle={
+                      section.listItemSubtitle
+                        ? section.listItemSubtitle(item)
+                        : ''
+                    }
+                    image={
+                      section.listItemIcon
+                        ? section.listItemIcon(item)
+                        : item.image ? item.image : null
+                    }
+                  />
+                )}
+                renderSectionHeader={({ section }) => (
+                  <View
+                    style={{
+                      // paddingRight: 8,
+                      borderBottomWidth: 0.5,
+                      borderBottomColor: colors.font,
+                      // padding: 4,
+                      paddingTop: 8,
+                      paddingLeft: 16,
+                      backgroundColor: colors.grey1,
+                      borderBottomEndRadius: 8,
+                      borderBottomStartRadius: 8,
+                    }}>
+                    <Text
+                      style={{
+                        // backgroundColor: '#64B5F6',
+                        fontSize: 10,
+                        padding: 5,
+                        color: colors.font,
+                        fontWeight: 'bold',
+                      }}>
+                      {section.title}{' '}
+                    </Text>
+                  </View>
+                )}
+                keyExtractor={item => item.id.toString()}
+                ItemSeparatorComponent={ListSeparator}
+              />
+            ) : null}
           </View>
-
-          {inputError || helperText ? (
-            <View style={viewStyleHelper}>
-              <Text
-                style={[
-                  textStyleFooter,
-                  { color: inputError ? colors.error : colors.primaryContrast },
-                ]}>
-                {inputError ? inputError : helperText}
-              </Text>
-            </View>
-          ) : null}
-
-          {data && focused ? (
-            <FlatList
-              // refreshControl={
-              //   <RefreshControl
-              //     refreshing={loadingData}
-              //     onRefresh={() => fetchData(type)}
-              //   />string.indexOf(substring) !== -1
-              // }
-              keyboardShouldPersistTaps="handled"
-              style={{
-                backgroundColor: colors.primaryContrast,
-                maxHeight: 150,
-                borderBottomLeftRadius: 5,
-                borderBottomRightRadius: 5,
-                overflow: 'hidden',
-              }}
-              contentContainerStyle={{
-                borderBottomLeftRadius: 5,
-                borderBottomRightRadius: 5,
-                overflow: 'hidden',
-              }}
-              // data={data.filter(item => item[title] === value)}
-              data={
-                data
-                // value
-                //   ? data.filter(item => item[title].indexOf(value) !== -1)
-                //   : data
-              }
-              renderItem={({ item }) => (
-                <ListItem
-                  onPress={() => onPressListItem(item)}
-                  title={title ? item[title] : item}
-                  subtitle={item[subtitle]}
-                  image={icon ? item[icon] : item.image ? item.image : null}
-                />
-              )}
-              keyExtractor={item => (item.id ? item.id.toString() : item)}
-              ItemSeparatorComponent={ListSeparator}
-              // ListEmptyComponent={<ListItem title="No data" />}
-            />
-          ) : null}
         </View>
-      </View>
-    );
+      );
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   // _renderSeparator = () => (
@@ -342,6 +436,9 @@ _Input.propTypes = {
   type: PropTypes.string, // Type of button (text, contained, TODO: outlined)
   colors: PropTypes.object, // Button color
   onBlur: PropTypes.func, // Function to execute on press
+  sections: PropTypes.array,
+  data: PropTypes.array,
+  scannable: PropTypes.bool,
 };
 
 _Input.defaultProps = {
@@ -355,6 +452,9 @@ _Input.defaultProps = {
   type: 'contained',
   colors: Colors,
   onBlur: () => {},
+  sections: [],
+  data: [],
+  scannable: false,
 };
 
 const styles = {
@@ -413,10 +513,10 @@ const styles = {
     fontSize: 12,
   },
   iconStyleVisibility: {
-    width: 24,
-    height: 24,
+    // width: 24,
+    // height: 24,
     right: 12,
-    position: 'absolute',
+    // position: 'absolute',
   },
   viewStyleCheckbox: {
     padding: 4,

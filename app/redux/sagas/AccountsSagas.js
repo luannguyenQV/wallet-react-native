@@ -27,7 +27,7 @@ import {
   transactionSelector,
   currenciesSelector,
 } from '../reducers/AccountsReducer';
-import { contactsSelector } from '../reducers/ContactsReducer';
+import { phoneContactsSelector } from '../reducers/ContactsReducer';
 
 import {
   validateEmail,
@@ -136,7 +136,7 @@ function* validateTransaction(action) {
     // console.log('validateTransaction');
     const type = action.payload;
     const transaction = yield select(transactionSelector);
-    const contacts = yield select(contactsSelector);
+    const contacts = yield select(phoneContactsSelector);
     // console.log('contacts', contacts);
     // console.log('currency', currency);
 

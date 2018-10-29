@@ -204,91 +204,27 @@ const selectColor = (component, theme, colors) => {
 export const themeDesignSelector = createSelector(
   [configThemeDesignStateSelector],
   themeDesign => {
-    return {
-      cardCornerRadius: safe(
-        themeDesign,
-        'cardCornerRadius',
-        defaultTheme.cardCornerRadius,
-      ),
-      roundButtons: safe(
-        themeDesign,
-        'roundButtons',
-        defaultTheme.roundButtons,
-      ),
-    };
+    return { ...default_theme.design, ...themeDesign };
   },
 );
 
 export const configAuthSelector = createSelector(
   [configAuthStateSelector],
   configAuthState => {
-    return {
-      identifier: safe(configAuthState, 'identifier', default_auth.identifier),
-      email: safe(configAuthState, 'email', default_auth.email),
-      mobile: safe(configAuthState, 'mobile', default_auth.mobile),
-      terms: safe(configAuthState, 'terms', default_auth.terms),
-      first_name: safe(configAuthState, 'first_name', default_auth.first_name),
-      last_name: safe(configAuthState, 'last_name', default_auth.last_name),
-      username: safe(configAuthState, 'username', default_auth.username),
-      country: safe(configAuthState, 'country', default_auth.country),
-      pin: safe(configAuthState, 'pin', default_auth.pin),
-      mfa: safe(configAuthState, 'mfa', default_auth.mfa),
-    };
+    return { ...default_auth, ...configAuthState };
   },
 );
-
-// export const configCardsSelector = createSelector(
-//   [configCardsStateSelector],
-//   configCardsState => {
-//     const cards = {
-//       home: {
-//         general: {
-//           welcome: safe(
-//             configCardsState,
-//             'identifier',
-//             default_auth.identifier,
-//           ),
-//           verify: true,
-//         },
-//         custom: [
-//           {
-//             id: 0,
-//             title: 'Card 1',
-//             description: 'This is your custom text for card 1',
-//             image: 'card1',
-//             dismiss: true,
-//           },
-//           {
-//             id: 1,
-//             title: 'Card 2',
-//             description: 'This is your custom text for card 2',
-//             image: 'card2',
-//             dismiss: false,
-//           },
-//         ],
-//       },
-//     };
-//     return cards;
-//   },
-// );
 
 export const configCardsHomeSelector = createSelector(
   [configCardsHomeStateSelector],
   configCardsHomeState => {
     return {
+      ...default_cards.home,
+      ...configCardsHomeState,
       general: {
-        welcome: safe(
-          safe(configCardsHomeState, 'general', default_cards.home.general),
-          'welcome',
-          default_cards.home.general.welcome,
-        ),
-        verify: safe(
-          safe(configCardsHomeState, 'general', default_cards.home.general),
-          'verify',
-          default_cards.home.general.verify,
-        ),
+        ...default_cards.home.general,
+        ...configCardsHomeState.general,
       },
-      custom: safe(configCardsHomeState, 'custom', default_cards.home.custom),
     };
   },
 );
@@ -296,60 +232,27 @@ export const configCardsHomeSelector = createSelector(
 export const configServicesSelector = createSelector(
   [configServicesStateSelector],
   configServicesState => {
-    return {
-      bitcoin: safe(configServicesState, 'bitcoin', default_services.bitcoin),
-      stellar: safe(configServicesState, 'stellar', default_services.stellar),
-      ethereum: safe(
-        configServicesState,
-        'ethereum',
-        default_services.ethereum,
-      ),
-      rewards: safe(configServicesState, 'rewards', default_services.rewards),
-    };
+    return { ...default_services, ...configServicesState };
   },
 );
 
 export const configVerificationSelector = createSelector(
   [configVerificationStateSelector],
   configVerificationState => {
-    return {
-      requireDocumentID: safe(
-        configVerificationState,
-        'requireDocumentID',
-        default_verification.requireDocumentID,
-      ),
-      requireDocumentAddress: safe(
-        configVerificationState,
-        'requireDocumentAddress',
-        default_verification.requireDocumentAddress,
-      ),
-      requireDocumentAdvID: safe(
-        configVerificationState,
-        'requireDocumentAdvID',
-        default_verification.requireDocumentAdvID,
-      ),
-    };
+    return { ...default_verification, ...configVerificationState };
   },
 );
 
 export const configSlidesAuthSelector = createSelector(
   configSlidersStateSelector,
-  configSlidersState => safe(configSlidersState, 'auth', default_sliders.auth),
+  configSlidersState => {
+    return { ...default_sliders.auth, ...configSlidersState };
+  },
 );
 
 export const configPinSelector = createSelector(
   [configPinStateSelector],
   configPinState => {
-    return {
-      appLoad: safe(configPinState, 'appLoad', default_pin.appLoad),
-      security: safe(configPinState, 'security', default_pin.security),
-      send: safe(configPinState, 'send', default_pin.send),
-      withdraw: safe(configPinState, 'withdraw', default_pin.withdraw),
-      updateDetails: safe(
-        configPinState,
-        'updateDetails',
-        default_pin.updateDetails,
-      ),
-    };
+    return { ...default_pin, ...configPinState };
   },
 );

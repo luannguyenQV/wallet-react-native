@@ -16,9 +16,9 @@ class ListItem extends Component {
       viewStyleTitle,
       textStyleTitle,
       textStyleSubtitle,
+      textStyleID,
     } = styles;
-    const { image, title, subtitle, onPress, noImage } = this.props;
-    console.log(image);
+    const { image, title, subtitle, onPress, noImage, subtitleID } = this.props;
     return (
       <TouchableHighlight
         underlayColor={'white'}
@@ -43,7 +43,7 @@ class ListItem extends Component {
             </View>
           ) : null}
           <View style={viewStyleTitle}>
-            <Text style={textStyleTitle}>{title ? title : subtitle}</Text>
+            <Text style={textStyleTitle}>{title ? title : subtitleID}</Text>
             {subtitle ? (
               <Text style={textStyleSubtitle}>{title ? subtitle : ''}</Text>
             ) : null}
@@ -60,6 +60,7 @@ ListItem.propTypes = {
   subtitle: PropTypes.string, // Animation type
   onPress: PropTypes.func, // Function to execute on press
   noImage: PropTypes.bool,
+  subtitleID: PropTypes.string, // Animation type
 };
 
 ListItem.defaultProps = {
@@ -68,6 +69,7 @@ ListItem.defaultProps = {
   subtitle: '',
   onPress: () => {},
   noImage: false,
+  subtitleID: '',
 };
 
 const ListSeparator = () => (
@@ -83,7 +85,7 @@ const styles = {
   viewStyleContainer: {
     // flex: 1,
     flexDirection: 'row',
-    height: 48,
+    // height: 48,
     // borderBottomWidth: 0.5,
     // borderBottomColor: 'lightgrey',
   },
@@ -95,14 +97,19 @@ const styles = {
   },
   viewStyleTitle: {
     justifyContent: 'center',
+    paddingVertical: 4,
   },
   textStyleTitle: {
     fontSize: 18,
-    color: 'black',
+    // color: 'black',
   },
   textStyleSubtitle: {
+    fontSize: 14,
+    // color: 'black',
+  },
+  textStyleID: {
     fontSize: 12,
-    color: 'black',
+    // color: 'black',
   },
 };
 

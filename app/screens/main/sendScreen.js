@@ -54,7 +54,6 @@ class SendScreen extends Component {
       memo,
       recipient,
     } = this.props.navigation.state.params;
-    console.log(this.props.navigation.state.params);
 
     const {
       setTransactionType,
@@ -233,6 +232,60 @@ class SendScreen extends Component {
         placeholder = 'GAQGVZYIZ2DX56EB6TZYGBD...';
         break;
     }
+    let sections = [];
+
+    if (contacts.recent.length > 0) {
+      sections.push({
+        title: 'Recent',
+        data: contacts.recent,
+        listItemTitle: item =>
+          item
+            ? (item.first_name ? item.first_name + ' ' : '') +
+              (item.last_name ? item.last_name : '')
+            : '',
+        listItemSubtitle: item =>
+          item
+            ? (item.email ? item.email + (item.mobile ? '\n' : '') : '') +
+              (item.mobile ? item.mobile : '')
+            : '',
+        listItemIcon: item => (item ? item.profile : ''),
+        listItemOnPress: item => {
+          updateAccountField({
+            prop: 'transactionRecipient',
+            value: item.email ? item.email : item.mobile ? item.mobile : '',
+          });
+          updateContactField({
+            prop: 'contactsSearch',
+            value: item.email ? item.email : item.mobile ? item.mobile : '',
+          });
+          transaction.currency.crypto === 'stellar'
+            ? this.memoInput.focus()
+            : this.noteInput.focus();
+          validateTransaction();
+        },
+      });
+    }
+    if (contacts.phone.length > 0) {
+      sections.push({
+        title: 'Device',
+        data: contacts.phone,
+        listItemTitle: item => (item && item.name ? item.name : ''),
+        listItemSubtitle: item => (item && item.contact ? item.contact : ''),
+        listItemIcon: item => (item && item.image ? item.image : ''),
+        listItemOnPress: item => {
+          updateAccountField({
+            prop: 'transactionRecipient',
+            value: item.contact,
+          });
+          updateContactField({ prop: 'contactsSearch', value: item.contact });
+          transaction.currency.crypto === 'stellar'
+            ? this.memoInput.focus()
+            : this.noteInput.focus();
+          validateTransaction();
+        },
+      });
+    }
+
     return (
       <View>
         <View style={{ flexDirection: 'row' }}>
@@ -289,6 +342,9 @@ class SendScreen extends Component {
                 ? Platform.OS === 'ios' ? 'decimal-pad' : 'phone-pad'
                 : 'default'
           }
+          prop="contactsSearch"
+          scannable={contacts.type === 'crypto'}
+          navigation={this.props.navigation}
           returnKeyType="next"
           // autoFocus
           onSubmitEditing={() => {
@@ -310,21 +366,8 @@ class SendScreen extends Component {
           }}
           popUp
           multiline={contacts.type === 'crypto' ? true : false}
-          data={contacts.data}
+          sections={sections}
           loadingData={contacts.loading}
-          title="name"
-          subtitle="contact"
-          onPressListItem={item => {
-            updateAccountField({
-              prop: 'transactionRecipient',
-              value: item.contact,
-            });
-            updateContactField({ prop: 'contactsSearch', value: item.contact });
-            transaction.currency.crypto === 'stellar'
-              ? this.memoInput.focus()
-              : this.noteInput.focus();
-            validateTransaction();
-          }}
         />
       </View>
     );
@@ -337,7 +380,6 @@ class SendScreen extends Component {
       validateTransaction,
       currencies,
     } = this.props;
-    console.log(transaction);
     return (
       <View style={{ flexDirection: 'row' }}>
         <CurrencySelector
@@ -452,7 +494,6 @@ class SendScreen extends Component {
       (transaction.recipient || contacts.search)
         ? 'Next'
         : '';
-
     return (
       <View style={{ flex: 1 }}>
         <Header

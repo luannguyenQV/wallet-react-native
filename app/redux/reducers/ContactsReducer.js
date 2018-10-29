@@ -10,6 +10,7 @@ import {
 import { PERSIST_REHYDRATE } from 'redux-persist/es/constants';
 import { createSelector } from 'reselect';
 import { contactsStateSelector } from '../sagas/selectors';
+import { allTransactionsSelector } from './AccountsReducer';
 
 const INITIAL_STATE = {
   contacts: [],
@@ -73,8 +74,8 @@ export default (state = INITIAL_STATE, action) => {
   }
 };
 
-export const contactsSelector = createSelector(
-  [contactsStateSelector],
+export const phoneContactsSelector = createSelector(
+  contactsStateSelector,
   contactsState => {
     const search = contactsState.contactsSearch
       ? contactsState.contactsSearch.toLowerCase()
@@ -91,9 +92,80 @@ export const contactsSelector = createSelector(
               : false),
       );
     }
-    // return {};
+    return data;
+  },
+);
+
+function objectMap(object, mapFn) {
+  return Object.keys(object).reduce(function(result, key) {
+    return mapFn(object[key]);
+  }, {});
+}
+
+export const recentContactsSelector = createSelector(
+  allTransactionsSelector,
+  allTransactions => {
+    let allUsers = [];
+    try {
+      allUsers = objectMap(allTransactions, account =>
+        objectMap(account, currency =>
+          currency.map(
+            transaction =>
+              transaction.source_transaction
+                ? transaction.source_transaction.user
+                : transaction.destination_transaction
+                  ? transaction.destination_transaction.user
+                  : null,
+          ),
+        ),
+      );
+    } catch (e) {
+      console.log(e);
+    }
+    allUsers = allUsers.filter(
+      (item, index, self) =>
+        self.findIndex(t => t && item && t.id === item.id) === index,
+    );
+    return allUsers;
+  },
+);
+
+export const contactsSelector = createSelector(
+  [contactsStateSelector, recentContactsSelector, phoneContactsSelector],
+  (contactsState, recentContacts, phoneContacts) => {
+    const search = contactsState.contactsSearch
+      ? contactsState.contactsSearch.toLowerCase()
+      : '';
+    let dataPhone = [];
+    if (search && phoneContacts) {
+      dataPhone = phoneContacts.filter(
+        item =>
+          item.type === contactsState.contactsType &&
+          (item.name
+            ? item.name.toLowerCase().includes(search)
+            : false || item.contact
+              ? item.contact.toLowerCase().includes(search)
+              : false),
+      );
+    }
+    let dataRecent = [];
+    if (search && recentContacts) {
+      dataRecent = recentContacts.filter(
+        item =>
+          contactsState.contactsType === 'email' &&
+          item &&
+          ((item.first_name
+            ? item.first_name.toLowerCase().includes(search)
+            : false) ||
+            (item.last_name
+              ? item.last_name.toLowerCase().includes(search)
+              : false)),
+      );
+    }
+
     return {
-      data,
+      phone: dataPhone,
+      recent: dataRecent,
       search: contactsState.contactsSearch,
       type: contactsState.contactsType,
       loading: contactsState.loading,

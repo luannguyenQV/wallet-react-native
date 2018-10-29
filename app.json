@@ -8,16 +8,16 @@
     "sdkVersion": "30.0.0",
     "orientation": "portrait",
     "primaryColor": "#4d4d4d",
-    "icon": "./assets/icons/icon-gray.png",
+    "icon": "./assets/icons/icon.png",
     "splash": {
-      "image": "./assets/icons/splash-full.png",
+      "image": "./assets/icons/splash.png",
       "primaryColor": "#ffffff",
       "resizeMode": "contain"
     },
     "assetBundlePatterns": ["./assets/icons/*"],
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.rehive.wallet-staging",
+      "bundleIdentifier": "com.rehive.wallet",
       "icon": "./assets/icons/app.png",
       "infoPlist": {
         "NSContactsUsageDescription":
@@ -30,18 +30,8 @@
     },
     "android": {
       "package": "com.rehivewallet_staging",
-      "icon": "./assets/icons/icon-1024.png",
-      "versionCode": 4,
-      "splash": {
-        "backgroundColor": "#ffffff",
-        "resizeMode": "contain",
-        "ldpi": "./assets/icons/splash-full.png",
-        "mdpi": "./assets/icons/splash-full.png",
-        "hdpi": "./assets/icons/splash-full.png",
-        "xhdpi": "./assets/icons/splash-full.png",
-        "xxhdpi": "./assets/icons/splash-full.png",
-        "xxxhdpi": "./assets/icons/splash-full.png"
-      }
+      "icon": "./assets/icons/icon-gray.png",
+      "versionCode": 6
     }
   }
 }

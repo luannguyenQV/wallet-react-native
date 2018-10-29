@@ -29,17 +29,6 @@ class _View extends Component {
     }
   }
   renderScrollView() {
-    const {
-      style,
-      children,
-      keyboardAvoiding,
-      scrollView,
-      behavior,
-      colors,
-      color,
-    } = this.props;
-    console.log('renderScrollView');
-
     return (
       <ScrollView
         keyboardDismissMode={'interactive'}
@@ -60,7 +49,6 @@ class _View extends Component {
       color,
     } = this.props;
 
-    // console.log('render', this.props);
     if (keyboardAvoiding) {
       return (
         <KeyboardAvoidingView
@@ -83,6 +71,7 @@ class _View extends Component {
         style={[
           styles._containerStyle,
           { backgroundColor: color ? colors[color] : 'white' },
+          style,
         ]}>
         {scrollView ? this.renderScrollView() : this.renderContent()}
       </_view>
