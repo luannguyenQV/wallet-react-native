@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image } from 'react-native';
+import { Image, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import { AppLoading, Asset } from 'expo';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -12,6 +12,8 @@ import MainNavigator from './routes/mainNavigator';
 import { ThemeContext } from './util/config';
 import { colorSelector, themeSelector } from './redux/reducers/ConfigReducer';
 import { profileSelector } from './redux/reducers/UserReducer';
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
 
 // const _XHR = GLOBAL.originalXMLHttpRequest
 //   ? GLOBAL.originalXMLHttpRequest
@@ -61,11 +63,13 @@ class Main extends Component {
     console.disableYellowBox = true;
     const { isReady, initStarted } = this.state;
     const { colors, theme, profile } = this.props;
+    const rem = SCREEN_WIDTH > 340 ? 18 : 16;
+
     // console.log(isReady, initStarted);
     if (true && (isReady && initStarted)) {
       return (
         <Root>
-          <ThemeContext.Provider value={{ colors, theme, profile }}>
+          <ThemeContext.Provider value={{ colors, theme, profile, rem }}>
             <MainNavigator
               ref={navigatorRef => {
                 NavigationService.setTopLevelNavigator(navigatorRef);
