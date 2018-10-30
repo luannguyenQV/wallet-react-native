@@ -129,7 +129,7 @@ class HomeCards extends Component {
           item.actionLabel ? item.actionLabel : item.dismiss ? 'DISMISS' : ''
         }>
         {item.description ? (
-          <View p={0.5}>
+          <View p={0.5} aI={'flex-start'}>
             <Text lh={22}>{item.description}</Text>
           </View>
         ) : null}

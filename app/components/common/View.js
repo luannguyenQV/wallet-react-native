@@ -43,7 +43,7 @@ class _View extends Component {
 
     return [
       {
-        backgroundColor: colors[bC],
+        backgroundColor: colors[bC] ? colors[bC] : bC,
         margin: m * rem,
         padding: p * rem,
         opacity: o,
@@ -58,7 +58,7 @@ class _View extends Component {
   }
 
   render() {
-    const { style, keyboardAvoiding, scrollView, behavior } = this.props;
+    const { keyboardAvoiding, scrollView, behavior } = this.props;
 
     if (keyboardAvoiding) {
       return (
@@ -91,8 +91,8 @@ _View.propTypes = {
     PropTypes.node,
   ]).isRequired, // string passed to RN <Text />
   f: PropTypes.number, // flex
-  h: PropTypes.number, // height
-  w: PropTypes.number, // width
+  h: PropTypes.oneOfType([PropTypes.number, PropTypes.string]), // height
+  w: PropTypes.oneOfType([PropTypes.number, PropTypes.string]), // width
   m: PropTypes.number, // margin
   p: PropTypes.number, // padding
   o: PropTypes.number, // opacity
@@ -119,7 +119,7 @@ _View.defaultProps = {
   bC: 'transparent', // backgroundColor
   colors: {}, // from context
   rem: 16, // rem value
-  fD: 'row', // flexDirection
+  fD: 'column', // flexDirection
   aI: 'flex-start', // alignItems
   jC: 'flex-start', // justifyContent
   style: null,

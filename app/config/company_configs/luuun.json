@@ -21,7 +21,7 @@
       "cardCornerRadius": 20,
       "cardShadow": 20,
       "cardElevation": 4,
-      "roundButtons": true,
+      "roundButtons": false,
       "buttonShadow": 20,
       "buttonElevation": 4
     }

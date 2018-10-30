@@ -60,6 +60,7 @@ class _Text extends Component {
       case 'bu':
         fontSize = 14;
         letterSpacing = 1.25;
+        fontWeight = '700';
         // textTransform = 'uppercase';
         break;
       case 'c':

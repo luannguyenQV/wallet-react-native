@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+// import { View } from 'react-native';
 import {
   fetchAccounts,
   resetSend,
@@ -13,7 +14,7 @@ import { currenciesSelector } from './../../redux/reducers/AccountsReducer';
 
 import Header from './../../components/header';
 // import Wallet from './../../components/wallet';
-import { Output, View } from '../../components/common';
+import { View } from '../../components/common';
 import CardListUserSettings from '../../components/cards/CardListUserSettings';
 
 class WalletsScreen extends Component {
@@ -38,7 +39,7 @@ class WalletsScreen extends Component {
   render() {
     const { currencies } = this.props;
     return (
-      <View>
+      <View f={1}>
         <Header navigation={this.props.navigation} drawer title="Wallets" />
         <CardListUserSettings
           type="wallet"

@@ -20,11 +20,12 @@ class _Button extends Component {
       round,
       buttonStyle,
       colors,
+      wide,
     } = this.props;
 
     let backgroundColor = 'transparent';
     if (type === 'contained') {
-      backgroundColor = colors[color];
+      backgroundColor = colors[color] ? colors[color] : color;
     }
     return {
       ...styles._buttonStyle,
@@ -35,6 +36,7 @@ class _Button extends Component {
           ? size === 'large' ? 20 : size === 'small' ? 15 : 18
           : 2.5,
       shadowRadius: design.buttonShadow,
+      flex: wide ? 1 : 0,
       ...buttonStyle,
     };
   }
@@ -80,7 +82,7 @@ class _Button extends Component {
           onPress={onPress}
           disabled={disabled}
           style={this._buttonStyle()}>
-          <View fD={'row'}>
+          <View fD={'row'} aI={'center'}>
             {icon ? (
               <Icon
                 name={icon}
@@ -116,6 +118,7 @@ _Button.propTypes = {
   color: PropTypes.string, // main color
   colors: PropTypes.object, // colors from context
   design: PropTypes.object, // design from context
+  wide: PropTypes.bool,
 };
 
 _Button.defaultProps = {
@@ -132,6 +135,7 @@ _Button.defaultProps = {
   containerStyle: {},
   color: 'primary',
   design: { roundButtons: false },
+  wide: false,
 };
 
 const styles = {
@@ -140,9 +144,7 @@ const styles = {
     margin: 8,
   },
   _buttonStyle: {
-    flex: 1,
     flexDirection: 'row',
-    borderRadius: 2.5,
     minWidth: 64,
     padding: 8,
     shadowColor: '#000',
@@ -150,10 +152,6 @@ const styles = {
     shadowOpacity: 0.2,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  _textStyle: {
-    textAlign: 'center',
-    // fontWeight: 'bold',
   },
 };
 

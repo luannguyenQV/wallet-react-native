@@ -75,6 +75,7 @@ class ChangePasswordScreen extends Component {
           <Button
             label="CONFIRM"
             color="primary"
+            wide
             onPress={() => changePassword(old_password, new_password)}
           />
         </InputContainer>
