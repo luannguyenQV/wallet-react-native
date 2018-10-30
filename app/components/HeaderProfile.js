@@ -11,7 +11,14 @@ class _HeaderProfile extends Component {
   };
 
   render() {
-    const { photoLink, username, name, colors } = this.props;
+    const { profile, colors, uploadProfilePhoto, resetLoading } = this.props;
+
+    const photoLink = profile.profile;
+    const name = profile.first_name
+      ? profile.first_name + ' ' + profile.last_name
+      : '';
+
+    const username = profile.username;
 
     const {
       viewStyleContainer,
@@ -19,10 +26,10 @@ class _HeaderProfile extends Component {
       viewStyleName,
       textStyleName,
     } = styles;
+    // console.log(this.ImageUploadProfile);
     return (
       <View style={[viewStyleContainer, { backgroundColor: colors.header }]}>
-        <TouchableHighlight
-          onPress={() => this.setState({ imageUpload: true })}>
+        <TouchableHighlight onPress={() => this.ImageUploadProfile.show()}>
           {photoLink ? (
             <Image
               style={[
@@ -57,9 +64,12 @@ class _HeaderProfile extends Component {
         </View>
 
         <ImageUpload
-          visible={this.state.imageUpload}
-          onSave={image => this.props.uploadProfilePhoto(image)}
-          onDismiss={() => this.setState({ imageUpload: false })}
+          ref={c => (this.ImageUploadProfile = c)}
+          onConfirm={image => uploadProfilePhoto(image)}
+          resetLoading={resetLoading}
+          error={profile.error}
+          success={profile.success}
+          loading={profile.loading}
         />
       </View>
     );

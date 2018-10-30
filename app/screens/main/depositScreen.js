@@ -87,9 +87,7 @@ class DepositScreen extends Component {
           </Text>
         </View>
         <View style={containerStyleReference}>
-          <Text style={textStyleCommentReference}>
-            {tempWallet.account}
-          </Text>
+          <Text style={textStyleCommentReference}>{tempWallet.account}</Text>
           <TouchableHighlight
             underlayColor={'white'}
             onPress={() => {

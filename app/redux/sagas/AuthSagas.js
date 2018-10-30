@@ -357,7 +357,7 @@ function* termsFlow() {
         },
       });
       const resp = yield take([NEXT_AUTH_FORM_STATE, UPDATE_AUTH_FORM_STATE]);
-      console.log('resp', resp);
+      // console.log('resp', resp);
       if (resp.type === NEXT_AUTH_FORM_STATE) {
         const { termsChecked } = yield select(authStateSelector);
         if (termsChecked) {

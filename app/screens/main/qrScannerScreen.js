@@ -6,8 +6,7 @@ import { connect } from 'react-redux';
 import { currenciesSelector } from './../../redux/reducers/AccountsReducer';
 import { decodeQR } from './../../util/general';
 
-import { Output, Button, EmptyListMessage } from './../../components/common';
-import { Toast } from 'native-base';
+import { EmptyListMessage } from './../../components/common';
 
 class QRCodeScannerScreen extends Component {
   static navigationOptions = {
@@ -24,7 +23,6 @@ class QRCodeScannerScreen extends Component {
   _handleBarCodeRead = raw => {
     const data = decodeQR(raw.data);
     let { currencies } = this.props;
-    console.log(data);
     const { account, currency, amount, recipient, note, type, memo } = data;
 
     // TODO: account
@@ -53,13 +51,10 @@ class QRCodeScannerScreen extends Component {
     } else {
       currencyCode = currency;
     }
-    console.log('currency', type, currencyCode, accountCode);
 
     currencies = currencies.data.filter(
       item => item.currency.code === currencyCode,
     );
-
-    console.log('currencies', currencies);
     if (currencies.length > 1) {
       const tempCurrencies = currencies.filter(
         item => item.account === accountCode,
@@ -68,9 +63,6 @@ class QRCodeScannerScreen extends Component {
         currencies = tempCurrencies;
       }
     }
-
-    console.log('currencies', currencies);
-    console.log('currency', currencies[0]);
 
     this.props.navigation.goBack();
     this.props.navigation.navigate('Send', {

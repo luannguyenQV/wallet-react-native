@@ -8,10 +8,10 @@ import ScrollableTabView, {
 class _Tabs extends Component {
   render() {
     const { children, colors } = this.props;
-
     return (
       <ScrollableTabView
         prerenderingSiblingsNumber={1}
+        keyboardShouldPersistTaps={'handled'}
         initialPage={0}
         tabBarTextStyle={{ fontSize: 16, color: colors.headerContrast }}
         tabBarBackgroundColor={colors.header}
@@ -24,7 +24,12 @@ class _Tabs extends Component {
           shadowOpacity: 0.15,
         }}
         tabBarUnderlineStyle={{ backgroundColor: colors.headerContrast }}
-        renderTabBar={() => <ScrollableTabBar />}>
+        renderTabBar={() => (
+          <ScrollableTabBar
+            tabsContainerStyle={{ justifyContent: 'space-around' }}
+            style={{ justifyContent: 'space-around' }}
+          />
+        )}>
         {children}
       </ScrollableTabView>
     );
