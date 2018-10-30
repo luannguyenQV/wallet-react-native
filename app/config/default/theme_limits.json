@@ -1,0 +1,24 @@
+{
+  "design": {
+    "cardCornerRadius": {
+      "max": 30,
+      "min": 0
+    },
+    "cardShadow": {
+      "max": 30,
+      "min": 0
+    },
+    "cardElevation": {
+      "max": 5,
+      "min": 0
+    },
+    "buttonShadow": {
+      "max": 30,
+      "min": 0
+    },
+    "buttonElevation": {
+      "max": 5,
+      "min": 0
+    }
+  }
+}

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, Switch } from 'react-native';
-import Colors from './../config/colors';
 
 export default class Notification extends Component {
   constructor(props) {

@@ -69,93 +69,93 @@ const _Card = props => {
   };
   // const iconFooter = ;
   return (
-    // <_View
-    //   style={[
-    //     viewStyleCardContainer,
-    //     {
-    //       shadowRadius: design.cardShadow,
-    //       // borderColor: 'transparent',
-    //       backgroundColor: 'transparent',
-    //     },
-    //   ]}>
     <_View
       style={[
         viewStyleCardContainer,
         {
-          borderRadius: design.cardCornerRadius,
-          overflow: 'hidden',
-          backgroundColor: 'transparent',
           shadowRadius: design.cardShadow,
           // borderColor: 'transparent',
-          elevation: design.cardElevation,
+          // backgroundColor: 'transparent',
         },
       ]}>
-      {/* <Swipeable rightContent={swipeableContent}> */}
-      {renderHeader ? <_View>{renderHeader}</_View> : null}
-      {title || subtitle || iconTitleLeft || iconTitleRight ? (
-        <_View
-          resizeMode="cover"
-          style={[viewStyleTitleContainer, { backgroundColor: 'white' }]}>
-          {textTitleLeft ? (
-            <_View style={iconStyleTitleLeft}>
-              <TouchableCircle
-                colors={colors}
-                text={textTitleLeft}
-                active={itemActive}
-                onPress={onPressTitleLeft}
-                radius={24}
-              />
-            </_View>
-          ) : null}
-          {iconTitleLeft ? (
-            <HeaderButton
-              name={iconTitleLeft}
-              onPress={onPressTitleLeft}
-              color={colorTitle ? colorTitle : colors.primaryContrast}
-            />
-          ) : null}
-          <Title onPress={onPressTitle} title={title} subtitle={subtitle} />
-          {iconTitleRight ? (
-            <_View style={iconStyleTitleRight}>
+      <_View
+        style={[
+          // viewStyleCardContainer,
+          {
+            borderRadius: design.cardCornerRadius,
+            overflow: 'hidden',
+            // backgroundColor: 'transparent',
+            // shadowRadius: design.cardShadow,
+            // borderColor: 'transparent',
+            elevation: design.cardElevation,
+          },
+        ]}>
+        {/* <Swipeable rightContent={swipeableContent}> */}
+        {renderHeader ? <_View>{renderHeader}</_View> : null}
+        {title || subtitle || iconTitleLeft || iconTitleRight ? (
+          <_View
+            resizeMode="cover"
+            style={[viewStyleTitleContainer, { backgroundColor: 'white' }]}>
+            {textTitleLeft ? (
+              <_View style={iconStyleTitleLeft}>
+                <TouchableCircle
+                  colors={colors}
+                  text={textTitleLeft}
+                  active={itemActive}
+                  onPress={onPressTitleLeft}
+                  radius={24}
+                />
+              </_View>
+            ) : null}
+            {iconTitleLeft ? (
               <HeaderButton
-                icon={iconTitleRight}
-                onPress={onPressTitleRight}
-                color={colorTitle ? colorTitle : colors.font}
+                name={iconTitleLeft}
+                onPress={onPressTitleLeft}
+                color={colorTitle ? colorTitle : colors.primaryContrast}
               />
-            </_View>
-          ) : null}
-        </_View>
-      ) : null}
-      <TouchableWithoutFeedback onPress={onPressContent}>
-        <View bC={'cardBackgroundColor'}>
-          {canEdit ? (
-            <_View
-              style={{ position: 'absolute', right: 8, top: 8, padding: 8 }}>
-              <Icon
-                name={'edit'}
-                size={22}
-                color={colorIcon ? colorIcon : colors.grey2}
-              />
-            </_View>
-          ) : null}
-          {props.children}
-          {/* {errorText ? <Text c={'error'}>{errorText}</Text> : null} TODO: not used anywhere yet, not showing */}
-        </View>
-      </TouchableWithoutFeedback>
-      {textActionOne || textActionTwo || iconFooter ? (
-        <MaterialActions
-          actionOne={actionOne}
-          actionTwo={actionTwo}
-          loading={loading}
-          iconFooter={{
-            name: iconFooter,
-            onPress: onPressFooter,
-          }}
-        />
-      ) : null}
-      {/* </Swipeable> */}
+            ) : null}
+            <Title onPress={onPressTitle} title={title} subtitle={subtitle} />
+            {iconTitleRight ? (
+              <_View style={iconStyleTitleRight}>
+                <HeaderButton
+                  icon={iconTitleRight}
+                  onPress={onPressTitleRight}
+                  color={colorTitle ? colorTitle : colors.font}
+                />
+              </_View>
+            ) : null}
+          </_View>
+        ) : null}
+        <TouchableWithoutFeedback onPress={onPressContent}>
+          <View bC={'cardBackgroundColor'}>
+            {canEdit ? (
+              <_View
+                style={{ position: 'absolute', right: 8, top: 8, padding: 8 }}>
+                <Icon
+                  name={'edit'}
+                  size={22}
+                  color={colorIcon ? colorIcon : colors.grey2}
+                />
+              </_View>
+            ) : null}
+            {props.children}
+            {/* {errorText ? <Text c={'error'}>{errorText}</Text> : null} TODO: not used anywhere yet, not showing */}
+          </View>
+        </TouchableWithoutFeedback>
+        {textActionOne || textActionTwo || iconFooter ? (
+          <MaterialActions
+            actionOne={actionOne}
+            actionTwo={actionTwo}
+            loading={loading}
+            iconFooter={{
+              name: iconFooter,
+              onPress: onPressFooter,
+            }}
+          />
+        ) : null}
+        {/* </Swipeable> */}
+      </_View>
     </_View>
-    // </_View>
   );
   {
     /* <_View style={styles.containerStyle}>{props.children}</_View>; */
@@ -199,7 +199,7 @@ const styles = {
       height: 1,
       width: 2,
     },
-    margin: 8,
+    padding: 8,
   },
   viewStyleTitleContainer: {
     flex: 1,

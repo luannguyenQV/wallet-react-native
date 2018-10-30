@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
 import {
   setSendWallet,
   resetSend,
   setActiveCurrency,
 } from './../redux/actions';
-
-import Colors from './../config/colors';
 
 import { Card, Output } from './../components/common';
 

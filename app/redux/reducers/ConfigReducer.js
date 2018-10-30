@@ -9,7 +9,9 @@ import default_services from './../../config/default/services.json';
 import default_sliders from './../../config/default/sliders.json';
 import default_theme from './../../config/default/theme.json';
 import default_verification from './../../config/default/verification.json';
-import { safe } from '../../util/general';
+import theme_limits from './../../config/default/theme_limits.json';
+
+import { safe, bounds } from '../../util/general';
 
 const INITIAL_STATE = {
   company_config: {},
@@ -209,7 +211,35 @@ const selectColor = (component, theme, colors) => {
 export const themeDesignSelector = createSelector(
   [configThemeDesignStateSelector],
   themeDesign => {
-    return { ...default_theme.design, ...themeDesign };
+    const design = { ...default_theme.design, ...themeDesign };
+    return {
+      ...design,
+      cardCornerRadius: bounds(
+        design.cardCornerRadius,
+        theme_limits.design.cardCornerRadius.min,
+        theme_limits.design.cardCornerRadius.max,
+      ),
+      cardShadow: bounds(
+        design.cardShadow,
+        theme_limits.design.cardShadow.min,
+        theme_limits.design.cardShadow.max,
+      ),
+      cardElevation: bounds(
+        design.cardElevation,
+        theme_limits.design.cardElevation.min,
+        theme_limits.design.cardElevation.max,
+      ),
+      buttonShadow: bounds(
+        design.buttonShadow,
+        theme_limits.design.buttonShadow.min,
+        theme_limits.design.buttonShadow.max,
+      ),
+      buttonElevation: bounds(
+        design.buttonElevation,
+        theme_limits.design.buttonElevation.min,
+        theme_limits.design.buttonElevation.max,
+      ),
+    };
   },
 );
 

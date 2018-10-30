@@ -4,8 +4,6 @@ import { WebBrowser } from 'expo';
 import { connect } from 'react-redux';
 import { fetchAccounts, fetchTransactions } from './../redux/actions';
 
-import * as Rehive from './../util/rehive';
-
 import TransactionListItem from './TransactionListItem';
 import {
   ListSeparator,
@@ -14,7 +12,6 @@ import {
   Output,
   Text,
 } from './common';
-import Colors from './../config/colors';
 import { performDivisibility } from './../util/general';
 
 import moment from 'moment';
@@ -163,7 +160,7 @@ class TransactionList extends Component {
             //   ' to ' +
             //   transaction.destination_transaction.user.email;
           }
-          color = Colors.positive;
+          color = 'positive';
           break;
         case 'credit':
           iconName = 'call-received';
@@ -174,28 +171,23 @@ class TransactionList extends Component {
             // headerText =
             //   headerText + ' from ' + transaction.source_transaction.user.email;
           }
-          color = Colors.negative;
+          color = 'negative';
           break;
         default:
           iconName = 'question';
           headerText = 'Unknown transaction type';
-          color = Colors.warning;
+          color = 'warning';
       }
       return (
         <PopUpGeneral
           visible={showDetail}
-          // iconTitleLeft={iconTitleLeft}
           title={headerText}
-          // subtitle={'Subtitle?'}
-          // titleStyle={titleStyle}
           iconTitleRight={'close'}
           onPressTitleRight={() => this.hideModal()}
           onDismiss={() => this.hideModal()}>
-          {/* <Text style={textStyleHeader}>{headerText}</Text> */}
           {user ? <Output label={userLabel} value={user} /> : null}
           {note ? <Output label="Note" value={note} /> : null}
           <Output label="Transaction type" value={label} />
-          {/* <Output label="Total amount" value={transaction.label} /> */}
           <Output
             label="Amount"
             value={
@@ -236,14 +228,10 @@ class TransactionList extends Component {
 
           <View style={viewStyleFooter}>
             <View>
-              <Text style={{ padding: 0, margin: 0 }}>
-                {moment(transaction.created).format('lll')}
-              </Text>
+              <Text>{moment(transaction.created).format('lll')}</Text>
             </View>
             <View>
-              <Text style={{ padding: 0, margin: 0 }}>
-                {transaction.status}
-              </Text>
+              <Text c={color}>{transaction.status}</Text>
             </View>
           </View>
         </PopUpGeneral>
@@ -273,8 +261,6 @@ const styles = {
     textAlign: 'center',
     paddingVertical: 8,
     fontWeight: 'bold',
-    // alignSelf: 'flex-start',
-    color: Colors.black,
   },
   viewStyleFooter: {
     // flex: 2,

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { View, Text, Dimensions } from 'react-native';
 import context from './common/context';
 
-import Colors from './../config/colors';
 import { HeaderButton } from './common';
 import { performDivisibility } from './../util/general';
 

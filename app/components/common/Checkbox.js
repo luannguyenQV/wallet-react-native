@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, Linking } from 'react-native';
-import Colors from './../../config/colors';
 import { MaterialIcons } from '@expo/vector-icons';
 import { WebBrowser } from 'expo';
 import context from './context';

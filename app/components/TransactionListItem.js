@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
-import { Text, View, Dimensions, TouchableHighlight } from 'react-native';
+import { Dimensions, TouchableHighlight, View } from 'react-native';
 import { MaterialIcons as Icon } from '@expo/vector-icons';
 import moment from 'moment';
 import { performDivisibility } from './../util/general';
 
-import Colors from './../config/colors';
+import context from './common/context';
+import { Text } from './common';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class TransactionListItem extends Component {
   renderItem() {
-    const { item, onPress } = this.props;
+    const { item, onPress, colors } = this.props;
     const {
       viewStyleContainer,
       textStyleHeader,
@@ -32,7 +33,7 @@ class TransactionListItem extends Component {
         //   headerTextOne = headerTextOne + ' to ';
         //   headerTextTwo = item.destination_transaction.user.email;
         // }
-        color = Colors.negative;
+        color = 'negative';
         break;
       case 'credit':
         // console.log('Credit');
@@ -42,12 +43,12 @@ class TransactionListItem extends Component {
         //   headerTextOne = headerTextOne + ' from ';
         //   headerTextTwo = item.source_transaction.user.email;
         // }
-        color = Colors.positive;
+        color = 'positive';
         break;
       default:
         iconName = 'question';
         headerText = 'Unknown transaction type';
-        color = Colors.warning;
+        color = 'warning';
     }
 
     return (
@@ -57,7 +58,11 @@ class TransactionListItem extends Component {
         // activeOpacity={0.2}
         onPress={() => onPress(item)}>
         <View style={viewStyleContainer}>
-          <Icon name={iconName} size={24} color={color ? color : 'black'} />
+          <Icon
+            name={iconName}
+            size={24}
+            color={color ? colors[color] : 'black'}
+          />
           <View style={{ paddingLeft: 8, paddingRight: 2 }}>
             {SCREEN_WIDTH < 400 ? (
               <View>
@@ -75,7 +80,7 @@ class TransactionListItem extends Component {
 
             <Text style={textStyleDate}>{moment(item.created).fromNow()}</Text>
           </View>
-          <Text style={[textStyleAmount, { color: color }]}>
+          <Text c={color} style={textStyleAmount}>
             {item.currency.symbol}{' '}
             {performDivisibility(
               item.amount,
@@ -123,9 +128,4 @@ const styles = {
   },
 };
 
-// const mapStateToProps = (state, ownProps) => {
-//   const expanded = (state.selectedLibraryId === ownProps.library.id);
-//   return { expanded };
-// };
-
-export default TransactionListItem; //connect(mapStateToProps, actions)(ListItem);
+export default context(TransactionListItem);

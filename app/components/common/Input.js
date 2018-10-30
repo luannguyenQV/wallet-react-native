@@ -8,7 +8,6 @@ import {
   SectionList,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import Colors from './../../config/colors';
 import { MaterialIcons } from '@expo/vector-icons';
 import CountryPicker from 'react-native-country-picker-modal';
 import { ListItem, ListSeparator } from './ListItem';
@@ -450,7 +449,7 @@ _Input.defaultProps = {
   icon: '',
   size: '',
   type: 'contained',
-  colors: Colors,
+  colors: {},
   onBlur: () => {},
   sections: [],
   data: [],

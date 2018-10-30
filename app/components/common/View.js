@@ -118,7 +118,6 @@ _View.defaultProps = {
   o: 1, // 0-1
   bC: 'transparent', // backgroundColor
   colors: {}, // from context
-  colors: {}, // from context
   rem: 16, // rem value
   fD: 'row', // flexDirection
   aI: 'flex-start', // alignItems

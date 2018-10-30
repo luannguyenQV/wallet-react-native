@@ -115,3 +115,5 @@ export const concatBankAccount = account => {
 
 export const safe = (item, field, value = '') =>
   item && item[field] ? item[field] : value;
+
+export const bounds = (value, min, max) => Math.min(max, Math.max(min, value));

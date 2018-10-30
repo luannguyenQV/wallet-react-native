@@ -22,7 +22,6 @@ import {
 } from '../../redux/actions';
 
 import { Input, FullScreenForm, Output } from './../../components/common';
-import Colors from './../../config/colors';
 import Header from './../../components/header';
 import LocalAuthentication from '../../components/LocalAuthentication';
 import { configPinSelector } from '../../redux/reducers/ConfigReducer';
@@ -320,7 +319,6 @@ const styles = {
   viewStyleContainer: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: Colors.focus,
     // paddingTop: 10,
   },
   viewStyleTopContainer: {

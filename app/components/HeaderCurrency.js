@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { View, Text, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 
-import Colors from './../config/colors';
 import { HeaderButton } from './common';
 import { performDivisibility } from './../util/general';
 
@@ -100,8 +99,6 @@ class HeaderCurrency extends Component {
 
 const styles = {
   viewStyleContainer: {
-    // flex: 1,
-    backgroundColor: Colors.primary,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
@@ -112,13 +109,11 @@ const styles = {
     alignItems: 'center',
   },
   textStyleCode: {
-    color: Colors.primaryContrast,
     fontSize: 20,
     fontWeight: 'bold',
     paddingBottom: 0,
   },
   textStyleAccount: {
-    color: Colors.primaryContrast,
     fontSize: 16,
     // fontWeight: 'bold',
     paddingBottom: 8,
