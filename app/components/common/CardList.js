@@ -47,7 +47,11 @@ class _CardList extends Component {
       cardListOptions,
       activeAction,
     } = this.props;
-    // console.log(index, data);
+    console.log(cardListOptions.loading, data);
+    const temp1 = data.indexLoading && data.index === index;
+    const temp2 = cardListOptions.loading;
+    const temp3 = temp1 || temp2;
+    console.log(temp1, temp2, temp3);
 
     return (
       <Card
@@ -118,7 +122,6 @@ class _CardList extends Component {
 
   render() {
     const { data, keyExtractor, onRefresh, type, colors } = this.props;
-    console.log(colors.primary);
     // if (cardListOptions.noScroll) {
     //   return <View color="grey2">{this.renderItem(data.data[0], 0)}</View>;
     // }

@@ -67,6 +67,7 @@ export default (state = INITIAL_STATE, action) => {
         campaignsError: '',
         showCampaignDetail: false,
         tempCampaign: null,
+        claimRewardLoading: false,
       };
     case FETCH_CAMPAIGNS_ASYNC.success:
       return {
@@ -128,6 +129,7 @@ export const userCampaignsSelector = createSelector(
       claimRewardLoading,
     } = rewardsState;
     const { campaignIndex, showDetail, type } = userState;
+    console.log(campaignsLoading);
     return {
       data:
         showDetail && type === 'campaign'

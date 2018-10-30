@@ -2,7 +2,7 @@
   "expo": {
     "name": "Plue Wallet",
     "description": "A multi-currency wallet built on the Rehive platform.",
-    "version": "1.4.13",
+    "version": "1.4.14",
     "slug": "plue-wallet",
     "privacy": "public",
     "sdkVersion": "30.0.0",
